@@ -135,8 +135,15 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Keyword_Registration.Instance,
             PlacedNpc_Registration.Instance,
             PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
+        dict[typeof(IEmittance)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Light_Registration.Instance,
+            Region_Registration.Instance,
+        });
+        dict[typeof(IEmittanceGetter)] = dict[typeof(IEmittance)] with { Setter = false };
         dict[typeof(ILocationRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             LocationReferenceType_Registration.Instance,
@@ -151,6 +158,7 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
         {
             PlacedNpc_Registration.Instance,
             PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
         });
         dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
         dict[typeof(IPlacedSimple)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -163,11 +171,13 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
         {
             PlacedNpc_Registration.Instance,
             PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
         });
         dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
         });
         dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)] with { Setter = false };
         dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

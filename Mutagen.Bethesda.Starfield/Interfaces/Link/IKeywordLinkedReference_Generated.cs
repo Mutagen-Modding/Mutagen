@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [Keyword, PlacedNpc, PlacedObject]
+    /// Implemented by: [Keyword, PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
     public partial interface IKeywordLinkedReference :
         IKeywordLinkedReferenceGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [Keyword, PlacedNpc, PlacedObject]
+    /// Implemented by: [Keyword, PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
     public partial interface IKeywordLinkedReferenceGetter : IStarfieldMajorRecordGetter
     {

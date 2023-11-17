@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -40,20 +42,30 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class Region :
-        StarfieldMajorRecord,
-        IEquatable<IRegionGetter>,
-        ILoquiObjectSetter<Region>,
-        IRegionInternal
+    public partial class PlacedBeam :
+        APlacedTrap,
+        IEquatable<IPlacedBeamGetter>,
+        ILoquiObjectSetter<PlacedBeam>,
+        IPlacedBeamInternal
     {
         #region Ctor
-        protected Region()
+        protected PlacedBeam()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Projectile
+        private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IPlacedBeamGetter.Projectile => this.Projectile;
+        #endregion
 
         #region To String
 
@@ -61,7 +73,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.Print(
+            PlacedBeamMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -71,7 +83,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mask
         public new class Mask<TItem> :
-            StarfieldMajorRecord.Mask<TItem>,
+            APlacedTrap.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -79,6 +91,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Projectile = initialValue;
             }
 
             public Mask(
@@ -88,7 +101,27 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem Emittance,
+                TItem RagdollData,
+                TItem ReferenceGroup,
+                TItem SourcePackIn,
+                TItem IgnoredBySandbox,
+                TItem OwnerFactionRank,
+                TItem LinkedReferences,
+                TItem Ownership,
+                TItem EncounterLocation,
+                TItem Layer,
+                TItem HeadTrackingWeight,
+                TItem LocationRefTypes,
+                TItem EnableParent,
+                TItem ActivationPoint,
+                TItem Scale,
+                TItem Position,
+                TItem Rotation,
+                TItem Comments,
+                TItem Projectile)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -96,8 +129,28 @@ namespace Mutagen.Bethesda.Starfield
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
-                StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
+                StarfieldMajorRecordFlags: StarfieldMajorRecordFlags,
+                VirtualMachineAdapter: VirtualMachineAdapter,
+                Emittance: Emittance,
+                RagdollData: RagdollData,
+                ReferenceGroup: ReferenceGroup,
+                SourcePackIn: SourcePackIn,
+                IgnoredBySandbox: IgnoredBySandbox,
+                OwnerFactionRank: OwnerFactionRank,
+                LinkedReferences: LinkedReferences,
+                Ownership: Ownership,
+                EncounterLocation: EncounterLocation,
+                Layer: Layer,
+                HeadTrackingWeight: HeadTrackingWeight,
+                LocationRefTypes: LocationRefTypes,
+                EnableParent: EnableParent,
+                ActivationPoint: ActivationPoint,
+                Scale: Scale,
+                Position: Position,
+                Rotation: Rotation,
+                Comments: Comments)
             {
+                this.Projectile = Projectile;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +159,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Projectile;
             #endregion
 
             #region Equals
@@ -119,11 +176,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Projectile);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +193,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Projectile)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +202,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Projectile)) return true;
                 return false;
             }
             #endregion
@@ -149,7 +210,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Region.Mask<R>();
+                var ret = new PlacedBeam.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -157,24 +218,29 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Projectile = eval(this.Projectile);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Region.Mask<bool>? printMask = null)
+            public string Print(PlacedBeam.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Region.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedBeam.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PlacedBeam.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Projectile ?? true)
+                    {
+                        sb.AppendItem(Projectile, "Projectile");
+                    }
                 }
             }
             #endregion
@@ -182,15 +248,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public new class ErrorMask :
-            StarfieldMajorRecord.ErrorMask,
+            APlacedTrap.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Projectile;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Region_FieldIndex enu = (Region_FieldIndex)index;
+                PlacedBeam_FieldIndex enu = (PlacedBeam_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedBeam_FieldIndex.Projectile:
+                        return Projectile;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,9 +270,12 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Region_FieldIndex enu = (Region_FieldIndex)index;
+                PlacedBeam_FieldIndex enu = (PlacedBeam_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedBeam_FieldIndex.Projectile:
+                        this.Projectile = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,9 +284,12 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Region_FieldIndex enu = (Region_FieldIndex)index;
+                PlacedBeam_FieldIndex enu = (PlacedBeam_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedBeam_FieldIndex.Projectile:
+                        this.Projectile = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +299,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Projectile != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +326,9 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Projectile, "Projectile");
+                }
             }
             #endregion
 
@@ -255,6 +337,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Projectile = this.Projectile.Combine(rhs.Projectile);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,18 +356,29 @@ namespace Mutagen.Bethesda.Starfield
 
         }
         public new class TranslationMask :
-            StarfieldMajorRecord.TranslationMask,
+            APlacedTrap.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Projectile;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Projectile = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Projectile, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,8 +389,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
-        public Region(
+        public static readonly RecordType GrupRecordType = PlacedBeam_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedBeamCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBeamSetterCommon.Instance.RemapLinks(this, mapping);
+        public PlacedBeam(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -305,7 +401,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private Region(
+        private PlacedBeam(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -314,7 +410,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Region(
+        internal PlacedBeam(
             FormKey formKey,
             ushort formVersion)
         {
@@ -323,14 +419,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Region(IStarfieldMod mod)
+        public PlacedBeam(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public Region(IStarfieldMod mod, string editorID)
+        public PlacedBeam(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -340,10 +436,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Region>.ToString(this);
+            return MajorRecordPrinter<PlacedBeam>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IRegion);
+        protected override Type LinkType => typeof(IPlacedBeam);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -352,16 +448,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRegionGetter rhs) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlacedBeamGetter rhs) return false;
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRegionGetter? obj)
+        public bool Equals(IPlacedBeamGetter? obj)
         {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -369,23 +465,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedBeamBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlacedBeamBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Region CreateFromBinary(
+        public new static PlacedBeam CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Region();
-            ((RegionSetterCommon)((IRegionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PlacedBeam();
+            ((PlacedBeamSetterCommon)((IPlacedBeamGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -396,7 +492,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Region item,
+            out PlacedBeam item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -411,84 +507,91 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((RegionSetterCommon)((IRegionGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PlacedBeamSetterCommon)((IPlacedBeamGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Region GetNew()
+        internal static new PlacedBeam GetNew()
         {
-            return new Region();
+            return new PlacedBeam();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IRegion :
-        IEmittance,
-        ILoquiObjectSetter<IRegionInternal>,
-        IRegionGetter,
-        IStarfieldMajorRecordInternal
+    public partial interface IPlacedBeam :
+        IAPlacedTrapInternal,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IPlacedBeamInternal>,
+        IPlacedBeamGetter,
+        IPositionRotation,
+        IScripted
+    {
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
+    }
+
+    public partial interface IPlacedBeamInternal :
+        IAPlacedTrapInternal,
+        IPlacedBeam,
+        IPlacedBeamGetter
     {
     }
 
-    public partial interface IRegionInternal :
-        IStarfieldMajorRecordInternal,
-        IRegion,
-        IRegionGetter
-    {
-    }
-
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.REGN)]
-    public partial interface IRegionGetter :
-        IStarfieldMajorRecordGetter,
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.PBEA)]
+    public partial interface IPlacedBeamGetter :
+        IAPlacedTrapGetter,
         IBinaryItem,
-        IEmittanceGetter,
-        ILoquiObject<IRegionGetter>,
-        IMapsToGetter<IRegionGetter>
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
+        ILoquiObject<IPlacedBeamGetter>,
+        IMapsToGetter<IPlacedBeamGetter>,
+        IPositionRotationGetter,
+        IScriptedGetter
     {
-        static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedBeam_Registration.Instance;
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class RegionMixIn
+    public static partial class PlacedBeamMixIn
     {
-        public static void Clear(this IRegionInternal item)
+        public static void Clear(this IPlacedBeamInternal item)
         {
-            ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PlacedBeamSetterCommon)((IPlacedBeamGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Region.Mask<bool> GetEqualsMask(
-            this IRegionGetter item,
-            IRegionGetter rhs,
+        public static PlacedBeam.Mask<bool> GetEqualsMask(
+            this IPlacedBeamGetter item,
+            IPlacedBeamGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IRegionGetter item,
+            this IPlacedBeamGetter item,
             string? name = null,
-            Region.Mask<bool>? printMask = null)
+            PlacedBeam.Mask<bool>? printMask = null)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IRegionGetter item,
+            this IPlacedBeamGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Region.Mask<bool>? printMask = null)
+            PlacedBeam.Mask<bool>? printMask = null)
         {
-            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
+            ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -496,39 +599,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IRegionGetter item,
-            IRegionGetter rhs,
-            Region.TranslationMask? equalsMask = null)
+            this IPlacedBeamGetter item,
+            IPlacedBeamGetter rhs,
+            PlacedBeam.TranslationMask? equalsMask = null)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Equals(
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IRegionInternal lhs,
-            IRegionGetter rhs,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? copyMask = null)
+            this IPlacedBeamInternal lhs,
+            IPlacedBeamGetter rhs,
+            out PlacedBeam.ErrorMask errorMask,
+            PlacedBeam.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedBeam.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IRegionInternal lhs,
-            IRegionGetter rhs,
+            this IPlacedBeamInternal lhs,
+            IPlacedBeamGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -536,55 +639,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Region DeepCopy(
-            this IRegionGetter item,
-            Region.TranslationMask? copyMask = null)
+        public static PlacedBeam DeepCopy(
+            this IPlacedBeamGetter item,
+            PlacedBeam.TranslationMask? copyMask = null)
         {
-            return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Region DeepCopy(
-            this IRegionGetter item,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? copyMask = null)
+        public static PlacedBeam DeepCopy(
+            this IPlacedBeamGetter item,
+            out PlacedBeam.ErrorMask errorMask,
+            PlacedBeam.TranslationMask? copyMask = null)
         {
-            return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Region DeepCopy(
-            this IRegionGetter item,
+        public static PlacedBeam DeepCopy(
+            this IPlacedBeamGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Region Duplicate(
-            this IRegionGetter item,
+        public static PlacedBeam Duplicate(
+            this IPlacedBeamGetter item,
             FormKey formKey,
-            Region.TranslationMask? copyMask = null)
+            PlacedBeam.TranslationMask? copyMask = null)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Duplicate(
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Region Duplicate(
-            this IRegionGetter item,
+        public static PlacedBeam Duplicate(
+            this IPlacedBeamGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Duplicate(
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -594,11 +697,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IRegionInternal item,
+            this IPlacedBeamInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PlacedBeamSetterCommon)((IPlacedBeamGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -614,7 +717,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Region_FieldIndex
+    internal enum PlacedBeam_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -623,37 +726,57 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Emittance = 8,
+        RagdollData = 9,
+        ReferenceGroup = 10,
+        SourcePackIn = 11,
+        IgnoredBySandbox = 12,
+        OwnerFactionRank = 13,
+        LinkedReferences = 14,
+        Ownership = 15,
+        EncounterLocation = 16,
+        Layer = 17,
+        HeadTrackingWeight = 18,
+        LocationRefTypes = 19,
+        EnableParent = 20,
+        ActivationPoint = 21,
+        Scale = 22,
+        Position = 23,
+        Rotation = 24,
+        Comments = 25,
+        Projectile = 26,
     }
     #endregion
 
     #region Registration
-    internal partial class Region_Registration : ILoquiRegistration
+    internal partial class PlacedBeam_Registration : ILoquiRegistration
     {
-        public static readonly Region_Registration Instance = new Region_Registration();
+        public static readonly PlacedBeam_Registration Instance = new PlacedBeam_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 27;
 
-        public static readonly Type MaskType = typeof(Region.Mask<>);
+        public static readonly Type MaskType = typeof(PlacedBeam.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Region.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PlacedBeam.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Region);
+        public static readonly Type ClassType = typeof(PlacedBeam);
 
-        public static readonly Type GetterType = typeof(IRegionGetter);
+        public static readonly Type GetterType = typeof(IPlacedBeamGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IRegion);
+        public static readonly Type SetterType = typeof(IPlacedBeam);
 
-        public static readonly Type? InternalSetterType = typeof(IRegionInternal);
+        public static readonly Type? InternalSetterType = typeof(IPlacedBeamInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Region";
+        public const string FullName = "Mutagen.Bethesda.Starfield.PlacedBeam";
 
-        public const string Name = "Region";
+        public const string Name = "PlacedBeam";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -661,14 +784,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PBEA;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.REGN);
+            var all = RecordCollection.Factory(RecordTypes.PBEA);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PlacedBeamBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -699,48 +822,66 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class RegionSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class PlacedBeamSetterCommon : APlacedTrapSetterCommon
     {
-        public new static readonly RegionSetterCommon Instance = new RegionSetterCommon();
+        public new static readonly PlacedBeamSetterCommon Instance = new PlacedBeamSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IRegionInternal item)
+        public void Clear(IPlacedBeamInternal item)
         {
             ClearPartial();
+            item.Projectile.Clear();
             base.Clear(item);
+        }
+        
+        public override void Clear(IAPlacedTrapInternal item)
+        {
+            Clear(item: (IPlacedBeamInternal)item);
         }
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IRegionInternal)item);
+            Clear(item: (IPlacedBeamInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IRegionInternal)item);
+            Clear(item: (IPlacedBeamInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IRegion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPlacedBeam obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Projectile.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IRegionInternal item,
+            IPlacedBeamInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IRegionInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IPlacedBeamInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: RegionBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: PlacedBeamBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PlacedBeamBinaryCreateTranslation.FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            IAPlacedTrapInternal item,
+            MutagenFrame frame,
+            TypedParseParams translationParams)
+        {
+            CopyInFromBinary(
+                item: (PlacedBeam)item,
+                frame: frame,
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
@@ -749,7 +890,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Region)item,
+                item: (PlacedBeam)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -760,7 +901,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Region)item,
+                item: (PlacedBeam)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -768,17 +909,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RegionCommon : StarfieldMajorRecordCommon
+    internal partial class PlacedBeamCommon : APlacedTrapCommon
     {
-        public new static readonly RegionCommon Instance = new RegionCommon();
+        public new static readonly PlacedBeamCommon Instance = new PlacedBeamCommon();
 
-        public Region.Mask<bool> GetEqualsMask(
-            IRegionGetter item,
-            IRegionGetter rhs,
+        public PlacedBeam.Mask<bool> GetEqualsMask(
+            IPlacedBeamGetter item,
+            IPlacedBeamGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Region.Mask<bool>(false);
-            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PlacedBeam.Mask<bool>(false);
+            ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -787,18 +928,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IRegionGetter item,
-            IRegionGetter rhs,
-            Region.Mask<bool> ret,
+            IPlacedBeamGetter item,
+            IPlacedBeamGetter rhs,
+            PlacedBeam.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Projectile = item.Projectile.Equals(rhs.Projectile);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IRegionGetter item,
+            IPlacedBeamGetter item,
             string? name = null,
-            Region.Mask<bool>? printMask = null)
+            PlacedBeam.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -810,18 +952,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IRegionGetter item,
+            IPlacedBeamGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Region.Mask<bool>? printMask = null)
+            PlacedBeam.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Region =>");
+                sb.AppendLine($"PlacedBeam =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Region) =>");
+                sb.AppendLine($"{name} (PlacedBeam) =>");
             }
             using (sb.Brace())
             {
@@ -833,51 +975,116 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IRegionGetter item,
+            IPlacedBeamGetter item,
             StructuredStringBuilder sb,
-            Region.Mask<bool>? printMask = null)
+            PlacedBeam.Mask<bool>? printMask = null)
         {
-            StarfieldMajorRecordCommon.ToStringFields(
+            APlacedTrapCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Projectile ?? true)
+            {
+                sb.AppendItem(item.Projectile.FormKey, "Projectile");
+            }
         }
         
-        public static Region_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static PlacedBeam_FieldIndex ConvertFieldIndex(APlacedTrap_FieldIndex index)
         {
             switch (index)
             {
-                case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Region_FieldIndex)((int)index);
-                case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Region_FieldIndex)((int)index);
-                case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Region_FieldIndex)((int)index);
-                case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Region_FieldIndex)((int)index);
-                case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Region_FieldIndex)((int)index);
-                case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Region_FieldIndex)((int)index);
-                case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Region_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.FormKey:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.VersionControl:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.EditorID:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.FormVersion:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Version2:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.StarfieldMajorRecordFlags:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.VirtualMachineAdapter:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Emittance:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.RagdollData:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.ReferenceGroup:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.SourcePackIn:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.IgnoredBySandbox:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.OwnerFactionRank:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.LinkedReferences:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Ownership:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.EncounterLocation:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Layer:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.HeadTrackingWeight:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.LocationRefTypes:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.EnableParent:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.ActivationPoint:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Scale:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Position:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Rotation:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Comments:
+                    return (PlacedBeam_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Region_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new PlacedBeam_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case StarfieldMajorRecord_FieldIndex.FormKey:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case StarfieldMajorRecord_FieldIndex.VersionControl:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case StarfieldMajorRecord_FieldIndex.EditorID:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case StarfieldMajorRecord_FieldIndex.FormVersion:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case StarfieldMajorRecord_FieldIndex.Version2:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
+                    return (PlacedBeam_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
+            }
+        }
+        
+        public static new PlacedBeam_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Region_FieldIndex)((int)index);
+                    return (PlacedBeam_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Region_FieldIndex)((int)index);
+                    return (PlacedBeam_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Region_FieldIndex)((int)index);
+                    return (PlacedBeam_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Region_FieldIndex)((int)index);
+                    return (PlacedBeam_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -885,13 +1092,28 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRegionGetter? lhs,
-            IRegionGetter? rhs,
+            IPlacedBeamGetter? lhs,
+            IPlacedBeamGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedBeam_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
             return true;
+        }
+        
+        public override bool Equals(
+            IAPlacedTrapGetter? lhs,
+            IAPlacedTrapGetter? rhs,
+            TranslationCrystal? equalsMask)
+        {
+            return Equals(
+                lhs: (IPlacedBeamGetter?)lhs,
+                rhs: rhs as IPlacedBeamGetter,
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -900,8 +1122,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRegionGetter?)lhs,
-                rhs: rhs as IRegionGetter,
+                lhs: (IPlacedBeamGetter?)lhs,
+                rhs: rhs as IPlacedBeamGetter,
                 equalsMask: equalsMask);
         }
         
@@ -911,26 +1133,32 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRegionGetter?)lhs,
-                rhs: rhs as IRegionGetter,
+                lhs: (IPlacedBeamGetter?)lhs,
+                rhs: rhs as IPlacedBeamGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IRegionGetter item)
+        public virtual int GetHashCode(IPlacedBeamGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Projectile);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
+        public override int GetHashCode(IAPlacedTrapGetter item)
+        {
+            return GetHashCode(item: (IPlacedBeamGetter)item);
+        }
+        
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRegionGetter)item);
+            return GetHashCode(item: (IPlacedBeamGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRegionGetter)item);
+            return GetHashCode(item: (IPlacedBeamGetter)item);
         }
         
         #endregion
@@ -938,28 +1166,40 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Region.GetNew();
+            return PlacedBeam.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedBeamGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.Projectile);
             yield break;
         }
         
         #region Duplicate
-        public Region Duplicate(
-            IRegionGetter item,
+        public PlacedBeam Duplicate(
+            IPlacedBeamGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Region(formKey, item.FormVersion);
+            var newRec = new PlacedBeam(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
+        }
+        
+        public override APlacedTrap Duplicate(
+            IAPlacedTrapGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPlacedBeamGetter)item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
         
         public override StarfieldMajorRecord Duplicate(
@@ -968,7 +1208,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRegionGetter)item,
+                item: (IPlacedBeamGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -979,7 +1219,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRegionGetter)item,
+                item: (IPlacedBeamGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -989,14 +1229,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RegionSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class PlacedBeamSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
-        public new static readonly RegionSetterTranslationCommon Instance = new RegionSetterTranslationCommon();
+        public new static readonly PlacedBeamSetterTranslationCommon Instance = new PlacedBeamSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IRegionInternal item,
-            IRegionGetter rhs,
+            IPlacedBeamInternal item,
+            IPlacedBeamGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1010,17 +1250,51 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IRegion item,
-            IRegionGetter rhs,
+            IPlacedBeam item,
+            IPlacedBeamGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IStarfieldMajorRecord)item,
-                (IStarfieldMajorRecordGetter)rhs,
+                (IAPlacedTrap)item,
+                (IAPlacedTrapGetter)rhs,
                 errorMask,
                 copyMask,
+                deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)PlacedBeam_FieldIndex.Projectile) ?? true))
+            {
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
+            }
+        }
+        
+        public override void DeepCopyIn(
+            IAPlacedTrapInternal item,
+            IAPlacedTrapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedBeamInternal)item,
+                rhs: (IPlacedBeamGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IAPlacedTrap item,
+            IAPlacedTrapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedBeam)item,
+                rhs: (IPlacedBeamGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
                 deepCopy: deepCopy);
         }
         
@@ -1032,8 +1306,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRegionInternal)item,
-                rhs: (IRegionGetter)rhs,
+                item: (IPlacedBeamInternal)item,
+                rhs: (IPlacedBeamGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1047,8 +1321,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRegion)item,
-                rhs: (IRegionGetter)rhs,
+                item: (IPlacedBeam)item,
+                rhs: (IPlacedBeamGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1062,8 +1336,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRegionInternal)item,
-                rhs: (IRegionGetter)rhs,
+                item: (IPlacedBeamInternal)item,
+                rhs: (IPlacedBeamGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1077,8 +1351,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRegion)item,
-                rhs: (IRegionGetter)rhs,
+                item: (IPlacedBeam)item,
+                rhs: (IPlacedBeamGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1086,12 +1360,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Region DeepCopy(
-            IRegionGetter item,
-            Region.TranslationMask? copyMask = null)
+        public PlacedBeam DeepCopy(
+            IPlacedBeamGetter item,
+            PlacedBeam.TranslationMask? copyMask = null)
         {
-            Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
-            ((RegionSetterTranslationCommon)((IRegionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedBeam ret = (PlacedBeam)((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).GetNew();
+            ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1100,30 +1374,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Region DeepCopy(
-            IRegionGetter item,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? copyMask = null)
+        public PlacedBeam DeepCopy(
+            IPlacedBeamGetter item,
+            out PlacedBeam.ErrorMask errorMask,
+            PlacedBeam.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
-            ((RegionSetterTranslationCommon)((IRegionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedBeam ret = (PlacedBeam)((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).GetNew();
+            ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedBeam.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Region DeepCopy(
-            IRegionGetter item,
+        public PlacedBeam DeepCopy(
+            IPlacedBeamGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
-            ((RegionSetterTranslationCommon)((IRegionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedBeam ret = (PlacedBeam)((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).GetNew();
+            ((PlacedBeamSetterTranslationCommon)((IPlacedBeamGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1139,21 +1413,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Region
+    public partial class PlacedBeam
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlacedBeam_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedBeam_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RegionCommon.Instance;
+        protected override object CommonInstance() => PlacedBeamCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return RegionSetterCommon.Instance;
+            return PlacedBeamSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RegionSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlacedBeamSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1164,29 +1438,38 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class RegionBinaryWriteTranslation :
-        StarfieldMajorRecordBinaryWriteTranslation,
+    public partial class PlacedBeamBinaryWriteTranslation :
+        APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RegionBinaryWriteTranslation Instance = new();
+        public new static readonly PlacedBeamBinaryWriteTranslation Instance = new();
+
+        public static void WriteEmbedded(
+            IPlacedBeamGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
 
         public void Write(
             MutagenWriter writer,
-            IRegionGetter item,
+            IPlacedBeamGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.REGN)))
+                record: translationParams.ConvertToCustom(RecordTypes.PBEA)))
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
@@ -1205,7 +1488,18 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IRegionGetter)item,
+                item: (IPlacedBeamGetter)item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IAPlacedTrapGetter item,
+            TypedWriteParams translationParams)
+        {
+            Write(
+                item: (IPlacedBeamGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1216,7 +1510,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRegionGetter)item,
+                item: (IPlacedBeamGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1227,25 +1521,34 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRegionGetter)item,
+                item: (IPlacedBeamGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class RegionBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class PlacedBeamBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
-        public new static readonly RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
+        public new static readonly PlacedBeamBinaryCreateTranslation Instance = new PlacedBeamBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.REGN;
+        public override RecordType RecordType => RecordTypes.PBEA;
+        public static void FillBinaryStructs(
+            IPlacedBeamInternal item,
+            MutagenFrame frame)
+        {
+            APlacedTrapBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
     }
 
 }
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class RegionBinaryTranslationMixIn
+    public static class PlacedBeamBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1254,35 +1557,36 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class RegionBinaryOverlay :
-        StarfieldMajorRecordBinaryOverlay,
-        IRegionGetter
+    internal partial class PlacedBeamBinaryOverlay :
+        APlacedTrapBinaryOverlay,
+        IPlacedBeamGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlacedBeam_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedBeam_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RegionCommon.Instance;
+        protected override object CommonInstance() => PlacedBeamCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RegionSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlacedBeamSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedBeamCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedBeamBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlacedBeamBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRegion);
+        protected override Type LinkType => typeof(IPlacedBeam);
 
 
         partial void CustomFactoryEnd(
@@ -1291,7 +1595,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected RegionBinaryOverlay(
+        protected PlacedBeamBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1301,7 +1605,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IRegionGetter RegionFactory(
+        public static IPlacedBeamGetter PlacedBeamFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1313,7 +1617,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new RegionBinaryOverlay(
+            var ret = new PlacedBeamBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1331,12 +1635,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IRegionGetter RegionFactory(
+        public static IPlacedBeamGetter PlacedBeamFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return RegionFactory(
+            return PlacedBeamFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1348,7 +1652,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.Print(
+            PlacedBeamMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1358,7 +1662,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Region>.ToString(this);
+            return MajorRecordPrinter<PlacedBeam>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1368,16 +1672,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRegionGetter rhs) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlacedBeamGetter rhs) return false;
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRegionGetter? obj)
+        public bool Equals(IPlacedBeamGetter? obj)
         {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

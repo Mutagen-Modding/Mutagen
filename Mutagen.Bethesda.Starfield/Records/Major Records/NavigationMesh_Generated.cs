@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +58,75 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? INavigationMeshGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> INavigationMeshGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region NavmeshGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NavmeshGeometry? _NavmeshGeometry;
+        public NavmeshGeometry? NavmeshGeometry
+        {
+            get => _NavmeshGeometry;
+            set => _NavmeshGeometry = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavmeshGeometryGetter? INavigationMeshGetter.NavmeshGeometry => this.NavmeshGeometry;
+        #endregion
+        #region NNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _NNAM;
+        public MemorySlice<Byte>? NNAM
+        {
+            get => this._NNAM;
+            set => this._NNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.NNAM => this.NNAM;
+        #endregion
+        #region PreCutMapEntries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<PreCutMapEntry>? _PreCutMapEntries;
+        public ExtendedList<PreCutMapEntry>? PreCutMapEntries
+        {
+            get => this._PreCutMapEntries;
+            set => this._PreCutMapEntries = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPreCutMapEntryGetter>? INavigationMeshGetter.PreCutMapEntries => _PreCutMapEntries;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +152,11 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
+                this.NNAM = initialValue;
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +166,12 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem Components,
+                TItem NavmeshGeometry,
+                TItem NNAM,
+                TItem PreCutMapEntries)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +181,11 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
+                this.NNAM = NNAM;
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(PreCutMapEntries, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +194,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>? NavmeshGeometry { get; set; }
+            public TItem NNAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>? PreCutMapEntries;
             #endregion
 
             #region Equals
@@ -119,11 +215,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.NavmeshGeometry, rhs.NavmeshGeometry)) return false;
+                if (!object.Equals(this.NNAM, rhs.NNAM)) return false;
+                if (!object.Equals(this.PreCutMapEntries, rhs.PreCutMapEntries)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Components);
+                hash.Add(this.NavmeshGeometry);
+                hash.Add(this.NNAM);
+                hash.Add(this.PreCutMapEntries);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +240,41 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavmeshGeometry != null)
+                {
+                    if (!eval(this.NavmeshGeometry.Overall)) return false;
+                    if (this.NavmeshGeometry.Specific != null && !this.NavmeshGeometry.Specific.All(eval)) return false;
+                }
+                if (!eval(this.NNAM)) return false;
+                if (this.PreCutMapEntries != null)
+                {
+                    if (!eval(this.PreCutMapEntries.Overall)) return false;
+                    if (this.PreCutMapEntries.Specific != null)
+                    {
+                        foreach (var item in this.PreCutMapEntries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +283,41 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavmeshGeometry != null)
+                {
+                    if (eval(this.NavmeshGeometry.Overall)) return true;
+                    if (this.NavmeshGeometry.Specific != null && this.NavmeshGeometry.Specific.Any(eval)) return true;
+                }
+                if (eval(this.NNAM)) return true;
+                if (this.PreCutMapEntries != null)
+                {
+                    if (eval(this.PreCutMapEntries.Overall)) return true;
+                    if (this.PreCutMapEntries.Specific != null)
+                    {
+                        foreach (var item in this.PreCutMapEntries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +333,39 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.NavmeshGeometry = this.NavmeshGeometry == null ? null : new MaskItem<R, NavmeshGeometry.Mask<R>?>(eval(this.NavmeshGeometry.Overall), this.NavmeshGeometry.Specific?.Translate(eval));
+                obj.NNAM = eval(this.NNAM);
+                if (PreCutMapEntries != null)
+                {
+                    obj.PreCutMapEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>?>(eval(this.PreCutMapEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>());
+                    if (PreCutMapEntries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>();
+                        obj.PreCutMapEntries.Specific = l;
+                        foreach (var item in PreCutMapEntries.Specific)
+                        {
+                            MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +384,56 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(NavigationMesh.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.NavmeshGeometry?.Overall ?? true)
+                    {
+                        NavmeshGeometry?.Print(sb);
+                    }
+                    if (printMask?.NNAM ?? true)
+                    {
+                        sb.AppendItem(NNAM, "NNAM");
+                    }
+                    if ((printMask?.PreCutMapEntries?.Overall ?? true)
+                        && PreCutMapEntries is {} PreCutMapEntriesItem)
+                    {
+                        sb.AppendLine("PreCutMapEntries =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PreCutMapEntriesItem.Overall);
+                            if (PreCutMapEntriesItem.Specific != null)
+                            {
+                                foreach (var subItem in PreCutMapEntriesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +444,30 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, NavmeshGeometry.ErrorMask?>? NavmeshGeometry;
+            public Exception? NNAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>? PreCutMapEntries;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMesh_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case NavigationMesh_FieldIndex.Components:
+                        return Components;
+                    case NavigationMesh_FieldIndex.NavmeshGeometry:
+                        return NavmeshGeometry;
+                    case NavigationMesh_FieldIndex.NNAM:
+                        return NNAM;
+                    case NavigationMesh_FieldIndex.PreCutMapEntries:
+                        return PreCutMapEntries;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +478,21 @@ namespace Mutagen.Bethesda.Starfield
                 NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMesh_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case NavigationMesh_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case NavigationMesh_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = new MaskItem<Exception?, NavmeshGeometry.ErrorMask?>(ex, null);
+                        break;
+                    case NavigationMesh_FieldIndex.NNAM:
+                        this.NNAM = ex;
+                        break;
+                    case NavigationMesh_FieldIndex.PreCutMapEntries:
+                        this.PreCutMapEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +504,21 @@ namespace Mutagen.Bethesda.Starfield
                 NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMesh_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case NavigationMesh_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case NavigationMesh_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = (MaskItem<Exception?, NavmeshGeometry.ErrorMask?>?)obj;
+                        break;
+                    case NavigationMesh_FieldIndex.NNAM:
+                        this.NNAM = (Exception?)obj;
+                        break;
+                    case NavigationMesh_FieldIndex.PreCutMapEntries:
+                        this.PreCutMapEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +528,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Components != null) return true;
+                if (NavmeshGeometry != null) return true;
+                if (NNAM != null) return true;
+                if (PreCutMapEntries != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +559,47 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                NavmeshGeometry?.Print(sb);
+                {
+                    sb.AppendItem(NNAM, "NNAM");
+                }
+                if (PreCutMapEntries is {} PreCutMapEntriesItem)
+                {
+                    sb.AppendLine("PreCutMapEntries =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PreCutMapEntriesItem.Overall);
+                        if (PreCutMapEntriesItem.Specific != null)
+                        {
+                            foreach (var subItem in PreCutMapEntriesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +608,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
+                ret.NNAM = this.NNAM.Combine(rhs.NNAM);
+                ret.PreCutMapEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PreCutMapEntries?.Overall, rhs.PreCutMapEntries?.Overall), Noggog.ExceptionExt.Combine(this.PreCutMapEntries?.Specific, rhs.PreCutMapEntries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +634,34 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public AComponent.TranslationMask? Components;
+            public NavmeshGeometry.TranslationMask? NavmeshGeometry;
+            public bool NNAM;
+            public PreCutMapEntry.TranslationMask? PreCutMapEntries;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.NNAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((NavmeshGeometry != null ? NavmeshGeometry.OnOverall : DefaultOn, NavmeshGeometry?.GetCrystal()));
+                ret.Add((NNAM, null));
+                ret.Add((PreCutMapEntries == null ? DefaultOn : !PreCutMapEntries.GetCrystal().CopyNothing, PreCutMapEntries?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +673,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMesh_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshSetterCommon.Instance.RemapLinks(this, mapping);
         public NavigationMesh(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +724,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(INavigationMesh);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => NavigationMeshCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => NavigationMeshSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => NavigationMeshSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => NavigationMeshSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +812,25 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface INavigationMesh :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationMeshInternal>,
         INavigationMeshGetter,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new NavmeshGeometry? NavmeshGeometry { get; set; }
+        new MemorySlice<Byte>? NNAM { get; set; }
+        new ExtendedList<PreCutMapEntry>? PreCutMapEntries { get; set; }
+        #region Mutagen
+        new NavigationMesh.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface INavigationMeshInternal :
@@ -440,11 +843,29 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.NAVM)]
     public partial interface INavigationMeshGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<INavigationMeshGetter>,
-        IMapsToGetter<INavigationMeshGetter>
+        IMapsToGetter<INavigationMeshGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => NavigationMesh_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        INavmeshGeometryGetter? NavmeshGeometry { get; }
+        ReadOnlyMemorySlice<Byte>? NNAM { get; }
+        IReadOnlyList<IPreCutMapEntryGetter>? PreCutMapEntries { get; }
+
+        #region Mutagen
+        NavigationMesh.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -621,6 +1042,11 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Components = 8,
+        NavmeshGeometry = 9,
+        NNAM = 10,
+        PreCutMapEntries = 11,
     }
     #endregion
 
@@ -631,9 +1057,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(NavigationMesh.Mask<>);
 
@@ -663,8 +1089,17 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.NAVM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.NAVM);
+            var all = RecordCollection.Factory(
+                RecordTypes.NAVM,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.NVNM,
+                RecordTypes.NNAM,
+                RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1141,11 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavigationMeshInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Components.Clear();
+            item.NavmeshGeometry = null;
+            item.NNAM = default;
+            item.PreCutMapEntries = null;
             base.Clear(item);
         }
         
@@ -723,6 +1163,34 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(INavigationMesh obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.NavmeshGeometry?.RemapLinks(mapping);
+            obj.PreCutMapEntries?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(INavigationMesh obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            INavigationMesh obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +1258,25 @@ namespace Mutagen.Bethesda.Starfield
             NavigationMesh.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.NavmeshGeometry = EqualsMaskHelper.EqualsHelper(
+                item.NavmeshGeometry,
+                rhs.NavmeshGeometry,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.NNAM = MemorySliceExt.SequenceEqual(item.NNAM, rhs.NNAM);
+            ret.PreCutMapEntries = item.PreCutMapEntries.CollectionEqualsHelper(
+                rhs.PreCutMapEntries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1326,50 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.NavmeshGeometry?.Overall ?? true)
+                && item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                NavmeshGeometryItem?.Print(sb, "NavmeshGeometry");
+            }
+            if ((printMask?.NNAM ?? true)
+                && item.NNAM is {} NNAMItem)
+            {
+                sb.AppendLine($"NNAM => {SpanExt.ToHexString(NNAMItem)}");
+            }
+            if ((printMask?.PreCutMapEntries?.Overall ?? true)
+                && item.PreCutMapEntries is {} PreCutMapEntriesItem)
+            {
+                sb.AppendLine("PreCutMapEntries =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PreCutMapEntriesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static NavigationMesh_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1420,34 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
+                {
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGeometry))) return false;
+                }
+                else if (!isNavmeshGeometryEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.NNAM, rhs.NNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PreCutMapEntries) ?? true))
+            {
+                if (!lhs.PreCutMapEntries.SequenceEqualNullable(rhs.PreCutMapEntries, (l, r) => ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.PreCutMapEntries)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1476,20 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(INavigationMeshGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.Components);
+            if (item.NavmeshGeometry is {} NavmeshGeometryitem)
+            {
+                hash.Add(NavmeshGeometryitem);
+            }
+            if (item.NNAM is {} NNAMItem)
+            {
+                hash.Add(NNAMItem);
+            }
+            hash.Add(item.PreCutMapEntries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1518,49 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.NavmeshGeometry is IFormLinkContainerGetter NavmeshGeometrylinkCont)
+            {
+                foreach (var item in NavmeshGeometrylinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PreCutMapEntries is {} PreCutMapEntriesItem)
+            {
+                foreach (var item in PreCutMapEntriesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(INavigationMeshGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +1636,125 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.NavmeshGeometry);
+                try
+                {
+                    if(rhs.NavmeshGeometry is {} rhsNavmeshGeometry)
+                    {
+                        item.NavmeshGeometry = rhsNavmeshGeometry.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGeometry));
+                    }
+                    else
+                    {
+                        item.NavmeshGeometry = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
+            {
+                if(rhs.NNAM is {} NNAMrhs)
+                {
+                    item.NNAM = NNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.NNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PreCutMapEntries) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.PreCutMapEntries);
+                try
+                {
+                    if ((rhs.PreCutMapEntries != null))
+                    {
+                        item.PreCutMapEntries = 
+                            rhs.PreCutMapEntries
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<PreCutMapEntry>();
+                    }
+                    else
+                    {
+                        item.PreCutMapEntries = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1903,58 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly NavigationMeshBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            INavigationMeshGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                ((NavmeshGeometryBinaryWriteTranslation)((IBinaryItem)NavmeshGeometryItem).BinaryWriteTranslator).Write(
+                    item: NavmeshGeometryItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPreCutMapEntryGetter>.Instance.Write(
+                writer: writer,
+                items: item.PreCutMapEntries,
+                recordType: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                transl: (MutagenWriter subWriter, IPreCutMapEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PreCutMapEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             INavigationMeshGetter item,
@@ -1184,10 +1971,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2026,75 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly NavigationMeshBinaryCreateTranslation Instance = new NavigationMeshBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NAVM;
+        public static ParseResult FillBinaryRecordTypes(
+            INavigationMeshInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)NavigationMesh_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)NavigationMesh_FieldIndex.Components;
+                }
+                case RecordTypeInts.NVNM:
+                {
+                    item.NavmeshGeometry = Mutagen.Bethesda.Starfield.NavmeshGeometry.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)NavigationMesh_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)NavigationMesh_FieldIndex.NNAM;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreCutMapEntries = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PreCutMapEntry>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: PreCutMapEntry.TryCreateFromBinary)
+                        .CastExtendedList<PreCutMapEntry>();
+                    return (int)NavigationMesh_FieldIndex.PreCutMapEntries;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2127,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => NavigationMeshCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1282,7 +2142,25 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(INavigationMesh);
 
+        public NavigationMesh.MajorFlag MajorFlags => (NavigationMesh.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region NavmeshGeometry
+        private int? _NavmeshGeometryLengthOverride;
+        private RangeInt32? _NavmeshGeometryLocation;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(_recordData.Slice(_NavmeshGeometryLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_NavmeshGeometryLengthOverride)) : default;
+        #endregion
+        #region NNAM
+        private int? _NNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IPreCutMapEntryGetter>? PreCutMapEntries { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2218,79 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)NavigationMesh_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)NavigationMesh_FieldIndex.Components;
+                }
+                case RecordTypeInts.NVNM:
+                {
+                    _NavmeshGeometryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _NavmeshGeometryLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)NavigationMesh_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _NNAMLocation = (stream.Position - offset);
+                    return (int)NavigationMesh_FieldIndex.NNAM;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParse<IPreCutMapEntryGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        getter: (s, p) => PreCutMapEntryBinaryOverlay.PreCutMapEntryFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)NavigationMesh_FieldIndex.PreCutMapEntries;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

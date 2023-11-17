@@ -3,5 +3,6 @@
   <Object name="Region" recordType="REGN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IEmittance</LinkInterface>
   </Object>
 </Loqui>

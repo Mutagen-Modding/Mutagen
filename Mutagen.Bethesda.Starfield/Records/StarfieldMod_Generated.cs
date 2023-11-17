@@ -5068,6 +5068,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "PlacedNpc":
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
@@ -5080,6 +5088,46 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
                     obj.Cells.Remove(
                         type: type,
                         keys: keys);
@@ -7805,6 +7853,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "PlacedNpc":
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
@@ -7818,6 +7875,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -9187,6 +9253,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "PlacedNpc":
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
@@ -9205,6 +9285,20 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
                         linkCache: linkCache,
                         type: type,

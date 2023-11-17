@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NavigationMesh" recordType="NAVM" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="NavigationMesh" recordType="NAVM" majorFlag="true" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX"/>
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
+      <ByteArray name="NNAM" recordType="NNAM" />
+      <RefList name="PreCutMapEntries" refName="PreCutMapEntry" recordType="MNAM" />
+    </Fields>
+  </Object>
+  <Object name="PreCutMapEntry" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>IStarfieldMajorRecord</Interface>
+      </FormLink>
+      <List name="Triangles" counterLength="2">
+        <UInt16 />
+      </List>
     </Fields>
   </Object>
 </Loqui>

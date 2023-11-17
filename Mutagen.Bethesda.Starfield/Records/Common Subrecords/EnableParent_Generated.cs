@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -37,33 +38,42 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class TraversalRefrence :
-        IEquatable<ITraversalRefrenceGetter>,
-        ILoquiObjectSetter<TraversalRefrence>,
-        ITraversalRefrence
+    public partial class EnableParent :
+        IEnableParent,
+        IEquatable<IEnableParentGetter>,
+        ILoquiObjectSetter<EnableParent>
     {
         #region Ctor
-        public TraversalRefrence()
+        public EnableParent()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Unknown1
-        public Int32 Unknown1 { get; set; } = default;
-        #endregion
-        #region From
-        public P3Float From { get; set; } = default;
-        #endregion
-        #region To
-        public P3Float To { get; set; } = default;
-        #endregion
-        #region UnknownVector
-        public P3Float UnknownVector { get; set; } = default;
+        #region Reference
+        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
-        public TraversalRefrence.Flag Flags { get; set; } = default;
+        public EnableParent.Flag Flags { get; set; } = default;
+        #endregion
+        #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown = new byte[3];
+        public MemorySlice<Byte> Unknown
+        {
+            get => _Unknown;
+            set => this._Unknown = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IEnableParentGetter.Unknown => this.Unknown;
         #endregion
 
         #region To String
@@ -72,7 +82,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            TraversalRefrenceMixIn.Print(
+            EnableParentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -83,16 +93,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ITraversalRefrenceGetter rhs) return false;
-            return ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IEnableParentGetter rhs) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ITraversalRefrenceGetter? obj)
+        public bool Equals(IEnableParentGetter? obj)
         {
-            return ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -104,25 +114,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Unknown1 = initialValue;
-                this.From = initialValue;
-                this.To = initialValue;
-                this.UnknownVector = initialValue;
+                this.Reference = initialValue;
                 this.Flags = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
-                TItem Unknown1,
-                TItem From,
-                TItem To,
-                TItem UnknownVector,
-                TItem Flags)
+                TItem Reference,
+                TItem Flags,
+                TItem Unknown)
             {
-                this.Unknown1 = Unknown1;
-                this.From = From;
-                this.To = To;
-                this.UnknownVector = UnknownVector;
+                this.Reference = Reference;
                 this.Flags = Flags;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -134,11 +138,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Unknown1;
-            public TItem From;
-            public TItem To;
-            public TItem UnknownVector;
+            public TItem Reference;
             public TItem Flags;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -151,21 +153,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.From, rhs.From)) return false;
-                if (!object.Equals(this.To, rhs.To)) return false;
-                if (!object.Equals(this.UnknownVector, rhs.UnknownVector)) return false;
+                if (!object.Equals(this.Reference, rhs.Reference)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown1);
-                hash.Add(this.From);
-                hash.Add(this.To);
-                hash.Add(this.UnknownVector);
+                hash.Add(this.Reference);
                 hash.Add(this.Flags);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -174,11 +172,9 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.From)) return false;
-                if (!eval(this.To)) return false;
-                if (!eval(this.UnknownVector)) return false;
+                if (!eval(this.Reference)) return false;
                 if (!eval(this.Flags)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -186,11 +182,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.From)) return true;
-                if (eval(this.To)) return true;
-                if (eval(this.UnknownVector)) return true;
+                if (eval(this.Reference)) return true;
                 if (eval(this.Flags)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -198,55 +192,45 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new TraversalRefrence.Mask<R>();
+                var ret = new EnableParent.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.From = eval(this.From);
-                obj.To = eval(this.To);
-                obj.UnknownVector = eval(this.UnknownVector);
+                obj.Reference = eval(this.Reference);
                 obj.Flags = eval(this.Flags);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(TraversalRefrence.Mask<bool>? printMask = null)
+            public string Print(EnableParent.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, TraversalRefrence.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EnableParent.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(TraversalRefrence.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(EnableParent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.Reference ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
-                    }
-                    if (printMask?.From ?? true)
-                    {
-                        sb.AppendItem(From, "From");
-                    }
-                    if (printMask?.To ?? true)
-                    {
-                        sb.AppendItem(To, "To");
-                    }
-                    if (printMask?.UnknownVector ?? true)
-                    {
-                        sb.AppendItem(UnknownVector, "UnknownVector");
+                        sb.AppendItem(Reference, "Reference");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -272,29 +256,23 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Unknown1;
-            public Exception? From;
-            public Exception? To;
-            public Exception? UnknownVector;
+            public Exception? Reference;
             public Exception? Flags;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                TraversalRefrence_FieldIndex enu = (TraversalRefrence_FieldIndex)index;
+                EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case TraversalRefrence_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case TraversalRefrence_FieldIndex.From:
-                        return From;
-                    case TraversalRefrence_FieldIndex.To:
-                        return To;
-                    case TraversalRefrence_FieldIndex.UnknownVector:
-                        return UnknownVector;
-                    case TraversalRefrence_FieldIndex.Flags:
+                    case EnableParent_FieldIndex.Reference:
+                        return Reference;
+                    case EnableParent_FieldIndex.Flags:
                         return Flags;
+                    case EnableParent_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -302,23 +280,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                TraversalRefrence_FieldIndex enu = (TraversalRefrence_FieldIndex)index;
+                EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case TraversalRefrence_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
+                    case EnableParent_FieldIndex.Reference:
+                        this.Reference = ex;
                         break;
-                    case TraversalRefrence_FieldIndex.From:
-                        this.From = ex;
-                        break;
-                    case TraversalRefrence_FieldIndex.To:
-                        this.To = ex;
-                        break;
-                    case TraversalRefrence_FieldIndex.UnknownVector:
-                        this.UnknownVector = ex;
-                        break;
-                    case TraversalRefrence_FieldIndex.Flags:
+                    case EnableParent_FieldIndex.Flags:
                         this.Flags = ex;
+                        break;
+                    case EnableParent_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -327,23 +299,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                TraversalRefrence_FieldIndex enu = (TraversalRefrence_FieldIndex)index;
+                EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case TraversalRefrence_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
+                    case EnableParent_FieldIndex.Reference:
+                        this.Reference = (Exception?)obj;
                         break;
-                    case TraversalRefrence_FieldIndex.From:
-                        this.From = (Exception?)obj;
-                        break;
-                    case TraversalRefrence_FieldIndex.To:
-                        this.To = (Exception?)obj;
-                        break;
-                    case TraversalRefrence_FieldIndex.UnknownVector:
-                        this.UnknownVector = (Exception?)obj;
-                        break;
-                    case TraversalRefrence_FieldIndex.Flags:
+                    case EnableParent_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
+                        break;
+                    case EnableParent_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -353,11 +319,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown1 != null) return true;
-                if (From != null) return true;
-                if (To != null) return true;
-                if (UnknownVector != null) return true;
+                if (Reference != null) return true;
                 if (Flags != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -384,19 +348,13 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
-                }
-                {
-                    sb.AppendItem(From, "From");
-                }
-                {
-                    sb.AppendItem(To, "To");
-                }
-                {
-                    sb.AppendItem(UnknownVector, "UnknownVector");
+                    sb.AppendItem(Reference, "Reference");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
                 }
             }
             #endregion
@@ -406,11 +364,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.From = this.From.Combine(rhs.From);
-                ret.To = this.To.Combine(rhs.To);
-                ret.UnknownVector = this.UnknownVector.Combine(rhs.UnknownVector);
+                ret.Reference = this.Reference.Combine(rhs.Reference);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -434,11 +390,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Unknown1;
-            public bool From;
-            public bool To;
-            public bool UnknownVector;
+            public bool Reference;
             public bool Flags;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -448,11 +402,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Unknown1 = defaultOn;
-                this.From = defaultOn;
-                this.To = defaultOn;
-                this.UnknownVector = defaultOn;
+                this.Reference = defaultOn;
                 this.Flags = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -468,11 +420,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unknown1, null));
-                ret.Add((From, null));
-                ret.Add((To, null));
-                ret.Add((UnknownVector, null));
+                ret.Add((Reference, null));
                 ret.Add((Flags, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -483,27 +433,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EnableParentCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnableParentSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => TraversalRefrenceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => EnableParentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((TraversalRefrenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EnableParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static TraversalRefrence CreateFromBinary(
+        public static EnableParent CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new TraversalRefrence();
-            ((TraversalRefrenceSetterCommon)((ITraversalRefrenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new EnableParent();
+            ((EnableParentSetterCommon)((IEnableParentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -514,7 +469,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out TraversalRefrence item,
+            out EnableParent item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -529,33 +484,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((TraversalRefrenceSetterCommon)((ITraversalRefrenceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((EnableParentSetterCommon)((IEnableParentGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static TraversalRefrence GetNew()
+        internal static EnableParent GetNew()
         {
-            return new TraversalRefrence();
+            return new EnableParent();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ITraversalRefrence :
-        ILoquiObjectSetter<ITraversalRefrence>,
-        ITraversalRefrenceGetter
+    public partial interface IEnableParent :
+        IEnableParentGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IEnableParent>
     {
-        new Int32 Unknown1 { get; set; }
-        new P3Float From { get; set; }
-        new P3Float To { get; set; }
-        new P3Float UnknownVector { get; set; }
-        new TraversalRefrence.Flag Flags { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new EnableParent.Flag Flags { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
     }
 
-    public partial interface ITraversalRefrenceGetter :
+    public partial interface IEnableParentGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ITraversalRefrenceGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IEnableParentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -563,54 +518,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => TraversalRefrence_Registration.Instance;
-        Int32 Unknown1 { get; }
-        P3Float From { get; }
-        P3Float To { get; }
-        P3Float UnknownVector { get; }
-        TraversalRefrence.Flag Flags { get; }
+        static ILoquiRegistration StaticRegistration => EnableParent_Registration.Instance;
+        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        EnableParent.Flag Flags { get; }
+        ReadOnlyMemorySlice<Byte> Unknown { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class TraversalRefrenceMixIn
+    public static partial class EnableParentMixIn
     {
-        public static void Clear(this ITraversalRefrence item)
+        public static void Clear(this IEnableParent item)
         {
-            ((TraversalRefrenceSetterCommon)((ITraversalRefrenceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((EnableParentSetterCommon)((IEnableParentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static TraversalRefrence.Mask<bool> GetEqualsMask(
-            this ITraversalRefrenceGetter item,
-            ITraversalRefrenceGetter rhs,
+        public static EnableParent.Mask<bool> GetEqualsMask(
+            this IEnableParentGetter item,
+            IEnableParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ITraversalRefrenceGetter item,
+            this IEnableParentGetter item,
             string? name = null,
-            TraversalRefrence.Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
-            return ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).Print(
+            return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ITraversalRefrenceGetter item,
+            this IEnableParentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            TraversalRefrence.Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
-            ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).Print(
+            ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -618,21 +571,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ITraversalRefrenceGetter item,
-            ITraversalRefrenceGetter rhs,
-            TraversalRefrence.TranslationMask? equalsMask = null)
+            this IEnableParentGetter item,
+            IEnableParentGetter rhs,
+            EnableParent.TranslationMask? equalsMask = null)
         {
-            return ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).Equals(
+            return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ITraversalRefrence lhs,
-            ITraversalRefrenceGetter rhs)
+            this IEnableParent lhs,
+            IEnableParentGetter rhs)
         {
-            ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentSetterTranslationCommon)((IEnableParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -641,11 +594,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ITraversalRefrence lhs,
-            ITraversalRefrenceGetter rhs,
-            TraversalRefrence.TranslationMask? copyMask = null)
+            this IEnableParent lhs,
+            IEnableParentGetter rhs,
+            EnableParent.TranslationMask? copyMask = null)
         {
-            ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentSetterTranslationCommon)((IEnableParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -654,28 +607,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ITraversalRefrence lhs,
-            ITraversalRefrenceGetter rhs,
-            out TraversalRefrence.ErrorMask errorMask,
-            TraversalRefrence.TranslationMask? copyMask = null)
+            this IEnableParent lhs,
+            IEnableParentGetter rhs,
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentSetterTranslationCommon)((IEnableParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = TraversalRefrence.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ITraversalRefrence lhs,
-            ITraversalRefrenceGetter rhs,
+            this IEnableParent lhs,
+            IEnableParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentSetterTranslationCommon)((IEnableParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -683,32 +636,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static TraversalRefrence DeepCopy(
-            this ITraversalRefrenceGetter item,
-            TraversalRefrence.TranslationMask? copyMask = null)
+        public static EnableParent DeepCopy(
+            this IEnableParentGetter item,
+            EnableParent.TranslationMask? copyMask = null)
         {
-            return ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EnableParentSetterTranslationCommon)((IEnableParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static TraversalRefrence DeepCopy(
-            this ITraversalRefrenceGetter item,
-            out TraversalRefrence.ErrorMask errorMask,
-            TraversalRefrence.TranslationMask? copyMask = null)
+        public static EnableParent DeepCopy(
+            this IEnableParentGetter item,
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? copyMask = null)
         {
-            return ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EnableParentSetterTranslationCommon)((IEnableParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static TraversalRefrence DeepCopy(
-            this ITraversalRefrenceGetter item,
+        public static EnableParent DeepCopy(
+            this IEnableParentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EnableParentSetterTranslationCommon)((IEnableParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -716,11 +669,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ITraversalRefrence item,
+            this IEnableParent item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((TraversalRefrenceSetterCommon)((ITraversalRefrenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((EnableParentSetterCommon)((IEnableParentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -736,44 +689,42 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum TraversalRefrence_FieldIndex
+    internal enum EnableParent_FieldIndex
     {
-        Unknown1 = 0,
-        From = 1,
-        To = 2,
-        UnknownVector = 3,
-        Flags = 4,
+        Reference = 0,
+        Flags = 1,
+        Unknown = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class TraversalRefrence_Registration : ILoquiRegistration
+    internal partial class EnableParent_Registration : ILoquiRegistration
     {
-        public static readonly TraversalRefrence_Registration Instance = new TraversalRefrence_Registration();
+        public static readonly EnableParent_Registration Instance = new EnableParent_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(TraversalRefrence.Mask<>);
+        public static readonly Type MaskType = typeof(EnableParent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(TraversalRefrence.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(EnableParent.ErrorMask);
 
-        public static readonly Type ClassType = typeof(TraversalRefrence);
+        public static readonly Type ClassType = typeof(EnableParent);
 
-        public static readonly Type GetterType = typeof(ITraversalRefrenceGetter);
+        public static readonly Type GetterType = typeof(IEnableParentGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ITraversalRefrence);
+        public static readonly Type SetterType = typeof(IEnableParent);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.TraversalRefrence";
+        public const string FullName = "Mutagen.Bethesda.Starfield.EnableParent";
 
-        public const string Name = "TraversalRefrence";
+        public const string Name = "EnableParent";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -781,7 +732,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(TraversalRefrenceBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XESP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XESP);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
+        public static readonly Type BinaryWriteTranslation = typeof(EnableParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -812,56 +770,59 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class TraversalRefrenceSetterCommon
+    internal partial class EnableParentSetterCommon
     {
-        public static readonly TraversalRefrenceSetterCommon Instance = new TraversalRefrenceSetterCommon();
+        public static readonly EnableParentSetterCommon Instance = new EnableParentSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ITraversalRefrence item)
+        public void Clear(IEnableParent item)
         {
             ClearPartial();
-            item.Unknown1 = default;
-            item.From = default;
-            item.To = default;
-            item.UnknownVector = default;
+            item.Reference.Clear();
             item.Flags = default;
+            item.Unknown = new byte[3];
         }
         
         #region Mutagen
-        public void RemapLinks(ITraversalRefrence obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IEnableParent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ITraversalRefrence item,
+            IEnableParent item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.XESP),
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: TraversalRefrenceBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: EnableParentBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class TraversalRefrenceCommon
+    internal partial class EnableParentCommon
     {
-        public static readonly TraversalRefrenceCommon Instance = new TraversalRefrenceCommon();
+        public static readonly EnableParentCommon Instance = new EnableParentCommon();
 
-        public TraversalRefrence.Mask<bool> GetEqualsMask(
-            ITraversalRefrenceGetter item,
-            ITraversalRefrenceGetter rhs,
+        public EnableParent.Mask<bool> GetEqualsMask(
+            IEnableParentGetter item,
+            IEnableParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new TraversalRefrence.Mask<bool>(false);
-            ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new EnableParent.Mask<bool>(false);
+            ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -870,22 +831,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ITraversalRefrenceGetter item,
-            ITraversalRefrenceGetter rhs,
-            TraversalRefrence.Mask<bool> ret,
+            IEnableParentGetter item,
+            IEnableParentGetter rhs,
+            EnableParent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
-            ret.From = item.From.Equals(rhs.From);
-            ret.To = item.To.Equals(rhs.To);
-            ret.UnknownVector = item.UnknownVector.Equals(rhs.UnknownVector);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Flags = item.Flags == rhs.Flags;
+            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
         }
         
         public string Print(
-            ITraversalRefrenceGetter item,
+            IEnableParentGetter item,
             string? name = null,
-            TraversalRefrence.Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -897,18 +856,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ITraversalRefrenceGetter item,
+            IEnableParentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            TraversalRefrence.Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"TraversalRefrence =>");
+                sb.AppendLine($"EnableParent =>");
             }
             else
             {
-                sb.AppendLine($"{name} (TraversalRefrence) =>");
+                sb.AppendLine($"{name} (EnableParent) =>");
             }
             using (sb.Brace())
             {
@@ -920,70 +879,52 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ITraversalRefrenceGetter item,
+            IEnableParentGetter item,
             StructuredStringBuilder sb,
-            TraversalRefrence.Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.Reference ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
-            }
-            if (printMask?.From ?? true)
-            {
-                sb.AppendItem(item.From, "From");
-            }
-            if (printMask?.To ?? true)
-            {
-                sb.AppendItem(item.To, "To");
-            }
-            if (printMask?.UnknownVector ?? true)
-            {
-                sb.AppendItem(item.UnknownVector, "UnknownVector");
+                sb.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ITraversalRefrenceGetter? lhs,
-            ITraversalRefrenceGetter? rhs,
+            IEnableParentGetter? lhs,
+            IEnableParentGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                if (lhs.Unknown1 != rhs.Unknown1) return false;
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.From) ?? true))
-            {
-                if (!lhs.From.Equals(rhs.From)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.To) ?? true))
-            {
-                if (!lhs.To.Equals(rhs.To)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.UnknownVector) ?? true))
-            {
-                if (!lhs.UnknownVector.Equals(rhs.UnknownVector)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ITraversalRefrenceGetter item)
+        public virtual int GetHashCode(IEnableParentGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown1);
-            hash.Add(item.From);
-            hash.Add(item.To);
-            hash.Add(item.UnknownVector);
+            hash.Add(item.Reference);
             hash.Add(item.Flags);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -992,60 +933,53 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return TraversalRefrence.GetNew();
+            return EnableParent.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITraversalRefrenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEnableParentGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class TraversalRefrenceSetterTranslationCommon
+    internal partial class EnableParentSetterTranslationCommon
     {
-        public static readonly TraversalRefrenceSetterTranslationCommon Instance = new TraversalRefrenceSetterTranslationCommon();
+        public static readonly EnableParentSetterTranslationCommon Instance = new EnableParentSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ITraversalRefrence item,
-            ITraversalRefrenceGetter rhs,
+            IEnableParent item,
+            IEnableParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.From) ?? true))
-            {
-                item.From = rhs.From;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.To) ?? true))
-            {
-                item.To = rhs.To;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.UnknownVector) ?? true))
-            {
-                item.UnknownVector = rhs.UnknownVector;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TraversalRefrence_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown.ToArray();
             }
         }
         
         #endregion
         
-        public TraversalRefrence DeepCopy(
-            ITraversalRefrenceGetter item,
-            TraversalRefrence.TranslationMask? copyMask = null)
+        public EnableParent DeepCopy(
+            IEnableParentGetter item,
+            EnableParent.TranslationMask? copyMask = null)
         {
-            TraversalRefrence ret = (TraversalRefrence)((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).GetNew();
-            ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).GetNew();
+            ((EnableParentSetterTranslationCommon)((IEnableParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1054,30 +988,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public TraversalRefrence DeepCopy(
-            ITraversalRefrenceGetter item,
-            out TraversalRefrence.ErrorMask errorMask,
-            TraversalRefrence.TranslationMask? copyMask = null)
+        public EnableParent DeepCopy(
+            IEnableParentGetter item,
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            TraversalRefrence ret = (TraversalRefrence)((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).GetNew();
-            ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).GetNew();
+            ((EnableParentSetterTranslationCommon)((IEnableParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = TraversalRefrence.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public TraversalRefrence DeepCopy(
-            ITraversalRefrenceGetter item,
+        public EnableParent DeepCopy(
+            IEnableParentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            TraversalRefrence ret = (TraversalRefrence)((TraversalRefrenceCommon)((ITraversalRefrenceGetter)item).CommonInstance()!).GetNew();
-            ((TraversalRefrenceSetterTranslationCommon)((ITraversalRefrenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).GetNew();
+            ((EnableParentSetterTranslationCommon)((IEnableParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1093,27 +1027,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class TraversalRefrence
+    public partial class EnableParent
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => TraversalRefrence_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => TraversalRefrence_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnableParent_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => TraversalRefrenceCommon.Instance;
+        protected object CommonInstance() => EnableParentCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return TraversalRefrenceSetterCommon.Instance;
+            return EnableParentSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => TraversalRefrenceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EnableParentSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ITraversalRefrenceGetter.CommonInstance() => this.CommonInstance();
+        object IEnableParentGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ITraversalRefrenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IEnableParentGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ITraversalRefrenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IEnableParentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1124,38 +1058,41 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class TraversalRefrenceBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class EnableParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TraversalRefrenceBinaryWriteTranslation Instance = new();
+        public static readonly EnableParentBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ITraversalRefrenceGetter item,
+            IEnableParentGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Unknown1);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.From);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.To);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.UnknownVector);
-            EnumBinaryTranslation<TraversalRefrence.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.Reference);
+            EnumBinaryTranslation<EnableParent.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
-                length: 4);
+                length: 1);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown);
         }
 
         public void Write(
             MutagenWriter writer,
-            ITraversalRefrenceGetter item,
+            IEnableParentGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.Subrecord(
+                writer: writer,
+                record: translationParams.ConvertToCustom(RecordTypes.XESP),
+                overflowRecord: translationParams.OverflowRecordType,
+                out var writerToUse))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writerToUse);
+            }
         }
 
         public void Write(
@@ -1164,28 +1101,26 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ITraversalRefrenceGetter)item,
+                item: (IEnableParentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class TraversalRefrenceBinaryCreateTranslation
+    internal partial class EnableParentBinaryCreateTranslation
     {
-        public static readonly TraversalRefrenceBinaryCreateTranslation Instance = new TraversalRefrenceBinaryCreateTranslation();
+        public static readonly EnableParentBinaryCreateTranslation Instance = new EnableParentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ITraversalRefrence item,
+            IEnableParent item,
             MutagenFrame frame)
         {
-            item.Unknown1 = frame.ReadInt32();
-            item.From = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.To = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.UnknownVector = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Flags = EnumBinaryTranslation<TraversalRefrence.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Flags = EnumBinaryTranslation<EnableParent.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                length: 4);
+                length: 1);
+            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }
@@ -1194,14 +1129,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class TraversalRefrenceBinaryTranslationMixIn
+    public static class EnableParentBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ITraversalRefrenceGetter item,
+            this IEnableParentGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((TraversalRefrenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((EnableParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1214,55 +1149,54 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class TraversalRefrenceBinaryOverlay :
+    internal partial class EnableParentBinaryOverlay :
         PluginBinaryOverlay,
-        ITraversalRefrenceGetter
+        IEnableParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => TraversalRefrence_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => TraversalRefrence_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnableParent_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => TraversalRefrenceCommon.Instance;
+        protected object CommonInstance() => EnableParentCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => TraversalRefrenceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EnableParentSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ITraversalRefrenceGetter.CommonInstance() => this.CommonInstance();
+        object IEnableParentGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ITraversalRefrenceGetter.CommonSetterInstance() => null;
+        object? IEnableParentGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ITraversalRefrenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IEnableParentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EnableParentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => TraversalRefrenceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => EnableParentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((TraversalRefrenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EnableParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown1 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public P3Float From => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0xC));
-        public P3Float To => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
-        public P3Float UnknownVector => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x1C, 0xC));
-        public TraversalRefrence.Flag Flags => (TraversalRefrence.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x28, 0x4));
+        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public EnableParent.Flag Flags => (EnableParent.Flag)_structData.Span.Slice(0x4, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected TraversalRefrenceBinaryOverlay(
+        protected EnableParentBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1272,22 +1206,22 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ITraversalRefrenceGetter TraversalRefrenceFactory(
+        public static IEnableParentGetter EnableParentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordStructMemory(
+            stream = ExtractSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x2C,
+                length: 0x8,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new TraversalRefrenceBinaryOverlay(
+            var ret = new EnableParentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x2C;
+            stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1295,12 +1229,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ITraversalRefrenceGetter TraversalRefrenceFactory(
+        public static IEnableParentGetter EnableParentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return TraversalRefrenceFactory(
+            return EnableParentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1312,7 +1246,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            TraversalRefrenceMixIn.Print(
+            EnableParentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1323,16 +1257,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ITraversalRefrenceGetter rhs) return false;
-            return ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IEnableParentGetter rhs) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ITraversalRefrenceGetter? obj)
+        public bool Equals(IEnableParentGetter? obj)
         {
-            return ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((TraversalRefrenceCommon)((ITraversalRefrenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

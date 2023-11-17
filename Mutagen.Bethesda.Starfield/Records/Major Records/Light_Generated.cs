@@ -424,6 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILight :
+        IEmittance,
         ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
         IStarfieldMajorRecordInternal
@@ -441,6 +442,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILightGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IEmittanceGetter,
         ILoquiObject<ILightGetter>,
         IMapsToGetter<ILightGetter>
     {

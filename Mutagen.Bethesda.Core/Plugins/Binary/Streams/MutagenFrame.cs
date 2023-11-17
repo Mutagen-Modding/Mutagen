@@ -161,6 +161,11 @@ public readonly struct MutagenFrame : IMutagenReadStream
         return Reader.ReadBytes(checked((int)Remaining));
     }
 
+    public void SkipRemainingBytes()
+    {
+        Position += Remaining;
+    }
+
     /// <inheritdoc/>
     public ReadOnlySpan<byte> ReadRemainingSpan(bool readSafe)
     {
