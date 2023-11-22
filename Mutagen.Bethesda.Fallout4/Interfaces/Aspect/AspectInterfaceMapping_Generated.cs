@@ -542,6 +542,7 @@ namespace Mutagen.Bethesda.Fallout4
                 PlacedNpc_Registration.Instance,
                 PlacedObject_Registration.Instance,
                 PlacedTrap_Registration.Instance,
+                RagdollData_Registration.Instance,
                 StaticPlacement_Registration.Instance,
                 TeleportDestination_Registration.Instance,
                 Transform_Registration.Instance,

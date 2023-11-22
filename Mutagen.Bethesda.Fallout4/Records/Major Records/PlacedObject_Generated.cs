@@ -190,14 +190,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _RagdollData;
-        public MemorySlice<Byte>? RagdollData
+        private ExtendedList<RagdollData>? _RagdollData;
+        public ExtendedList<RagdollData>? RagdollData
         {
             get => this._RagdollData;
             set => this._RagdollData = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.RagdollData => this.RagdollData;
+        IReadOnlyList<IRagdollDataGetter>? IPlacedObjectGetter.RagdollData => _RagdollData;
+        #endregion
+
         #endregion
         #region RagdollBipedRotation
         public P3Float? RagdollBipedRotation { get; set; }
@@ -762,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ImageSpace = initialValue;
                 this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.IsMultiBoundPrimitive = initialValue;
-                this.RagdollData = initialValue;
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
                 this.RagdollBipedRotation = initialValue;
                 this.Radius = initialValue;
                 this.Emittance = initialValue;
@@ -927,7 +930,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ImageSpace = ImageSpace;
                 this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, Enumerable.Empty<(int Index, TItem Value)>());
                 this.IsMultiBoundPrimitive = IsMultiBoundPrimitive;
-                this.RagdollData = RagdollData;
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
                 this.RagdollBipedRotation = RagdollBipedRotation;
                 this.Radius = Radius;
                 this.Emittance = Emittance;
@@ -1011,7 +1014,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ImageSpace;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LinkedRooms;
             public TItem IsMultiBoundPrimitive;
-            public TItem RagdollData;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>? RagdollData;
             public TItem RagdollBipedRotation;
             public TItem Radius;
             public TItem Emittance;
@@ -1295,7 +1298,18 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (!eval(this.IsMultiBoundPrimitive)) return false;
-                if (!eval(this.RagdollData)) return false;
+                if (this.RagdollData != null)
+                {
+                    if (!eval(this.RagdollData.Overall)) return false;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.RagdollBipedRotation)) return false;
                 if (!eval(this.Radius)) return false;
                 if (!eval(this.Emittance)) return false;
@@ -1532,7 +1546,18 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (eval(this.IsMultiBoundPrimitive)) return true;
-                if (eval(this.RagdollData)) return true;
+                if (this.RagdollData != null)
+                {
+                    if (eval(this.RagdollData.Overall)) return true;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.RagdollBipedRotation)) return true;
                 if (eval(this.Radius)) return true;
                 if (eval(this.Emittance)) return true;
@@ -1766,7 +1791,21 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 obj.IsMultiBoundPrimitive = eval(this.IsMultiBoundPrimitive);
-                obj.RagdollData = eval(this.RagdollData);
+                if (RagdollData != null)
+                {
+                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), Enumerable.Empty<MaskItemIndexed<R, RagdollData.Mask<R>?>>());
+                    if (RagdollData.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RagdollData.Mask<R>?>>();
+                        obj.RagdollData.Specific = l;
+                        foreach (var item in RagdollData.Specific)
+                        {
+                            MaskItemIndexed<R, RagdollData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RagdollData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.RagdollBipedRotation = eval(this.RagdollBipedRotation);
                 obj.Radius = eval(this.Radius);
                 obj.Emittance = eval(this.Emittance);
@@ -2009,9 +2048,24 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(IsMultiBoundPrimitive, "IsMultiBoundPrimitive");
                     }
-                    if (printMask?.RagdollData ?? true)
+                    if ((printMask?.RagdollData?.Overall ?? true)
+                        && RagdollData is {} RagdollDataItem)
                     {
-                        sb.AppendItem(RagdollData, "RagdollData");
+                        sb.AppendLine("RagdollData =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RagdollDataItem.Overall);
+                            if (RagdollDataItem.Specific != null)
+                            {
+                                foreach (var subItem in RagdollDataItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.RagdollBipedRotation ?? true)
                     {
@@ -2369,7 +2423,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ImageSpace;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LinkedRooms;
             public Exception? IsMultiBoundPrimitive;
-            public Exception? RagdollData;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>? RagdollData;
             public Exception? RagdollBipedRotation;
             public Exception? Radius;
             public Exception? Emittance;
@@ -2633,7 +2687,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.IsMultiBoundPrimitive = ex;
                         break;
                     case PlacedObject_FieldIndex.RagdollData:
-                        this.RagdollData = ex;
+                        this.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.RagdollBipedRotation:
                         this.RagdollBipedRotation = ex;
@@ -2863,7 +2917,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.IsMultiBoundPrimitive = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.RagdollData:
-                        this.RagdollData = (Exception?)obj;
+                        this.RagdollData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>)obj;
                         break;
                     case PlacedObject_FieldIndex.RagdollBipedRotation:
                         this.RagdollBipedRotation = (Exception?)obj;
@@ -3213,8 +3267,23 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(IsMultiBoundPrimitive, "IsMultiBoundPrimitive");
                 }
+                if (RagdollData is {} RagdollDataItem)
                 {
-                    sb.AppendItem(RagdollData, "RagdollData");
+                    sb.AppendLine("RagdollData =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RagdollDataItem.Overall);
+                        if (RagdollDataItem.Specific != null)
+                        {
+                            foreach (var subItem in RagdollDataItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 {
                     sb.AppendItem(RagdollBipedRotation, "RagdollBipedRotation");
@@ -3482,7 +3551,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), Noggog.ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
                 ret.IsMultiBoundPrimitive = this.IsMultiBoundPrimitive.Combine(rhs.IsMultiBoundPrimitive);
-                ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
+                ret.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RagdollData?.Overall, rhs.RagdollData?.Overall), Noggog.ExceptionExt.Combine(this.RagdollData?.Specific, rhs.RagdollData?.Specific));
                 ret.RagdollBipedRotation = this.RagdollBipedRotation.Combine(rhs.RagdollBipedRotation);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
@@ -3577,7 +3646,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ImageSpace;
             public bool LinkedRooms;
             public bool IsMultiBoundPrimitive;
-            public bool RagdollData;
+            public RagdollData.TranslationMask? RagdollData;
             public bool RagdollBipedRotation;
             public bool Radius;
             public bool Emittance;
@@ -3653,7 +3722,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ImageSpace = defaultOn;
                 this.LinkedRooms = defaultOn;
                 this.IsMultiBoundPrimitive = defaultOn;
-                this.RagdollData = defaultOn;
                 this.RagdollBipedRotation = defaultOn;
                 this.Radius = defaultOn;
                 this.Emittance = defaultOn;
@@ -3716,7 +3784,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ImageSpace, null));
                 ret.Add((LinkedRooms, null));
                 ret.Add((IsMultiBoundPrimitive, null));
-                ret.Add((RagdollData, null));
+                ret.Add((RagdollData == null ? DefaultOn : !RagdollData.GetCrystal().CopyNothing, RagdollData?.GetCrystal()));
                 ret.Add((RagdollBipedRotation, null));
                 ret.Add((Radius, null));
                 ret.Add((Emittance, null));
@@ -3948,7 +4016,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean IsMultiBoundPrimitive { get; set; }
-        new MemorySlice<Byte>? RagdollData { get; set; }
+        new ExtendedList<RagdollData>? RagdollData { get; set; }
         new P3Float? RagdollBipedRotation { get; set; }
         new Single? Radius { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
@@ -4054,7 +4122,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         Boolean IsMultiBoundPrimitive { get; }
-        ReadOnlyMemorySlice<Byte>? RagdollData { get; }
+        IReadOnlyList<IRagdollDataGetter>? RagdollData { get; }
         P3Float? RagdollBipedRotation { get; }
         Single? Radius { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
@@ -4536,7 +4604,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.ImageSpace.Clear();
             item.LinkedRooms.Clear();
             item.IsMultiBoundPrimitive = default;
-            item.RagdollData = default;
+            item.RagdollData = null;
             item.RagdollBipedRotation = default;
             item.Radius = default;
             item.Emittance.Clear();
@@ -4750,7 +4818,10 @@ namespace Mutagen.Bethesda.Fallout4
                 (l, r) => object.Equals(l, r),
                 include);
             ret.IsMultiBoundPrimitive = item.IsMultiBoundPrimitive == rhs.IsMultiBoundPrimitive;
-            ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
+            ret.RagdollData = item.RagdollData.CollectionEqualsHelper(
+                rhs.RagdollData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.RagdollBipedRotation = item.RagdollBipedRotation.Equals(rhs.RagdollBipedRotation);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.Emittance = item.Emittance.Equals(rhs.Emittance);
@@ -5012,10 +5083,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.IsMultiBoundPrimitive, "IsMultiBoundPrimitive");
             }
-            if ((printMask?.RagdollData ?? true)
+            if ((printMask?.RagdollData?.Overall ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+                sb.AppendLine("RagdollData =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RagdollDataItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if ((printMask?.RagdollBipedRotation ?? true)
                 && item.RagdollBipedRotation is {} RagdollBipedRotationItem)
@@ -5467,7 +5548,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
+                if (!lhs.RagdollData.SequenceEqualNullable(rhs.RagdollData, (l, r) => ((RagdollDataCommon)((IRagdollDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RagdollData)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedRotation) ?? true))
             {
@@ -5820,10 +5901,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.ImageSpace);
             hash.Add(item.LinkedRooms);
             hash.Add(item.IsMultiBoundPrimitive);
-            if (item.RagdollData is {} RagdollDataItem)
-            {
-                hash.Add(RagdollDataItem);
-            }
+            hash.Add(item.RagdollData);
             if (item.RagdollBipedRotation is {} RagdollBipedRotationitem)
             {
                 hash.Add(RagdollBipedRotationitem);
@@ -6440,13 +6518,34 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData is {} RagdollDatarhs)
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.RagdollData);
+                try
                 {
-                    item.RagdollData = RagdollDatarhs.ToArray();
+                    if ((rhs.RagdollData != null))
+                    {
+                        item.RagdollData = 
+                            rhs.RagdollData
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<RagdollData>();
+                    }
+                    else
+                    {
+                        item.RagdollData = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.RagdollData = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedRotation) ?? true))
@@ -7380,10 +7479,18 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.IsMultiBoundPrimitive,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBP));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRagdollDataGetter>.Instance.Write(
                 writer: writer,
-                item: item.RagdollData,
-                header: translationParams.ConvertToCustom(RecordTypes.XRGD));
+                items: item.RagdollData,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XRGD),
+                transl: (MutagenWriter subWriter, IRagdollDataGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RagdollDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.RagdollBipedRotation,
@@ -7878,7 +7985,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XRGD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.RagdollData = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RagdollData>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: RagdollData.TryCreateFromBinary)
+                        .CastExtendedList<RagdollData>();
                     return (int)PlacedObject_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRGB:
@@ -8380,10 +8491,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _IsMultiBoundPrimitiveLocation;
         public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default;
         #endregion
-        #region RagdollData
-        private int? _RagdollDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
         #region RagdollBipedRotation
         private int? _RagdollBipedRotationLocation;
         public P3Float? RagdollBipedRotation => _RagdollBipedRotationLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollBipedRotationLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
@@ -8739,7 +8847,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    _RagdollDataLocation = (stream.Position - offset);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 28,
+                        getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
+                    stream.Position += subLen;
                     return (int)PlacedObject_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRGB:

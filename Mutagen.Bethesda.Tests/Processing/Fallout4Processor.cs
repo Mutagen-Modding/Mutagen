@@ -346,6 +346,15 @@ public class Fallout4Processor : Processor
             int loc = 0;
             ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
         }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGD, out var rgd))
+        {
+            int loc = 0;
+            while (loc < rgd.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(rgd, fileOffset, ref loc, 6);
+            }
+        }
         if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprm))
         {
             int loc = 0;
@@ -450,6 +459,15 @@ public class Fallout4Processor : Processor
         {
             int loc = 0;
             ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGD, out var rgd))
+        {
+            int loc = 0;
+            while (loc < rgd.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(rgd, fileOffset, ref loc, 6);
+            }
         }
     }
 

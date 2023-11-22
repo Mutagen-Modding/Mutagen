@@ -2482,6 +2482,9 @@
     <Compile Include="Records\Common Subrecords\NavmeshCoverTriangleMap_Generated.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\RagdollData_Generated.cs">
+      <DependentUpon>RagdollData.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />
