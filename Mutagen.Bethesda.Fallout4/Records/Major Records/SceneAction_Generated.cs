@@ -76,10 +76,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #endregion
-        #region ActorID
-        public Int32? ActorID { get; set; }
+        #region AliasID
+        public Int32? AliasID { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? ISceneActionGetter.ActorID => this.ActorID;
+        Int32? ISceneActionGetter.AliasID => this.AliasID;
         #endregion
         #region Index
         public UInt32? Index { get; set; }
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Type = new MaskItem<TItem, ASceneActionType.Mask<TItem>?>(initialValue, new ASceneActionType.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.ActorID = initialValue;
+                this.AliasID = initialValue;
                 this.Index = initialValue;
                 this.Flags = initialValue;
                 this.StartPhase = initialValue;
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(
                 TItem Type,
                 TItem Name,
-                TItem ActorID,
+                TItem AliasID,
                 TItem Index,
                 TItem Flags,
                 TItem StartPhase,
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Type = new MaskItem<TItem, ASceneActionType.Mask<TItem>?>(Type, new ASceneActionType.Mask<TItem>(Type));
                 this.Name = Name;
-                this.ActorID = ActorID;
+                this.AliasID = AliasID;
                 this.Index = Index;
                 this.Flags = Flags;
                 this.StartPhase = StartPhase;
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public MaskItem<TItem, ASceneActionType.Mask<TItem>?>? Type { get; set; }
             public TItem Name;
-            public TItem ActorID;
+            public TItem AliasID;
             public TItem Index;
             public TItem Flags;
             public TItem StartPhase;
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.ActorID, rhs.ActorID)) return false;
+                if (!object.Equals(this.AliasID, rhs.AliasID)) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.StartPhase, rhs.StartPhase)) return false;
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.Type);
                 hash.Add(this.Name);
-                hash.Add(this.ActorID);
+                hash.Add(this.AliasID);
                 hash.Add(this.Index);
                 hash.Add(this.Flags);
                 hash.Add(this.StartPhase);
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.Type.Specific != null && !this.Type.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Name)) return false;
-                if (!eval(this.ActorID)) return false;
+                if (!eval(this.AliasID)) return false;
                 if (!eval(this.Index)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.StartPhase)) return false;
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.Type.Specific != null && this.Type.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Name)) return true;
-                if (eval(this.ActorID)) return true;
+                if (eval(this.AliasID)) return true;
                 if (eval(this.Index)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.StartPhase)) return true;
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 obj.Type = this.Type == null ? null : new MaskItem<R, ASceneActionType.Mask<R>?>(eval(this.Type.Overall), this.Type.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.ActorID = eval(this.ActorID);
+                obj.AliasID = eval(this.AliasID);
                 obj.Index = eval(this.Index);
                 obj.Flags = eval(this.Flags);
                 obj.StartPhase = eval(this.StartPhase);
@@ -1093,9 +1093,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.ActorID ?? true)
+                    if (printMask?.AliasID ?? true)
                     {
-                        sb.AppendItem(ActorID, "ActorID");
+                        sb.AppendItem(AliasID, "AliasID");
                     }
                     if (printMask?.Index ?? true)
                     {
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             public MaskItem<Exception?, ASceneActionType.ErrorMask?>? Type;
             public Exception? Name;
-            public Exception? ActorID;
+            public Exception? AliasID;
             public Exception? Index;
             public Exception? Flags;
             public Exception? StartPhase;
@@ -1397,8 +1397,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Type;
                     case SceneAction_FieldIndex.Name:
                         return Name;
-                    case SceneAction_FieldIndex.ActorID:
-                        return ActorID;
+                    case SceneAction_FieldIndex.AliasID:
+                        return AliasID;
                     case SceneAction_FieldIndex.Index:
                         return Index;
                     case SceneAction_FieldIndex.Flags:
@@ -1493,8 +1493,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case SceneAction_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case SceneAction_FieldIndex.ActorID:
-                        this.ActorID = ex;
+                    case SceneAction_FieldIndex.AliasID:
+                        this.AliasID = ex;
                         break;
                     case SceneAction_FieldIndex.Index:
                         this.Index = ex;
@@ -1629,8 +1629,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case SceneAction_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case SceneAction_FieldIndex.ActorID:
-                        this.ActorID = (Exception?)obj;
+                    case SceneAction_FieldIndex.AliasID:
+                        this.AliasID = (Exception?)obj;
                         break;
                     case SceneAction_FieldIndex.Index:
                         this.Index = (Exception?)obj;
@@ -1759,7 +1759,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (Type != null) return true;
                 if (Name != null) return true;
-                if (ActorID != null) return true;
+                if (AliasID != null) return true;
                 if (Index != null) return true;
                 if (Flags != null) return true;
                 if (StartPhase != null) return true;
@@ -1829,7 +1829,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Name, "Name");
                 }
                 {
-                    sb.AppendItem(ActorID, "ActorID");
+                    sb.AppendItem(AliasID, "AliasID");
                 }
                 {
                     sb.AppendItem(Index, "Index");
@@ -2020,7 +2020,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Type = this.Type.Combine(rhs.Type, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.ActorID = this.ActorID.Combine(rhs.ActorID);
+                ret.AliasID = this.AliasID.Combine(rhs.AliasID);
                 ret.Index = this.Index.Combine(rhs.Index);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.StartPhase = this.StartPhase.Combine(rhs.StartPhase);
@@ -2085,7 +2085,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool OnOverall;
             public ASceneActionType.TranslationMask? Type;
             public bool Name;
-            public bool ActorID;
+            public bool AliasID;
             public bool Index;
             public bool Flags;
             public bool StartPhase;
@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Name = defaultOn;
-                this.ActorID = defaultOn;
+                this.AliasID = defaultOn;
                 this.Index = defaultOn;
                 this.Flags = defaultOn;
                 this.StartPhase = defaultOn;
@@ -2189,7 +2189,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ret.Add((Type != null ? Type.OnOverall : DefaultOn, Type?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((ActorID, null));
+                ret.Add((AliasID, null));
                 ret.Add((Index, null));
                 ret.Add((Flags, null));
                 ret.Add((StartPhase, null));
@@ -2314,7 +2314,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new Int32? ActorID { get; set; }
+        new Int32? AliasID { get; set; }
         new UInt32? Index { get; set; }
         new SceneAction.Flag? Flags { get; set; }
         new UInt32? StartPhase { get; set; }
@@ -2378,7 +2378,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         String? Name { get; }
         #endregion
-        Int32? ActorID { get; }
+        Int32? AliasID { get; }
         UInt32? Index { get; }
         SceneAction.Flag? Flags { get; }
         UInt32? StartPhase { get; }
@@ -2589,7 +2589,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         Type = 0,
         Name = 1,
-        ActorID = 2,
+        AliasID = 2,
         Index = 3,
         Flags = 4,
         StartPhase = 5,
@@ -2766,7 +2766,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Type.Clear();
             item.Name = default;
-            item.ActorID = default;
+            item.AliasID = default;
             item.Index = default;
             item.Flags = default;
             item.StartPhase = default;
@@ -2880,7 +2880,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.Type = MaskItemExt.Factory(item.Type.GetEqualsMask(rhs.Type, include), include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.ActorID = item.ActorID == rhs.ActorID;
+            ret.AliasID = item.AliasID == rhs.AliasID;
             ret.Index = item.Index == rhs.Index;
             ret.Flags = item.Flags == rhs.Flags;
             ret.StartPhase = item.StartPhase == rhs.StartPhase;
@@ -2993,10 +2993,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.ActorID ?? true)
-                && item.ActorID is {} ActorIDItem)
+            if ((printMask?.AliasID ?? true)
+                && item.AliasID is {} AliasIDItem)
             {
-                sb.AppendItem(ActorIDItem, "ActorID");
+                sb.AppendItem(AliasIDItem, "AliasID");
             }
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
@@ -3232,9 +3232,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.ActorID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.AliasID) ?? true))
             {
-                if (lhs.ActorID != rhs.ActorID) return false;
+                if (lhs.AliasID != rhs.AliasID) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Index) ?? true))
             {
@@ -3411,9 +3411,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Nameitem);
             }
-            if (item.ActorID is {} ActorIDitem)
+            if (item.AliasID is {} AliasIDitem)
             {
-                hash.Add(ActorIDitem);
+                hash.Add(AliasIDitem);
             }
             if (item.Index is {} Indexitem)
             {
@@ -3652,9 +3652,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.ActorID) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.AliasID) ?? true))
             {
-                item.ActorID = rhs.ActorID;
+                item.AliasID = rhs.AliasID;
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Index) ?? true))
             {
@@ -4049,7 +4049,7 @@ namespace Mutagen.Bethesda.Fallout4
                 binaryType: StringBinaryType.NullTerminate);
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.ActorID,
+                item: item.AliasID,
                 header: translationParams.ConvertToCustom(RecordTypes.ALID));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -4348,8 +4348,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ALID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorID = frame.ReadInt32();
-                    return (int)SceneAction_FieldIndex.ActorID;
+                    item.AliasID = frame.ReadInt32();
+                    return (int)SceneAction_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -4802,9 +4802,9 @@ namespace Mutagen.Bethesda.Fallout4
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        #region ActorID
-        private int? _ActorIDLocation;
-        public Int32? ActorID => _ActorIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region AliasID
+        private int? _AliasIDLocation;
+        public Int32? AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region Index
         private int? _IndexLocation;
@@ -5058,8 +5058,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ALID:
                 {
-                    _ActorIDLocation = (stream.Position - offset);
-                    return (int)SceneAction_FieldIndex.ActorID;
+                    _AliasIDLocation = (stream.Position - offset);
+                    return (int)SceneAction_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.INAM:
                 {

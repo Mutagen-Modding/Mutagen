@@ -73,7 +73,7 @@
     <Fields>
       <RefDirect name="Type" refName="ASceneActionType" recordType="ANAM" nullable="False" binary="Custom" />
       <String name="Name" recordType="NAM0" />
-      <Int32 name="ActorID" recordType="ALID" />
+      <Int32 name="AliasID" recordType="ALID" />
       <UInt32 name="Index" recordType="INAM" />
       <Enum name="Flags" enumName="SceneAction.Flag" byteLength="4" recordType="FNAM" />
       <UInt32 name="StartPhase" recordType="SNAM" />
