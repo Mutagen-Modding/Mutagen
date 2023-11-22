@@ -106,16 +106,10 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IPlacedNpcGetter.RagdollData => this.RagdollData;
         #endregion
-        #region RagdollBipedData
+        #region RagdollBipedRotation
+        public P3Float? RagdollBipedRotation { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _RagdollBipedData;
-        public MemorySlice<Byte>? RagdollBipedData
-        {
-            get => this._RagdollBipedData;
-            set => this._RagdollBipedData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedNpcGetter.RagdollBipedData => this.RagdollBipedData;
+        P3Float? IPlacedNpcGetter.RagdollBipedRotation => this.RagdollBipedRotation;
         #endregion
         #region Patrol
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -365,7 +359,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Base = initialValue;
                 this.EncounterZone = initialValue;
                 this.RagdollData = initialValue;
-                this.RagdollBipedData = initialValue;
+                this.RagdollBipedRotation = initialValue;
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
                 this.LevelModifier = initialValue;
                 this.Count = initialValue;
@@ -409,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Base,
                 TItem EncounterZone,
                 TItem RagdollData,
-                TItem RagdollBipedData,
+                TItem RagdollBipedRotation,
                 TItem Patrol,
                 TItem LevelModifier,
                 TItem Count,
@@ -452,7 +446,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Base = Base;
                 this.EncounterZone = EncounterZone;
                 this.RagdollData = RagdollData;
-                this.RagdollBipedData = RagdollBipedData;
+                this.RagdollBipedRotation = RagdollBipedRotation;
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
                 this.LevelModifier = LevelModifier;
                 this.Count = Count;
@@ -497,7 +491,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Base;
             public TItem EncounterZone;
             public TItem RagdollData;
-            public TItem RagdollBipedData;
+            public TItem RagdollBipedRotation;
             public MaskItem<TItem, Patrol.Mask<TItem>?>? Patrol { get; set; }
             public TItem LevelModifier;
             public TItem Count;
@@ -544,7 +538,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Base, rhs.Base)) return false;
                 if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
                 if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
-                if (!object.Equals(this.RagdollBipedData, rhs.RagdollBipedData)) return false;
+                if (!object.Equals(this.RagdollBipedRotation, rhs.RagdollBipedRotation)) return false;
                 if (!object.Equals(this.Patrol, rhs.Patrol)) return false;
                 if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
                 if (!object.Equals(this.Count, rhs.Count)) return false;
@@ -583,7 +577,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Base);
                 hash.Add(this.EncounterZone);
                 hash.Add(this.RagdollData);
-                hash.Add(this.RagdollBipedData);
+                hash.Add(this.RagdollBipedRotation);
                 hash.Add(this.Patrol);
                 hash.Add(this.LevelModifier);
                 hash.Add(this.Count);
@@ -631,7 +625,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Base)) return false;
                 if (!eval(this.EncounterZone)) return false;
                 if (!eval(this.RagdollData)) return false;
-                if (!eval(this.RagdollBipedData)) return false;
+                if (!eval(this.RagdollBipedRotation)) return false;
                 if (Patrol != null)
                 {
                     if (!eval(this.Patrol.Overall)) return false;
@@ -725,7 +719,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Base)) return true;
                 if (eval(this.EncounterZone)) return true;
                 if (eval(this.RagdollData)) return true;
-                if (eval(this.RagdollBipedData)) return true;
+                if (eval(this.RagdollBipedRotation)) return true;
                 if (Patrol != null)
                 {
                     if (eval(this.Patrol.Overall)) return true;
@@ -822,7 +816,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Base = eval(this.Base);
                 obj.EncounterZone = eval(this.EncounterZone);
                 obj.RagdollData = eval(this.RagdollData);
-                obj.RagdollBipedData = eval(this.RagdollBipedData);
+                obj.RagdollBipedRotation = eval(this.RagdollBipedRotation);
                 obj.Patrol = this.Patrol == null ? null : new MaskItem<R, Patrol.Mask<R>?>(eval(this.Patrol.Overall), this.Patrol.Specific?.Translate(eval));
                 obj.LevelModifier = eval(this.LevelModifier);
                 obj.Count = eval(this.Count);
@@ -927,9 +921,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(RagdollData, "RagdollData");
                     }
-                    if (printMask?.RagdollBipedData ?? true)
+                    if (printMask?.RagdollBipedRotation ?? true)
                     {
-                        sb.AppendItem(RagdollBipedData, "RagdollBipedData");
+                        sb.AppendItem(RagdollBipedRotation, "RagdollBipedRotation");
                     }
                     if (printMask?.Patrol?.Overall ?? true)
                     {
@@ -1109,7 +1103,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Base;
             public Exception? EncounterZone;
             public Exception? RagdollData;
-            public Exception? RagdollBipedData;
+            public Exception? RagdollBipedRotation;
             public MaskItem<Exception?, Patrol.ErrorMask?>? Patrol;
             public Exception? LevelModifier;
             public Exception? Count;
@@ -1155,8 +1149,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return EncounterZone;
                     case PlacedNpc_FieldIndex.RagdollData:
                         return RagdollData;
-                    case PlacedNpc_FieldIndex.RagdollBipedData:
-                        return RagdollBipedData;
+                    case PlacedNpc_FieldIndex.RagdollBipedRotation:
+                        return RagdollBipedRotation;
                     case PlacedNpc_FieldIndex.Patrol:
                         return Patrol;
                     case PlacedNpc_FieldIndex.LevelModifier:
@@ -1237,8 +1231,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedNpc_FieldIndex.RagdollData:
                         this.RagdollData = ex;
                         break;
-                    case PlacedNpc_FieldIndex.RagdollBipedData:
-                        this.RagdollBipedData = ex;
+                    case PlacedNpc_FieldIndex.RagdollBipedRotation:
+                        this.RagdollBipedRotation = ex;
                         break;
                     case PlacedNpc_FieldIndex.Patrol:
                         this.Patrol = new MaskItem<Exception?, Patrol.ErrorMask?>(ex, null);
@@ -1350,8 +1344,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedNpc_FieldIndex.RagdollData:
                         this.RagdollData = (Exception?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.RagdollBipedData:
-                        this.RagdollBipedData = (Exception?)obj;
+                    case PlacedNpc_FieldIndex.RagdollBipedRotation:
+                        this.RagdollBipedRotation = (Exception?)obj;
                         break;
                     case PlacedNpc_FieldIndex.Patrol:
                         this.Patrol = (MaskItem<Exception?, Patrol.ErrorMask?>?)obj;
@@ -1453,7 +1447,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Base != null) return true;
                 if (EncounterZone != null) return true;
                 if (RagdollData != null) return true;
-                if (RagdollBipedData != null) return true;
+                if (RagdollBipedRotation != null) return true;
                 if (Patrol != null) return true;
                 if (LevelModifier != null) return true;
                 if (Count != null) return true;
@@ -1520,7 +1514,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(RagdollData, "RagdollData");
                 }
                 {
-                    sb.AppendItem(RagdollBipedData, "RagdollBipedData");
+                    sb.AppendItem(RagdollBipedRotation, "RagdollBipedRotation");
                 }
                 Patrol?.Print(sb);
                 {
@@ -1660,7 +1654,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Base = this.Base.Combine(rhs.Base);
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
-                ret.RagdollBipedData = this.RagdollBipedData.Combine(rhs.RagdollBipedData);
+                ret.RagdollBipedRotation = this.RagdollBipedRotation.Combine(rhs.RagdollBipedRotation);
                 ret.Patrol = this.Patrol.Combine(rhs.Patrol, (l, r) => l.Combine(r));
                 ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
                 ret.Count = this.Count.Combine(rhs.Count);
@@ -1716,7 +1710,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Base;
             public bool EncounterZone;
             public bool RagdollData;
-            public bool RagdollBipedData;
+            public bool RagdollBipedRotation;
             public Patrol.TranslationMask? Patrol;
             public bool LevelModifier;
             public bool Count;
@@ -1757,7 +1751,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Base = defaultOn;
                 this.EncounterZone = defaultOn;
                 this.RagdollData = defaultOn;
-                this.RagdollBipedData = defaultOn;
+                this.RagdollBipedRotation = defaultOn;
                 this.LevelModifier = defaultOn;
                 this.Count = defaultOn;
                 this.Radius = defaultOn;
@@ -1792,7 +1786,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Base, null));
                 ret.Add((EncounterZone, null));
                 ret.Add((RagdollData, null));
-                ret.Add((RagdollBipedData, null));
+                ret.Add((RagdollBipedRotation, null));
                 ret.Add((Patrol != null ? Patrol.OnOverall : DefaultOn, Patrol?.GetCrystal()));
                 ret.Add((LevelModifier, null));
                 ret.Add((Count, null));
@@ -1987,7 +1981,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<INpcGetter> Base { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
-        new MemorySlice<Byte>? RagdollBipedData { get; set; }
+        new P3Float? RagdollBipedRotation { get; set; }
         new Patrol? Patrol { get; set; }
         new Level? LevelModifier { get; set; }
         new Int32? Count { get; set; }
@@ -2055,7 +2049,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<INpcGetter> Base { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
-        ReadOnlyMemorySlice<Byte>? RagdollBipedData { get; }
+        P3Float? RagdollBipedRotation { get; }
         IPatrolGetter? Patrol { get; }
         Level? LevelModifier { get; }
         Int32? Count { get; }
@@ -2269,7 +2263,7 @@ namespace Mutagen.Bethesda.Fallout4
         Base = 8,
         EncounterZone = 9,
         RagdollData = 10,
-        RagdollBipedData = 11,
+        RagdollBipedRotation = 11,
         Patrol = 12,
         LevelModifier = 13,
         Count = 14,
@@ -2424,7 +2418,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Base.Clear();
             item.EncounterZone.Clear();
             item.RagdollData = default;
-            item.RagdollBipedData = default;
+            item.RagdollBipedRotation = default;
             item.Patrol = null;
             item.LevelModifier = default;
             item.Count = default;
@@ -2563,7 +2557,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Base = item.Base.Equals(rhs.Base);
             ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
             ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
-            ret.RagdollBipedData = MemorySliceExt.SequenceEqual(item.RagdollBipedData, rhs.RagdollBipedData);
+            ret.RagdollBipedRotation = item.RagdollBipedRotation.Equals(rhs.RagdollBipedRotation);
             ret.Patrol = EqualsMaskHelper.EqualsHelper(
                 item.Patrol,
                 rhs.Patrol,
@@ -2685,10 +2679,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
-            if ((printMask?.RagdollBipedData ?? true)
-                && item.RagdollBipedData is {} RagdollBipedDataItem)
+            if ((printMask?.RagdollBipedRotation ?? true)
+                && item.RagdollBipedRotation is {} RagdollBipedRotationItem)
             {
-                sb.AppendLine($"RagdollBipedData => {SpanExt.ToHexString(RagdollBipedDataItem)}");
+                sb.AppendItem(RagdollBipedRotationItem, "RagdollBipedRotation");
             }
             if ((printMask?.Patrol?.Overall ?? true)
                 && item.Patrol is {} PatrolItem)
@@ -2920,9 +2914,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedRotation) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
+                if (!lhs.RagdollBipedRotation.Equals(rhs.RagdollBipedRotation)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Patrol) ?? true))
             {
@@ -3094,9 +3088,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(RagdollDataItem);
             }
-            if (item.RagdollBipedData is {} RagdollBipedDataItem)
+            if (item.RagdollBipedRotation is {} RagdollBipedRotationitem)
             {
-                hash.Add(RagdollBipedDataItem);
+                hash.Add(RagdollBipedRotationitem);
             }
             if (item.Patrol is {} Patrolitem)
             {
@@ -3400,16 +3394,9 @@ namespace Mutagen.Bethesda.Fallout4
                     item.RagdollData = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedRotation) ?? true))
             {
-                if(rhs.RagdollBipedData is {} RagdollBipedDatarhs)
-                {
-                    item.RagdollBipedData = RagdollBipedDatarhs.ToArray();
-                }
-                else
-                {
-                    item.RagdollBipedData = default;
-                }
+                item.RagdollBipedRotation = rhs.RagdollBipedRotation;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Patrol) ?? true))
             {
@@ -3854,9 +3841,9 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.RagdollData,
                 header: translationParams.ConvertToCustom(RecordTypes.XRGD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.RagdollBipedData,
+                item: item.RagdollBipedRotation,
                 header: translationParams.ConvertToCustom(RecordTypes.XRGB));
             if (item.Patrol is {} PatrolItem)
             {
@@ -4123,8 +4110,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XRGB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollBipedData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PlacedNpc_FieldIndex.RagdollBipedData;
+                    item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedNpc_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XPRD:
                 {
@@ -4395,9 +4382,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _RagdollDataLocation;
         public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region RagdollBipedData
-        private int? _RagdollBipedDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollBipedData => _RagdollBipedDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollBipedDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region RagdollBipedRotation
+        private int? _RagdollBipedRotationLocation;
+        public P3Float? RagdollBipedRotation => _RagdollBipedRotationLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollBipedRotationLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         public IPatrolGetter? Patrol { get; private set; }
         #region LevelModifier
@@ -4596,8 +4583,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XRGB:
                 {
-                    _RagdollBipedDataLocation = (stream.Position - offset);
-                    return (int)PlacedNpc_FieldIndex.RagdollBipedData;
+                    _RagdollBipedRotationLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XPRD:
                 {

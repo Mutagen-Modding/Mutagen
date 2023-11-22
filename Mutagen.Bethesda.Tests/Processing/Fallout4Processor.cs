@@ -341,6 +341,11 @@ public class Fallout4Processor : Processor
             int loc = 0;
             ProcessZeroFloats(xtel, fileOffset, ref loc, 6);
         }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
         if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprm))
         {
             int loc = 0;
@@ -440,6 +445,11 @@ public class Fallout4Processor : Processor
         {
             int offset = 8;
             ProcessBool(xown, fileOffset, offset, 4, 1);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
         }
     }
 
