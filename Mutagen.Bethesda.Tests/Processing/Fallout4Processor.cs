@@ -720,11 +720,8 @@ public class Fallout4Processor : Processor
     {
         foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.ANAM))
         {
-            int i = BinaryPrimitives.ReadInt32LittleEndian(subRec.Content);
-            if (i == -1)
-            {
-                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, new byte[4]);
-            }
+            int loc = 0;
+            ProcessMaxIsNegativeFormID(subRec, fileOffset, ref loc);
         }
     }
 
