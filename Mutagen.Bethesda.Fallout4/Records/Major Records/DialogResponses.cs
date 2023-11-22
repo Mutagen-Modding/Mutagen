@@ -13,20 +13,12 @@ partial class DialogResponses
     [Flags]
     public enum Flag
     {
-        StartSceneOnEnd = 0x1,
         Random = 0x2,
-        SayOnce = 0x4,
-        RequiresPlayerActivation = 0x8,
+        ForceAllChildrenPlayerActivateOnly = 0x8,
         RandomEnd = 0x20,
-        EndRunningScene = 0x40,
-        ForceGreetHello = 0x80,
-        PlayerAddress = 0x100,
-        ForceSubtitle = 0x200,
-        CanMoveWhileGreeting = 0x400,
-        NoLIPFile = 0x800,
-        RequiresPostProcessing = 0x1000,
-        AudioOutputOverride = 0x2000,
-        HasCapture = 0x4000,
+        ChildInfosDontInheritResetData = 0x100,
+        ForceAllChildrenRandom = 0x200,
+        DoNotDoAllBeforeRepeating = 0x800,
     }
 
     public enum ChallengeType
