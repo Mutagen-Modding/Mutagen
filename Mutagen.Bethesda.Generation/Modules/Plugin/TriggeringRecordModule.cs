@@ -46,6 +46,8 @@ public class TriggeringRecordModule : GenerationModule
         {
             data.TriggeringRecordAccessors.Add($"Group<T>.T_RecordType");
         }
+
+        data.NotDuplicate = node.GetAttribute<bool>("notDuplicate");
         return base.PostFieldLoad(obj, field, node);
     }
 

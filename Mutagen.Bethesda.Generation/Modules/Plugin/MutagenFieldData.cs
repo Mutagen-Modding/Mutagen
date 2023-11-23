@@ -34,6 +34,7 @@ public class MutagenFieldData
     public bool HasVersioning => Versioning.Count > 0;
     public bool IsAfterBreak;
     public bool Circular;
+    public bool NotDuplicate;
 
     public MutagenFieldData(TypeGeneration source)
     {

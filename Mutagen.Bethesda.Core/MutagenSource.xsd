@@ -225,6 +225,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="notDuplicate" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to consider duplicate logic
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

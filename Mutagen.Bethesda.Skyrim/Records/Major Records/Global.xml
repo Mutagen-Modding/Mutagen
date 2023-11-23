@@ -22,7 +22,7 @@
   </Object>
   <Object name="GlobalUnknown" recordType="GLOB" baseClass="Global" objType="Record">
     <Fields>
-      <Char name="TypeChar" recordType="FNAM" nullable="False" binary="Custom" />
+      <Char name="TypeChar" recordType="FNAM" nullable="False" binary="Custom" notDuplicate="true" />
       <Float name="Data" recordType="FLTV" />
     </Fields>
   </Object>
