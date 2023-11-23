@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Starfield.Internals;
 using Noggog;
@@ -99,6 +100,7 @@ partial class QuestBinaryCreateTranslation
         RecordTypes.ALLS,
         RecordTypes.ALCS,
         RecordTypes.ALMI,
+        RecordTypes.ALED,
     };
 
     public static partial ParseResult FillBinaryAliasParseCustom(MutagenFrame frame, IQuestInternal item,
@@ -107,30 +109,25 @@ partial class QuestBinaryCreateTranslation
         frame = frame.SpawnAll();
         frame.TryReadSubrecord(RecordTypes.ANAM, out _);
         item.Aliases = new();
-        while (frame.TryReadSubrecord(_expectedAliasRecords, out var subRec))
+        while (frame.TryGetSubrecord(_expectedAliasRecords, out var subRec))
         {
             switch (subRec.RecordTypeInt)
             {
                 case RecordTypeInts.ALST:
                 {
-                    var id = subRec.AsUInt32();
                     var ret = QuestReferenceAlias.CreateFromBinary(frame);
-                    ret.ID = id;
                     item.Aliases.Add(ret);
                     break;
                 }
                 case RecordTypeInts.ALLS:
                 {
-                    var id = subRec.AsUInt32();
                     var ret = QuestLocationAlias.CreateFromBinary(frame);
-                    ret.ID = id;
                     item.Aliases.Add(ret);
                     break;
                 }
                 case RecordTypeInts.ALCS:
                 case RecordTypeInts.ALMI:
                 {
-                    frame.Position -= subRec.TotalLength;
                     var ret = new QuestCollectionAlias();
                     ret.Collection.SetTo(
                         ListBinaryTranslation<CollectionAlias>.Instance.Parse(
@@ -139,13 +136,65 @@ partial class QuestBinaryCreateTranslation
                     item.Aliases.Add(ret);
                     break;
                 }
+                case RecordTypeInts.ALED:
+                    frame.Position += subRec.TotalLength;
+                    break;
                 default:
-                    frame.Position -= subRec.TotalLength;
                     return (int)Quest_FieldIndex.Aliases;
             }
         }
 
         return (int)Quest_FieldIndex.Aliases;
+    }
+    
+    public static partial void ParseSubgroupsLogic(MutagenFrame frame, IQuestInternal obj)
+    {
+        try
+        {
+            if (frame.Reader.Complete) return;
+            if (!frame.TryGetGroupHeader(out var groupMeta)) return;
+            if (groupMeta.GroupType == (int)GroupTypeEnum.QuestChildren)
+            {
+                obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
+                obj.Unknown = frame.GetInt32(offset: 20);
+                if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
+                {
+                    throw new ArgumentException("Quest children group did not match the FormID of the parent.");
+                }
+            }
+            else
+            {
+                return;
+            }
+            frame.Reader.Position += groupMeta.HeaderLength;
+            frame = frame.SpawnWithLength(groupMeta.ContentLength);
+            var records = ListBinaryTranslation<IMajorRecord>.Instance.Parse(
+                reader: frame,
+                transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out IMajorRecord rec) =>
+                {
+                    switch (header.TypeInt)
+                    {
+                        case RecordTypeInts.DIAL:
+                            rec = DialogTopic.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.SCEN:
+                            rec = Scene.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.DLBR:
+                            rec = DialogBranch.CreateFromBinary(r);
+                            return true;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                });
+            obj.Scenes.SetTo(records.WhereCastable<IMajorRecord, Scene>());
+            obj.DialogTopics.SetTo(records.WhereCastable<IMajorRecord, DialogTopic>());
+            obj.DialogBranches.SetTo(records.WhereCastable<IMajorRecord, DialogBranch>());
+        }
+        catch (Exception ex)
+        {
+            throw RecordException.Enrich(ex, obj);
+        }
     }
 }
 
@@ -188,7 +237,12 @@ partial class QuestBinaryWriteTranslation
                         case IQuestLocationAliasGetter locAlias:
                             return locAlias.ID;
                         case IQuestCollectionAliasGetter collAlias:
-                            return default(UInt32);
+                        {
+                            return collAlias.Collection
+                                .Select(x => Math.Max(x.ReferenceAlias.ID, x.ID ?? 0))
+                                .StartWith((uint)0)
+                                .Max();
+                        }
                         default:
                             throw new NotImplementedException();
                     }
@@ -202,19 +256,9 @@ partial class QuestBinaryWriteTranslation
             switch (alias)
             {
                 case IQuestReferenceAliasGetter refAlias:
-                    using (HeaderExport.Subrecord(writer, RecordTypes.ALST))
-                    {
-                        writer.Write(refAlias.ID);
-                    }
-
                     refAlias.WriteToBinary(writer);
                     break;
                 case IQuestLocationAliasGetter locAlias:
-                    using (HeaderExport.Subrecord(writer, RecordTypes.ALLS))
-                    {
-                        writer.Write(locAlias.ID);
-                    }
-
                     locAlias.WriteToBinary(writer);
                     break;
                 case IQuestCollectionAliasGetter collAlias:
@@ -223,6 +267,57 @@ partial class QuestBinaryWriteTranslation
                 default:
                     throw new NotImplementedException();
             }
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { }
+        }
+    }
+
+    public static partial void WriteSubgroupsLogic(MutagenWriter writer, IQuestGetter obj)
+    {
+        try
+        {
+            var scenes = obj.Scenes;
+            var dialogTopics = obj.DialogTopics;
+            var dialogBranches = obj.DialogBranches;
+            if (scenes.Count == 0
+                && dialogTopics.Count == 0
+                && dialogBranches.Count == 0)
+            {
+                return;
+            }
+            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+            {
+                FormKeyBinaryTranslation.Instance.Write(
+                    writer,
+                    obj.FormKey);
+                writer.Write((int)GroupTypeEnum.QuestChildren);
+                writer.Write(obj.Timestamp);
+                writer.Write(obj.Unknown);
+                ListBinaryTranslation<IDialogBranchGetter>.Instance.Write(
+                    writer: writer,
+                    items: dialogBranches,
+                    transl: (MutagenWriter subWriter, IDialogBranchGetter subItem) =>
+                    {
+                        subItem.WriteToBinary(subWriter);
+                    });
+                ListBinaryTranslation<IDialogTopicGetter>.Instance.Write(
+                    writer: writer,
+                    items: dialogTopics,
+                    transl: (MutagenWriter subWriter, IDialogTopicGetter subItem) =>
+                    {
+                        subItem.WriteToBinary(subWriter);
+                    });
+                ListBinaryTranslation<ISceneGetter>.Instance.Write(
+                    writer: writer,
+                    items: scenes,
+                    transl: (MutagenWriter subWriter, ISceneGetter subItem) =>
+                    {
+                        subItem.WriteToBinary(subWriter);
+                    });
+            }
+        }
+        catch (Exception ex)
+        {
+            throw RecordException.Enrich(ex, obj);
         }
     }
 }
@@ -346,19 +441,13 @@ partial class QuestBinaryOverlay
                 {
                     case RecordTypeInts.ALST:
                     {
-                        var id = subRec.AsUInt32();
-                        var ret = (QuestReferenceAliasBinaryOverlay)QuestReferenceAliasBinaryOverlay
+                        return QuestReferenceAliasBinaryOverlay
                             .QuestReferenceAliasFactory(s.Slice(subRec.TotalLength), p);
-                        ret.ID = id;
-                        return ret;
                     }
                     case RecordTypeInts.ALLS:
                     {
-                        var id = subRec.AsUInt32();
-                        var ret = (QuestLocationAliasBinaryOverlay)QuestLocationAliasBinaryOverlay
+                        return QuestLocationAliasBinaryOverlay
                             .QuestLocationAliasFactory(s.Slice(subRec.TotalLength), p);
-                        ret.ID = id;
-                        return ret;
                     }
                     case RecordTypeInts.ALCS:
                     {
@@ -388,4 +477,49 @@ partial class QuestBinaryOverlay
                 RecordTypes.GRUP);
         return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
     });
+
+    public partial void ParseSubgroupsLogic(OverlayStream stream, int finalPos, int offset)
+    {
+        try
+        {
+            if (stream.Complete) return;
+            if (!stream.TryGetGroupHeader(out var groupMeta)) return;
+            if (groupMeta.GroupType != (int)GroupTypeEnum.QuestChildren) return;
+            this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+            var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+            if (formKey != this.FormKey)
+            {
+                throw new ArgumentException("Quest children group did not match the FormID of the parent.");
+            }
+            var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
+            var locs = ParseRecordLocations(
+                    stream: new OverlayStream(contentSpan, _package),
+                    trigger: QuestSubGroupTriggerSpecs,
+                    constants: stream.MetaData.Constants.MajorConstants,
+                    triggersAlwaysAreNewRecords: true,
+                    skipHeader: false).Select(x => _package.MetaData.Constants.MajorRecordHeader(contentSpan.Slice(x)).Pin(x));
+
+            this.DialogBranches = BinaryOverlayList.FactoryByArray<IDialogBranchGetter>(
+                contentSpan,
+                _package,
+                getter: (s, p) => DialogBranchBinaryOverlay.DialogBranchFactory(new OverlayStream(s, p), p),
+                locs: locs.Where(s => s.RecordType == RecordTypes.DLBR).Select(x => x.Location).ToArray());
+
+            this.DialogTopics = BinaryOverlayList.FactoryByArray<IDialogTopicGetter>(
+                contentSpan,
+                _package,
+                getter: (s, p) => DialogTopicBinaryOverlay.DialogTopicFactory(new OverlayStream(s, p), p),
+                locs: locs.Where(s => s.RecordType == RecordTypes.DIAL).Select(x => x.Location).ToArray());
+
+            this.Scenes = BinaryOverlayList.FactoryByArray<ISceneGetter>(
+                contentSpan,
+                _package,
+                getter: (s, p) => SceneBinaryOverlay.SceneFactory(new OverlayStream(s, p), p),
+                locs: locs.Where(s => s.RecordType == RecordTypes.SCEN).Select(x => x.Location).ToArray());
+        }
+        catch (Exception ex)
+        {
+            throw RecordException.Enrich(ex, this);
+        }
+    }
 }

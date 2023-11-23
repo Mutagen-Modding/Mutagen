@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -410,6 +411,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestCollectionAliasCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCollectionAliasSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestCollectionAliasBinaryWriteTranslation.Instance;
@@ -468,6 +474,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IQuestCollectionAlias :
         IAQuestAlias,
+        IFormLinkContainer,
         ILoquiObjectSetter<IQuestCollectionAlias>,
         IQuestCollectionAliasGetter
     {
@@ -477,6 +484,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IQuestCollectionAliasGetter :
         IAQuestAliasGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IQuestCollectionAliasGetter>
     {
         static new ILoquiRegistration StaticRegistration => QuestCollectionAlias_Registration.Instance;
@@ -664,14 +672,17 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.ALCS;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.ALCS);
-            var all = RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(
                 RecordTypes.ALCS,
                 RecordTypes.ALMI);
+            var all = RecordCollection.Factory(
+                RecordTypes.ALCS,
+                RecordTypes.ALMI,
+                RecordTypes.ALAM,
+                RecordTypes.ALST);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestCollectionAliasBinaryWriteTranslation);
@@ -727,6 +738,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IQuestCollectionAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Collection.RemapLinks(mapping);
         }
         
         #endregion
@@ -913,6 +925,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Collection.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1136,6 +1152,7 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.ALCS:
+                case RecordTypeInts.ALMI:
                 {
                     if (lastParsed.ShortCircuit((int)QuestCollectionAlias_FieldIndex.Collection, translationParams)) return ParseResult.Stop;
                     item.Collection.SetTo(
@@ -1183,6 +1200,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestCollectionAliasCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestCollectionAliasBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1260,6 +1278,7 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ALCS:
+                case RecordTypeInts.ALMI:
                 {
                     if (lastParsed.ShortCircuit((int)QuestCollectionAlias_FieldIndex.Collection, translationParams)) return ParseResult.Stop;
                     this.Collection = this.ParseRepeatedTypelessSubrecord<ICollectionAliasGetter>(

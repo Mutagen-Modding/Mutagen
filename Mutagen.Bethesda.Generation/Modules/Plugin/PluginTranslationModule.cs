@@ -2067,6 +2067,10 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             bool async = HasAsync(obj, self: true);
             var utilityTranslation = nameof(PluginUtilityTranslation);
+            if (data.MarkerType.HasValue)
+            {
+                sb.AppendLine($"frame.ReadSubrecord({obj.RecordTypeHeaderName(data.MarkerType.Value)});");
+            }
             switch (objType)
             {
                 case ObjectType.Subrecord:
@@ -3192,6 +3196,11 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             using (sb.CurlyBrace(doIt: isMajor))
             {
+                if (data.MarkerType.HasValue)
+                {
+                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }} // Start Marker");
+                }
+                
                 if (obj.HasEmbeddedFields())
                 {
                     using (var args = sb.Call(

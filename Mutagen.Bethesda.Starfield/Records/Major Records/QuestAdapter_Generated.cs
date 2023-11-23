@@ -53,6 +53,9 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region ExtraBindDataVersion
         public static readonly Byte ExtraBindDataVersionDefault = 3;
         public Byte ExtraBindDataVersion { get; set; } = ExtraBindDataVersionDefault;
@@ -131,6 +134,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Versioning = initialValue;
                 this.ExtraBindDataVersion = initialValue;
                 this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(initialValue, new ScriptEntry.Mask<TItem>(initialValue));
                 this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
@@ -141,6 +145,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version,
                 TItem ObjectFormat,
                 TItem Scripts,
+                TItem Versioning,
                 TItem ExtraBindDataVersion,
                 TItem Script,
                 TItem Fragments,
@@ -150,6 +155,7 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectFormat: ObjectFormat,
                 Scripts: Scripts)
             {
+                this.Versioning = Versioning;
                 this.ExtraBindDataVersion = ExtraBindDataVersion;
                 this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(Script, new ScriptEntry.Mask<TItem>(Script));
                 this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
@@ -165,6 +171,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem ExtraBindDataVersion;
             public MaskItem<TItem, ScriptEntry.Mask<TItem>?>? Script { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>? Fragments;
@@ -182,6 +189,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.ExtraBindDataVersion, rhs.ExtraBindDataVersion)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.Fragments, rhs.Fragments)) return false;
@@ -191,6 +199,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.ExtraBindDataVersion);
                 hash.Add(this.Script);
                 hash.Add(this.Fragments);
@@ -205,6 +214,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.ExtraBindDataVersion)) return false;
                 if (Script != null)
                 {
@@ -243,6 +253,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Versioning)) return true;
                 if (eval(this.ExtraBindDataVersion)) return true;
                 if (Script != null)
                 {
@@ -288,6 +299,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Versioning = eval(this.Versioning);
                 obj.ExtraBindDataVersion = eval(this.ExtraBindDataVersion);
                 obj.Script = this.Script == null ? null : new MaskItem<R, ScriptEntry.Mask<R>?>(eval(this.Script.Overall), this.Script.Specific?.Translate(eval));
                 if (Fragments != null)
@@ -338,6 +350,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(QuestAdapter.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.ExtraBindDataVersion ?? true)
                     {
                         sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
@@ -395,6 +411,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Versioning;
             public Exception? ExtraBindDataVersion;
             public MaskItem<Exception?, ScriptEntry.ErrorMask?>? Script;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>? Fragments;
@@ -407,6 +424,8 @@ namespace Mutagen.Bethesda.Starfield
                 QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
                 switch (enu)
                 {
+                    case QuestAdapter_FieldIndex.Versioning:
+                        return Versioning;
                     case QuestAdapter_FieldIndex.ExtraBindDataVersion:
                         return ExtraBindDataVersion;
                     case QuestAdapter_FieldIndex.Script:
@@ -425,6 +444,9 @@ namespace Mutagen.Bethesda.Starfield
                 QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
                 switch (enu)
                 {
+                    case QuestAdapter_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case QuestAdapter_FieldIndex.ExtraBindDataVersion:
                         this.ExtraBindDataVersion = ex;
                         break;
@@ -448,6 +470,9 @@ namespace Mutagen.Bethesda.Starfield
                 QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
                 switch (enu)
                 {
+                    case QuestAdapter_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case QuestAdapter_FieldIndex.ExtraBindDataVersion:
                         this.ExtraBindDataVersion = (Exception?)obj;
                         break;
@@ -469,6 +494,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (ExtraBindDataVersion != null) return true;
                 if (Script != null) return true;
                 if (Fragments != null) return true;
@@ -499,6 +525,9 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
                 {
                     sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                 }
@@ -547,6 +576,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
                 ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), Noggog.ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
@@ -573,6 +603,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public bool Versioning;
             public bool ExtraBindDataVersion;
             public ScriptEntry.TranslationMask? Script;
             public QuestScriptFragment.TranslationMask? Fragments;
@@ -585,6 +616,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Versioning = defaultOn;
                 this.ExtraBindDataVersion = defaultOn;
             }
 
@@ -593,6 +625,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((Versioning, null));
                 ret.Add((ExtraBindDataVersion, null));
                 ret.Add((Script != null ? Script.OnOverall : DefaultOn, Script?.GetCrystal()));
                 ret.Add((Fragments == null ? DefaultOn : !Fragments.GetCrystal().CopyNothing, Fragments?.GetCrystal()));
@@ -608,6 +641,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAdapterCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -674,6 +712,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IQuestAdapter>,
         IQuestAdapterGetter
     {
+        new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte ExtraBindDataVersion { get; set; }
         new ScriptEntry Script { get; set; }
         new ExtendedList<QuestScriptFragment> Fragments { get; }
@@ -687,6 +726,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IQuestAdapterGetter>
     {
         static new ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
+        QuestAdapter.VersioningBreaks Versioning { get; }
         Byte ExtraBindDataVersion { get; }
         IScriptEntryGetter Script { get; }
         IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; }
@@ -838,10 +878,11 @@ namespace Mutagen.Bethesda.Starfield
         Version = 0,
         ObjectFormat = 1,
         Scripts = 2,
-        ExtraBindDataVersion = 3,
-        Script = 4,
-        Fragments = 5,
-        Aliases = 6,
+        Versioning = 3,
+        ExtraBindDataVersion = 4,
+        Script = 5,
+        Fragments = 6,
+        Aliases = 7,
     }
     #endregion
 
@@ -852,9 +893,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(QuestAdapter.Mask<>);
 
@@ -927,6 +968,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestAdapter item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.ExtraBindDataVersion = QuestAdapter.ExtraBindDataVersionDefault;
             item.Script.Clear();
             item.Fragments.Clear();
@@ -1004,6 +1046,7 @@ namespace Mutagen.Bethesda.Starfield
             QuestAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
             ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
             ret.Fragments = item.Fragments.CollectionEqualsHelper(
@@ -1063,6 +1106,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.ExtraBindDataVersion ?? true)
             {
                 sb.AppendItem(item.ExtraBindDataVersion, "ExtraBindDataVersion");
@@ -1124,6 +1171,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
             {
                 if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
@@ -1161,6 +1212,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IQuestAdapterGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.ExtraBindDataVersion);
             hash.Add(item.Script);
             hash.Add(item.Fragments);
@@ -1225,6 +1277,11 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
+            if (rhs.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
             {
                 item.ExtraBindDataVersion = rhs.ExtraBindDataVersion;
@@ -1410,19 +1467,22 @@ namespace Mutagen.Bethesda.Starfield
             AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.ExtraBindDataVersion);
-            QuestAdapterBinaryWriteTranslation.WriteBinaryFragmentCount(
-                writer: writer,
-                item: item);
-            QuestAdapterBinaryWriteTranslation.WriteBinaryScript(
-                writer: writer,
-                item: item);
-            QuestAdapterBinaryWriteTranslation.WriteBinaryFragments(
-                writer: writer,
-                item: item);
-            QuestAdapterBinaryWriteTranslation.WriteBinaryAliases(
-                writer: writer,
-                item: item);
+            if (!item.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0))
+            {
+                writer.Write(item.ExtraBindDataVersion);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryFragmentCount(
+                    writer: writer,
+                    item: item);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryScript(
+                    writer: writer,
+                    item: item);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryFragments(
+                    writer: writer,
+                    item: item);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryAliases(
+                    writer: writer,
+                    item: item);
+            }
         }
 
         public static partial void WriteBinaryFragmentCountCustom(
@@ -1529,6 +1589,11 @@ namespace Mutagen.Bethesda.Starfield
             AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= QuestAdapter.VersioningBreaks.Break0;
+                return;
+            }
             item.ExtraBindDataVersion = frame.ReadUInt8();
             QuestAdapterBinaryCreateTranslation.FillBinaryFragmentCountCustom(
                 frame: frame,
@@ -1605,7 +1670,8 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public Byte ExtraBindDataVersion => _structData.Span[ScriptsEndingPos];
+        public QuestAdapter.VersioningBreaks Versioning { get; private set; }
+        public Byte ExtraBindDataVersion => _structData.Length <= ScriptsEndingPos + 0x0 ? default : _structData.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
         partial void FragmentCountCustomParse(
             OverlayStream stream,
@@ -1658,6 +1724,10 @@ namespace Mutagen.Bethesda.Starfield
                 package: package);
             ret.CustomFragmentsEndPos();
             ret.CustomAliasesEndPos();
+            if (ret._structData.Length <= ret.ScriptsEndingPos)
+            {
+                ret.Versioning |= QuestAdapter.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

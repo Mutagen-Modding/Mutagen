@@ -335,6 +335,35 @@ public abstract class Processor
         }
     }
 
+    public void SwapSubrecordContent(long fileOffset, MajorRecordFrame majorFrame, SubrecordPinFrame subrecord, byte[] b)
+    {
+        var loc = fileOffset + subrecord.Location + subrecord.HeaderLength;
+        if (b.Length == subrecord.ContentLength)
+        {
+            _instructions.SetSubstitution(loc, b);
+        }
+        else if (b.Length < subrecord.ContentLength)
+        {
+            _instructions.SetSubstitution(loc, b);
+            var remLength = subrecord.ContentLength - b.Length;
+            _instructions.SetRemove(RangeInt64.FromLength(loc + b.Length, remLength));
+            ProcessLengths(
+                majorFrame,
+                -remLength,
+                fileOffset);
+        }
+        else
+        {
+            _instructions.SetSubstitution(loc, b.AsSpan().Slice(0, subrecord.ContentLength).ToArray());
+            _instructions.SetAddition( loc + subrecord.ContentLength, b.AsSpan().Slice(subrecord.ContentLength).ToArray());
+            
+            ProcessLengths(
+                majorFrame,
+                b.Length - subrecord.ContentLength,
+                fileOffset);
+        }
+    }
+    
     public void ProcessLengths(
         SubrecordFrame frame,
         int amount,

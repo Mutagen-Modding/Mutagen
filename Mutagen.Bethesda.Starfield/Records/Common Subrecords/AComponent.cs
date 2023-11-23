@@ -32,6 +32,7 @@ public partial class AComponent
         BGSLodOwner_Component,
         BGSSoundTag_Component,
         BGSDisplayCase,
+        BGSObjectPaletteDefaults_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -94,6 +95,8 @@ public partial class AComponent
                 return SoundTagComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSDisplayCase:
                 return DisplayCaseComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSObjectPaletteDefaults_Component:
+                return ObjectPaletteDefaultsComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -157,6 +160,7 @@ partial class AComponentBinaryWriteTranslation
             ILodOwnerComponentGetter _ => AComponent.ComponentType.BGSLodOwner_Component,
             ISoundTagComponentGetter _ => AComponent.ComponentType.BGSSoundTag_Component,
             IDisplayCaseComponentGetter _ => AComponent.ComponentType.BGSDisplayCase,
+            IObjectPaletteDefaultsComponentGetter _ => AComponent.ComponentType.BGSObjectPaletteDefaults_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -217,10 +221,11 @@ partial class AComponentBinaryOverlay
                 return SoundTagComponentBinaryOverlay.SoundTagComponentFactory(stream, package);
             case AComponent.ComponentType.BGSDisplayCase:
                 return DisplayCaseComponentBinaryOverlay.DisplayCaseComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSObjectPaletteDefaults_Component:
+                return ObjectPaletteDefaultsComponentBinaryOverlay.ObjectPaletteDefaultsComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }
-
-
+        
     }
 }

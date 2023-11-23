@@ -59,21 +59,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamedRequired
         /// </summary>
-        public String? Name { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IQuestReferenceAliasGetter.Name => this.Name;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-        #endregion
+        public String Name { get; set; } = string.Empty;
         #endregion
         #region Flags
         public AQuestAlias.Flag? Flags { get; set; }
@@ -86,8 +74,7 @@ namespace Mutagen.Bethesda.Starfield
         UInt32? IQuestReferenceAliasGetter.ALFG => this.ALFG;
         #endregion
         #region LegendaryRank
-        public static readonly Byte LegendaryRankDefault = 1;
-        public Byte? LegendaryRank { get; set; } = LegendaryRankDefault;
+        public Byte? LegendaryRank { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? IQuestReferenceAliasGetter.LegendaryRank => this.LegendaryRank;
         #endregion
@@ -187,7 +174,9 @@ namespace Mutagen.Bethesda.Starfield
         IFindMatchingRefNearAliasGetter? IQuestReferenceAliasGetter.FindMatchingRefNearAlias => this.FindMatchingRefNearAlias;
         #endregion
         #region ReferenceCollectionAliasID
-        public Int32 ReferenceCollectionAliasID { get; set; } = default;
+        public Int32? ReferenceCollectionAliasID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IQuestReferenceAliasGetter.ReferenceCollectionAliasID => this.ReferenceCollectionAliasID;
         #endregion
         #region CreateObjectTemplate
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2235,15 +2224,14 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IQuestReferenceAlias>,
-        INamed,
         INamedRequired,
         IQuestReferenceAliasGetter
     {
         new UInt32 ID { get; set; }
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new String Name { get; set; }
         new AQuestAlias.Flag? Flags { get; set; }
         new UInt32? ALFG { get; set; }
         new Byte? LegendaryRank { get; set; }
@@ -2257,7 +2245,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<INpcGetter> UniqueActor { get; set; }
         new IFormLinkNullable<IGenericBaseFormGetter> UniqueBaseForm { get; set; }
         new FindMatchingRefNearAlias? FindMatchingRefNearAlias { get; set; }
-        new Int32 ReferenceCollectionAliasID { get; set; }
+        new Int32? ReferenceCollectionAliasID { get; set; }
         new CreateObjectTemplate? CreateObjectTemplate { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         /// <summary>
@@ -2287,16 +2275,15 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IQuestReferenceAliasGetter>,
-        INamedGetter,
         INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => QuestReferenceAlias_Registration.Instance;
         UInt32 ID { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        String Name { get; }
         #endregion
         AQuestAlias.Flag? Flags { get; }
         UInt32? ALFG { get; }
@@ -2311,7 +2298,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<INpcGetter> UniqueActor { get; }
         IFormLinkNullableGetter<IGenericBaseFormGetter> UniqueBaseForm { get; }
         IFindMatchingRefNearAliasGetter? FindMatchingRefNearAlias { get; }
-        Int32 ReferenceCollectionAliasID { get; }
+        Int32? ReferenceCollectionAliasID { get; }
         ICreateObjectTemplateGetter? CreateObjectTemplate { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         #region Keywords
@@ -2551,12 +2538,13 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ALST;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory();
+            var triggers = RecordCollection.Factory(RecordTypes.ALST);
             var all = RecordCollection.Factory(
-                RecordTypes.ALED,
+                RecordTypes.ALST,
                 RecordTypes.ALID,
                 RecordTypes.FNAM,
                 RecordTypes.ALFG,
@@ -2646,10 +2634,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.ID = default;
-            item.Name = default;
+            item.Name = string.Empty;
             item.Flags = default;
             item.ALFG = default;
-            item.LegendaryRank = QuestReferenceAlias.LegendaryRankDefault;
+            item.LegendaryRank = default;
             item.AliasIDToForceIntoWhenFilled = default;
             item.ClosestToAlias = default;
             item.ForcedReference.Clear();
@@ -2728,7 +2716,6 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: QuestReferenceAliasBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestReferenceAliasBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -2902,10 +2889,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ID, "ID");
             }
-            if ((printMask?.Name ?? true)
-                && item.Name is {} NameItem)
+            if (printMask?.Name ?? true)
             {
-                sb.AppendItem(NameItem, "Name");
+                sb.AppendItem(item.Name, "Name");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
@@ -2969,9 +2955,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 FindMatchingRefNearAliasItem?.Print(sb, "FindMatchingRefNearAlias");
             }
-            if (printMask?.ReferenceCollectionAliasID ?? true)
+            if ((printMask?.ReferenceCollectionAliasID ?? true)
+                && item.ReferenceCollectionAliasID is {} ReferenceCollectionAliasIDItem)
             {
-                sb.AppendItem(item.ReferenceCollectionAliasID, "ReferenceCollectionAliasID");
+                sb.AppendItem(ReferenceCollectionAliasIDItem, "ReferenceCollectionAliasID");
             }
             if ((printMask?.CreateObjectTemplate?.Overall ?? true)
                 && item.CreateObjectTemplate is {} CreateObjectTemplateItem)
@@ -3317,10 +3304,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.ID);
-            if (item.Name is {} Nameitem)
-            {
-                hash.Add(Nameitem);
-            }
+            hash.Add(item.Name);
             if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
@@ -3364,7 +3348,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(FindMatchingRefNearAliasitem);
             }
-            hash.Add(item.ReferenceCollectionAliasID);
+            if (item.ReferenceCollectionAliasID is {} ReferenceCollectionAliasIDitem)
+            {
+                hash.Add(ReferenceCollectionAliasIDitem);
+            }
             if (item.CreateObjectTemplate is {} CreateObjectTemplateitem)
             {
                 hash.Add(CreateObjectTemplateitem);
@@ -4067,18 +4054,16 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly QuestReferenceAliasBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IQuestReferenceAliasGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IQuestReferenceAliasGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.ID,
+                header: translationParams.ConvertToCustom(RecordTypes.ALST));
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.ALID),
@@ -4151,7 +4136,7 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ReferenceCollectionAliasID,
                 header: translationParams.ConvertToCustom(RecordTypes.ALCS));
@@ -4288,14 +4273,10 @@ namespace Mutagen.Bethesda.Starfield
             IQuestReferenceAliasGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public override void Write(
@@ -4326,12 +4307,6 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly QuestReferenceAliasBinaryCreateTranslation Instance = new QuestReferenceAliasBinaryCreateTranslation();
 
-        public static void FillBinaryStructs(
-            IQuestReferenceAlias item,
-            MutagenFrame frame)
-        {
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IQuestReferenceAlias item,
             MutagenFrame frame,
@@ -4344,6 +4319,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.ALST:
+                {
+                    if (lastParsed.ShortCircuit((int)QuestReferenceAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ID = frame.ReadUInt32();
+                    return (int)QuestReferenceAlias_FieldIndex.ID;
+                }
                 case RecordTypeInts.ALID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -4593,11 +4575,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.TerminalMenu.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestReferenceAlias_FieldIndex.TerminalMenu;
                 }
-                case RecordTypeInts.ALED: // End Marker
-                {
-                    frame.ReadSubrecord();
-                    return ParseResult.Stop;
-                }
                 default:
                     return ParseResult.Stop;
             }
@@ -4648,13 +4625,13 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        #region ID
+        private int? _IDLocation;
+        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        #endregion
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -4695,7 +4672,7 @@ namespace Mutagen.Bethesda.Starfield
         public IFindMatchingRefNearAliasGetter? FindMatchingRefNearAlias { get; private set; }
         #region ReferenceCollectionAliasID
         private int? _ReferenceCollectionAliasIDLocation;
-        public Int32 ReferenceCollectionAliasID => _ReferenceCollectionAliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceCollectionAliasIDLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32? ReferenceCollectionAliasID => _ReferenceCollectionAliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceCollectionAliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         public ICreateObjectTemplateGetter? CreateObjectTemplate { get; private set; }
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
@@ -4811,6 +4788,12 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.ALST:
+                {
+                    if (lastParsed.ShortCircuit((int)QuestReferenceAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
+                    _IDLocation = (stream.Position - offset);
+                    return (int)QuestReferenceAlias_FieldIndex.ID;
+                }
                 case RecordTypeInts.ALID:
                 {
                     _NameLocation = (stream.Position - offset);
@@ -5061,11 +5044,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _TerminalMenuLocation = (stream.Position - offset);
                     return (int)QuestReferenceAlias_FieldIndex.TerminalMenu;
-                }
-                case RecordTypeInts.ALED: // End Marker
-                {
-                    stream.ReadSubrecord();
-                    return ParseResult.Stop;
                 }
                 default:
                     return ParseResult.Stop;

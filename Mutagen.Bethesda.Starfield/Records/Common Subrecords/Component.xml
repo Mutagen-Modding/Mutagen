@@ -149,4 +149,9 @@
       <UInt32 name="Unknown2" />
     </Fields>
   </Object>
+  <Object name="ObjectPaletteDefaultsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+    </Fields>
+  </Object>
 </Loqui>

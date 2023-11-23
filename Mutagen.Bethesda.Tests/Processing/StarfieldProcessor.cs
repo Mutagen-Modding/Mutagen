@@ -41,6 +41,8 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PDCL, ProcessProjectedDecals);
         AddDynamicProcessing(RecordTypes.MISC, ProcessMisc);
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
+        AddDynamicProcessing(RecordTypes.DIAL, ProcessDialog);
+        AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -135,6 +137,8 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "ARMO", "FULL" },
                     new RecordType[] { "CONT", "FULL" },
                     new RecordType[] { "OMOD", "FULL" },
+                    new RecordType[] { "DIAL", "FULL" },
+                    new RecordType[] { "QUST", "FULL", "NNAM", "QMDP", "QMSU", "QMDT", "QMDS" },
                     new RecordType[] { "MGEF", "FULL", "DNAM" },
                     new RecordType[] { "ALCH", "FULL", "DNAM" },
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
@@ -150,10 +154,12 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "BOOK", "DESC" },
                     new RecordType[] { "ALCH", "DESC" },
                     new RecordType[] { "OMOD", "DESC" },
+                    new RecordType[] { "QUST", "CNAM" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]
                 {
+                    new RecordType[] { "INFO", "NAM1" },
                 };
             default:
                 throw new NotImplementedException();
@@ -218,6 +224,76 @@ public class StarfieldProcessor : Processor
                 default:
                     break;
             }
+        }
+    }
+
+    private void ProcessDialogResponses(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.TRDA))
+        {
+            int loc = 0;
+            ProcessMaxIsNegativeFormID(subRec, fileOffset, ref loc);
+        }
+    }
+
+    private void ProcessDialog(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        CleanEmptyDialogGroups(
+            stream,
+            formKey,
+            fileOffset);
+        
+        uint actualCount = 0;
+        List<FormID> infos = new();
+        stream.Position = fileOffset + majorFrame.TotalLength;
+        if (stream.TryReadGroup(out var groupFrame)
+            && groupFrame.GroupType == 7)
+        {
+            int groupPos = 0;
+            while (groupPos < groupFrame.Content.Length)
+            {
+                var majorMeta = stream.MetaData.Constants.MajorRecordHeader(groupFrame.Content.Slice(groupPos));
+                actualCount++;
+                groupPos += checked((int)majorMeta.TotalLength);
+                if (majorMeta.RecordType == RecordTypes.INFO)
+                {
+                    infos.Add(majorMeta.FormID);
+                }
+            }
+        }
+
+        // Reset misnumbered counter
+        if (majorFrame.TryFindSubrecord(RecordTypes.TIFC, out var tifcRec))
+        {
+            var count = tifcRec.AsUInt32();
+
+            if (actualCount != count)
+            {
+                byte[] b = new byte[4];
+                BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
+                _instructions.SetSubstitution(
+                    fileOffset + tifcRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength,
+                    b);
+            }
+        }
+        
+        if (majorFrame.TryFindSubrecord(RecordTypes.TIFL, out var rec))
+        {
+            byte[] b = new byte[infos.Count * 4];
+            var slice = b.AsSpan();
+            foreach (var tifl in infos)
+            {
+                BinaryPrimitives.WriteUInt32LittleEndian(slice, tifl.Raw);
+                slice = slice.Slice(4);
+            }
+            SwapSubrecordContent(fileOffset, majorFrame, rec, b);
         }
     }
 

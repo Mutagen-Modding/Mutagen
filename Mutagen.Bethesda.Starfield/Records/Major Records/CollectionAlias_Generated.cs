@@ -13,12 +13,14 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -50,13 +52,23 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region AliasID
-        public Int32 AliasID { get; set; } = default;
+        #region ID
+        public UInt32? ID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ICollectionAliasGetter.ID => this.ID;
         #endregion
         #region MaxInitialFillCount
-        public Byte? MaxInitialFillCount { get; set; }
+        public Byte MaxInitialFillCount { get; set; } = default;
+        #endregion
+        #region ALAM
+        public Int32? ALAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? ICollectionAliasGetter.MaxInitialFillCount => this.MaxInitialFillCount;
+        Int32? ICollectionAliasGetter.ALAM => this.ALAM;
+        #endregion
+        #region ReferenceAlias
+        public QuestReferenceAlias ReferenceAlias { get; set; } = new QuestReferenceAlias();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IQuestReferenceAliasGetter ICollectionAliasGetter.ReferenceAlias => ReferenceAlias;
         #endregion
 
         #region To String
@@ -97,16 +109,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.AliasID = initialValue;
+                this.ID = initialValue;
                 this.MaxInitialFillCount = initialValue;
+                this.ALAM = initialValue;
+                this.ReferenceAlias = new MaskItem<TItem, QuestReferenceAlias.Mask<TItem>?>(initialValue, new QuestReferenceAlias.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem AliasID,
-                TItem MaxInitialFillCount)
+                TItem ID,
+                TItem MaxInitialFillCount,
+                TItem ALAM,
+                TItem ReferenceAlias)
             {
-                this.AliasID = AliasID;
+                this.ID = ID;
                 this.MaxInitialFillCount = MaxInitialFillCount;
+                this.ALAM = ALAM;
+                this.ReferenceAlias = new MaskItem<TItem, QuestReferenceAlias.Mask<TItem>?>(ReferenceAlias, new QuestReferenceAlias.Mask<TItem>(ReferenceAlias));
             }
 
             #pragma warning disable CS8618
@@ -118,8 +136,10 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem AliasID;
+            public TItem ID;
             public TItem MaxInitialFillCount;
+            public TItem ALAM;
+            public MaskItem<TItem, QuestReferenceAlias.Mask<TItem>?>? ReferenceAlias { get; set; }
             #endregion
 
             #region Equals
@@ -132,15 +152,19 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.AliasID, rhs.AliasID)) return false;
+                if (!object.Equals(this.ID, rhs.ID)) return false;
                 if (!object.Equals(this.MaxInitialFillCount, rhs.MaxInitialFillCount)) return false;
+                if (!object.Equals(this.ALAM, rhs.ALAM)) return false;
+                if (!object.Equals(this.ReferenceAlias, rhs.ReferenceAlias)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.AliasID);
+                hash.Add(this.ID);
                 hash.Add(this.MaxInitialFillCount);
+                hash.Add(this.ALAM);
+                hash.Add(this.ReferenceAlias);
                 return hash.ToHashCode();
             }
 
@@ -149,8 +173,14 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.AliasID)) return false;
+                if (!eval(this.ID)) return false;
                 if (!eval(this.MaxInitialFillCount)) return false;
+                if (!eval(this.ALAM)) return false;
+                if (ReferenceAlias != null)
+                {
+                    if (!eval(this.ReferenceAlias.Overall)) return false;
+                    if (this.ReferenceAlias.Specific != null && !this.ReferenceAlias.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -158,8 +188,14 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.AliasID)) return true;
+                if (eval(this.ID)) return true;
                 if (eval(this.MaxInitialFillCount)) return true;
+                if (eval(this.ALAM)) return true;
+                if (ReferenceAlias != null)
+                {
+                    if (eval(this.ReferenceAlias.Overall)) return true;
+                    if (this.ReferenceAlias.Specific != null && this.ReferenceAlias.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -174,8 +210,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.AliasID = eval(this.AliasID);
+                obj.ID = eval(this.ID);
                 obj.MaxInitialFillCount = eval(this.MaxInitialFillCount);
+                obj.ALAM = eval(this.ALAM);
+                obj.ReferenceAlias = this.ReferenceAlias == null ? null : new MaskItem<R, QuestReferenceAlias.Mask<R>?>(eval(this.ReferenceAlias.Overall), this.ReferenceAlias.Specific?.Translate(eval));
             }
             #endregion
 
@@ -194,13 +232,21 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(CollectionAlias.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.AliasID ?? true)
+                    if (printMask?.ID ?? true)
                     {
-                        sb.AppendItem(AliasID, "AliasID");
+                        sb.AppendItem(ID, "ID");
                     }
                     if (printMask?.MaxInitialFillCount ?? true)
                     {
                         sb.AppendItem(MaxInitialFillCount, "MaxInitialFillCount");
+                    }
+                    if (printMask?.ALAM ?? true)
+                    {
+                        sb.AppendItem(ALAM, "ALAM");
+                    }
+                    if (printMask?.ReferenceAlias?.Overall ?? true)
+                    {
+                        ReferenceAlias?.Print(sb);
                     }
                 }
             }
@@ -226,8 +272,10 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? AliasID;
+            public Exception? ID;
             public Exception? MaxInitialFillCount;
+            public Exception? ALAM;
+            public MaskItem<Exception?, QuestReferenceAlias.ErrorMask?>? ReferenceAlias;
             #endregion
 
             #region IErrorMask
@@ -236,10 +284,14 @@ namespace Mutagen.Bethesda.Starfield
                 CollectionAlias_FieldIndex enu = (CollectionAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case CollectionAlias_FieldIndex.AliasID:
-                        return AliasID;
+                    case CollectionAlias_FieldIndex.ID:
+                        return ID;
                     case CollectionAlias_FieldIndex.MaxInitialFillCount:
                         return MaxInitialFillCount;
+                    case CollectionAlias_FieldIndex.ALAM:
+                        return ALAM;
+                    case CollectionAlias_FieldIndex.ReferenceAlias:
+                        return ReferenceAlias;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -250,11 +302,17 @@ namespace Mutagen.Bethesda.Starfield
                 CollectionAlias_FieldIndex enu = (CollectionAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case CollectionAlias_FieldIndex.AliasID:
-                        this.AliasID = ex;
+                    case CollectionAlias_FieldIndex.ID:
+                        this.ID = ex;
                         break;
                     case CollectionAlias_FieldIndex.MaxInitialFillCount:
                         this.MaxInitialFillCount = ex;
+                        break;
+                    case CollectionAlias_FieldIndex.ALAM:
+                        this.ALAM = ex;
+                        break;
+                    case CollectionAlias_FieldIndex.ReferenceAlias:
+                        this.ReferenceAlias = new MaskItem<Exception?, QuestReferenceAlias.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -266,11 +324,17 @@ namespace Mutagen.Bethesda.Starfield
                 CollectionAlias_FieldIndex enu = (CollectionAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case CollectionAlias_FieldIndex.AliasID:
-                        this.AliasID = (Exception?)obj;
+                    case CollectionAlias_FieldIndex.ID:
+                        this.ID = (Exception?)obj;
                         break;
                     case CollectionAlias_FieldIndex.MaxInitialFillCount:
                         this.MaxInitialFillCount = (Exception?)obj;
+                        break;
+                    case CollectionAlias_FieldIndex.ALAM:
+                        this.ALAM = (Exception?)obj;
+                        break;
+                    case CollectionAlias_FieldIndex.ReferenceAlias:
+                        this.ReferenceAlias = (MaskItem<Exception?, QuestReferenceAlias.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -280,8 +344,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (AliasID != null) return true;
+                if (ID != null) return true;
                 if (MaxInitialFillCount != null) return true;
+                if (ALAM != null) return true;
+                if (ReferenceAlias != null) return true;
                 return false;
             }
             #endregion
@@ -308,11 +374,15 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(AliasID, "AliasID");
+                    sb.AppendItem(ID, "ID");
                 }
                 {
                     sb.AppendItem(MaxInitialFillCount, "MaxInitialFillCount");
                 }
+                {
+                    sb.AppendItem(ALAM, "ALAM");
+                }
+                ReferenceAlias?.Print(sb);
             }
             #endregion
 
@@ -321,8 +391,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.AliasID = this.AliasID.Combine(rhs.AliasID);
+                ret.ID = this.ID.Combine(rhs.ID);
                 ret.MaxInitialFillCount = this.MaxInitialFillCount.Combine(rhs.MaxInitialFillCount);
+                ret.ALAM = this.ALAM.Combine(rhs.ALAM);
+                ret.ReferenceAlias = this.ReferenceAlias.Combine(rhs.ReferenceAlias, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -346,8 +418,10 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool AliasID;
+            public bool ID;
             public bool MaxInitialFillCount;
+            public bool ALAM;
+            public QuestReferenceAlias.TranslationMask? ReferenceAlias;
             #endregion
 
             #region Ctors
@@ -357,8 +431,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.AliasID = defaultOn;
+                this.ID = defaultOn;
                 this.MaxInitialFillCount = defaultOn;
+                this.ALAM = defaultOn;
             }
 
             #endregion
@@ -374,8 +449,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((AliasID, null));
+                ret.Add((ID, null));
                 ret.Add((MaxInitialFillCount, null));
+                ret.Add((ALAM, null));
+                ret.Add((ReferenceAlias != null ? ReferenceAlias.OnOverall : DefaultOn, ReferenceAlias?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -384,6 +461,11 @@ namespace Mutagen.Bethesda.Starfield
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CollectionAliasCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollectionAliasSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -446,15 +528,19 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ICollectionAlias :
         ICollectionAliasGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICollectionAlias>
     {
-        new Int32 AliasID { get; set; }
-        new Byte? MaxInitialFillCount { get; set; }
+        new UInt32? ID { get; set; }
+        new Byte MaxInitialFillCount { get; set; }
+        new Int32? ALAM { get; set; }
+        new QuestReferenceAlias ReferenceAlias { get; set; }
     }
 
     public partial interface ICollectionAliasGetter :
         ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ICollectionAliasGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -464,8 +550,10 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
-        Int32 AliasID { get; }
-        Byte? MaxInitialFillCount { get; }
+        UInt32? ID { get; }
+        Byte MaxInitialFillCount { get; }
+        Int32? ALAM { get; }
+        IQuestReferenceAliasGetter ReferenceAlias { get; }
 
     }
 
@@ -635,8 +723,10 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum CollectionAlias_FieldIndex
     {
-        AliasID = 0,
+        ID = 0,
         MaxInitialFillCount = 1,
+        ALAM = 2,
+        ReferenceAlias = 3,
     }
     #endregion
 
@@ -647,9 +737,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(CollectionAlias.Mask<>);
 
@@ -675,14 +765,17 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.ALCS;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.ALCS);
-            var all = RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(
                 RecordTypes.ALCS,
                 RecordTypes.ALMI);
+            var all = RecordCollection.Factory(
+                RecordTypes.ALCS,
+                RecordTypes.ALMI,
+                RecordTypes.ALAM,
+                RecordTypes.ALST);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CollectionAliasBinaryWriteTranslation);
@@ -725,13 +818,16 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICollectionAlias item)
         {
             ClearPartial();
-            item.AliasID = default;
+            item.ID = default;
             item.MaxInitialFillCount = default;
+            item.ALAM = default;
+            item.ReferenceAlias.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ICollectionAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.ReferenceAlias.RemapLinks(mapping);
         }
         
         #endregion
@@ -776,8 +872,10 @@ namespace Mutagen.Bethesda.Starfield
             CollectionAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.AliasID = item.AliasID == rhs.AliasID;
+            ret.ID = item.ID == rhs.ID;
             ret.MaxInitialFillCount = item.MaxInitialFillCount == rhs.MaxInitialFillCount;
+            ret.ALAM = item.ALAM == rhs.ALAM;
+            ret.ReferenceAlias = MaskItemExt.Factory(item.ReferenceAlias.GetEqualsMask(rhs.ReferenceAlias, include), include);
         }
         
         public string Print(
@@ -822,14 +920,23 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             CollectionAlias.Mask<bool>? printMask = null)
         {
-            if (printMask?.AliasID ?? true)
+            if ((printMask?.ID ?? true)
+                && item.ID is {} IDItem)
             {
-                sb.AppendItem(item.AliasID, "AliasID");
+                sb.AppendItem(IDItem, "ID");
             }
-            if ((printMask?.MaxInitialFillCount ?? true)
-                && item.MaxInitialFillCount is {} MaxInitialFillCountItem)
+            if (printMask?.MaxInitialFillCount ?? true)
             {
-                sb.AppendItem(MaxInitialFillCountItem, "MaxInitialFillCount");
+                sb.AppendItem(item.MaxInitialFillCount, "MaxInitialFillCount");
+            }
+            if ((printMask?.ALAM ?? true)
+                && item.ALAM is {} ALAMItem)
+            {
+                sb.AppendItem(ALAMItem, "ALAM");
+            }
+            if (printMask?.ReferenceAlias?.Overall ?? true)
+            {
+                item.ReferenceAlias?.Print(sb, "ReferenceAlias");
             }
         }
         
@@ -840,13 +947,25 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.AliasID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.ID) ?? true))
             {
-                if (lhs.AliasID != rhs.AliasID) return false;
+                if (lhs.ID != rhs.ID) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.MaxInitialFillCount) ?? true))
             {
                 if (lhs.MaxInitialFillCount != rhs.MaxInitialFillCount) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.ALAM) ?? true))
+            {
+                if (lhs.ALAM != rhs.ALAM) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.ReferenceAlias) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ReferenceAlias, rhs.ReferenceAlias, out var lhsReferenceAlias, out var rhsReferenceAlias, out var isReferenceAliasEqual))
+                {
+                    if (!((QuestReferenceAliasCommon)((IQuestReferenceAliasGetter)lhsReferenceAlias).CommonInstance()!).Equals(lhsReferenceAlias, rhsReferenceAlias, equalsMask?.GetSubCrystal((int)CollectionAlias_FieldIndex.ReferenceAlias))) return false;
+                }
+                else if (!isReferenceAliasEqual) return false;
             }
             return true;
         }
@@ -854,11 +973,16 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ICollectionAliasGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.AliasID);
-            if (item.MaxInitialFillCount is {} MaxInitialFillCountitem)
+            if (item.ID is {} IDitem)
             {
-                hash.Add(MaxInitialFillCountitem);
+                hash.Add(IDitem);
             }
+            hash.Add(item.MaxInitialFillCount);
+            if (item.ALAM is {} ALAMitem)
+            {
+                hash.Add(ALAMitem);
+            }
+            hash.Add(item.ReferenceAlias);
             return hash.ToHashCode();
         }
         
@@ -873,6 +997,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICollectionAliasGetter obj)
         {
+            foreach (var item in obj.ReferenceAlias.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -891,13 +1019,39 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.AliasID) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.ID) ?? true))
             {
-                item.AliasID = rhs.AliasID;
+                item.ID = rhs.ID;
             }
             if ((copyMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.MaxInitialFillCount) ?? true))
             {
                 item.MaxInitialFillCount = rhs.MaxInitialFillCount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.ALAM) ?? true))
+            {
+                item.ALAM = rhs.ALAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.ReferenceAlias) ?? true))
+            {
+                errorMask?.PushIndex((int)CollectionAlias_FieldIndex.ReferenceAlias);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.ReferenceAlias) ?? true))
+                    {
+                        item.ReferenceAlias = rhs.ReferenceAlias.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CollectionAlias_FieldIndex.ReferenceAlias),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -996,14 +1150,23 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.AliasID,
+                item: item.ID,
                 header: translationParams.ConvertToCustom(RecordTypes.ALCS));
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxInitialFillCount,
                 header: translationParams.ConvertToCustom(RecordTypes.ALMI));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ALAM,
+                header: translationParams.ConvertToCustom(RecordTypes.ALAM));
+            var ReferenceAliasItem = item.ReferenceAlias;
+            ((QuestReferenceAliasBinaryWriteTranslation)((IBinaryItem)ReferenceAliasItem).BinaryWriteTranslator).Write(
+                item: ReferenceAliasItem,
+                writer: writer,
+                translationParams: translationParams);
         }
 
         public void Write(
@@ -1048,16 +1211,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ALCS:
                 {
-                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasID = frame.ReadInt32();
-                    return (int)CollectionAlias_FieldIndex.AliasID;
+                    item.ID = frame.ReadUInt32();
+                    return (int)CollectionAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALMI:
                 {
+                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.MaxInitialFillCount, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaxInitialFillCount = frame.ReadUInt8();
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
+                }
+                case RecordTypeInts.ALAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ALAM = frame.ReadInt32();
+                    return (int)CollectionAlias_FieldIndex.ALAM;
+                }
+                case RecordTypeInts.ALST:
+                {
+                    item.ReferenceAlias = Mutagen.Bethesda.Starfield.QuestReferenceAlias.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CollectionAlias_FieldIndex.ReferenceAlias;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1113,6 +1290,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CollectionAliasCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CollectionAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1127,13 +1305,21 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region AliasID
-        private int? _AliasIDLocation;
-        public Int32 AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AliasIDLocation.Value, _package.MetaData.Constants)) : default;
+        #region ID
+        private int? _IDLocation;
+        public UInt32? ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region MaxInitialFillCount
         private int? _MaxInitialFillCountLocation;
-        public Byte? MaxInitialFillCount => _MaxInitialFillCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxInitialFillCountLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte MaxInitialFillCount => _MaxInitialFillCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxInitialFillCountLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        #endregion
+        #region ALAM
+        private int? _ALAMLocation;
+        public Int32? ALAM => _ALAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ALAMLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region ReferenceAlias
+        private IQuestReferenceAliasGetter? _ReferenceAlias;
+        public IQuestReferenceAliasGetter ReferenceAlias => _ReferenceAlias ?? new QuestReferenceAlias();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1200,14 +1386,28 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ALCS:
                 {
-                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
-                    _AliasIDLocation = (stream.Position - offset);
-                    return (int)CollectionAlias_FieldIndex.AliasID;
+                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
+                    _IDLocation = (stream.Position - offset);
+                    return (int)CollectionAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALMI:
                 {
+                    if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.MaxInitialFillCount, translationParams)) return ParseResult.Stop;
                     _MaxInitialFillCountLocation = (stream.Position - offset);
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
+                }
+                case RecordTypeInts.ALAM:
+                {
+                    _ALAMLocation = (stream.Position - offset);
+                    return (int)CollectionAlias_FieldIndex.ALAM;
+                }
+                case RecordTypeInts.ALST:
+                {
+                    this._ReferenceAlias = QuestReferenceAliasBinaryOverlay.QuestReferenceAliasFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CollectionAlias_FieldIndex.ReferenceAlias;
                 }
                 default:
                     return ParseResult.Stop;
