@@ -3124,13 +3124,14 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.KSIZ,
                 RecordTypes.SCCM,
                 RecordTypes.DLBR,
+                RecordTypes.QNAM,
+                RecordTypes.TNAM,
+                RecordTypes.SNAM,
                 RecordTypes.DIAL,
                 RecordTypes.PNAM,
                 RecordTypes.BNAM,
-                RecordTypes.QNAM,
                 RecordTypes.KNAM,
                 RecordTypes.DATA,
-                RecordTypes.SNAM,
                 RecordTypes.TIFL,
                 RecordTypes.TIFC,
                 RecordTypes.INFO,
@@ -3161,7 +3162,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODQ,
                 RecordTypes.INAM,
                 RecordTypes.COCT,
-                RecordTypes.AFFE,
+                RecordTypes.NAM8,
                 RecordTypes.PERK,
                 RecordTypes.SCSP,
                 RecordTypes.SCEN,
@@ -3171,7 +3172,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ALID,
                 RecordTypes.SNOT,
                 RecordTypes.VNAM,
-                RecordTypes.TNAM,
                 RecordTypes.BOLV,
                 RecordTypes.SCPI,
                 RecordTypes.JNAM,
@@ -3293,6 +3293,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.QuestGroup.Relink(mapping);
             obj.MissionTypeKeyword.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
+            obj.DialogBranches.RemapLinks(mapping);
             obj.DialogTopics.RemapLinks(mapping);
             obj.Scenes.RemapLinks(mapping);
         }
@@ -4325,6 +4326,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
+            }
+            foreach (var item in obj.DialogBranches.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.DialogTopics.SelectMany(f => f.EnumerateFormLinks()))
             {

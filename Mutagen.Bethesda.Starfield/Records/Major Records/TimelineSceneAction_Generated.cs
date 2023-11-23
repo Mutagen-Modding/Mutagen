@@ -1330,9 +1330,45 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SNAM = frame.ReadInt32();
-                    return (int)TimelineSceneAction_FieldIndex.SNAM;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.Flags)
+                    {
+                        return ASceneActionBinaryCreateTranslation.FillBinaryRecordTypes(
+                            item: item,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            recordParseCount: recordParseCount,
+                            nextRecordType: nextRecordType,
+                            contentLength: contentLength,
+                            translationParams: translationParams.WithNoConverter());
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)TimelineSceneAction_FieldIndex.TNAM)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SNAM = frame.ReadInt32();
+                        return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                return ASceneActionBinaryCreateTranslation.FillBinaryRecordTypes(
+                                    item: item,
+                                    frame: frame,
+                                    lastParsed: lastParsed,
+                                    recordParseCount: recordParseCount,
+                                    nextRecordType: nextRecordType,
+                                    contentLength: contentLength,
+                                    translationParams: translationParams.WithNoConverter());
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SNAM = frame.ReadInt32();
+                                return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.UNAM:
                 {
@@ -1498,8 +1534,43 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SNAMLocation = (stream.Position - offset);
-                    return (int)TimelineSceneAction_FieldIndex.SNAM;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.Flags)
+                    {
+                        return base.FillRecordType(
+                            stream: stream,
+                            finalPos: finalPos,
+                            offset: offset,
+                            type: type,
+                            lastParsed: lastParsed,
+                            recordParseCount: recordParseCount,
+                            translationParams: translationParams.WithNoConverter());
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)TimelineSceneAction_FieldIndex.TNAM)
+                    {
+                        _SNAMLocation = (stream.Position - offset);
+                        return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                return base.FillRecordType(
+                                    stream: stream,
+                                    finalPos: finalPos,
+                                    offset: offset,
+                                    type: type,
+                                    lastParsed: lastParsed,
+                                    recordParseCount: recordParseCount,
+                                    translationParams: translationParams.WithNoConverter());
+                            case 1:
+                                _SNAMLocation = (stream.Position - offset);
+                                return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.UNAM:
                 {

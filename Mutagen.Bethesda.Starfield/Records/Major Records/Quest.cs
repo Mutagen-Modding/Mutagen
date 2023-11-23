@@ -365,69 +365,20 @@ partial class QuestBinaryOverlay
         return null;
     }
 
-    public static RecordTriggerSpecs QuestAliasTriggerSpecs => _aliasTriggerSpecs.Value;
-
-    private static readonly Lazy<RecordTriggerSpecs> _aliasTriggerSpecs = new Lazy<RecordTriggerSpecs>(() =>
-    {
-        return new RecordTriggerSpecs(
-            RecordCollection.Factory(
-                RecordTypes.ALST,
-                RecordTypes.ALLS,
-                RecordTypes.ALCS,
-                RecordTypes.ALED,
-                RecordTypes.ALID,
-                RecordTypes.FNAM,
-                RecordTypes.ALFI,
-                RecordTypes.ALFL,
-                RecordTypes.ALFR,
-                RecordTypes.ALUA,
-                RecordTypes.ALFA,
-                RecordTypes.KNAM,
-                RecordTypes.ALRT,
-                RecordTypes.ALEQ,
-                RecordTypes.ALEA,
-                RecordTypes.ALCO,
-                RecordTypes.ALCA,
-                RecordTypes.ALCL,
-                RecordTypes.ALNA,
-                RecordTypes.ALNT,
-                RecordTypes.ALFE,
-                RecordTypes.ALFD,
-                RecordTypes.ALCC,
-                RecordTypes.CTDA,
-                RecordTypes.CIS1,
-                RecordTypes.CIS2,
-                RecordTypes.KWDA,
-                RecordTypes.KSIZ,
-                RecordTypes.CNTO,
-                RecordTypes.COCT,
-                RecordTypes.COED,
-                RecordTypes.SPOR,
-                RecordTypes.OCOR,
-                RecordTypes.GWOR,
-                RecordTypes.ECOR,
-                RecordTypes.ALLA,
-                RecordTypes.ALDN,
-                RecordTypes.ALFV,
-                RecordTypes.ALDI,
-                RecordTypes.ALSP,
-                RecordTypes.ALFC,
-                RecordTypes.ALPC,
-                RecordTypes.VTCK,
-                RecordTypes.ALMI),
-            RecordCollection.Factory(
-                RecordTypes.ALST,
-                RecordTypes.ALLS,
-                RecordTypes.ALCS));
-    });
-
+    private static readonly IReadOnlyRecordCollection _aliasEndTriggers = RecordCollection.Factory(RecordTypes.ALED);
+    private static readonly IReadOnlyRecordCollection _aliasStartTriggers = RecordCollection.Factory(
+        RecordTypes.ALST,
+        RecordTypes.ALLS,
+        RecordTypes.ALCS);
+    
     public partial ParseResult AliasParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.TryReadSubrecord(RecordTypes.ANAM, out _);
         var mem = stream.RemainingMemory;
-        var locs = ParseRecordLocations(
+        var locs = ParseRecordLocationsEnder(
             stream,
-            QuestAliasTriggerSpecs,
+            startTriggers: _aliasStartTriggers,
+            endTriggers: _aliasEndTriggers,
             _package.MetaData.Constants.SubConstants,
             skipHeader: false);
         Aliases = BinaryOverlayList.FactoryByArray<IAQuestAliasGetter>(
@@ -442,12 +393,12 @@ partial class QuestBinaryOverlay
                     case RecordTypeInts.ALST:
                     {
                         return QuestReferenceAliasBinaryOverlay
-                            .QuestReferenceAliasFactory(s.Slice(subRec.TotalLength), p);
+                            .QuestReferenceAliasFactory(s, p);
                     }
                     case RecordTypeInts.ALLS:
                     {
                         return QuestLocationAliasBinaryOverlay
-                            .QuestLocationAliasFactory(s.Slice(subRec.TotalLength), p);
+                            .QuestLocationAliasFactory(s, p);
                     }
                     case RecordTypeInts.ALCS:
                     {

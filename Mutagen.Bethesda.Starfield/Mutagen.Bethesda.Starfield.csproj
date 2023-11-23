@@ -2084,6 +2084,9 @@
     <Compile Include="Records\Major Records\DefaultObject.cs">
       <DependentUpon>DefaultObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DialogBranch.cs">
+      <DependentUpon>DialogBranch.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\DialogResponses.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>

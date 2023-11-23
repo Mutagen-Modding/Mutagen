@@ -1318,9 +1318,45 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.SNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)TimerSceneAction_FieldIndex.MaxSeconds;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.Flags)
+                    {
+                        return ASceneActionBinaryCreateTranslation.FillBinaryRecordTypes(
+                            item: item,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            recordParseCount: recordParseCount,
+                            nextRecordType: nextRecordType,
+                            contentLength: contentLength,
+                            translationParams: translationParams.WithNoConverter());
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.EndPhase)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.MaxSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                return ASceneActionBinaryCreateTranslation.FillBinaryRecordTypes(
+                                    item: item,
+                                    frame: frame,
+                                    lastParsed: lastParsed,
+                                    recordParseCount: recordParseCount,
+                                    nextRecordType: nextRecordType,
+                                    contentLength: contentLength,
+                                    translationParams: translationParams.WithNoConverter());
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.MaxSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -1486,8 +1522,43 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.SNAM:
                 {
-                    _MaxSecondsLocation = (stream.Position - offset);
-                    return (int)TimerSceneAction_FieldIndex.MaxSeconds;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.Flags)
+                    {
+                        return base.FillRecordType(
+                            stream: stream,
+                            finalPos: finalPos,
+                            offset: offset,
+                            type: type,
+                            lastParsed: lastParsed,
+                            recordParseCount: recordParseCount,
+                            translationParams: translationParams.WithNoConverter());
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.EndPhase)
+                    {
+                        _MaxSecondsLocation = (stream.Position - offset);
+                        return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                return base.FillRecordType(
+                                    stream: stream,
+                                    finalPos: finalPos,
+                                    offset: offset,
+                                    type: type,
+                                    lastParsed: lastParsed,
+                                    recordParseCount: recordParseCount,
+                                    translationParams: translationParams.WithNoConverter());
+                            case 1:
+                                _MaxSecondsLocation = (stream.Position - offset);
+                                return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.TNAM:
                 {

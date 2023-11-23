@@ -413,6 +413,7 @@ public partial class RecordTypeInts
     public const int NAM4 = 0x344D414E;
     public const int NAM5 = 0x354D414E;
     public const int NAM6 = 0x364D414E;
+    public const int NAM8 = 0x384D414E;
     public const int NAM9 = 0x394D414E;
     public const int NAME = 0x454D414E;
     public const int NARO = 0x4F52414E;

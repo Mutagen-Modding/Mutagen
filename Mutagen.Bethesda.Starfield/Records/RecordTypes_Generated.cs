@@ -415,6 +415,7 @@ public partial class RecordTypes
     public static readonly RecordType NAM4 = new(0x344D414E);
     public static readonly RecordType NAM5 = new(0x354D414E);
     public static readonly RecordType NAM6 = new(0x364D414E);
+    public static readonly RecordType NAM8 = new(0x384D414E);
     public static readonly RecordType NAM9 = new(0x394D414E);
     public static readonly RecordType NAME = new(0x454D414E);
     public static readonly RecordType NARO = new(0x4F52414E);

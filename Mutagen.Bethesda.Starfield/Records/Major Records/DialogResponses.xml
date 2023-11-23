@@ -19,7 +19,7 @@
       <FormLink name="ResetGlobal" refName="Global" recordType="MODQ" />
       <Enum name="SubtitlePriority" enumName="DialogResponses.SubtitlePriorityLevel" recordType="INAM" byteLength="4" />
       <Bool name="COCT" recordType="COCT" boolAsMarker="True" unknown="true" />
-      <FormLink name="NAM8" refName="AffinityEvent" recordType="AFFE" unknown="true" />
+      <FormLink name="NAM8" refName="AffinityEvent" recordType="NAM8" unknown="true" />
       <FormLink name="Perk" refName="Perk" recordType="PERK" />
       <FormLink name="SpeechChallenge" refName="SpeechChallenge" recordType="SCSP" />
     </Fields>

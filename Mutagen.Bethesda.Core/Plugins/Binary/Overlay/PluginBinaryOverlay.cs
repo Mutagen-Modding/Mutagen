@@ -566,6 +566,60 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         }
         return ret.ToArray();
     }
+        
+    public static int[] ParseRecordLocationsEnder(
+        OverlayStream stream,
+        IReadOnlyRecordCollection startTriggers,
+        IReadOnlyRecordCollection endTriggers,
+        RecordHeaderConstants constants,
+        bool skipHeader,
+        TypedParseParams translationParams = default)
+    {
+        translationParams = translationParams.ShortCircuit();
+        var ret = new List<int>();
+        var startingPos = stream.Position;
+        bool shouldAdd = true;
+        while (!stream.Complete)
+        {
+            var varMeta = stream.GetVariableHeader(subRecords: constants.LengthLength == 2);
+            var recType = translationParams.ConvertToStandard(varMeta.RecordType);
+
+            if (endTriggers.Contains(recType))
+            {
+                shouldAdd = true;
+                stream.Position += (int)varMeta.TotalLength;
+            }
+            else if (shouldAdd)
+            {
+                if (startTriggers.Contains(recType))
+                {
+                    shouldAdd = false;
+                    if (skipHeader)
+                    {
+                        stream.Position += varMeta.HeaderLength;
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.ContentLength;
+                    }
+                    else
+                    {
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                stream.Position += (int)varMeta.TotalLength;
+            }
+        }
+
+        return ret.ToArray();
+    }
+
 
     /// <summary>
     /// Finds locations of a number of records given by count that match a set of record types.

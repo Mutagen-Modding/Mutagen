@@ -1,4 +1,6 @@
-﻿using Mutagen.Bethesda.Plugins.Binary.Headers;
+﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -84,7 +86,6 @@ partial class SceneBinaryCreateTranslation
 
             try
             {
-                
                 // Footer
                 frame.ReadSubrecord(RecordTypes.ANAM);
             }
@@ -150,5 +151,60 @@ partial class SceneBinaryWriteTranslation
 
 partial class SceneBinaryOverlay
 {
-    public IReadOnlyList<IASceneActionGetter>? Actions => throw new NotImplementedException();
+    public IReadOnlyList<IASceneActionGetter>? Actions { get; private set; }
+
+    private IASceneActionGetter ReadSceneAction(
+        SubrecordFrame subRec,
+        OverlayStream frame)
+    {
+        switch ((SceneBinaryCreateTranslation.ActionType)subRec.AsInt16())
+        {
+            case SceneBinaryCreateTranslation.ActionType.Dialogue:
+                return DialogueSceneActionBinaryOverlay.DialogueSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.Package:
+                return PackageSceneActionBinaryOverlay.PackageSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.Timer:
+                return TimerSceneActionBinaryOverlay.TimerSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.PlayerDialogue:
+                return PlayerDialogueSceneActionBinaryOverlay.PlayerDialogueSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.StartScene:
+                return StartSceneActionBinaryOverlay.StartSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.Radio:
+                return RadioSceneActionBinaryOverlay.RadioSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.Move:
+                return MoveSceneActionBinaryOverlay.MoveSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.Camera:
+                return CameraSceneActionBinaryOverlay.CameraSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.FX:
+                return FxSceneActionBinaryOverlay.FxSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.Animation:
+                return AnimationSceneActionBinaryOverlay.AnimationSceneActionFactory(frame, _package);
+            case SceneBinaryCreateTranslation.ActionType.Timeline:
+                return TimelineSceneActionBinaryOverlay.TimelineSceneActionFactory(frame, _package);
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+    
+    partial void ActionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    {
+        var ret = new ExtendedList<IASceneActionGetter>();
+        while (stream.TryReadSubrecord(RecordTypes.ANAM, out var subRec))
+        {
+            ret.Add(ReadSceneAction(subRec, stream));
+
+            try
+            {
+                // Footer
+                stream.ReadSubrecord(RecordTypes.ANAM);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        Actions = ret;
+    }
 }

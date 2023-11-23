@@ -349,6 +349,7 @@ public abstract class Processor
             _instructions.SetRemove(RangeInt64.FromLength(loc + b.Length, remLength));
             ProcessLengths(
                 majorFrame,
+                subrecord,
                 -remLength,
                 fileOffset);
         }
@@ -359,6 +360,7 @@ public abstract class Processor
             
             ProcessLengths(
                 majorFrame,
+                subrecord,
                 b.Length - subrecord.ContentLength,
                 fileOffset);
         }
@@ -395,6 +397,30 @@ public abstract class Processor
         BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), checked((uint)(frame.ContentLength + amount)));
         _instructions.SetSubstitution(
             loc: refLoc + Constants.HeaderLength,
+            sub: lenData);
+    }
+
+    public void ProcessLengths(
+        MajorRecordFrame frame,
+        SubrecordPinFrame subRec,
+        int amount,
+        long refLoc)
+    {
+        if (amount == 0) return;
+        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        ModifyParentGroupLengths(amount, formKey);
+
+        // Modify Length 
+        byte[] lenData = new byte[4];
+        BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), checked((uint)(frame.ContentLength + amount)));
+        _instructions.SetSubstitution(
+            loc: refLoc + Constants.HeaderLength,
+            sub: lenData);
+        
+        lenData = new byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subRec.ContentLength + amount));
+        _instructions.SetSubstitution(
+            loc: refLoc + subRec.Location + Constants.HeaderLength,
             sub: lenData);
     }
 

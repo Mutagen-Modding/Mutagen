@@ -256,8 +256,10 @@ public partial class RecordTypeInts
     public const int XMBR = 0x52424D58;
     public const int XMSP = 0x50534D58;
     public const int XOWN = 0x4E574F58;
+    public const int XPCS = 0x53435058;
     public const int XPWR = 0x52575058;
     public const int XRFG = 0x47465258;
+    public const int XRGD = 0x44475258;
     public const int XRNK = 0x4B4E5258;
     public const int XSCL = 0x4C435358;
     public const int XXXX = 0x58585858;

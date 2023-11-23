@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODQ,
                 RecordTypes.INAM,
                 RecordTypes.COCT,
-                RecordTypes.AFFE,
+                RecordTypes.NAM8,
                 RecordTypes.PERK,
                 RecordTypes.SCSP);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
@@ -3126,7 +3126,7 @@ namespace Mutagen.Bethesda.Starfield
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NAM8,
-                header: translationParams.ConvertToCustom(RecordTypes.AFFE));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM8));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Perk,
@@ -3339,7 +3339,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.COCT = true;
                     return (int)DialogResponses_FieldIndex.COCT;
                 }
-                case RecordTypeInts.AFFE:
+                case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM8.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -3674,7 +3674,7 @@ namespace Mutagen.Bethesda.Starfield
                     _COCTLocation = (stream.Position - offset);
                     return (int)DialogResponses_FieldIndex.COCT;
                 }
-                case RecordTypeInts.AFFE:
+                case RecordTypeInts.NAM8:
                 {
                     _NAM8Location = (stream.Position - offset);
                     return (int)DialogResponses_FieldIndex.NAM8;

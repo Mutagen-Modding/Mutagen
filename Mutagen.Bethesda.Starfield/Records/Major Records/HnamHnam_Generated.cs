@@ -1378,6 +1378,7 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            stream.ReadSubrecord(RecordTypes.HNAM);
             stream = ExtractTypelessSubrecordRecordMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,

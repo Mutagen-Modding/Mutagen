@@ -1742,7 +1742,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODQ,
                 RecordTypes.INAM,
                 RecordTypes.COCT,
-                RecordTypes.AFFE,
+                RecordTypes.NAM8,
                 RecordTypes.PERK,
                 RecordTypes.SCSP);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);

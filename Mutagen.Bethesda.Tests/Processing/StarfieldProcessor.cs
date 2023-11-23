@@ -138,6 +138,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "CONT", "FULL" },
                     new RecordType[] { "OMOD", "FULL" },
                     new RecordType[] { "DIAL", "FULL" },
+                    new RecordType[] { "INFO", "RNAM" },
                     new RecordType[] { "QUST", "FULL", "NNAM", "QMDP", "QMSU", "QMDT", "QMDS" },
                     new RecordType[] { "MGEF", "FULL", "DNAM" },
                     new RecordType[] { "ALCH", "FULL", "DNAM" },
@@ -244,6 +245,13 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+
+        if (majorFrame.FormID.ID == 0x4BD62)
+        {
+            int wer = 23;
+            wer++;
+        }
+        
         var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
         CleanEmptyDialogGroups(
             stream,
@@ -294,6 +302,12 @@ public class StarfieldProcessor : Processor
                 slice = slice.Slice(4);
             }
             SwapSubrecordContent(fileOffset, majorFrame, rec, b);
+        }
+        
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.OPDS))
+        {
+            int loc = 0;
+            ProcessZeroFloats(subRec, fileOffset, ref loc);
         }
     }
 
