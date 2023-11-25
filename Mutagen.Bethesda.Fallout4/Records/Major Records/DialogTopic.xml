@@ -5,7 +5,7 @@
       <String name="Name" recordType="FULL" translated="Normal" />
       <Float name="Priority" recordType="PNAM" nullable="False" default="50" />
       <FormLink name="Branch" recordType="BNAM" refName="DialogBranch" />
-      <FormLink name="Quest" recordType="QNAM" refName="Quest" />
+      <FormLink name="Quest" recordType="QNAM" refName="Quest" nullable="false" />
       <FormLink name="Keyword" recordType="KNAM" refName="Keyword" />
       <Data>
         <Fields>

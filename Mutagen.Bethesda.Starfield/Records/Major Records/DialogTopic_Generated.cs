@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,132 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IDialogTopicGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IDialogTopicGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Priority
+        public static readonly Single PriorityDefault = 50;
+        public Single Priority { get; set; } = PriorityDefault;
+        #endregion
+        #region Branch
+        private readonly IFormLinkNullable<IDialogBranchGetter> _Branch = new FormLinkNullable<IDialogBranchGetter>();
+        public IFormLinkNullable<IDialogBranchGetter> Branch
+        {
+            get => _Branch;
+            set => _Branch.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
+        #endregion
+        #region Quest
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
+        #endregion
+        #region Keyword
+        private readonly IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> Keyword
+        {
+            get => _Keyword;
+            set => _Keyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IDialogTopicGetter.Keyword => this.Keyword;
+        #endregion
+        #region AffinityEvent
+        private readonly IFormLinkNullable<IAffinityEventGetter> _AffinityEvent = new FormLinkNullable<IAffinityEventGetter>();
+        public IFormLinkNullable<IAffinityEventGetter> AffinityEvent
+        {
+            get => _AffinityEvent;
+            set => _AffinityEvent.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAffinityEventGetter> IDialogTopicGetter.AffinityEvent => this.AffinityEvent;
+        #endregion
+        #region TopicFlags
+        public DialogTopic.TopicFlag TopicFlags { get; set; } = default;
+        #endregion
+        #region Category
+        public DialogTopic.CategoryEnum Category { get; set; } = default;
+        #endregion
+        #region Subtype
+        public DialogTopic.SubtypeEnum Subtype { get; set; } = default;
+        #endregion
+        #region SubtypeName
+        public RecordType SubtypeName { get; set; } = RecordType.Null;
+        #endregion
+        #region Timestamp
+        public Int32 Timestamp { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
+        #endregion
+        #region Responses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
+        public ExtendedList<DialogResponses> Responses
+        {
+            get => this._Responses;
+            init => this._Responses = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDialogResponsesGetter> IDialogTopicGetter.Responses => _Responses;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +210,20 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Priority = initialValue;
+                this.Branch = initialValue;
+                this.Quest = initialValue;
+                this.Keyword = initialValue;
+                this.AffinityEvent = initialValue;
+                this.TopicFlags = initialValue;
+                this.Category = initialValue;
+                this.Subtype = initialValue;
+                this.SubtypeName = initialValue;
+                this.Timestamp = initialValue;
+                this.Unknown = initialValue;
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +233,21 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem Name,
+                TItem Priority,
+                TItem Branch,
+                TItem Quest,
+                TItem Keyword,
+                TItem AffinityEvent,
+                TItem TopicFlags,
+                TItem Category,
+                TItem Subtype,
+                TItem SubtypeName,
+                TItem Timestamp,
+                TItem Unknown,
+                TItem Responses)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +257,20 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Priority = Priority;
+                this.Branch = Branch;
+                this.Quest = Quest;
+                this.Keyword = Keyword;
+                this.AffinityEvent = AffinityEvent;
+                this.TopicFlags = TopicFlags;
+                this.Category = Category;
+                this.Subtype = Subtype;
+                this.SubtypeName = SubtypeName;
+                this.Timestamp = Timestamp;
+                this.Unknown = Unknown;
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +279,23 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public TItem Priority;
+            public TItem Branch;
+            public TItem Quest;
+            public TItem Keyword;
+            public TItem AffinityEvent;
+            public TItem TopicFlags;
+            public TItem Category;
+            public TItem Subtype;
+            public TItem SubtypeName;
+            public TItem Timestamp;
+            public TItem Unknown;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>? Responses;
             #endregion
 
             #region Equals
@@ -119,11 +309,39 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
+                if (!object.Equals(this.Branch, rhs.Branch)) return false;
+                if (!object.Equals(this.Quest, rhs.Quest)) return false;
+                if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
+                if (!object.Equals(this.AffinityEvent, rhs.AffinityEvent)) return false;
+                if (!object.Equals(this.TopicFlags, rhs.TopicFlags)) return false;
+                if (!object.Equals(this.Category, rhs.Category)) return false;
+                if (!object.Equals(this.Subtype, rhs.Subtype)) return false;
+                if (!object.Equals(this.SubtypeName, rhs.SubtypeName)) return false;
+                if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Responses, rhs.Responses)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.Priority);
+                hash.Add(this.Branch);
+                hash.Add(this.Quest);
+                hash.Add(this.Keyword);
+                hash.Add(this.AffinityEvent);
+                hash.Add(this.TopicFlags);
+                hash.Add(this.Category);
+                hash.Add(this.Subtype);
+                hash.Add(this.SubtypeName);
+                hash.Add(this.Timestamp);
+                hash.Add(this.Unknown);
+                hash.Add(this.Responses);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +352,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Priority)) return false;
+                if (!eval(this.Branch)) return false;
+                if (!eval(this.Quest)) return false;
+                if (!eval(this.Keyword)) return false;
+                if (!eval(this.AffinityEvent)) return false;
+                if (!eval(this.TopicFlags)) return false;
+                if (!eval(this.Category)) return false;
+                if (!eval(this.Subtype)) return false;
+                if (!eval(this.SubtypeName)) return false;
+                if (!eval(this.Timestamp)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (this.Responses != null)
+                {
+                    if (!eval(this.Responses.Overall)) return false;
+                    if (this.Responses.Specific != null)
+                    {
+                        foreach (var item in this.Responses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +396,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.Priority)) return true;
+                if (eval(this.Branch)) return true;
+                if (eval(this.Quest)) return true;
+                if (eval(this.Keyword)) return true;
+                if (eval(this.AffinityEvent)) return true;
+                if (eval(this.TopicFlags)) return true;
+                if (eval(this.Category)) return true;
+                if (eval(this.Subtype)) return true;
+                if (eval(this.SubtypeName)) return true;
+                if (eval(this.Timestamp)) return true;
+                if (eval(this.Unknown)) return true;
+                if (this.Responses != null)
+                {
+                    if (eval(this.Responses.Overall)) return true;
+                    if (this.Responses.Specific != null)
+                    {
+                        foreach (var item in this.Responses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +447,48 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.Priority = eval(this.Priority);
+                obj.Branch = eval(this.Branch);
+                obj.Quest = eval(this.Quest);
+                obj.Keyword = eval(this.Keyword);
+                obj.AffinityEvent = eval(this.AffinityEvent);
+                obj.TopicFlags = eval(this.TopicFlags);
+                obj.Category = eval(this.Category);
+                obj.Subtype = eval(this.Subtype);
+                obj.SubtypeName = eval(this.SubtypeName);
+                obj.Timestamp = eval(this.Timestamp);
+                obj.Unknown = eval(this.Unknown);
+                if (Responses != null)
+                {
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponses.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponses.Mask<R>?>>());
+                    if (Responses.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DialogResponses.Mask<R>?>>();
+                        obj.Responses.Specific = l;
+                        foreach (var item in Responses.Specific)
+                        {
+                            MaskItemIndexed<R, DialogResponses.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DialogResponses.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +507,92 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(DialogTopic.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Priority ?? true)
+                    {
+                        sb.AppendItem(Priority, "Priority");
+                    }
+                    if (printMask?.Branch ?? true)
+                    {
+                        sb.AppendItem(Branch, "Branch");
+                    }
+                    if (printMask?.Quest ?? true)
+                    {
+                        sb.AppendItem(Quest, "Quest");
+                    }
+                    if (printMask?.Keyword ?? true)
+                    {
+                        sb.AppendItem(Keyword, "Keyword");
+                    }
+                    if (printMask?.AffinityEvent ?? true)
+                    {
+                        sb.AppendItem(AffinityEvent, "AffinityEvent");
+                    }
+                    if (printMask?.TopicFlags ?? true)
+                    {
+                        sb.AppendItem(TopicFlags, "TopicFlags");
+                    }
+                    if (printMask?.Category ?? true)
+                    {
+                        sb.AppendItem(Category, "Category");
+                    }
+                    if (printMask?.Subtype ?? true)
+                    {
+                        sb.AppendItem(Subtype, "Subtype");
+                    }
+                    if (printMask?.SubtypeName ?? true)
+                    {
+                        sb.AppendItem(SubtypeName, "SubtypeName");
+                    }
+                    if (printMask?.Timestamp ?? true)
+                    {
+                        sb.AppendItem(Timestamp, "Timestamp");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if ((printMask?.Responses?.Overall ?? true)
+                        && Responses is {} ResponsesItem)
+                    {
+                        sb.AppendLine("Responses =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ResponsesItem.Overall);
+                            if (ResponsesItem.Specific != null)
+                            {
+                                foreach (var subItem in ResponsesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +603,57 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public Exception? Priority;
+            public Exception? Branch;
+            public Exception? Quest;
+            public Exception? Keyword;
+            public Exception? AffinityEvent;
+            public Exception? TopicFlags;
+            public Exception? Category;
+            public Exception? Subtype;
+            public Exception? SubtypeName;
+            public Exception? Timestamp;
+            public Exception? Unknown;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>? Responses;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogTopic_FieldIndex.Components:
+                        return Components;
+                    case DialogTopic_FieldIndex.Name:
+                        return Name;
+                    case DialogTopic_FieldIndex.Priority:
+                        return Priority;
+                    case DialogTopic_FieldIndex.Branch:
+                        return Branch;
+                    case DialogTopic_FieldIndex.Quest:
+                        return Quest;
+                    case DialogTopic_FieldIndex.Keyword:
+                        return Keyword;
+                    case DialogTopic_FieldIndex.AffinityEvent:
+                        return AffinityEvent;
+                    case DialogTopic_FieldIndex.TopicFlags:
+                        return TopicFlags;
+                    case DialogTopic_FieldIndex.Category:
+                        return Category;
+                    case DialogTopic_FieldIndex.Subtype:
+                        return Subtype;
+                    case DialogTopic_FieldIndex.SubtypeName:
+                        return SubtypeName;
+                    case DialogTopic_FieldIndex.Timestamp:
+                        return Timestamp;
+                    case DialogTopic_FieldIndex.Unknown:
+                        return Unknown;
+                    case DialogTopic_FieldIndex.Responses:
+                        return Responses;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +664,48 @@ namespace Mutagen.Bethesda.Starfield
                 DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogTopic_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case DialogTopic_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Priority:
+                        this.Priority = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Branch:
+                        this.Branch = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Quest:
+                        this.Quest = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Keyword:
+                        this.Keyword = ex;
+                        break;
+                    case DialogTopic_FieldIndex.AffinityEvent:
+                        this.AffinityEvent = ex;
+                        break;
+                    case DialogTopic_FieldIndex.TopicFlags:
+                        this.TopicFlags = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Category:
+                        this.Category = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Subtype:
+                        this.Subtype = ex;
+                        break;
+                    case DialogTopic_FieldIndex.SubtypeName:
+                        this.SubtypeName = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Timestamp:
+                        this.Timestamp = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Responses:
+                        this.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +717,48 @@ namespace Mutagen.Bethesda.Starfield
                 DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogTopic_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Priority:
+                        this.Priority = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Branch:
+                        this.Branch = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Quest:
+                        this.Quest = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Keyword:
+                        this.Keyword = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.AffinityEvent:
+                        this.AffinityEvent = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.TopicFlags:
+                        this.TopicFlags = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Category:
+                        this.Category = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Subtype:
+                        this.Subtype = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.SubtypeName:
+                        this.SubtypeName = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Timestamp:
+                        this.Timestamp = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Responses:
+                        this.Responses = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +768,20 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (Priority != null) return true;
+                if (Branch != null) return true;
+                if (Quest != null) return true;
+                if (Keyword != null) return true;
+                if (AffinityEvent != null) return true;
+                if (TopicFlags != null) return true;
+                if (Category != null) return true;
+                if (Subtype != null) return true;
+                if (SubtypeName != null) return true;
+                if (Timestamp != null) return true;
+                if (Unknown != null) return true;
+                if (Responses != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +808,78 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Priority, "Priority");
+                }
+                {
+                    sb.AppendItem(Branch, "Branch");
+                }
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(Keyword, "Keyword");
+                }
+                {
+                    sb.AppendItem(AffinityEvent, "AffinityEvent");
+                }
+                {
+                    sb.AppendItem(TopicFlags, "TopicFlags");
+                }
+                {
+                    sb.AppendItem(Category, "Category");
+                }
+                {
+                    sb.AppendItem(Subtype, "Subtype");
+                }
+                {
+                    sb.AppendItem(SubtypeName, "SubtypeName");
+                }
+                {
+                    sb.AppendItem(Timestamp, "Timestamp");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                if (Responses is {} ResponsesItem)
+                {
+                    sb.AppendLine("Responses =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ResponsesItem.Overall);
+                        if (ResponsesItem.Specific != null)
+                        {
+                            foreach (var subItem in ResponsesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +888,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Priority = this.Priority.Combine(rhs.Priority);
+                ret.Branch = this.Branch.Combine(rhs.Branch);
+                ret.Quest = this.Quest.Combine(rhs.Quest);
+                ret.Keyword = this.Keyword.Combine(rhs.Keyword);
+                ret.AffinityEvent = this.AffinityEvent.Combine(rhs.AffinityEvent);
+                ret.TopicFlags = this.TopicFlags.Combine(rhs.TopicFlags);
+                ret.Category = this.Category.Combine(rhs.Category);
+                ret.Subtype = this.Subtype.Combine(rhs.Subtype);
+                ret.SubtypeName = this.SubtypeName.Combine(rhs.SubtypeName);
+                ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +923,63 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public bool Priority;
+            public bool Branch;
+            public bool Quest;
+            public bool Keyword;
+            public bool AffinityEvent;
+            public bool TopicFlags;
+            public bool Category;
+            public bool Subtype;
+            public bool SubtypeName;
+            public bool Timestamp;
+            public bool Unknown;
+            public DialogResponses.TranslationMask? Responses;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Priority = defaultOn;
+                this.Branch = defaultOn;
+                this.Quest = defaultOn;
+                this.Keyword = defaultOn;
+                this.AffinityEvent = defaultOn;
+                this.TopicFlags = defaultOn;
+                this.Category = defaultOn;
+                this.Subtype = defaultOn;
+                this.SubtypeName = defaultOn;
+                this.Timestamp = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Priority, null));
+                ret.Add((Branch, null));
+                ret.Add((Quest, null));
+                ret.Add((Keyword, null));
+                ret.Add((AffinityEvent, null));
+                ret.Add((TopicFlags, null));
+                ret.Add((Category, null));
+                ret.Add((Subtype, null));
+                ret.Add((SubtypeName, null));
+                ret.Add((Timestamp, null));
+                ret.Add((Unknown, null));
+                ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +991,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogTopicCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1042,49 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IDialogTopic);
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DialogTopicCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DialogTopicSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DialogTopicSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DialogTopicSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1164,38 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IDialogTopic :
+        IAssetLinkContainer,
         IDialogTopicGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        IStarfieldMajorRecordInternal
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new Single Priority { get; set; }
+        new IFormLinkNullable<IDialogBranchGetter> Branch { get; set; }
+        new IFormLink<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkNullable<IAffinityEventGetter> AffinityEvent { get; set; }
+        new DialogTopic.TopicFlag TopicFlags { get; set; }
+        new DialogTopic.CategoryEnum Category { get; set; }
+        new DialogTopic.SubtypeEnum Subtype { get; set; }
+        new RecordType SubtypeName { get; set; }
+        new Int32 Timestamp { get; set; }
+        new Int32 Unknown { get; set; }
+        new ExtendedList<DialogResponses> Responses { get; }
+        #region Mutagen
+        new DialogTopic.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IDialogTopicInternal :
@@ -440,11 +1208,41 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.DIAL)]
     public partial interface IDialogTopicGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IDialogTopicGetter>,
-        IMapsToGetter<IDialogTopicGetter>
+        IMajorRecordGetterEnumerable,
+        IMapsToGetter<IDialogTopicGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => DialogTopic_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        Single Priority { get; }
+        IFormLinkNullableGetter<IDialogBranchGetter> Branch { get; }
+        IFormLinkGetter<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IKeywordGetter> Keyword { get; }
+        IFormLinkNullableGetter<IAffinityEventGetter> AffinityEvent { get; }
+        DialogTopic.TopicFlag TopicFlags { get; }
+        DialogTopic.CategoryEnum Category { get; }
+        DialogTopic.SubtypeEnum Subtype { get; }
+        RecordType SubtypeName { get; }
+        Int32 Timestamp { get; }
+        Int32 Unknown { get; }
+        IReadOnlyList<IDialogResponsesGetter> Responses { get; }
+
+        #region Mutagen
+        DialogTopic.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -566,6 +1364,218 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IDialogTopicGetter obj)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IDialogTopicGetter obj,
+            bool throwIfUnknown = true)
+            where TMajor : class, IMajorRecordQueryableGetter
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            this IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecordGetter)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IDialogTopicInternal obj)
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IDialogTopicInternal obj)
+            where TMajor : class, IMajorRecordQueryable
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: true)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
+            this IDialogTopicInternal obj,
+            Type? type,
+            bool throwIfUnknown = true)
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecord)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
         public static DialogTopic Duplicate(
             this IDialogTopicGetter item,
             FormKey formKey,
@@ -621,6 +1631,20 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        Name = 8,
+        Priority = 9,
+        Branch = 10,
+        Quest = 11,
+        Keyword = 12,
+        AffinityEvent = 13,
+        TopicFlags = 14,
+        Category = 15,
+        Subtype = 16,
+        SubtypeName = 17,
+        Timestamp = 18,
+        Unknown = 19,
+        Responses = 20,
     }
     #endregion
 
@@ -631,9 +1655,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(DialogTopic.Mask<>);
 
@@ -663,9 +1687,67 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.DIAL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.DIAL);
+            var all = RecordCollection.Factory(
+                RecordTypes.DIAL,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.PNAM,
+                RecordTypes.BNAM,
+                RecordTypes.QNAM,
+                RecordTypes.KNAM,
+                RecordTypes.ANAM,
+                RecordTypes.DATA,
+                RecordTypes.SNAM,
+                RecordTypes.TIFL,
+                RecordTypes.TIFC,
+                RecordTypes.INFO,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.ENAM,
+                RecordTypes.DNAM,
+                RecordTypes.GNAM,
+                RecordTypes.TRDA,
+                RecordTypes.TROT,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.NAM9,
+                RecordTypes.STRV,
+                RecordTypes.VCLR,
+                RecordTypes.FLMV,
+                RecordTypes.FLAV,
+                RecordTypes.QUAL,
+                RecordTypes.DOFT,
+                RecordTypes.DPLT,
+                RecordTypes.OCOR,
+                RecordTypes.LVCR,
+                RecordTypes.ATAC,
+                RecordTypes.PLRL,
+                RecordTypes.XNAM,
+                RecordTypes.HNAM,
+                RecordTypes.RVSH,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.RNAM,
+                RecordTypes.TSCE,
+                RecordTypes.INTV,
+                RecordTypes.WED0,
+                RecordTypes.TIQS,
+                RecordTypes.NAM0,
+                RecordTypes.MODQ,
+                RecordTypes.INAM,
+                RecordTypes.COCT,
+                RecordTypes.NAM8,
+                RecordTypes.PERK,
+                RecordTypes.SCSP);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
+        public static bool IsPartialFormable => true;
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -706,6 +1788,20 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDialogTopicInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.Name = default;
+            item.Priority = DialogTopic.PriorityDefault;
+            item.Branch.Clear();
+            item.Quest.Clear();
+            item.Keyword.Clear();
+            item.AffinityEvent.Clear();
+            item.TopicFlags = default;
+            item.Category = default;
+            item.Subtype = default;
+            item.SubtypeName = RecordType.Null;
+            item.Timestamp = default;
+            item.Unknown = default;
+            item.Responses.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1819,179 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IDialogTopic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Branch.Relink(mapping);
+            obj.Quest.Relink(mapping);
+            obj.Keyword.Relink(mapping);
+            obj.AffinityEvent.Relink(mapping);
+            obj.Responses.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IDialogTopicInternal obj)
+        {
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecord)!;
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IDialogTopicInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IDialogTopicInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            {
+                yield return item;
+            }
+        }
+        
+        public void Remove(
+            IDialogTopicInternal obj,
+            HashSet<FormKey> keys)
+        {
+            obj.Responses.Remove(keys);
+        }
+        
+        public void Remove(
+            IDialogTopicInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IStarfieldMajorRecord":
+                case "StarfieldMajorRecord":
+                case "IMajorRecordGetter":
+                case "IStarfieldMajorRecordGetter":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                case "AComponent":
+                case "IAComponentGetter":
+                case "IAComponent":
+                case "AnimationGraphComponent":
+                case "IAnimationGraphComponentGetter":
+                case "IAnimationGraphComponent":
+                case "AttachParentArrayComponent":
+                case "IAttachParentArrayComponentGetter":
+                case "IAttachParentArrayComponent":
+                case "ActivityTrackerComponent":
+                case "IActivityTrackerComponentGetter":
+                case "IActivityTrackerComponent":
+                case "ScannableComponent":
+                case "IScannableComponentGetter":
+                case "IScannableComponent":
+                case "KeywordFormComponent":
+                case "IKeywordFormComponentGetter":
+                case "IKeywordFormComponent":
+                case "ObjectWindowFilterComponent":
+                case "IObjectWindowFilterComponentGetter":
+                case "IObjectWindowFilterComponent":
+                case "ContactShadowComponent":
+                case "IContactShadowComponentGetter":
+                case "IContactShadowComponent":
+                case "FullNameComponent":
+                case "IFullNameComponentGetter":
+                case "IFullNameComponent":
+                case "ModelComponent":
+                case "IModelComponentGetter":
+                case "IModelComponent":
+                case "PlanetModelComponent":
+                case "IPlanetModelComponentGetter":
+                case "IPlanetModelComponent":
+                case "HoudiniDataComponent":
+                case "IHoudiniDataComponentGetter":
+                case "IHoudiniDataComponent":
+                case "SkinFormComponent":
+                case "ISkinFormComponentGetter":
+                case "ISkinFormComponent":
+                case "BodyPartInfoComponent":
+                case "IBodyPartInfoComponentGetter":
+                case "IBodyPartInfoComponent":
+                case "EffectSequenceComponent":
+                case "IEffectSequenceComponentGetter":
+                case "IEffectSequenceComponent":
+                case "LightAttachmentFormComponent":
+                case "ILightAttachmentFormComponentGetter":
+                case "ILightAttachmentFormComponent":
+                case "LightAnimFormComponent":
+                case "ILightAnimFormComponentGetter":
+                case "ILightAnimFormComponent":
+                case "ParticleSystemComponent":
+                case "IParticleSystemComponentGetter":
+                case "IParticleSystemComponent":
+                case "LodOwnerComponent":
+                case "ILodOwnerComponentGetter":
+                case "ILodOwnerComponent":
+                case "SoundTagComponent":
+                case "ISoundTagComponentGetter":
+                case "ISoundTagComponent":
+                case "DisplayCaseComponent":
+                case "IDisplayCaseComponentGetter":
+                case "IDisplayCaseComponent":
+                case "ObjectPaletteDefaultsComponent":
+                case "IObjectPaletteDefaultsComponentGetter":
+                case "IObjectPaletteDefaultsComponent":
+                    break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    obj.Responses.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDialogTopic obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Responses.WhereCastable<IDialogResponsesGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IDialogTopic obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Responses.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -739,6 +2008,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams,
                 fillStructs: DialogTopicBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DialogTopicBinaryCreateTranslation.FillBinaryRecordTypes);
+            DialogTopicBinaryCreateTranslation.CustomBinaryEndImportPublic(
+                frame: frame,
+                obj: item);
         }
         
         public override void CopyInFromBinary(
@@ -790,6 +2062,26 @@ namespace Mutagen.Bethesda.Starfield
             DialogTopic.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Priority = item.Priority.EqualsWithin(rhs.Priority);
+            ret.Branch = item.Branch.Equals(rhs.Branch);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.Keyword = item.Keyword.Equals(rhs.Keyword);
+            ret.AffinityEvent = item.AffinityEvent.Equals(rhs.AffinityEvent);
+            ret.TopicFlags = item.TopicFlags == rhs.TopicFlags;
+            ret.Category = item.Category == rhs.Category;
+            ret.Subtype = item.Subtype == rhs.Subtype;
+            ret.SubtypeName = item.SubtypeName == rhs.SubtypeName;
+            ret.Timestamp = item.Timestamp == rhs.Timestamp;
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Responses = item.Responses.CollectionEqualsHelper(
+                rhs.Responses,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +2131,83 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Priority ?? true)
+            {
+                sb.AppendItem(item.Priority, "Priority");
+            }
+            if (printMask?.Branch ?? true)
+            {
+                sb.AppendItem(item.Branch.FormKeyNullable, "Branch");
+            }
+            if (printMask?.Quest ?? true)
+            {
+                sb.AppendItem(item.Quest.FormKey, "Quest");
+            }
+            if (printMask?.Keyword ?? true)
+            {
+                sb.AppendItem(item.Keyword.FormKeyNullable, "Keyword");
+            }
+            if (printMask?.AffinityEvent ?? true)
+            {
+                sb.AppendItem(item.AffinityEvent.FormKeyNullable, "AffinityEvent");
+            }
+            if (printMask?.TopicFlags ?? true)
+            {
+                sb.AppendItem(item.TopicFlags, "TopicFlags");
+            }
+            if (printMask?.Category ?? true)
+            {
+                sb.AppendItem(item.Category, "Category");
+            }
+            if (printMask?.Subtype ?? true)
+            {
+                sb.AppendItem(item.Subtype, "Subtype");
+            }
+            if (printMask?.SubtypeName ?? true)
+            {
+                sb.AppendItem(item.SubtypeName, "SubtypeName");
+            }
+            if (printMask?.Timestamp ?? true)
+            {
+                sb.AppendItem(item.Timestamp, "Timestamp");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Responses?.Overall ?? true)
+            {
+                sb.AppendLine("Responses =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Responses)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static DialogTopic_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +2258,62 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
+            {
+                if (!lhs.Priority.EqualsWithin(rhs.Priority)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
+            {
+                if (!lhs.Branch.Equals(rhs.Branch)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Keyword) ?? true))
+            {
+                if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.AffinityEvent) ?? true))
+            {
+                if (!lhs.AffinityEvent.Equals(rhs.AffinityEvent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
+            {
+                if (lhs.TopicFlags != rhs.TopicFlags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
+            {
+                if (lhs.Category != rhs.Category) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
+            {
+                if (lhs.Subtype != rhs.Subtype) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
+            {
+                if (lhs.SubtypeName != rhs.SubtypeName) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            {
+                if (lhs.Timestamp != rhs.Timestamp) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
+            {
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +2342,23 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IDialogTopicGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Priority);
+            hash.Add(item.Branch);
+            hash.Add(item.Quest);
+            hash.Add(item.Keyword);
+            hash.Add(item.AffinityEvent);
+            hash.Add(item.TopicFlags);
+            hash.Add(item.Category);
+            hash.Add(item.Subtype);
+            hash.Add(item.SubtypeName);
+            hash.Add(item.Timestamp);
+            hash.Add(item.Unknown);
+            hash.Add(item.Responses);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +2387,280 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Branch, out var BranchInfo))
+            {
+                yield return BranchInfo;
+            }
+            yield return FormLinkInformation.Factory(obj.Quest);
+            if (FormLinkInformation.TryFactory(obj.Keyword, out var KeywordInfo))
+            {
+                yield return KeywordInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.AffinityEvent, out var AffinityEventInfo))
+            {
+                yield return AffinityEventInfo;
+            }
+            foreach (var item in obj.Responses.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
+        {
+            foreach (var subItem in obj.Responses)
+            {
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IDialogTopicGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IStarfieldMajorRecord":
+                case "StarfieldMajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IStarfieldMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AComponent":
+                case "IAComponentGetter":
+                case "IAComponent":
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.Responses)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IModContext<IStarfieldMod, IStarfieldModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<IStarfieldMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<IStarfieldMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
+        {
+            var curContext = new ModContext<IStarfieldMod, IStarfieldModGetter, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            foreach (var subItem in obj.Responses)
+            {
+                yield return new ModContext<IStarfieldMod, IStarfieldModGetter, IDialogResponsesInternal, IDialogResponsesGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                        var ret = parent.Responses.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                        parent.Responses.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e, f) =>
+                    {
+                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<IStarfieldMod, IStarfieldModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<IStarfieldMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<IStarfieldMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
+        {
+            var curContext = new ModContext<IStarfieldMod, IStarfieldModGetter, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IStarfieldMajorRecord":
+                case "StarfieldMajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IStarfieldMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AComponent":
+                case "IAComponentGetter":
+                case "IAComponent":
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.Responses)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IStarfieldMod, IStarfieldModGetter, IDialogResponsesInternal, IDialogResponsesGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                                    var ret = parent.Responses.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                                    parent.Responses.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IDialogTopicGetter, IStarfieldMod, IStarfieldModGetter>(
+                        GameCategory.Starfield,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDialogTopicGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Responses.WhereCastable<IDialogResponsesGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +2736,102 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
+            {
+                item.Priority = rhs.Priority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
+            {
+                item.Branch.SetTo(rhs.Branch.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
+            {
+                item.Quest.SetTo(rhs.Quest.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Keyword) ?? true))
+            {
+                item.Keyword.SetTo(rhs.Keyword.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.AffinityEvent) ?? true))
+            {
+                item.AffinityEvent.SetTo(rhs.AffinityEvent.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
+            {
+                item.TopicFlags = rhs.TopicFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
+            {
+                item.Category = rhs.Category;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
+            {
+                item.Subtype = rhs.Subtype;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
+            {
+                item.SubtypeName = rhs.SubtypeName;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            {
+                item.Timestamp = rhs.Timestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.Responses);
+                try
+                {
+                    item.Responses.SetTo(
+                        rhs.Responses
+                        .Select(r =>
+                        {
+                            return (DialogResponses)r.DeepCopy(
+                                copyMask: default(TranslationCrystal),
+                                errorMask: errorMask);
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2980,125 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly DialogTopicBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IDialogTopicGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IDialogTopicGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Priority,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Branch,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Quest,
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Keyword,
+                header: translationParams.ConvertToCustom(RecordTypes.KNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AffinityEvent,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.TopicFlags,
+                    length: 1);
+                EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Category,
+                    length: 1);
+                EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Subtype,
+                    length: 2);
+            }
+            RecordTypeBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.SubtypeName,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            DialogTopicBinaryWriteTranslation.WriteBinaryTopicInfoList(
+                writer: writer,
+                item: item);
+            DialogTopicBinaryWriteTranslation.WriteBinaryInfoCount(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryTopicInfoListCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinaryTopicInfoList(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinaryTopicInfoListCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryInfoCountCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinaryInfoCount(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinaryInfoCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IDialogTopicGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IDialogTopicGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IDialogTopicGetter item,
@@ -1179,15 +3110,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1195,6 +3128,9 @@ namespace Mutagen.Bethesda.Starfield
                     throw RecordException.Enrich(ex, item);
                 }
             }
+            CustomBinaryEndExportInternal(
+                writer: writer,
+                obj: item);
         }
 
         public override void Write(
@@ -1237,6 +3173,147 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly DialogTopicBinaryCreateTranslation Instance = new DialogTopicBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DIAL;
+        public static void FillBinaryStructs(
+            IDialogTopicInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IDialogTopicInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)DialogTopic_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)DialogTopic_FieldIndex.Name;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)DialogTopic_FieldIndex.Priority;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Branch.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogTopic_FieldIndex.Branch;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogTopic_FieldIndex.Quest;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogTopic_FieldIndex.Keyword;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AffinityEvent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogTopic_FieldIndex.AffinityEvent;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    return (int)DialogTopic_FieldIndex.Subtype;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
+                }
+                case RecordTypeInts.TIFL:
+                {
+                    return DialogTopicBinaryCreateTranslation.FillBinaryTopicInfoListCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.TIFC:
+                {
+                    return DialogTopicBinaryCreateTranslation.FillBinaryInfoCountCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial ParseResult FillBinaryTopicInfoListCustom(
+            MutagenFrame frame,
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
+
+        public static partial ParseResult FillBinaryInfoCountCustom(
+            MutagenFrame frame,
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
+
+        public static partial void CustomBinaryEndImport(
+            MutagenFrame frame,
+            IDialogTopicInternal obj);
+        public static void CustomBinaryEndImportPublic(
+            MutagenFrame frame,
+            IDialogTopicInternal obj)
+        {
+            CustomBinaryEndImport(
+                frame: frame,
+                obj: obj);
+        }
     }
 
 }
@@ -1269,6 +3346,14 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogTopicCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DialogTopicCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1282,8 +3367,78 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IDialogTopic);
 
+        public DialogTopic.MajorFlag MajorFlags => (DialogTopic.MajorFlag)this.MajorRecordFlagsRaw;
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Priority
+        private int? _PriorityLocation;
+        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants).Float() : default;
+        #endregion
+        #region Branch
+        private int? _BranchLocation;
+        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
+        #endregion
+        #region Quest
+        private int? _QuestLocation;
+        public IFormLinkGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
+        #endregion
+        #region Keyword
+        private int? _KeywordLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region AffinityEvent
+        private int? _AffinityEventLocation;
+        public IFormLinkNullableGetter<IAffinityEventGetter> AffinityEvent => _AffinityEventLocation.HasValue ? new FormLinkNullable<IAffinityEventGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AffinityEventLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAffinityEventGetter>.Null;
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region TopicFlags
+        private int _TopicFlagsLocation => _DATALocation!.Value.Min;
+        private bool _TopicFlags_IsSet => _DATALocation.HasValue;
+        public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_recordData.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region Category
+        private int _CategoryLocation => _DATALocation!.Value.Min + 0x1;
+        private bool _Category_IsSet => _DATALocation.HasValue;
+        public DialogTopic.CategoryEnum Category => _Category_IsSet ? (DialogTopic.CategoryEnum)_recordData.Span.Slice(_CategoryLocation, 0x1)[0] : default;
+        #endregion
+        #region Subtype
+        private int _SubtypeLocation => _DATALocation!.Value.Min + 0x2;
+        private bool _Subtype_IsSet => _DATALocation.HasValue;
+        public DialogTopic.SubtypeEnum Subtype => _Subtype_IsSet ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SubtypeLocation, 0x2)) : default;
+        #endregion
+        #region SubtypeName
+        private int? _SubtypeNameLocation;
+        public RecordType SubtypeName => _SubtypeNameLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation.Value, _package.MetaData.Constants))) : RecordType.Null;
+        #endregion
+        #region TopicInfoList
+        public partial ParseResult TopicInfoListCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
+        #region InfoCount
+        public partial ParseResult InfoCountCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
         partial void CustomFactoryEnd(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        partial void CustomEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
@@ -1304,6 +3459,7 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            var origStream = stream;
             stream = Decompression.DecompressStream(stream);
             stream = ExtractRecordMemory(
                 stream: stream,
@@ -1326,6 +3482,10 @@ namespace Mutagen.Bethesda.Starfield
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
+            ret.CustomEnd(
+                stream: origStream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 
@@ -1340,6 +3500,92 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)DialogTopic_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Name;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _PriorityLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Priority;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BranchLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Branch;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _QuestLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Quest;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    _KeywordLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Keyword;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _AffinityEventLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.AffinityEvent;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)DialogTopic_FieldIndex.Subtype;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _SubtypeNameLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
+                }
+                case RecordTypeInts.TIFL:
+                {
+                    return TopicInfoListCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.TIFC:
+                {
+                    return InfoCountCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

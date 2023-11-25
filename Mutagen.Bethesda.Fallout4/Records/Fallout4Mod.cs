@@ -279,7 +279,6 @@ partial class Fallout4ModCommon
         PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
         streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
     }
-
     
     public static void WriteQuestsParallel(
         IFallout4GroupGetter<IQuestGetter> group,

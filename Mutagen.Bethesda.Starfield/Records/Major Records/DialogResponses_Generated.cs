@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,202 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DialogResponsesAdapter? _VirtualMachineAdapter;
+        public DialogResponsesAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDialogResponsesAdapterGetter? IDialogResponsesGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IDialogResponsesGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DialogResponseFlags? _Flags;
+        public DialogResponseFlags? Flags
+        {
+            get => _Flags;
+            set => _Flags = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDialogResponseFlagsGetter? IDialogResponsesGetter.Flags => this.Flags;
+        #endregion
+        #region SharedDialog
+        private readonly IFormLinkNullable<IDialogResponsesGetter> _SharedDialog = new FormLinkNullable<IDialogResponsesGetter>();
+        public IFormLinkNullable<IDialogResponsesGetter> SharedDialog
+        {
+            get => _SharedDialog;
+            set => _SharedDialog.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.SharedDialog => this.SharedDialog;
+        #endregion
+        #region DialogGroup
+        private readonly IFormLinkNullable<IDialogResponsesGetter> _DialogGroup = new FormLinkNullable<IDialogResponsesGetter>();
+        public IFormLinkNullable<IDialogResponsesGetter> DialogGroup
+        {
+            get => _DialogGroup;
+            set => _DialogGroup.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.DialogGroup => this.DialogGroup;
+        #endregion
+        #region Responses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public ExtendedList<DialogResponse> Responses
+        {
+            get => this._Responses;
+            init => this._Responses = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDialogResponseGetter> IDialogResponsesGetter.Responses => _Responses;
+        #endregion
+
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IDialogResponsesGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region Prompt
+        public TranslatedString? Prompt { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IDialogResponsesGetter.Prompt => this.Prompt;
+        #endregion
+        #region Speaker
+        private readonly IFormLinkNullable<INpcGetter> _Speaker = new FormLinkNullable<INpcGetter>();
+        public IFormLinkNullable<INpcGetter> Speaker
+        {
+            get => _Speaker;
+            set => _Speaker.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<INpcGetter> IDialogResponsesGetter.Speaker => this.Speaker;
+        #endregion
+        #region StartScene
+        private readonly IFormLinkNullable<ISceneGetter> _StartScene = new FormLinkNullable<ISceneGetter>();
+        public IFormLinkNullable<ISceneGetter> StartScene
+        {
+            get => _StartScene;
+            set => _StartScene.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISceneGetter> IDialogResponsesGetter.StartScene => this.StartScene;
+        #endregion
+        #region INTV
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _INTV;
+        public MemorySlice<Byte>? INTV
+        {
+            get => this._INTV;
+            set => this._INTV = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IDialogResponsesGetter.INTV => this.INTV;
+        #endregion
+        #region WED0
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _WED0;
+        public SoundReference? WED0
+        {
+            get => _WED0;
+            set => _WED0 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IDialogResponsesGetter.WED0 => this.WED0;
+        #endregion
+        #region SetParentQuestStage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DialogSetParentQuestStage? _SetParentQuestStage;
+        public DialogSetParentQuestStage? SetParentQuestStage
+        {
+            get => _SetParentQuestStage;
+            set => _SetParentQuestStage = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDialogSetParentQuestStageGetter? IDialogResponsesGetter.SetParentQuestStage => this.SetParentQuestStage;
+        #endregion
+        #region StartScenePhase
+        public String? StartScenePhase { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IDialogResponsesGetter.StartScenePhase => this.StartScenePhase;
+        #endregion
+        #region ResetGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _ResetGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> ResetGlobal
+        {
+            get => _ResetGlobal;
+            set => _ResetGlobal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IDialogResponsesGetter.ResetGlobal => this.ResetGlobal;
+        #endregion
+        #region SubtitlePriority
+        public DialogResponses.SubtitlePriorityLevel? SubtitlePriority { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        DialogResponses.SubtitlePriorityLevel? IDialogResponsesGetter.SubtitlePriority => this.SubtitlePriority;
+        #endregion
+        #region COCT
+        public Boolean COCT { get; set; } = default;
+        #endregion
+        #region NAM8
+        private readonly IFormLinkNullable<IAffinityEventGetter> _NAM8 = new FormLinkNullable<IAffinityEventGetter>();
+        public IFormLinkNullable<IAffinityEventGetter> NAM8
+        {
+            get => _NAM8;
+            set => _NAM8.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAffinityEventGetter> IDialogResponsesGetter.NAM8 => this.NAM8;
+        #endregion
+        #region Perk
+        private readonly IFormLinkNullable<IPerkGetter> _Perk = new FormLinkNullable<IPerkGetter>();
+        public IFormLinkNullable<IPerkGetter> Perk
+        {
+            get => _Perk;
+            set => _Perk.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPerkGetter> IDialogResponsesGetter.Perk => this.Perk;
+        #endregion
+        #region SpeechChallenge
+        private readonly IFormLinkNullable<ISpeechChallengeGetter> _SpeechChallenge = new FormLinkNullable<ISpeechChallengeGetter>();
+        public IFormLinkNullable<ISpeechChallengeGetter> SpeechChallenge
+        {
+            get => _SpeechChallenge;
+            set => _SpeechChallenge.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISpeechChallengeGetter> IDialogResponsesGetter.SpeechChallenge => this.SpeechChallenge;
+        #endregion
 
         #region To String
 
@@ -79,6 +280,26 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(initialValue, new DialogResponsesAdapter.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(initialValue, new DialogResponseFlags.Mask<TItem>(initialValue));
+                this.SharedDialog = initialValue;
+                this.DialogGroup = initialValue;
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Prompt = initialValue;
+                this.Speaker = initialValue;
+                this.StartScene = initialValue;
+                this.INTV = initialValue;
+                this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.SetParentQuestStage = new MaskItem<TItem, DialogSetParentQuestStage.Mask<TItem>?>(initialValue, new DialogSetParentQuestStage.Mask<TItem>(initialValue));
+                this.StartScenePhase = initialValue;
+                this.ResetGlobal = initialValue;
+                this.SubtitlePriority = initialValue;
+                this.COCT = initialValue;
+                this.NAM8 = initialValue;
+                this.Perk = initialValue;
+                this.SpeechChallenge = initialValue;
             }
 
             public Mask(
@@ -88,7 +309,27 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem Components,
+                TItem Flags,
+                TItem SharedDialog,
+                TItem DialogGroup,
+                TItem Responses,
+                TItem Conditions,
+                TItem Prompt,
+                TItem Speaker,
+                TItem StartScene,
+                TItem INTV,
+                TItem WED0,
+                TItem SetParentQuestStage,
+                TItem StartScenePhase,
+                TItem ResetGlobal,
+                TItem SubtitlePriority,
+                TItem COCT,
+                TItem NAM8,
+                TItem Perk,
+                TItem SpeechChallenge)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +339,26 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(VirtualMachineAdapter, new DialogResponsesAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(Flags, new DialogResponseFlags.Mask<TItem>(Flags));
+                this.SharedDialog = SharedDialog;
+                this.DialogGroup = DialogGroup;
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Prompt = Prompt;
+                this.Speaker = Speaker;
+                this.StartScene = StartScene;
+                this.INTV = INTV;
+                this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
+                this.SetParentQuestStage = new MaskItem<TItem, DialogSetParentQuestStage.Mask<TItem>?>(SetParentQuestStage, new DialogSetParentQuestStage.Mask<TItem>(SetParentQuestStage));
+                this.StartScenePhase = StartScenePhase;
+                this.ResetGlobal = ResetGlobal;
+                this.SubtitlePriority = SubtitlePriority;
+                this.COCT = COCT;
+                this.NAM8 = NAM8;
+                this.Perk = Perk;
+                this.SpeechChallenge = SpeechChallenge;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +367,29 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>? Flags { get; set; }
+            public TItem SharedDialog;
+            public TItem DialogGroup;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>? Responses;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem Prompt;
+            public TItem Speaker;
+            public TItem StartScene;
+            public TItem INTV;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED0 { get; set; }
+            public MaskItem<TItem, DialogSetParentQuestStage.Mask<TItem>?>? SetParentQuestStage { get; set; }
+            public TItem StartScenePhase;
+            public TItem ResetGlobal;
+            public TItem SubtitlePriority;
+            public TItem COCT;
+            public TItem NAM8;
+            public TItem Perk;
+            public TItem SpeechChallenge;
             #endregion
 
             #region Equals
@@ -119,11 +403,51 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.SharedDialog, rhs.SharedDialog)) return false;
+                if (!object.Equals(this.DialogGroup, rhs.DialogGroup)) return false;
+                if (!object.Equals(this.Responses, rhs.Responses)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Prompt, rhs.Prompt)) return false;
+                if (!object.Equals(this.Speaker, rhs.Speaker)) return false;
+                if (!object.Equals(this.StartScene, rhs.StartScene)) return false;
+                if (!object.Equals(this.INTV, rhs.INTV)) return false;
+                if (!object.Equals(this.WED0, rhs.WED0)) return false;
+                if (!object.Equals(this.SetParentQuestStage, rhs.SetParentQuestStage)) return false;
+                if (!object.Equals(this.StartScenePhase, rhs.StartScenePhase)) return false;
+                if (!object.Equals(this.ResetGlobal, rhs.ResetGlobal)) return false;
+                if (!object.Equals(this.SubtitlePriority, rhs.SubtitlePriority)) return false;
+                if (!object.Equals(this.COCT, rhs.COCT)) return false;
+                if (!object.Equals(this.NAM8, rhs.NAM8)) return false;
+                if (!object.Equals(this.Perk, rhs.Perk)) return false;
+                if (!object.Equals(this.SpeechChallenge, rhs.SpeechChallenge)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Components);
+                hash.Add(this.Flags);
+                hash.Add(this.SharedDialog);
+                hash.Add(this.DialogGroup);
+                hash.Add(this.Responses);
+                hash.Add(this.Conditions);
+                hash.Add(this.Prompt);
+                hash.Add(this.Speaker);
+                hash.Add(this.StartScene);
+                hash.Add(this.INTV);
+                hash.Add(this.WED0);
+                hash.Add(this.SetParentQuestStage);
+                hash.Add(this.StartScenePhase);
+                hash.Add(this.ResetGlobal);
+                hash.Add(this.SubtitlePriority);
+                hash.Add(this.COCT);
+                hash.Add(this.NAM8);
+                hash.Add(this.Perk);
+                hash.Add(this.SpeechChallenge);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +458,75 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Flags != null)
+                {
+                    if (!eval(this.Flags.Overall)) return false;
+                    if (this.Flags.Specific != null && !this.Flags.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SharedDialog)) return false;
+                if (!eval(this.DialogGroup)) return false;
+                if (this.Responses != null)
+                {
+                    if (!eval(this.Responses.Overall)) return false;
+                    if (this.Responses.Specific != null)
+                    {
+                        foreach (var item in this.Responses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Prompt)) return false;
+                if (!eval(this.Speaker)) return false;
+                if (!eval(this.StartScene)) return false;
+                if (!eval(this.INTV)) return false;
+                if (WED0 != null)
+                {
+                    if (!eval(this.WED0.Overall)) return false;
+                    if (this.WED0.Specific != null && !this.WED0.Specific.All(eval)) return false;
+                }
+                if (SetParentQuestStage != null)
+                {
+                    if (!eval(this.SetParentQuestStage.Overall)) return false;
+                    if (this.SetParentQuestStage.Specific != null && !this.SetParentQuestStage.Specific.All(eval)) return false;
+                }
+                if (!eval(this.StartScenePhase)) return false;
+                if (!eval(this.ResetGlobal)) return false;
+                if (!eval(this.SubtitlePriority)) return false;
+                if (!eval(this.COCT)) return false;
+                if (!eval(this.NAM8)) return false;
+                if (!eval(this.Perk)) return false;
+                if (!eval(this.SpeechChallenge)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +535,75 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Flags != null)
+                {
+                    if (eval(this.Flags.Overall)) return true;
+                    if (this.Flags.Specific != null && this.Flags.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SharedDialog)) return true;
+                if (eval(this.DialogGroup)) return true;
+                if (this.Responses != null)
+                {
+                    if (eval(this.Responses.Overall)) return true;
+                    if (this.Responses.Specific != null)
+                    {
+                        foreach (var item in this.Responses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Prompt)) return true;
+                if (eval(this.Speaker)) return true;
+                if (eval(this.StartScene)) return true;
+                if (eval(this.INTV)) return true;
+                if (WED0 != null)
+                {
+                    if (eval(this.WED0.Overall)) return true;
+                    if (this.WED0.Specific != null && this.WED0.Specific.Any(eval)) return true;
+                }
+                if (SetParentQuestStage != null)
+                {
+                    if (eval(this.SetParentQuestStage.Overall)) return true;
+                    if (this.SetParentQuestStage.Specific != null && this.SetParentQuestStage.Specific.Any(eval)) return true;
+                }
+                if (eval(this.StartScenePhase)) return true;
+                if (eval(this.ResetGlobal)) return true;
+                if (eval(this.SubtitlePriority)) return true;
+                if (eval(this.COCT)) return true;
+                if (eval(this.NAM8)) return true;
+                if (eval(this.Perk)) return true;
+                if (eval(this.SpeechChallenge)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +619,68 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, DialogResponsesAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Flags = this.Flags == null ? null : new MaskItem<R, DialogResponseFlags.Mask<R>?>(eval(this.Flags.Overall), this.Flags.Specific?.Translate(eval));
+                obj.SharedDialog = eval(this.SharedDialog);
+                obj.DialogGroup = eval(this.DialogGroup);
+                if (Responses != null)
+                {
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponse.Mask<R>?>>());
+                    if (Responses.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DialogResponse.Mask<R>?>>();
+                        obj.Responses.Specific = l;
+                        foreach (var item in Responses.Specific)
+                        {
+                            MaskItemIndexed<R, DialogResponse.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DialogResponse.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Prompt = eval(this.Prompt);
+                obj.Speaker = eval(this.Speaker);
+                obj.StartScene = eval(this.StartScene);
+                obj.INTV = eval(this.INTV);
+                obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
+                obj.SetParentQuestStage = this.SetParentQuestStage == null ? null : new MaskItem<R, DialogSetParentQuestStage.Mask<R>?>(eval(this.SetParentQuestStage.Overall), this.SetParentQuestStage.Specific?.Translate(eval));
+                obj.StartScenePhase = eval(this.StartScenePhase);
+                obj.ResetGlobal = eval(this.ResetGlobal);
+                obj.SubtitlePriority = eval(this.SubtitlePriority);
+                obj.COCT = eval(this.COCT);
+                obj.NAM8 = eval(this.NAM8);
+                obj.Perk = eval(this.Perk);
+                obj.SpeechChallenge = eval(this.SpeechChallenge);
             }
             #endregion
 
@@ -175,6 +699,131 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(DialogResponses.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Flags?.Overall ?? true)
+                    {
+                        Flags?.Print(sb);
+                    }
+                    if (printMask?.SharedDialog ?? true)
+                    {
+                        sb.AppendItem(SharedDialog, "SharedDialog");
+                    }
+                    if (printMask?.DialogGroup ?? true)
+                    {
+                        sb.AppendItem(DialogGroup, "DialogGroup");
+                    }
+                    if ((printMask?.Responses?.Overall ?? true)
+                        && Responses is {} ResponsesItem)
+                    {
+                        sb.AppendLine("Responses =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ResponsesItem.Overall);
+                            if (ResponsesItem.Specific != null)
+                            {
+                                foreach (var subItem in ResponsesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Prompt ?? true)
+                    {
+                        sb.AppendItem(Prompt, "Prompt");
+                    }
+                    if (printMask?.Speaker ?? true)
+                    {
+                        sb.AppendItem(Speaker, "Speaker");
+                    }
+                    if (printMask?.StartScene ?? true)
+                    {
+                        sb.AppendItem(StartScene, "StartScene");
+                    }
+                    if (printMask?.INTV ?? true)
+                    {
+                        sb.AppendItem(INTV, "INTV");
+                    }
+                    if (printMask?.WED0?.Overall ?? true)
+                    {
+                        WED0?.Print(sb);
+                    }
+                    if (printMask?.SetParentQuestStage?.Overall ?? true)
+                    {
+                        SetParentQuestStage?.Print(sb);
+                    }
+                    if (printMask?.StartScenePhase ?? true)
+                    {
+                        sb.AppendItem(StartScenePhase, "StartScenePhase");
+                    }
+                    if (printMask?.ResetGlobal ?? true)
+                    {
+                        sb.AppendItem(ResetGlobal, "ResetGlobal");
+                    }
+                    if (printMask?.SubtitlePriority ?? true)
+                    {
+                        sb.AppendItem(SubtitlePriority, "SubtitlePriority");
+                    }
+                    if (printMask?.COCT ?? true)
+                    {
+                        sb.AppendItem(COCT, "COCT");
+                    }
+                    if (printMask?.NAM8 ?? true)
+                    {
+                        sb.AppendItem(NAM8, "NAM8");
+                    }
+                    if (printMask?.Perk ?? true)
+                    {
+                        sb.AppendItem(Perk, "Perk");
+                    }
+                    if (printMask?.SpeechChallenge ?? true)
+                    {
+                        sb.AppendItem(SpeechChallenge, "SpeechChallenge");
+                    }
                 }
             }
             #endregion
@@ -185,12 +834,75 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, DialogResponsesAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, DialogResponseFlags.ErrorMask?>? Flags;
+            public Exception? SharedDialog;
+            public Exception? DialogGroup;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>? Responses;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? Prompt;
+            public Exception? Speaker;
+            public Exception? StartScene;
+            public Exception? INTV;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? WED0;
+            public MaskItem<Exception?, DialogSetParentQuestStage.ErrorMask?>? SetParentQuestStage;
+            public Exception? StartScenePhase;
+            public Exception? ResetGlobal;
+            public Exception? SubtitlePriority;
+            public Exception? COCT;
+            public Exception? NAM8;
+            public Exception? Perk;
+            public Exception? SpeechChallenge;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogResponses_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case DialogResponses_FieldIndex.Components:
+                        return Components;
+                    case DialogResponses_FieldIndex.Flags:
+                        return Flags;
+                    case DialogResponses_FieldIndex.SharedDialog:
+                        return SharedDialog;
+                    case DialogResponses_FieldIndex.DialogGroup:
+                        return DialogGroup;
+                    case DialogResponses_FieldIndex.Responses:
+                        return Responses;
+                    case DialogResponses_FieldIndex.Conditions:
+                        return Conditions;
+                    case DialogResponses_FieldIndex.Prompt:
+                        return Prompt;
+                    case DialogResponses_FieldIndex.Speaker:
+                        return Speaker;
+                    case DialogResponses_FieldIndex.StartScene:
+                        return StartScene;
+                    case DialogResponses_FieldIndex.INTV:
+                        return INTV;
+                    case DialogResponses_FieldIndex.WED0:
+                        return WED0;
+                    case DialogResponses_FieldIndex.SetParentQuestStage:
+                        return SetParentQuestStage;
+                    case DialogResponses_FieldIndex.StartScenePhase:
+                        return StartScenePhase;
+                    case DialogResponses_FieldIndex.ResetGlobal:
+                        return ResetGlobal;
+                    case DialogResponses_FieldIndex.SubtitlePriority:
+                        return SubtitlePriority;
+                    case DialogResponses_FieldIndex.COCT:
+                        return COCT;
+                    case DialogResponses_FieldIndex.NAM8:
+                        return NAM8;
+                    case DialogResponses_FieldIndex.Perk:
+                        return Perk;
+                    case DialogResponses_FieldIndex.SpeechChallenge:
+                        return SpeechChallenge;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +913,66 @@ namespace Mutagen.Bethesda.Starfield
                 DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogResponses_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, DialogResponsesAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case DialogResponses_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case DialogResponses_FieldIndex.Flags:
+                        this.Flags = new MaskItem<Exception?, DialogResponseFlags.ErrorMask?>(ex, null);
+                        break;
+                    case DialogResponses_FieldIndex.SharedDialog:
+                        this.SharedDialog = ex;
+                        break;
+                    case DialogResponses_FieldIndex.DialogGroup:
+                        this.DialogGroup = ex;
+                        break;
+                    case DialogResponses_FieldIndex.Responses:
+                        this.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(ex, null);
+                        break;
+                    case DialogResponses_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case DialogResponses_FieldIndex.Prompt:
+                        this.Prompt = ex;
+                        break;
+                    case DialogResponses_FieldIndex.Speaker:
+                        this.Speaker = ex;
+                        break;
+                    case DialogResponses_FieldIndex.StartScene:
+                        this.StartScene = ex;
+                        break;
+                    case DialogResponses_FieldIndex.INTV:
+                        this.INTV = ex;
+                        break;
+                    case DialogResponses_FieldIndex.WED0:
+                        this.WED0 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case DialogResponses_FieldIndex.SetParentQuestStage:
+                        this.SetParentQuestStage = new MaskItem<Exception?, DialogSetParentQuestStage.ErrorMask?>(ex, null);
+                        break;
+                    case DialogResponses_FieldIndex.StartScenePhase:
+                        this.StartScenePhase = ex;
+                        break;
+                    case DialogResponses_FieldIndex.ResetGlobal:
+                        this.ResetGlobal = ex;
+                        break;
+                    case DialogResponses_FieldIndex.SubtitlePriority:
+                        this.SubtitlePriority = ex;
+                        break;
+                    case DialogResponses_FieldIndex.COCT:
+                        this.COCT = ex;
+                        break;
+                    case DialogResponses_FieldIndex.NAM8:
+                        this.NAM8 = ex;
+                        break;
+                    case DialogResponses_FieldIndex.Perk:
+                        this.Perk = ex;
+                        break;
+                    case DialogResponses_FieldIndex.SpeechChallenge:
+                        this.SpeechChallenge = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +984,66 @@ namespace Mutagen.Bethesda.Starfield
                 DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogResponses_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, DialogResponsesAdapter.ErrorMask?>?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Flags:
+                        this.Flags = (MaskItem<Exception?, DialogResponseFlags.ErrorMask?>?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.SharedDialog:
+                        this.SharedDialog = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.DialogGroup:
+                        this.DialogGroup = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Responses:
+                        this.Responses = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Prompt:
+                        this.Prompt = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Speaker:
+                        this.Speaker = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.StartScene:
+                        this.StartScene = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.INTV:
+                        this.INTV = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.WED0:
+                        this.WED0 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.SetParentQuestStage:
+                        this.SetParentQuestStage = (MaskItem<Exception?, DialogSetParentQuestStage.ErrorMask?>?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.StartScenePhase:
+                        this.StartScenePhase = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.ResetGlobal:
+                        this.ResetGlobal = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.SubtitlePriority:
+                        this.SubtitlePriority = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.COCT:
+                        this.COCT = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.NAM8:
+                        this.NAM8 = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Perk:
+                        this.Perk = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.SpeechChallenge:
+                        this.SpeechChallenge = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1053,26 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Components != null) return true;
+                if (Flags != null) return true;
+                if (SharedDialog != null) return true;
+                if (DialogGroup != null) return true;
+                if (Responses != null) return true;
+                if (Conditions != null) return true;
+                if (Prompt != null) return true;
+                if (Speaker != null) return true;
+                if (StartScene != null) return true;
+                if (INTV != null) return true;
+                if (WED0 != null) return true;
+                if (SetParentQuestStage != null) return true;
+                if (StartScenePhase != null) return true;
+                if (ResetGlobal != null) return true;
+                if (SubtitlePriority != null) return true;
+                if (COCT != null) return true;
+                if (NAM8 != null) return true;
+                if (Perk != null) return true;
+                if (SpeechChallenge != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1099,103 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Flags?.Print(sb);
+                {
+                    sb.AppendItem(SharedDialog, "SharedDialog");
+                }
+                {
+                    sb.AppendItem(DialogGroup, "DialogGroup");
+                }
+                if (Responses is {} ResponsesItem)
+                {
+                    sb.AppendLine("Responses =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ResponsesItem.Overall);
+                        if (ResponsesItem.Specific != null)
+                        {
+                            foreach (var subItem in ResponsesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Prompt, "Prompt");
+                }
+                {
+                    sb.AppendItem(Speaker, "Speaker");
+                }
+                {
+                    sb.AppendItem(StartScene, "StartScene");
+                }
+                {
+                    sb.AppendItem(INTV, "INTV");
+                }
+                WED0?.Print(sb);
+                SetParentQuestStage?.Print(sb);
+                {
+                    sb.AppendItem(StartScenePhase, "StartScenePhase");
+                }
+                {
+                    sb.AppendItem(ResetGlobal, "ResetGlobal");
+                }
+                {
+                    sb.AppendItem(SubtitlePriority, "SubtitlePriority");
+                }
+                {
+                    sb.AppendItem(COCT, "COCT");
+                }
+                {
+                    sb.AppendItem(NAM8, "NAM8");
+                }
+                {
+                    sb.AppendItem(Perk, "Perk");
+                }
+                {
+                    sb.AppendItem(SpeechChallenge, "SpeechChallenge");
+                }
             }
             #endregion
 
@@ -255,6 +1204,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags, (l, r) => l.Combine(r));
+                ret.SharedDialog = this.SharedDialog.Combine(rhs.SharedDialog);
+                ret.DialogGroup = this.DialogGroup.Combine(rhs.DialogGroup);
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Prompt = this.Prompt.Combine(rhs.Prompt);
+                ret.Speaker = this.Speaker.Combine(rhs.Speaker);
+                ret.StartScene = this.StartScene.Combine(rhs.StartScene);
+                ret.INTV = this.INTV.Combine(rhs.INTV);
+                ret.WED0 = this.WED0.Combine(rhs.WED0, (l, r) => l.Combine(r));
+                ret.SetParentQuestStage = this.SetParentQuestStage.Combine(rhs.SetParentQuestStage, (l, r) => l.Combine(r));
+                ret.StartScenePhase = this.StartScenePhase.Combine(rhs.StartScenePhase);
+                ret.ResetGlobal = this.ResetGlobal.Combine(rhs.ResetGlobal);
+                ret.SubtitlePriority = this.SubtitlePriority.Combine(rhs.SubtitlePriority);
+                ret.COCT = this.COCT.Combine(rhs.COCT);
+                ret.NAM8 = this.NAM8.Combine(rhs.NAM8);
+                ret.Perk = this.Perk.Combine(rhs.Perk);
+                ret.SpeechChallenge = this.SpeechChallenge.Combine(rhs.SpeechChallenge);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1245,76 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public DialogResponsesAdapter.TranslationMask? VirtualMachineAdapter;
+            public AComponent.TranslationMask? Components;
+            public DialogResponseFlags.TranslationMask? Flags;
+            public bool SharedDialog;
+            public bool DialogGroup;
+            public DialogResponse.TranslationMask? Responses;
+            public Condition.TranslationMask? Conditions;
+            public bool Prompt;
+            public bool Speaker;
+            public bool StartScene;
+            public bool INTV;
+            public SoundReference.TranslationMask? WED0;
+            public DialogSetParentQuestStage.TranslationMask? SetParentQuestStage;
+            public bool StartScenePhase;
+            public bool ResetGlobal;
+            public bool SubtitlePriority;
+            public bool COCT;
+            public bool NAM8;
+            public bool Perk;
+            public bool SpeechChallenge;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.SharedDialog = defaultOn;
+                this.DialogGroup = defaultOn;
+                this.Prompt = defaultOn;
+                this.Speaker = defaultOn;
+                this.StartScene = defaultOn;
+                this.INTV = defaultOn;
+                this.StartScenePhase = defaultOn;
+                this.ResetGlobal = defaultOn;
+                this.SubtitlePriority = defaultOn;
+                this.COCT = defaultOn;
+                this.NAM8 = defaultOn;
+                this.Perk = defaultOn;
+                this.SpeechChallenge = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Flags != null ? Flags.OnOverall : DefaultOn, Flags?.GetCrystal()));
+                ret.Add((SharedDialog, null));
+                ret.Add((DialogGroup, null));
+                ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((Prompt, null));
+                ret.Add((Speaker, null));
+                ret.Add((StartScene, null));
+                ret.Add((INTV, null));
+                ret.Add((WED0 != null ? WED0.OnOverall : DefaultOn, WED0?.GetCrystal()));
+                ret.Add((SetParentQuestStage != null ? SetParentQuestStage.OnOverall : DefaultOn, SetParentQuestStage?.GetCrystal()));
+                ret.Add((StartScenePhase, null));
+                ret.Add((ResetGlobal, null));
+                ret.Add((SubtitlePriority, null));
+                ret.Add((COCT, null));
+                ret.Add((NAM8, null));
+                ret.Add((Perk, null));
+                ret.Add((SpeechChallenge, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1326,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogResponses_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponsesCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogResponses(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1377,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IDialogResponses);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DialogResponsesCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DialogResponsesSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DialogResponsesSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DialogResponsesSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1465,36 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IDialogResponses :
+        IAssetLinkContainer,
         IDialogResponsesGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogResponsesInternal>,
         IStarfieldMajorRecordInternal
     {
+        new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new DialogResponseFlags? Flags { get; set; }
+        new IFormLinkNullable<IDialogResponsesGetter> SharedDialog { get; set; }
+        new IFormLinkNullable<IDialogResponsesGetter> DialogGroup { get; set; }
+        new ExtendedList<DialogResponse> Responses { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new TranslatedString? Prompt { get; set; }
+        new IFormLinkNullable<INpcGetter> Speaker { get; set; }
+        new IFormLinkNullable<ISceneGetter> StartScene { get; set; }
+        new MemorySlice<Byte>? INTV { get; set; }
+        new SoundReference? WED0 { get; set; }
+        new DialogSetParentQuestStage? SetParentQuestStage { get; set; }
+        new String? StartScenePhase { get; set; }
+        new IFormLinkNullable<IGlobalGetter> ResetGlobal { get; set; }
+        new DialogResponses.SubtitlePriorityLevel? SubtitlePriority { get; set; }
+        new Boolean COCT { get; set; }
+        new IFormLinkNullable<IAffinityEventGetter> NAM8 { get; set; }
+        new IFormLinkNullable<IPerkGetter> Perk { get; set; }
+        new IFormLinkNullable<ISpeechChallengeGetter> SpeechChallenge { get; set; }
+        #region Mutagen
+        new DialogResponses.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IDialogResponsesInternal :
@@ -440,11 +1507,43 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.INFO)]
     public partial interface IDialogResponsesGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IDialogResponsesGetter>,
         IMapsToGetter<IDialogResponsesGetter>
     {
         static new ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
+        IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IDialogResponseFlagsGetter? Flags { get; }
+        IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog { get; }
+        IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup { get; }
+        IReadOnlyList<IDialogResponseGetter> Responses { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        ITranslatedStringGetter? Prompt { get; }
+        IFormLinkNullableGetter<INpcGetter> Speaker { get; }
+        IFormLinkNullableGetter<ISceneGetter> StartScene { get; }
+        ReadOnlyMemorySlice<Byte>? INTV { get; }
+        ISoundReferenceGetter? WED0 { get; }
+        IDialogSetParentQuestStageGetter? SetParentQuestStage { get; }
+        String? StartScenePhase { get; }
+        IFormLinkNullableGetter<IGlobalGetter> ResetGlobal { get; }
+        DialogResponses.SubtitlePriorityLevel? SubtitlePriority { get; }
+        Boolean COCT { get; }
+        IFormLinkNullableGetter<IAffinityEventGetter> NAM8 { get; }
+        IFormLinkNullableGetter<IPerkGetter> Perk { get; }
+        IFormLinkNullableGetter<ISpeechChallengeGetter> SpeechChallenge { get; }
+
+        #region Mutagen
+        DialogResponses.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -621,6 +1720,26 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Components = 8,
+        Flags = 9,
+        SharedDialog = 10,
+        DialogGroup = 11,
+        Responses = 12,
+        Conditions = 13,
+        Prompt = 14,
+        Speaker = 15,
+        StartScene = 16,
+        INTV = 17,
+        WED0 = 18,
+        SetParentQuestStage = 19,
+        StartScenePhase = 20,
+        ResetGlobal = 21,
+        SubtitlePriority = 22,
+        COCT = 23,
+        NAM8 = 24,
+        Perk = 25,
+        SpeechChallenge = 26,
     }
     #endregion
 
@@ -631,9 +1750,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(DialogResponses.Mask<>);
 
@@ -663,8 +1782,56 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.INFO);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.INFO);
+            var all = RecordCollection.Factory(
+                RecordTypes.INFO,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.ENAM,
+                RecordTypes.DNAM,
+                RecordTypes.GNAM,
+                RecordTypes.TRDA,
+                RecordTypes.TROT,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.NAM9,
+                RecordTypes.BNAM,
+                RecordTypes.STRV,
+                RecordTypes.VCLR,
+                RecordTypes.FLMV,
+                RecordTypes.FLAV,
+                RecordTypes.QUAL,
+                RecordTypes.DOFT,
+                RecordTypes.DPLT,
+                RecordTypes.OCOR,
+                RecordTypes.LVCR,
+                RecordTypes.ATAC,
+                RecordTypes.PLRL,
+                RecordTypes.XNAM,
+                RecordTypes.HNAM,
+                RecordTypes.RVSH,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.RNAM,
+                RecordTypes.ANAM,
+                RecordTypes.TSCE,
+                RecordTypes.INTV,
+                RecordTypes.WED0,
+                RecordTypes.TIQS,
+                RecordTypes.NAM0,
+                RecordTypes.MODQ,
+                RecordTypes.INAM,
+                RecordTypes.COCT,
+                RecordTypes.NAM8,
+                RecordTypes.PERK,
+                RecordTypes.SCSP);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1873,26 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDialogResponsesInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Components.Clear();
+            item.Flags = null;
+            item.SharedDialog.Clear();
+            item.DialogGroup.Clear();
+            item.Responses.Clear();
+            item.Conditions.Clear();
+            item.Prompt = default;
+            item.Speaker.Clear();
+            item.StartScene.Clear();
+            item.INTV = default;
+            item.WED0 = null;
+            item.SetParentQuestStage = null;
+            item.StartScenePhase = default;
+            item.ResetGlobal.Clear();
+            item.SubtitlePriority = default;
+            item.COCT = default;
+            item.NAM8.Clear();
+            item.Perk.Clear();
+            item.SpeechChallenge.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1910,43 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IDialogResponses obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.SharedDialog.Relink(mapping);
+            obj.DialogGroup.Relink(mapping);
+            obj.Responses.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.Speaker.Relink(mapping);
+            obj.StartScene.Relink(mapping);
+            obj.WED0?.RemapLinks(mapping);
+            obj.ResetGlobal.Relink(mapping);
+            obj.NAM8.Relink(mapping);
+            obj.Perk.Relink(mapping);
+            obj.SpeechChallenge.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDialogResponses obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IDialogResponses obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +2014,51 @@ namespace Mutagen.Bethesda.Starfield
             DialogResponses.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Flags = EqualsMaskHelper.EqualsHelper(
+                item.Flags,
+                rhs.Flags,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SharedDialog = item.SharedDialog.Equals(rhs.SharedDialog);
+            ret.DialogGroup = item.DialogGroup.Equals(rhs.DialogGroup);
+            ret.Responses = item.Responses.CollectionEqualsHelper(
+                rhs.Responses,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Prompt = object.Equals(item.Prompt, rhs.Prompt);
+            ret.Speaker = item.Speaker.Equals(rhs.Speaker);
+            ret.StartScene = item.StartScene.Equals(rhs.StartScene);
+            ret.INTV = MemorySliceExt.SequenceEqual(item.INTV, rhs.INTV);
+            ret.WED0 = EqualsMaskHelper.EqualsHelper(
+                item.WED0,
+                rhs.WED0,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SetParentQuestStage = EqualsMaskHelper.EqualsHelper(
+                item.SetParentQuestStage,
+                rhs.SetParentQuestStage,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.StartScenePhase = string.Equals(item.StartScenePhase, rhs.StartScenePhase);
+            ret.ResetGlobal = item.ResetGlobal.Equals(rhs.ResetGlobal);
+            ret.SubtitlePriority = item.SubtitlePriority == rhs.SubtitlePriority;
+            ret.COCT = item.COCT == rhs.COCT;
+            ret.NAM8 = item.NAM8.Equals(rhs.NAM8);
+            ret.Perk = item.Perk.Equals(rhs.Perk);
+            ret.SpeechChallenge = item.SpeechChallenge.Equals(rhs.SpeechChallenge);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +2108,124 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Flags?.Overall ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                FlagsItem?.Print(sb, "Flags");
+            }
+            if (printMask?.SharedDialog ?? true)
+            {
+                sb.AppendItem(item.SharedDialog.FormKeyNullable, "SharedDialog");
+            }
+            if (printMask?.DialogGroup ?? true)
+            {
+                sb.AppendItem(item.DialogGroup.FormKeyNullable, "DialogGroup");
+            }
+            if (printMask?.Responses?.Overall ?? true)
+            {
+                sb.AppendLine("Responses =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Responses)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Prompt ?? true)
+                && item.Prompt is {} PromptItem)
+            {
+                sb.AppendItem(PromptItem, "Prompt");
+            }
+            if (printMask?.Speaker ?? true)
+            {
+                sb.AppendItem(item.Speaker.FormKeyNullable, "Speaker");
+            }
+            if (printMask?.StartScene ?? true)
+            {
+                sb.AppendItem(item.StartScene.FormKeyNullable, "StartScene");
+            }
+            if ((printMask?.INTV ?? true)
+                && item.INTV is {} INTVItem)
+            {
+                sb.AppendLine($"INTV => {SpanExt.ToHexString(INTVItem)}");
+            }
+            if ((printMask?.WED0?.Overall ?? true)
+                && item.WED0 is {} WED0Item)
+            {
+                WED0Item?.Print(sb, "WED0");
+            }
+            if ((printMask?.SetParentQuestStage?.Overall ?? true)
+                && item.SetParentQuestStage is {} SetParentQuestStageItem)
+            {
+                SetParentQuestStageItem?.Print(sb, "SetParentQuestStage");
+            }
+            if ((printMask?.StartScenePhase ?? true)
+                && item.StartScenePhase is {} StartScenePhaseItem)
+            {
+                sb.AppendItem(StartScenePhaseItem, "StartScenePhase");
+            }
+            if (printMask?.ResetGlobal ?? true)
+            {
+                sb.AppendItem(item.ResetGlobal.FormKeyNullable, "ResetGlobal");
+            }
+            if ((printMask?.SubtitlePriority ?? true)
+                && item.SubtitlePriority is {} SubtitlePriorityItem)
+            {
+                sb.AppendItem(SubtitlePriorityItem, "SubtitlePriority");
+            }
+            if (printMask?.COCT ?? true)
+            {
+                sb.AppendItem(item.COCT, "COCT");
+            }
+            if (printMask?.NAM8 ?? true)
+            {
+                sb.AppendItem(item.NAM8.FormKeyNullable, "NAM8");
+            }
+            if (printMask?.Perk ?? true)
+            {
+                sb.AppendItem(item.Perk.FormKeyNullable, "Perk");
+            }
+            if (printMask?.SpeechChallenge ?? true)
+            {
+                sb.AppendItem(item.SpeechChallenge.FormKeyNullable, "SpeechChallenge");
+            }
         }
         
         public static DialogResponses_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +2276,102 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Flags) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Flags, rhs.Flags, out var lhsFlags, out var rhsFlags, out var isFlagsEqual))
+                {
+                    if (!((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Flags))) return false;
+                }
+                else if (!isFlagsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SharedDialog) ?? true))
+            {
+                if (!lhs.SharedDialog.Equals(rhs.SharedDialog)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DialogGroup) ?? true))
+            {
+                if (!lhs.DialogGroup.Equals(rhs.DialogGroup)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
+            {
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponseCommon)((IDialogResponseGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Responses)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Prompt) ?? true))
+            {
+                if (!object.Equals(lhs.Prompt, rhs.Prompt)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
+            {
+                if (!lhs.Speaker.Equals(rhs.Speaker)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.StartScene) ?? true))
+            {
+                if (!lhs.StartScene.Equals(rhs.StartScene)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.INTV) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.INTV, rhs.INTV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.WED0) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WED0, rhs.WED0, out var lhsWED0, out var rhsWED0, out var isWED0Equal))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsWED0).CommonInstance()!).Equals(lhsWED0, rhsWED0, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.WED0))) return false;
+                }
+                else if (!isWED0Equal) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SetParentQuestStage) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SetParentQuestStage, rhs.SetParentQuestStage, out var lhsSetParentQuestStage, out var rhsSetParentQuestStage, out var isSetParentQuestStageEqual))
+                {
+                    if (!((DialogSetParentQuestStageCommon)((IDialogSetParentQuestStageGetter)lhsSetParentQuestStage).CommonInstance()!).Equals(lhsSetParentQuestStage, rhsSetParentQuestStage, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.SetParentQuestStage))) return false;
+                }
+                else if (!isSetParentQuestStageEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.StartScenePhase) ?? true))
+            {
+                if (!string.Equals(lhs.StartScenePhase, rhs.StartScenePhase)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResetGlobal) ?? true))
+            {
+                if (!lhs.ResetGlobal.Equals(rhs.ResetGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SubtitlePriority) ?? true))
+            {
+                if (lhs.SubtitlePriority != rhs.SubtitlePriority) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.COCT) ?? true))
+            {
+                if (lhs.COCT != rhs.COCT) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.NAM8) ?? true))
+            {
+                if (!lhs.NAM8.Equals(rhs.NAM8)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Perk) ?? true))
+            {
+                if (!lhs.Perk.Equals(rhs.Perk)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SpeechChallenge) ?? true))
+            {
+                if (!lhs.SpeechChallenge.Equals(rhs.SpeechChallenge)) return false;
+            }
             return true;
         }
         
@@ -917,6 +2400,50 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IDialogResponsesGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.Components);
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            hash.Add(item.SharedDialog);
+            hash.Add(item.DialogGroup);
+            hash.Add(item.Responses);
+            hash.Add(item.Conditions);
+            if (item.Prompt is {} Promptitem)
+            {
+                hash.Add(Promptitem);
+            }
+            hash.Add(item.Speaker);
+            hash.Add(item.StartScene);
+            if (item.INTV is {} INTVItem)
+            {
+                hash.Add(INTVItem);
+            }
+            if (item.WED0 is {} WED0item)
+            {
+                hash.Add(WED0item);
+            }
+            if (item.SetParentQuestStage is {} SetParentQuestStageitem)
+            {
+                hash.Add(SetParentQuestStageitem);
+            }
+            if (item.StartScenePhase is {} StartScenePhaseitem)
+            {
+                hash.Add(StartScenePhaseitem);
+            }
+            hash.Add(item.ResetGlobal);
+            if (item.SubtitlePriority is {} SubtitlePriorityitem)
+            {
+                hash.Add(SubtitlePriorityitem);
+            }
+            hash.Add(item.COCT);
+            hash.Add(item.NAM8);
+            hash.Add(item.Perk);
+            hash.Add(item.SpeechChallenge);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +2472,82 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.SharedDialog, out var SharedDialogInfo))
+            {
+                yield return SharedDialogInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.DialogGroup, out var DialogGroupInfo))
+            {
+                yield return DialogGroupInfo;
+            }
+            foreach (var item in obj.Responses.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Speaker, out var SpeakerInfo))
+            {
+                yield return SpeakerInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.StartScene, out var StartSceneInfo))
+            {
+                yield return StartSceneInfo;
+            }
+            if (obj.WED0 is {} WED0Items)
+            {
+                foreach (var item in WED0Items.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ResetGlobal, out var ResetGlobalInfo))
+            {
+                yield return ResetGlobalInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.NAM8, out var NAM8Info))
+            {
+                yield return NAM8Info;
+            }
+            if (FormLinkInformation.TryFactory(obj.Perk, out var PerkInfo))
+            {
+                yield return PerkInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.SpeechChallenge, out var SpeechChallengeInfo))
+            {
+                yield return SpeechChallengeInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDialogResponsesGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +2623,241 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogResponses_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogResponses_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Flags) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogResponses_FieldIndex.Flags);
+                try
+                {
+                    if(rhs.Flags is {} rhsFlags)
+                    {
+                        item.Flags = rhsFlags.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Flags));
+                    }
+                    else
+                    {
+                        item.Flags = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SharedDialog) ?? true))
+            {
+                item.SharedDialog.SetTo(rhs.SharedDialog.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DialogGroup) ?? true))
+            {
+                item.DialogGroup.SetTo(rhs.DialogGroup.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogResponses_FieldIndex.Responses);
+                try
+                {
+                    item.Responses.SetTo(
+                        rhs.Responses
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogResponses_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Prompt) ?? true))
+            {
+                item.Prompt = rhs.Prompt?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
+            {
+                item.Speaker.SetTo(rhs.Speaker.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.StartScene) ?? true))
+            {
+                item.StartScene.SetTo(rhs.StartScene.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.INTV) ?? true))
+            {
+                if(rhs.INTV is {} INTVrhs)
+                {
+                    item.INTV = INTVrhs.ToArray();
+                }
+                else
+                {
+                    item.INTV = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.WED0) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogResponses_FieldIndex.WED0);
+                try
+                {
+                    if(rhs.WED0 is {} rhsWED0)
+                    {
+                        item.WED0 = rhsWED0.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.WED0));
+                    }
+                    else
+                    {
+                        item.WED0 = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SetParentQuestStage) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogResponses_FieldIndex.SetParentQuestStage);
+                try
+                {
+                    if(rhs.SetParentQuestStage is {} rhsSetParentQuestStage)
+                    {
+                        item.SetParentQuestStage = rhsSetParentQuestStage.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.SetParentQuestStage));
+                    }
+                    else
+                    {
+                        item.SetParentQuestStage = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.StartScenePhase) ?? true))
+            {
+                item.StartScenePhase = rhs.StartScenePhase;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResetGlobal) ?? true))
+            {
+                item.ResetGlobal.SetTo(rhs.ResetGlobal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SubtitlePriority) ?? true))
+            {
+                item.SubtitlePriority = rhs.SubtitlePriority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.COCT) ?? true))
+            {
+                item.COCT = rhs.COCT;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.NAM8) ?? true))
+            {
+                item.NAM8.SetTo(rhs.NAM8.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Perk) ?? true))
+            {
+                item.Perk.SetTo(rhs.Perk.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SpeechChallenge) ?? true))
+            {
+                item.SpeechChallenge.SetTo(rhs.SpeechChallenge.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +3006,137 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly DialogResponsesBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IDialogResponsesGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((DialogResponsesAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.Flags is {} FlagsItem)
+            {
+                ((DialogResponseFlagsBinaryWriteTranslation)((IBinaryItem)FlagsItem).BinaryWriteTranslator).Write(
+                    item: FlagsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SharedDialog,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DialogGroup,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDialogResponseGetter>.Instance.Write(
+                writer: writer,
+                items: item.Responses,
+                transl: (MutagenWriter subWriter, IDialogResponseGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((DialogResponseBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Prompt,
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Speaker,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.StartScene,
+                header: translationParams.ConvertToCustom(RecordTypes.TSCE));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.INTV,
+                header: translationParams.ConvertToCustom(RecordTypes.INTV));
+            if (item.WED0 is {} WED0Item)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.WED0))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)WED0Item).BinaryWriteTranslator).Write(
+                        item: WED0Item,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.SetParentQuestStage is {} SetParentQuestStageItem)
+            {
+                ((DialogSetParentQuestStageBinaryWriteTranslation)((IBinaryItem)SetParentQuestStageItem).BinaryWriteTranslator).Write(
+                    item: SetParentQuestStageItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.StartScenePhase,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ResetGlobal,
+                header: translationParams.ConvertToCustom(RecordTypes.MODQ));
+            EnumBinaryTranslation<DialogResponses.SubtitlePriorityLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.SubtitlePriority,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.COCT,
+                header: translationParams.ConvertToCustom(RecordTypes.COCT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM8,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM8));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Perk,
+                header: translationParams.ConvertToCustom(RecordTypes.PERK));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SpeechChallenge,
+                header: translationParams.ConvertToCustom(RecordTypes.SCSP));
+        }
+
         public void Write(
             MutagenWriter writer,
             IDialogResponsesGetter item,
@@ -1184,10 +3153,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +3208,172 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly DialogResponsesBinaryCreateTranslation Instance = new DialogResponsesBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.INFO;
+        public static ParseResult FillBinaryRecordTypes(
+            IDialogResponsesInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.DialogResponsesAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)DialogResponses_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)DialogResponses_FieldIndex.Components;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    item.Flags = Mutagen.Bethesda.Starfield.DialogResponseFlags.CreateFromBinary(frame: frame);
+                    return (int)DialogResponses_FieldIndex.Flags;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SharedDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.SharedDialog;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DialogGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.DialogGroup;
+                }
+                case RecordTypeInts.TRDA:
+                {
+                    item.Responses.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DialogResponse>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: DialogResponse_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: DialogResponse.TryCreateFromBinary));
+                    return (int)DialogResponses_FieldIndex.Responses;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)DialogResponses_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Prompt = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)DialogResponses_FieldIndex.Prompt;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.Speaker;
+                }
+                case RecordTypeInts.TSCE:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.StartScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.StartScene;
+                }
+                case RecordTypeInts.INTV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.INTV = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)DialogResponses_FieldIndex.INTV;
+                }
+                case RecordTypeInts.WED0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.WED0 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)DialogResponses_FieldIndex.WED0;
+                }
+                case RecordTypeInts.TIQS:
+                {
+                    item.SetParentQuestStage = Mutagen.Bethesda.Starfield.DialogSetParentQuestStage.CreateFromBinary(frame: frame);
+                    return (int)DialogResponses_FieldIndex.SetParentQuestStage;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.StartScenePhase = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)DialogResponses_FieldIndex.StartScenePhase;
+                }
+                case RecordTypeInts.MODQ:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ResetGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.ResetGlobal;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SubtitlePriority = EnumBinaryTranslation<DialogResponses.SubtitlePriorityLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)DialogResponses_FieldIndex.SubtitlePriority;
+                }
+                case RecordTypeInts.COCT:
+                {
+                    item.COCT = true;
+                    return (int)DialogResponses_FieldIndex.COCT;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM8.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.NAM8;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.Perk;
+                }
+                case RecordTypeInts.SCSP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SpeechChallenge.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.SpeechChallenge;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +3406,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponsesCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DialogResponsesCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogResponsesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1282,7 +3421,78 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IDialogResponses);
 
+        public DialogResponses.MajorFlag MajorFlags => (DialogResponses.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IDialogResponsesAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? DialogResponsesAdapterBinaryOverlay.DialogResponsesAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Flags
+        private RangeInt32? _FlagsLocation;
+        public IDialogResponseFlagsGetter? Flags => _FlagsLocation.HasValue ? DialogResponseFlagsBinaryOverlay.DialogResponseFlagsFactory(_recordData.Slice(_FlagsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region SharedDialog
+        private int? _SharedDialogLocation;
+        public IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog => _SharedDialogLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SharedDialogLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
+        #endregion
+        #region DialogGroup
+        private int? _DialogGroupLocation;
+        public IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup => _DialogGroupLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
+        #endregion
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        #region Prompt
+        private int? _PromptLocation;
+        public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region Speaker
+        private int? _SpeakerLocation;
+        public IFormLinkNullableGetter<INpcGetter> Speaker => _SpeakerLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpeakerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        #endregion
+        #region StartScene
+        private int? _StartSceneLocation;
+        public IFormLinkNullableGetter<ISceneGetter> StartScene => _StartSceneLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartSceneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        #endregion
+        #region INTV
+        private int? _INTVLocation;
+        public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public ISoundReferenceGetter? WED0 { get; private set; }
+        #region SetParentQuestStage
+        private RangeInt32? _SetParentQuestStageLocation;
+        public IDialogSetParentQuestStageGetter? SetParentQuestStage => _SetParentQuestStageLocation.HasValue ? DialogSetParentQuestStageBinaryOverlay.DialogSetParentQuestStageFactory(_recordData.Slice(_SetParentQuestStageLocation!.Value.Min), _package) : default;
+        #endregion
+        #region StartScenePhase
+        private int? _StartScenePhaseLocation;
+        public String? StartScenePhase => _StartScenePhaseLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartScenePhaseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ResetGlobal
+        private int? _ResetGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> ResetGlobal => _ResetGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResetGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        #region SubtitlePriority
+        private int? _SubtitlePriorityLocation;
+        public DialogResponses.SubtitlePriorityLevel? SubtitlePriority => _SubtitlePriorityLocation.HasValue ? (DialogResponses.SubtitlePriorityLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtitlePriorityLocation!.Value, _package.MetaData.Constants)) : default(DialogResponses.SubtitlePriorityLevel?);
+        #endregion
+        #region COCT
+        private int? _COCTLocation;
+        public Boolean COCT => _COCTLocation.HasValue ? true : default;
+        #endregion
+        #region NAM8
+        private int? _NAM8Location;
+        public IFormLinkNullableGetter<IAffinityEventGetter> NAM8 => _NAM8Location.HasValue ? new FormLinkNullable<IAffinityEventGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM8Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAffinityEventGetter>.Null;
+        #endregion
+        #region Perk
+        private int? _PerkLocation;
+        public IFormLinkNullableGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        #endregion
+        #region SpeechChallenge
+        private int? _SpeechChallengeLocation;
+        public IFormLinkNullableGetter<ISpeechChallengeGetter> SpeechChallenge => _SpeechChallengeLocation.HasValue ? new FormLinkNullable<ISpeechChallengeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpeechChallengeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpeechChallengeGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +3550,161 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)DialogResponses_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)DialogResponses_FieldIndex.Components;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)DialogResponses_FieldIndex.Flags;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _SharedDialogLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.SharedDialog;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _DialogGroupLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.DialogGroup;
+                }
+                case RecordTypeInts.TRDA:
+                {
+                    this.Responses = this.ParseRepeatedTypelessSubrecord<IDialogResponseGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: DialogResponse_Registration.TriggerSpecs,
+                        factory: DialogResponseBinaryOverlay.DialogResponseFactory);
+                    return (int)DialogResponses_FieldIndex.Responses;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)DialogResponses_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _PromptLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.Prompt;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _SpeakerLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.Speaker;
+                }
+                case RecordTypeInts.TSCE:
+                {
+                    _StartSceneLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.StartScene;
+                }
+                case RecordTypeInts.INTV:
+                {
+                    _INTVLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.INTV;
+                }
+                case RecordTypeInts.WED0:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.WED0 = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)DialogResponses_FieldIndex.WED0;
+                }
+                case RecordTypeInts.TIQS:
+                {
+                    _SetParentQuestStageLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)DialogResponses_FieldIndex.SetParentQuestStage;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _StartScenePhaseLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.StartScenePhase;
+                }
+                case RecordTypeInts.MODQ:
+                {
+                    _ResetGlobalLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.ResetGlobal;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _SubtitlePriorityLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.SubtitlePriority;
+                }
+                case RecordTypeInts.COCT:
+                {
+                    _COCTLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.COCT;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    _NAM8Location = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.NAM8;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    _PerkLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.Perk;
+                }
+                case RecordTypeInts.SCSP:
+                {
+                    _SpeechChallengeLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.SpeechChallenge;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

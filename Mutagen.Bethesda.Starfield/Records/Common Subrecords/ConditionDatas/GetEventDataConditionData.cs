@@ -17,6 +17,8 @@ public partial class GetEventDataConditionData : IConditionStringParameter
         get => SecondUnusedStringParameter;
         set => SecondUnusedStringParameter = value;
     }
+
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetEventData;
     
     public enum EventMember : ushort
     {

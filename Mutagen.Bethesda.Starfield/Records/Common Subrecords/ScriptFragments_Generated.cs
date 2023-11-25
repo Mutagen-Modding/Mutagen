@@ -39,6 +39,9 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial class ScriptFragments :
         IEquatable<IScriptFragmentsGetter>,
         ILoquiObjectSetter<ScriptFragments>,
@@ -86,7 +89,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region To String
 
-        public void Print(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -184,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region All
-            public bool All(Func<TItem, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.ExtraBindDataVersion)) return false;
                 if (Script != null)
@@ -207,7 +210,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Any
-            public bool Any(Func<TItem, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.ExtraBindDataVersion)) return true;
                 if (Script != null)
@@ -308,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region IErrorMask
-            public object? GetNthMask(int index)
+            public virtual object? GetNthMask(int index)
             {
                 ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
@@ -326,7 +329,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
 
-            public void SetNthException(int index, Exception ex)
+            public virtual void SetNthException(int index, Exception ex)
             {
                 ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
@@ -348,7 +351,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
 
-            public void SetNthMask(int index, object obj)
+            public virtual void SetNthMask(int index, object obj)
             {
                 ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
@@ -370,7 +373,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
 
-            public bool IsInError()
+            public virtual bool IsInError()
             {
                 if (Overall != null) return true;
                 if (ExtraBindDataVersion != null) return true;
@@ -384,7 +387,7 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public void Print(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -400,7 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                     PrintFillInternal(sb);
                 }
             }
-            protected void PrintFillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
@@ -470,7 +473,7 @@ namespace Mutagen.Bethesda.Starfield
                 return _crystal;
             }
 
-            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((ExtraBindDataVersion, null));
                 ret.Add((Script != null ? Script.OnOverall : DefaultOn, Script?.GetCrystal()));
@@ -493,7 +496,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
@@ -549,6 +552,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial interface IScriptFragments :
         IFormLinkContainer,
         ILoquiObjectSetter<IScriptFragments>,
@@ -560,6 +566,9 @@ namespace Mutagen.Bethesda.Starfield
         new ScriptFragment? OnEnd { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial interface IScriptFragmentsGetter :
         ILoquiObject,
         IBinaryItem,
@@ -825,7 +834,7 @@ namespace Mutagen.Bethesda.Starfield
 
         partial void ClearPartial();
         
-        public void Clear(IScriptFragments item)
+        public virtual void Clear(IScriptFragments item)
         {
             ClearPartial();
             item.ExtraBindDataVersion = ScriptFragments.ExtraBindDataVersionDefault;
@@ -1015,7 +1024,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
         
-        public object GetNew()
+        public virtual object GetNew()
         {
             return ScriptFragments.GetNew();
         }
@@ -1041,7 +1050,7 @@ namespace Mutagen.Bethesda.Starfield
         public static readonly ScriptFragmentsSetterTranslationCommon Instance = new ScriptFragmentsSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
+        public virtual void DeepCopyIn(
             IScriptFragments item,
             IScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1190,14 +1199,14 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
         public static ILoquiRegistration StaticRegistration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptFragmentsCommon.Instance;
+        protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected virtual object CommonSetterInstance()
         {
             return ScriptFragmentsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
         object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
@@ -1225,7 +1234,7 @@ namespace Mutagen.Bethesda.Starfield
             writer.Write(item.ExtraBindDataVersion);
         }
 
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
             IScriptFragmentsGetter item,
             TypedWriteParams translationParams)
@@ -1235,7 +1244,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer);
         }
 
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams translationParams = default)
@@ -1294,9 +1303,9 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
         public static ILoquiRegistration StaticRegistration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptFragmentsCommon.Instance;
+        protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
         object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
@@ -1308,9 +1317,9 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
@@ -1376,7 +1385,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region To String
 
-        public void Print(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {

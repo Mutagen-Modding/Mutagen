@@ -20,7 +20,7 @@
         <FormLink recordType="XLRM" refName="PlacedObject" />
       </List>
       <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
-      <RefDirect name="RagdollData" refName="RagdollData" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <Float name="Radius" recordType="XRDS" />
       <FormLink name="Emittance" recordType="XEMI">

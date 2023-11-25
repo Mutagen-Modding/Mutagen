@@ -2,6 +2,269 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Scene" recordType="SCEN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="SceneAdapter" recordType="VMAD" overflowRecordType="XXXX" />
+      <Enum name="Flags" enumName="Scene.Flag" byteLength="4" recordType="FNAM" />
+      <RefList name="Phases" refName="ScenePhase" />
+      <RefList name="Actors" refName="SceneActor" />
+      <RefList name="Actions" refName="ASceneAction" recordType="ANAM" binary="Custom" />
+      <FormLink name="Quest" refName="Quest" recordType="PNAM" />
+      <UInt32 name="LastActionIndex" recordType="INAM" />
+      <ByteArray name="VNAM" recordType="VNAM" unknown="true" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefDirect name="SetParentQuestStage" refName="SceneSetParentQuestStage" />
+      <String name="Notes" recordType="NNAM" />
+      <FormLink name="Template" refName="Scene" recordType="TNAM" />
+      <ByteArray name="BOLV" recordType="BOLV" unknown="true" />
+      <UInt32 name="Index" recordType="XNAM" />
+      <ByteArray name="SCPI" recordType="SCPI" unknown="true" />
+      <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
+      <FormLink name="SCPP" refName="Scene" recordType="SCPP" unknown="true" />
+      <Bool name="DEVT" recordType="DEVT" boolAsMarker="True" unknown="true" />
+      <Bool name="SCSP" recordType="SCSP" boolAsMarker="True" unknown="true" />
+      <List name="SPMA" recordType="SPMA" unknown="true" >
+        <FormLink refName="Scene" />
+      </List>
+      <List name="SPEX" recordType="SPEX" unknown="true" >
+        <FormLink refName="Scene" />
+      </List>
+      <ByteArray name="SPRK" recordType="SPRK" unknown="true" />
+      <ByteArray name="SPRW" recordType="SPRW" unknown="true" />
+      <Bool name="SPRP" recordType="SPRP" boolAsMarker="True" unknown="true" />
+      <Bool name="SPDF" recordType="SPDF" boolAsMarker="True" unknown="true" />
+      <Bool name="SPPQ" recordType="SPPQ" boolAsMarker="True" unknown="true" />
+      <List name="SPKW" recordType="SPKW" unknown="true" >
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="SPPK" recordType="SPPK" unknown="true" >
+        <FormLink refName="Perk" />
+      </List>
+      <List name="SPKY" recordType="SPKY" unknown="true" >
+        <FormLink refName="Keyword" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="SceneAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="SceneScriptFragments" binary="Custom" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord">
+    <Fields>
+      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" />
+    </Fields>
+  </Object>
+  <Object name="ScenePhaseFragment" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="ScenePhaseFragment.Flag" byteLength="1" />
+      <UInt8 name="Index" />
+      <UInt32 name="Unknown" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="SceneSetParentQuestStage" objType="Subrecord" recordType="SCQS">
+    <Fields>
+      <Int16 name="OnBegin" />
+      <Int16 name="OnEnd" />
+    </Fields>
+  </Object>
+  <Object name="ScenePhase" objType="Subrecord">
+    <Fields>
+      <Marker name="StartMarker" recordType="HNAM" nullable="False" />
+      <String name="Name" recordType="NAM0" />
+      <RefList name="StartConditions" refName="Condition" binary="Custom" />
+      <RefList name="CompletionConditions" refName="Condition" binary="Custom" markerType="NEXT" />
+      <UInt32 name="EditorWidth" recordType="WNAM" />
+      <Enum name="Flags" enumName="ScenePhase.Flag" byteLength="2" recordType="FNAM" />
+      <RefDirect name="PhaseSetParentQuestStage" refName="SceneSetParentQuestStage" />
+      <ByteArray name="SPMV" recordType="SPMV" unknown="true" />
+      <Marker name="EndMarker" recordType="HNAM" />
+    </Fields>
+  </Object>
+  <Object name="SceneActor" objType="Subrecord">
+    <Fields>
+      <UInt32 name="ID" recordType="ALID" nullable="False" />
+      <Enum name="Flags" enumName="SceneActor.Flag" recordType="LNAM" byteLength="4" nullable="False" />
+      <Enum name="BehaviorFlags" enumName="SceneActor.BehaviorFlag" recordType="DNAM" byteLength="4" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="HnamHnam" objType="Subrecord" markerType="HNAM" endMarkerType="HNAM" >
+    <Fields>
+      <List name="ReferenceAliasIDs" recordType="HTID" >
+        <Int32 />
+      </List>
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ASceneAction" abstract="true" objType="Subrecord">
+    <Fields>
+      <String name="Name" recordType="NAM0" nullable="false" />
+      <String name="SceneNotes" recordType="SNOT" />
+      <Int32 name="AliasID" recordType="ALID" />
+      <UInt32 name="Index" recordType="INAM" />
+      <Enum name="Flags" enumName="ASceneAction.Flag" byteLength="4" recordType="FNAM" />
+      <UInt32 name="StartPhase" recordType="SNAM" nullable="false" />
+      <UInt32 name="EndPhase" recordType="ENAM" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="DialogueSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <FormLink name="Topic" refName="DialogTopic" recordType="DATA" />
+      <Float name="LoopingMax" recordType="DMAX" />
+      <Float name="LoopingMin" recordType="DMIN" />
+      <RefDirect name="HNAM" refName="HnamHnam" nullable="false" />
+      <FormLink name="DialogueSubtype" recordType="VENC" refName="Keyword" />
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+    </Fields>
+  </Object>
+  <Object name="PackageSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <List name="Packages">
+        <FormLink refName="Package" recordType="PNAM" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="TimerSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <Float name="MaxSeconds" recordType="SNAM" />
+      <Float name="MinSeconds" recordType="TNAM" />
+      <Bool name="HNAM" recordType="HNAM" boolAsMarker="True" unknown="true" />
+      <Int16 name="SCQS" recordType="SCQS" />
+      <Int16 name="INTV" recordType="INTV" />
+    </Fields>
+  </Object>
+  <Object name="PlayerDialogueSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+      <RefDirect name="HNAM" refName="HnamHnam" nullable="false" />
+      <Int32 name="DialogueTargetActor" recordType="DTGT" />
+      <RefList name="DialogueList" refName="PlayerDialogueSceneActionItem" />
+      <ByteArray name="ATTR" recordType="ATTR" unknown="true" />
+      <Bool name="ACBS" recordType="ACBS" boolAsMarker="True" unknown="true" />
+      <Bool name="JAIL" recordType="JAIL" boolAsMarker="True" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PlayerDialogueSceneActionItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="PlayerChoice" refName="DialogTopic" recordType="ESCE" />
+      <FormLink name="PPST" refName="Keyword" recordType="PPST" unknown="true" />
+      <FormLink name="PNST" refName="Keyword" recordType="PNST" unknown="true" />
+      <FormLink name="StartScene" refName="Scene" recordType="PASP" />
+      <UInt32 name="PhaseIndex" recordType="PAPI" />
+      <String name="PAPN" recordType="PAPN" unknown="true" />
+      <FormLink name="NpcResponse" refName="DialogTopic" recordType="ESCS" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="StartSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <RefList name="StartScenes" refName="StartScene" />
+      <Bool name="HTID" recordType="HTID" boolAsMarker="True" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="StartScene" objType="Subrecord" >
+    <Fields>
+      <FormLink name="LCEPScene" refName="Scene" recordType="LCEP" />
+      <FormLink name="STSCScene" refName="Scene" recordType="STSC" />
+      <UInt16 name="INTTPhaseIndex" recordType="INTT" nullable="false" />
+      <UInt16 name="ACTVPhaseIndex" recordType="ACTV" />
+      <String name="StartPhaseForScene" recordType="SSPN" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
+  </Object>
+  <Object name="RadioSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <FormLink name="Topic" recordType="DATA" refName="DialogTopic" nullable="false" />
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+      <RefDirect name="WED1" recordType="WED1" unknown="true" refName="SoundReference" />
+      <FormLink name="DialogueSubtype" recordType="VENC" refName="Keyword" />
+    </Fields>
+  </Object>
+  <Object name="MoveSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <Bool name="DNAM" recordType="DNAM" boolAsMarker="True" unknown="true" />
+      <Bool name="NVCI" recordType="NVCI" boolAsMarker="True" unknown="true" />
+      <Int32 name="ALLA" recordType="ALLA" unknown="true" nullable="False" />
+      <FormLink name="REPL" recordType="REPL" unknown="true" nullable="False" >
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <Float name="HNAM" recordType="HNAM" nullable="false" />
+      <Float name="VCLR" recordType="VCLR" nullable="false" />
+      <Float name="VNML" recordType="VNML" nullable="false" />
+      <Int32 name="FLMV" recordType="FLMV" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="CameraSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <RefList name="CameraShots" refName="CameraSceneShot" />
+    </Fields>
+  </Object>
+  <Object name="CameraSceneShot" objType="Subrecord" endMarkerType="XNAM">
+    <Fields>
+      <FormLink name="CameraShot" refName="CameraShot" recordType="CNAM" />
+      <Int32 name="ALLA" recordType="ALLA" unknown="true" nullable="false" />
+      <FormLink name="REPL" recordType="REPL" unknown="true" nullable="False" >
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <Int32 name="HNAM" recordType="HNAM" nullable="false" />
+      <Int32 name="VCLR" recordType="VCLR" nullable="false" />
+      <Int32 name="LVCR" recordType="LVCR" nullable="false" />
+      <Bool name="BTXT" recordType="BTXT" boolAsMarker="True" unknown="true" />
+      <Bool name="ATXT" recordType="ATXT" boolAsMarker="True" unknown="true" />
+      <Bool name="VTXT" recordType="VTXT" boolAsMarker="True" unknown="true" />
+      <Bool name="AIDT" recordType="AIDT" boolAsMarker="True" unknown="true" />
+      <Bool name="MPCD" recordType="MPCD" boolAsMarker="True" unknown="true" />
+      <Bool name="VNAM" recordType="VNAM" boolAsMarker="True" unknown="true" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="FxSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <FormLink name="REPL" refName="ImageSpaceAdapter" recordType="REPL" nullable="false" />
+      <Float name="HNAM" recordType="HNAM" nullable="false" />
+      <Float name="VCLR" recordType="VCLR" nullable="false" />
+      <Int32 name="BTXT" recordType="BTXT" nullable="false" />
+      <Int32 name="FLMV" recordType="FLMV" nullable="false" />
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="BIPL" refName="PlacedObject" recordType="BIPL" nullable="false" />
+      <Int32 name="LVLO" recordType="LVLO" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="AnimationSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <RefList name="Animations" refName="AnimationSceneItem" />
+    </Fields>
+  </Object>
+  <Object name="AnimationSceneItem" objType="Subrecord" endMarkerType="XNAM" >
+    <Fields>
+      <FormLink name="NpcAnimation" refName="IdleAnimation" recordType="BNAM" />
+      <String name="STRV" recordType="STRV" unknown="true" />
+      <FormLink name="VCLR" refName="Keyword" recordType="VCLR" nullable="false" unknown="true" />
+      <FormLink name="FLMV" refName="Keyword" recordType="FLMV" nullable="false" unknown="true" />
+      <FormLink name="FLAV" refName="Keyword" recordType="FLAV" nullable="false" unknown="true" />
+      <Bool name="QUAL" recordType="QUAL" boolAsMarker="True" unknown="true" />
+      <Bool name="SPOR" recordType="SPOR" boolAsMarker="True" unknown="true" />
+      <Bool name="OCOR" recordType="OCOR" boolAsMarker="True" unknown="true" />
+      <Bool name="SOFT" recordType="SOFT" boolAsMarker="True" unknown="true" />
+      <Bool name="DOFT" recordType="DOFT" boolAsMarker="True" unknown="true" />
+      <Float name="LVCR" recordType="LVCR" nullable="false" unknown="true" />
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="ATAC" refName="ActionRecord" recordType="ATAC" nullable="false" unknown="true" />
+      <Bool name="PLRL" recordType="PLRL" boolAsMarker="True" unknown="true" />
+      <Bool name="SHRT" recordType="SHRT" boolAsMarker="True" unknown="true" />
+      <Int32 name="DTGT" recordType="DTGT" unknown="true" />
+      <Bool name="DPLT" recordType="DPLT" boolAsMarker="True" unknown="true" />
+      <Bool name="ACEP" recordType="ACEP" boolAsMarker="True" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="TimelineSceneAction" objType="Subrecord" baseClass="ASceneAction">
+    <Fields>
+      <Int32 name="TNAM" recordType="TNAM" unknown="true" />
+      <Int32 name="SNAM" recordType="SNAM" unknown="true" />
+      <Int32 name="UNAM" recordType="UNAM" unknown="true" />
+      <Int32 name="LNAM" recordType="LNAM" unknown="true" />
+      <Int32 name="CNAM" recordType="CNAM" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

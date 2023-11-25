@@ -5,8 +5,8 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <FormLink name="Base" refName="Npc" recordType="NAME" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
-      <RefDirect name="RagdollData" refName="RagdollData" />
-      <P3Float name="RagdollBipedData" recordType="XRGB" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <RefDirect name="Patrol" refName="Patrol" />
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <Int32 name="Count" recordType="XCNT" />

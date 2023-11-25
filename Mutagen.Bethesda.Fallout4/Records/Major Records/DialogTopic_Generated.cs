@@ -108,14 +108,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
         #endregion
         #region Quest
-        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
-        public IFormLinkNullable<IQuestGetter> Quest
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest
         {
             get => _Quest;
             set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
+        IFormLinkGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
         #endregion
         #region Keyword
         private readonly IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
         new IFormLinkNullable<IDialogBranchGetter> Branch { get; set; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLink<IQuestGetter> Quest { get; set; }
         new IFormLinkNullable<IKeywordGetter> Keyword { get; set; }
         new DialogTopic.TopicFlag TopicFlags { get; set; }
         new DialogTopic.CategoryEnum Category { get; set; }
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         Single Priority { get; }
         IFormLinkNullableGetter<IDialogBranchGetter> Branch { get; }
-        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
+        IFormLinkGetter<IQuestGetter> Quest { get; }
         IFormLinkNullableGetter<IKeywordGetter> Keyword { get; }
         DialogTopic.TopicFlag TopicFlags { get; }
         DialogTopic.CategoryEnum Category { get; }
@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (printMask?.Quest ?? true)
             {
-                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
+                sb.AppendItem(item.Quest.FormKey, "Quest");
             }
             if (printMask?.Keyword ?? true)
             {
@@ -2067,10 +2067,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return BranchInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
-            {
-                yield return QuestInfo;
-            }
+            yield return FormLinkInformation.Factory(obj.Quest);
             if (FormLinkInformation.TryFactory(obj.Keyword, out var KeywordInfo))
             {
                 yield return KeywordInfo;
@@ -2389,7 +2386,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Keyword) ?? true))
             {
@@ -2623,7 +2620,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Branch,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Quest,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
@@ -2941,7 +2938,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
         #endregion
         #region Keyword
         private int? _KeywordLocation;

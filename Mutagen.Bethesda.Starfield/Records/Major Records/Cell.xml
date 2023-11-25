@@ -18,7 +18,7 @@
       <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="Cell" recordType="CELL" baseClass="StarfieldMajorRecord" objType="Record" majorFlag="true" customBinaryEnd="Normal">
+  <Object name="Cell" recordType="CELL" baseClass="StarfieldMajorRecord" objType="Record" partialForm="true" majorFlag="true" customBinaryEnd="Normal">
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />

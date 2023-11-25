@@ -258,8 +258,10 @@ public partial class RecordTypes
     public static readonly RecordType XMBR = new(0x52424D58);
     public static readonly RecordType XMSP = new(0x50534D58);
     public static readonly RecordType XOWN = new(0x4E574F58);
+    public static readonly RecordType XPCS = new(0x53435058);
     public static readonly RecordType XPWR = new(0x52575058);
     public static readonly RecordType XRFG = new(0x47465258);
+    public static readonly RecordType XRGD = new(0x44475258);
     public static readonly RecordType XRNK = new(0x4B4E5258);
     public static readonly RecordType XSCL = new(0x4C435358);
     public static readonly RecordType XXXX = new(0x58585858);

@@ -341,6 +341,20 @@ public class Fallout4Processor : Processor
             int loc = 0;
             ProcessZeroFloats(xtel, fileOffset, ref loc, 6);
         }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGD, out var rgd))
+        {
+            int loc = 0;
+            while (loc < rgd.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(rgd, fileOffset, ref loc, 6);
+            }
+        }
         if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprm))
         {
             int loc = 0;
@@ -440,6 +454,20 @@ public class Fallout4Processor : Processor
         {
             int offset = 8;
             ProcessBool(xown, fileOffset, offset, 4, 1);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGD, out var rgd))
+        {
+            int loc = 0;
+            while (loc < rgd.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(rgd, fileOffset, ref loc, 6);
+            }
         }
     }
 
@@ -692,11 +720,8 @@ public class Fallout4Processor : Processor
     {
         foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.ANAM))
         {
-            int i = BinaryPrimitives.ReadInt32LittleEndian(subRec.Content);
-            if (i == -1)
-            {
-                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, new byte[4]);
-            }
+            int loc = 0;
+            ProcessMaxIsNegativeFormID(subRec, fileOffset, ref loc);
         }
     }
 

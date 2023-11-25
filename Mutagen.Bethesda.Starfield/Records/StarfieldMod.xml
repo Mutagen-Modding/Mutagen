@@ -45,6 +45,7 @@
           <GenericSpecification Definition="Starfield.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Group name="Quests" refName="Quest" />
       <Group name="Perks" refName="Perk" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="FormLists" refName="FormList" />
@@ -63,7 +64,6 @@
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="Resources" refName="Resource" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
-      <Group name="Quests" refName="Quest" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>

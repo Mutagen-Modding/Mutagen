@@ -142,4 +142,14 @@ partial class StarfieldModCommon
         PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
         streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
     }
+    
+    public static void WriteQuestsParallel(
+        IStarfieldGroupGetter<IQuestGetter> group,
+        int targetIndex,
+        Stream[] streamDepositArray,
+        WritingBundle bundle,
+        ParallelWriteParameters parallelWriteParameters)
+    {
+        WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
+    }
 }

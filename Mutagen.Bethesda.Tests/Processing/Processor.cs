@@ -335,6 +335,37 @@ public abstract class Processor
         }
     }
 
+    public void SwapSubrecordContent(long fileOffset, MajorRecordFrame majorFrame, SubrecordPinFrame subrecord, byte[] b)
+    {
+        var loc = fileOffset + subrecord.Location + subrecord.HeaderLength;
+        if (b.Length == subrecord.ContentLength)
+        {
+            _instructions.SetSubstitution(loc, b);
+        }
+        else if (b.Length < subrecord.ContentLength)
+        {
+            _instructions.SetSubstitution(loc, b);
+            var remLength = subrecord.ContentLength - b.Length;
+            _instructions.SetRemove(RangeInt64.FromLength(loc + b.Length, remLength));
+            ProcessLengths(
+                majorFrame,
+                subrecord,
+                -remLength,
+                fileOffset);
+        }
+        else
+        {
+            _instructions.SetSubstitution(loc, b.AsSpan().Slice(0, subrecord.ContentLength).ToArray());
+            _instructions.SetAddition( loc + subrecord.ContentLength, b.AsSpan().Slice(subrecord.ContentLength).ToArray());
+            
+            ProcessLengths(
+                majorFrame,
+                subrecord,
+                b.Length - subrecord.ContentLength,
+                fileOffset);
+        }
+    }
+    
     public void ProcessLengths(
         SubrecordFrame frame,
         int amount,
@@ -366,6 +397,30 @@ public abstract class Processor
         BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), checked((uint)(frame.ContentLength + amount)));
         _instructions.SetSubstitution(
             loc: refLoc + Constants.HeaderLength,
+            sub: lenData);
+    }
+
+    public void ProcessLengths(
+        MajorRecordFrame frame,
+        SubrecordPinFrame subRec,
+        int amount,
+        long refLoc)
+    {
+        if (amount == 0) return;
+        var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+        ModifyParentGroupLengths(amount, formKey);
+
+        // Modify Length 
+        byte[] lenData = new byte[4];
+        BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), checked((uint)(frame.ContentLength + amount)));
+        _instructions.SetSubstitution(
+            loc: refLoc + Constants.HeaderLength,
+            sub: lenData);
+        
+        lenData = new byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subRec.ContentLength + amount));
+        _instructions.SetSubstitution(
+            loc: refLoc + subRec.Location + Constants.HeaderLength,
             sub: lenData);
     }
 
@@ -424,6 +479,16 @@ public abstract class Processor
                 new byte[4]);
         }
     }
+
+    public void ProcessMaxIsNegativeFormID(ReadOnlySpan<byte> span, ref long offsetLoc)
+    {
+        offsetLoc += 4;
+        int i = span.Int32();
+        if (i == -1)
+        {
+            _instructions.SetSubstitution(offsetLoc - 4, new byte[4]);
+        }
+    }
     
     public bool ProcessRotationFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, float multiplier)
     {
@@ -474,6 +539,15 @@ public abstract class Processor
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
         ProcessZeroFloat(pin.Content.Slice(loc), ref longLoc);
+        loc += 4;
+        return true;
+    }
+
+    public bool ProcessMaxIsNegativeFormID(SubrecordPinFrame pin, long offsetLoc, ref int loc)
+    {
+        if (loc >= pin.ContentLength) return false;
+        long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+        ProcessMaxIsNegativeFormID(pin.Content.Slice(loc), ref longLoc);
         loc += 4;
         return true;
     }

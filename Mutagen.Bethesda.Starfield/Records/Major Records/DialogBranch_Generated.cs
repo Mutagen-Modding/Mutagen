@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,36 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Quest
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IQuestGetter> IDialogBranchGetter.Quest => this.Quest;
+        #endregion
+        #region Category
+        public DialogBranch.CategoryType? Category { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        DialogBranch.CategoryType? IDialogBranchGetter.Category => this.Category;
+        #endregion
+        #region Flags
+        public DialogBranch.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        DialogBranch.Flag? IDialogBranchGetter.Flags => this.Flags;
+        #endregion
+        #region StartingTopic
+        private readonly IFormLinkNullable<IDialogTopicGetter> _StartingTopic = new FormLinkNullable<IDialogTopicGetter>();
+        public IFormLinkNullable<IDialogTopicGetter> StartingTopic
+        {
+            get => _StartingTopic;
+            set => _StartingTopic.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogTopicGetter> IDialogBranchGetter.StartingTopic => this.StartingTopic;
+        #endregion
 
         #region To String
 
@@ -79,6 +110,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Quest = initialValue;
+                this.Category = initialValue;
+                this.Flags = initialValue;
+                this.StartingTopic = initialValue;
             }
 
             public Mask(
@@ -88,7 +123,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Quest,
+                TItem Category,
+                TItem Flags,
+                TItem StartingTopic)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +137,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Quest = Quest;
+                this.Category = Category;
+                this.Flags = Flags;
+                this.StartingTopic = StartingTopic;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +149,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Quest;
+            public TItem Category;
+            public TItem Flags;
+            public TItem StartingTopic;
             #endregion
 
             #region Equals
@@ -119,11 +169,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Quest, rhs.Quest)) return false;
+                if (!object.Equals(this.Category, rhs.Category)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.StartingTopic, rhs.StartingTopic)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Quest);
+                hash.Add(this.Category);
+                hash.Add(this.Flags);
+                hash.Add(this.StartingTopic);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +192,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Quest)) return false;
+                if (!eval(this.Category)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.StartingTopic)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +204,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Quest)) return true;
+                if (eval(this.Category)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.StartingTopic)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +223,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Quest = eval(this.Quest);
+                obj.Category = eval(this.Category);
+                obj.Flags = eval(this.Flags);
+                obj.StartingTopic = eval(this.StartingTopic);
             }
             #endregion
 
@@ -175,6 +245,22 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(DialogBranch.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Quest ?? true)
+                    {
+                        sb.AppendItem(Quest, "Quest");
+                    }
+                    if (printMask?.Category ?? true)
+                    {
+                        sb.AppendItem(Category, "Category");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.StartingTopic ?? true)
+                    {
+                        sb.AppendItem(StartingTopic, "StartingTopic");
+                    }
                 }
             }
             #endregion
@@ -185,12 +271,27 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Quest;
+            public Exception? Category;
+            public Exception? Flags;
+            public Exception? StartingTopic;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogBranch_FieldIndex.Quest:
+                        return Quest;
+                    case DialogBranch_FieldIndex.Category:
+                        return Category;
+                    case DialogBranch_FieldIndex.Flags:
+                        return Flags;
+                    case DialogBranch_FieldIndex.StartingTopic:
+                        return StartingTopic;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +302,18 @@ namespace Mutagen.Bethesda.Starfield
                 DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogBranch_FieldIndex.Quest:
+                        this.Quest = ex;
+                        break;
+                    case DialogBranch_FieldIndex.Category:
+                        this.Category = ex;
+                        break;
+                    case DialogBranch_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case DialogBranch_FieldIndex.StartingTopic:
+                        this.StartingTopic = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +325,18 @@ namespace Mutagen.Bethesda.Starfield
                 DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogBranch_FieldIndex.Quest:
+                        this.Quest = (Exception?)obj;
+                        break;
+                    case DialogBranch_FieldIndex.Category:
+                        this.Category = (Exception?)obj;
+                        break;
+                    case DialogBranch_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case DialogBranch_FieldIndex.StartingTopic:
+                        this.StartingTopic = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +346,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Quest != null) return true;
+                if (Category != null) return true;
+                if (Flags != null) return true;
+                if (StartingTopic != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +376,18 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(Category, "Category");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(StartingTopic, "StartingTopic");
+                }
             }
             #endregion
 
@@ -255,6 +396,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Quest = this.Quest.Combine(rhs.Quest);
+                ret.Category = this.Category.Combine(rhs.Category);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.StartingTopic = this.StartingTopic.Combine(rhs.StartingTopic);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +421,35 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Quest;
+            public bool Category;
+            public bool Flags;
+            public bool StartingTopic;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Quest = defaultOn;
+                this.Category = defaultOn;
+                this.Flags = defaultOn;
+                this.StartingTopic = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Quest, null));
+                ret.Add((Category, null));
+                ret.Add((Flags, null));
+                ret.Add((StartingTopic, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +461,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogBranch_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogBranchCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogBranch(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -425,9 +592,14 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IDialogBranch :
         IDialogBranchGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogBranchInternal>,
         IStarfieldMajorRecordInternal
     {
+        new IFormLink<IQuestGetter> Quest { get; set; }
+        new DialogBranch.CategoryType? Category { get; set; }
+        new DialogBranch.Flag? Flags { get; set; }
+        new IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; set; }
     }
 
     public partial interface IDialogBranchInternal :
@@ -441,10 +613,15 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IDialogBranchGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IDialogBranchGetter>,
         IMapsToGetter<IDialogBranchGetter>
     {
         static new ILoquiRegistration StaticRegistration => DialogBranch_Registration.Instance;
+        IFormLinkGetter<IQuestGetter> Quest { get; }
+        DialogBranch.CategoryType? Category { get; }
+        DialogBranch.Flag? Flags { get; }
+        IFormLinkNullableGetter<IDialogTopicGetter> StartingTopic { get; }
 
     }
 
@@ -621,6 +798,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Quest = 7,
+        Category = 8,
+        Flags = 9,
+        StartingTopic = 10,
     }
     #endregion
 
@@ -631,9 +812,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(DialogBranch.Mask<>);
 
@@ -663,8 +844,14 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.DLBR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.DLBR);
+            var all = RecordCollection.Factory(
+                RecordTypes.DLBR,
+                RecordTypes.QNAM,
+                RecordTypes.TNAM,
+                RecordTypes.DNAM,
+                RecordTypes.SNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogBranchBinaryWriteTranslation);
         #region Interface
@@ -706,6 +893,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDialogBranchInternal item)
         {
             ClearPartial();
+            item.Quest.Clear();
+            item.Category = default;
+            item.Flags = default;
+            item.StartingTopic.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +914,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IDialogBranch obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Quest.Relink(mapping);
+            obj.StartingTopic.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +983,10 @@ namespace Mutagen.Bethesda.Starfield
             DialogBranch.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.Category = item.Category == rhs.Category;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.StartingTopic = item.StartingTopic.Equals(rhs.StartingTopic);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1036,24 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Quest ?? true)
+            {
+                sb.AppendItem(item.Quest.FormKey, "Quest");
+            }
+            if ((printMask?.Category ?? true)
+                && item.Category is {} CategoryItem)
+            {
+                sb.AppendItem(CategoryItem, "Category");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
+            if (printMask?.StartingTopic ?? true)
+            {
+                sb.AppendItem(item.StartingTopic.FormKeyNullable, "StartingTopic");
+            }
         }
         
         public static DialogBranch_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1104,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Category) ?? true))
+            {
+                if (lhs.Category != rhs.Category) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
+            {
+                if (!lhs.StartingTopic.Equals(rhs.StartingTopic)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1148,16 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IDialogBranchGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Quest);
+            if (item.Category is {} Categoryitem)
+            {
+                hash.Add(Categoryitem);
+            }
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            hash.Add(item.StartingTopic);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1186,11 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            yield return FormLinkInformation.Factory(obj.Quest);
+            if (FormLinkInformation.TryFactory(obj.StartingTopic, out var StartingTopicInfo))
+            {
+                yield return StartingTopicInfo;
             }
             yield break;
         }
@@ -1020,6 +1266,22 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
+            {
+                item.Quest.SetTo(rhs.Quest.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Category) ?? true))
+            {
+                item.Category = rhs.Category;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
+            {
+                item.StartingTopic.SetTo(rhs.StartingTopic.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1430,35 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly DialogBranchBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IDialogBranchGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Quest,
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
+            EnumBinaryTranslation<DialogBranch.CategoryType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Category,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            EnumBinaryTranslation<DialogBranch.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.StartingTopic,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IDialogBranchGetter item,
@@ -1184,10 +1475,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1530,58 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly DialogBranchBinaryCreateTranslation Instance = new DialogBranchBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DLBR;
+        public static ParseResult FillBinaryRecordTypes(
+            IDialogBranchInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogBranch_FieldIndex.Quest;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Category = EnumBinaryTranslation<DialogBranch.CategoryType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)DialogBranch_FieldIndex.Category;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<DialogBranch.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)DialogBranch_FieldIndex.Flags;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.StartingTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogBranch_FieldIndex.StartingTopic;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1614,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogBranchCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogBranchBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1629,22 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IDialogBranch);
 
 
+        #region Quest
+        private int? _QuestLocation;
+        public IFormLinkGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
+        #endregion
+        #region Category
+        private int? _CategoryLocation;
+        public DialogBranch.CategoryType? Category => _CategoryLocation.HasValue ? (DialogBranch.CategoryType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CategoryLocation!.Value, _package.MetaData.Constants)) : default(DialogBranch.CategoryType?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public DialogBranch.Flag? Flags => _FlagsLocation.HasValue ? (DialogBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(DialogBranch.Flag?);
+        #endregion
+        #region StartingTopic
+        private int? _StartingTopicLocation;
+        public IFormLinkNullableGetter<IDialogTopicGetter> StartingTopic => _StartingTopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartingTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1702,49 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.QNAM:
+                {
+                    _QuestLocation = (stream.Position - offset);
+                    return (int)DialogBranch_FieldIndex.Quest;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _CategoryLocation = (stream.Position - offset);
+                    return (int)DialogBranch_FieldIndex.Category;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)DialogBranch_FieldIndex.Flags;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _StartingTopicLocation = (stream.Position - offset);
+                    return (int)DialogBranch_FieldIndex.StartingTopic;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

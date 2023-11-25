@@ -3136,6 +3136,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XSCL);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
+        public static bool IsPartialFormable => true;
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3367,6 +3368,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "DisplayCaseComponent":
                 case "IDisplayCaseComponentGetter":
                 case "IDisplayCaseComponent":
+                case "ObjectPaletteDefaultsComponent":
+                case "IObjectPaletteDefaultsComponentGetter":
+                case "IObjectPaletteDefaultsComponent":
                     break;
                 case "CellShipBlueprintSnapLink":
                 case "ICellShipBlueprintSnapLinkGetter":

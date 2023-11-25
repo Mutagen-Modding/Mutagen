@@ -46,6 +46,8 @@ public class TriggeringRecordModule : GenerationModule
         {
             data.TriggeringRecordAccessors.Add($"Group<T>.T_RecordType");
         }
+
+        data.NotDuplicate = node.GetAttribute<bool>("notDuplicate");
         return base.PostFieldLoad(obj, field, node);
     }
 
@@ -690,17 +692,20 @@ public class TriggeringRecordModule : GenerationModule
     private async Task SetObjectTrigger(ObjectGeneration obj)
     {
         var data = obj.GetObjectData();
-        await SetBasicTriggers(obj, data, isGRUP: data.ObjectType == ObjectType.Group);
+        if (obj.TryGetMarkerType(out var markerType))
+        {
+            data.TriggeringRecordTypes.Add(markerType);
+        }
+        else
+        {
+            await SetBasicTriggers(obj, data, isGRUP: data.ObjectType == ObjectType.Group);
+        }
 
         if (data.ObjectType == ObjectType.Group)
         {
             data.TriggeringRecordTypes.Add(Plugins.Internals.Constants.Group);
         }
 
-        if (obj.TryGetMarkerType(out var markerType))
-        {
-            data.TriggeringRecordTypes.Add(markerType);
-        }
 
         if (obj.TryGetCustomRecordTypeTriggers(out var customTypeTriggers))
         {
