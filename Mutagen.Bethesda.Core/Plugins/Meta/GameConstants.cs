@@ -257,7 +257,7 @@ public sealed record GameConstants
     {
         Release = GameRelease.SkyrimVR,
         MyDocumentsString = "Skyrim VR",
-        IniName = "Skyrim VR",
+        IniName = "SkyrimVR",
     };
 
     public static readonly GameConstants EnderalSE = SkyrimSE with
