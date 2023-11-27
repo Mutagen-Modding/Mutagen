@@ -3,10 +3,6 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
 	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <IsPackable>false</IsPackable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

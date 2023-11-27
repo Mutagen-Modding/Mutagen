@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <WarningsAsErrors>nullable</WarningsAsErrors>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <RootNamespace>Mutagen.Bethesda.UnitTests</RootNamespace>
     </PropertyGroup>
 

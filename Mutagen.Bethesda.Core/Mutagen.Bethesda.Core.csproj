@@ -7,19 +7,8 @@
         <WarningsAsErrors>nullable</WarningsAsErrors>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RootNamespace>Mutagen.Bethesda</RootNamespace>
-        <LangVersion>latest</LangVersion>
         <PackageId>Mutagen.Bethesda.Core</PackageId>
-        <Authors>Noggog</Authors>
-        <Company>Mutagen</Company>
-        <Product>Mutagen</Product>
         <Description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains only the core components without the generated records.</Description>
-        <Copyright>2021</Copyright>
-        <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
-        <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -2,18 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Company>Mutagen</Company>
-    <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Bethesda mods.</Description>
-    <Copyright>2021</Copyright>
-    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
-    <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <Authors>Noggog</Authors>
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

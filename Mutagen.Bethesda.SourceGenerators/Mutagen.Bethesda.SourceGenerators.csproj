@@ -2,19 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>Latest</LangVersion>
         <PackageId>Mutagen.Bethesda.SourceGenerators</PackageId>
-        <Authors>Noggog</Authors>
-        <Company>Mutagen</Company>
-        <Product>Mutagen</Product>
         <Description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains source generators to provide extra build-time functionality</Description>
-        <Copyright>2021</Copyright>
-        <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
-        <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
         <IncludeBuildOutput>false</IncludeBuildOutput>
     </PropertyGroup>

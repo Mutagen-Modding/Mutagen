@@ -4,10 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <IsPackable>false</IsPackable>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

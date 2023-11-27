@@ -3,17 +3,7 @@
     <PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <PackageId>Mutagen.Bethesda.Testing</PackageId>
-        <Authors>Noggog</Authors>
-        <Company>Mutagen</Company>
-        <Product>Mutagen</Product>
         <Description>A C# library for helping write tests for Mutagen</Description>
-        <Copyright>2021</Copyright>
-        <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
-        <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
 

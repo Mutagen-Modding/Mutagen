@@ -3,19 +3,9 @@
   <PropertyGroup>
 	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
-    <LangVersion>preview</LangVersion>
-    <Company>Mutagen</Company>
-    <Product>Mutagen</Product>
-    <Authors>Noggog</Authors>
-    <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
-    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>A C# library for Mutagen/Bethesda related WPF controls and styling</Description>
-    <Copyright>2021</Copyright>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

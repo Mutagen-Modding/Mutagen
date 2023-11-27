@@ -6,5 +6,16 @@
         <VersionPrefix>0.43.0.1</VersionPrefix>
         <ImplicitUsings>true</ImplicitUsings>
         <IsPackable>false</IsPackable>
+        <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
+        <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+        <Copyright>2023</Copyright>
+        <Company>Mutagen</Company>
+        <Product>Mutagen</Product>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Authors>Noggog</Authors>
     </PropertyGroup>
 </Project>
