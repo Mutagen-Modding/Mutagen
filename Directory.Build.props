@@ -3,7 +3,7 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
-        <Version>0.43.0.1</Version>
+        <VersionPrefix>0.43.0.1</VersionPrefix>
         <ImplicitUsings>true</ImplicitUsings>
     </PropertyGroup>
 </Project>
