@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
@@ -291,6 +292,8 @@ public readonly struct SubrecordPinFrame
     /// Location where the subrecord ends.  This is equivalent to Location + TotalLength
     /// </summary>
     public int EndLocation => Location + TotalLength;
+    
+    public int? LengthOverrideRecordLocation { get; }
 
     /// <summary>
     /// Constructor
@@ -308,6 +311,13 @@ public readonly struct SubrecordPinFrame
     {
         Frame = frame;
         Location = pinLocation;
+    }
+    
+    private SubrecordPinFrame(SubrecordFrame frame, int pinLocation, int LengthOverrideRecordLocation)
+    {
+        Frame = frame;
+        Location = pinLocation;
+        LengthOverrideRecordLocation = LengthOverrideRecordLocation;
     }
 
     /// <summary>
@@ -334,6 +344,15 @@ public readonly struct SubrecordPinFrame
         return new SubrecordPinFrame(
             SubrecordFrame.FactoryNoTrim(header, span),
             pinLocation);
+    }
+
+    public static SubrecordPinFrame FactoryWithOverrideLength(SubrecordHeader header, ReadOnlyMemorySlice<byte> span,
+        int pinLocation, int overrideSubrecLocation)
+    {
+        return new SubrecordPinFrame(
+            SubrecordFrame.Factory(header, span),
+            pinLocation,
+            overrideSubrecLocation);
     }
 
     /// <inheritdoc/>
