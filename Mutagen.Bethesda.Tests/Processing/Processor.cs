@@ -320,7 +320,7 @@ public abstract class Processor
             formKey: formKey);
     }
 
-    public void ModifyParentGroupLengths(int amount, FormKey formKey)
+    public void ModifyParentGroupLengths(long amount, FormKey formKey)
     {
         if (amount == 0) return;
         lock (_lengthTracker)
@@ -396,7 +396,7 @@ public abstract class Processor
 
     public void ProcessLengths(
         MajorRecordFrame frame,
-        int amount,
+        long amount,
         long refLoc)
     {
         if (amount == 0) return;
