@@ -33,8 +33,12 @@ public abstract class Processor
     public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
     protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(SourcePath));
+
     public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
-    public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
+
+    public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame,
+        long fileOffset);
+
     protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new();
     protected Dictionary<RecordType, List<DynamicStreamProcessor>> DynamicStreamProcessors = new();
     public readonly ParallelOptions ParallelOptions;
@@ -179,14 +183,17 @@ public abstract class Processor
         {
             locs = locs.Where(loc => loc.Value.Record == type);
         }
+
         if (!DynamicProcessors.TryGetValue(type, out var procs))
         {
             procs = null;
         }
+
         if (!DynamicStreamProcessors.TryGetValue(type, out var streamProcs))
         {
             streamProcs = null;
         }
+
         Parallel.ForEach(locs, ParallelOptions, (loc) =>
         {
             MajorRecordFrame frame;
@@ -205,6 +212,7 @@ public abstract class Processor
                     proc(frame, loc.Key);
                 }
             }
+
             if (streamProcs != null)
             {
                 using var stream = streamGetter();
@@ -277,6 +285,7 @@ public abstract class Processor
         {
             if (!ProcessFormIDOverflow(pin, offsetLoc, ref loc)) return false;
         }
+
         return true;
     }
 
@@ -335,7 +344,8 @@ public abstract class Processor
         }
     }
 
-    public void SwapSubrecordContent(long fileOffset, MajorRecordFrame majorFrame, SubrecordPinFrame subrecord, byte[] b)
+    public void SwapSubrecordContent(long fileOffset, MajorRecordFrame majorFrame, SubrecordPinFrame subrecord,
+        byte[] b)
     {
         var loc = fileOffset + subrecord.Location + subrecord.HeaderLength;
         if (b.Length == subrecord.ContentLength)
@@ -356,8 +366,9 @@ public abstract class Processor
         else
         {
             Instructions.SetSubstitution(loc, b.AsSpan().Slice(0, subrecord.ContentLength).ToArray());
-            Instructions.SetAddition( loc + subrecord.ContentLength, b.AsSpan().Slice(subrecord.ContentLength).ToArray());
-            
+            Instructions.SetAddition(loc + subrecord.ContentLength,
+                b.AsSpan().Slice(subrecord.ContentLength).ToArray());
+
             ProcessLengths(
                 majorFrame,
                 subrecord,
@@ -471,6 +482,7 @@ public abstract class Processor
                 new byte[4]);
             return;
         }
+
         uint floatInt = span.UInt32();
         if (floatInt == 0x80000000)
         {
@@ -581,6 +593,7 @@ public abstract class Processor
         {
             if (!ProcessZeroFloat(pin, offsetLoc, ref loc)) return false;
         }
+
         return true;
     }
 
@@ -595,6 +608,7 @@ public abstract class Processor
         {
             writer.Write(color, type);
         }
+
         if (span.SequenceEqual(outBytes)) return;
         Instructions.SetSubstitution(
             offsetLoc,
@@ -651,6 +665,7 @@ public abstract class Processor
                 offsetLoc,
                 1);
         }
+
         for (int i = 1; i < span.Length; i++)
         {
             if (span[i] != 0)
@@ -692,7 +707,8 @@ public abstract class Processor
             stream.Position = loc.Value.Location.Min;
             var majorFrame = stream.ReadMajorRecord();
             if (!majorFrame.IsDeleted || majorFrame.ContentLength == 0) continue;
-            Instructions.SetRemove(RangeInt64.FromLength(loc.Value.Location.Min + majorFrame.HeaderLength, majorFrame.ContentLength));
+            Instructions.SetRemove(RangeInt64.FromLength(loc.Value.Location.Min + majorFrame.HeaderLength,
+                majorFrame.ContentLength));
             ProcessLengths(majorFrame, -checked((int)majorFrame.ContentLength), loc.Value.Location.Min);
         }
     }
@@ -715,13 +731,16 @@ public abstract class Processor
                 pos += subRec.TotalLength;
                 continue;
             }
+
             if (subRec.RecordType != containedType)
             {
                 prevWasCounter = false;
                 pos += subRec.TotalLength;
                 continue;
             }
-            var passedLen = RecordSpanExtensions.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
+
+            var passedLen = RecordSpanExtensions.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType,
+                out var numPassed);
             // Found contained record
             if (!prevWasCounter)
             {
@@ -734,17 +753,19 @@ public abstract class Processor
                     fileOffset + frame.HeaderLength + pos,
                     bytes);
                 sizeChange += 10;
-
             }
+
             prevWasCounter = false;
             pos += passedLen;
         }
+
         return sizeChange;
     }
 
     public abstract class AStringsAlignment
     {
-        public delegate void Handle(long loc, MajorRecordFrame major, List<StringEntry> processedStrings, IStringsLookup overlay);
+        public delegate void Handle(long loc, MajorRecordFrame major, List<StringEntry> processedStrings,
+            IStringsLookup overlay);
 
         public RecordType MajorType;
 
@@ -837,7 +858,8 @@ public abstract class Processor
         if (!Enums.HasFlag(modHeader.Flags, Constants.Localized)) return;
         var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var language = Language.English;
-        using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncoding.Default);
+        using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)),
+            outFolder, MutagenEncoding.Default);
         var stringEntries = Enums<StringsSource>.Values
             .SelectMany(source =>
             {
@@ -851,14 +873,16 @@ public abstract class Processor
             .ToArray();
 
         var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
-        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, new StringsReadParameters()
-        {
-            BsaOrdering = bsaOrder
-        });
+        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder,
+            new StringsReadParameters()
+            {
+                BsaOrdering = bsaOrder
+            });
 
         var overlays = Enums<StringsSource>.Values
             .Select(x => (x, stringsOverlay.Get(x)))
-            .ToDictionary(x => x.x, x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.ToDictionary())));
+            .ToDictionary(x => x.x,
+                x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.ToDictionary())));
 
         var deadKeys = KnownDeadStringKeys();
 
@@ -873,6 +897,7 @@ public abstract class Processor
                 {
                     overlayDict.Remove(knownDeadKeys);
                 }
+
                 overlayDict.Remove(entry.OrigIndex);
                 if (entry.Fill)
                 {
@@ -887,10 +912,12 @@ public abstract class Processor
                         var regis = writer.Register(entry.Source, new KeyValuePair<Language, string>(language, str));
                         BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
                     }
+
                     Instructions.SetSubstitution(entry.FileLocation, bytes);
                     continue;
                 }
             }
+
             Instructions.SetSubstitution(entry.FileLocation, new byte[4]);
         }
 
@@ -932,7 +959,8 @@ public abstract class Processor
         stream.Position = 0;
         var mod = stream.ReadModHeader();
         var localizedIndex = stream.MetaData.Constants.Release.ToCategory().GetLocalizedFlagIndex();
-        if (!localizedIndex.HasValue || !Enums.HasFlag(mod.Flags, localizedIndex.Value)) return Array.Empty<StringEntry>();
+        if (!localizedIndex.HasValue || !Enums.HasFlag(mod.Flags, localizedIndex.Value))
+            return Array.Empty<StringEntry>();
 
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(
@@ -947,6 +975,7 @@ public abstract class Processor
             {
                 continue;
             }
+
             instructions.Handler(stream.Position, major, ret, overlay.Value);
         }
 
@@ -987,14 +1016,18 @@ public abstract class Processor
                 {
                     goto Break;
                 }
+
                 if (subBlockGroup.ContentLength == 0)
-                { // Empty group
+                {
+                    // Empty group
                     ModifyLengthTracking(blockGroupPos, -subBlockGroup.HeaderLength);
                     removes.Add(RangeInt64.FromLength(subBlockGroupPos, subBlockGroup.HeaderLength));
                     amountRemoved++;
                 }
+
                 stream.Position = subBlockGroupPos + subBlockGroup.TotalLength;
             }
+
             Break:
 
             // Check to see if removed subgroups left parent empty
@@ -1014,6 +1047,7 @@ public abstract class Processor
                 section: remove);
             amount -= (int)remove.Width;
         }
+
         ModifyParentGroupLengths(amount, formKey);
     }
 
@@ -1045,6 +1079,7 @@ public abstract class Processor
                 section: remove);
             amount -= (int)remove.Width;
         }
+
         ModifyParentGroupLengths(amount, formKey);
     }
 
@@ -1076,6 +1111,7 @@ public abstract class Processor
                 section: remove);
             amount -= (int)remove.Width;
         }
+
         ModifyParentGroupLengths(amount, formKey);
     }
 
@@ -1105,6 +1141,7 @@ public abstract class Processor
         {
             locToMove = majorFrame.TotalLength;
         }
+
         if (limit == locToMove) return false;
         if (offender < limit)
         {
@@ -1112,6 +1149,7 @@ public abstract class Processor
             {
                 throw new ArgumentException();
             }
+
             Instructions.SetMove(
                 section: new RangeInt64(
                     fileOffset + majorFrame.HeaderLength + offender,
@@ -1119,6 +1157,7 @@ public abstract class Processor
                 loc: fileOffset + majorFrame.HeaderLength + locToMove.Value);
             return true;
         }
+
         return false;
     }
 
