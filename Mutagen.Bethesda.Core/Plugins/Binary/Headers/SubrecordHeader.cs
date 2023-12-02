@@ -350,7 +350,7 @@ public readonly struct SubrecordPinFrame
         int pinLocation, int overrideSubrecLocation)
     {
         return new SubrecordPinFrame(
-            SubrecordFrame.Factory(header, span),
+            SubrecordFrame.FactoryNoTrim(header, span),
             pinLocation,
             overrideSubrecLocation);
     }

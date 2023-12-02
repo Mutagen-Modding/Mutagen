@@ -14,7 +14,7 @@ public static class RecordSpanExtensions
         var loc = overflow.EndLocation;
         var nextSpan = data.Slice(loc, checked((int)(nextLen + overflow.Meta.SubConstants.HeaderLength)));
         var subHeader = new SubrecordHeader(overflow.Meta, nextSpan);
-        return SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc);
+        return SubrecordPinFrame.FactoryWithOverrideLength(subHeader, nextSpan, loc, overflow.Location);
     }
     
     /// <summary>
