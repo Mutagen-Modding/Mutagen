@@ -51,14 +51,6 @@ public sealed class OrderListings : IOrderListings
         return implicitListings
             .Concat(
                 Order(creationClubListings
-                    .Select(x =>
-                    {
-                        if (selector(x).Type == ModType.Plugin)
-                        {
-                            throw new NotImplementedException("Creation Club does not support esp plugins.");
-                        }
-                        return x;
-                    })
                     // If CC mod is on plugins list, refer to its ordering
                     .OrderBy(selector, Comparer<ModKey>.Create((x, y) =>
                     {
