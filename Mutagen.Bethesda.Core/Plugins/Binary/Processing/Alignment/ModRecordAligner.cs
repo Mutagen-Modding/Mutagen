@@ -1,6 +1,8 @@
 using Mutagen.Bethesda.Plugins.Analysis;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
@@ -21,9 +23,10 @@ public static class ModRecordAligner
             EmptyMeansInterested = false 
         }; 
         // Always interested in parent record types 
-        interest.InterestingTypes.Add("CELL"); 
-        interest.InterestingTypes.Add("WRLD"); 
-        interest.InterestingTypes.Add("QUST"); 
+        interest.InterestingTypes.Add("CELL");
+        interest.InterestingTypes.Add("WRLD");
+        interest.InterestingTypes.Add("QUST");
+        interest.InterestingTypes.Add("REFR");
 
         using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
         {
@@ -42,10 +45,11 @@ public static class ModRecordAligner
             AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
             inputPath = alignedGroupsFile;
         }
-
-        if (gameMode is GameRelease.Oblivion or GameRelease.Fallout4)
+        
+        if (gameMode is GameRelease.Oblivion or GameRelease.Fallout4 or GameRelease.Starfield)
         {
             var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
+            
             var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedCells"));
             using (var mutaReader = new MutagenBinaryReadStream(inputPath, gameMode))
             {
@@ -159,9 +163,11 @@ public static class ModRecordAligner
             var dataDict = new Dictionary<RecordType, List<ReadOnlyMemorySlice<byte>>>(); 
             ReadOnlyMemorySlice<byte>? rest = null;
             RecordType? last = null;
-            while (inputStream.Position < endPos) 
-            { 
-                var subType = inputStream.GetSubrecord(); 
+            
+
+            while (inputStream.Position < endPos)
+            {
+                var subType = inputStream.GetSubrecord();
                 if (stopMarkers?.Contains(subType.RecordType) ?? false) 
                 { 
                     rest = inputStream.ReadMemory((int)(endPos - inputStream.Position), readSafe: true); 
@@ -171,27 +177,67 @@ public static class ModRecordAligner
                 if (!started && (startTriggers?.Contains(subType.RecordType) ?? false)) 
                 { 
                     started = true; 
-                } 
+                }
  
                 if (!started) 
-                { 
-                    inputStream.WriteTo(writer.BaseStream, subType.TotalLength); 
+                {
+                    if (inputStream.MetaData.Constants.HeaderOverflow.Contains(subType.RecordType))
+                    {
+                        var overflowLen = subType.AsInt32();
+                        inputStream.WriteTo(writer.BaseStream, subType.TotalLength); 
+                        inputStream.WriteTo(writer.BaseStream, overflowLen + inputStream.MetaData.Constants.SubConstants.HeaderLength); 
+                    }
+                    else
+                    {
+                        inputStream.WriteTo(writer.BaseStream, subType.TotalLength); 
+                    }
                     continue; 
-                } 
+                }
+                
+                SubrecordFrame? overflowRec = null;
+
+                if (inputStream.MetaData.Constants.HeaderOverflow.Contains(subType.RecordType))
+                {
+                    overflowRec = subType;
+                    subType = inputStream.GetSubrecord(offset: overflowRec.Value.TotalLength);
+                }
                      
                 if (alignments.TryGetValue(subType.RecordType, out var rule))
                 {
-                    dataDict.GetOrAdd(subType.RecordType).Add(rule.GetBytes(inputStream));
+                    if (overflowRec != null)
+                    {
+                        dataDict.GetOrAdd(subType.RecordType).Add(overflowRec.Value.HeaderAndContentData);
+                        inputStream.Position += overflowRec.Value.TotalLength;
+                        dataDict.GetOrAdd(subType.RecordType).Add(rule.ReadBytes(inputStream, overflowRec.Value.AsInt32()));
+                    }
+                    else
+                    {
+                        dataDict.GetOrAdd(subType.RecordType).Add(rule.ReadBytes(inputStream, null));
+                    }
                     last = subType.RecordType;
                 } 
                 else
                 {
                     if (last != null)
                     {
-                        dataDict.GetOrAdd(last.Value).Add(inputStream.ReadSubrecord().HeaderAndContentData);
+                        if (overflowRec != null)
+                        {
+                            dataDict.GetOrAdd(last.Value).Add(overflowRec.Value.HeaderAndContentData);
+                            inputStream.Position += overflowRec.Value.TotalLength;
+                            dataDict.GetOrAdd(last.Value).Add(
+                                inputStream.ReadMemory(overflowRec.Value.HeaderLength + overflowRec.Value.AsInt32()));
+                        }
+                        else
+                        {
+                            dataDict.GetOrAdd(last.Value).Add(inputStream.ReadSubrecord().HeaderAndContentData);
+                        }
                     }
                     else
                     {
+                        if (overflowRec != null)
+                        {
+                            inputStream.WriteTo(writer.BaseStream, overflowRec.Value.TotalLength);
+                        }
                         inputStream.WriteTo(writer.BaseStream, subType.TotalLength);
                     }
                 }
@@ -219,7 +265,7 @@ public static class ModRecordAligner
             } 
             if (writer.Position != writerEndPos) 
             { 
-                throw new ArgumentException("Record alignment changed length"); 
+                throw new ArgumentException($"Record alignment changed length on record {majorHeader.FormID}.  Expected len {writerEndPos}, but was {writer.Position}"); 
             } 
         } 
     } 
