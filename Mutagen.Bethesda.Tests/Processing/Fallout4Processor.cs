@@ -110,7 +110,7 @@ public class Fallout4Processor : Processor
                     writable.FormVersion = 0x83;
                     
                     // Insert partial formed record
-                    _instructions.SetAddition(
+                    Instructions.SetAddition(
                         rec.Location + group.Location.Min,
                         bytes);
                     added += bytes.Length;
@@ -161,13 +161,13 @@ public class Fallout4Processor : Processor
 
             byte[] sub = new byte[4];
             BinaryPrimitives.WriteInt32LittleEndian(sub, max);
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 fileOffset + mlsi.Location + mlsi.HeaderLength,
                 sub);
         }
         else
         {
-            _instructions.SetRemove(RangeInt64.FromLength(fileOffset + mlsi.Location, mlsi.TotalLength));
+            Instructions.SetRemove(RangeInt64.FromLength(fileOffset + mlsi.Location, mlsi.TotalLength));
             ProcessLengths(
                 majorFrame,
                 -mlsi.TotalLength,
@@ -200,7 +200,7 @@ public class Fallout4Processor : Processor
                 if (zeroIndex == -1) break; 
                 var index = fileOffset + mnam.Location + mnam.HeaderLength + zeroIndex + i; 
                 var byteSize = blockSize - zeroIndex; 
-                _instructions.SetSubstitution(index, new byte[byteSize]); 
+                Instructions.SetSubstitution(index, new byte[byteSize]); 
             } 
         } 
     }
@@ -266,7 +266,7 @@ public class Fallout4Processor : Processor
         {
             var bytes = new byte[4];
             BinaryPrimitives.WriteInt32LittleEndian(bytes, 1);
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 fileOffset + frame.Location + frame.HeaderLength,
                 bytes);
         }
@@ -326,7 +326,7 @@ public class Fallout4Processor : Processor
         if (raw.SequenceEqual(rdats.Keys)) return;
         foreach (var item in rdats.Reverse())
         {
-            _instructions.SetMove(
+            Instructions.SetMove(
                 loc: fileOffset + majorFrame.TotalLength,
                 section: item.Value);
         }
@@ -382,7 +382,7 @@ public class Fallout4Processor : Processor
             && !majorFrame.TryFindSubrecord(RecordTypes.INAM, out _)
             && !majorFrame.TryFindSubrecord(RecordTypes.XLRM, out _))
         {
-            _instructions.SetRemove(RangeInt64.FromLength(fileOffset + xrmr.Location, xrmr.TotalLength));
+            Instructions.SetRemove(RangeInt64.FromLength(fileOffset + xrmr.Location, xrmr.TotalLength));
             ProcessLengths(
                 majorFrame,
                 -xrmr.TotalLength,
@@ -406,12 +406,12 @@ public class Fallout4Processor : Processor
                 var following = xwpgs[i];
                 var amount = following.AsUInt32();
                 firstAmount += amount;
-                _instructions.SetRemove(RangeInt64.FromLength(fileOffset + following.Location, following.TotalLength));
+                Instructions.SetRemove(RangeInt64.FromLength(fileOffset + following.Location, following.TotalLength));
                 removed += following.TotalLength;
             }
             byte[] b = new byte[4];
             BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(), firstAmount);
-            _instructions.SetSubstitution(fileOffset + first.Location + first.HeaderLength, b);
+            Instructions.SetSubstitution(fileOffset + first.Location + first.HeaderLength, b);
         }
 
         FixVMADs(majorFrame, fileOffset);
@@ -536,7 +536,7 @@ public class Fallout4Processor : Processor
             {
                 byte[] b = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + tifcRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength,
                     b);
             }
@@ -557,7 +557,7 @@ public class Fallout4Processor : Processor
             int i = BinaryPrimitives.ReadInt32LittleEndian(ctda.Content.Slice(12));
             if (i == 0x0100087C)
             {
-                _instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
+                Instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
             }
         }
     }
@@ -709,7 +709,7 @@ public class Fallout4Processor : Processor
             int i = BinaryPrimitives.ReadInt32LittleEndian(ctda.Content.Slice(12));
             if (i == 0x0100080E)
             {
-                _instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
+                Instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
             }
         }
     }
@@ -769,11 +769,11 @@ public class Fallout4Processor : Processor
         {
             if (subRec.Content[2] == 3)
             {
-                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 2, 2);
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 2, 2);
             }
             if (subRec.Content[3] == 3)
             {
-                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 3, 2);
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 3, 2);
             }
         }
     }
@@ -904,7 +904,7 @@ public class Fallout4Processor : Processor
             var subLoc = startLoc;
             foreach (var item in dataValues.OrderBy(i => i.Index))
             {
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + majorFrame.HeaderLength + subLoc,
                     item.Data.ToArray());
                 subLoc += item.Data.Length;
@@ -914,7 +914,7 @@ public class Fallout4Processor : Processor
             {
                 byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
                 bytes[6] = (byte)item.Index;
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + majorFrame.HeaderLength + subLoc,
                     bytes.ToArray());
                 subLoc += bytes.Length;
@@ -970,7 +970,7 @@ public class Fallout4Processor : Processor
 
         foreach (var item in inputValues.OrderBy(i => i.Index))
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 writeLoc,
                 item.Data.ToArray());
             writeLoc += item.Data.Length;
@@ -1010,7 +1010,7 @@ public class Fallout4Processor : Processor
             {
                 byte[] sub = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + anamRec.Location + anamRec.HeaderLength,
                     sub);
             }

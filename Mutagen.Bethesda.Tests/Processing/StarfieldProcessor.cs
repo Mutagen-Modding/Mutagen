@@ -286,7 +286,7 @@ public class StarfieldProcessor : Processor
             {
                 byte[] b = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + tifcRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength,
                     b);
             }
@@ -344,7 +344,7 @@ public class StarfieldProcessor : Processor
             {
                 byte[] sub = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + anamRec.Location + anamRec.HeaderLength,
                     sub);
             }

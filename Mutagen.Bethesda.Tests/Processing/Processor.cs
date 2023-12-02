@@ -23,7 +23,7 @@ public abstract class Processor
     public abstract GameRelease GameRelease { get; }
     public readonly GameConstants Meta;
     protected RecordLocatorResults _alignedFileLocs;
-    protected BinaryFileProcessor.ConfigConstructor _instructions = new();
+    public BinaryFileProcessor.ConfigConstructor Instructions = new();
     private readonly Dictionary<long, uint> _lengthTracker = new();
     protected byte _numMasters;
     protected IMasterReferenceCollection Masters;
@@ -103,14 +103,14 @@ public abstract class Processor
                 {
                     stream.Position = grup.Key + 4;
                     if (grup.Value == stream.ReadUInt32()) continue;
-                    _instructions.SetSubstitution(
+                    Instructions.SetSubstitution(
                         loc: grup.Key + 4,
                         sub: BitConverter.GetBytes(grup.Value));
                 }
             }
         }
 
-        var config = _instructions.GetConfig();
+        var config = Instructions.GetConfig();
 
         using (var processor = new BinaryFileProcessor(
                    new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
@@ -235,7 +235,7 @@ public abstract class Processor
         var formID = majorFrame.FormID;
         if (formID.ModIndex.ID <= _numMasters) return;
         // Need to zero out master
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             fileOffset + Meta.MajorConstants.FormIDLocationOffset + 3,
             0);
     }
@@ -245,7 +245,7 @@ public abstract class Processor
         var formID = new FormID(span.UInt32());
         if (formID.ModIndex.ID <= _numMasters) return;
         // Need to zero out master
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             offsetLoc + 3,
             _numMasters);
     }
@@ -300,7 +300,7 @@ public abstract class Processor
         if (nullIndex == -1) throw new ArgumentException();
         if (nullIndex == subFrame.Content.Length - 1) return;
         // Extra content pass null terminator.  Trim 
-        _instructions.SetRemove(
+        Instructions.SetRemove(
             section: RangeInt64.FromLength(
                 refLoc + subFrame.HeaderLength + nullIndex + 1,
                 subFrame.Content.Length - nullIndex));
@@ -340,13 +340,13 @@ public abstract class Processor
         var loc = fileOffset + subrecord.Location + subrecord.HeaderLength;
         if (b.Length == subrecord.ContentLength)
         {
-            _instructions.SetSubstitution(loc, b);
+            Instructions.SetSubstitution(loc, b);
         }
         else if (b.Length < subrecord.ContentLength)
         {
-            _instructions.SetSubstitution(loc, b);
+            Instructions.SetSubstitution(loc, b);
             var remLength = subrecord.ContentLength - b.Length;
-            _instructions.SetRemove(RangeInt64.FromLength(loc + b.Length, remLength));
+            Instructions.SetRemove(RangeInt64.FromLength(loc + b.Length, remLength));
             ProcessLengths(
                 majorFrame,
                 subrecord,
@@ -355,8 +355,8 @@ public abstract class Processor
         }
         else
         {
-            _instructions.SetSubstitution(loc, b.AsSpan().Slice(0, subrecord.ContentLength).ToArray());
-            _instructions.SetAddition( loc + subrecord.ContentLength, b.AsSpan().Slice(subrecord.ContentLength).ToArray());
+            Instructions.SetSubstitution(loc, b.AsSpan().Slice(0, subrecord.ContentLength).ToArray());
+            Instructions.SetAddition( loc + subrecord.ContentLength, b.AsSpan().Slice(subrecord.ContentLength).ToArray());
             
             ProcessLengths(
                 majorFrame,
@@ -378,7 +378,7 @@ public abstract class Processor
         // Modify Length 
         byte[] lenData = new byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             loc: refLoc + Constants.HeaderLength,
             sub: lenData);
     }
@@ -395,7 +395,7 @@ public abstract class Processor
         // Modify Length 
         byte[] lenData = new byte[4];
         BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), checked((uint)(frame.ContentLength + amount)));
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             loc: refLoc + Constants.HeaderLength,
             sub: lenData);
     }
@@ -413,13 +413,13 @@ public abstract class Processor
         // Modify Length 
         byte[] lenData = new byte[4];
         BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), checked((uint)(frame.ContentLength + amount)));
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             loc: refLoc + Constants.HeaderLength,
             sub: lenData);
         
         lenData = new byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subRec.ContentLength + amount));
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             loc: refLoc + subRec.Location + Constants.HeaderLength,
             sub: lenData);
     }
@@ -444,7 +444,7 @@ public abstract class Processor
         var majorMeta = stream.ReadMajorRecordHeader();
         byte[] lenData = new byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(majorMeta.ContentLength + amount));
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             loc: recordLoc + Constants.HeaderLength,
             sub: lenData);
 
@@ -454,7 +454,7 @@ public abstract class Processor
             var subMeta = stream.ReadSubrecordHeader();
             lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 loc: subRecordLoc.Value + Constants.HeaderLength,
                 sub: lenData);
         }
@@ -466,7 +466,7 @@ public abstract class Processor
         var f = span.Float();
         if (f == float.Epsilon)
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 offsetLoc - 4,
                 new byte[4]);
             return;
@@ -474,7 +474,7 @@ public abstract class Processor
         uint floatInt = span.UInt32();
         if (floatInt == 0x80000000)
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 offsetLoc - 4,
                 new byte[4]);
         }
@@ -486,7 +486,7 @@ public abstract class Processor
         int i = span.Int32();
         if (i == -1)
         {
-            _instructions.SetSubstitution(offsetLoc - 4, new byte[4]);
+            Instructions.SetSubstitution(offsetLoc - 4, new byte[4]);
         }
     }
     
@@ -509,7 +509,7 @@ public abstract class Processor
             offsetLoc += 4;
             var b = new byte[4];
             BinaryPrimitives.WriteSingleLittleEndian(b, newFloat);
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 offsetLoc - 4,
                 b);
         }
@@ -596,7 +596,7 @@ public abstract class Processor
             writer.Write(color, type);
         }
         if (span.SequenceEqual(outBytes)) return;
-        _instructions.SetSubstitution(
+        Instructions.SetSubstitution(
             offsetLoc,
             outBytes);
     }
@@ -647,7 +647,7 @@ public abstract class Processor
         if (importantBytes != 1) throw new NotImplementedException();
         if (span[0] > 1)
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 offsetLoc,
                 1);
         }
@@ -656,7 +656,7 @@ public abstract class Processor
             if (span[i] != 0)
             {
                 var outBytes = new byte[span.Length - 1];
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     offsetLoc + 1,
                     outBytes);
                 break;
@@ -680,7 +680,7 @@ public abstract class Processor
             stream.Position = loc;
             var groupMeta = stream.ReadGroupHeader();
             if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
-            _instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
+            Instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
         }
     }
 
@@ -692,7 +692,7 @@ public abstract class Processor
             stream.Position = loc.Value.Location.Min;
             var majorFrame = stream.ReadMajorRecord();
             if (!majorFrame.IsDeleted || majorFrame.ContentLength == 0) continue;
-            _instructions.SetRemove(RangeInt64.FromLength(loc.Value.Location.Min + majorFrame.HeaderLength, majorFrame.ContentLength));
+            Instructions.SetRemove(RangeInt64.FromLength(loc.Value.Location.Min + majorFrame.HeaderLength, majorFrame.ContentLength));
             ProcessLengths(majorFrame, -checked((int)majorFrame.ContentLength), loc.Value.Location.Min);
         }
     }
@@ -730,7 +730,7 @@ public abstract class Processor
                 BinaryPrimitives.WriteInt16LittleEndian(bytes.AsSpan().Slice(4), 4);
                 BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan().Slice(6), numPassed);
                 // Add counter
-                _instructions.SetAddition(
+                Instructions.SetAddition(
                     fileOffset + frame.HeaderLength + pos,
                     bytes);
                 sizeChange += 10;
@@ -887,11 +887,11 @@ public abstract class Processor
                         var regis = writer.Register(entry.Source, new KeyValuePair<Language, string>(language, str));
                         BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
                     }
-                    _instructions.SetSubstitution(entry.FileLocation, bytes);
+                    Instructions.SetSubstitution(entry.FileLocation, bytes);
                     continue;
                 }
             }
-            _instructions.SetSubstitution(entry.FileLocation, new byte[4]);
+            Instructions.SetSubstitution(entry.FileLocation, new byte[4]);
         }
 
         if (StrictStrings)
@@ -1010,7 +1010,7 @@ public abstract class Processor
         int amount = 0;
         foreach (var remove in removes)
         {
-            _instructions.SetRemove(
+            Instructions.SetRemove(
                 section: remove);
             amount -= (int)remove.Width;
         }
@@ -1041,7 +1041,7 @@ public abstract class Processor
         int amount = 0;
         foreach (var remove in removes)
         {
-            _instructions.SetRemove(
+            Instructions.SetRemove(
                 section: remove);
             amount -= (int)remove.Width;
         }
@@ -1072,7 +1072,7 @@ public abstract class Processor
         int amount = 0;
         foreach (var remove in removes)
         {
-            _instructions.SetRemove(
+            Instructions.SetRemove(
                 section: remove);
             amount -= (int)remove.Width;
         }
@@ -1112,7 +1112,7 @@ public abstract class Processor
             {
                 throw new ArgumentException();
             }
-            _instructions.SetMove(
+            Instructions.SetMove(
                 section: new RangeInt64(
                     fileOffset + majorFrame.HeaderLength + offender,
                     fileOffset + majorFrame.HeaderLength + limit - 1),

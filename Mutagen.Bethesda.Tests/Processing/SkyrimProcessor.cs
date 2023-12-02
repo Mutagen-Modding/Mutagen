@@ -115,7 +115,7 @@ public class SkyrimProcessor : Processor
             transferPos += bytes.Length;
         }
 
-        _instructions.SetSubstitution(fileOffset + rec.Location, reordered);
+        Instructions.SetSubstitution(fileOffset + rec.Location, reordered);
     }
 
     private void ProcessNpcs(
@@ -133,7 +133,7 @@ public class SkyrimProcessor : Processor
             writer.Write(r / 255f);
             writer.Write(g / 255f);
             writer.Write(b / 255f);
-            _instructions.SetSubstitution(fileOffset + qnamFrame.Location + qnamFrame.HeaderLength, bytes);
+            Instructions.SetSubstitution(fileOffset + qnamFrame.Location + qnamFrame.HeaderLength, bytes);
         }
 
         if (majorFrame.TryFindSubrecord(RecordTypes.NAM9, out var nam9Frame))
@@ -179,7 +179,7 @@ public class SkyrimProcessor : Processor
         if (raw.SequenceEqual(rdats.Keys)) return;
         foreach (var item in rdats.Reverse())
         {
-            _instructions.SetMove(
+            Instructions.SetMove(
                 loc: fileOffset + majorFrame.TotalLength,
                 section: item.Value);
         }
@@ -208,10 +208,10 @@ public class SkyrimProcessor : Processor
         {
             if (dataRec.ContentLength == 1)
             {
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + dataRec.Location + 4,
                     2);
-                _instructions.SetAddition(
+                Instructions.SetAddition(
                     fileOffset + dataRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
                     new byte[] { 0 });
                 sizeChange++;
@@ -257,7 +257,7 @@ public class SkyrimProcessor : Processor
             {
                 byte[] b = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + tifcRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength,
                     b);
             }
@@ -293,7 +293,7 @@ public class SkyrimProcessor : Processor
             {
                 byte[] sub = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + anamRec.Location + anamRec.HeaderLength,
                     sub);
             }
@@ -492,7 +492,7 @@ public class SkyrimProcessor : Processor
         {
             if (xrmrRec.AsInt32() == 0)
             {
-                _instructions.SetRemove(
+                Instructions.SetRemove(
                     RangeInt64.FromLength(
                         fileOffset + xrmrRec.Location,
                         10));
@@ -651,7 +651,7 @@ public class SkyrimProcessor : Processor
             var subLoc = startLoc;
             foreach (var item in dataValues.OrderBy(i => i.Index))
             {
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + majorFrame.HeaderLength + subLoc,
                     item.Data.ToArray());
                 subLoc += item.Data.Length;
@@ -661,7 +661,7 @@ public class SkyrimProcessor : Processor
             {
                 byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
                 bytes[6] = (byte)item.Index;
-                _instructions.SetSubstitution(
+                Instructions.SetSubstitution(
                     fileOffset + majorFrame.HeaderLength + subLoc,
                     bytes.ToArray());
                 subLoc += bytes.Length;
@@ -717,7 +717,7 @@ public class SkyrimProcessor : Processor
 
         foreach (var item in inputValues.OrderBy(i => i.Index))
         {
-            _instructions.SetSubstitution(
+            Instructions.SetSubstitution(
                 writeLoc,
                 item.Data.ToArray());
             writeLoc += item.Data.Length;
@@ -839,7 +839,7 @@ public class SkyrimProcessor : Processor
                 if (zeroIndex == -1) break;
                 var index = fileOffset + mnam.Location + mnam.HeaderLength + zeroIndex + i;
                 var byteSize = blockSize - zeroIndex;
-                _instructions.SetSubstitution(index, new byte[byteSize]);
+                Instructions.SetSubstitution(index, new byte[byteSize]);
             }
         }
     }
