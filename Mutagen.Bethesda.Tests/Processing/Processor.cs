@@ -427,12 +427,23 @@ public abstract class Processor
         Instructions.SetSubstitution(
             loc: refLoc + Constants.HeaderLength,
             sub: lenData);
-        
-        lenData = new byte[2];
-        BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subRec.ContentLength + amount));
-        Instructions.SetSubstitution(
-            loc: refLoc + subRec.Location + Constants.HeaderLength,
-            sub: lenData);
+
+        if (subRec.LengthOverrideRecordLocation == null)
+        {
+            lenData = new byte[2];
+            BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subRec.ContentLength + amount));
+            Instructions.SetSubstitution(
+                loc: refLoc + subRec.Location + Constants.HeaderLength,
+                sub: lenData);
+        }
+        else
+        {
+            lenData = new byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), (uint)(subRec.ContentLength + amount));
+            Instructions.SetSubstitution(
+                loc: refLoc + subRec.LengthOverrideRecordLocation.Value + Constants.HeaderLength,
+                sub: lenData);
+        }
     }
 
     public void ModifyLengths(
