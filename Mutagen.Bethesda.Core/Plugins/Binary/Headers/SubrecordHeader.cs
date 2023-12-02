@@ -256,7 +256,7 @@ public readonly struct SubrecordFrame
     /// <summary>
     /// The length of the content of the Sub Record, excluding the header bytes.
     /// </summary>
-    public ushort ContentLength => (ushort)Content.Length;
+    public int ContentLength => Content.Length;
     #endregion
 
     public static implicit operator SubrecordHeader(SubrecordFrame frame)
@@ -393,7 +393,7 @@ public readonly struct SubrecordPinFrame
     /// <summary>
     /// The length of the content of the Sub Record, excluding the header bytes.
     /// </summary>
-    public ushort ContentLength => Frame.ContentLength;
+    public int ContentLength => Frame.ContentLength;
     #endregion
 
     public static implicit operator SubrecordHeader(SubrecordPinFrame pin)
