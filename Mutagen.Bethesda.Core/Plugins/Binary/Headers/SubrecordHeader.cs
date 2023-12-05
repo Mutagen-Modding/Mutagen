@@ -287,6 +287,8 @@ public readonly struct SubrecordPinFrame
     /// E.g., relative to the position of the RecordType of the parent MajorRecord.
     /// </summary>
     public int Location { get; }
+
+    public int ContentLocation => Location + Meta.SubConstants.HeaderLength;
     
     /// <summary>
     /// Location where the subrecord ends.  This is equivalent to Location + TotalLength
@@ -313,11 +315,11 @@ public readonly struct SubrecordPinFrame
         Location = pinLocation;
     }
     
-    private SubrecordPinFrame(SubrecordFrame frame, int pinLocation, int LengthOverrideRecordLocation)
+    private SubrecordPinFrame(SubrecordFrame frame, int pinLocation, int? lengthOverrideRecordLocation)
     {
         Frame = frame;
         Location = pinLocation;
-        LengthOverrideRecordLocation = LengthOverrideRecordLocation;
+        LengthOverrideRecordLocation = lengthOverrideRecordLocation;
     }
 
     /// <summary>
@@ -428,5 +430,21 @@ public readonly struct SubrecordPinFrame
     public static implicit operator SubrecordPinHeader(SubrecordPinFrame pin)
     {
         return new SubrecordPinHeader(pin.Header, pin.Location);
+    }
+
+    public SubrecordPinFrame Shift(int offset)
+    {
+        return new SubrecordPinFrame(
+            this.Frame,
+            Location + offset,
+            LengthOverrideRecordLocation + offset);
+    }
+
+    public SubrecordPinFrame WithoutOverflow()
+    {
+        return new SubrecordPinFrame(
+            this.Frame,
+            Location,
+            lengthOverrideRecordLocation: null);
     }
 }

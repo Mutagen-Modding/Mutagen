@@ -902,7 +902,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         { 
             try 
             { 
-                using (var header = HeaderExport.Subrecord( 
+                using (HeaderExport.Subrecord( 
                            writer, 
                            recordType,  
                            overflowRecord: overflowRecord, 

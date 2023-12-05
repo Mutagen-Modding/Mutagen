@@ -338,7 +338,7 @@ public static class HeaderExt
             pin = default;
             return false;
         }
-        pin = find.Value.Frame.Pin(find.Value.Location + majorFrame.HeaderLength);
+        pin = find.Value.Shift(majorFrame.HeaderLength);
         return true;
     }
 
