@@ -110,6 +110,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem IgnoredBySandbox,
                 TItem OwnerFactionRank,
                 TItem LinkedReferences,
+                TItem IsLinkedRefTransient,
                 TItem Ownership,
                 TItem EncounterLocation,
                 TItem Layer,
@@ -138,6 +139,7 @@ namespace Mutagen.Bethesda.Starfield
                 IgnoredBySandbox: IgnoredBySandbox,
                 OwnerFactionRank: OwnerFactionRank,
                 LinkedReferences: LinkedReferences,
+                IsLinkedRefTransient: IsLinkedRefTransient,
                 Ownership: Ownership,
                 EncounterLocation: EncounterLocation,
                 Layer: Layer,
@@ -734,18 +736,19 @@ namespace Mutagen.Bethesda.Starfield
         IgnoredBySandbox = 12,
         OwnerFactionRank = 13,
         LinkedReferences = 14,
-        Ownership = 15,
-        EncounterLocation = 16,
-        Layer = 17,
-        HeadTrackingWeight = 18,
-        LocationRefTypes = 19,
-        EnableParent = 20,
-        ActivationPoint = 21,
-        Scale = 22,
-        Position = 23,
-        Rotation = 24,
-        Comments = 25,
-        Projectile = 26,
+        IsLinkedRefTransient = 15,
+        Ownership = 16,
+        EncounterLocation = 17,
+        Layer = 18,
+        HeadTrackingWeight = 19,
+        LocationRefTypes = 20,
+        EnableParent = 21,
+        ActivationPoint = 22,
+        Scale = 23,
+        Position = 24,
+        Rotation = 25,
+        Comments = 26,
+        Projectile = 27,
     }
     #endregion
 
@@ -758,7 +761,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(PlacedMissile.Mask<>);
 
@@ -1022,6 +1025,8 @@ namespace Mutagen.Bethesda.Starfield
                 case APlacedTrap_FieldIndex.OwnerFactionRank:
                     return (PlacedMissile_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.LinkedReferences:
+                    return (PlacedMissile_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.IsLinkedRefTransient:
                     return (PlacedMissile_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Ownership:
                     return (PlacedMissile_FieldIndex)((int)index);

@@ -13,7 +13,7 @@ public static class ModTrimmer
     /// <param name="streamCreator">A func to create an input stream</param>
     /// <param name="outputStream">Stream to write output to</param>
     /// <param name="interest">Specification of which record types to include</param>
-    public static void Trim(
+    public static void TrimGroups(
         Func<IMutagenReadStream> streamCreator,
         Stream outputStream,
         RecordInterest interest)

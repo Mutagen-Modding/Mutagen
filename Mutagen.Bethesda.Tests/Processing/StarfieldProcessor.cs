@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Strings;
+using Noggog;
 using APerkEntryPointEffect = Mutagen.Bethesda.Starfield.APerkEntryPointEffect;
 using ScriptBoolListProperty = Mutagen.Bethesda.Starfield.ScriptBoolListProperty;
 using ScriptBoolProperty = Mutagen.Bethesda.Starfield.ScriptBoolProperty;
@@ -24,7 +25,7 @@ namespace Mutagen.Bethesda.Tests;
 public class StarfieldProcessor : Processor
 {
     public override bool StrictStrings => false;
-    
+
     public StarfieldProcessor(bool multithread) : base(multithread)
     {
     }
@@ -43,6 +44,11 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(RecordTypes.DIAL, ProcessDialog);
         AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
+        AddDynamicProcessing(RecordTypes.REFR, ProcessPlacedObject);
+        AddDynamicProcessing(RecordTypes.ACHR, ProcessPlacedNpc);
+        AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
+        AddDynamicProcessing(RecordTypes.PGRE, ProcessTraps);
+        AddDynamicProcessing(RecordTypes.PHZD, ProcessHazards);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -52,6 +58,16 @@ public class StarfieldProcessor : Processor
             yield return job;
         }
     }
+
+    public override KeyValuePair<RecordType, FormKey>[] TrimmedRecords => new KeyValuePair<RecordType, FormKey>[]
+    {
+        new(RecordTypes.NAVM, FormKey.Factory("110AD3:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("14FC69:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("17FEC6:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("1BA29E:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("1BA29F:Starfield.esm")),
+        new(RecordTypes.NAVM, FormKey.Factory("2F01CA:Starfield.esm")),
+    };
 
     private void ProcessStaticCollections(
         MajorRecordFrame majorFrame,
@@ -131,7 +147,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "SPEL", "FULL" },
                     new RecordType[] { "ACTI", "FULL", "ATTX" },
                     new RecordType[] { "FLST", "FULL" },
-                    new RecordType[] { "TMLM", "FULL", "BTXT", "INAM", "ITXT", "ISTX", "UNAM"  },
+                    new RecordType[] { "TMLM", "FULL", "BTXT", "INAM", "ITXT", "ISTX", "UNAM" },
                     new RecordType[] { "WEAP", "FULL" },
                     new RecordType[] { "PERK", "FULL" },
                     new RecordType[] { "ARMO", "FULL" },
@@ -139,6 +155,8 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "OMOD", "FULL" },
                     new RecordType[] { "DIAL", "FULL" },
                     new RecordType[] { "INFO", "RNAM" },
+                    new RecordType[] { "CELL", "FULL" },
+                    new RecordType[] { "REFR", "FULL", "UNAM" },
                     new RecordType[] { "QUST", "FULL", "NNAM", "QMDP", "QMSU", "QMDT", "QMDS" },
                     new RecordType[] { "MGEF", "FULL", "DNAM" },
                     new RecordType[] { "ALCH", "FULL", "DNAM" },
@@ -166,7 +184,7 @@ public class StarfieldProcessor : Processor
                 throw new NotImplementedException();
         }
     }
-    
+
     public void GameSettingStringHandler(
         long loc,
         MajorRecordFrame major,
@@ -198,13 +216,14 @@ public class StarfieldProcessor : Processor
         int offset = 0;
         ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
     }
+
     public void PerkStringHandler(
         long loc,
         MajorRecordFrame major,
         List<StringEntry> processedStrings,
         IStringsLookup overlay)
     {
-        SubrecordPinFrame? lastepft = null; 
+        SubrecordPinFrame? lastepft = null;
         foreach (var sub in major.EnumerateSubrecords())
         {
             switch (sub.RecordTypeInt)
@@ -214,13 +233,14 @@ public class StarfieldProcessor : Processor
                     AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
                     break;
                 case RecordTypeInts.EPFT:
-                    lastepft = sub; 
+                    lastepft = sub;
                     break;
                 case RecordTypeInts.EPFD:
                     if (lastepft!.Value.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
                     {
                         AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
                     }
+
                     break;
                 default:
                     break;
@@ -240,24 +260,283 @@ public class StarfieldProcessor : Processor
         }
     }
 
+    private void ProcessPlacedObject(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.XTEL, out var xtel))
+        {
+            int loc = 4;
+            ProcessZeroFloats(xtel, fileOffset, ref loc, 6);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
+
+        ProcessRagdollData(majorFrame, fileOffset);
+
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.OPDS))
+        {
+            int loc = 4;
+            ProcessZeroFloats(subRec, fileOffset, ref loc);
+        }
+
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
+        {
+            int loc = 0;
+            ProcessZeroFloats(subRec, fileOffset, ref loc);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprm))
+        {
+            int loc = 0;
+            ProcessZeroFloats(xprm, fileOffset, ref loc, 3);
+            ProcessColorFloat(xprm, fileOffset, ref loc, alpha: false);
+            ProcessZeroFloats(xprm, fileOffset, ref loc, 1);
+        }
+
+        ProcessVolumesComponents(majorFrame, fileOffset);
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XBSD, out var XBSD))
+        {
+            Instructions.SetSubstitution(fileOffset + XBSD.ContentLocation + 0x15, new byte[3]);
+        }
+
+        ZeroXOWNBool(stream, majorFrame, fileOffset);
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+        ProcessXTV2(majorFrame, fileOffset);
+    }
+
+    private void ProcessRagdollData(MajorRecordFrame majorFrame, long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.XRGD))
+        {
+            int loc = 0;
+            while (loc < subRec.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(subRec, fileOffset, ref loc, 6);
+            }
+        }
+    }
+
+    private void ProcessVolumesComponents(MajorRecordFrame majorFrame, long fileOffset)
+    {
+        if (!majorFrame.TryFindSubrecord(RecordTypes.VLMS, out var VLMS)) return;
+
+        int amount = BinaryPrimitives.ReadInt32LittleEndian(VLMS.Content);
+        int loc = 4;
+
+        for (int i = 0; i < amount; i++)
+        {
+            var type = BinaryPrimitives.ReadInt32LittleEndian(VLMS.Content.Slice(loc));
+            loc += 4;
+            ProcessZeroFloats(VLMS, fileOffset, ref loc, 19);
+            switch (type)
+            {
+                case 1:
+                    ProcessZeroFloats(VLMS, fileOffset, ref loc, 1);
+                    break;
+                case 3:
+                    ProcessZeroFloats(VLMS, fileOffset, ref loc, 2);
+                    break;
+                case 5:
+                    ProcessZeroFloats(VLMS, fileOffset, ref loc, 3);
+                    break;
+            }
+        }
+    }
+
+    private void ProcessPlacedNpc(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
+        {
+            int loc = 0;
+            ProcessZeroFloats(subRec, fileOffset, ref loc);
+        }
+        
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var rgb))
+        {
+            int loc = 0;
+            ProcessZeroFloats(rgb, fileOffset, ref loc, 3);
+        }
+
+        ProcessRagdollData(majorFrame, fileOffset);
+        ZeroXOWNBool(stream, majorFrame, fileOffset);
+    }
+
+    private void ProcessCells(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ZeroXOWNBool(stream, majorFrame, fileOffset);
+        ProcessXTV2(majorFrame, fileOffset);
+    }
+
+    private void ZeroXOWNBool(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.XOWN))
+        {
+            Instructions.SetSubstitution(
+                fileOffset + subRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength + 9, new byte[3]);
+        }
+    }
+
+    private void ProcessTraps(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessRagdollData(majorFrame, fileOffset);
+        ProcessPositionRotationData(majorFrame, fileOffset);
+    }
+
+    private void ProcessHazards(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessPositionRotationData(majorFrame, fileOffset);
+    }
+
+    private void ProcessPositionRotationData(MajorRecordFrame majorFrame, long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
+        {
+            int loc = 0;
+            ProcessZeroFloats(subRec, fileOffset, ref loc, 6);
+        }
+    }
+
+    private void ProcessXTV2(MajorRecordFrame majorFrame, long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.XTV2, out var xtv2))
+        {
+            if (TryGetXtv2TrimLocation(xtv2, out _, out var cutLen))
+            {
+                RemoveEndingBytes(xtv2, fileOffset, cutLen);
+                var remainingLen = xtv2.ContentLength - cutLen;
+                if (remainingLen < ushort.MaxValue && xtv2.LengthOverrideRecordLocation.HasValue)
+                {
+                    RemoveOverflowRecord(majorFrame, xtv2, fileOffset, checked((uint)remainingLen));
+                    xtv2 = xtv2.WithoutOverflow();
+                    cutLen += 10;
+                    ProcessLengths(majorFrame, -cutLen, fileOffset);
+                }
+                else
+                {
+                    ProcessLengths(majorFrame, xtv2, -cutLen, fileOffset);
+                }
+                return;
+            }
+            
+            RemoveUnnecessaryOverflowRecord(majorFrame, xtv2, fileOffset);
+
+            try
+            {
+                var span = xtv2.Content;
+                int pos = 0;
+                while (span.Length > pos)
+                {
+                    pos += 0x28;
+                    var flag = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(pos));
+                    if (flag == 0)
+                    {
+                        pos += 0x10;
+                    }
+                    else if (flag == 4)
+                    {
+                        pos += 0xC;
+                    }
+                    else
+                    {
+                        if (EnumExt.HasFlag(flag, 4))
+                        {
+                            Instructions.SetSubstitution(fileOffset + xtv2.ContentLocation + pos, new byte[]
+                            {
+                                4, 0, 0, 0
+                            });
+                            pos += 0xC;
+                        }
+                        else
+                        {
+                            Instructions.SetSubstitution(fileOffset + xtv2.ContentLocation + pos, new byte[]
+                            {
+                                0, 0, 0, 0
+                            });
+                            pos += 0x10;
+                        }
+                    }
+                }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+            }
+        }
+    }
+
+    private bool TryGetXtv2TrimLocation(SubrecordPinFrame xtv2, out int loc, out int cut)
+    {
+        loc = 0;
+        while (xtv2.ContentLength > loc)
+        {
+            if (CheckIfXtv2IsFluff(xtv2.Content.Slice(loc), out var hasFormLink))
+            {
+                cut = xtv2.ContentLength - loc;
+                return true;
+            }
+
+            loc += hasFormLink ? 0x38 : 0x34;
+        }
+
+        cut = 0;
+        return false;
+    }
+    
+    private bool CheckIfXtv2IsFluff(ReadOnlyMemorySlice<byte> mem, out bool hasFormLink)
+    {
+        try
+        {
+            var starter = mem.Slice(0, 0x28);
+            var flags = BinaryPrimitives.ReadInt32LittleEndian(mem.Slice(0x28, 4));
+            hasFormLink = !Enums.HasFlag(flags, 4);
+            if (!hasFormLink)
+            {
+                return false;
+            }
+
+            var ender = mem.Slice(0x2C, 12);
+            if (starter.Any(b => b != 0)) return false;
+            if (ender.Any(b => b != 0)) return false;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            hasFormLink = false;
+            return true;
+        }
+        
+        return true;
+    }
+
     private void ProcessDialog(
         IMutagenReadStream stream,
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-
-        if (majorFrame.FormID.ID == 0x4BD62)
-        {
-            int wer = 23;
-            wer++;
-        }
-        
         var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
         CleanEmptyDialogGroups(
             stream,
             formKey,
             fileOffset);
-        
+
         uint actualCount = 0;
         List<FormID> infos = new();
         stream.Position = fileOffset + majorFrame.TotalLength;
@@ -291,7 +570,7 @@ public class StarfieldProcessor : Processor
                     b);
             }
         }
-        
+
         if (majorFrame.TryFindSubrecord(RecordTypes.TIFL, out var rec))
         {
             byte[] b = new byte[infos.Count * 4];
@@ -301,13 +580,8 @@ public class StarfieldProcessor : Processor
                 BinaryPrimitives.WriteUInt32LittleEndian(slice, tifl.Raw);
                 slice = slice.Slice(4);
             }
+
             SwapSubrecordContent(fileOffset, majorFrame, rec, b);
-        }
-        
-        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.OPDS))
-        {
-            int loc = 0;
-            ProcessZeroFloats(subRec, fileOffset, ref loc);
         }
     }
 
@@ -354,14 +628,14 @@ public class StarfieldProcessor : Processor
             stream,
             formKey,
             fileOffset);
-        
+
         FixVMADs(majorFrame, fileOffset);
     }
-    
+
     public void FixVMADs(
         MajorRecordFrame majorFrame,
         long fileOffset)
-    {        
+    {
         FixVMADFormIDs(
             majorFrame,
             fileOffset,
@@ -501,6 +775,7 @@ public class StarfieldProcessor : Processor
                     {
                         FixScriptEntry(stream, fileOffset, objectFormat, isStruct: true);
                     }
+
                     break;
                 default:
                     prop.CopyInFromBinary(new MutagenFrame(stream));
@@ -508,7 +783,7 @@ public class StarfieldProcessor : Processor
             }
         }
     }
-    
+
     private void FixObjectPropertyIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
     {
         switch (objectFormat)

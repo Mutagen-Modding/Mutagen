@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +58,264 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IPlacedNpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IPlacedNpcGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedNpcGetter.XALG => this.XALG;
+        #endregion
+        #region Base
+        private readonly IFormLink<INpcGetter> _Base = new FormLink<INpcGetter>();
+        public IFormLink<INpcGetter> Base
+        {
+            get => _Base;
+            set => _Base.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<INpcGetter> IPlacedNpcGetter.Base => this.Base;
+        #endregion
+        #region LevelModifier
+        public Level? LevelModifier { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Level? IPlacedNpcGetter.LevelModifier => this.LevelModifier;
+        #endregion
+        #region Emittance
+        private readonly IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
+        public IFormLinkNullable<IEmittanceGetter> Emittance
+        {
+            get => _Emittance;
+            set => _Emittance.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEmittanceGetter> IPlacedNpcGetter.Emittance => this.Emittance;
+        #endregion
+        #region Radius
+        public Single? Radius { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedNpcGetter.Radius => this.Radius;
+        #endregion
+        #region RagdollData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<RagdollData>? _RagdollData;
+        public ExtendedList<RagdollData>? RagdollData
+        {
+            get => this._RagdollData;
+            set => this._RagdollData = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRagdollDataGetter>? IPlacedNpcGetter.RagdollData => _RagdollData;
+        #endregion
+
+        #endregion
+        #region ReferenceGroup
+        private readonly IFormLinkNullable<IReferenceGroupGetter> _ReferenceGroup = new FormLinkNullable<IReferenceGroupGetter>();
+        public IFormLinkNullable<IReferenceGroupGetter> ReferenceGroup
+        {
+            get => _ReferenceGroup;
+            set => _ReferenceGroup.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IReferenceGroupGetter> IPlacedNpcGetter.ReferenceGroup => this.ReferenceGroup;
+        #endregion
+        #region SourcePackIn
+        private readonly IFormLinkNullable<IPackInGetter> _SourcePackIn = new FormLinkNullable<IPackInGetter>();
+        public IFormLinkNullable<IPackInGetter> SourcePackIn
+        {
+            get => _SourcePackIn;
+            set => _SourcePackIn.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPackInGetter> IPlacedNpcGetter.SourcePackIn => this.SourcePackIn;
+        #endregion
+        #region PersistentLocation
+        private readonly IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> PersistentLocation
+        {
+            get => _PersistentLocation;
+            set => _PersistentLocation.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation;
+        #endregion
+        #region IsIgnoredBySandbox
+        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedNpcGetter.FactionRank => this.FactionRank;
+        #endregion
+        #region PowerLinks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<PowerLink> _PowerLinks = new ExtendedList<PowerLink>();
+        public ExtendedList<PowerLink> PowerLinks
+        {
+            get => this._PowerLinks;
+            init => this._PowerLinks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPowerLinkGetter> IPlacedNpcGetter.PowerLinks => _PowerLinks;
+        #endregion
+
+        #endregion
+        #region LinkedReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public ExtendedList<LinkedReferences> LinkedReferences
+        {
+            get => this._LinkedReferences;
+            init => this._LinkedReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILinkedReferencesGetter> IPlacedNpcGetter.LinkedReferences => _LinkedReferences;
+        #endregion
+
+        #endregion
+        #region IsLinkedRefTransient
+        public Boolean IsLinkedRefTransient { get; set; } = default;
+        #endregion
+        #region ExternalEmittance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExternalEmittance? _ExternalEmittance;
+        public ExternalEmittance? ExternalEmittance
+        {
+            get => _ExternalEmittance;
+            set => _ExternalEmittance = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IExternalEmittanceGetter? IPlacedNpcGetter.ExternalEmittance => this.ExternalEmittance;
+        #endregion
+        #region Ownership
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Ownership? _Ownership;
+        public Ownership? Ownership
+        {
+            get => _Ownership;
+            set => _Ownership = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IOwnershipGetter? IPlacedNpcGetter.Ownership => this.Ownership;
+        #endregion
+        #region EncounterLocation
+        private readonly IFormLinkNullable<ILocationGetter> _EncounterLocation = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> EncounterLocation
+        {
+            get => _EncounterLocation;
+            set => _EncounterLocation.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.EncounterLocation => this.EncounterLocation;
+        #endregion
+        #region Layer
+        private readonly IFormLinkNullable<ILayerGetter> _Layer = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> Layer
+        {
+            get => _Layer;
+            set => _Layer.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayerGetter> IPlacedNpcGetter.Layer => this.Layer;
+        #endregion
+        #region HeadTrackingWeight
+        public Single? HeadTrackingWeight { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedNpcGetter.HeadTrackingWeight => this.HeadTrackingWeight;
+        #endregion
+        #region LocationRefTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes
+        {
+            get => this._LocationRefTypes;
+            set => this._LocationRefTypes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IPlacedNpcGetter.LocationRefTypes => _LocationRefTypes;
+        #endregion
+
+        #endregion
+        #region RagdollBipedRotation
+        public P3Float? RagdollBipedRotation { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IPlacedNpcGetter.RagdollBipedRotation => this.RagdollBipedRotation;
+        #endregion
+        #region Health
+        public Percent? Health { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Percent? IPlacedNpcGetter.Health => this.Health;
+        #endregion
+        #region EnableParent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EnableParent? _EnableParent;
+        public EnableParent? EnableParent
+        {
+            get => _EnableParent;
+            set => _EnableParent = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnableParentGetter? IPlacedNpcGetter.EnableParent => this.EnableParent;
+        #endregion
+        #region IsActivationPoint
+        public Boolean IsActivationPoint { get; set; } = default;
+        #endregion
+        #region Scale
+        public Single? Scale { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedNpcGetter.Scale => this.Scale;
+        #endregion
+        #region Position
+        public P3Float Position { get; set; } = default;
+        #endregion
+        #region Rotation
+        public P3Float Rotation { get; set; } = default;
+        #endregion
+        #region Comments
+        public String? Comments { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPlacedNpcGetter.Comments => this.Comments;
+        #endregion
 
         #region To String
 
@@ -79,6 +341,36 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.XALG = initialValue;
+                this.Base = initialValue;
+                this.LevelModifier = initialValue;
+                this.Emittance = initialValue;
+                this.Radius = initialValue;
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.ReferenceGroup = initialValue;
+                this.SourcePackIn = initialValue;
+                this.PersistentLocation = initialValue;
+                this.IsIgnoredBySandbox = initialValue;
+                this.FactionRank = initialValue;
+                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.IsLinkedRefTransient = initialValue;
+                this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(initialValue, new ExternalEmittance.Mask<TItem>(initialValue));
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.EncounterLocation = initialValue;
+                this.Layer = initialValue;
+                this.HeadTrackingWeight = initialValue;
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RagdollBipedRotation = initialValue;
+                this.Health = initialValue;
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
+                this.IsActivationPoint = initialValue;
+                this.Scale = initialValue;
+                this.Position = initialValue;
+                this.Rotation = initialValue;
+                this.Comments = initialValue;
             }
 
             public Mask(
@@ -88,7 +380,37 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem Components,
+                TItem XALG,
+                TItem Base,
+                TItem LevelModifier,
+                TItem Emittance,
+                TItem Radius,
+                TItem RagdollData,
+                TItem ReferenceGroup,
+                TItem SourcePackIn,
+                TItem PersistentLocation,
+                TItem IsIgnoredBySandbox,
+                TItem FactionRank,
+                TItem PowerLinks,
+                TItem LinkedReferences,
+                TItem IsLinkedRefTransient,
+                TItem ExternalEmittance,
+                TItem Ownership,
+                TItem EncounterLocation,
+                TItem Layer,
+                TItem HeadTrackingWeight,
+                TItem LocationRefTypes,
+                TItem RagdollBipedRotation,
+                TItem Health,
+                TItem EnableParent,
+                TItem IsActivationPoint,
+                TItem Scale,
+                TItem Position,
+                TItem Rotation,
+                TItem Comments)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +420,36 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.XALG = XALG;
+                this.Base = Base;
+                this.LevelModifier = LevelModifier;
+                this.Emittance = Emittance;
+                this.Radius = Radius;
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.ReferenceGroup = ReferenceGroup;
+                this.SourcePackIn = SourcePackIn;
+                this.PersistentLocation = PersistentLocation;
+                this.IsIgnoredBySandbox = IsIgnoredBySandbox;
+                this.FactionRank = FactionRank;
+                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(PowerLinks, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.IsLinkedRefTransient = IsLinkedRefTransient;
+                this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(ExternalEmittance, new ExternalEmittance.Mask<TItem>(ExternalEmittance));
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.EncounterLocation = EncounterLocation;
+                this.Layer = Layer;
+                this.HeadTrackingWeight = HeadTrackingWeight;
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RagdollBipedRotation = RagdollBipedRotation;
+                this.Health = Health;
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
+                this.IsActivationPoint = IsActivationPoint;
+                this.Scale = Scale;
+                this.Position = Position;
+                this.Rotation = Rotation;
+                this.Comments = Comments;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +458,39 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem XALG;
+            public TItem Base;
+            public TItem LevelModifier;
+            public TItem Emittance;
+            public TItem Radius;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>? RagdollData;
+            public TItem ReferenceGroup;
+            public TItem SourcePackIn;
+            public TItem PersistentLocation;
+            public TItem IsIgnoredBySandbox;
+            public TItem FactionRank;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>? PowerLinks;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
+            public TItem IsLinkedRefTransient;
+            public MaskItem<TItem, ExternalEmittance.Mask<TItem>?>? ExternalEmittance { get; set; }
+            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem EncounterLocation;
+            public TItem Layer;
+            public TItem HeadTrackingWeight;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
+            public TItem RagdollBipedRotation;
+            public TItem Health;
+            public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
+            public TItem IsActivationPoint;
+            public TItem Scale;
+            public TItem Position;
+            public TItem Rotation;
+            public TItem Comments;
             #endregion
 
             #region Equals
@@ -119,11 +504,71 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Base, rhs.Base)) return false;
+                if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
+                if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
+                if (!object.Equals(this.ReferenceGroup, rhs.ReferenceGroup)) return false;
+                if (!object.Equals(this.SourcePackIn, rhs.SourcePackIn)) return false;
+                if (!object.Equals(this.PersistentLocation, rhs.PersistentLocation)) return false;
+                if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
+                if (!object.Equals(this.PowerLinks, rhs.PowerLinks)) return false;
+                if (!object.Equals(this.LinkedReferences, rhs.LinkedReferences)) return false;
+                if (!object.Equals(this.IsLinkedRefTransient, rhs.IsLinkedRefTransient)) return false;
+                if (!object.Equals(this.ExternalEmittance, rhs.ExternalEmittance)) return false;
+                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.EncounterLocation, rhs.EncounterLocation)) return false;
+                if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
+                if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
+                if (!object.Equals(this.RagdollBipedRotation, rhs.RagdollBipedRotation)) return false;
+                if (!object.Equals(this.Health, rhs.Health)) return false;
+                if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
+                if (!object.Equals(this.IsActivationPoint, rhs.IsActivationPoint)) return false;
+                if (!object.Equals(this.Scale, rhs.Scale)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+                if (!object.Equals(this.Comments, rhs.Comments)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Components);
+                hash.Add(this.XALG);
+                hash.Add(this.Base);
+                hash.Add(this.LevelModifier);
+                hash.Add(this.Emittance);
+                hash.Add(this.Radius);
+                hash.Add(this.RagdollData);
+                hash.Add(this.ReferenceGroup);
+                hash.Add(this.SourcePackIn);
+                hash.Add(this.PersistentLocation);
+                hash.Add(this.IsIgnoredBySandbox);
+                hash.Add(this.FactionRank);
+                hash.Add(this.PowerLinks);
+                hash.Add(this.LinkedReferences);
+                hash.Add(this.IsLinkedRefTransient);
+                hash.Add(this.ExternalEmittance);
+                hash.Add(this.Ownership);
+                hash.Add(this.EncounterLocation);
+                hash.Add(this.Layer);
+                hash.Add(this.HeadTrackingWeight);
+                hash.Add(this.LocationRefTypes);
+                hash.Add(this.RagdollBipedRotation);
+                hash.Add(this.Health);
+                hash.Add(this.EnableParent);
+                hash.Add(this.IsActivationPoint);
+                hash.Add(this.Scale);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
+                hash.Add(this.Comments);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +579,106 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.XALG)) return false;
+                if (!eval(this.Base)) return false;
+                if (!eval(this.LevelModifier)) return false;
+                if (!eval(this.Emittance)) return false;
+                if (!eval(this.Radius)) return false;
+                if (this.RagdollData != null)
+                {
+                    if (!eval(this.RagdollData.Overall)) return false;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ReferenceGroup)) return false;
+                if (!eval(this.SourcePackIn)) return false;
+                if (!eval(this.PersistentLocation)) return false;
+                if (!eval(this.IsIgnoredBySandbox)) return false;
+                if (!eval(this.FactionRank)) return false;
+                if (this.PowerLinks != null)
+                {
+                    if (!eval(this.PowerLinks.Overall)) return false;
+                    if (this.PowerLinks.Specific != null)
+                    {
+                        foreach (var item in this.PowerLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LinkedReferences != null)
+                {
+                    if (!eval(this.LinkedReferences.Overall)) return false;
+                    if (this.LinkedReferences.Specific != null)
+                    {
+                        foreach (var item in this.LinkedReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.IsLinkedRefTransient)) return false;
+                if (ExternalEmittance != null)
+                {
+                    if (!eval(this.ExternalEmittance.Overall)) return false;
+                    if (this.ExternalEmittance.Specific != null && !this.ExternalEmittance.Specific.All(eval)) return false;
+                }
+                if (Ownership != null)
+                {
+                    if (!eval(this.Ownership.Overall)) return false;
+                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
+                }
+                if (!eval(this.EncounterLocation)) return false;
+                if (!eval(this.Layer)) return false;
+                if (!eval(this.HeadTrackingWeight)) return false;
+                if (this.LocationRefTypes != null)
+                {
+                    if (!eval(this.LocationRefTypes.Overall)) return false;
+                    if (this.LocationRefTypes.Specific != null)
+                    {
+                        foreach (var item in this.LocationRefTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.RagdollBipedRotation)) return false;
+                if (!eval(this.Health)) return false;
+                if (EnableParent != null)
+                {
+                    if (!eval(this.EnableParent.Overall)) return false;
+                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
+                }
+                if (!eval(this.IsActivationPoint)) return false;
+                if (!eval(this.Scale)) return false;
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
+                if (!eval(this.Comments)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +687,106 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.XALG)) return true;
+                if (eval(this.Base)) return true;
+                if (eval(this.LevelModifier)) return true;
+                if (eval(this.Emittance)) return true;
+                if (eval(this.Radius)) return true;
+                if (this.RagdollData != null)
+                {
+                    if (eval(this.RagdollData.Overall)) return true;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ReferenceGroup)) return true;
+                if (eval(this.SourcePackIn)) return true;
+                if (eval(this.PersistentLocation)) return true;
+                if (eval(this.IsIgnoredBySandbox)) return true;
+                if (eval(this.FactionRank)) return true;
+                if (this.PowerLinks != null)
+                {
+                    if (eval(this.PowerLinks.Overall)) return true;
+                    if (this.PowerLinks.Specific != null)
+                    {
+                        foreach (var item in this.PowerLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LinkedReferences != null)
+                {
+                    if (eval(this.LinkedReferences.Overall)) return true;
+                    if (this.LinkedReferences.Specific != null)
+                    {
+                        foreach (var item in this.LinkedReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.IsLinkedRefTransient)) return true;
+                if (ExternalEmittance != null)
+                {
+                    if (eval(this.ExternalEmittance.Overall)) return true;
+                    if (this.ExternalEmittance.Specific != null && this.ExternalEmittance.Specific.Any(eval)) return true;
+                }
+                if (Ownership != null)
+                {
+                    if (eval(this.Ownership.Overall)) return true;
+                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
+                }
+                if (eval(this.EncounterLocation)) return true;
+                if (eval(this.Layer)) return true;
+                if (eval(this.HeadTrackingWeight)) return true;
+                if (this.LocationRefTypes != null)
+                {
+                    if (eval(this.LocationRefTypes.Overall)) return true;
+                    if (this.LocationRefTypes.Specific != null)
+                    {
+                        foreach (var item in this.LocationRefTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.RagdollBipedRotation)) return true;
+                if (eval(this.Health)) return true;
+                if (EnableParent != null)
+                {
+                    if (eval(this.EnableParent.Overall)) return true;
+                    if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
+                }
+                if (eval(this.IsActivationPoint)) return true;
+                if (eval(this.Scale)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
+                if (eval(this.Comments)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +802,105 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.XALG = eval(this.XALG);
+                obj.Base = eval(this.Base);
+                obj.LevelModifier = eval(this.LevelModifier);
+                obj.Emittance = eval(this.Emittance);
+                obj.Radius = eval(this.Radius);
+                if (RagdollData != null)
+                {
+                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), Enumerable.Empty<MaskItemIndexed<R, RagdollData.Mask<R>?>>());
+                    if (RagdollData.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RagdollData.Mask<R>?>>();
+                        obj.RagdollData.Specific = l;
+                        foreach (var item in RagdollData.Specific)
+                        {
+                            MaskItemIndexed<R, RagdollData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RagdollData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ReferenceGroup = eval(this.ReferenceGroup);
+                obj.SourcePackIn = eval(this.SourcePackIn);
+                obj.PersistentLocation = eval(this.PersistentLocation);
+                obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
+                obj.FactionRank = eval(this.FactionRank);
+                if (PowerLinks != null)
+                {
+                    obj.PowerLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PowerLink.Mask<R>?>>?>(eval(this.PowerLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, PowerLink.Mask<R>?>>());
+                    if (PowerLinks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PowerLink.Mask<R>?>>();
+                        obj.PowerLinks.Specific = l;
+                        foreach (var item in PowerLinks.Specific)
+                        {
+                            MaskItemIndexed<R, PowerLink.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PowerLink.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LinkedReferences != null)
+                {
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    if (LinkedReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
+                        obj.LinkedReferences.Specific = l;
+                        foreach (var item in LinkedReferences.Specific)
+                        {
+                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.IsLinkedRefTransient = eval(this.IsLinkedRefTransient);
+                obj.ExternalEmittance = this.ExternalEmittance == null ? null : new MaskItem<R, ExternalEmittance.Mask<R>?>(eval(this.ExternalEmittance.Overall), this.ExternalEmittance.Specific?.Translate(eval));
+                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.EncounterLocation = eval(this.EncounterLocation);
+                obj.Layer = eval(this.Layer);
+                obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
+                if (LocationRefTypes != null)
+                {
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LocationRefTypes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LocationRefTypes.Specific = l;
+                        foreach (var item in LocationRefTypes.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.RagdollBipedRotation = eval(this.RagdollBipedRotation);
+                obj.Health = eval(this.Health);
+                obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
+                obj.IsActivationPoint = eval(this.IsActivationPoint);
+                obj.Scale = eval(this.Scale);
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
+                obj.Comments = eval(this.Comments);
             }
             #endregion
 
@@ -175,6 +919,203 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PlacedNpc.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if (printMask?.Base ?? true)
+                    {
+                        sb.AppendItem(Base, "Base");
+                    }
+                    if (printMask?.LevelModifier ?? true)
+                    {
+                        sb.AppendItem(LevelModifier, "LevelModifier");
+                    }
+                    if (printMask?.Emittance ?? true)
+                    {
+                        sb.AppendItem(Emittance, "Emittance");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        sb.AppendItem(Radius, "Radius");
+                    }
+                    if ((printMask?.RagdollData?.Overall ?? true)
+                        && RagdollData is {} RagdollDataItem)
+                    {
+                        sb.AppendLine("RagdollData =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RagdollDataItem.Overall);
+                            if (RagdollDataItem.Specific != null)
+                            {
+                                foreach (var subItem in RagdollDataItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.ReferenceGroup ?? true)
+                    {
+                        sb.AppendItem(ReferenceGroup, "ReferenceGroup");
+                    }
+                    if (printMask?.SourcePackIn ?? true)
+                    {
+                        sb.AppendItem(SourcePackIn, "SourcePackIn");
+                    }
+                    if (printMask?.PersistentLocation ?? true)
+                    {
+                        sb.AppendItem(PersistentLocation, "PersistentLocation");
+                    }
+                    if (printMask?.IsIgnoredBySandbox ?? true)
+                    {
+                        sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
+                    }
+                    if ((printMask?.PowerLinks?.Overall ?? true)
+                        && PowerLinks is {} PowerLinksItem)
+                    {
+                        sb.AppendLine("PowerLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PowerLinksItem.Overall);
+                            if (PowerLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in PowerLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.LinkedReferences?.Overall ?? true)
+                        && LinkedReferences is {} LinkedReferencesItem)
+                    {
+                        sb.AppendLine("LinkedReferences =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LinkedReferencesItem.Overall);
+                            if (LinkedReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in LinkedReferencesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.IsLinkedRefTransient ?? true)
+                    {
+                        sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
+                    }
+                    if (printMask?.ExternalEmittance?.Overall ?? true)
+                    {
+                        ExternalEmittance?.Print(sb);
+                    }
+                    if (printMask?.Ownership?.Overall ?? true)
+                    {
+                        Ownership?.Print(sb);
+                    }
+                    if (printMask?.EncounterLocation ?? true)
+                    {
+                        sb.AppendItem(EncounterLocation, "EncounterLocation");
+                    }
+                    if (printMask?.Layer ?? true)
+                    {
+                        sb.AppendItem(Layer, "Layer");
+                    }
+                    if (printMask?.HeadTrackingWeight ?? true)
+                    {
+                        sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                    }
+                    if ((printMask?.LocationRefTypes?.Overall ?? true)
+                        && LocationRefTypes is {} LocationRefTypesItem)
+                    {
+                        sb.AppendLine("LocationRefTypes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LocationRefTypesItem.Overall);
+                            if (LocationRefTypesItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationRefTypesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.RagdollBipedRotation ?? true)
+                    {
+                        sb.AppendItem(RagdollBipedRotation, "RagdollBipedRotation");
+                    }
+                    if (printMask?.Health ?? true)
+                    {
+                        sb.AppendItem(Health, "Health");
+                    }
+                    if (printMask?.EnableParent?.Overall ?? true)
+                    {
+                        EnableParent?.Print(sb);
+                    }
+                    if (printMask?.IsActivationPoint ?? true)
+                    {
+                        sb.AppendItem(IsActivationPoint, "IsActivationPoint");
+                    }
+                    if (printMask?.Scale ?? true)
+                    {
+                        sb.AppendItem(Scale, "Scale");
+                    }
+                    if (printMask?.Position ?? true)
+                    {
+                        sb.AppendItem(Position, "Position");
+                    }
+                    if (printMask?.Rotation ?? true)
+                    {
+                        sb.AppendItem(Rotation, "Rotation");
+                    }
+                    if (printMask?.Comments ?? true)
+                    {
+                        sb.AppendItem(Comments, "Comments");
+                    }
                 }
             }
             #endregion
@@ -185,12 +1126,105 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? XALG;
+            public Exception? Base;
+            public Exception? LevelModifier;
+            public Exception? Emittance;
+            public Exception? Radius;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>? RagdollData;
+            public Exception? ReferenceGroup;
+            public Exception? SourcePackIn;
+            public Exception? PersistentLocation;
+            public Exception? IsIgnoredBySandbox;
+            public Exception? FactionRank;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>? PowerLinks;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
+            public Exception? IsLinkedRefTransient;
+            public MaskItem<Exception?, ExternalEmittance.ErrorMask?>? ExternalEmittance;
+            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? EncounterLocation;
+            public Exception? Layer;
+            public Exception? HeadTrackingWeight;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
+            public Exception? RagdollBipedRotation;
+            public Exception? Health;
+            public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
+            public Exception? IsActivationPoint;
+            public Exception? Scale;
+            public Exception? Position;
+            public Exception? Rotation;
+            public Exception? Comments;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedNpc_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case PlacedNpc_FieldIndex.Components:
+                        return Components;
+                    case PlacedNpc_FieldIndex.XALG:
+                        return XALG;
+                    case PlacedNpc_FieldIndex.Base:
+                        return Base;
+                    case PlacedNpc_FieldIndex.LevelModifier:
+                        return LevelModifier;
+                    case PlacedNpc_FieldIndex.Emittance:
+                        return Emittance;
+                    case PlacedNpc_FieldIndex.Radius:
+                        return Radius;
+                    case PlacedNpc_FieldIndex.RagdollData:
+                        return RagdollData;
+                    case PlacedNpc_FieldIndex.ReferenceGroup:
+                        return ReferenceGroup;
+                    case PlacedNpc_FieldIndex.SourcePackIn:
+                        return SourcePackIn;
+                    case PlacedNpc_FieldIndex.PersistentLocation:
+                        return PersistentLocation;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox:
+                        return IsIgnoredBySandbox;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        return FactionRank;
+                    case PlacedNpc_FieldIndex.PowerLinks:
+                        return PowerLinks;
+                    case PlacedNpc_FieldIndex.LinkedReferences:
+                        return LinkedReferences;
+                    case PlacedNpc_FieldIndex.IsLinkedRefTransient:
+                        return IsLinkedRefTransient;
+                    case PlacedNpc_FieldIndex.ExternalEmittance:
+                        return ExternalEmittance;
+                    case PlacedNpc_FieldIndex.Ownership:
+                        return Ownership;
+                    case PlacedNpc_FieldIndex.EncounterLocation:
+                        return EncounterLocation;
+                    case PlacedNpc_FieldIndex.Layer:
+                        return Layer;
+                    case PlacedNpc_FieldIndex.HeadTrackingWeight:
+                        return HeadTrackingWeight;
+                    case PlacedNpc_FieldIndex.LocationRefTypes:
+                        return LocationRefTypes;
+                    case PlacedNpc_FieldIndex.RagdollBipedRotation:
+                        return RagdollBipedRotation;
+                    case PlacedNpc_FieldIndex.Health:
+                        return Health;
+                    case PlacedNpc_FieldIndex.EnableParent:
+                        return EnableParent;
+                    case PlacedNpc_FieldIndex.IsActivationPoint:
+                        return IsActivationPoint;
+                    case PlacedNpc_FieldIndex.Scale:
+                        return Scale;
+                    case PlacedNpc_FieldIndex.Position:
+                        return Position;
+                    case PlacedNpc_FieldIndex.Rotation:
+                        return Rotation;
+                    case PlacedNpc_FieldIndex.Comments:
+                        return Comments;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +1235,96 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedNpc_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Base:
+                        this.Base = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.LevelModifier:
+                        this.LevelModifier = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Emittance:
+                        this.Emittance = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.RagdollData:
+                        this.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.ReferenceGroup:
+                        this.ReferenceGroup = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.PersistentLocation:
+                        this.PersistentLocation = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.PowerLinks:
+                        this.PowerLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.LinkedReferences:
+                        this.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.IsLinkedRefTransient:
+                        this.IsLinkedRefTransient = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.ExternalEmittance:
+                        this.ExternalEmittance = new MaskItem<Exception?, ExternalEmittance.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.Ownership:
+                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.EncounterLocation:
+                        this.EncounterLocation = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Layer:
+                        this.Layer = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.HeadTrackingWeight:
+                        this.HeadTrackingWeight = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.LocationRefTypes:
+                        this.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.RagdollBipedRotation:
+                        this.RagdollBipedRotation = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Health:
+                        this.Health = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.EnableParent:
+                        this.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedNpc_FieldIndex.IsActivationPoint:
+                        this.IsActivationPoint = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Scale:
+                        this.Scale = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Position:
+                        this.Position = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Rotation:
+                        this.Rotation = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Comments:
+                        this.Comments = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1336,96 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedNpc_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Base:
+                        this.Base = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.LevelModifier:
+                        this.LevelModifier = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Emittance:
+                        this.Emittance = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.RagdollData:
+                        this.RagdollData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.ReferenceGroup:
+                        this.ReferenceGroup = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.PersistentLocation:
+                        this.PersistentLocation = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.PowerLinks:
+                        this.PowerLinks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.LinkedReferences:
+                        this.LinkedReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.IsLinkedRefTransient:
+                        this.IsLinkedRefTransient = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.ExternalEmittance:
+                        this.ExternalEmittance = (MaskItem<Exception?, ExternalEmittance.ErrorMask?>?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Ownership:
+                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.EncounterLocation:
+                        this.EncounterLocation = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Layer:
+                        this.Layer = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.HeadTrackingWeight:
+                        this.HeadTrackingWeight = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.LocationRefTypes:
+                        this.LocationRefTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.RagdollBipedRotation:
+                        this.RagdollBipedRotation = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Health:
+                        this.Health = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.EnableParent:
+                        this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.IsActivationPoint:
+                        this.IsActivationPoint = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Scale:
+                        this.Scale = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Position:
+                        this.Position = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.Comments:
+                        this.Comments = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1435,36 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Components != null) return true;
+                if (XALG != null) return true;
+                if (Base != null) return true;
+                if (LevelModifier != null) return true;
+                if (Emittance != null) return true;
+                if (Radius != null) return true;
+                if (RagdollData != null) return true;
+                if (ReferenceGroup != null) return true;
+                if (SourcePackIn != null) return true;
+                if (PersistentLocation != null) return true;
+                if (IsIgnoredBySandbox != null) return true;
+                if (FactionRank != null) return true;
+                if (PowerLinks != null) return true;
+                if (LinkedReferences != null) return true;
+                if (IsLinkedRefTransient != null) return true;
+                if (ExternalEmittance != null) return true;
+                if (Ownership != null) return true;
+                if (EncounterLocation != null) return true;
+                if (Layer != null) return true;
+                if (HeadTrackingWeight != null) return true;
+                if (LocationRefTypes != null) return true;
+                if (RagdollBipedRotation != null) return true;
+                if (Health != null) return true;
+                if (EnableParent != null) return true;
+                if (IsActivationPoint != null) return true;
+                if (Scale != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
+                if (Comments != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1491,165 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(LevelModifier, "LevelModifier");
+                }
+                {
+                    sb.AppendItem(Emittance, "Emittance");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                if (RagdollData is {} RagdollDataItem)
+                {
+                    sb.AppendLine("RagdollData =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RagdollDataItem.Overall);
+                        if (RagdollDataItem.Specific != null)
+                        {
+                            foreach (var subItem in RagdollDataItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(ReferenceGroup, "ReferenceGroup");
+                }
+                {
+                    sb.AppendItem(SourcePackIn, "SourcePackIn");
+                }
+                {
+                    sb.AppendItem(PersistentLocation, "PersistentLocation");
+                }
+                {
+                    sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                if (PowerLinks is {} PowerLinksItem)
+                {
+                    sb.AppendLine("PowerLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PowerLinksItem.Overall);
+                        if (PowerLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in PowerLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (LinkedReferences is {} LinkedReferencesItem)
+                {
+                    sb.AppendLine("LinkedReferences =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LinkedReferencesItem.Overall);
+                        if (LinkedReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in LinkedReferencesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
+                }
+                ExternalEmittance?.Print(sb);
+                Ownership?.Print(sb);
+                {
+                    sb.AppendItem(EncounterLocation, "EncounterLocation");
+                }
+                {
+                    sb.AppendItem(Layer, "Layer");
+                }
+                {
+                    sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                }
+                if (LocationRefTypes is {} LocationRefTypesItem)
+                {
+                    sb.AppendLine("LocationRefTypes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LocationRefTypesItem.Overall);
+                        if (LocationRefTypesItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationRefTypesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(RagdollBipedRotation, "RagdollBipedRotation");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                EnableParent?.Print(sb);
+                {
+                    sb.AppendItem(IsActivationPoint, "IsActivationPoint");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
+                {
+                    sb.AppendItem(Comments, "Comments");
+                }
             }
             #endregion
 
@@ -255,6 +1658,36 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Base = this.Base.Combine(rhs.Base);
+                ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
+                ret.Emittance = this.Emittance.Combine(rhs.Emittance);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RagdollData?.Overall, rhs.RagdollData?.Overall), Noggog.ExceptionExt.Combine(this.RagdollData?.Specific, rhs.RagdollData?.Specific));
+                ret.ReferenceGroup = this.ReferenceGroup.Combine(rhs.ReferenceGroup);
+                ret.SourcePackIn = this.SourcePackIn.Combine(rhs.SourcePackIn);
+                ret.PersistentLocation = this.PersistentLocation.Combine(rhs.PersistentLocation);
+                ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
+                ret.PowerLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PowerLinks?.Overall, rhs.PowerLinks?.Overall), Noggog.ExceptionExt.Combine(this.PowerLinks?.Specific, rhs.PowerLinks?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.IsLinkedRefTransient = this.IsLinkedRefTransient.Combine(rhs.IsLinkedRefTransient);
+                ret.ExternalEmittance = this.ExternalEmittance.Combine(rhs.ExternalEmittance, (l, r) => l.Combine(r));
+                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.EncounterLocation = this.EncounterLocation.Combine(rhs.EncounterLocation);
+                ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.RagdollBipedRotation = this.RagdollBipedRotation.Combine(rhs.RagdollBipedRotation);
+                ret.Health = this.Health.Combine(rhs.Health);
+                ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
+                ret.IsActivationPoint = this.IsActivationPoint.Combine(rhs.IsActivationPoint);
+                ret.Scale = this.Scale.Combine(rhs.Scale);
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+                ret.Comments = this.Comments.Combine(rhs.Comments);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1709,105 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public AComponent.TranslationMask? Components;
+            public bool XALG;
+            public bool Base;
+            public bool LevelModifier;
+            public bool Emittance;
+            public bool Radius;
+            public RagdollData.TranslationMask? RagdollData;
+            public bool ReferenceGroup;
+            public bool SourcePackIn;
+            public bool PersistentLocation;
+            public bool IsIgnoredBySandbox;
+            public bool FactionRank;
+            public PowerLink.TranslationMask? PowerLinks;
+            public LinkedReferences.TranslationMask? LinkedReferences;
+            public bool IsLinkedRefTransient;
+            public ExternalEmittance.TranslationMask? ExternalEmittance;
+            public Ownership.TranslationMask? Ownership;
+            public bool EncounterLocation;
+            public bool Layer;
+            public bool HeadTrackingWeight;
+            public bool LocationRefTypes;
+            public bool RagdollBipedRotation;
+            public bool Health;
+            public EnableParent.TranslationMask? EnableParent;
+            public bool IsActivationPoint;
+            public bool Scale;
+            public bool Position;
+            public bool Rotation;
+            public bool Comments;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.XALG = defaultOn;
+                this.Base = defaultOn;
+                this.LevelModifier = defaultOn;
+                this.Emittance = defaultOn;
+                this.Radius = defaultOn;
+                this.ReferenceGroup = defaultOn;
+                this.SourcePackIn = defaultOn;
+                this.PersistentLocation = defaultOn;
+                this.IsIgnoredBySandbox = defaultOn;
+                this.FactionRank = defaultOn;
+                this.IsLinkedRefTransient = defaultOn;
+                this.EncounterLocation = defaultOn;
+                this.Layer = defaultOn;
+                this.HeadTrackingWeight = defaultOn;
+                this.LocationRefTypes = defaultOn;
+                this.RagdollBipedRotation = defaultOn;
+                this.Health = defaultOn;
+                this.IsActivationPoint = defaultOn;
+                this.Scale = defaultOn;
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
+                this.Comments = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((XALG, null));
+                ret.Add((Base, null));
+                ret.Add((LevelModifier, null));
+                ret.Add((Emittance, null));
+                ret.Add((Radius, null));
+                ret.Add((RagdollData == null ? DefaultOn : !RagdollData.GetCrystal().CopyNothing, RagdollData?.GetCrystal()));
+                ret.Add((ReferenceGroup, null));
+                ret.Add((SourcePackIn, null));
+                ret.Add((PersistentLocation, null));
+                ret.Add((IsIgnoredBySandbox, null));
+                ret.Add((FactionRank, null));
+                ret.Add((PowerLinks == null ? DefaultOn : !PowerLinks.GetCrystal().CopyNothing, PowerLinks?.GetCrystal()));
+                ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
+                ret.Add((IsLinkedRefTransient, null));
+                ret.Add((ExternalEmittance != null ? ExternalEmittance.OnOverall : DefaultOn, ExternalEmittance?.GetCrystal()));
+                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((EncounterLocation, null));
+                ret.Add((Layer, null));
+                ret.Add((HeadTrackingWeight, null));
+                ret.Add((LocationRefTypes, null));
+                ret.Add((RagdollBipedRotation, null));
+                ret.Add((Health, null));
+                ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
+                ret.Add((IsActivationPoint, null));
+                ret.Add((Scale, null));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
+                ret.Add((Comments, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1819,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedNpcCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1870,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IPlacedNpc);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PlacedNpcCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => PlacedNpcSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => PlacedNpcSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => PlacedNpcSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,6 +1958,8 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPlacedNpc :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         IKeywordLinkedReference,
         ILinkedReference,
         ILoquiObjectSetter<IPlacedNpcInternal>,
@@ -431,8 +1967,47 @@ namespace Mutagen.Bethesda.Starfield
         IPlaced,
         IPlacedNpcGetter,
         IPlacedSimple,
+        IPositionRotation,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new IFormLink<INpcGetter> Base { get; set; }
+        new Level? LevelModifier { get; set; }
+        new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
+        new Single? Radius { get; set; }
+        new ExtendedList<RagdollData>? RagdollData { get; set; }
+        new IFormLinkNullable<IReferenceGroupGetter> ReferenceGroup { get; set; }
+        new IFormLinkNullable<IPackInGetter> SourcePackIn { get; set; }
+        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
+        new Boolean IsIgnoredBySandbox { get; set; }
+        new Int32? FactionRank { get; set; }
+        new ExtendedList<PowerLink> PowerLinks { get; }
+        new ExtendedList<LinkedReferences> LinkedReferences { get; }
+        new Boolean IsLinkedRefTransient { get; set; }
+        new ExternalEmittance? ExternalEmittance { get; set; }
+        new Ownership? Ownership { get; set; }
+        new IFormLinkNullable<ILocationGetter> EncounterLocation { get; set; }
+        new IFormLinkNullable<ILayerGetter> Layer { get; set; }
+        new Single? HeadTrackingWeight { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
+        new P3Float? RagdollBipedRotation { get; set; }
+        new Percent? Health { get; set; }
+        new EnableParent? EnableParent { get; set; }
+        new Boolean IsActivationPoint { get; set; }
+        new Single? Scale { get; set; }
+        new P3Float Position { get; set; }
+        new P3Float Rotation { get; set; }
+        new String? Comments { get; set; }
+        #region Mutagen
+        new PlacedNpc.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IPlacedNpcInternal :
@@ -445,16 +2020,60 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.ACHR)]
     public partial interface IPlacedNpcGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
         ILinkedReferenceGetter,
         ILoquiObject<IPlacedNpcGetter>,
         IMapsToGetter<IPlacedNpcGetter>,
         IOwnerGetter,
         IPlacedGetter,
-        IPlacedSimpleGetter
+        IPlacedSimpleGetter,
+        IPositionRotationGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        IFormLinkGetter<INpcGetter> Base { get; }
+        Level? LevelModifier { get; }
+        IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
+        Single? Radius { get; }
+        IReadOnlyList<IRagdollDataGetter>? RagdollData { get; }
+        IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup { get; }
+        IFormLinkNullableGetter<IPackInGetter> SourcePackIn { get; }
+        IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
+        Boolean IsIgnoredBySandbox { get; }
+        Int32? FactionRank { get; }
+        IReadOnlyList<IPowerLinkGetter> PowerLinks { get; }
+        IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
+        Boolean IsLinkedRefTransient { get; }
+        IExternalEmittanceGetter? ExternalEmittance { get; }
+        IOwnershipGetter? Ownership { get; }
+        IFormLinkNullableGetter<ILocationGetter> EncounterLocation { get; }
+        IFormLinkNullableGetter<ILayerGetter> Layer { get; }
+        Single? HeadTrackingWeight { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
+        P3Float? RagdollBipedRotation { get; }
+        Percent? Health { get; }
+        IEnableParentGetter? EnableParent { get; }
+        Boolean IsActivationPoint { get; }
+        Single? Scale { get; }
+        P3Float Position { get; }
+        P3Float Rotation { get; }
+        String? Comments { get; }
+
+        #region Mutagen
+        PlacedNpc.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -631,6 +2250,36 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Components = 8,
+        XALG = 9,
+        Base = 10,
+        LevelModifier = 11,
+        Emittance = 12,
+        Radius = 13,
+        RagdollData = 14,
+        ReferenceGroup = 15,
+        SourcePackIn = 16,
+        PersistentLocation = 17,
+        IsIgnoredBySandbox = 18,
+        FactionRank = 19,
+        PowerLinks = 20,
+        LinkedReferences = 21,
+        IsLinkedRefTransient = 22,
+        ExternalEmittance = 23,
+        Ownership = 24,
+        EncounterLocation = 25,
+        Layer = 26,
+        HeadTrackingWeight = 27,
+        LocationRefTypes = 28,
+        RagdollBipedRotation = 29,
+        Health = 30,
+        EnableParent = 31,
+        IsActivationPoint = 32,
+        Scale = 33,
+        Position = 34,
+        Rotation = 35,
+        Comments = 36,
     }
     #endregion
 
@@ -641,9 +2290,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 30;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -673,8 +2322,41 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.ACHR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.ACHR);
+            var all = RecordCollection.Factory(
+                RecordTypes.ACHR,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.XALG,
+                RecordTypes.NAME,
+                RecordTypes.XLCM,
+                RecordTypes.XEMI,
+                RecordTypes.XRDS,
+                RecordTypes.XRGD,
+                RecordTypes.XRFG,
+                RecordTypes.XPCS,
+                RecordTypes.XLCN,
+                RecordTypes.XIS2,
+                RecordTypes.XRNK,
+                RecordTypes.XPLK,
+                RecordTypes.XLKR,
+                RecordTypes.XLKT,
+                RecordTypes.XEED,
+                RecordTypes.XOWN,
+                RecordTypes.XEZN,
+                RecordTypes.XLYR,
+                RecordTypes.XHTW,
+                RecordTypes.XLRT,
+                RecordTypes.XRGB,
+                RecordTypes.XHLT,
+                RecordTypes.XESP,
+                RecordTypes.XATP,
+                RecordTypes.XSCL,
+                RecordTypes.DATA,
+                RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedNpcBinaryWriteTranslation);
         #region Interface
@@ -716,6 +2398,36 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedNpcInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Components.Clear();
+            item.XALG = default;
+            item.Base.Clear();
+            item.LevelModifier = default;
+            item.Emittance.Clear();
+            item.Radius = default;
+            item.RagdollData = null;
+            item.ReferenceGroup.Clear();
+            item.SourcePackIn.Clear();
+            item.PersistentLocation.Clear();
+            item.IsIgnoredBySandbox = default;
+            item.FactionRank = default;
+            item.PowerLinks.Clear();
+            item.LinkedReferences.Clear();
+            item.IsLinkedRefTransient = default;
+            item.ExternalEmittance = null;
+            item.Ownership = null;
+            item.EncounterLocation.Clear();
+            item.Layer.Clear();
+            item.HeadTrackingWeight = default;
+            item.LocationRefTypes = null;
+            item.RagdollBipedRotation = default;
+            item.Health = default;
+            item.EnableParent = null;
+            item.IsActivationPoint = default;
+            item.Scale = default;
+            item.Position = default;
+            item.Rotation = default;
+            item.Comments = default;
             base.Clear(item);
         }
         
@@ -733,6 +2445,44 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IPlacedNpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Base.Relink(mapping);
+            obj.Emittance.Relink(mapping);
+            obj.ReferenceGroup.Relink(mapping);
+            obj.SourcePackIn.Relink(mapping);
+            obj.PersistentLocation.Relink(mapping);
+            obj.PowerLinks.RemapLinks(mapping);
+            obj.LinkedReferences.RemapLinks(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.EncounterLocation.Relink(mapping);
+            obj.Layer.Relink(mapping);
+            obj.LocationRefTypes?.RemapLinks(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPlacedNpc obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IPlacedNpc obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -800,6 +2550,67 @@ namespace Mutagen.Bethesda.Starfield
             PlacedNpc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.Base = item.Base.Equals(rhs.Base);
+            ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
+            ret.Emittance = item.Emittance.Equals(rhs.Emittance);
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.RagdollData = item.RagdollData.CollectionEqualsHelper(
+                rhs.RagdollData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ReferenceGroup = item.ReferenceGroup.Equals(rhs.ReferenceGroup);
+            ret.SourcePackIn = item.SourcePackIn.Equals(rhs.SourcePackIn);
+            ret.PersistentLocation = item.PersistentLocation.Equals(rhs.PersistentLocation);
+            ret.IsIgnoredBySandbox = item.IsIgnoredBySandbox == rhs.IsIgnoredBySandbox;
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
+            ret.PowerLinks = item.PowerLinks.CollectionEqualsHelper(
+                rhs.PowerLinks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LinkedReferences = item.LinkedReferences.CollectionEqualsHelper(
+                rhs.LinkedReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.IsLinkedRefTransient = item.IsLinkedRefTransient == rhs.IsLinkedRefTransient;
+            ret.ExternalEmittance = EqualsMaskHelper.EqualsHelper(
+                item.ExternalEmittance,
+                rhs.ExternalEmittance,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Ownership = EqualsMaskHelper.EqualsHelper(
+                item.Ownership,
+                rhs.Ownership,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.EncounterLocation = item.EncounterLocation.Equals(rhs.EncounterLocation);
+            ret.Layer = item.Layer.Equals(rhs.Layer);
+            ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
+            ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
+                rhs.LocationRefTypes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.RagdollBipedRotation = item.RagdollBipedRotation.Equals(rhs.RagdollBipedRotation);
+            ret.Health = item.Health.Equals(rhs.Health);
+            ret.EnableParent = EqualsMaskHelper.EqualsHelper(
+                item.EnableParent,
+                rhs.EnableParent,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.IsActivationPoint = item.IsActivationPoint == rhs.IsActivationPoint;
+            ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
+            ret.Comments = string.Equals(item.Comments, rhs.Comments);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -849,6 +2660,191 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if (printMask?.Base ?? true)
+            {
+                sb.AppendItem(item.Base.FormKey, "Base");
+            }
+            if ((printMask?.LevelModifier ?? true)
+                && item.LevelModifier is {} LevelModifierItem)
+            {
+                sb.AppendItem(LevelModifierItem, "LevelModifier");
+            }
+            if (printMask?.Emittance ?? true)
+            {
+                sb.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
+            }
+            if ((printMask?.Radius ?? true)
+                && item.Radius is {} RadiusItem)
+            {
+                sb.AppendItem(RadiusItem, "Radius");
+            }
+            if ((printMask?.RagdollData?.Overall ?? true)
+                && item.RagdollData is {} RagdollDataItem)
+            {
+                sb.AppendLine("RagdollData =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RagdollDataItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.ReferenceGroup ?? true)
+            {
+                sb.AppendItem(item.ReferenceGroup.FormKeyNullable, "ReferenceGroup");
+            }
+            if (printMask?.SourcePackIn ?? true)
+            {
+                sb.AppendItem(item.SourcePackIn.FormKeyNullable, "SourcePackIn");
+            }
+            if (printMask?.PersistentLocation ?? true)
+            {
+                sb.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
+            }
+            if (printMask?.IsIgnoredBySandbox ?? true)
+            {
+                sb.AppendItem(item.IsIgnoredBySandbox, "IsIgnoredBySandbox");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
+            }
+            if (printMask?.PowerLinks?.Overall ?? true)
+            {
+                sb.AppendLine("PowerLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.PowerLinks)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.LinkedReferences?.Overall ?? true)
+            {
+                sb.AppendLine("LinkedReferences =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.LinkedReferences)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.IsLinkedRefTransient ?? true)
+            {
+                sb.AppendItem(item.IsLinkedRefTransient, "IsLinkedRefTransient");
+            }
+            if ((printMask?.ExternalEmittance?.Overall ?? true)
+                && item.ExternalEmittance is {} ExternalEmittanceItem)
+            {
+                ExternalEmittanceItem?.Print(sb, "ExternalEmittance");
+            }
+            if ((printMask?.Ownership?.Overall ?? true)
+                && item.Ownership is {} OwnershipItem)
+            {
+                OwnershipItem?.Print(sb, "Ownership");
+            }
+            if (printMask?.EncounterLocation ?? true)
+            {
+                sb.AppendItem(item.EncounterLocation.FormKeyNullable, "EncounterLocation");
+            }
+            if (printMask?.Layer ?? true)
+            {
+                sb.AppendItem(item.Layer.FormKeyNullable, "Layer");
+            }
+            if ((printMask?.HeadTrackingWeight ?? true)
+                && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
+            {
+                sb.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
+            }
+            if ((printMask?.LocationRefTypes?.Overall ?? true)
+                && item.LocationRefTypes is {} LocationRefTypesItem)
+            {
+                sb.AppendLine("LocationRefTypes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in LocationRefTypesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.RagdollBipedRotation ?? true)
+                && item.RagdollBipedRotation is {} RagdollBipedRotationItem)
+            {
+                sb.AppendItem(RagdollBipedRotationItem, "RagdollBipedRotation");
+            }
+            if ((printMask?.Health ?? true)
+                && item.Health is {} HealthItem)
+            {
+                sb.AppendItem(HealthItem, "Health");
+            }
+            if ((printMask?.EnableParent?.Overall ?? true)
+                && item.EnableParent is {} EnableParentItem)
+            {
+                EnableParentItem?.Print(sb, "EnableParent");
+            }
+            if (printMask?.IsActivationPoint ?? true)
+            {
+                sb.AppendItem(item.IsActivationPoint, "IsActivationPoint");
+            }
+            if ((printMask?.Scale ?? true)
+                && item.Scale is {} ScaleItem)
+            {
+                sb.AppendItem(ScaleItem, "Scale");
+            }
+            if (printMask?.Position ?? true)
+            {
+                sb.AppendItem(item.Position, "Position");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                sb.AppendItem(item.Rotation, "Rotation");
+            }
+            if ((printMask?.Comments ?? true)
+                && item.Comments is {} CommentsItem)
+            {
+                sb.AppendItem(CommentsItem, "Comments");
+            }
         }
         
         public static PlacedNpc_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -899,6 +2895,142 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
+            {
+                if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LevelModifier) ?? true))
+            {
+                if (lhs.LevelModifier != rhs.LevelModifier) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
+            {
+                if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
+            {
+                if (!lhs.RagdollData.SequenceEqualNullable(rhs.RagdollData, (l, r) => ((RagdollDataCommon)((IRagdollDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.RagdollData)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.ReferenceGroup) ?? true))
+            {
+                if (!lhs.ReferenceGroup.Equals(rhs.ReferenceGroup)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.SourcePackIn) ?? true))
+            {
+                if (!lhs.SourcePackIn.Equals(rhs.SourcePackIn)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PersistentLocation) ?? true))
+            {
+                if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox) ?? true))
+            {
+                if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PowerLinks) ?? true))
+            {
+                if (!lhs.PowerLinks.SequenceEqual(rhs.PowerLinks, (l, r) => ((PowerLinkCommon)((IPowerLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.PowerLinks)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LinkedReferences) ?? true))
+            {
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.LinkedReferences)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsLinkedRefTransient) ?? true))
+            {
+                if (lhs.IsLinkedRefTransient != rhs.IsLinkedRefTransient) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.ExternalEmittance) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ExternalEmittance, rhs.ExternalEmittance, out var lhsExternalEmittance, out var rhsExternalEmittance, out var isExternalEmittanceEqual))
+                {
+                    if (!((ExternalEmittanceCommon)((IExternalEmittanceGetter)lhsExternalEmittance).CommonInstance()!).Equals(lhsExternalEmittance, rhsExternalEmittance, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.ExternalEmittance))) return false;
+                }
+                else if (!isExternalEmittanceEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
+                {
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Ownership))) return false;
+                }
+                else if (!isOwnershipEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EncounterLocation) ?? true))
+            {
+                if (!lhs.EncounterLocation.Equals(rhs.EncounterLocation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Layer) ?? true))
+            {
+                if (!lhs.Layer.Equals(rhs.Layer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.HeadTrackingWeight) ?? true))
+            {
+                if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationRefTypes) ?? true))
+            {
+                if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedRotation) ?? true))
+            {
+                if (!lhs.RagdollBipedRotation.Equals(rhs.RagdollBipedRotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Health) ?? true))
+            {
+                if (!lhs.Health.Equals(rhs.Health)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EnableParent) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
+                {
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, equalsMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.EnableParent))) return false;
+                }
+                else if (!isEnableParentEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsActivationPoint) ?? true))
+            {
+                if (lhs.IsActivationPoint != rhs.IsActivationPoint) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Position) ?? true))
+            {
+                if (!lhs.Position.Equals(rhs.Position)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Rotation) ?? true))
+            {
+                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Comments) ?? true))
+            {
+                if (!string.Equals(lhs.Comments, rhs.Comments)) return false;
+            }
             return true;
         }
         
@@ -927,6 +3059,75 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPlacedNpcGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.Components);
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            hash.Add(item.Base);
+            if (item.LevelModifier is {} LevelModifieritem)
+            {
+                hash.Add(LevelModifieritem);
+            }
+            hash.Add(item.Emittance);
+            if (item.Radius is {} Radiusitem)
+            {
+                hash.Add(Radiusitem);
+            }
+            hash.Add(item.RagdollData);
+            hash.Add(item.ReferenceGroup);
+            hash.Add(item.SourcePackIn);
+            hash.Add(item.PersistentLocation);
+            hash.Add(item.IsIgnoredBySandbox);
+            if (item.FactionRank is {} FactionRankitem)
+            {
+                hash.Add(FactionRankitem);
+            }
+            hash.Add(item.PowerLinks);
+            hash.Add(item.LinkedReferences);
+            hash.Add(item.IsLinkedRefTransient);
+            if (item.ExternalEmittance is {} ExternalEmittanceitem)
+            {
+                hash.Add(ExternalEmittanceitem);
+            }
+            if (item.Ownership is {} Ownershipitem)
+            {
+                hash.Add(Ownershipitem);
+            }
+            hash.Add(item.EncounterLocation);
+            hash.Add(item.Layer);
+            if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
+            {
+                hash.Add(HeadTrackingWeightitem);
+            }
+            hash.Add(item.LocationRefTypes);
+            if (item.RagdollBipedRotation is {} RagdollBipedRotationitem)
+            {
+                hash.Add(RagdollBipedRotationitem);
+            }
+            if (item.Health is {} Healthitem)
+            {
+                hash.Add(Healthitem);
+            }
+            if (item.EnableParent is {} EnableParentitem)
+            {
+                hash.Add(EnableParentitem);
+            }
+            hash.Add(item.IsActivationPoint);
+            if (item.Scale is {} Scaleitem)
+            {
+                hash.Add(Scaleitem);
+            }
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
+            if (item.Comments is {} Commentsitem)
+            {
+                hash.Add(Commentsitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -955,6 +3156,89 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield return FormLinkInformation.Factory(obj.Base);
+            if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
+            {
+                yield return EmittanceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ReferenceGroup, out var ReferenceGroupInfo))
+            {
+                yield return ReferenceGroupInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.SourcePackIn, out var SourcePackInInfo))
+            {
+                yield return SourcePackInInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PersistentLocation, out var PersistentLocationInfo))
+            {
+                yield return PersistentLocationInfo;
+            }
+            foreach (var item in obj.PowerLinks.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Ownership is {} OwnershipItems)
+            {
+                foreach (var item in OwnershipItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.EncounterLocation, out var EncounterLocationInfo))
+            {
+                yield return EncounterLocationInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Layer, out var LayerInfo))
+            {
+                yield return LayerInfo;
+            }
+            if (obj.LocationRefTypes is {} LocationRefTypesItem)
+            {
+                foreach (var item in LocationRefTypesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.EnableParent is {} EnableParentItems)
+            {
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPlacedNpcGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1030,6 +3314,332 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
+            {
+                item.Base.SetTo(rhs.Base.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LevelModifier) ?? true))
+            {
+                item.LevelModifier = rhs.LevelModifier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
+            {
+                item.Emittance.SetTo(rhs.Emittance.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.RagdollData);
+                try
+                {
+                    if ((rhs.RagdollData != null))
+                    {
+                        item.RagdollData = 
+                            rhs.RagdollData
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<RagdollData>();
+                    }
+                    else
+                    {
+                        item.RagdollData = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.ReferenceGroup) ?? true))
+            {
+                item.ReferenceGroup.SetTo(rhs.ReferenceGroup.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.SourcePackIn) ?? true))
+            {
+                item.SourcePackIn.SetTo(rhs.SourcePackIn.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PersistentLocation) ?? true))
+            {
+                item.PersistentLocation.SetTo(rhs.PersistentLocation.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox) ?? true))
+            {
+                item.IsIgnoredBySandbox = rhs.IsIgnoredBySandbox;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PowerLinks) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.PowerLinks);
+                try
+                {
+                    item.PowerLinks.SetTo(
+                        rhs.PowerLinks
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LinkedReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.LinkedReferences);
+                try
+                {
+                    item.LinkedReferences.SetTo(
+                        rhs.LinkedReferences
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsLinkedRefTransient) ?? true))
+            {
+                item.IsLinkedRefTransient = rhs.IsLinkedRefTransient;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.ExternalEmittance) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.ExternalEmittance);
+                try
+                {
+                    if(rhs.ExternalEmittance is {} rhsExternalEmittance)
+                    {
+                        item.ExternalEmittance = rhsExternalEmittance.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.ExternalEmittance));
+                    }
+                    else
+                    {
+                        item.ExternalEmittance = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Ownership);
+                try
+                {
+                    if(rhs.Ownership is {} rhsOwnership)
+                    {
+                        item.Ownership = rhsOwnership.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Ownership));
+                    }
+                    else
+                    {
+                        item.Ownership = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EncounterLocation) ?? true))
+            {
+                item.EncounterLocation.SetTo(rhs.EncounterLocation.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Layer) ?? true))
+            {
+                item.Layer.SetTo(rhs.Layer.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.HeadTrackingWeight) ?? true))
+            {
+                item.HeadTrackingWeight = rhs.HeadTrackingWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationRefTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.LocationRefTypes);
+                try
+                {
+                    if ((rhs.LocationRefTypes != null))
+                    {
+                        item.LocationRefTypes = 
+                            rhs.LocationRefTypes
+                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    }
+                    else
+                    {
+                        item.LocationRefTypes = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedRotation) ?? true))
+            {
+                item.RagdollBipedRotation = rhs.RagdollBipedRotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Health) ?? true))
+            {
+                item.Health = rhs.Health;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EnableParent) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.EnableParent);
+                try
+                {
+                    if(rhs.EnableParent is {} rhsEnableParent)
+                    {
+                        item.EnableParent = rhsEnableParent.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.EnableParent));
+                    }
+                    else
+                    {
+                        item.EnableParent = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsActivationPoint) ?? true))
+            {
+                item.IsActivationPoint = rhs.IsActivationPoint;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
+            {
+                item.Scale = rhs.Scale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Position) ?? true))
+            {
+                item.Position = rhs.Position;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Rotation) ?? true))
+            {
+                item.Rotation = rhs.Rotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Comments) ?? true))
+            {
+                item.Comments = rhs.Comments;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1178,6 +3788,188 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly PlacedNpcBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IPlacedNpcGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Base,
+                header: translationParams.ConvertToCustom(RecordTypes.NAME));
+            EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.LevelModifier,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.XLCM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Emittance,
+                header: translationParams.ConvertToCustom(RecordTypes.XEMI));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Radius,
+                header: translationParams.ConvertToCustom(RecordTypes.XRDS));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRagdollDataGetter>.Instance.Write(
+                writer: writer,
+                items: item.RagdollData,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XRGD),
+                transl: (MutagenWriter subWriter, IRagdollDataGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RagdollDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ReferenceGroup,
+                header: translationParams.ConvertToCustom(RecordTypes.XRFG));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SourcePackIn,
+                header: translationParams.ConvertToCustom(RecordTypes.XPCS));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PersistentLocation,
+                header: translationParams.ConvertToCustom(RecordTypes.XLCN));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsIgnoredBySandbox,
+                header: translationParams.ConvertToCustom(RecordTypes.XIS2));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPowerLinkGetter>.Instance.Write(
+                writer: writer,
+                items: item.PowerLinks,
+                transl: (MutagenWriter subWriter, IPowerLinkGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PowerLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILinkedReferencesGetter>.Instance.Write(
+                writer: writer,
+                items: item.LinkedReferences,
+                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LinkedReferencesBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsLinkedRefTransient,
+                header: translationParams.ConvertToCustom(RecordTypes.XLKT));
+            if (item.ExternalEmittance is {} ExternalEmittanceItem)
+            {
+                ((ExternalEmittanceBinaryWriteTranslation)((IBinaryItem)ExternalEmittanceItem).BinaryWriteTranslator).Write(
+                    item: ExternalEmittanceItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Ownership is {} OwnershipItem)
+            {
+                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
+                    item: OwnershipItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EncounterLocation,
+                header: translationParams.ConvertToCustom(RecordTypes.XEZN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Layer,
+                header: translationParams.ConvertToCustom(RecordTypes.XLYR));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.HeadTrackingWeight,
+                header: translationParams.ConvertToCustom(RecordTypes.XHTW));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LocationRefTypes,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XLRT),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.RagdollBipedRotation,
+                header: translationParams.ConvertToCustom(RecordTypes.XRGB));
+            PercentBinaryTranslation.Write(
+                writer: writer,
+                item: item.Health,
+                integerType: FloatIntegerType.UInt,
+                header: translationParams.ConvertToCustom(RecordTypes.XHLT));
+            if (item.EnableParent is {} EnableParentItem)
+            {
+                ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
+                    item: EnableParentItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsActivationPoint,
+                header: translationParams.ConvertToCustom(RecordTypes.XATP));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Scale,
+                header: translationParams.ConvertToCustom(RecordTypes.XSCL));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Position);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Rotation);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Comments,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             IPlacedNpcGetter item,
@@ -1194,10 +3986,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1247,6 +4041,234 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACHR;
+        public static ParseResult FillBinaryRecordTypes(
+            IPlacedNpcInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)PlacedNpc_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)PlacedNpc_FieldIndex.Components;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedNpc_FieldIndex.XALG;
+                }
+                case RecordTypeInts.NAME:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.Base;
+                }
+                case RecordTypeInts.XLCM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LevelModifier = EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)PlacedNpc_FieldIndex.LevelModifier;
+                }
+                case RecordTypeInts.XEMI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.Emittance;
+                }
+                case RecordTypeInts.XRDS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedNpc_FieldIndex.Radius;
+                }
+                case RecordTypeInts.XRGD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollData = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RagdollData>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: RagdollData.TryCreateFromBinary)
+                        .CastExtendedList<RagdollData>();
+                    return (int)PlacedNpc_FieldIndex.RagdollData;
+                }
+                case RecordTypeInts.XRFG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.ReferenceGroup;
+                }
+                case RecordTypeInts.XPCS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.SourcePackIn;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.PersistentLocation;
+                }
+                case RecordTypeInts.XIS2:
+                {
+                    item.IsIgnoredBySandbox = true;
+                    return (int)PlacedNpc_FieldIndex.IsIgnoredBySandbox;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)PlacedNpc_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XPLK:
+                {
+                    item.PowerLinks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PowerLink>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: PowerLink_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: PowerLink.TryCreateFromBinary));
+                    return (int)PlacedNpc_FieldIndex.PowerLinks;
+                }
+                case RecordTypeInts.XLKR:
+                {
+                    item.LinkedReferences.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: LinkedReferences_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: LinkedReferences.TryCreateFromBinary));
+                    return (int)PlacedNpc_FieldIndex.LinkedReferences;
+                }
+                case RecordTypeInts.XLKT:
+                {
+                    item.IsLinkedRefTransient = true;
+                    return (int)PlacedNpc_FieldIndex.IsLinkedRefTransient;
+                }
+                case RecordTypeInts.XEED:
+                {
+                    item.ExternalEmittance = Mutagen.Bethesda.Starfield.ExternalEmittance.CreateFromBinary(frame: frame);
+                    return (int)PlacedNpc_FieldIndex.ExternalEmittance;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    item.Ownership = Mutagen.Bethesda.Starfield.Ownership.CreateFromBinary(frame: frame);
+                    return (int)PlacedNpc_FieldIndex.Ownership;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EncounterLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.EncounterLocation;
+                }
+                case RecordTypeInts.XLYR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.Layer;
+                }
+                case RecordTypeInts.XHTW:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedNpc_FieldIndex.HeadTrackingWeight;
+                }
+                case RecordTypeInts.XLRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationRefTypes = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    return (int)PlacedNpc_FieldIndex.LocationRefTypes;
+                }
+                case RecordTypeInts.XRGB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedNpc_FieldIndex.RagdollBipedRotation;
+                }
+                case RecordTypeInts.XHLT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Health = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)PlacedNpc_FieldIndex.Health;
+                }
+                case RecordTypeInts.XESP:
+                {
+                    item.EnableParent = Mutagen.Bethesda.Starfield.EnableParent.CreateFromBinary(frame: frame);
+                    return (int)PlacedNpc_FieldIndex.EnableParent;
+                }
+                case RecordTypeInts.XATP:
+                {
+                    item.IsActivationPoint = true;
+                    return (int)PlacedNpc_FieldIndex.IsActivationPoint;
+                }
+                case RecordTypeInts.XSCL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedNpc_FieldIndex.Scale;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)PlacedNpc_FieldIndex.Rotation;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Comments = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)PlacedNpc_FieldIndex.Comments;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1279,6 +4301,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedNpcCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PlacedNpcCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1292,7 +4316,115 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IPlacedNpc);
 
+        public PlacedNpc.MajorFlag MajorFlags => (PlacedNpc.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Base
+        private int? _BaseLocation;
+        public IFormLinkGetter<INpcGetter> Base => _BaseLocation.HasValue ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLink<INpcGetter>.Null;
+        #endregion
+        #region LevelModifier
+        private int? _LevelModifierLocation;
+        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
+        #endregion
+        #region Emittance
+        private int? _EmittanceLocation;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        #endregion
+        #region Radius
+        private int? _RadiusLocation;
+        public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
+        #region ReferenceGroup
+        private int? _ReferenceGroupLocation;
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => _ReferenceGroupLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
+        #endregion
+        #region SourcePackIn
+        private int? _SourcePackInLocation;
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => _SourcePackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourcePackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        #endregion
+        #region PersistentLocation
+        private int? _PersistentLocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region IsIgnoredBySandbox
+        private int? _IsIgnoredBySandboxLocation;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        public IReadOnlyList<IPowerLinkGetter> PowerLinks { get; private set; } = Array.Empty<IPowerLinkGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        #region IsLinkedRefTransient
+        private int? _IsLinkedRefTransientLocation;
+        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default;
+        #endregion
+        #region ExternalEmittance
+        private RangeInt32? _ExternalEmittanceLocation;
+        public IExternalEmittanceGetter? ExternalEmittance => _ExternalEmittanceLocation.HasValue ? ExternalEmittanceBinaryOverlay.ExternalEmittanceFactory(_recordData.Slice(_ExternalEmittanceLocation!.Value.Min), _package) : default;
+        #endregion
+        public IOwnershipGetter? Ownership { get; private set; }
+        #region EncounterLocation
+        private int? _EncounterLocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => _EncounterLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region Layer
+        private int? _LayerLocation;
+        public IFormLinkNullableGetter<ILayerGetter> Layer => _LayerLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        #endregion
+        #region HeadTrackingWeight
+        private int? _HeadTrackingWeightLocation;
+        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
+        #region RagdollBipedRotation
+        private int? _RagdollBipedRotationLocation;
+        public P3Float? RagdollBipedRotation => _RagdollBipedRotationLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollBipedRotationLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region Health
+        private int? _HealthLocation;
+        public Percent? Health => _HealthLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HealthLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent?);
+        #endregion
+        #region EnableParent
+        private RangeInt32? _EnableParentLocation;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
+        #endregion
+        #region IsActivationPoint
+        private int? _IsActivationPointLocation;
+        public Boolean IsActivationPoint => _IsActivationPointLocation.HasValue ? true : default;
+        #endregion
+        #region Scale
+        private int? _ScaleLocation;
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region Position
+        private int _PositionLocation => _DATALocation!.Value.Min;
+        private bool _Position_IsSet => _DATALocation.HasValue;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
+        #endregion
+        #region Rotation
+        private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Rotation_IsSet => _DATALocation.HasValue;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
+        #endregion
+        #region Comments
+        private int? _CommentsLocation;
+        public String? Comments => _CommentsLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CommentsLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1350,6 +4482,225 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)PlacedNpc_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)PlacedNpc_FieldIndex.Components;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.XALG;
+                }
+                case RecordTypeInts.NAME:
+                {
+                    _BaseLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Base;
+                }
+                case RecordTypeInts.XLCM:
+                {
+                    _LevelModifierLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.LevelModifier;
+                }
+                case RecordTypeInts.XEMI:
+                {
+                    _EmittanceLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Emittance;
+                }
+                case RecordTypeInts.XRDS:
+                {
+                    _RadiusLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Radius;
+                }
+                case RecordTypeInts.XRGD:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 28,
+                        getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)PlacedNpc_FieldIndex.RagdollData;
+                }
+                case RecordTypeInts.XRFG:
+                {
+                    _ReferenceGroupLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.ReferenceGroup;
+                }
+                case RecordTypeInts.XPCS:
+                {
+                    _SourcePackInLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.SourcePackIn;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    _PersistentLocationLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.PersistentLocation;
+                }
+                case RecordTypeInts.XIS2:
+                {
+                    _IsIgnoredBySandboxLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.IsIgnoredBySandbox;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XPLK:
+                {
+                    this.PowerLinks = BinaryOverlayList.FactoryByArray<IPowerLinkGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => PowerLinkBinaryOverlay.PowerLinkFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: PowerLink_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)PlacedNpc_FieldIndex.PowerLinks;
+                }
+                case RecordTypeInts.XLKR:
+                {
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: LinkedReferences_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)PlacedNpc_FieldIndex.LinkedReferences;
+                }
+                case RecordTypeInts.XLKT:
+                {
+                    _IsLinkedRefTransientLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.IsLinkedRefTransient;
+                }
+                case RecordTypeInts.XEED:
+                {
+                    _ExternalEmittanceLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedNpc_FieldIndex.ExternalEmittance;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedNpc_FieldIndex.Ownership;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    _EncounterLocationLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.EncounterLocation;
+                }
+                case RecordTypeInts.XLYR:
+                {
+                    _LayerLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Layer;
+                }
+                case RecordTypeInts.XHTW:
+                {
+                    _HeadTrackingWeightLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.HeadTrackingWeight;
+                }
+                case RecordTypeInts.XLRT:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)PlacedNpc_FieldIndex.LocationRefTypes;
+                }
+                case RecordTypeInts.XRGB:
+                {
+                    _RagdollBipedRotationLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.RagdollBipedRotation;
+                }
+                case RecordTypeInts.XHLT:
+                {
+                    _HealthLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Health;
+                }
+                case RecordTypeInts.XESP:
+                {
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedNpc_FieldIndex.EnableParent;
+                }
+                case RecordTypeInts.XATP:
+                {
+                    _IsActivationPointLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.IsActivationPoint;
+                }
+                case RecordTypeInts.XSCL:
+                {
+                    _ScaleLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Scale;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)PlacedNpc_FieldIndex.Rotation;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _CommentsLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Comments;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

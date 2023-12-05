@@ -260,6 +260,8 @@ partial class CellBinaryWriteTranslation
         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITraversalReferenceGetter>.Instance.Write(
             writer: writer,
             items: item.Traversals,
+            recordType: RecordTypes.XTV2,
+            overflowRecord: RecordTypes.XXXX,
             transl: (MutagenWriter subWriter, ITraversalReferenceGetter subItem, TypedWriteParams conv) =>
             {
                 var Item = subItem;

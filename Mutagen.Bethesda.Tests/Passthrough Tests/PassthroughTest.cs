@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Streams.Binary;
 using System.Reactive.Subjects;
+using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -50,7 +51,7 @@ public abstract class PassthroughTest
         StringsFolderOverride = Path.Combine(SourceDataFolder, "Strings"),
         BsaFolderOverride = Path.Combine(SourceDataFolder),
     };
-    protected abstract Processor? ProcessorFactory();
+    protected abstract Processor ProcessorFactory();
     
     public static DirectoryPath GetTestFolderPath(string nickname) => Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{nickname}");
 
@@ -94,12 +95,9 @@ public abstract class PassthroughTest
     private async Task ExecuteProcessing(ModPath prev, DirectoryPath tmp, Subject<string> o)
     {
         var processedPath = ProcessedPath(tmp);
-        BinaryFileProcessor.Config instructions;
         if (!Settings.CacheReuse.ReuseProcessing
             || !File.Exists(processedPath))
         {
-            instructions = new BinaryFileProcessor.Config();
-
             var processor = ProcessorFactory();
             if (processor != null)
             {
@@ -197,13 +195,31 @@ public abstract class PassthroughTest
             {
                 try
                 {
-                    await using var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write);
-                    ModTrimmer.Trim(
-                        streamCreator: () => new MutagenBinaryReadStream(FilePath, GameRelease),
-                        outputStream: outStream,
-                        interest: new RecordInterest(
-                            interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
-                            uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
+                    var processor = ProcessorFactory();
+                    Dictionary<RecordType, HashSet<FormKey>> trimRecords = processor.TrimmedRecords
+                        .GroupBy(x => x.Key)
+                        .ToDictionary(x => x.Key, x => x.Select(x => x.Value).ToHashSet());
+                    var trimmedGroups = trimmedPath + "Groups";
+                    using (var outStream = new FileStream(trimmedGroups, FileMode.Create, FileAccess.Write))
+                    {
+                        ModTrimmer.TrimGroups(
+                            streamCreator: () => new MutagenBinaryReadStream(FilePath, GameRelease),
+                            outputStream: outStream,
+                            interest: new RecordInterest(
+                                interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
+                                uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
+                    }
+
+                    using (var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write))
+                    {
+                        var modPath = new ModPath(ModKey, trimmedGroups);
+                        TrimRecords(
+                            modPath: modPath,
+                            streamCreator: () => new MutagenBinaryReadStream(modPath, GameRelease),
+                            outStream,
+                            trimRecords);
+                    }
+                    
                 }
                 catch (Exception)
                 {
@@ -222,6 +238,42 @@ public abstract class PassthroughTest
         }
 
         return trimmedPath;
+    }
+
+    public void TrimRecords(
+        ModPath modPath,
+        Func<IMutagenReadStream> streamCreator,
+        Stream outputStream,
+        Dictionary<RecordType, HashSet<FormKey>> trimRecords)
+    {
+        using var inputStream = streamCreator();
+        if (inputStream.Complete) return;
+
+        var locs = RecordLocator.GetLocations(inputStream, new RecordInterest(trimRecords.Keys));
+
+        inputStream.Position = 0;
+        var processor = ProcessorFactory();
+        processor.Init(modPath, modPath);
+
+        foreach (var recFormKey in trimRecords.Values.SelectMany(x => x))
+        {
+            if (!locs.TryGetRecord(recFormKey, out var r)) continue;
+
+            inputStream.Position = r.Location.Min;
+            var majorFrame = inputStream.ReadMajorRecord();
+            processor.Remove(majorFrame, r.Location.Min);
+        }
+        
+        processor.ExecuteLengthTrackerChanges(inputStream);
+        
+        var config = processor.Instructions.GetConfig();
+
+        using (var binaryFileProcessor = new BinaryFileProcessor(
+                   streamCreator().BaseStream,
+                   config))
+        {
+            binaryFileProcessor.CopyTo(outputStream);
+        }
     }
 
     protected abstract Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams);

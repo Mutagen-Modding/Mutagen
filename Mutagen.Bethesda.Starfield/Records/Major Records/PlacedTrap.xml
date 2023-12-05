@@ -7,12 +7,13 @@
       <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
       </FormLink>
-      <RefDirect name="RagdollData" refName="RagdollData"/>
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <FormLink name="ReferenceGroup" refName="ReferenceGroup" recordType="XRFG"/>
       <FormLink name="SourcePackIn" refName="PackIn" recordType="XPCS"/>
       <Bool name="IgnoredBySandbox" boolAsMarker="XIS2"/>
       <Int32 name="OwnerFactionRank" recordType="XRNK"/>
       <RefList name="LinkedReferences" refName="LinkedReferences"/>
+      <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
       <RefDirect name="Ownership" refName="Ownership"/>
       <FormLink name="EncounterLocation" refName="Location" recordType="XEZN"/>
       <FormLink name="Layer" refName="Layer" recordType="XLYR"/>

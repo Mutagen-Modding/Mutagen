@@ -1,4 +1,4 @@
-namespace Mutagen.Bethesda.Starfield;
+﻿namespace Mutagen.Bethesda.Starfield;
 
 partial class LockData
 {

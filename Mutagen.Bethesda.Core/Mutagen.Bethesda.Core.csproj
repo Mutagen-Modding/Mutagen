@@ -212,6 +212,7 @@
         <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentStraightRecord.cs"/>
         <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentSubRule.cs"/>
         <Compile Include="Plugins\Binary\Processing\Alignment\ModRecordAligner.cs"/>
+        <Compile Include="Plugins\Binary\Processing\Alignment\SandwichedMarkersRule.cs" />
         <Compile Include="Plugins\Binary\Processing\ModGroupMerger.cs"/>
         <Compile Include="Plugins\Binary\Processing\ModTrimmer.cs"/>
         <Compile Include="Plugins\Binary\Streams\Decompression.cs"/>

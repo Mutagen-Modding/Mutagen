@@ -22,17 +22,17 @@
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Enum name="Flags" enumName="Cell.Flag" byteLength="2" nullable="False" recordType="DATA" />
+      <Enum name="Flags" enumName="Cell.Flag" byteLength="4" nullable="False" recordType="DATA" />
       <RefDirect name="Grid" refName="CellGrid" />
       <RefDirect name="Lighting" refName="CellLighting" />
       <ByteArray name="MHDT" recordType="MHDT" unknown="true" />
       <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
       <Float name="WaterHeight" recordType="XCLW" />
       <Float name="XILS" recordType="XILS" unknown="true" />
-      <Int32 name="XCLA" recordType="XCLA" unknown="true" />
-      <String name="XCLD" recordType="XCLD" unknown="true" />
+      <RefList name="XCLAs" refName="CellXCLAItem" />
       <ByteArray name="XWCN" recordType="XWCN" />
       <FormLink name="CellSkyRegion" refName="Region" recordType="XCCM" />
+      <RefDirect name="Ownership" refName="Ownership" />
       <FormLink name="Location" refName="Location" recordType="XLCN" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
       <String name="WaterType" recordType="XCWM" />
@@ -115,6 +115,12 @@
       <FormLink name="LinkedReference" refName="PlacedObject" />
       <Int32 name="ParentNode" />
       <Int32 name="LinkedNode" />
+    </Fields>
+  </Object>
+  <Object name="CellXCLAItem" objType="Subrecord">
+    <Fields>
+      <Int32 name="XCLA" recordType="XCLA" unknown="true" />
+      <String name="XCLD" recordType="XCLD" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

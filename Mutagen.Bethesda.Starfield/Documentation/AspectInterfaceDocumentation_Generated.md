@@ -22,6 +22,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlacedFlame
 - PlacedHazard
 - PlacedMissile
+- PlacedNpc
+- PlacedObject
 - PlacedTrap
 - Quest
 - Scene
@@ -111,6 +113,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ObjectTemplate
 - PackageSceneAction
 - Perk
+- PlacedObjectMapMarker
 - Planet
 - PlayerDialogueSceneAction
 - ProgressionEvaluatorArgument
@@ -175,9 +178,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlacedFlame
 - PlacedHazard
 - PlacedMissile
+- PlacedNpc
+- PlacedObject
 - PlacedTrap
 - RagdollData
 - StaticPlacement
+- TeleportDestination
 - Transform
 ### IScripted
 - Activator
@@ -196,6 +202,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlacedFlame
 - PlacedHazard
 - PlacedMissile
+- PlacedNpc
+- PlacedObject
 - PlacedTrap
 - Weapon
 ### IWeightValue
@@ -382,6 +390,16 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHaveVirtualMachineAdapter
 - IPositionRotation
 - IScripted
+### PlacedNpc
+- IHaveVirtualMachineAdapter
+- IPositionRotation
+- IScripted
+### PlacedObject
+- IHaveVirtualMachineAdapter
+- IPositionRotation
+- IScripted
+### PlacedObjectMapMarker
+- INamed
 ### PlacedTrap
 - IHaveVirtualMachineAdapter
 - IPositionRotation
@@ -469,6 +487,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 ### StaticPlacement
+- IPositionRotation
+### TeleportDestination
 - IPositionRotation
 ### TerminalMenu
 - IHaveVirtualMachineAdapter

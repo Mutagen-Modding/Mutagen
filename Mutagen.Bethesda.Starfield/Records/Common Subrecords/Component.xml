@@ -154,4 +154,72 @@
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
     </Fields>
   </Object>
+  <Object name="VolumesComponent" objType="Subrecord" baseClass="AComponent" >
+    <Fields>
+      <RefList name="Items" refName="VolumesComponentItem" counterLength="4" recordType="VLMS" />
+    </Fields>
+  </Object>
+  <Object name="VolumesComponentItem" objType="Subrecord" >
+    <Fields>
+      <CustomLogic name="TypeParse" byteLength="4" />
+      <RefDirect name="Matrix1" refName="VolumesMatrix" />
+      <RefDirect name="Matrix2" refName="VolumesMatrix" />
+      <RefDirect name="Matrix3" refName="VolumesMatrix" />
+      <RefDirect name="Matrix4" refName="VolumesMatrix" />
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <RefDirect name="Ender" refName="AVolumesUnknownEnder" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="VolumesMatrix" objType="Subrecord" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+    </Fields>
+  </Object>
+  <Object name="AVolumesUnknownEnder" abstract="true" objType="Subrecord" >
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="VolumesUnknownEnderSingle" objType="Subrecord" baseClass="AVolumesUnknownEnder" >
+    <Fields>
+      <Float name="Unknown1" />
+    </Fields>
+  </Object>
+  <Object name="VolumesUnknownEnderDouble" objType="Subrecord" baseClass="AVolumesUnknownEnder" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="VolumesUnknownEnderTrio" objType="Subrecord" baseClass="AVolumesUnknownEnder" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+    </Fields>
+  </Object>
+  <Object name="PlanetContentManagerContentProperties" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <UInt32 name="ZNAM" recordType="ZNAM" unknown="true" />
+      <UInt8 name="YNAM" recordType="YNAM" unknown="true" />
+      <UInt32 name="XNAM" recordType="XNAM" unknown="true" />
+      <UInt32 name="WNAM" recordType="WNAM" unknown="true" />
+      <UInt8 name="VNAM" recordType="VNAM" unknown="true" />
+      <UInt32 name="UNAM" recordType="UNAM" unknown="true" />
+      <Float name="NAM1" recordType="NAM1" unknown="true" />
+      <FormLink name="Global" recordType="NAM2" refName="Global" />
+      <UInt32 name="NAM3" recordType="NAM3" unknown="true" />
+      <ByteArray name="NAM4" recordType="NAM4" unknown="true" />
+      <UInt32 name="NAM5" recordType="NAM5" unknown="true" />
+      <UInt32 name="NAM6" recordType="NAM6" unknown="true" />
+      <UInt32 name="NAM7" recordType="NAM7" unknown="true" />
+      <UInt8 name="NAM8" recordType="NAM8" unknown="true" />
+      <UInt32 name="NAM9" recordType="NAM9" unknown="true" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
+  </Object>
 </Loqui>

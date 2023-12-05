@@ -33,6 +33,8 @@ public partial class AComponent
         BGSSoundTag_Component,
         BGSDisplayCase,
         BGSObjectPaletteDefaults_Component,
+        Volumes_Component,
+        BGSPlanetContentManagerContentProperties_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -97,6 +99,10 @@ public partial class AComponent
                 return DisplayCaseComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSObjectPaletteDefaults_Component:
                 return ObjectPaletteDefaultsComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.Volumes_Component:
+                return VolumesComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSPlanetContentManagerContentProperties_Component:
+                return PlanetContentManagerContentProperties.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -161,6 +167,8 @@ partial class AComponentBinaryWriteTranslation
             ISoundTagComponentGetter _ => AComponent.ComponentType.BGSSoundTag_Component,
             IDisplayCaseComponentGetter _ => AComponent.ComponentType.BGSDisplayCase,
             IObjectPaletteDefaultsComponentGetter _ => AComponent.ComponentType.BGSObjectPaletteDefaults_Component,
+            IVolumesComponentGetter _ => AComponent.ComponentType.Volumes_Component,
+            IPlanetContentManagerContentPropertiesGetter _ => AComponent.ComponentType.BGSPlanetContentManagerContentProperties_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -223,6 +231,10 @@ partial class AComponentBinaryOverlay
                 return DisplayCaseComponentBinaryOverlay.DisplayCaseComponentFactory(stream, package);
             case AComponent.ComponentType.BGSObjectPaletteDefaults_Component:
                 return ObjectPaletteDefaultsComponentBinaryOverlay.ObjectPaletteDefaultsComponentFactory(stream, package);
+            case AComponent.ComponentType.Volumes_Component:
+                return VolumesComponentBinaryOverlay.VolumesComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSPlanetContentManagerContentProperties_Component:
+                return PlanetContentManagerContentPropertiesBinaryOverlay.PlanetContentManagerContentPropertiesFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

@@ -24,6 +24,12 @@ partial class TraversalReferenceBinaryCreateTranslation
         // Dont require Starfield modkey
         Traversal = FormKey.Factory("000000:Starfield.esm").ToNullableLink<ITraversalGetter>()
     };
+
+    public static readonly TraversalReference.TranslationMask _equalsMask = new(false)
+    {
+        From = true,
+        Unknown1 = true
+    };
     
     public static partial void FillBinaryTraversalCustom(
         MutagenFrame frame,
@@ -51,7 +57,7 @@ partial class TraversalReferenceBinaryCreateTranslation
             try
             {
                 if (!TraversalReference.TryCreateFromBinary(reader, out var subItem)
-                    || Zeroed.Equals(subItem))
+                    || Zeroed.Equals(subItem, _equalsMask))
                 {
                     reader.SkipRemainingBytes();
                     break;
@@ -76,14 +82,15 @@ partial class TraversalReferenceBinaryWriteTranslation
         MutagenWriter writer,
         ITraversalReferenceGetter item)
     {
-        if (item.Traversal is { } trav)
+        var trav = item.Traversal;
+        if (trav.IsNull)
         {
-            writer.Write(0);
-            FormKeyBinaryTranslation.Instance.Write(writer, trav.FormKey);
+            writer.Write(TraversalReferenceBinaryCreateTranslation.HasNoTraversal);
         }
         else
         {
-            writer.Write(TraversalReferenceBinaryCreateTranslation.HasNoTraversal);
+            writer.Write(0);
+            FormKeyBinaryTranslation.Instance.Write(writer, trav.FormKey);
         }
         writer.Write(item.Unknown);
     }

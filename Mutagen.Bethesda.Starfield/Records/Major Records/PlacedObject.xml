@@ -1,12 +1,265 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedObject" recordType="REFR" baseClass="StarfieldMajorRecord" objType="Record">
+  <Object name="PlacedObject" recordType="REFR" baseClass="StarfieldMajorRecord" objType="Record" >
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <FormLink name="Base" recordType="NAME" nullable="false">
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
+      <RefDirect name="VolumeData" refName="PlacedObjectVolumeData" />
+      <RefDirect name="ShipArrival" refName="PlacedObjectShipArrival" />
+      <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
+      <Enum name="Action" enumName="PlacedObject.ActionFlag" recordType="XACT" byteLength="4" />
+      <RefDirect name="Primitive" refName="PlacedPrimitive" />
+      <RefDirect name="VolumeReflectionProbeOffsetIntensity" refName="VolumeReflectionProbeOffsetIntensity" />
+      <RefDirect name="DebugText" refName="PlacedObjectDebugText" />
+      <FormLink name="Emittance" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <Float name="Radius" recordType="XRDS" />
+      <RefDirect name="Lighting" refName="PlacedObjectLighting" />
+      <RefDirect name="LightBarndoorData" refName="PlacedObjectLightBarndoorData" />
+      <RefDirect name="LightArea" refName="PlacedObjectLightArea" />
+      <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
+      <ByteArray name="XCZA" recordType="XCZA" unknown="true" />
+      <RefDirect name="Patrol" refName="Patrol" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
+      <RefDirect name="TeleportDestination" refName="TeleportDestination" />
+      <FormLink name="TeleportName" refName="Message" recordType="XTNM" />
+      <FormLink name="ReferenceGroup" recordType="XRFG" refName="ReferenceGroup" />
+      <List name="LocationRefTypes" recordType="XLRT">
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <List name="LayeredMaterialSwaps" recordType="XLMS" >
+        <FormLink refName="LayeredMaterialSwap" />
+      </List>
+      <FormLink name="XPCK" recordType="XPCK" refName="ReferenceGroup" unknown="true" />
+      <FormLink name="SourcePackIn" refName="PackIn" recordType="XPCS"/>
+      <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
+      <RefDirect name="ProjectedDecal" refName="PlacedObjectProjectedDecal" />
+      <List name="ProjectedDecalReferences" recordType="XPDO" >
+        <FormLink >
+          <Interface>IPlaced</Interface>
+        </FormLink>
+      </List>
+      <P3Float name="ConstrainedDecal" recordType="XCDD" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <RefDirect name="LightGobo" refName="LightGobo" />
+      <RefDirect name="Collision" refName="PlacedObjectCollision" />
+      <RefList name="PowerLinks" refName="PowerLink" />
+      <Int32 name="Count" recordType="XCNT" />
+      <ByteArray name="XFLG" recordType="XFLG" unknown="true" />
+      <RefDirect name="LightFlicker" refName="PlacedObjectLightFlicker" />
+      <RefDirect name="MapMarker" refName="PlacedObjectMapMarker" markerType="XMRK" />
+      <Bool name="LightLayerData" recordType="XLLD" byteLength="4" />
+      <Bool name="LightStaticShadowMap" recordType="XLSM" byteLength="4" />
+      <Float name="LightVolumetricData" recordType="XLVD" />
+      <RefDirect name="Ownership" refName="Ownership"/>
+      <RefList name="LightColors" refName="PlacedObjectLightColor" />
+      <RefDirect name="GroupedPackIn" refName="GroupedPackIn" />
+      <UInt32 name="BlueprintPartOrigin" recordType="XBPO" />
+      <FormLink name="Layer" refName="Layer" recordType="XLYR" />
+      <RefDirect name="LightRoundedness" refName="PlacedObjectLightRoundedness" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
+      <RefList name="SnapLinks" refName="SnapLink" recordType="XSL1" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="Location" />
+      <Float name="GeometryDirtinessScale" recordType="XGDS" />
+      <RefDirect name="Lock" refName="LockData" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="XPPS" />
+      <RefDirect name="ExternalEmittance" refName="ExternalEmittance" />
+      <Float name="HeadTrackingWeight" recordType="XHTW" />
+      <UInt16 name="BOLV" recordType="BOLV" unknown="true" />
+      <RefDirect name="Spline" refName="PlacedObjectSpline" />
+      <ByteArray name="XNSE" recordType="XNSE" unknown="true" />
+      <FormLink name="AttachRef" recordType="XATR">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
+      <Percent name="HealthPercent" recordType="XHLT" />
+      <FormLink name="TimeOfDay" refName="TimeOfDayData" recordType="TODD" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" />
+      <RefDirect name="NavigationDoorLink" refName="NavigationDoorLink" />
+      <Bool name="IsActivationPoint" boolAsMarker="XATP" />
+      <Float name="Scale" recordType="XSCL" />
+      <Bool name="OpenByDefault" boolAsMarker="ONAM" />
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+      <String name="Comments" recordType="MNAM" />
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
+  </Object>
+  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
+    <Fields>
+      <P3Float name="Bounds" binary="Custom" byteLength="12" />
+      <Color name="Color" binaryType="NoAlphaFloat" />
+      <Float name="Unknown" />
+      <Enum name="Type" enumName="PlacedPrimitive.TypeEnum" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectVolumeData" objType="Subrecord" recordType="XVL2" >
+    <Fields>
+      <ByteArray name="Data" byteLength="85" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectLightArea" objType="Subrecord" recordType="XALD" >
+    <Fields>
+      <ByteArray name="Data" byteLength="16" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectShipArrival" objType="Subrecord" recordType="XSAD" >
+    <Fields>
+      <ByteArray name="Data" byteLength="17" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="ExternalEmittance" objType="Subrecord" recordType="XEED" >
+    <Fields>
+      <ByteArray name="Data" byteLength="8" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="VolumeReflectionProbeOffsetIntensity" objType="Subrecord" recordType="XVOI" >
+    <Fields>
+      <ByteArray name="Data" byteLength="16" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectLightRoundedness" objType="Subrecord" recordType="XLRD" >
+    <Fields>
+      <ByteArray name="Data" byteLength="20" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectLightBarndoorData" objType="Subrecord" recordType="XLBD" >
+    <Fields>
+      <ByteArray name="Data" byteLength="24" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectDebugText" objType="Subrecord" >
+    <Fields>
+      <String name="String" recordType="XDTS" />
+      <RefDirect name="Format" refName="PlacedObjectDebugTextFormat" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectDebugTextFormat" objType="Subrecord" recordType="XDTF">
+    <Fields>
+      <UInt32 name="Size" />
+      <Color name="Color" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectLighting" objType="Subrecord" recordType="XLIG">
+    <Fields>
+      <Float name="Fov90PlusMinus" />
+      <Float name="Fade1PlusMinus" />
+      <Float name="EndDistanceCap" />
+      <Float name="ShadowDepthBias" />
+      <Float name="NearClip" />
+      <Float name="VolumetricIntensity" />
+      <UInt32 name="Unknown1" />
+      <UInt32 name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL">
+    <Fields>
+      <FormLink name="Door" refName="PlacedObject" />
+      <P3Float name="Position" />
+      <P3Float name="Rotation" />
+      <Enum name="Flags" enumName="TeleportDestination.Flag" byteLength="4" />
+      <FormLink name="TransitionInterior" refName="Cell" />
+    </Fields>
+  </Object>
+  <Object name="SnapLink" objType="Subrecord" >
+    <Fields>
+      <FormLink name="LinkedReference" refName="PlacedObject" />
+      <RefList name="Links" refName="SnapLinkItem" />
+    </Fields>
+  </Object>
+  <Object name="SnapLinkItem" objType="Subrecord" >
+    <Fields>
+      <UInt32 name="ParentNode" />
+      <UInt32 name="LinkedNode" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectProjectedDecal" objType="Subrecord" recordType="XPDD">
+    <Fields>
+      <Float name="WidthScale" />
+      <Float name="HeightScale" />
+      <Float name="UnknownFloat" />
+      <UInt32 name="UnknownInt" />
+    </Fields>
+  </Object>
+  <Object name="LightGobo" objType="Subrecord" recordType="XLGD" >
+    <Fields>
+      <ByteArray name="Data" byteLength="88" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectCollision" objType="Subrecord" recordType="XCOL" >
+    <Fields>
+      <UInt32 name="CollisionLayer" />
+      <FormLink name="MaterialType" refName="MaterialType" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectLightFlicker" objType="Subrecord" recordType="XLFD" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <UInt32 name="Unknown3" />
+      <UInt32 name="Unknown4" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectMapMarker" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="PlacedObjectMapMarker.Flag" recordType="FNAM" byteLength="4" nullable="False" />
+      <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
+      <Data recordType="TNAM">
+        <Fields>
+          <Int8 name="Type" />
+          <UInt8 name="Unknown" />
+        </Fields>
+      </Data>
+      <UInt16 name="VNAM" recordType="VNAM" unknown="true" />
+      <String name="UNAM" recordType="UNAM" unknown="true" translated="Normal" />
+      <UInt8 name="VISI" recordType="VISI" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="GroupedPackIn" objType="Subrecord" endMarkerType="XWPK" markerType="XWPK" >
+    <Fields>
+      <FormLink name="GNAM" refName="PackIn" recordType="GNAM" unknown="true" />
+      <FormLink name="HNAM" refName="PlacedObject" recordType="HNAM" unknown="true" />
+      <Bool name="INAM" recordType="INAM" byteLength="2" unknown="true" />
+      <FormLink name="JNAM" refName="PackIn" recordType="JNAM" unknown="true" />
+      <ByteArray name="LNAM" recordType="LNAM" nullable="False" unknown="true" />
+      <Bool name="XGOM" boolAsMarker="XGOM" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectSpline" objType="Subrecord" recordType="XBSD">
+    <Fields>
+      <Float name="Slack" />
+      <Float name="Thickness" />
+      <P3Float name="HalfExtents" />
+      <Bool name="IsWindDetachedEnd" importantByteLength="1" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP">
+    <Fields>
+      <FormLink name="NavMesh" refName="NavigationMesh" />
+      <Int16 name="TeleportMarkerTriangle" />
+      <Int16 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectLightColor" objType="Subrecord" recordType="XLCD">
+    <Fields>
+      <Color name="UnknownColor" />
+      <Int64 name="Unknown" />
+    </Fields>
   </Object>
 </Loqui>

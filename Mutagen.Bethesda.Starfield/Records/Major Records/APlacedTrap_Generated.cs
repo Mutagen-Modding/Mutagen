@@ -90,14 +90,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RagdollData? _RagdollData;
-        public RagdollData? RagdollData
+        private ExtendedList<RagdollData>? _RagdollData;
+        public ExtendedList<RagdollData>? RagdollData
         {
-            get => _RagdollData;
-            set => _RagdollData = value;
+            get => this._RagdollData;
+            set => this._RagdollData = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRagdollDataGetter? IAPlacedTrapGetter.RagdollData => this.RagdollData;
+        IReadOnlyList<IRagdollDataGetter>? IAPlacedTrapGetter.RagdollData => _RagdollData;
+        #endregion
+
         #endregion
         #region ReferenceGroup
         private readonly IFormLinkNullable<IReferenceGroupGetter> _ReferenceGroup = new FormLinkNullable<IReferenceGroupGetter>();
@@ -140,6 +143,9 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<ILinkedReferencesGetter> IAPlacedTrapGetter.LinkedReferences => _LinkedReferences;
         #endregion
 
+        #endregion
+        #region IsLinkedRefTransient
+        public Boolean IsLinkedRefTransient { get; set; } = default;
         #endregion
         #region Ownership
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -248,12 +254,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Emittance = initialValue;
-                this.RagdollData = new MaskItem<TItem, RagdollData.Mask<TItem>?>(initialValue, new RagdollData.Mask<TItem>(initialValue));
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
                 this.ReferenceGroup = initialValue;
                 this.SourcePackIn = initialValue;
                 this.IgnoredBySandbox = initialValue;
                 this.OwnerFactionRank = initialValue;
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.IsLinkedRefTransient = initialValue;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.EncounterLocation = initialValue;
                 this.Layer = initialValue;
@@ -283,6 +290,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem IgnoredBySandbox,
                 TItem OwnerFactionRank,
                 TItem LinkedReferences,
+                TItem IsLinkedRefTransient,
                 TItem Ownership,
                 TItem EncounterLocation,
                 TItem Layer,
@@ -305,12 +313,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Emittance = Emittance;
-                this.RagdollData = new MaskItem<TItem, RagdollData.Mask<TItem>?>(RagdollData, new RagdollData.Mask<TItem>(RagdollData));
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
                 this.ReferenceGroup = ReferenceGroup;
                 this.SourcePackIn = SourcePackIn;
                 this.IgnoredBySandbox = IgnoredBySandbox;
                 this.OwnerFactionRank = OwnerFactionRank;
                 this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.IsLinkedRefTransient = IsLinkedRefTransient;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.EncounterLocation = EncounterLocation;
                 this.Layer = Layer;
@@ -335,12 +344,13 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem Emittance;
-            public MaskItem<TItem, RagdollData.Mask<TItem>?>? RagdollData { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>? RagdollData;
             public TItem ReferenceGroup;
             public TItem SourcePackIn;
             public TItem IgnoredBySandbox;
             public TItem OwnerFactionRank;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
+            public TItem IsLinkedRefTransient;
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
             public TItem EncounterLocation;
             public TItem Layer;
@@ -373,6 +383,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
                 if (!object.Equals(this.OwnerFactionRank, rhs.OwnerFactionRank)) return false;
                 if (!object.Equals(this.LinkedReferences, rhs.LinkedReferences)) return false;
+                if (!object.Equals(this.IsLinkedRefTransient, rhs.IsLinkedRefTransient)) return false;
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
                 if (!object.Equals(this.EncounterLocation, rhs.EncounterLocation)) return false;
                 if (!object.Equals(this.Layer, rhs.Layer)) return false;
@@ -397,6 +408,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.IgnoredBySandbox);
                 hash.Add(this.OwnerFactionRank);
                 hash.Add(this.LinkedReferences);
+                hash.Add(this.IsLinkedRefTransient);
                 hash.Add(this.Ownership);
                 hash.Add(this.EncounterLocation);
                 hash.Add(this.Layer);
@@ -424,10 +436,17 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Emittance)) return false;
-                if (RagdollData != null)
+                if (this.RagdollData != null)
                 {
                     if (!eval(this.RagdollData.Overall)) return false;
-                    if (this.RagdollData.Specific != null && !this.RagdollData.Specific.All(eval)) return false;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (!eval(this.ReferenceGroup)) return false;
                 if (!eval(this.SourcePackIn)) return false;
@@ -445,6 +464,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.IsLinkedRefTransient)) return false;
                 if (Ownership != null)
                 {
                     if (!eval(this.Ownership.Overall)) return false;
@@ -488,10 +508,17 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Emittance)) return true;
-                if (RagdollData != null)
+                if (this.RagdollData != null)
                 {
                     if (eval(this.RagdollData.Overall)) return true;
-                    if (this.RagdollData.Specific != null && this.RagdollData.Specific.Any(eval)) return true;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (eval(this.ReferenceGroup)) return true;
                 if (eval(this.SourcePackIn)) return true;
@@ -509,6 +536,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.IsLinkedRefTransient)) return true;
                 if (Ownership != null)
                 {
                     if (eval(this.Ownership.Overall)) return true;
@@ -555,7 +583,21 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.Emittance = eval(this.Emittance);
-                obj.RagdollData = this.RagdollData == null ? null : new MaskItem<R, RagdollData.Mask<R>?>(eval(this.RagdollData.Overall), this.RagdollData.Specific?.Translate(eval));
+                if (RagdollData != null)
+                {
+                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), Enumerable.Empty<MaskItemIndexed<R, RagdollData.Mask<R>?>>());
+                    if (RagdollData.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RagdollData.Mask<R>?>>();
+                        obj.RagdollData.Specific = l;
+                        foreach (var item in RagdollData.Specific)
+                        {
+                            MaskItemIndexed<R, RagdollData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RagdollData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.ReferenceGroup = eval(this.ReferenceGroup);
                 obj.SourcePackIn = eval(this.SourcePackIn);
                 obj.IgnoredBySandbox = eval(this.IgnoredBySandbox);
@@ -575,6 +617,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.IsLinkedRefTransient = eval(this.IsLinkedRefTransient);
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
                 obj.EncounterLocation = eval(this.EncounterLocation);
                 obj.Layer = eval(this.Layer);
@@ -625,9 +668,24 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Emittance, "Emittance");
                     }
-                    if (printMask?.RagdollData?.Overall ?? true)
+                    if ((printMask?.RagdollData?.Overall ?? true)
+                        && RagdollData is {} RagdollDataItem)
                     {
-                        RagdollData?.Print(sb);
+                        sb.AppendLine("RagdollData =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RagdollDataItem.Overall);
+                            if (RagdollDataItem.Specific != null)
+                            {
+                                foreach (var subItem in RagdollDataItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.ReferenceGroup ?? true)
                     {
@@ -663,6 +721,10 @@ namespace Mutagen.Bethesda.Starfield
                                 }
                             }
                         }
+                    }
+                    if (printMask?.IsLinkedRefTransient ?? true)
+                    {
+                        sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
                     }
                     if (printMask?.Ownership?.Overall ?? true)
                     {
@@ -738,12 +800,13 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? Emittance;
-            public MaskItem<Exception?, RagdollData.ErrorMask?>? RagdollData;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>? RagdollData;
             public Exception? ReferenceGroup;
             public Exception? SourcePackIn;
             public Exception? IgnoredBySandbox;
             public Exception? OwnerFactionRank;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
+            public Exception? IsLinkedRefTransient;
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
             public Exception? EncounterLocation;
             public Exception? Layer;
@@ -779,6 +842,8 @@ namespace Mutagen.Bethesda.Starfield
                         return OwnerFactionRank;
                     case APlacedTrap_FieldIndex.LinkedReferences:
                         return LinkedReferences;
+                    case APlacedTrap_FieldIndex.IsLinkedRefTransient:
+                        return IsLinkedRefTransient;
                     case APlacedTrap_FieldIndex.Ownership:
                         return Ownership;
                     case APlacedTrap_FieldIndex.EncounterLocation:
@@ -818,7 +883,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.Emittance = ex;
                         break;
                     case APlacedTrap_FieldIndex.RagdollData:
-                        this.RagdollData = new MaskItem<Exception?, RagdollData.ErrorMask?>(ex, null);
+                        this.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(ex, null);
                         break;
                     case APlacedTrap_FieldIndex.ReferenceGroup:
                         this.ReferenceGroup = ex;
@@ -834,6 +899,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case APlacedTrap_FieldIndex.LinkedReferences:
                         this.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ex, null);
+                        break;
+                    case APlacedTrap_FieldIndex.IsLinkedRefTransient:
+                        this.IsLinkedRefTransient = ex;
                         break;
                     case APlacedTrap_FieldIndex.Ownership:
                         this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
@@ -886,7 +954,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.Emittance = (Exception?)obj;
                         break;
                     case APlacedTrap_FieldIndex.RagdollData:
-                        this.RagdollData = (MaskItem<Exception?, RagdollData.ErrorMask?>?)obj;
+                        this.RagdollData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>)obj;
                         break;
                     case APlacedTrap_FieldIndex.ReferenceGroup:
                         this.ReferenceGroup = (Exception?)obj;
@@ -902,6 +970,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case APlacedTrap_FieldIndex.LinkedReferences:
                         this.LinkedReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>)obj;
+                        break;
+                    case APlacedTrap_FieldIndex.IsLinkedRefTransient:
+                        this.IsLinkedRefTransient = (Exception?)obj;
                         break;
                     case APlacedTrap_FieldIndex.Ownership:
                         this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
@@ -953,6 +1024,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (IgnoredBySandbox != null) return true;
                 if (OwnerFactionRank != null) return true;
                 if (LinkedReferences != null) return true;
+                if (IsLinkedRefTransient != null) return true;
                 if (Ownership != null) return true;
                 if (EncounterLocation != null) return true;
                 if (Layer != null) return true;
@@ -994,7 +1066,24 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Emittance, "Emittance");
                 }
-                RagdollData?.Print(sb);
+                if (RagdollData is {} RagdollDataItem)
+                {
+                    sb.AppendLine("RagdollData =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RagdollDataItem.Overall);
+                        if (RagdollDataItem.Specific != null)
+                        {
+                            foreach (var subItem in RagdollDataItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(ReferenceGroup, "ReferenceGroup");
                 }
@@ -1024,6 +1113,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                }
+                {
+                    sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
                 }
                 Ownership?.Print(sb);
                 {
@@ -1081,12 +1173,13 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
-                ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData, (l, r) => l.Combine(r));
+                ret.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RagdollData?.Overall, rhs.RagdollData?.Overall), Noggog.ExceptionExt.Combine(this.RagdollData?.Specific, rhs.RagdollData?.Specific));
                 ret.ReferenceGroup = this.ReferenceGroup.Combine(rhs.ReferenceGroup);
                 ret.SourcePackIn = this.SourcePackIn.Combine(rhs.SourcePackIn);
                 ret.IgnoredBySandbox = this.IgnoredBySandbox.Combine(rhs.IgnoredBySandbox);
                 ret.OwnerFactionRank = this.OwnerFactionRank.Combine(rhs.OwnerFactionRank);
                 ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.IsLinkedRefTransient = this.IsLinkedRefTransient.Combine(rhs.IsLinkedRefTransient);
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
                 ret.EncounterLocation = this.EncounterLocation.Combine(rhs.EncounterLocation);
                 ret.Layer = this.Layer.Combine(rhs.Layer);
@@ -1128,6 +1221,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IgnoredBySandbox;
             public bool OwnerFactionRank;
             public LinkedReferences.TranslationMask? LinkedReferences;
+            public bool IsLinkedRefTransient;
             public Ownership.TranslationMask? Ownership;
             public bool EncounterLocation;
             public bool Layer;
@@ -1152,6 +1246,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SourcePackIn = defaultOn;
                 this.IgnoredBySandbox = defaultOn;
                 this.OwnerFactionRank = defaultOn;
+                this.IsLinkedRefTransient = defaultOn;
                 this.EncounterLocation = defaultOn;
                 this.Layer = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
@@ -1170,12 +1265,13 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Emittance, null));
-                ret.Add((RagdollData != null ? RagdollData.OnOverall : DefaultOn, RagdollData?.GetCrystal()));
+                ret.Add((RagdollData == null ? DefaultOn : !RagdollData.GetCrystal().CopyNothing, RagdollData?.GetCrystal()));
                 ret.Add((ReferenceGroup, null));
                 ret.Add((SourcePackIn, null));
                 ret.Add((IgnoredBySandbox, null));
                 ret.Add((OwnerFactionRank, null));
                 ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
+                ret.Add((IsLinkedRefTransient, null));
                 ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((EncounterLocation, null));
                 ret.Add((Layer, null));
@@ -1324,12 +1420,13 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
-        new RagdollData? RagdollData { get; set; }
+        new ExtendedList<RagdollData>? RagdollData { get; set; }
         new IFormLinkNullable<IReferenceGroupGetter> ReferenceGroup { get; set; }
         new IFormLinkNullable<IPackInGetter> SourcePackIn { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
         new Int32? OwnerFactionRank { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
+        new Boolean IsLinkedRefTransient { get; set; }
         new Ownership? Ownership { get; set; }
         new IFormLinkNullable<ILocationGetter> EncounterLocation { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
@@ -1378,12 +1475,13 @@ namespace Mutagen.Bethesda.Starfield
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
-        IRagdollDataGetter? RagdollData { get; }
+        IReadOnlyList<IRagdollDataGetter>? RagdollData { get; }
         IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup { get; }
         IFormLinkNullableGetter<IPackInGetter> SourcePackIn { get; }
         Boolean IgnoredBySandbox { get; }
         Int32? OwnerFactionRank { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
+        Boolean IsLinkedRefTransient { get; }
         IOwnershipGetter? Ownership { get; }
         IFormLinkNullableGetter<ILocationGetter> EncounterLocation { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
@@ -1583,17 +1681,18 @@ namespace Mutagen.Bethesda.Starfield
         IgnoredBySandbox = 12,
         OwnerFactionRank = 13,
         LinkedReferences = 14,
-        Ownership = 15,
-        EncounterLocation = 16,
-        Layer = 17,
-        HeadTrackingWeight = 18,
-        LocationRefTypes = 19,
-        EnableParent = 20,
-        ActivationPoint = 21,
-        Scale = 22,
-        Position = 23,
-        Rotation = 24,
-        Comments = 25,
+        IsLinkedRefTransient = 15,
+        Ownership = 16,
+        EncounterLocation = 17,
+        Layer = 18,
+        HeadTrackingWeight = 19,
+        LocationRefTypes = 20,
+        EnableParent = 21,
+        ActivationPoint = 22,
+        Scale = 23,
+        Position = 24,
+        Rotation = 25,
+        Comments = 26,
     }
     #endregion
 
@@ -1604,9 +1703,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(APlacedTrap.Mask<>);
 
@@ -1645,6 +1744,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XIS2,
                 RecordTypes.XRNK,
                 RecordTypes.XLKR,
+                RecordTypes.XLKT,
                 RecordTypes.XOWN,
                 RecordTypes.XEZN,
                 RecordTypes.XLYR,
@@ -1672,6 +1772,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XIS2,
                 RecordTypes.XRNK,
                 RecordTypes.XLKR,
+                RecordTypes.XLKT,
                 RecordTypes.XOWN,
                 RecordTypes.XEZN,
                 RecordTypes.XLYR,
@@ -1741,6 +1842,7 @@ namespace Mutagen.Bethesda.Starfield
             item.IgnoredBySandbox = default;
             item.OwnerFactionRank = default;
             item.LinkedReferences.Clear();
+            item.IsLinkedRefTransient = default;
             item.Ownership = null;
             item.EncounterLocation.Clear();
             item.Layer.Clear();
@@ -1852,10 +1954,9 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Emittance = item.Emittance.Equals(rhs.Emittance);
-            ret.RagdollData = EqualsMaskHelper.EqualsHelper(
-                item.RagdollData,
+            ret.RagdollData = item.RagdollData.CollectionEqualsHelper(
                 rhs.RagdollData,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.ReferenceGroup = item.ReferenceGroup.Equals(rhs.ReferenceGroup);
             ret.SourcePackIn = item.SourcePackIn.Equals(rhs.SourcePackIn);
@@ -1865,6 +1966,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.LinkedReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.IsLinkedRefTransient = item.IsLinkedRefTransient == rhs.IsLinkedRefTransient;
             ret.Ownership = EqualsMaskHelper.EqualsHelper(
                 item.Ownership,
                 rhs.Ownership,
@@ -1948,7 +2050,17 @@ namespace Mutagen.Bethesda.Starfield
             if ((printMask?.RagdollData?.Overall ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                RagdollDataItem?.Print(sb, "RagdollData");
+                sb.AppendLine("RagdollData =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RagdollDataItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if (printMask?.ReferenceGroup ?? true)
             {
@@ -1980,6 +2092,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.IsLinkedRefTransient ?? true)
+            {
+                sb.AppendItem(item.IsLinkedRefTransient, "IsLinkedRefTransient");
             }
             if ((printMask?.Ownership?.Overall ?? true)
                 && item.Ownership is {} OwnershipItem)
@@ -2105,11 +2221,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.RagdollData) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.RagdollData, rhs.RagdollData, out var lhsRagdollData, out var rhsRagdollData, out var isRagdollDataEqual))
-                {
-                    if (!((RagdollDataCommon)((IRagdollDataGetter)lhsRagdollData).CommonInstance()!).Equals(lhsRagdollData, rhsRagdollData, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.RagdollData))) return false;
-                }
-                else if (!isRagdollDataEqual) return false;
+                if (!lhs.RagdollData.SequenceEqualNullable(rhs.RagdollData, (l, r) => ((RagdollDataCommon)((IRagdollDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.RagdollData)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ReferenceGroup) ?? true))
             {
@@ -2130,6 +2242,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LinkedReferences) ?? true))
             {
                 if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.LinkedReferences)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IsLinkedRefTransient) ?? true))
+            {
+                if (lhs.IsLinkedRefTransient != rhs.IsLinkedRefTransient) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
             {
@@ -2216,10 +2332,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.Emittance);
-            if (item.RagdollData is {} RagdollDataitem)
-            {
-                hash.Add(RagdollDataitem);
-            }
+            hash.Add(item.RagdollData);
             hash.Add(item.ReferenceGroup);
             hash.Add(item.SourcePackIn);
             hash.Add(item.IgnoredBySandbox);
@@ -2228,6 +2341,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(OwnerFactionRankitem);
             }
             hash.Add(item.LinkedReferences);
+            hash.Add(item.IsLinkedRefTransient);
             if (item.Ownership is {} Ownershipitem)
             {
                 hash.Add(Ownershipitem);
@@ -2442,15 +2556,21 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask?.PushIndex((int)APlacedTrap_FieldIndex.RagdollData);
                 try
                 {
-                    if(rhs.RagdollData is {} rhsRagdollData)
+                    if ((rhs.RagdollData != null))
                     {
-                        item.RagdollData = rhsRagdollData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.RagdollData));
+                        item.RagdollData = 
+                            rhs.RagdollData
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<RagdollData>();
                     }
                     else
                     {
-                        item.RagdollData = default;
+                        item.RagdollData = null;
                     }
                 }
                 catch (Exception ex)
@@ -2502,6 +2622,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IsLinkedRefTransient) ?? true))
+            {
+                item.IsLinkedRefTransient = rhs.IsLinkedRefTransient;
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
             {
@@ -2785,13 +2909,18 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Emittance,
                 header: translationParams.ConvertToCustom(RecordTypes.XEMI));
-            if (item.RagdollData is {} RagdollDataItem)
-            {
-                ((RagdollDataBinaryWriteTranslation)((IBinaryItem)RagdollDataItem).BinaryWriteTranslator).Write(
-                    item: RagdollDataItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRagdollDataGetter>.Instance.Write(
+                writer: writer,
+                items: item.RagdollData,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XRGD),
+                transl: (MutagenWriter subWriter, IRagdollDataGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RagdollDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ReferenceGroup,
@@ -2819,6 +2948,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsLinkedRefTransient,
+                header: translationParams.ConvertToCustom(RecordTypes.XLKT));
             if (item.Ownership is {} OwnershipItem)
             {
                 ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
@@ -2992,7 +3125,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    item.RagdollData = Mutagen.Bethesda.Starfield.RagdollData.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollData = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RagdollData>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: RagdollData.TryCreateFromBinary)
+                        .CastExtendedList<RagdollData>();
                     return (int)APlacedTrap_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRFG:
@@ -3027,6 +3165,11 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams,
                             transl: LinkedReferences.TryCreateFromBinary));
                     return (int)APlacedTrap_FieldIndex.LinkedReferences;
+                }
+                case RecordTypeInts.XLKT:
+                {
+                    item.IsLinkedRefTransient = true;
+                    return (int)APlacedTrap_FieldIndex.IsLinkedRefTransient;
                 }
                 case RecordTypeInts.XOWN:
                 {
@@ -3179,10 +3322,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _EmittanceLocation;
         public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
         #endregion
-        #region RagdollData
-        private RangeInt32? _RagdollDataLocation;
-        public IRagdollDataGetter? RagdollData => _RagdollDataLocation.HasValue ? RagdollDataBinaryOverlay.RagdollDataFactory(_recordData.Slice(_RagdollDataLocation!.Value.Min), _package) : default;
-        #endregion
+        public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
         #region ReferenceGroup
         private int? _ReferenceGroupLocation;
         public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => _ReferenceGroupLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
@@ -3200,6 +3340,10 @@ namespace Mutagen.Bethesda.Starfield
         public Int32? OwnerFactionRank => _OwnerFactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerFactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        #region IsLinkedRefTransient
+        private int? _IsLinkedRefTransientLocation;
+        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default;
+        #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region EncounterLocation
         private int? _EncounterLocationLocation;
@@ -3294,7 +3438,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    _RagdollDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 28,
+                        getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
+                    stream.Position += subLen;
                     return (int)APlacedTrap_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRFG:
@@ -3331,6 +3482,11 @@ namespace Mutagen.Bethesda.Starfield
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)APlacedTrap_FieldIndex.LinkedReferences;
+                }
+                case RecordTypeInts.XLKT:
+                {
+                    _IsLinkedRefTransientLocation = (stream.Position - offset);
+                    return (int)APlacedTrap_FieldIndex.IsLinkedRefTransient;
                 }
                 case RecordTypeInts.XOWN:
                 {

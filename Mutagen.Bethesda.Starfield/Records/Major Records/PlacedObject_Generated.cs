@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +58,699 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IPlacedObjectGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XALG => this.XALG;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IPlacedObjectGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Base
+        private readonly IFormLink<IPlaceableObjectGetter> _Base = new FormLink<IPlaceableObjectGetter>();
+        public IFormLink<IPlaceableObjectGetter> Base
+        {
+            get => _Base;
+            set => _Base.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlaceableObjectGetter> IPlacedObjectGetter.Base => this.Base;
+        #endregion
+        #region VolumeData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectVolumeData? _VolumeData;
+        public PlacedObjectVolumeData? VolumeData
+        {
+            get => _VolumeData;
+            set => _VolumeData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectVolumeDataGetter? IPlacedObjectGetter.VolumeData => this.VolumeData;
+        #endregion
+        #region ShipArrival
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectShipArrival? _ShipArrival;
+        public PlacedObjectShipArrival? ShipArrival
+        {
+            get => _ShipArrival;
+            set => _ShipArrival = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectShipArrivalGetter? IPlacedObjectGetter.ShipArrival => this.ShipArrival;
+        #endregion
+        #region LevelModifier
+        public Level? LevelModifier { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Level? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
+        #endregion
+        #region Action
+        public PlacedObject.ActionFlag? Action { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        PlacedObject.ActionFlag? IPlacedObjectGetter.Action => this.Action;
+        #endregion
+        #region Primitive
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedPrimitive? _Primitive;
+        public PlacedPrimitive? Primitive
+        {
+            get => _Primitive;
+            set => _Primitive = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedPrimitiveGetter? IPlacedObjectGetter.Primitive => this.Primitive;
+        #endregion
+        #region VolumeReflectionProbeOffsetIntensity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VolumeReflectionProbeOffsetIntensity? _VolumeReflectionProbeOffsetIntensity;
+        public VolumeReflectionProbeOffsetIntensity? VolumeReflectionProbeOffsetIntensity
+        {
+            get => _VolumeReflectionProbeOffsetIntensity;
+            set => _VolumeReflectionProbeOffsetIntensity = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVolumeReflectionProbeOffsetIntensityGetter? IPlacedObjectGetter.VolumeReflectionProbeOffsetIntensity => this.VolumeReflectionProbeOffsetIntensity;
+        #endregion
+        #region DebugText
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectDebugText? _DebugText;
+        public PlacedObjectDebugText? DebugText
+        {
+            get => _DebugText;
+            set => _DebugText = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectDebugTextGetter? IPlacedObjectGetter.DebugText => this.DebugText;
+        #endregion
+        #region Emittance
+        private readonly IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
+        public IFormLinkNullable<IEmittanceGetter> Emittance
+        {
+            get => _Emittance;
+            set => _Emittance.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEmittanceGetter> IPlacedObjectGetter.Emittance => this.Emittance;
+        #endregion
+        #region Radius
+        public Single? Radius { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.Radius => this.Radius;
+        #endregion
+        #region Lighting
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectLighting? _Lighting;
+        public PlacedObjectLighting? Lighting
+        {
+            get => _Lighting;
+            set => _Lighting = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectLightingGetter? IPlacedObjectGetter.Lighting => this.Lighting;
+        #endregion
+        #region LightBarndoorData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectLightBarndoorData? _LightBarndoorData;
+        public PlacedObjectLightBarndoorData? LightBarndoorData
+        {
+            get => _LightBarndoorData;
+            set => _LightBarndoorData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectLightBarndoorDataGetter? IPlacedObjectGetter.LightBarndoorData => this.LightBarndoorData;
+        #endregion
+        #region LightArea
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectLightArea? _LightArea;
+        public PlacedObjectLightArea? LightArea
+        {
+            get => _LightArea;
+            set => _LightArea = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectLightAreaGetter? IPlacedObjectGetter.LightArea => this.LightArea;
+        #endregion
+        #region CurrentZoneCell
+        private readonly IFormLinkNullable<ICellGetter> _CurrentZoneCell = new FormLinkNullable<ICellGetter>();
+        public IFormLinkNullable<ICellGetter> CurrentZoneCell
+        {
+            get => _CurrentZoneCell;
+            set => _CurrentZoneCell.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICellGetter> IPlacedObjectGetter.CurrentZoneCell => this.CurrentZoneCell;
+        #endregion
+        #region XCZA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XCZA;
+        public MemorySlice<Byte>? XCZA
+        {
+            get => this._XCZA;
+            set => this._XCZA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCZA => this.XCZA;
+        #endregion
+        #region Patrol
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Patrol? _Patrol;
+        public Patrol? Patrol
+        {
+            get => _Patrol;
+            set => _Patrol = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPatrolGetter? IPlacedObjectGetter.Patrol => this.Patrol;
+        #endregion
+        #region RagdollData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<RagdollData>? _RagdollData;
+        public ExtendedList<RagdollData>? RagdollData
+        {
+            get => this._RagdollData;
+            set => this._RagdollData = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRagdollDataGetter>? IPlacedObjectGetter.RagdollData => _RagdollData;
+        #endregion
+
+        #endregion
+        #region TeleportDestination
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private TeleportDestination? _TeleportDestination;
+        public TeleportDestination? TeleportDestination
+        {
+            get => _TeleportDestination;
+            set => _TeleportDestination = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITeleportDestinationGetter? IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
+        #endregion
+        #region TeleportName
+        private readonly IFormLinkNullable<IMessageGetter> _TeleportName = new FormLinkNullable<IMessageGetter>();
+        public IFormLinkNullable<IMessageGetter> TeleportName
+        {
+            get => _TeleportName;
+            set => _TeleportName.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMessageGetter> IPlacedObjectGetter.TeleportName => this.TeleportName;
+        #endregion
+        #region ReferenceGroup
+        private readonly IFormLinkNullable<IReferenceGroupGetter> _ReferenceGroup = new FormLinkNullable<IReferenceGroupGetter>();
+        public IFormLinkNullable<IReferenceGroupGetter> ReferenceGroup
+        {
+            get => _ReferenceGroup;
+            set => _ReferenceGroup.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IReferenceGroupGetter> IPlacedObjectGetter.ReferenceGroup => this.ReferenceGroup;
+        #endregion
+        #region LocationRefTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes
+        {
+            get => this._LocationRefTypes;
+            set => this._LocationRefTypes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IPlacedObjectGetter.LocationRefTypes => _LocationRefTypes;
+        #endregion
+
+        #endregion
+        #region LayeredMaterialSwaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? _LayeredMaterialSwaps;
+        public ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? LayeredMaterialSwaps
+        {
+            get => this._LayeredMaterialSwaps;
+            set => this._LayeredMaterialSwaps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? IPlacedObjectGetter.LayeredMaterialSwaps => _LayeredMaterialSwaps;
+        #endregion
+
+        #endregion
+        #region XPCK
+        private readonly IFormLinkNullable<IReferenceGroupGetter> _XPCK = new FormLinkNullable<IReferenceGroupGetter>();
+        public IFormLinkNullable<IReferenceGroupGetter> XPCK
+        {
+            get => _XPCK;
+            set => _XPCK.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IReferenceGroupGetter> IPlacedObjectGetter.XPCK => this.XPCK;
+        #endregion
+        #region SourcePackIn
+        private readonly IFormLinkNullable<IPackInGetter> _SourcePackIn = new FormLinkNullable<IPackInGetter>();
+        public IFormLinkNullable<IPackInGetter> SourcePackIn
+        {
+            get => _SourcePackIn;
+            set => _SourcePackIn.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPackInGetter> IPlacedObjectGetter.SourcePackIn => this.SourcePackIn;
+        #endregion
+        #region PersistentLocation
+        private readonly IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> PersistentLocation
+        {
+            get => _PersistentLocation;
+            set => _PersistentLocation.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.PersistentLocation => this.PersistentLocation;
+        #endregion
+        #region ProjectedDecal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectProjectedDecal? _ProjectedDecal;
+        public PlacedObjectProjectedDecal? ProjectedDecal
+        {
+            get => _ProjectedDecal;
+            set => _ProjectedDecal = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectProjectedDecalGetter? IPlacedObjectGetter.ProjectedDecal => this.ProjectedDecal;
+        #endregion
+        #region ProjectedDecalReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IPlacedGetter>>? _ProjectedDecalReferences;
+        public ExtendedList<IFormLinkGetter<IPlacedGetter>>? ProjectedDecalReferences
+        {
+            get => this._ProjectedDecalReferences;
+            set => this._ProjectedDecalReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? IPlacedObjectGetter.ProjectedDecalReferences => _ProjectedDecalReferences;
+        #endregion
+
+        #endregion
+        #region ConstrainedDecal
+        public P3Float? ConstrainedDecal { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IPlacedObjectGetter.ConstrainedDecal => this.ConstrainedDecal;
+        #endregion
+        #region IsIgnoredBySandbox
+        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedObjectGetter.FactionRank => this.FactionRank;
+        #endregion
+        #region LightGobo
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LightGobo? _LightGobo;
+        public LightGobo? LightGobo
+        {
+            get => _LightGobo;
+            set => _LightGobo = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILightGoboGetter? IPlacedObjectGetter.LightGobo => this.LightGobo;
+        #endregion
+        #region Collision
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectCollision? _Collision;
+        public PlacedObjectCollision? Collision
+        {
+            get => _Collision;
+            set => _Collision = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectCollisionGetter? IPlacedObjectGetter.Collision => this.Collision;
+        #endregion
+        #region PowerLinks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<PowerLink> _PowerLinks = new ExtendedList<PowerLink>();
+        public ExtendedList<PowerLink> PowerLinks
+        {
+            get => this._PowerLinks;
+            init => this._PowerLinks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPowerLinkGetter> IPlacedObjectGetter.PowerLinks => _PowerLinks;
+        #endregion
+
+        #endregion
+        #region Count
+        public Int32? Count { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedObjectGetter.Count => this.Count;
+        #endregion
+        #region XFLG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XFLG;
+        public MemorySlice<Byte>? XFLG
+        {
+            get => this._XFLG;
+            set => this._XFLG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XFLG => this.XFLG;
+        #endregion
+        #region LightFlicker
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectLightFlicker? _LightFlicker;
+        public PlacedObjectLightFlicker? LightFlicker
+        {
+            get => _LightFlicker;
+            set => _LightFlicker = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectLightFlickerGetter? IPlacedObjectGetter.LightFlicker => this.LightFlicker;
+        #endregion
+        #region MapMarker
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectMapMarker? _MapMarker;
+        public PlacedObjectMapMarker? MapMarker
+        {
+            get => _MapMarker;
+            set => _MapMarker = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
+        #endregion
+        #region LightLayerData
+        public Boolean? LightLayerData { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IPlacedObjectGetter.LightLayerData => this.LightLayerData;
+        #endregion
+        #region LightStaticShadowMap
+        public Boolean? LightStaticShadowMap { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IPlacedObjectGetter.LightStaticShadowMap => this.LightStaticShadowMap;
+        #endregion
+        #region LightVolumetricData
+        public Single? LightVolumetricData { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.LightVolumetricData => this.LightVolumetricData;
+        #endregion
+        #region Ownership
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Ownership? _Ownership;
+        public Ownership? Ownership
+        {
+            get => _Ownership;
+            set => _Ownership = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IOwnershipGetter? IPlacedObjectGetter.Ownership => this.Ownership;
+        #endregion
+        #region LightColors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<PlacedObjectLightColor> _LightColors = new ExtendedList<PlacedObjectLightColor>();
+        public ExtendedList<PlacedObjectLightColor> LightColors
+        {
+            get => this._LightColors;
+            init => this._LightColors = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPlacedObjectLightColorGetter> IPlacedObjectGetter.LightColors => _LightColors;
+        #endregion
+
+        #endregion
+        #region GroupedPackIn
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private GroupedPackIn? _GroupedPackIn;
+        public GroupedPackIn? GroupedPackIn
+        {
+            get => _GroupedPackIn;
+            set => _GroupedPackIn = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupedPackInGetter? IPlacedObjectGetter.GroupedPackIn => this.GroupedPackIn;
+        #endregion
+        #region BlueprintPartOrigin
+        public UInt32? BlueprintPartOrigin { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IPlacedObjectGetter.BlueprintPartOrigin => this.BlueprintPartOrigin;
+        #endregion
+        #region Layer
+        private readonly IFormLinkNullable<ILayerGetter> _Layer = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> Layer
+        {
+            get => _Layer;
+            set => _Layer.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayerGetter> IPlacedObjectGetter.Layer => this.Layer;
+        #endregion
+        #region LightRoundedness
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectLightRoundedness? _LightRoundedness;
+        public PlacedObjectLightRoundedness? LightRoundedness
+        {
+            get => _LightRoundedness;
+            set => _LightRoundedness = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectLightRoundednessGetter? IPlacedObjectGetter.LightRoundedness => this.LightRoundedness;
+        #endregion
+        #region LinkedReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public ExtendedList<LinkedReferences> LinkedReferences
+        {
+            get => this._LinkedReferences;
+            init => this._LinkedReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILinkedReferencesGetter> IPlacedObjectGetter.LinkedReferences => _LinkedReferences;
+        #endregion
+
+        #endregion
+        #region IsLinkedRefTransient
+        public Boolean IsLinkedRefTransient { get; set; } = default;
+        #endregion
+        #region SnapLinks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SnapLink>? _SnapLinks;
+        public ExtendedList<SnapLink>? SnapLinks
+        {
+            get => this._SnapLinks;
+            set => this._SnapLinks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISnapLinkGetter>? IPlacedObjectGetter.SnapLinks => _SnapLinks;
+        #endregion
+
+        #endregion
+        #region EncounterZone
+        private readonly IFormLinkNullable<ILocationGetter> _EncounterZone = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> EncounterZone
+        {
+            get => _EncounterZone;
+            set => _EncounterZone.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.EncounterZone => this.EncounterZone;
+        #endregion
+        #region GeometryDirtinessScale
+        public Single? GeometryDirtinessScale { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.GeometryDirtinessScale => this.GeometryDirtinessScale;
+        #endregion
+        #region Lock
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LockData? _Lock;
+        public LockData? Lock
+        {
+            get => _Lock;
+            set => _Lock = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILockDataGetter? IPlacedObjectGetter.Lock => this.Lock;
+        #endregion
+        #region Properties
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectProperty>? _Properties;
+        public ExtendedList<ObjectProperty>? Properties
+        {
+            get => this._Properties;
+            set => this._Properties = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectPropertyGetter>? IPlacedObjectGetter.Properties => _Properties;
+        #endregion
+
+        #endregion
+        #region ExternalEmittance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExternalEmittance? _ExternalEmittance;
+        public ExternalEmittance? ExternalEmittance
+        {
+            get => _ExternalEmittance;
+            set => _ExternalEmittance = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IExternalEmittanceGetter? IPlacedObjectGetter.ExternalEmittance => this.ExternalEmittance;
+        #endregion
+        #region HeadTrackingWeight
+        public Single? HeadTrackingWeight { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.HeadTrackingWeight => this.HeadTrackingWeight;
+        #endregion
+        #region BOLV
+        public UInt16? BOLV { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IPlacedObjectGetter.BOLV => this.BOLV;
+        #endregion
+        #region Spline
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObjectSpline? _Spline;
+        public PlacedObjectSpline? Spline
+        {
+            get => _Spline;
+            set => _Spline = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedObjectSplineGetter? IPlacedObjectGetter.Spline => this.Spline;
+        #endregion
+        #region XNSE
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XNSE;
+        public MemorySlice<Byte>? XNSE
+        {
+            get => this._XNSE;
+            set => this._XNSE = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XNSE => this.XNSE;
+        #endregion
+        #region AttachRef
+        private readonly IFormLinkNullable<ILinkedReferenceGetter> _AttachRef = new FormLinkNullable<ILinkedReferenceGetter>();
+        public IFormLinkNullable<ILinkedReferenceGetter> AttachRef
+        {
+            get => _AttachRef;
+            set => _AttachRef.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;
+        #endregion
+        #region RagdollBipedRotation
+        public P3Float? RagdollBipedRotation { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IPlacedObjectGetter.RagdollBipedRotation => this.RagdollBipedRotation;
+        #endregion
+        #region HealthPercent
+        public Percent? HealthPercent { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Percent? IPlacedObjectGetter.HealthPercent => this.HealthPercent;
+        #endregion
+        #region TimeOfDay
+        private readonly IFormLinkNullable<ITimeOfDayDataGetter> _TimeOfDay = new FormLinkNullable<ITimeOfDayDataGetter>();
+        public IFormLinkNullable<ITimeOfDayDataGetter> TimeOfDay
+        {
+            get => _TimeOfDay;
+            set => _TimeOfDay.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITimeOfDayDataGetter> IPlacedObjectGetter.TimeOfDay => this.TimeOfDay;
+        #endregion
+        #region EnableParent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EnableParent? _EnableParent;
+        public EnableParent? EnableParent
+        {
+            get => _EnableParent;
+            set => _EnableParent = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnableParentGetter? IPlacedObjectGetter.EnableParent => this.EnableParent;
+        #endregion
+        #region Traversals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<TraversalReference>? _Traversals;
+        public ExtendedList<TraversalReference>? Traversals
+        {
+            get => this._Traversals;
+            set => this._Traversals = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ITraversalReferenceGetter>? IPlacedObjectGetter.Traversals => _Traversals;
+        #endregion
+
+        #endregion
+        #region NavigationDoorLink
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NavigationDoorLink? _NavigationDoorLink;
+        public NavigationDoorLink? NavigationDoorLink
+        {
+            get => _NavigationDoorLink;
+            set => _NavigationDoorLink = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavigationDoorLinkGetter? IPlacedObjectGetter.NavigationDoorLink => this.NavigationDoorLink;
+        #endregion
+        #region IsActivationPoint
+        public Boolean IsActivationPoint { get; set; } = default;
+        #endregion
+        #region Scale
+        public Single? Scale { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.Scale => this.Scale;
+        #endregion
+        #region OpenByDefault
+        public Boolean OpenByDefault { get; set; } = default;
+        #endregion
+        #region Position
+        public P3Float Position { get; set; } = default;
+        #endregion
+        #region Rotation
+        public P3Float Rotation { get; set; } = default;
+        #endregion
+        #region Comments
+        public String? Comments { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPlacedObjectGetter.Comments => this.Comments;
+        #endregion
 
         #region To String
 
@@ -79,6 +776,80 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.XALG = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Base = initialValue;
+                this.VolumeData = new MaskItem<TItem, PlacedObjectVolumeData.Mask<TItem>?>(initialValue, new PlacedObjectVolumeData.Mask<TItem>(initialValue));
+                this.ShipArrival = new MaskItem<TItem, PlacedObjectShipArrival.Mask<TItem>?>(initialValue, new PlacedObjectShipArrival.Mask<TItem>(initialValue));
+                this.LevelModifier = initialValue;
+                this.Action = initialValue;
+                this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
+                this.VolumeReflectionProbeOffsetIntensity = new MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>(initialValue, new VolumeReflectionProbeOffsetIntensity.Mask<TItem>(initialValue));
+                this.DebugText = new MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>(initialValue, new PlacedObjectDebugText.Mask<TItem>(initialValue));
+                this.Emittance = initialValue;
+                this.Radius = initialValue;
+                this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(initialValue, new PlacedObjectLighting.Mask<TItem>(initialValue));
+                this.LightBarndoorData = new MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>(initialValue, new PlacedObjectLightBarndoorData.Mask<TItem>(initialValue));
+                this.LightArea = new MaskItem<TItem, PlacedObjectLightArea.Mask<TItem>?>(initialValue, new PlacedObjectLightArea.Mask<TItem>(initialValue));
+                this.CurrentZoneCell = initialValue;
+                this.XCZA = initialValue;
+                this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
+                this.TeleportName = initialValue;
+                this.ReferenceGroup = initialValue;
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LayeredMaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.XPCK = initialValue;
+                this.SourcePackIn = initialValue;
+                this.PersistentLocation = initialValue;
+                this.ProjectedDecal = new MaskItem<TItem, PlacedObjectProjectedDecal.Mask<TItem>?>(initialValue, new PlacedObjectProjectedDecal.Mask<TItem>(initialValue));
+                this.ProjectedDecalReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ConstrainedDecal = initialValue;
+                this.IsIgnoredBySandbox = initialValue;
+                this.FactionRank = initialValue;
+                this.LightGobo = new MaskItem<TItem, LightGobo.Mask<TItem>?>(initialValue, new LightGobo.Mask<TItem>(initialValue));
+                this.Collision = new MaskItem<TItem, PlacedObjectCollision.Mask<TItem>?>(initialValue, new PlacedObjectCollision.Mask<TItem>(initialValue));
+                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
+                this.Count = initialValue;
+                this.XFLG = initialValue;
+                this.LightFlicker = new MaskItem<TItem, PlacedObjectLightFlicker.Mask<TItem>?>(initialValue, new PlacedObjectLightFlicker.Mask<TItem>(initialValue));
+                this.MapMarker = new MaskItem<TItem, PlacedObjectMapMarker.Mask<TItem>?>(initialValue, new PlacedObjectMapMarker.Mask<TItem>(initialValue));
+                this.LightLayerData = initialValue;
+                this.LightStaticShadowMap = initialValue;
+                this.LightVolumetricData = initialValue;
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.LightColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>());
+                this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(initialValue, new GroupedPackIn.Mask<TItem>(initialValue));
+                this.BlueprintPartOrigin = initialValue;
+                this.Layer = initialValue;
+                this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(initialValue, new PlacedObjectLightRoundedness.Mask<TItem>(initialValue));
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.IsLinkedRefTransient = initialValue;
+                this.SnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>());
+                this.EncounterZone = initialValue;
+                this.GeometryDirtinessScale = initialValue;
+                this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(initialValue, new LockData.Mask<TItem>(initialValue));
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(initialValue, new ExternalEmittance.Mask<TItem>(initialValue));
+                this.HeadTrackingWeight = initialValue;
+                this.BOLV = initialValue;
+                this.Spline = new MaskItem<TItem, PlacedObjectSpline.Mask<TItem>?>(initialValue, new PlacedObjectSpline.Mask<TItem>(initialValue));
+                this.XNSE = initialValue;
+                this.AttachRef = initialValue;
+                this.RagdollBipedRotation = initialValue;
+                this.HealthPercent = initialValue;
+                this.TimeOfDay = initialValue;
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
+                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
+                this.IsActivationPoint = initialValue;
+                this.Scale = initialValue;
+                this.OpenByDefault = initialValue;
+                this.Position = initialValue;
+                this.Rotation = initialValue;
+                this.Comments = initialValue;
             }
 
             public Mask(
@@ -88,7 +859,81 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem XALG,
+                TItem Components,
+                TItem Base,
+                TItem VolumeData,
+                TItem ShipArrival,
+                TItem LevelModifier,
+                TItem Action,
+                TItem Primitive,
+                TItem VolumeReflectionProbeOffsetIntensity,
+                TItem DebugText,
+                TItem Emittance,
+                TItem Radius,
+                TItem Lighting,
+                TItem LightBarndoorData,
+                TItem LightArea,
+                TItem CurrentZoneCell,
+                TItem XCZA,
+                TItem Patrol,
+                TItem RagdollData,
+                TItem TeleportDestination,
+                TItem TeleportName,
+                TItem ReferenceGroup,
+                TItem LocationRefTypes,
+                TItem LayeredMaterialSwaps,
+                TItem XPCK,
+                TItem SourcePackIn,
+                TItem PersistentLocation,
+                TItem ProjectedDecal,
+                TItem ProjectedDecalReferences,
+                TItem ConstrainedDecal,
+                TItem IsIgnoredBySandbox,
+                TItem FactionRank,
+                TItem LightGobo,
+                TItem Collision,
+                TItem PowerLinks,
+                TItem Count,
+                TItem XFLG,
+                TItem LightFlicker,
+                TItem MapMarker,
+                TItem LightLayerData,
+                TItem LightStaticShadowMap,
+                TItem LightVolumetricData,
+                TItem Ownership,
+                TItem LightColors,
+                TItem GroupedPackIn,
+                TItem BlueprintPartOrigin,
+                TItem Layer,
+                TItem LightRoundedness,
+                TItem LinkedReferences,
+                TItem IsLinkedRefTransient,
+                TItem SnapLinks,
+                TItem EncounterZone,
+                TItem GeometryDirtinessScale,
+                TItem Lock,
+                TItem Properties,
+                TItem ExternalEmittance,
+                TItem HeadTrackingWeight,
+                TItem BOLV,
+                TItem Spline,
+                TItem XNSE,
+                TItem AttachRef,
+                TItem RagdollBipedRotation,
+                TItem HealthPercent,
+                TItem TimeOfDay,
+                TItem EnableParent,
+                TItem Traversals,
+                TItem NavigationDoorLink,
+                TItem IsActivationPoint,
+                TItem Scale,
+                TItem OpenByDefault,
+                TItem Position,
+                TItem Rotation,
+                TItem Comments)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +943,80 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.XALG = XALG;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Base = Base;
+                this.VolumeData = new MaskItem<TItem, PlacedObjectVolumeData.Mask<TItem>?>(VolumeData, new PlacedObjectVolumeData.Mask<TItem>(VolumeData));
+                this.ShipArrival = new MaskItem<TItem, PlacedObjectShipArrival.Mask<TItem>?>(ShipArrival, new PlacedObjectShipArrival.Mask<TItem>(ShipArrival));
+                this.LevelModifier = LevelModifier;
+                this.Action = Action;
+                this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
+                this.VolumeReflectionProbeOffsetIntensity = new MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>(VolumeReflectionProbeOffsetIntensity, new VolumeReflectionProbeOffsetIntensity.Mask<TItem>(VolumeReflectionProbeOffsetIntensity));
+                this.DebugText = new MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>(DebugText, new PlacedObjectDebugText.Mask<TItem>(DebugText));
+                this.Emittance = Emittance;
+                this.Radius = Radius;
+                this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(Lighting, new PlacedObjectLighting.Mask<TItem>(Lighting));
+                this.LightBarndoorData = new MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>(LightBarndoorData, new PlacedObjectLightBarndoorData.Mask<TItem>(LightBarndoorData));
+                this.LightArea = new MaskItem<TItem, PlacedObjectLightArea.Mask<TItem>?>(LightArea, new PlacedObjectLightArea.Mask<TItem>(LightArea));
+                this.CurrentZoneCell = CurrentZoneCell;
+                this.XCZA = XCZA;
+                this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
+                this.TeleportName = TeleportName;
+                this.ReferenceGroup = ReferenceGroup;
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LayeredMaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LayeredMaterialSwaps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.XPCK = XPCK;
+                this.SourcePackIn = SourcePackIn;
+                this.PersistentLocation = PersistentLocation;
+                this.ProjectedDecal = new MaskItem<TItem, PlacedObjectProjectedDecal.Mask<TItem>?>(ProjectedDecal, new PlacedObjectProjectedDecal.Mask<TItem>(ProjectedDecal));
+                this.ProjectedDecalReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ProjectedDecalReferences, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ConstrainedDecal = ConstrainedDecal;
+                this.IsIgnoredBySandbox = IsIgnoredBySandbox;
+                this.FactionRank = FactionRank;
+                this.LightGobo = new MaskItem<TItem, LightGobo.Mask<TItem>?>(LightGobo, new LightGobo.Mask<TItem>(LightGobo));
+                this.Collision = new MaskItem<TItem, PlacedObjectCollision.Mask<TItem>?>(Collision, new PlacedObjectCollision.Mask<TItem>(Collision));
+                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(PowerLinks, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
+                this.Count = Count;
+                this.XFLG = XFLG;
+                this.LightFlicker = new MaskItem<TItem, PlacedObjectLightFlicker.Mask<TItem>?>(LightFlicker, new PlacedObjectLightFlicker.Mask<TItem>(LightFlicker));
+                this.MapMarker = new MaskItem<TItem, PlacedObjectMapMarker.Mask<TItem>?>(MapMarker, new PlacedObjectMapMarker.Mask<TItem>(MapMarker));
+                this.LightLayerData = LightLayerData;
+                this.LightStaticShadowMap = LightStaticShadowMap;
+                this.LightVolumetricData = LightVolumetricData;
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.LightColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>?>(LightColors, Enumerable.Empty<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>());
+                this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(GroupedPackIn, new GroupedPackIn.Mask<TItem>(GroupedPackIn));
+                this.BlueprintPartOrigin = BlueprintPartOrigin;
+                this.Layer = Layer;
+                this.LightRoundedness = new MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>(LightRoundedness, new PlacedObjectLightRoundedness.Mask<TItem>(LightRoundedness));
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.IsLinkedRefTransient = IsLinkedRefTransient;
+                this.SnapLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>(SnapLinks, Enumerable.Empty<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>());
+                this.EncounterZone = EncounterZone;
+                this.GeometryDirtinessScale = GeometryDirtinessScale;
+                this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(Lock, new LockData.Mask<TItem>(Lock));
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(ExternalEmittance, new ExternalEmittance.Mask<TItem>(ExternalEmittance));
+                this.HeadTrackingWeight = HeadTrackingWeight;
+                this.BOLV = BOLV;
+                this.Spline = new MaskItem<TItem, PlacedObjectSpline.Mask<TItem>?>(Spline, new PlacedObjectSpline.Mask<TItem>(Spline));
+                this.XNSE = XNSE;
+                this.AttachRef = AttachRef;
+                this.RagdollBipedRotation = RagdollBipedRotation;
+                this.HealthPercent = HealthPercent;
+                this.TimeOfDay = TimeOfDay;
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
+                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
+                this.IsActivationPoint = IsActivationPoint;
+                this.Scale = Scale;
+                this.OpenByDefault = OpenByDefault;
+                this.Position = Position;
+                this.Rotation = Rotation;
+                this.Comments = Comments;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +1025,83 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem XALG;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Base;
+            public MaskItem<TItem, PlacedObjectVolumeData.Mask<TItem>?>? VolumeData { get; set; }
+            public MaskItem<TItem, PlacedObjectShipArrival.Mask<TItem>?>? ShipArrival { get; set; }
+            public TItem LevelModifier;
+            public TItem Action;
+            public MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>? Primitive { get; set; }
+            public MaskItem<TItem, VolumeReflectionProbeOffsetIntensity.Mask<TItem>?>? VolumeReflectionProbeOffsetIntensity { get; set; }
+            public MaskItem<TItem, PlacedObjectDebugText.Mask<TItem>?>? DebugText { get; set; }
+            public TItem Emittance;
+            public TItem Radius;
+            public MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>? Lighting { get; set; }
+            public MaskItem<TItem, PlacedObjectLightBarndoorData.Mask<TItem>?>? LightBarndoorData { get; set; }
+            public MaskItem<TItem, PlacedObjectLightArea.Mask<TItem>?>? LightArea { get; set; }
+            public TItem CurrentZoneCell;
+            public TItem XCZA;
+            public MaskItem<TItem, Patrol.Mask<TItem>?>? Patrol { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>? RagdollData;
+            public MaskItem<TItem, TeleportDestination.Mask<TItem>?>? TeleportDestination { get; set; }
+            public TItem TeleportName;
+            public TItem ReferenceGroup;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LayeredMaterialSwaps;
+            public TItem XPCK;
+            public TItem SourcePackIn;
+            public TItem PersistentLocation;
+            public MaskItem<TItem, PlacedObjectProjectedDecal.Mask<TItem>?>? ProjectedDecal { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ProjectedDecalReferences;
+            public TItem ConstrainedDecal;
+            public TItem IsIgnoredBySandbox;
+            public TItem FactionRank;
+            public MaskItem<TItem, LightGobo.Mask<TItem>?>? LightGobo { get; set; }
+            public MaskItem<TItem, PlacedObjectCollision.Mask<TItem>?>? Collision { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>? PowerLinks;
+            public TItem Count;
+            public TItem XFLG;
+            public MaskItem<TItem, PlacedObjectLightFlicker.Mask<TItem>?>? LightFlicker { get; set; }
+            public MaskItem<TItem, PlacedObjectMapMarker.Mask<TItem>?>? MapMarker { get; set; }
+            public TItem LightLayerData;
+            public TItem LightStaticShadowMap;
+            public TItem LightVolumetricData;
+            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>?>? LightColors;
+            public MaskItem<TItem, GroupedPackIn.Mask<TItem>?>? GroupedPackIn { get; set; }
+            public TItem BlueprintPartOrigin;
+            public TItem Layer;
+            public MaskItem<TItem, PlacedObjectLightRoundedness.Mask<TItem>?>? LightRoundedness { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
+            public TItem IsLinkedRefTransient;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLink.Mask<TItem>?>>?>? SnapLinks;
+            public TItem EncounterZone;
+            public TItem GeometryDirtinessScale;
+            public MaskItem<TItem, LockData.Mask<TItem>?>? Lock { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
+            public MaskItem<TItem, ExternalEmittance.Mask<TItem>?>? ExternalEmittance { get; set; }
+            public TItem HeadTrackingWeight;
+            public TItem BOLV;
+            public MaskItem<TItem, PlacedObjectSpline.Mask<TItem>?>? Spline { get; set; }
+            public TItem XNSE;
+            public TItem AttachRef;
+            public TItem RagdollBipedRotation;
+            public TItem HealthPercent;
+            public TItem TimeOfDay;
+            public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>? Traversals;
+            public MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>? NavigationDoorLink { get; set; }
+            public TItem IsActivationPoint;
+            public TItem Scale;
+            public TItem OpenByDefault;
+            public TItem Position;
+            public TItem Rotation;
+            public TItem Comments;
             #endregion
 
             #region Equals
@@ -119,11 +1115,159 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Base, rhs.Base)) return false;
+                if (!object.Equals(this.VolumeData, rhs.VolumeData)) return false;
+                if (!object.Equals(this.ShipArrival, rhs.ShipArrival)) return false;
+                if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
+                if (!object.Equals(this.Action, rhs.Action)) return false;
+                if (!object.Equals(this.Primitive, rhs.Primitive)) return false;
+                if (!object.Equals(this.VolumeReflectionProbeOffsetIntensity, rhs.VolumeReflectionProbeOffsetIntensity)) return false;
+                if (!object.Equals(this.DebugText, rhs.DebugText)) return false;
+                if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
+                if (!object.Equals(this.LightBarndoorData, rhs.LightBarndoorData)) return false;
+                if (!object.Equals(this.LightArea, rhs.LightArea)) return false;
+                if (!object.Equals(this.CurrentZoneCell, rhs.CurrentZoneCell)) return false;
+                if (!object.Equals(this.XCZA, rhs.XCZA)) return false;
+                if (!object.Equals(this.Patrol, rhs.Patrol)) return false;
+                if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
+                if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
+                if (!object.Equals(this.TeleportName, rhs.TeleportName)) return false;
+                if (!object.Equals(this.ReferenceGroup, rhs.ReferenceGroup)) return false;
+                if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
+                if (!object.Equals(this.LayeredMaterialSwaps, rhs.LayeredMaterialSwaps)) return false;
+                if (!object.Equals(this.XPCK, rhs.XPCK)) return false;
+                if (!object.Equals(this.SourcePackIn, rhs.SourcePackIn)) return false;
+                if (!object.Equals(this.PersistentLocation, rhs.PersistentLocation)) return false;
+                if (!object.Equals(this.ProjectedDecal, rhs.ProjectedDecal)) return false;
+                if (!object.Equals(this.ProjectedDecalReferences, rhs.ProjectedDecalReferences)) return false;
+                if (!object.Equals(this.ConstrainedDecal, rhs.ConstrainedDecal)) return false;
+                if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
+                if (!object.Equals(this.LightGobo, rhs.LightGobo)) return false;
+                if (!object.Equals(this.Collision, rhs.Collision)) return false;
+                if (!object.Equals(this.PowerLinks, rhs.PowerLinks)) return false;
+                if (!object.Equals(this.Count, rhs.Count)) return false;
+                if (!object.Equals(this.XFLG, rhs.XFLG)) return false;
+                if (!object.Equals(this.LightFlicker, rhs.LightFlicker)) return false;
+                if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
+                if (!object.Equals(this.LightLayerData, rhs.LightLayerData)) return false;
+                if (!object.Equals(this.LightStaticShadowMap, rhs.LightStaticShadowMap)) return false;
+                if (!object.Equals(this.LightVolumetricData, rhs.LightVolumetricData)) return false;
+                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.LightColors, rhs.LightColors)) return false;
+                if (!object.Equals(this.GroupedPackIn, rhs.GroupedPackIn)) return false;
+                if (!object.Equals(this.BlueprintPartOrigin, rhs.BlueprintPartOrigin)) return false;
+                if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.LightRoundedness, rhs.LightRoundedness)) return false;
+                if (!object.Equals(this.LinkedReferences, rhs.LinkedReferences)) return false;
+                if (!object.Equals(this.IsLinkedRefTransient, rhs.IsLinkedRefTransient)) return false;
+                if (!object.Equals(this.SnapLinks, rhs.SnapLinks)) return false;
+                if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
+                if (!object.Equals(this.GeometryDirtinessScale, rhs.GeometryDirtinessScale)) return false;
+                if (!object.Equals(this.Lock, rhs.Lock)) return false;
+                if (!object.Equals(this.Properties, rhs.Properties)) return false;
+                if (!object.Equals(this.ExternalEmittance, rhs.ExternalEmittance)) return false;
+                if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
+                if (!object.Equals(this.BOLV, rhs.BOLV)) return false;
+                if (!object.Equals(this.Spline, rhs.Spline)) return false;
+                if (!object.Equals(this.XNSE, rhs.XNSE)) return false;
+                if (!object.Equals(this.AttachRef, rhs.AttachRef)) return false;
+                if (!object.Equals(this.RagdollBipedRotation, rhs.RagdollBipedRotation)) return false;
+                if (!object.Equals(this.HealthPercent, rhs.HealthPercent)) return false;
+                if (!object.Equals(this.TimeOfDay, rhs.TimeOfDay)) return false;
+                if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
+                if (!object.Equals(this.Traversals, rhs.Traversals)) return false;
+                if (!object.Equals(this.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
+                if (!object.Equals(this.IsActivationPoint, rhs.IsActivationPoint)) return false;
+                if (!object.Equals(this.Scale, rhs.Scale)) return false;
+                if (!object.Equals(this.OpenByDefault, rhs.OpenByDefault)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+                if (!object.Equals(this.Comments, rhs.Comments)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.XALG);
+                hash.Add(this.Components);
+                hash.Add(this.Base);
+                hash.Add(this.VolumeData);
+                hash.Add(this.ShipArrival);
+                hash.Add(this.LevelModifier);
+                hash.Add(this.Action);
+                hash.Add(this.Primitive);
+                hash.Add(this.VolumeReflectionProbeOffsetIntensity);
+                hash.Add(this.DebugText);
+                hash.Add(this.Emittance);
+                hash.Add(this.Radius);
+                hash.Add(this.Lighting);
+                hash.Add(this.LightBarndoorData);
+                hash.Add(this.LightArea);
+                hash.Add(this.CurrentZoneCell);
+                hash.Add(this.XCZA);
+                hash.Add(this.Patrol);
+                hash.Add(this.RagdollData);
+                hash.Add(this.TeleportDestination);
+                hash.Add(this.TeleportName);
+                hash.Add(this.ReferenceGroup);
+                hash.Add(this.LocationRefTypes);
+                hash.Add(this.LayeredMaterialSwaps);
+                hash.Add(this.XPCK);
+                hash.Add(this.SourcePackIn);
+                hash.Add(this.PersistentLocation);
+                hash.Add(this.ProjectedDecal);
+                hash.Add(this.ProjectedDecalReferences);
+                hash.Add(this.ConstrainedDecal);
+                hash.Add(this.IsIgnoredBySandbox);
+                hash.Add(this.FactionRank);
+                hash.Add(this.LightGobo);
+                hash.Add(this.Collision);
+                hash.Add(this.PowerLinks);
+                hash.Add(this.Count);
+                hash.Add(this.XFLG);
+                hash.Add(this.LightFlicker);
+                hash.Add(this.MapMarker);
+                hash.Add(this.LightLayerData);
+                hash.Add(this.LightStaticShadowMap);
+                hash.Add(this.LightVolumetricData);
+                hash.Add(this.Ownership);
+                hash.Add(this.LightColors);
+                hash.Add(this.GroupedPackIn);
+                hash.Add(this.BlueprintPartOrigin);
+                hash.Add(this.Layer);
+                hash.Add(this.LightRoundedness);
+                hash.Add(this.LinkedReferences);
+                hash.Add(this.IsLinkedRefTransient);
+                hash.Add(this.SnapLinks);
+                hash.Add(this.EncounterZone);
+                hash.Add(this.GeometryDirtinessScale);
+                hash.Add(this.Lock);
+                hash.Add(this.Properties);
+                hash.Add(this.ExternalEmittance);
+                hash.Add(this.HeadTrackingWeight);
+                hash.Add(this.BOLV);
+                hash.Add(this.Spline);
+                hash.Add(this.XNSE);
+                hash.Add(this.AttachRef);
+                hash.Add(this.RagdollBipedRotation);
+                hash.Add(this.HealthPercent);
+                hash.Add(this.TimeOfDay);
+                hash.Add(this.EnableParent);
+                hash.Add(this.Traversals);
+                hash.Add(this.NavigationDoorLink);
+                hash.Add(this.IsActivationPoint);
+                hash.Add(this.Scale);
+                hash.Add(this.OpenByDefault);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
+                hash.Add(this.Comments);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +1278,294 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.XALG)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Base)) return false;
+                if (VolumeData != null)
+                {
+                    if (!eval(this.VolumeData.Overall)) return false;
+                    if (this.VolumeData.Specific != null && !this.VolumeData.Specific.All(eval)) return false;
+                }
+                if (ShipArrival != null)
+                {
+                    if (!eval(this.ShipArrival.Overall)) return false;
+                    if (this.ShipArrival.Specific != null && !this.ShipArrival.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LevelModifier)) return false;
+                if (!eval(this.Action)) return false;
+                if (Primitive != null)
+                {
+                    if (!eval(this.Primitive.Overall)) return false;
+                    if (this.Primitive.Specific != null && !this.Primitive.Specific.All(eval)) return false;
+                }
+                if (VolumeReflectionProbeOffsetIntensity != null)
+                {
+                    if (!eval(this.VolumeReflectionProbeOffsetIntensity.Overall)) return false;
+                    if (this.VolumeReflectionProbeOffsetIntensity.Specific != null && !this.VolumeReflectionProbeOffsetIntensity.Specific.All(eval)) return false;
+                }
+                if (DebugText != null)
+                {
+                    if (!eval(this.DebugText.Overall)) return false;
+                    if (this.DebugText.Specific != null && !this.DebugText.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Emittance)) return false;
+                if (!eval(this.Radius)) return false;
+                if (Lighting != null)
+                {
+                    if (!eval(this.Lighting.Overall)) return false;
+                    if (this.Lighting.Specific != null && !this.Lighting.Specific.All(eval)) return false;
+                }
+                if (LightBarndoorData != null)
+                {
+                    if (!eval(this.LightBarndoorData.Overall)) return false;
+                    if (this.LightBarndoorData.Specific != null && !this.LightBarndoorData.Specific.All(eval)) return false;
+                }
+                if (LightArea != null)
+                {
+                    if (!eval(this.LightArea.Overall)) return false;
+                    if (this.LightArea.Specific != null && !this.LightArea.Specific.All(eval)) return false;
+                }
+                if (!eval(this.CurrentZoneCell)) return false;
+                if (!eval(this.XCZA)) return false;
+                if (Patrol != null)
+                {
+                    if (!eval(this.Patrol.Overall)) return false;
+                    if (this.Patrol.Specific != null && !this.Patrol.Specific.All(eval)) return false;
+                }
+                if (this.RagdollData != null)
+                {
+                    if (!eval(this.RagdollData.Overall)) return false;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (TeleportDestination != null)
+                {
+                    if (!eval(this.TeleportDestination.Overall)) return false;
+                    if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.All(eval)) return false;
+                }
+                if (!eval(this.TeleportName)) return false;
+                if (!eval(this.ReferenceGroup)) return false;
+                if (this.LocationRefTypes != null)
+                {
+                    if (!eval(this.LocationRefTypes.Overall)) return false;
+                    if (this.LocationRefTypes.Specific != null)
+                    {
+                        foreach (var item in this.LocationRefTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.LayeredMaterialSwaps != null)
+                {
+                    if (!eval(this.LayeredMaterialSwaps.Overall)) return false;
+                    if (this.LayeredMaterialSwaps.Specific != null)
+                    {
+                        foreach (var item in this.LayeredMaterialSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.XPCK)) return false;
+                if (!eval(this.SourcePackIn)) return false;
+                if (!eval(this.PersistentLocation)) return false;
+                if (ProjectedDecal != null)
+                {
+                    if (!eval(this.ProjectedDecal.Overall)) return false;
+                    if (this.ProjectedDecal.Specific != null && !this.ProjectedDecal.Specific.All(eval)) return false;
+                }
+                if (this.ProjectedDecalReferences != null)
+                {
+                    if (!eval(this.ProjectedDecalReferences.Overall)) return false;
+                    if (this.ProjectedDecalReferences.Specific != null)
+                    {
+                        foreach (var item in this.ProjectedDecalReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ConstrainedDecal)) return false;
+                if (!eval(this.IsIgnoredBySandbox)) return false;
+                if (!eval(this.FactionRank)) return false;
+                if (LightGobo != null)
+                {
+                    if (!eval(this.LightGobo.Overall)) return false;
+                    if (this.LightGobo.Specific != null && !this.LightGobo.Specific.All(eval)) return false;
+                }
+                if (Collision != null)
+                {
+                    if (!eval(this.Collision.Overall)) return false;
+                    if (this.Collision.Specific != null && !this.Collision.Specific.All(eval)) return false;
+                }
+                if (this.PowerLinks != null)
+                {
+                    if (!eval(this.PowerLinks.Overall)) return false;
+                    if (this.PowerLinks.Specific != null)
+                    {
+                        foreach (var item in this.PowerLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Count)) return false;
+                if (!eval(this.XFLG)) return false;
+                if (LightFlicker != null)
+                {
+                    if (!eval(this.LightFlicker.Overall)) return false;
+                    if (this.LightFlicker.Specific != null && !this.LightFlicker.Specific.All(eval)) return false;
+                }
+                if (MapMarker != null)
+                {
+                    if (!eval(this.MapMarker.Overall)) return false;
+                    if (this.MapMarker.Specific != null && !this.MapMarker.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LightLayerData)) return false;
+                if (!eval(this.LightStaticShadowMap)) return false;
+                if (!eval(this.LightVolumetricData)) return false;
+                if (Ownership != null)
+                {
+                    if (!eval(this.Ownership.Overall)) return false;
+                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
+                }
+                if (this.LightColors != null)
+                {
+                    if (!eval(this.LightColors.Overall)) return false;
+                    if (this.LightColors.Specific != null)
+                    {
+                        foreach (var item in this.LightColors.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (GroupedPackIn != null)
+                {
+                    if (!eval(this.GroupedPackIn.Overall)) return false;
+                    if (this.GroupedPackIn.Specific != null && !this.GroupedPackIn.Specific.All(eval)) return false;
+                }
+                if (!eval(this.BlueprintPartOrigin)) return false;
+                if (!eval(this.Layer)) return false;
+                if (LightRoundedness != null)
+                {
+                    if (!eval(this.LightRoundedness.Overall)) return false;
+                    if (this.LightRoundedness.Specific != null && !this.LightRoundedness.Specific.All(eval)) return false;
+                }
+                if (this.LinkedReferences != null)
+                {
+                    if (!eval(this.LinkedReferences.Overall)) return false;
+                    if (this.LinkedReferences.Specific != null)
+                    {
+                        foreach (var item in this.LinkedReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.IsLinkedRefTransient)) return false;
+                if (this.SnapLinks != null)
+                {
+                    if (!eval(this.SnapLinks.Overall)) return false;
+                    if (this.SnapLinks.Specific != null)
+                    {
+                        foreach (var item in this.SnapLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.EncounterZone)) return false;
+                if (!eval(this.GeometryDirtinessScale)) return false;
+                if (Lock != null)
+                {
+                    if (!eval(this.Lock.Overall)) return false;
+                    if (this.Lock.Specific != null && !this.Lock.Specific.All(eval)) return false;
+                }
+                if (this.Properties != null)
+                {
+                    if (!eval(this.Properties.Overall)) return false;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (ExternalEmittance != null)
+                {
+                    if (!eval(this.ExternalEmittance.Overall)) return false;
+                    if (this.ExternalEmittance.Specific != null && !this.ExternalEmittance.Specific.All(eval)) return false;
+                }
+                if (!eval(this.HeadTrackingWeight)) return false;
+                if (!eval(this.BOLV)) return false;
+                if (Spline != null)
+                {
+                    if (!eval(this.Spline.Overall)) return false;
+                    if (this.Spline.Specific != null && !this.Spline.Specific.All(eval)) return false;
+                }
+                if (!eval(this.XNSE)) return false;
+                if (!eval(this.AttachRef)) return false;
+                if (!eval(this.RagdollBipedRotation)) return false;
+                if (!eval(this.HealthPercent)) return false;
+                if (!eval(this.TimeOfDay)) return false;
+                if (EnableParent != null)
+                {
+                    if (!eval(this.EnableParent.Overall)) return false;
+                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
+                }
+                if (this.Traversals != null)
+                {
+                    if (!eval(this.Traversals.Overall)) return false;
+                    if (this.Traversals.Specific != null)
+                    {
+                        foreach (var item in this.Traversals.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavigationDoorLink != null)
+                {
+                    if (!eval(this.NavigationDoorLink.Overall)) return false;
+                    if (this.NavigationDoorLink.Specific != null && !this.NavigationDoorLink.Specific.All(eval)) return false;
+                }
+                if (!eval(this.IsActivationPoint)) return false;
+                if (!eval(this.Scale)) return false;
+                if (!eval(this.OpenByDefault)) return false;
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
+                if (!eval(this.Comments)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +1574,294 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.XALG)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Base)) return true;
+                if (VolumeData != null)
+                {
+                    if (eval(this.VolumeData.Overall)) return true;
+                    if (this.VolumeData.Specific != null && this.VolumeData.Specific.Any(eval)) return true;
+                }
+                if (ShipArrival != null)
+                {
+                    if (eval(this.ShipArrival.Overall)) return true;
+                    if (this.ShipArrival.Specific != null && this.ShipArrival.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LevelModifier)) return true;
+                if (eval(this.Action)) return true;
+                if (Primitive != null)
+                {
+                    if (eval(this.Primitive.Overall)) return true;
+                    if (this.Primitive.Specific != null && this.Primitive.Specific.Any(eval)) return true;
+                }
+                if (VolumeReflectionProbeOffsetIntensity != null)
+                {
+                    if (eval(this.VolumeReflectionProbeOffsetIntensity.Overall)) return true;
+                    if (this.VolumeReflectionProbeOffsetIntensity.Specific != null && this.VolumeReflectionProbeOffsetIntensity.Specific.Any(eval)) return true;
+                }
+                if (DebugText != null)
+                {
+                    if (eval(this.DebugText.Overall)) return true;
+                    if (this.DebugText.Specific != null && this.DebugText.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Emittance)) return true;
+                if (eval(this.Radius)) return true;
+                if (Lighting != null)
+                {
+                    if (eval(this.Lighting.Overall)) return true;
+                    if (this.Lighting.Specific != null && this.Lighting.Specific.Any(eval)) return true;
+                }
+                if (LightBarndoorData != null)
+                {
+                    if (eval(this.LightBarndoorData.Overall)) return true;
+                    if (this.LightBarndoorData.Specific != null && this.LightBarndoorData.Specific.Any(eval)) return true;
+                }
+                if (LightArea != null)
+                {
+                    if (eval(this.LightArea.Overall)) return true;
+                    if (this.LightArea.Specific != null && this.LightArea.Specific.Any(eval)) return true;
+                }
+                if (eval(this.CurrentZoneCell)) return true;
+                if (eval(this.XCZA)) return true;
+                if (Patrol != null)
+                {
+                    if (eval(this.Patrol.Overall)) return true;
+                    if (this.Patrol.Specific != null && this.Patrol.Specific.Any(eval)) return true;
+                }
+                if (this.RagdollData != null)
+                {
+                    if (eval(this.RagdollData.Overall)) return true;
+                    if (this.RagdollData.Specific != null)
+                    {
+                        foreach (var item in this.RagdollData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (TeleportDestination != null)
+                {
+                    if (eval(this.TeleportDestination.Overall)) return true;
+                    if (this.TeleportDestination.Specific != null && this.TeleportDestination.Specific.Any(eval)) return true;
+                }
+                if (eval(this.TeleportName)) return true;
+                if (eval(this.ReferenceGroup)) return true;
+                if (this.LocationRefTypes != null)
+                {
+                    if (eval(this.LocationRefTypes.Overall)) return true;
+                    if (this.LocationRefTypes.Specific != null)
+                    {
+                        foreach (var item in this.LocationRefTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.LayeredMaterialSwaps != null)
+                {
+                    if (eval(this.LayeredMaterialSwaps.Overall)) return true;
+                    if (this.LayeredMaterialSwaps.Specific != null)
+                    {
+                        foreach (var item in this.LayeredMaterialSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.XPCK)) return true;
+                if (eval(this.SourcePackIn)) return true;
+                if (eval(this.PersistentLocation)) return true;
+                if (ProjectedDecal != null)
+                {
+                    if (eval(this.ProjectedDecal.Overall)) return true;
+                    if (this.ProjectedDecal.Specific != null && this.ProjectedDecal.Specific.Any(eval)) return true;
+                }
+                if (this.ProjectedDecalReferences != null)
+                {
+                    if (eval(this.ProjectedDecalReferences.Overall)) return true;
+                    if (this.ProjectedDecalReferences.Specific != null)
+                    {
+                        foreach (var item in this.ProjectedDecalReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ConstrainedDecal)) return true;
+                if (eval(this.IsIgnoredBySandbox)) return true;
+                if (eval(this.FactionRank)) return true;
+                if (LightGobo != null)
+                {
+                    if (eval(this.LightGobo.Overall)) return true;
+                    if (this.LightGobo.Specific != null && this.LightGobo.Specific.Any(eval)) return true;
+                }
+                if (Collision != null)
+                {
+                    if (eval(this.Collision.Overall)) return true;
+                    if (this.Collision.Specific != null && this.Collision.Specific.Any(eval)) return true;
+                }
+                if (this.PowerLinks != null)
+                {
+                    if (eval(this.PowerLinks.Overall)) return true;
+                    if (this.PowerLinks.Specific != null)
+                    {
+                        foreach (var item in this.PowerLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Count)) return true;
+                if (eval(this.XFLG)) return true;
+                if (LightFlicker != null)
+                {
+                    if (eval(this.LightFlicker.Overall)) return true;
+                    if (this.LightFlicker.Specific != null && this.LightFlicker.Specific.Any(eval)) return true;
+                }
+                if (MapMarker != null)
+                {
+                    if (eval(this.MapMarker.Overall)) return true;
+                    if (this.MapMarker.Specific != null && this.MapMarker.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LightLayerData)) return true;
+                if (eval(this.LightStaticShadowMap)) return true;
+                if (eval(this.LightVolumetricData)) return true;
+                if (Ownership != null)
+                {
+                    if (eval(this.Ownership.Overall)) return true;
+                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
+                }
+                if (this.LightColors != null)
+                {
+                    if (eval(this.LightColors.Overall)) return true;
+                    if (this.LightColors.Specific != null)
+                    {
+                        foreach (var item in this.LightColors.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (GroupedPackIn != null)
+                {
+                    if (eval(this.GroupedPackIn.Overall)) return true;
+                    if (this.GroupedPackIn.Specific != null && this.GroupedPackIn.Specific.Any(eval)) return true;
+                }
+                if (eval(this.BlueprintPartOrigin)) return true;
+                if (eval(this.Layer)) return true;
+                if (LightRoundedness != null)
+                {
+                    if (eval(this.LightRoundedness.Overall)) return true;
+                    if (this.LightRoundedness.Specific != null && this.LightRoundedness.Specific.Any(eval)) return true;
+                }
+                if (this.LinkedReferences != null)
+                {
+                    if (eval(this.LinkedReferences.Overall)) return true;
+                    if (this.LinkedReferences.Specific != null)
+                    {
+                        foreach (var item in this.LinkedReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.IsLinkedRefTransient)) return true;
+                if (this.SnapLinks != null)
+                {
+                    if (eval(this.SnapLinks.Overall)) return true;
+                    if (this.SnapLinks.Specific != null)
+                    {
+                        foreach (var item in this.SnapLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.EncounterZone)) return true;
+                if (eval(this.GeometryDirtinessScale)) return true;
+                if (Lock != null)
+                {
+                    if (eval(this.Lock.Overall)) return true;
+                    if (this.Lock.Specific != null && this.Lock.Specific.Any(eval)) return true;
+                }
+                if (this.Properties != null)
+                {
+                    if (eval(this.Properties.Overall)) return true;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (ExternalEmittance != null)
+                {
+                    if (eval(this.ExternalEmittance.Overall)) return true;
+                    if (this.ExternalEmittance.Specific != null && this.ExternalEmittance.Specific.Any(eval)) return true;
+                }
+                if (eval(this.HeadTrackingWeight)) return true;
+                if (eval(this.BOLV)) return true;
+                if (Spline != null)
+                {
+                    if (eval(this.Spline.Overall)) return true;
+                    if (this.Spline.Specific != null && this.Spline.Specific.Any(eval)) return true;
+                }
+                if (eval(this.XNSE)) return true;
+                if (eval(this.AttachRef)) return true;
+                if (eval(this.RagdollBipedRotation)) return true;
+                if (eval(this.HealthPercent)) return true;
+                if (eval(this.TimeOfDay)) return true;
+                if (EnableParent != null)
+                {
+                    if (eval(this.EnableParent.Overall)) return true;
+                    if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
+                }
+                if (this.Traversals != null)
+                {
+                    if (eval(this.Traversals.Overall)) return true;
+                    if (this.Traversals.Specific != null)
+                    {
+                        foreach (var item in this.Traversals.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavigationDoorLink != null)
+                {
+                    if (eval(this.NavigationDoorLink.Overall)) return true;
+                    if (this.NavigationDoorLink.Specific != null && this.NavigationDoorLink.Specific.Any(eval)) return true;
+                }
+                if (eval(this.IsActivationPoint)) return true;
+                if (eval(this.Scale)) return true;
+                if (eval(this.OpenByDefault)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
+                if (eval(this.Comments)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +1877,231 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.XALG = eval(this.XALG);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Base = eval(this.Base);
+                obj.VolumeData = this.VolumeData == null ? null : new MaskItem<R, PlacedObjectVolumeData.Mask<R>?>(eval(this.VolumeData.Overall), this.VolumeData.Specific?.Translate(eval));
+                obj.ShipArrival = this.ShipArrival == null ? null : new MaskItem<R, PlacedObjectShipArrival.Mask<R>?>(eval(this.ShipArrival.Overall), this.ShipArrival.Specific?.Translate(eval));
+                obj.LevelModifier = eval(this.LevelModifier);
+                obj.Action = eval(this.Action);
+                obj.Primitive = this.Primitive == null ? null : new MaskItem<R, PlacedPrimitive.Mask<R>?>(eval(this.Primitive.Overall), this.Primitive.Specific?.Translate(eval));
+                obj.VolumeReflectionProbeOffsetIntensity = this.VolumeReflectionProbeOffsetIntensity == null ? null : new MaskItem<R, VolumeReflectionProbeOffsetIntensity.Mask<R>?>(eval(this.VolumeReflectionProbeOffsetIntensity.Overall), this.VolumeReflectionProbeOffsetIntensity.Specific?.Translate(eval));
+                obj.DebugText = this.DebugText == null ? null : new MaskItem<R, PlacedObjectDebugText.Mask<R>?>(eval(this.DebugText.Overall), this.DebugText.Specific?.Translate(eval));
+                obj.Emittance = eval(this.Emittance);
+                obj.Radius = eval(this.Radius);
+                obj.Lighting = this.Lighting == null ? null : new MaskItem<R, PlacedObjectLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
+                obj.LightBarndoorData = this.LightBarndoorData == null ? null : new MaskItem<R, PlacedObjectLightBarndoorData.Mask<R>?>(eval(this.LightBarndoorData.Overall), this.LightBarndoorData.Specific?.Translate(eval));
+                obj.LightArea = this.LightArea == null ? null : new MaskItem<R, PlacedObjectLightArea.Mask<R>?>(eval(this.LightArea.Overall), this.LightArea.Specific?.Translate(eval));
+                obj.CurrentZoneCell = eval(this.CurrentZoneCell);
+                obj.XCZA = eval(this.XCZA);
+                obj.Patrol = this.Patrol == null ? null : new MaskItem<R, Patrol.Mask<R>?>(eval(this.Patrol.Overall), this.Patrol.Specific?.Translate(eval));
+                if (RagdollData != null)
+                {
+                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), Enumerable.Empty<MaskItemIndexed<R, RagdollData.Mask<R>?>>());
+                    if (RagdollData.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RagdollData.Mask<R>?>>();
+                        obj.RagdollData.Specific = l;
+                        foreach (var item in RagdollData.Specific)
+                        {
+                            MaskItemIndexed<R, RagdollData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RagdollData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.TeleportDestination = this.TeleportDestination == null ? null : new MaskItem<R, TeleportDestination.Mask<R>?>(eval(this.TeleportDestination.Overall), this.TeleportDestination.Specific?.Translate(eval));
+                obj.TeleportName = eval(this.TeleportName);
+                obj.ReferenceGroup = eval(this.ReferenceGroup);
+                if (LocationRefTypes != null)
+                {
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LocationRefTypes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LocationRefTypes.Specific = l;
+                        foreach (var item in LocationRefTypes.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (LayeredMaterialSwaps != null)
+                {
+                    obj.LayeredMaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LayeredMaterialSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LayeredMaterialSwaps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LayeredMaterialSwaps.Specific = l;
+                        foreach (var item in LayeredMaterialSwaps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.XPCK = eval(this.XPCK);
+                obj.SourcePackIn = eval(this.SourcePackIn);
+                obj.PersistentLocation = eval(this.PersistentLocation);
+                obj.ProjectedDecal = this.ProjectedDecal == null ? null : new MaskItem<R, PlacedObjectProjectedDecal.Mask<R>?>(eval(this.ProjectedDecal.Overall), this.ProjectedDecal.Specific?.Translate(eval));
+                if (ProjectedDecalReferences != null)
+                {
+                    obj.ProjectedDecalReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ProjectedDecalReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ProjectedDecalReferences.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ProjectedDecalReferences.Specific = l;
+                        foreach (var item in ProjectedDecalReferences.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.ConstrainedDecal = eval(this.ConstrainedDecal);
+                obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
+                obj.FactionRank = eval(this.FactionRank);
+                obj.LightGobo = this.LightGobo == null ? null : new MaskItem<R, LightGobo.Mask<R>?>(eval(this.LightGobo.Overall), this.LightGobo.Specific?.Translate(eval));
+                obj.Collision = this.Collision == null ? null : new MaskItem<R, PlacedObjectCollision.Mask<R>?>(eval(this.Collision.Overall), this.Collision.Specific?.Translate(eval));
+                if (PowerLinks != null)
+                {
+                    obj.PowerLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PowerLink.Mask<R>?>>?>(eval(this.PowerLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, PowerLink.Mask<R>?>>());
+                    if (PowerLinks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PowerLink.Mask<R>?>>();
+                        obj.PowerLinks.Specific = l;
+                        foreach (var item in PowerLinks.Specific)
+                        {
+                            MaskItemIndexed<R, PowerLink.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PowerLink.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Count = eval(this.Count);
+                obj.XFLG = eval(this.XFLG);
+                obj.LightFlicker = this.LightFlicker == null ? null : new MaskItem<R, PlacedObjectLightFlicker.Mask<R>?>(eval(this.LightFlicker.Overall), this.LightFlicker.Specific?.Translate(eval));
+                obj.MapMarker = this.MapMarker == null ? null : new MaskItem<R, PlacedObjectMapMarker.Mask<R>?>(eval(this.MapMarker.Overall), this.MapMarker.Specific?.Translate(eval));
+                obj.LightLayerData = eval(this.LightLayerData);
+                obj.LightStaticShadowMap = eval(this.LightStaticShadowMap);
+                obj.LightVolumetricData = eval(this.LightVolumetricData);
+                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                if (LightColors != null)
+                {
+                    obj.LightColors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlacedObjectLightColor.Mask<R>?>>?>(eval(this.LightColors.Overall), Enumerable.Empty<MaskItemIndexed<R, PlacedObjectLightColor.Mask<R>?>>());
+                    if (LightColors.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PlacedObjectLightColor.Mask<R>?>>();
+                        obj.LightColors.Specific = l;
+                        foreach (var item in LightColors.Specific)
+                        {
+                            MaskItemIndexed<R, PlacedObjectLightColor.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PlacedObjectLightColor.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.GroupedPackIn = this.GroupedPackIn == null ? null : new MaskItem<R, GroupedPackIn.Mask<R>?>(eval(this.GroupedPackIn.Overall), this.GroupedPackIn.Specific?.Translate(eval));
+                obj.BlueprintPartOrigin = eval(this.BlueprintPartOrigin);
+                obj.Layer = eval(this.Layer);
+                obj.LightRoundedness = this.LightRoundedness == null ? null : new MaskItem<R, PlacedObjectLightRoundedness.Mask<R>?>(eval(this.LightRoundedness.Overall), this.LightRoundedness.Specific?.Translate(eval));
+                if (LinkedReferences != null)
+                {
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    if (LinkedReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
+                        obj.LinkedReferences.Specific = l;
+                        foreach (var item in LinkedReferences.Specific)
+                        {
+                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.IsLinkedRefTransient = eval(this.IsLinkedRefTransient);
+                if (SnapLinks != null)
+                {
+                    obj.SnapLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapLink.Mask<R>?>>?>(eval(this.SnapLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapLink.Mask<R>?>>());
+                    if (SnapLinks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SnapLink.Mask<R>?>>();
+                        obj.SnapLinks.Specific = l;
+                        foreach (var item in SnapLinks.Specific)
+                        {
+                            MaskItemIndexed<R, SnapLink.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SnapLink.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.EncounterZone = eval(this.EncounterZone);
+                obj.GeometryDirtinessScale = eval(this.GeometryDirtinessScale);
+                obj.Lock = this.Lock == null ? null : new MaskItem<R, LockData.Mask<R>?>(eval(this.Lock.Overall), this.Lock.Specific?.Translate(eval));
+                if (Properties != null)
+                {
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    if (Properties.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
+                        obj.Properties.Specific = l;
+                        foreach (var item in Properties.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ExternalEmittance = this.ExternalEmittance == null ? null : new MaskItem<R, ExternalEmittance.Mask<R>?>(eval(this.ExternalEmittance.Overall), this.ExternalEmittance.Specific?.Translate(eval));
+                obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
+                obj.BOLV = eval(this.BOLV);
+                obj.Spline = this.Spline == null ? null : new MaskItem<R, PlacedObjectSpline.Mask<R>?>(eval(this.Spline.Overall), this.Spline.Specific?.Translate(eval));
+                obj.XNSE = eval(this.XNSE);
+                obj.AttachRef = eval(this.AttachRef);
+                obj.RagdollBipedRotation = eval(this.RagdollBipedRotation);
+                obj.HealthPercent = eval(this.HealthPercent);
+                obj.TimeOfDay = eval(this.TimeOfDay);
+                obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
+                if (Traversals != null)
+                {
+                    obj.Traversals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TraversalReference.Mask<R>?>>?>(eval(this.Traversals.Overall), Enumerable.Empty<MaskItemIndexed<R, TraversalReference.Mask<R>?>>());
+                    if (Traversals.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, TraversalReference.Mask<R>?>>();
+                        obj.Traversals.Specific = l;
+                        foreach (var item in Traversals.Specific)
+                        {
+                            MaskItemIndexed<R, TraversalReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TraversalReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.NavigationDoorLink = this.NavigationDoorLink == null ? null : new MaskItem<R, NavigationDoorLink.Mask<R>?>(eval(this.NavigationDoorLink.Overall), this.NavigationDoorLink.Specific?.Translate(eval));
+                obj.IsActivationPoint = eval(this.IsActivationPoint);
+                obj.Scale = eval(this.Scale);
+                obj.OpenByDefault = eval(this.OpenByDefault);
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
+                obj.Comments = eval(this.Comments);
             }
             #endregion
 
@@ -175,6 +2120,473 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Base ?? true)
+                    {
+                        sb.AppendItem(Base, "Base");
+                    }
+                    if (printMask?.VolumeData?.Overall ?? true)
+                    {
+                        VolumeData?.Print(sb);
+                    }
+                    if (printMask?.ShipArrival?.Overall ?? true)
+                    {
+                        ShipArrival?.Print(sb);
+                    }
+                    if (printMask?.LevelModifier ?? true)
+                    {
+                        sb.AppendItem(LevelModifier, "LevelModifier");
+                    }
+                    if (printMask?.Action ?? true)
+                    {
+                        sb.AppendItem(Action, "Action");
+                    }
+                    if (printMask?.Primitive?.Overall ?? true)
+                    {
+                        Primitive?.Print(sb);
+                    }
+                    if (printMask?.VolumeReflectionProbeOffsetIntensity?.Overall ?? true)
+                    {
+                        VolumeReflectionProbeOffsetIntensity?.Print(sb);
+                    }
+                    if (printMask?.DebugText?.Overall ?? true)
+                    {
+                        DebugText?.Print(sb);
+                    }
+                    if (printMask?.Emittance ?? true)
+                    {
+                        sb.AppendItem(Emittance, "Emittance");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        sb.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.Lighting?.Overall ?? true)
+                    {
+                        Lighting?.Print(sb);
+                    }
+                    if (printMask?.LightBarndoorData?.Overall ?? true)
+                    {
+                        LightBarndoorData?.Print(sb);
+                    }
+                    if (printMask?.LightArea?.Overall ?? true)
+                    {
+                        LightArea?.Print(sb);
+                    }
+                    if (printMask?.CurrentZoneCell ?? true)
+                    {
+                        sb.AppendItem(CurrentZoneCell, "CurrentZoneCell");
+                    }
+                    if (printMask?.XCZA ?? true)
+                    {
+                        sb.AppendItem(XCZA, "XCZA");
+                    }
+                    if (printMask?.Patrol?.Overall ?? true)
+                    {
+                        Patrol?.Print(sb);
+                    }
+                    if ((printMask?.RagdollData?.Overall ?? true)
+                        && RagdollData is {} RagdollDataItem)
+                    {
+                        sb.AppendLine("RagdollData =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RagdollDataItem.Overall);
+                            if (RagdollDataItem.Specific != null)
+                            {
+                                foreach (var subItem in RagdollDataItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.TeleportDestination?.Overall ?? true)
+                    {
+                        TeleportDestination?.Print(sb);
+                    }
+                    if (printMask?.TeleportName ?? true)
+                    {
+                        sb.AppendItem(TeleportName, "TeleportName");
+                    }
+                    if (printMask?.ReferenceGroup ?? true)
+                    {
+                        sb.AppendItem(ReferenceGroup, "ReferenceGroup");
+                    }
+                    if ((printMask?.LocationRefTypes?.Overall ?? true)
+                        && LocationRefTypes is {} LocationRefTypesItem)
+                    {
+                        sb.AppendLine("LocationRefTypes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LocationRefTypesItem.Overall);
+                            if (LocationRefTypesItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationRefTypesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.LayeredMaterialSwaps?.Overall ?? true)
+                        && LayeredMaterialSwaps is {} LayeredMaterialSwapsItem)
+                    {
+                        sb.AppendLine("LayeredMaterialSwaps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LayeredMaterialSwapsItem.Overall);
+                            if (LayeredMaterialSwapsItem.Specific != null)
+                            {
+                                foreach (var subItem in LayeredMaterialSwapsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.XPCK ?? true)
+                    {
+                        sb.AppendItem(XPCK, "XPCK");
+                    }
+                    if (printMask?.SourcePackIn ?? true)
+                    {
+                        sb.AppendItem(SourcePackIn, "SourcePackIn");
+                    }
+                    if (printMask?.PersistentLocation ?? true)
+                    {
+                        sb.AppendItem(PersistentLocation, "PersistentLocation");
+                    }
+                    if (printMask?.ProjectedDecal?.Overall ?? true)
+                    {
+                        ProjectedDecal?.Print(sb);
+                    }
+                    if ((printMask?.ProjectedDecalReferences?.Overall ?? true)
+                        && ProjectedDecalReferences is {} ProjectedDecalReferencesItem)
+                    {
+                        sb.AppendLine("ProjectedDecalReferences =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ProjectedDecalReferencesItem.Overall);
+                            if (ProjectedDecalReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in ProjectedDecalReferencesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.ConstrainedDecal ?? true)
+                    {
+                        sb.AppendItem(ConstrainedDecal, "ConstrainedDecal");
+                    }
+                    if (printMask?.IsIgnoredBySandbox ?? true)
+                    {
+                        sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
+                    }
+                    if (printMask?.LightGobo?.Overall ?? true)
+                    {
+                        LightGobo?.Print(sb);
+                    }
+                    if (printMask?.Collision?.Overall ?? true)
+                    {
+                        Collision?.Print(sb);
+                    }
+                    if ((printMask?.PowerLinks?.Overall ?? true)
+                        && PowerLinks is {} PowerLinksItem)
+                    {
+                        sb.AppendLine("PowerLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PowerLinksItem.Overall);
+                            if (PowerLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in PowerLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Count ?? true)
+                    {
+                        sb.AppendItem(Count, "Count");
+                    }
+                    if (printMask?.XFLG ?? true)
+                    {
+                        sb.AppendItem(XFLG, "XFLG");
+                    }
+                    if (printMask?.LightFlicker?.Overall ?? true)
+                    {
+                        LightFlicker?.Print(sb);
+                    }
+                    if (printMask?.MapMarker?.Overall ?? true)
+                    {
+                        MapMarker?.Print(sb);
+                    }
+                    if (printMask?.LightLayerData ?? true)
+                    {
+                        sb.AppendItem(LightLayerData, "LightLayerData");
+                    }
+                    if (printMask?.LightStaticShadowMap ?? true)
+                    {
+                        sb.AppendItem(LightStaticShadowMap, "LightStaticShadowMap");
+                    }
+                    if (printMask?.LightVolumetricData ?? true)
+                    {
+                        sb.AppendItem(LightVolumetricData, "LightVolumetricData");
+                    }
+                    if (printMask?.Ownership?.Overall ?? true)
+                    {
+                        Ownership?.Print(sb);
+                    }
+                    if ((printMask?.LightColors?.Overall ?? true)
+                        && LightColors is {} LightColorsItem)
+                    {
+                        sb.AppendLine("LightColors =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LightColorsItem.Overall);
+                            if (LightColorsItem.Specific != null)
+                            {
+                                foreach (var subItem in LightColorsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.GroupedPackIn?.Overall ?? true)
+                    {
+                        GroupedPackIn?.Print(sb);
+                    }
+                    if (printMask?.BlueprintPartOrigin ?? true)
+                    {
+                        sb.AppendItem(BlueprintPartOrigin, "BlueprintPartOrigin");
+                    }
+                    if (printMask?.Layer ?? true)
+                    {
+                        sb.AppendItem(Layer, "Layer");
+                    }
+                    if (printMask?.LightRoundedness?.Overall ?? true)
+                    {
+                        LightRoundedness?.Print(sb);
+                    }
+                    if ((printMask?.LinkedReferences?.Overall ?? true)
+                        && LinkedReferences is {} LinkedReferencesItem)
+                    {
+                        sb.AppendLine("LinkedReferences =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LinkedReferencesItem.Overall);
+                            if (LinkedReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in LinkedReferencesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.IsLinkedRefTransient ?? true)
+                    {
+                        sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
+                    }
+                    if ((printMask?.SnapLinks?.Overall ?? true)
+                        && SnapLinks is {} SnapLinksItem)
+                    {
+                        sb.AppendLine("SnapLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SnapLinksItem.Overall);
+                            if (SnapLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in SnapLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.EncounterZone ?? true)
+                    {
+                        sb.AppendItem(EncounterZone, "EncounterZone");
+                    }
+                    if (printMask?.GeometryDirtinessScale ?? true)
+                    {
+                        sb.AppendItem(GeometryDirtinessScale, "GeometryDirtinessScale");
+                    }
+                    if (printMask?.Lock?.Overall ?? true)
+                    {
+                        Lock?.Print(sb);
+                    }
+                    if ((printMask?.Properties?.Overall ?? true)
+                        && Properties is {} PropertiesItem)
+                    {
+                        sb.AppendLine("Properties =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PropertiesItem.Overall);
+                            if (PropertiesItem.Specific != null)
+                            {
+                                foreach (var subItem in PropertiesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.ExternalEmittance?.Overall ?? true)
+                    {
+                        ExternalEmittance?.Print(sb);
+                    }
+                    if (printMask?.HeadTrackingWeight ?? true)
+                    {
+                        sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                    }
+                    if (printMask?.BOLV ?? true)
+                    {
+                        sb.AppendItem(BOLV, "BOLV");
+                    }
+                    if (printMask?.Spline?.Overall ?? true)
+                    {
+                        Spline?.Print(sb);
+                    }
+                    if (printMask?.XNSE ?? true)
+                    {
+                        sb.AppendItem(XNSE, "XNSE");
+                    }
+                    if (printMask?.AttachRef ?? true)
+                    {
+                        sb.AppendItem(AttachRef, "AttachRef");
+                    }
+                    if (printMask?.RagdollBipedRotation ?? true)
+                    {
+                        sb.AppendItem(RagdollBipedRotation, "RagdollBipedRotation");
+                    }
+                    if (printMask?.HealthPercent ?? true)
+                    {
+                        sb.AppendItem(HealthPercent, "HealthPercent");
+                    }
+                    if (printMask?.TimeOfDay ?? true)
+                    {
+                        sb.AppendItem(TimeOfDay, "TimeOfDay");
+                    }
+                    if (printMask?.EnableParent?.Overall ?? true)
+                    {
+                        EnableParent?.Print(sb);
+                    }
+                    if ((printMask?.Traversals?.Overall ?? true)
+                        && Traversals is {} TraversalsItem)
+                    {
+                        sb.AppendLine("Traversals =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TraversalsItem.Overall);
+                            if (TraversalsItem.Specific != null)
+                            {
+                                foreach (var subItem in TraversalsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.NavigationDoorLink?.Overall ?? true)
+                    {
+                        NavigationDoorLink?.Print(sb);
+                    }
+                    if (printMask?.IsActivationPoint ?? true)
+                    {
+                        sb.AppendItem(IsActivationPoint, "IsActivationPoint");
+                    }
+                    if (printMask?.Scale ?? true)
+                    {
+                        sb.AppendItem(Scale, "Scale");
+                    }
+                    if (printMask?.OpenByDefault ?? true)
+                    {
+                        sb.AppendItem(OpenByDefault, "OpenByDefault");
+                    }
+                    if (printMask?.Position ?? true)
+                    {
+                        sb.AppendItem(Position, "Position");
+                    }
+                    if (printMask?.Rotation ?? true)
+                    {
+                        sb.AppendItem(Rotation, "Rotation");
+                    }
+                    if (printMask?.Comments ?? true)
+                    {
+                        sb.AppendItem(Comments, "Comments");
+                    }
                 }
             }
             #endregion
@@ -185,12 +2597,237 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? XALG;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Base;
+            public MaskItem<Exception?, PlacedObjectVolumeData.ErrorMask?>? VolumeData;
+            public MaskItem<Exception?, PlacedObjectShipArrival.ErrorMask?>? ShipArrival;
+            public Exception? LevelModifier;
+            public Exception? Action;
+            public MaskItem<Exception?, PlacedPrimitive.ErrorMask?>? Primitive;
+            public MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>? VolumeReflectionProbeOffsetIntensity;
+            public MaskItem<Exception?, PlacedObjectDebugText.ErrorMask?>? DebugText;
+            public Exception? Emittance;
+            public Exception? Radius;
+            public MaskItem<Exception?, PlacedObjectLighting.ErrorMask?>? Lighting;
+            public MaskItem<Exception?, PlacedObjectLightBarndoorData.ErrorMask?>? LightBarndoorData;
+            public MaskItem<Exception?, PlacedObjectLightArea.ErrorMask?>? LightArea;
+            public Exception? CurrentZoneCell;
+            public Exception? XCZA;
+            public MaskItem<Exception?, Patrol.ErrorMask?>? Patrol;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>? RagdollData;
+            public MaskItem<Exception?, TeleportDestination.ErrorMask?>? TeleportDestination;
+            public Exception? TeleportName;
+            public Exception? ReferenceGroup;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LayeredMaterialSwaps;
+            public Exception? XPCK;
+            public Exception? SourcePackIn;
+            public Exception? PersistentLocation;
+            public MaskItem<Exception?, PlacedObjectProjectedDecal.ErrorMask?>? ProjectedDecal;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ProjectedDecalReferences;
+            public Exception? ConstrainedDecal;
+            public Exception? IsIgnoredBySandbox;
+            public Exception? FactionRank;
+            public MaskItem<Exception?, LightGobo.ErrorMask?>? LightGobo;
+            public MaskItem<Exception?, PlacedObjectCollision.ErrorMask?>? Collision;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>? PowerLinks;
+            public Exception? Count;
+            public Exception? XFLG;
+            public MaskItem<Exception?, PlacedObjectLightFlicker.ErrorMask?>? LightFlicker;
+            public MaskItem<Exception?, PlacedObjectMapMarker.ErrorMask?>? MapMarker;
+            public Exception? LightLayerData;
+            public Exception? LightStaticShadowMap;
+            public Exception? LightVolumetricData;
+            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectLightColor.ErrorMask?>>?>? LightColors;
+            public MaskItem<Exception?, GroupedPackIn.ErrorMask?>? GroupedPackIn;
+            public Exception? BlueprintPartOrigin;
+            public Exception? Layer;
+            public MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>? LightRoundedness;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
+            public Exception? IsLinkedRefTransient;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>? SnapLinks;
+            public Exception? EncounterZone;
+            public Exception? GeometryDirtinessScale;
+            public MaskItem<Exception?, LockData.ErrorMask?>? Lock;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
+            public MaskItem<Exception?, ExternalEmittance.ErrorMask?>? ExternalEmittance;
+            public Exception? HeadTrackingWeight;
+            public Exception? BOLV;
+            public MaskItem<Exception?, PlacedObjectSpline.ErrorMask?>? Spline;
+            public Exception? XNSE;
+            public Exception? AttachRef;
+            public Exception? RagdollBipedRotation;
+            public Exception? HealthPercent;
+            public Exception? TimeOfDay;
+            public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>? Traversals;
+            public MaskItem<Exception?, NavigationDoorLink.ErrorMask?>? NavigationDoorLink;
+            public Exception? IsActivationPoint;
+            public Exception? Scale;
+            public Exception? OpenByDefault;
+            public Exception? Position;
+            public Exception? Rotation;
+            public Exception? Comments;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case PlacedObject_FieldIndex.XALG:
+                        return XALG;
+                    case PlacedObject_FieldIndex.Components:
+                        return Components;
+                    case PlacedObject_FieldIndex.Base:
+                        return Base;
+                    case PlacedObject_FieldIndex.VolumeData:
+                        return VolumeData;
+                    case PlacedObject_FieldIndex.ShipArrival:
+                        return ShipArrival;
+                    case PlacedObject_FieldIndex.LevelModifier:
+                        return LevelModifier;
+                    case PlacedObject_FieldIndex.Action:
+                        return Action;
+                    case PlacedObject_FieldIndex.Primitive:
+                        return Primitive;
+                    case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
+                        return VolumeReflectionProbeOffsetIntensity;
+                    case PlacedObject_FieldIndex.DebugText:
+                        return DebugText;
+                    case PlacedObject_FieldIndex.Emittance:
+                        return Emittance;
+                    case PlacedObject_FieldIndex.Radius:
+                        return Radius;
+                    case PlacedObject_FieldIndex.Lighting:
+                        return Lighting;
+                    case PlacedObject_FieldIndex.LightBarndoorData:
+                        return LightBarndoorData;
+                    case PlacedObject_FieldIndex.LightArea:
+                        return LightArea;
+                    case PlacedObject_FieldIndex.CurrentZoneCell:
+                        return CurrentZoneCell;
+                    case PlacedObject_FieldIndex.XCZA:
+                        return XCZA;
+                    case PlacedObject_FieldIndex.Patrol:
+                        return Patrol;
+                    case PlacedObject_FieldIndex.RagdollData:
+                        return RagdollData;
+                    case PlacedObject_FieldIndex.TeleportDestination:
+                        return TeleportDestination;
+                    case PlacedObject_FieldIndex.TeleportName:
+                        return TeleportName;
+                    case PlacedObject_FieldIndex.ReferenceGroup:
+                        return ReferenceGroup;
+                    case PlacedObject_FieldIndex.LocationRefTypes:
+                        return LocationRefTypes;
+                    case PlacedObject_FieldIndex.LayeredMaterialSwaps:
+                        return LayeredMaterialSwaps;
+                    case PlacedObject_FieldIndex.XPCK:
+                        return XPCK;
+                    case PlacedObject_FieldIndex.SourcePackIn:
+                        return SourcePackIn;
+                    case PlacedObject_FieldIndex.PersistentLocation:
+                        return PersistentLocation;
+                    case PlacedObject_FieldIndex.ProjectedDecal:
+                        return ProjectedDecal;
+                    case PlacedObject_FieldIndex.ProjectedDecalReferences:
+                        return ProjectedDecalReferences;
+                    case PlacedObject_FieldIndex.ConstrainedDecal:
+                        return ConstrainedDecal;
+                    case PlacedObject_FieldIndex.IsIgnoredBySandbox:
+                        return IsIgnoredBySandbox;
+                    case PlacedObject_FieldIndex.FactionRank:
+                        return FactionRank;
+                    case PlacedObject_FieldIndex.LightGobo:
+                        return LightGobo;
+                    case PlacedObject_FieldIndex.Collision:
+                        return Collision;
+                    case PlacedObject_FieldIndex.PowerLinks:
+                        return PowerLinks;
+                    case PlacedObject_FieldIndex.Count:
+                        return Count;
+                    case PlacedObject_FieldIndex.XFLG:
+                        return XFLG;
+                    case PlacedObject_FieldIndex.LightFlicker:
+                        return LightFlicker;
+                    case PlacedObject_FieldIndex.MapMarker:
+                        return MapMarker;
+                    case PlacedObject_FieldIndex.LightLayerData:
+                        return LightLayerData;
+                    case PlacedObject_FieldIndex.LightStaticShadowMap:
+                        return LightStaticShadowMap;
+                    case PlacedObject_FieldIndex.LightVolumetricData:
+                        return LightVolumetricData;
+                    case PlacedObject_FieldIndex.Ownership:
+                        return Ownership;
+                    case PlacedObject_FieldIndex.LightColors:
+                        return LightColors;
+                    case PlacedObject_FieldIndex.GroupedPackIn:
+                        return GroupedPackIn;
+                    case PlacedObject_FieldIndex.BlueprintPartOrigin:
+                        return BlueprintPartOrigin;
+                    case PlacedObject_FieldIndex.Layer:
+                        return Layer;
+                    case PlacedObject_FieldIndex.LightRoundedness:
+                        return LightRoundedness;
+                    case PlacedObject_FieldIndex.LinkedReferences:
+                        return LinkedReferences;
+                    case PlacedObject_FieldIndex.IsLinkedRefTransient:
+                        return IsLinkedRefTransient;
+                    case PlacedObject_FieldIndex.SnapLinks:
+                        return SnapLinks;
+                    case PlacedObject_FieldIndex.EncounterZone:
+                        return EncounterZone;
+                    case PlacedObject_FieldIndex.GeometryDirtinessScale:
+                        return GeometryDirtinessScale;
+                    case PlacedObject_FieldIndex.Lock:
+                        return Lock;
+                    case PlacedObject_FieldIndex.Properties:
+                        return Properties;
+                    case PlacedObject_FieldIndex.ExternalEmittance:
+                        return ExternalEmittance;
+                    case PlacedObject_FieldIndex.HeadTrackingWeight:
+                        return HeadTrackingWeight;
+                    case PlacedObject_FieldIndex.BOLV:
+                        return BOLV;
+                    case PlacedObject_FieldIndex.Spline:
+                        return Spline;
+                    case PlacedObject_FieldIndex.XNSE:
+                        return XNSE;
+                    case PlacedObject_FieldIndex.AttachRef:
+                        return AttachRef;
+                    case PlacedObject_FieldIndex.RagdollBipedRotation:
+                        return RagdollBipedRotation;
+                    case PlacedObject_FieldIndex.HealthPercent:
+                        return HealthPercent;
+                    case PlacedObject_FieldIndex.TimeOfDay:
+                        return TimeOfDay;
+                    case PlacedObject_FieldIndex.EnableParent:
+                        return EnableParent;
+                    case PlacedObject_FieldIndex.Traversals:
+                        return Traversals;
+                    case PlacedObject_FieldIndex.NavigationDoorLink:
+                        return NavigationDoorLink;
+                    case PlacedObject_FieldIndex.IsActivationPoint:
+                        return IsActivationPoint;
+                    case PlacedObject_FieldIndex.Scale:
+                        return Scale;
+                    case PlacedObject_FieldIndex.OpenByDefault:
+                        return OpenByDefault;
+                    case PlacedObject_FieldIndex.Position:
+                        return Position;
+                    case PlacedObject_FieldIndex.Rotation:
+                        return Rotation;
+                    case PlacedObject_FieldIndex.Comments:
+                        return Comments;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +2838,228 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Base:
+                        this.Base = ex;
+                        break;
+                    case PlacedObject_FieldIndex.VolumeData:
+                        this.VolumeData = new MaskItem<Exception?, PlacedObjectVolumeData.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.ShipArrival:
+                        this.ShipArrival = new MaskItem<Exception?, PlacedObjectShipArrival.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LevelModifier:
+                        this.LevelModifier = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Action:
+                        this.Action = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Primitive:
+                        this.Primitive = new MaskItem<Exception?, PlacedPrimitive.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
+                        this.VolumeReflectionProbeOffsetIntensity = new MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.DebugText:
+                        this.DebugText = new MaskItem<Exception?, PlacedObjectDebugText.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Emittance:
+                        this.Emittance = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Lighting:
+                        this.Lighting = new MaskItem<Exception?, PlacedObjectLighting.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LightBarndoorData:
+                        this.LightBarndoorData = new MaskItem<Exception?, PlacedObjectLightBarndoorData.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LightArea:
+                        this.LightArea = new MaskItem<Exception?, PlacedObjectLightArea.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.CurrentZoneCell:
+                        this.CurrentZoneCell = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XCZA:
+                        this.XCZA = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Patrol:
+                        this.Patrol = new MaskItem<Exception?, Patrol.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.RagdollData:
+                        this.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.TeleportDestination:
+                        this.TeleportDestination = new MaskItem<Exception?, TeleportDestination.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.TeleportName:
+                        this.TeleportName = ex;
+                        break;
+                    case PlacedObject_FieldIndex.ReferenceGroup:
+                        this.ReferenceGroup = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LocationRefTypes:
+                        this.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LayeredMaterialSwaps:
+                        this.LayeredMaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.XPCK:
+                        this.XPCK = ex;
+                        break;
+                    case PlacedObject_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = ex;
+                        break;
+                    case PlacedObject_FieldIndex.PersistentLocation:
+                        this.PersistentLocation = ex;
+                        break;
+                    case PlacedObject_FieldIndex.ProjectedDecal:
+                        this.ProjectedDecal = new MaskItem<Exception?, PlacedObjectProjectedDecal.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.ProjectedDecalReferences:
+                        this.ProjectedDecalReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.ConstrainedDecal:
+                        this.ConstrainedDecal = ex;
+                        break;
+                    case PlacedObject_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = ex;
+                        break;
+                    case PlacedObject_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightGobo:
+                        this.LightGobo = new MaskItem<Exception?, LightGobo.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Collision:
+                        this.Collision = new MaskItem<Exception?, PlacedObjectCollision.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.PowerLinks:
+                        this.PowerLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Count:
+                        this.Count = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XFLG:
+                        this.XFLG = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightFlicker:
+                        this.LightFlicker = new MaskItem<Exception?, PlacedObjectLightFlicker.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.MapMarker:
+                        this.MapMarker = new MaskItem<Exception?, PlacedObjectMapMarker.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LightLayerData:
+                        this.LightLayerData = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightStaticShadowMap:
+                        this.LightStaticShadowMap = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightVolumetricData:
+                        this.LightVolumetricData = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Ownership:
+                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LightColors:
+                        this.LightColors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectLightColor.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.GroupedPackIn:
+                        this.GroupedPackIn = new MaskItem<Exception?, GroupedPackIn.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.BlueprintPartOrigin:
+                        this.BlueprintPartOrigin = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Layer:
+                        this.Layer = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightRoundedness:
+                        this.LightRoundedness = new MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LinkedReferences:
+                        this.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.IsLinkedRefTransient:
+                        this.IsLinkedRefTransient = ex;
+                        break;
+                    case PlacedObject_FieldIndex.SnapLinks:
+                        this.SnapLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.EncounterZone:
+                        this.EncounterZone = ex;
+                        break;
+                    case PlacedObject_FieldIndex.GeometryDirtinessScale:
+                        this.GeometryDirtinessScale = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Lock:
+                        this.Lock = new MaskItem<Exception?, LockData.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Properties:
+                        this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.ExternalEmittance:
+                        this.ExternalEmittance = new MaskItem<Exception?, ExternalEmittance.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.HeadTrackingWeight:
+                        this.HeadTrackingWeight = ex;
+                        break;
+                    case PlacedObject_FieldIndex.BOLV:
+                        this.BOLV = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Spline:
+                        this.Spline = new MaskItem<Exception?, PlacedObjectSpline.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.XNSE:
+                        this.XNSE = ex;
+                        break;
+                    case PlacedObject_FieldIndex.AttachRef:
+                        this.AttachRef = ex;
+                        break;
+                    case PlacedObject_FieldIndex.RagdollBipedRotation:
+                        this.RagdollBipedRotation = ex;
+                        break;
+                    case PlacedObject_FieldIndex.HealthPercent:
+                        this.HealthPercent = ex;
+                        break;
+                    case PlacedObject_FieldIndex.TimeOfDay:
+                        this.TimeOfDay = ex;
+                        break;
+                    case PlacedObject_FieldIndex.EnableParent:
+                        this.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Traversals:
+                        this.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.NavigationDoorLink:
+                        this.NavigationDoorLink = new MaskItem<Exception?, NavigationDoorLink.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.IsActivationPoint:
+                        this.IsActivationPoint = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Scale:
+                        this.Scale = ex;
+                        break;
+                    case PlacedObject_FieldIndex.OpenByDefault:
+                        this.OpenByDefault = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Position:
+                        this.Position = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Rotation:
+                        this.Rotation = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Comments:
+                        this.Comments = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +3071,228 @@ namespace Mutagen.Bethesda.Starfield
                 PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Base:
+                        this.Base = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.VolumeData:
+                        this.VolumeData = (MaskItem<Exception?, PlacedObjectVolumeData.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ShipArrival:
+                        this.ShipArrival = (MaskItem<Exception?, PlacedObjectShipArrival.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LevelModifier:
+                        this.LevelModifier = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Action:
+                        this.Action = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Primitive:
+                        this.Primitive = (MaskItem<Exception?, PlacedPrimitive.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity:
+                        this.VolumeReflectionProbeOffsetIntensity = (MaskItem<Exception?, VolumeReflectionProbeOffsetIntensity.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.DebugText:
+                        this.DebugText = (MaskItem<Exception?, PlacedObjectDebugText.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Emittance:
+                        this.Emittance = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Lighting:
+                        this.Lighting = (MaskItem<Exception?, PlacedObjectLighting.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightBarndoorData:
+                        this.LightBarndoorData = (MaskItem<Exception?, PlacedObjectLightBarndoorData.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightArea:
+                        this.LightArea = (MaskItem<Exception?, PlacedObjectLightArea.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.CurrentZoneCell:
+                        this.CurrentZoneCell = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XCZA:
+                        this.XCZA = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Patrol:
+                        this.Patrol = (MaskItem<Exception?, Patrol.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.RagdollData:
+                        this.RagdollData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.TeleportDestination:
+                        this.TeleportDestination = (MaskItem<Exception?, TeleportDestination.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.TeleportName:
+                        this.TeleportName = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ReferenceGroup:
+                        this.ReferenceGroup = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LocationRefTypes:
+                        this.LocationRefTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LayeredMaterialSwaps:
+                        this.LayeredMaterialSwaps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XPCK:
+                        this.XPCK = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.SourcePackIn:
+                        this.SourcePackIn = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.PersistentLocation:
+                        this.PersistentLocation = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ProjectedDecal:
+                        this.ProjectedDecal = (MaskItem<Exception?, PlacedObjectProjectedDecal.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ProjectedDecalReferences:
+                        this.ProjectedDecalReferences = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ConstrainedDecal:
+                        this.ConstrainedDecal = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightGobo:
+                        this.LightGobo = (MaskItem<Exception?, LightGobo.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Collision:
+                        this.Collision = (MaskItem<Exception?, PlacedObjectCollision.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.PowerLinks:
+                        this.PowerLinks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Count:
+                        this.Count = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XFLG:
+                        this.XFLG = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightFlicker:
+                        this.LightFlicker = (MaskItem<Exception?, PlacedObjectLightFlicker.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.MapMarker:
+                        this.MapMarker = (MaskItem<Exception?, PlacedObjectMapMarker.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightLayerData:
+                        this.LightLayerData = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightStaticShadowMap:
+                        this.LightStaticShadowMap = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightVolumetricData:
+                        this.LightVolumetricData = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Ownership:
+                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightColors:
+                        this.LightColors = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectLightColor.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.GroupedPackIn:
+                        this.GroupedPackIn = (MaskItem<Exception?, GroupedPackIn.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.BlueprintPartOrigin:
+                        this.BlueprintPartOrigin = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Layer:
+                        this.Layer = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightRoundedness:
+                        this.LightRoundedness = (MaskItem<Exception?, PlacedObjectLightRoundedness.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LinkedReferences:
+                        this.LinkedReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.IsLinkedRefTransient:
+                        this.IsLinkedRefTransient = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.SnapLinks:
+                        this.SnapLinks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.EncounterZone:
+                        this.EncounterZone = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.GeometryDirtinessScale:
+                        this.GeometryDirtinessScale = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Lock:
+                        this.Lock = (MaskItem<Exception?, LockData.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Properties:
+                        this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ExternalEmittance:
+                        this.ExternalEmittance = (MaskItem<Exception?, ExternalEmittance.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.HeadTrackingWeight:
+                        this.HeadTrackingWeight = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.BOLV:
+                        this.BOLV = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Spline:
+                        this.Spline = (MaskItem<Exception?, PlacedObjectSpline.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XNSE:
+                        this.XNSE = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.AttachRef:
+                        this.AttachRef = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.RagdollBipedRotation:
+                        this.RagdollBipedRotation = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.HealthPercent:
+                        this.HealthPercent = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.TimeOfDay:
+                        this.TimeOfDay = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.EnableParent:
+                        this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Traversals:
+                        this.Traversals = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.NavigationDoorLink:
+                        this.NavigationDoorLink = (MaskItem<Exception?, NavigationDoorLink.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.IsActivationPoint:
+                        this.IsActivationPoint = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Scale:
+                        this.Scale = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.OpenByDefault:
+                        this.OpenByDefault = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Position:
+                        this.Position = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Comments:
+                        this.Comments = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +3302,80 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (XALG != null) return true;
+                if (Components != null) return true;
+                if (Base != null) return true;
+                if (VolumeData != null) return true;
+                if (ShipArrival != null) return true;
+                if (LevelModifier != null) return true;
+                if (Action != null) return true;
+                if (Primitive != null) return true;
+                if (VolumeReflectionProbeOffsetIntensity != null) return true;
+                if (DebugText != null) return true;
+                if (Emittance != null) return true;
+                if (Radius != null) return true;
+                if (Lighting != null) return true;
+                if (LightBarndoorData != null) return true;
+                if (LightArea != null) return true;
+                if (CurrentZoneCell != null) return true;
+                if (XCZA != null) return true;
+                if (Patrol != null) return true;
+                if (RagdollData != null) return true;
+                if (TeleportDestination != null) return true;
+                if (TeleportName != null) return true;
+                if (ReferenceGroup != null) return true;
+                if (LocationRefTypes != null) return true;
+                if (LayeredMaterialSwaps != null) return true;
+                if (XPCK != null) return true;
+                if (SourcePackIn != null) return true;
+                if (PersistentLocation != null) return true;
+                if (ProjectedDecal != null) return true;
+                if (ProjectedDecalReferences != null) return true;
+                if (ConstrainedDecal != null) return true;
+                if (IsIgnoredBySandbox != null) return true;
+                if (FactionRank != null) return true;
+                if (LightGobo != null) return true;
+                if (Collision != null) return true;
+                if (PowerLinks != null) return true;
+                if (Count != null) return true;
+                if (XFLG != null) return true;
+                if (LightFlicker != null) return true;
+                if (MapMarker != null) return true;
+                if (LightLayerData != null) return true;
+                if (LightStaticShadowMap != null) return true;
+                if (LightVolumetricData != null) return true;
+                if (Ownership != null) return true;
+                if (LightColors != null) return true;
+                if (GroupedPackIn != null) return true;
+                if (BlueprintPartOrigin != null) return true;
+                if (Layer != null) return true;
+                if (LightRoundedness != null) return true;
+                if (LinkedReferences != null) return true;
+                if (IsLinkedRefTransient != null) return true;
+                if (SnapLinks != null) return true;
+                if (EncounterZone != null) return true;
+                if (GeometryDirtinessScale != null) return true;
+                if (Lock != null) return true;
+                if (Properties != null) return true;
+                if (ExternalEmittance != null) return true;
+                if (HeadTrackingWeight != null) return true;
+                if (BOLV != null) return true;
+                if (Spline != null) return true;
+                if (XNSE != null) return true;
+                if (AttachRef != null) return true;
+                if (RagdollBipedRotation != null) return true;
+                if (HealthPercent != null) return true;
+                if (TimeOfDay != null) return true;
+                if (EnableParent != null) return true;
+                if (Traversals != null) return true;
+                if (NavigationDoorLink != null) return true;
+                if (IsActivationPoint != null) return true;
+                if (Scale != null) return true;
+                if (OpenByDefault != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
+                if (Comments != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +3402,351 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                VolumeData?.Print(sb);
+                ShipArrival?.Print(sb);
+                {
+                    sb.AppendItem(LevelModifier, "LevelModifier");
+                }
+                {
+                    sb.AppendItem(Action, "Action");
+                }
+                Primitive?.Print(sb);
+                VolumeReflectionProbeOffsetIntensity?.Print(sb);
+                DebugText?.Print(sb);
+                {
+                    sb.AppendItem(Emittance, "Emittance");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                Lighting?.Print(sb);
+                LightBarndoorData?.Print(sb);
+                LightArea?.Print(sb);
+                {
+                    sb.AppendItem(CurrentZoneCell, "CurrentZoneCell");
+                }
+                {
+                    sb.AppendItem(XCZA, "XCZA");
+                }
+                Patrol?.Print(sb);
+                if (RagdollData is {} RagdollDataItem)
+                {
+                    sb.AppendLine("RagdollData =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RagdollDataItem.Overall);
+                        if (RagdollDataItem.Specific != null)
+                        {
+                            foreach (var subItem in RagdollDataItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                TeleportDestination?.Print(sb);
+                {
+                    sb.AppendItem(TeleportName, "TeleportName");
+                }
+                {
+                    sb.AppendItem(ReferenceGroup, "ReferenceGroup");
+                }
+                if (LocationRefTypes is {} LocationRefTypesItem)
+                {
+                    sb.AppendLine("LocationRefTypes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LocationRefTypesItem.Overall);
+                        if (LocationRefTypesItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationRefTypesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (LayeredMaterialSwaps is {} LayeredMaterialSwapsItem)
+                {
+                    sb.AppendLine("LayeredMaterialSwaps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LayeredMaterialSwapsItem.Overall);
+                        if (LayeredMaterialSwapsItem.Specific != null)
+                        {
+                            foreach (var subItem in LayeredMaterialSwapsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(XPCK, "XPCK");
+                }
+                {
+                    sb.AppendItem(SourcePackIn, "SourcePackIn");
+                }
+                {
+                    sb.AppendItem(PersistentLocation, "PersistentLocation");
+                }
+                ProjectedDecal?.Print(sb);
+                if (ProjectedDecalReferences is {} ProjectedDecalReferencesItem)
+                {
+                    sb.AppendLine("ProjectedDecalReferences =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ProjectedDecalReferencesItem.Overall);
+                        if (ProjectedDecalReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in ProjectedDecalReferencesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(ConstrainedDecal, "ConstrainedDecal");
+                }
+                {
+                    sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                LightGobo?.Print(sb);
+                Collision?.Print(sb);
+                if (PowerLinks is {} PowerLinksItem)
+                {
+                    sb.AppendLine("PowerLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PowerLinksItem.Overall);
+                        if (PowerLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in PowerLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
+                {
+                    sb.AppendItem(XFLG, "XFLG");
+                }
+                LightFlicker?.Print(sb);
+                MapMarker?.Print(sb);
+                {
+                    sb.AppendItem(LightLayerData, "LightLayerData");
+                }
+                {
+                    sb.AppendItem(LightStaticShadowMap, "LightStaticShadowMap");
+                }
+                {
+                    sb.AppendItem(LightVolumetricData, "LightVolumetricData");
+                }
+                Ownership?.Print(sb);
+                if (LightColors is {} LightColorsItem)
+                {
+                    sb.AppendLine("LightColors =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LightColorsItem.Overall);
+                        if (LightColorsItem.Specific != null)
+                        {
+                            foreach (var subItem in LightColorsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                GroupedPackIn?.Print(sb);
+                {
+                    sb.AppendItem(BlueprintPartOrigin, "BlueprintPartOrigin");
+                }
+                {
+                    sb.AppendItem(Layer, "Layer");
+                }
+                LightRoundedness?.Print(sb);
+                if (LinkedReferences is {} LinkedReferencesItem)
+                {
+                    sb.AppendLine("LinkedReferences =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LinkedReferencesItem.Overall);
+                        if (LinkedReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in LinkedReferencesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(IsLinkedRefTransient, "IsLinkedRefTransient");
+                }
+                if (SnapLinks is {} SnapLinksItem)
+                {
+                    sb.AppendLine("SnapLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SnapLinksItem.Overall);
+                        if (SnapLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in SnapLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(EncounterZone, "EncounterZone");
+                }
+                {
+                    sb.AppendItem(GeometryDirtinessScale, "GeometryDirtinessScale");
+                }
+                Lock?.Print(sb);
+                if (Properties is {} PropertiesItem)
+                {
+                    sb.AppendLine("Properties =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PropertiesItem.Overall);
+                        if (PropertiesItem.Specific != null)
+                        {
+                            foreach (var subItem in PropertiesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                ExternalEmittance?.Print(sb);
+                {
+                    sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                }
+                {
+                    sb.AppendItem(BOLV, "BOLV");
+                }
+                Spline?.Print(sb);
+                {
+                    sb.AppendItem(XNSE, "XNSE");
+                }
+                {
+                    sb.AppendItem(AttachRef, "AttachRef");
+                }
+                {
+                    sb.AppendItem(RagdollBipedRotation, "RagdollBipedRotation");
+                }
+                {
+                    sb.AppendItem(HealthPercent, "HealthPercent");
+                }
+                {
+                    sb.AppendItem(TimeOfDay, "TimeOfDay");
+                }
+                EnableParent?.Print(sb);
+                if (Traversals is {} TraversalsItem)
+                {
+                    sb.AppendLine("Traversals =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TraversalsItem.Overall);
+                        if (TraversalsItem.Specific != null)
+                        {
+                            foreach (var subItem in TraversalsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                NavigationDoorLink?.Print(sb);
+                {
+                    sb.AppendItem(IsActivationPoint, "IsActivationPoint");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
+                    sb.AppendItem(OpenByDefault, "OpenByDefault");
+                }
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
+                {
+                    sb.AppendItem(Comments, "Comments");
+                }
             }
             #endregion
 
@@ -255,6 +3755,80 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Base = this.Base.Combine(rhs.Base);
+                ret.VolumeData = this.VolumeData.Combine(rhs.VolumeData, (l, r) => l.Combine(r));
+                ret.ShipArrival = this.ShipArrival.Combine(rhs.ShipArrival, (l, r) => l.Combine(r));
+                ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
+                ret.Action = this.Action.Combine(rhs.Action);
+                ret.Primitive = this.Primitive.Combine(rhs.Primitive, (l, r) => l.Combine(r));
+                ret.VolumeReflectionProbeOffsetIntensity = this.VolumeReflectionProbeOffsetIntensity.Combine(rhs.VolumeReflectionProbeOffsetIntensity, (l, r) => l.Combine(r));
+                ret.DebugText = this.DebugText.Combine(rhs.DebugText, (l, r) => l.Combine(r));
+                ret.Emittance = this.Emittance.Combine(rhs.Emittance);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Lighting = this.Lighting.Combine(rhs.Lighting, (l, r) => l.Combine(r));
+                ret.LightBarndoorData = this.LightBarndoorData.Combine(rhs.LightBarndoorData, (l, r) => l.Combine(r));
+                ret.LightArea = this.LightArea.Combine(rhs.LightArea, (l, r) => l.Combine(r));
+                ret.CurrentZoneCell = this.CurrentZoneCell.Combine(rhs.CurrentZoneCell);
+                ret.XCZA = this.XCZA.Combine(rhs.XCZA);
+                ret.Patrol = this.Patrol.Combine(rhs.Patrol, (l, r) => l.Combine(r));
+                ret.RagdollData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RagdollData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RagdollData?.Overall, rhs.RagdollData?.Overall), Noggog.ExceptionExt.Combine(this.RagdollData?.Specific, rhs.RagdollData?.Specific));
+                ret.TeleportDestination = this.TeleportDestination.Combine(rhs.TeleportDestination, (l, r) => l.Combine(r));
+                ret.TeleportName = this.TeleportName.Combine(rhs.TeleportName);
+                ret.ReferenceGroup = this.ReferenceGroup.Combine(rhs.ReferenceGroup);
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LayeredMaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LayeredMaterialSwaps?.Overall, rhs.LayeredMaterialSwaps?.Overall), Noggog.ExceptionExt.Combine(this.LayeredMaterialSwaps?.Specific, rhs.LayeredMaterialSwaps?.Specific));
+                ret.XPCK = this.XPCK.Combine(rhs.XPCK);
+                ret.SourcePackIn = this.SourcePackIn.Combine(rhs.SourcePackIn);
+                ret.PersistentLocation = this.PersistentLocation.Combine(rhs.PersistentLocation);
+                ret.ProjectedDecal = this.ProjectedDecal.Combine(rhs.ProjectedDecal, (l, r) => l.Combine(r));
+                ret.ProjectedDecalReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ProjectedDecalReferences?.Overall, rhs.ProjectedDecalReferences?.Overall), Noggog.ExceptionExt.Combine(this.ProjectedDecalReferences?.Specific, rhs.ProjectedDecalReferences?.Specific));
+                ret.ConstrainedDecal = this.ConstrainedDecal.Combine(rhs.ConstrainedDecal);
+                ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
+                ret.LightGobo = this.LightGobo.Combine(rhs.LightGobo, (l, r) => l.Combine(r));
+                ret.Collision = this.Collision.Combine(rhs.Collision, (l, r) => l.Combine(r));
+                ret.PowerLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PowerLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PowerLinks?.Overall, rhs.PowerLinks?.Overall), Noggog.ExceptionExt.Combine(this.PowerLinks?.Specific, rhs.PowerLinks?.Specific));
+                ret.Count = this.Count.Combine(rhs.Count);
+                ret.XFLG = this.XFLG.Combine(rhs.XFLG);
+                ret.LightFlicker = this.LightFlicker.Combine(rhs.LightFlicker, (l, r) => l.Combine(r));
+                ret.MapMarker = this.MapMarker.Combine(rhs.MapMarker, (l, r) => l.Combine(r));
+                ret.LightLayerData = this.LightLayerData.Combine(rhs.LightLayerData);
+                ret.LightStaticShadowMap = this.LightStaticShadowMap.Combine(rhs.LightStaticShadowMap);
+                ret.LightVolumetricData = this.LightVolumetricData.Combine(rhs.LightVolumetricData);
+                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.LightColors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectLightColor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LightColors?.Overall, rhs.LightColors?.Overall), Noggog.ExceptionExt.Combine(this.LightColors?.Specific, rhs.LightColors?.Specific));
+                ret.GroupedPackIn = this.GroupedPackIn.Combine(rhs.GroupedPackIn, (l, r) => l.Combine(r));
+                ret.BlueprintPartOrigin = this.BlueprintPartOrigin.Combine(rhs.BlueprintPartOrigin);
+                ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.LightRoundedness = this.LightRoundedness.Combine(rhs.LightRoundedness, (l, r) => l.Combine(r));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.IsLinkedRefTransient = this.IsLinkedRefTransient.Combine(rhs.IsLinkedRefTransient);
+                ret.SnapLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SnapLinks?.Overall, rhs.SnapLinks?.Overall), Noggog.ExceptionExt.Combine(this.SnapLinks?.Specific, rhs.SnapLinks?.Specific));
+                ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
+                ret.GeometryDirtinessScale = this.GeometryDirtinessScale.Combine(rhs.GeometryDirtinessScale);
+                ret.Lock = this.Lock.Combine(rhs.Lock, (l, r) => l.Combine(r));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.ExternalEmittance = this.ExternalEmittance.Combine(rhs.ExternalEmittance, (l, r) => l.Combine(r));
+                ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
+                ret.BOLV = this.BOLV.Combine(rhs.BOLV);
+                ret.Spline = this.Spline.Combine(rhs.Spline, (l, r) => l.Combine(r));
+                ret.XNSE = this.XNSE.Combine(rhs.XNSE);
+                ret.AttachRef = this.AttachRef.Combine(rhs.AttachRef);
+                ret.RagdollBipedRotation = this.RagdollBipedRotation.Combine(rhs.RagdollBipedRotation);
+                ret.HealthPercent = this.HealthPercent.Combine(rhs.HealthPercent);
+                ret.TimeOfDay = this.TimeOfDay.Combine(rhs.TimeOfDay);
+                ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
+                ret.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Traversals?.Overall, rhs.Traversals?.Overall), Noggog.ExceptionExt.Combine(this.Traversals?.Specific, rhs.Traversals?.Specific));
+                ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
+                ret.IsActivationPoint = this.IsActivationPoint.Combine(rhs.IsActivationPoint);
+                ret.Scale = this.Scale.Combine(rhs.Scale);
+                ret.OpenByDefault = this.OpenByDefault.Combine(rhs.OpenByDefault);
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+                ret.Comments = this.Comments.Combine(rhs.Comments);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +3850,213 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public bool XALG;
+            public AComponent.TranslationMask? Components;
+            public bool Base;
+            public PlacedObjectVolumeData.TranslationMask? VolumeData;
+            public PlacedObjectShipArrival.TranslationMask? ShipArrival;
+            public bool LevelModifier;
+            public bool Action;
+            public PlacedPrimitive.TranslationMask? Primitive;
+            public VolumeReflectionProbeOffsetIntensity.TranslationMask? VolumeReflectionProbeOffsetIntensity;
+            public PlacedObjectDebugText.TranslationMask? DebugText;
+            public bool Emittance;
+            public bool Radius;
+            public PlacedObjectLighting.TranslationMask? Lighting;
+            public PlacedObjectLightBarndoorData.TranslationMask? LightBarndoorData;
+            public PlacedObjectLightArea.TranslationMask? LightArea;
+            public bool CurrentZoneCell;
+            public bool XCZA;
+            public Patrol.TranslationMask? Patrol;
+            public RagdollData.TranslationMask? RagdollData;
+            public TeleportDestination.TranslationMask? TeleportDestination;
+            public bool TeleportName;
+            public bool ReferenceGroup;
+            public bool LocationRefTypes;
+            public bool LayeredMaterialSwaps;
+            public bool XPCK;
+            public bool SourcePackIn;
+            public bool PersistentLocation;
+            public PlacedObjectProjectedDecal.TranslationMask? ProjectedDecal;
+            public bool ProjectedDecalReferences;
+            public bool ConstrainedDecal;
+            public bool IsIgnoredBySandbox;
+            public bool FactionRank;
+            public LightGobo.TranslationMask? LightGobo;
+            public PlacedObjectCollision.TranslationMask? Collision;
+            public PowerLink.TranslationMask? PowerLinks;
+            public bool Count;
+            public bool XFLG;
+            public PlacedObjectLightFlicker.TranslationMask? LightFlicker;
+            public PlacedObjectMapMarker.TranslationMask? MapMarker;
+            public bool LightLayerData;
+            public bool LightStaticShadowMap;
+            public bool LightVolumetricData;
+            public Ownership.TranslationMask? Ownership;
+            public PlacedObjectLightColor.TranslationMask? LightColors;
+            public GroupedPackIn.TranslationMask? GroupedPackIn;
+            public bool BlueprintPartOrigin;
+            public bool Layer;
+            public PlacedObjectLightRoundedness.TranslationMask? LightRoundedness;
+            public LinkedReferences.TranslationMask? LinkedReferences;
+            public bool IsLinkedRefTransient;
+            public SnapLink.TranslationMask? SnapLinks;
+            public bool EncounterZone;
+            public bool GeometryDirtinessScale;
+            public LockData.TranslationMask? Lock;
+            public ObjectProperty.TranslationMask? Properties;
+            public ExternalEmittance.TranslationMask? ExternalEmittance;
+            public bool HeadTrackingWeight;
+            public bool BOLV;
+            public PlacedObjectSpline.TranslationMask? Spline;
+            public bool XNSE;
+            public bool AttachRef;
+            public bool RagdollBipedRotation;
+            public bool HealthPercent;
+            public bool TimeOfDay;
+            public EnableParent.TranslationMask? EnableParent;
+            public TraversalReference.TranslationMask? Traversals;
+            public NavigationDoorLink.TranslationMask? NavigationDoorLink;
+            public bool IsActivationPoint;
+            public bool Scale;
+            public bool OpenByDefault;
+            public bool Position;
+            public bool Rotation;
+            public bool Comments;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.XALG = defaultOn;
+                this.Base = defaultOn;
+                this.LevelModifier = defaultOn;
+                this.Action = defaultOn;
+                this.Emittance = defaultOn;
+                this.Radius = defaultOn;
+                this.CurrentZoneCell = defaultOn;
+                this.XCZA = defaultOn;
+                this.TeleportName = defaultOn;
+                this.ReferenceGroup = defaultOn;
+                this.LocationRefTypes = defaultOn;
+                this.LayeredMaterialSwaps = defaultOn;
+                this.XPCK = defaultOn;
+                this.SourcePackIn = defaultOn;
+                this.PersistentLocation = defaultOn;
+                this.ProjectedDecalReferences = defaultOn;
+                this.ConstrainedDecal = defaultOn;
+                this.IsIgnoredBySandbox = defaultOn;
+                this.FactionRank = defaultOn;
+                this.Count = defaultOn;
+                this.XFLG = defaultOn;
+                this.LightLayerData = defaultOn;
+                this.LightStaticShadowMap = defaultOn;
+                this.LightVolumetricData = defaultOn;
+                this.BlueprintPartOrigin = defaultOn;
+                this.Layer = defaultOn;
+                this.IsLinkedRefTransient = defaultOn;
+                this.EncounterZone = defaultOn;
+                this.GeometryDirtinessScale = defaultOn;
+                this.HeadTrackingWeight = defaultOn;
+                this.BOLV = defaultOn;
+                this.XNSE = defaultOn;
+                this.AttachRef = defaultOn;
+                this.RagdollBipedRotation = defaultOn;
+                this.HealthPercent = defaultOn;
+                this.TimeOfDay = defaultOn;
+                this.IsActivationPoint = defaultOn;
+                this.Scale = defaultOn;
+                this.OpenByDefault = defaultOn;
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
+                this.Comments = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((XALG, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Base, null));
+                ret.Add((VolumeData != null ? VolumeData.OnOverall : DefaultOn, VolumeData?.GetCrystal()));
+                ret.Add((ShipArrival != null ? ShipArrival.OnOverall : DefaultOn, ShipArrival?.GetCrystal()));
+                ret.Add((LevelModifier, null));
+                ret.Add((Action, null));
+                ret.Add((Primitive != null ? Primitive.OnOverall : DefaultOn, Primitive?.GetCrystal()));
+                ret.Add((VolumeReflectionProbeOffsetIntensity != null ? VolumeReflectionProbeOffsetIntensity.OnOverall : DefaultOn, VolumeReflectionProbeOffsetIntensity?.GetCrystal()));
+                ret.Add((DebugText != null ? DebugText.OnOverall : DefaultOn, DebugText?.GetCrystal()));
+                ret.Add((Emittance, null));
+                ret.Add((Radius, null));
+                ret.Add((Lighting != null ? Lighting.OnOverall : DefaultOn, Lighting?.GetCrystal()));
+                ret.Add((LightBarndoorData != null ? LightBarndoorData.OnOverall : DefaultOn, LightBarndoorData?.GetCrystal()));
+                ret.Add((LightArea != null ? LightArea.OnOverall : DefaultOn, LightArea?.GetCrystal()));
+                ret.Add((CurrentZoneCell, null));
+                ret.Add((XCZA, null));
+                ret.Add((Patrol != null ? Patrol.OnOverall : DefaultOn, Patrol?.GetCrystal()));
+                ret.Add((RagdollData == null ? DefaultOn : !RagdollData.GetCrystal().CopyNothing, RagdollData?.GetCrystal()));
+                ret.Add((TeleportDestination != null ? TeleportDestination.OnOverall : DefaultOn, TeleportDestination?.GetCrystal()));
+                ret.Add((TeleportName, null));
+                ret.Add((ReferenceGroup, null));
+                ret.Add((LocationRefTypes, null));
+                ret.Add((LayeredMaterialSwaps, null));
+                ret.Add((XPCK, null));
+                ret.Add((SourcePackIn, null));
+                ret.Add((PersistentLocation, null));
+                ret.Add((ProjectedDecal != null ? ProjectedDecal.OnOverall : DefaultOn, ProjectedDecal?.GetCrystal()));
+                ret.Add((ProjectedDecalReferences, null));
+                ret.Add((ConstrainedDecal, null));
+                ret.Add((IsIgnoredBySandbox, null));
+                ret.Add((FactionRank, null));
+                ret.Add((LightGobo != null ? LightGobo.OnOverall : DefaultOn, LightGobo?.GetCrystal()));
+                ret.Add((Collision != null ? Collision.OnOverall : DefaultOn, Collision?.GetCrystal()));
+                ret.Add((PowerLinks == null ? DefaultOn : !PowerLinks.GetCrystal().CopyNothing, PowerLinks?.GetCrystal()));
+                ret.Add((Count, null));
+                ret.Add((XFLG, null));
+                ret.Add((LightFlicker != null ? LightFlicker.OnOverall : DefaultOn, LightFlicker?.GetCrystal()));
+                ret.Add((MapMarker != null ? MapMarker.OnOverall : DefaultOn, MapMarker?.GetCrystal()));
+                ret.Add((LightLayerData, null));
+                ret.Add((LightStaticShadowMap, null));
+                ret.Add((LightVolumetricData, null));
+                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((LightColors == null ? DefaultOn : !LightColors.GetCrystal().CopyNothing, LightColors?.GetCrystal()));
+                ret.Add((GroupedPackIn != null ? GroupedPackIn.OnOverall : DefaultOn, GroupedPackIn?.GetCrystal()));
+                ret.Add((BlueprintPartOrigin, null));
+                ret.Add((Layer, null));
+                ret.Add((LightRoundedness != null ? LightRoundedness.OnOverall : DefaultOn, LightRoundedness?.GetCrystal()));
+                ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
+                ret.Add((IsLinkedRefTransient, null));
+                ret.Add((SnapLinks == null ? DefaultOn : !SnapLinks.GetCrystal().CopyNothing, SnapLinks?.GetCrystal()));
+                ret.Add((EncounterZone, null));
+                ret.Add((GeometryDirtinessScale, null));
+                ret.Add((Lock != null ? Lock.OnOverall : DefaultOn, Lock?.GetCrystal()));
+                ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
+                ret.Add((ExternalEmittance != null ? ExternalEmittance.OnOverall : DefaultOn, ExternalEmittance?.GetCrystal()));
+                ret.Add((HeadTrackingWeight, null));
+                ret.Add((BOLV, null));
+                ret.Add((Spline != null ? Spline.OnOverall : DefaultOn, Spline?.GetCrystal()));
+                ret.Add((XNSE, null));
+                ret.Add((AttachRef, null));
+                ret.Add((RagdollBipedRotation, null));
+                ret.Add((HealthPercent, null));
+                ret.Add((TimeOfDay, null));
+                ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
+                ret.Add((Traversals == null ? DefaultOn : !Traversals.GetCrystal().CopyNothing, Traversals?.GetCrystal()));
+                ret.Add((NavigationDoorLink != null ? NavigationDoorLink.OnOverall : DefaultOn, NavigationDoorLink?.GetCrystal()));
+                ret.Add((IsActivationPoint, null));
+                ret.Add((Scale, null));
+                ret.Add((OpenByDefault, null));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
+                ret.Add((Comments, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +4068,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +4119,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IPlacedObject);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PlacedObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => PlacedObjectSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => PlacedObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => PlacedObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,6 +4202,8 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPlacedObject :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         IKeywordLinkedReference,
         ILinkedReference,
         ILoquiObjectSetter<IPlacedObjectInternal>,
@@ -431,8 +4211,87 @@ namespace Mutagen.Bethesda.Starfield
         IPlacedObjectGetter,
         IPlacedSimple,
         IPlacedThing,
+        IPositionRotation,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new IFormLink<IPlaceableObjectGetter> Base { get; set; }
+        new PlacedObjectVolumeData? VolumeData { get; set; }
+        new PlacedObjectShipArrival? ShipArrival { get; set; }
+        new Level? LevelModifier { get; set; }
+        new PlacedObject.ActionFlag? Action { get; set; }
+        new PlacedPrimitive? Primitive { get; set; }
+        new VolumeReflectionProbeOffsetIntensity? VolumeReflectionProbeOffsetIntensity { get; set; }
+        new PlacedObjectDebugText? DebugText { get; set; }
+        new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
+        new Single? Radius { get; set; }
+        new PlacedObjectLighting? Lighting { get; set; }
+        new PlacedObjectLightBarndoorData? LightBarndoorData { get; set; }
+        new PlacedObjectLightArea? LightArea { get; set; }
+        new IFormLinkNullable<ICellGetter> CurrentZoneCell { get; set; }
+        new MemorySlice<Byte>? XCZA { get; set; }
+        new Patrol? Patrol { get; set; }
+        new ExtendedList<RagdollData>? RagdollData { get; set; }
+        new TeleportDestination? TeleportDestination { get; set; }
+        new IFormLinkNullable<IMessageGetter> TeleportName { get; set; }
+        new IFormLinkNullable<IReferenceGroupGetter> ReferenceGroup { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
+        new ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? LayeredMaterialSwaps { get; set; }
+        new IFormLinkNullable<IReferenceGroupGetter> XPCK { get; set; }
+        new IFormLinkNullable<IPackInGetter> SourcePackIn { get; set; }
+        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
+        new PlacedObjectProjectedDecal? ProjectedDecal { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedGetter>>? ProjectedDecalReferences { get; set; }
+        new P3Float? ConstrainedDecal { get; set; }
+        new Boolean IsIgnoredBySandbox { get; set; }
+        new Int32? FactionRank { get; set; }
+        new LightGobo? LightGobo { get; set; }
+        new PlacedObjectCollision? Collision { get; set; }
+        new ExtendedList<PowerLink> PowerLinks { get; }
+        new Int32? Count { get; set; }
+        new MemorySlice<Byte>? XFLG { get; set; }
+        new PlacedObjectLightFlicker? LightFlicker { get; set; }
+        new PlacedObjectMapMarker? MapMarker { get; set; }
+        new Boolean? LightLayerData { get; set; }
+        new Boolean? LightStaticShadowMap { get; set; }
+        new Single? LightVolumetricData { get; set; }
+        new Ownership? Ownership { get; set; }
+        new ExtendedList<PlacedObjectLightColor> LightColors { get; }
+        new GroupedPackIn? GroupedPackIn { get; set; }
+        new UInt32? BlueprintPartOrigin { get; set; }
+        new IFormLinkNullable<ILayerGetter> Layer { get; set; }
+        new PlacedObjectLightRoundedness? LightRoundedness { get; set; }
+        new ExtendedList<LinkedReferences> LinkedReferences { get; }
+        new Boolean IsLinkedRefTransient { get; set; }
+        new ExtendedList<SnapLink>? SnapLinks { get; set; }
+        new IFormLinkNullable<ILocationGetter> EncounterZone { get; set; }
+        new Single? GeometryDirtinessScale { get; set; }
+        new LockData? Lock { get; set; }
+        new ExtendedList<ObjectProperty>? Properties { get; set; }
+        new ExternalEmittance? ExternalEmittance { get; set; }
+        new Single? HeadTrackingWeight { get; set; }
+        new UInt16? BOLV { get; set; }
+        new PlacedObjectSpline? Spline { get; set; }
+        new MemorySlice<Byte>? XNSE { get; set; }
+        new IFormLinkNullable<ILinkedReferenceGetter> AttachRef { get; set; }
+        new P3Float? RagdollBipedRotation { get; set; }
+        new Percent? HealthPercent { get; set; }
+        new IFormLinkNullable<ITimeOfDayDataGetter> TimeOfDay { get; set; }
+        new EnableParent? EnableParent { get; set; }
+        new ExtendedList<TraversalReference>? Traversals { get; set; }
+        new NavigationDoorLink? NavigationDoorLink { get; set; }
+        new Boolean IsActivationPoint { get; set; }
+        new Single? Scale { get; set; }
+        new Boolean OpenByDefault { get; set; }
+        new P3Float Position { get; set; }
+        new P3Float Rotation { get; set; }
+        new String? Comments { get; set; }
     }
 
     public partial interface IPlacedObjectInternal :
@@ -445,16 +4304,100 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.REFR)]
     public partial interface IPlacedObjectGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
         ILinkedReferenceGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
         IPlacedSimpleGetter,
-        IPlacedThingGetter
+        IPlacedThingGetter,
+        IPositionRotationGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IFormLinkGetter<IPlaceableObjectGetter> Base { get; }
+        IPlacedObjectVolumeDataGetter? VolumeData { get; }
+        IPlacedObjectShipArrivalGetter? ShipArrival { get; }
+        Level? LevelModifier { get; }
+        PlacedObject.ActionFlag? Action { get; }
+        IPlacedPrimitiveGetter? Primitive { get; }
+        IVolumeReflectionProbeOffsetIntensityGetter? VolumeReflectionProbeOffsetIntensity { get; }
+        IPlacedObjectDebugTextGetter? DebugText { get; }
+        IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
+        Single? Radius { get; }
+        IPlacedObjectLightingGetter? Lighting { get; }
+        IPlacedObjectLightBarndoorDataGetter? LightBarndoorData { get; }
+        IPlacedObjectLightAreaGetter? LightArea { get; }
+        IFormLinkNullableGetter<ICellGetter> CurrentZoneCell { get; }
+        ReadOnlyMemorySlice<Byte>? XCZA { get; }
+        IPatrolGetter? Patrol { get; }
+        IReadOnlyList<IRagdollDataGetter>? RagdollData { get; }
+        ITeleportDestinationGetter? TeleportDestination { get; }
+        IFormLinkNullableGetter<IMessageGetter> TeleportName { get; }
+        IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
+        IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? LayeredMaterialSwaps { get; }
+        IFormLinkNullableGetter<IReferenceGroupGetter> XPCK { get; }
+        IFormLinkNullableGetter<IPackInGetter> SourcePackIn { get; }
+        IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
+        IPlacedObjectProjectedDecalGetter? ProjectedDecal { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ProjectedDecalReferences { get; }
+        P3Float? ConstrainedDecal { get; }
+        Boolean IsIgnoredBySandbox { get; }
+        Int32? FactionRank { get; }
+        ILightGoboGetter? LightGobo { get; }
+        IPlacedObjectCollisionGetter? Collision { get; }
+        IReadOnlyList<IPowerLinkGetter> PowerLinks { get; }
+        Int32? Count { get; }
+        ReadOnlyMemorySlice<Byte>? XFLG { get; }
+        IPlacedObjectLightFlickerGetter? LightFlicker { get; }
+        IPlacedObjectMapMarkerGetter? MapMarker { get; }
+        Boolean? LightLayerData { get; }
+        Boolean? LightStaticShadowMap { get; }
+        Single? LightVolumetricData { get; }
+        IOwnershipGetter? Ownership { get; }
+        IReadOnlyList<IPlacedObjectLightColorGetter> LightColors { get; }
+        IGroupedPackInGetter? GroupedPackIn { get; }
+        UInt32? BlueprintPartOrigin { get; }
+        IFormLinkNullableGetter<ILayerGetter> Layer { get; }
+        IPlacedObjectLightRoundednessGetter? LightRoundedness { get; }
+        IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
+        Boolean IsLinkedRefTransient { get; }
+        IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; }
+        IFormLinkNullableGetter<ILocationGetter> EncounterZone { get; }
+        Single? GeometryDirtinessScale { get; }
+        ILockDataGetter? Lock { get; }
+        IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
+        IExternalEmittanceGetter? ExternalEmittance { get; }
+        Single? HeadTrackingWeight { get; }
+        UInt16? BOLV { get; }
+        IPlacedObjectSplineGetter? Spline { get; }
+        ReadOnlyMemorySlice<Byte>? XNSE { get; }
+        IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef { get; }
+        P3Float? RagdollBipedRotation { get; }
+        Percent? HealthPercent { get; }
+        IFormLinkNullableGetter<ITimeOfDayDataGetter> TimeOfDay { get; }
+        IEnableParentGetter? EnableParent { get; }
+        IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; }
+        INavigationDoorLinkGetter? NavigationDoorLink { get; }
+        Boolean IsActivationPoint { get; }
+        Single? Scale { get; }
+        Boolean OpenByDefault { get; }
+        P3Float Position { get; }
+        P3Float Rotation { get; }
+        String? Comments { get; }
 
     }
 
@@ -631,6 +4574,80 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        XALG = 8,
+        Components = 9,
+        Base = 10,
+        VolumeData = 11,
+        ShipArrival = 12,
+        LevelModifier = 13,
+        Action = 14,
+        Primitive = 15,
+        VolumeReflectionProbeOffsetIntensity = 16,
+        DebugText = 17,
+        Emittance = 18,
+        Radius = 19,
+        Lighting = 20,
+        LightBarndoorData = 21,
+        LightArea = 22,
+        CurrentZoneCell = 23,
+        XCZA = 24,
+        Patrol = 25,
+        RagdollData = 26,
+        TeleportDestination = 27,
+        TeleportName = 28,
+        ReferenceGroup = 29,
+        LocationRefTypes = 30,
+        LayeredMaterialSwaps = 31,
+        XPCK = 32,
+        SourcePackIn = 33,
+        PersistentLocation = 34,
+        ProjectedDecal = 35,
+        ProjectedDecalReferences = 36,
+        ConstrainedDecal = 37,
+        IsIgnoredBySandbox = 38,
+        FactionRank = 39,
+        LightGobo = 40,
+        Collision = 41,
+        PowerLinks = 42,
+        Count = 43,
+        XFLG = 44,
+        LightFlicker = 45,
+        MapMarker = 46,
+        LightLayerData = 47,
+        LightStaticShadowMap = 48,
+        LightVolumetricData = 49,
+        Ownership = 50,
+        LightColors = 51,
+        GroupedPackIn = 52,
+        BlueprintPartOrigin = 53,
+        Layer = 54,
+        LightRoundedness = 55,
+        LinkedReferences = 56,
+        IsLinkedRefTransient = 57,
+        SnapLinks = 58,
+        EncounterZone = 59,
+        GeometryDirtinessScale = 60,
+        Lock = 61,
+        Properties = 62,
+        ExternalEmittance = 63,
+        HeadTrackingWeight = 64,
+        BOLV = 65,
+        Spline = 66,
+        XNSE = 67,
+        AttachRef = 68,
+        RagdollBipedRotation = 69,
+        HealthPercent = 70,
+        TimeOfDay = 71,
+        EnableParent = 72,
+        Traversals = 73,
+        NavigationDoorLink = 74,
+        IsActivationPoint = 75,
+        Scale = 76,
+        OpenByDefault = 77,
+        Position = 78,
+        Rotation = 79,
+        Comments = 80,
     }
     #endregion
 
@@ -641,9 +4658,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 74;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 81;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -673,8 +4690,86 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.REFR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.REFR);
+            var all = RecordCollection.Factory(
+                RecordTypes.REFR,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.XALG,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.NAME,
+                RecordTypes.XVL2,
+                RecordTypes.XSAD,
+                RecordTypes.XLCM,
+                RecordTypes.XACT,
+                RecordTypes.XPRM,
+                RecordTypes.XVOI,
+                RecordTypes.XDTS,
+                RecordTypes.XDTF,
+                RecordTypes.XEMI,
+                RecordTypes.XRDS,
+                RecordTypes.XLIG,
+                RecordTypes.XLBD,
+                RecordTypes.XALD,
+                RecordTypes.XCZC,
+                RecordTypes.XCZA,
+                RecordTypes.XPRD,
+                RecordTypes.XRGD,
+                RecordTypes.XTEL,
+                RecordTypes.XTNM,
+                RecordTypes.XRFG,
+                RecordTypes.XLRT,
+                RecordTypes.XLMS,
+                RecordTypes.XPCK,
+                RecordTypes.XPCS,
+                RecordTypes.XLCN,
+                RecordTypes.XPDD,
+                RecordTypes.XPDO,
+                RecordTypes.XCDD,
+                RecordTypes.XIS2,
+                RecordTypes.XRNK,
+                RecordTypes.XLGD,
+                RecordTypes.XCOL,
+                RecordTypes.XPLK,
+                RecordTypes.XCNT,
+                RecordTypes.XFLG,
+                RecordTypes.XLFD,
+                RecordTypes.XMRK,
+                RecordTypes.XLLD,
+                RecordTypes.XLSM,
+                RecordTypes.XLVD,
+                RecordTypes.XOWN,
+                RecordTypes.XLCD,
+                RecordTypes.XWPK,
+                RecordTypes.XBPO,
+                RecordTypes.XLYR,
+                RecordTypes.XLRD,
+                RecordTypes.XLKR,
+                RecordTypes.XLKT,
+                RecordTypes.XSL1,
+                RecordTypes.XEZN,
+                RecordTypes.XGDS,
+                RecordTypes.XLOC,
+                RecordTypes.XPPS,
+                RecordTypes.XEED,
+                RecordTypes.XHTW,
+                RecordTypes.BOLV,
+                RecordTypes.XBSD,
+                RecordTypes.XNSE,
+                RecordTypes.XATR,
+                RecordTypes.XRGB,
+                RecordTypes.XHLT,
+                RecordTypes.TODD,
+                RecordTypes.XESP,
+                RecordTypes.XTV2,
+                RecordTypes.XNDP,
+                RecordTypes.XATP,
+                RecordTypes.XSCL,
+                RecordTypes.ONAM,
+                RecordTypes.DATA,
+                RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
@@ -716,6 +4811,80 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.XALG = default;
+            item.Components.Clear();
+            item.Base.Clear();
+            item.VolumeData = null;
+            item.ShipArrival = null;
+            item.LevelModifier = default;
+            item.Action = default;
+            item.Primitive = null;
+            item.VolumeReflectionProbeOffsetIntensity = null;
+            item.DebugText = null;
+            item.Emittance.Clear();
+            item.Radius = default;
+            item.Lighting = null;
+            item.LightBarndoorData = null;
+            item.LightArea = null;
+            item.CurrentZoneCell.Clear();
+            item.XCZA = default;
+            item.Patrol = null;
+            item.RagdollData = null;
+            item.TeleportDestination = null;
+            item.TeleportName.Clear();
+            item.ReferenceGroup.Clear();
+            item.LocationRefTypes = null;
+            item.LayeredMaterialSwaps = null;
+            item.XPCK.Clear();
+            item.SourcePackIn.Clear();
+            item.PersistentLocation.Clear();
+            item.ProjectedDecal = null;
+            item.ProjectedDecalReferences = null;
+            item.ConstrainedDecal = default;
+            item.IsIgnoredBySandbox = default;
+            item.FactionRank = default;
+            item.LightGobo = null;
+            item.Collision = null;
+            item.PowerLinks.Clear();
+            item.Count = default;
+            item.XFLG = default;
+            item.LightFlicker = null;
+            item.MapMarker = null;
+            item.LightLayerData = default;
+            item.LightStaticShadowMap = default;
+            item.LightVolumetricData = default;
+            item.Ownership = null;
+            item.LightColors.Clear();
+            item.GroupedPackIn = null;
+            item.BlueprintPartOrigin = default;
+            item.Layer.Clear();
+            item.LightRoundedness = null;
+            item.LinkedReferences.Clear();
+            item.IsLinkedRefTransient = default;
+            item.SnapLinks = null;
+            item.EncounterZone.Clear();
+            item.GeometryDirtinessScale = default;
+            item.Lock = null;
+            item.Properties = null;
+            item.ExternalEmittance = null;
+            item.HeadTrackingWeight = default;
+            item.BOLV = default;
+            item.Spline = null;
+            item.XNSE = default;
+            item.AttachRef.Clear();
+            item.RagdollBipedRotation = default;
+            item.HealthPercent = default;
+            item.TimeOfDay.Clear();
+            item.EnableParent = null;
+            item.Traversals = null;
+            item.NavigationDoorLink = null;
+            item.IsActivationPoint = default;
+            item.Scale = default;
+            item.OpenByDefault = default;
+            item.Position = default;
+            item.Rotation = default;
+            item.Comments = default;
             base.Clear(item);
         }
         
@@ -733,6 +4902,60 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Base.Relink(mapping);
+            obj.Emittance.Relink(mapping);
+            obj.CurrentZoneCell.Relink(mapping);
+            obj.Patrol?.RemapLinks(mapping);
+            obj.TeleportDestination?.RemapLinks(mapping);
+            obj.TeleportName.Relink(mapping);
+            obj.ReferenceGroup.Relink(mapping);
+            obj.LocationRefTypes?.RemapLinks(mapping);
+            obj.LayeredMaterialSwaps?.RemapLinks(mapping);
+            obj.XPCK.Relink(mapping);
+            obj.SourcePackIn.Relink(mapping);
+            obj.PersistentLocation.Relink(mapping);
+            obj.ProjectedDecalReferences?.RemapLinks(mapping);
+            obj.Collision?.RemapLinks(mapping);
+            obj.PowerLinks.RemapLinks(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.GroupedPackIn?.RemapLinks(mapping);
+            obj.Layer.Relink(mapping);
+            obj.LinkedReferences.RemapLinks(mapping);
+            obj.SnapLinks?.RemapLinks(mapping);
+            obj.EncounterZone.Relink(mapping);
+            obj.Lock?.RemapLinks(mapping);
+            obj.Properties?.RemapLinks(mapping);
+            obj.AttachRef.Relink(mapping);
+            obj.TimeOfDay.Relink(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+            obj.Traversals?.RemapLinks(mapping);
+            obj.NavigationDoorLink?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPlacedObject obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IPlacedObject obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -800,6 +5023,209 @@ namespace Mutagen.Bethesda.Starfield
             PlacedObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Base = item.Base.Equals(rhs.Base);
+            ret.VolumeData = EqualsMaskHelper.EqualsHelper(
+                item.VolumeData,
+                rhs.VolumeData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ShipArrival = EqualsMaskHelper.EqualsHelper(
+                item.ShipArrival,
+                rhs.ShipArrival,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
+            ret.Action = item.Action == rhs.Action;
+            ret.Primitive = EqualsMaskHelper.EqualsHelper(
+                item.Primitive,
+                rhs.Primitive,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.VolumeReflectionProbeOffsetIntensity = EqualsMaskHelper.EqualsHelper(
+                item.VolumeReflectionProbeOffsetIntensity,
+                rhs.VolumeReflectionProbeOffsetIntensity,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DebugText = EqualsMaskHelper.EqualsHelper(
+                item.DebugText,
+                rhs.DebugText,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Emittance = item.Emittance.Equals(rhs.Emittance);
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Lighting = EqualsMaskHelper.EqualsHelper(
+                item.Lighting,
+                rhs.Lighting,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LightBarndoorData = EqualsMaskHelper.EqualsHelper(
+                item.LightBarndoorData,
+                rhs.LightBarndoorData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LightArea = EqualsMaskHelper.EqualsHelper(
+                item.LightArea,
+                rhs.LightArea,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.CurrentZoneCell = item.CurrentZoneCell.Equals(rhs.CurrentZoneCell);
+            ret.XCZA = MemorySliceExt.SequenceEqual(item.XCZA, rhs.XCZA);
+            ret.Patrol = EqualsMaskHelper.EqualsHelper(
+                item.Patrol,
+                rhs.Patrol,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.RagdollData = item.RagdollData.CollectionEqualsHelper(
+                rhs.RagdollData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.TeleportDestination = EqualsMaskHelper.EqualsHelper(
+                item.TeleportDestination,
+                rhs.TeleportDestination,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.TeleportName = item.TeleportName.Equals(rhs.TeleportName);
+            ret.ReferenceGroup = item.ReferenceGroup.Equals(rhs.ReferenceGroup);
+            ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
+                rhs.LocationRefTypes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.LayeredMaterialSwaps = item.LayeredMaterialSwaps.CollectionEqualsHelper(
+                rhs.LayeredMaterialSwaps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.XPCK = item.XPCK.Equals(rhs.XPCK);
+            ret.SourcePackIn = item.SourcePackIn.Equals(rhs.SourcePackIn);
+            ret.PersistentLocation = item.PersistentLocation.Equals(rhs.PersistentLocation);
+            ret.ProjectedDecal = EqualsMaskHelper.EqualsHelper(
+                item.ProjectedDecal,
+                rhs.ProjectedDecal,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ProjectedDecalReferences = item.ProjectedDecalReferences.CollectionEqualsHelper(
+                rhs.ProjectedDecalReferences,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ConstrainedDecal = item.ConstrainedDecal.Equals(rhs.ConstrainedDecal);
+            ret.IsIgnoredBySandbox = item.IsIgnoredBySandbox == rhs.IsIgnoredBySandbox;
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
+            ret.LightGobo = EqualsMaskHelper.EqualsHelper(
+                item.LightGobo,
+                rhs.LightGobo,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Collision = EqualsMaskHelper.EqualsHelper(
+                item.Collision,
+                rhs.Collision,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PowerLinks = item.PowerLinks.CollectionEqualsHelper(
+                rhs.PowerLinks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Count = item.Count == rhs.Count;
+            ret.XFLG = MemorySliceExt.SequenceEqual(item.XFLG, rhs.XFLG);
+            ret.LightFlicker = EqualsMaskHelper.EqualsHelper(
+                item.LightFlicker,
+                rhs.LightFlicker,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.MapMarker = EqualsMaskHelper.EqualsHelper(
+                item.MapMarker,
+                rhs.MapMarker,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LightLayerData = item.LightLayerData == rhs.LightLayerData;
+            ret.LightStaticShadowMap = item.LightStaticShadowMap == rhs.LightStaticShadowMap;
+            ret.LightVolumetricData = item.LightVolumetricData.EqualsWithin(rhs.LightVolumetricData);
+            ret.Ownership = EqualsMaskHelper.EqualsHelper(
+                item.Ownership,
+                rhs.Ownership,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LightColors = item.LightColors.CollectionEqualsHelper(
+                rhs.LightColors,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.GroupedPackIn = EqualsMaskHelper.EqualsHelper(
+                item.GroupedPackIn,
+                rhs.GroupedPackIn,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.BlueprintPartOrigin = item.BlueprintPartOrigin == rhs.BlueprintPartOrigin;
+            ret.Layer = item.Layer.Equals(rhs.Layer);
+            ret.LightRoundedness = EqualsMaskHelper.EqualsHelper(
+                item.LightRoundedness,
+                rhs.LightRoundedness,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LinkedReferences = item.LinkedReferences.CollectionEqualsHelper(
+                rhs.LinkedReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.IsLinkedRefTransient = item.IsLinkedRefTransient == rhs.IsLinkedRefTransient;
+            ret.SnapLinks = item.SnapLinks.CollectionEqualsHelper(
+                rhs.SnapLinks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
+            ret.GeometryDirtinessScale = item.GeometryDirtinessScale.EqualsWithin(rhs.GeometryDirtinessScale);
+            ret.Lock = EqualsMaskHelper.EqualsHelper(
+                item.Lock,
+                rhs.Lock,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Properties = item.Properties.CollectionEqualsHelper(
+                rhs.Properties,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ExternalEmittance = EqualsMaskHelper.EqualsHelper(
+                item.ExternalEmittance,
+                rhs.ExternalEmittance,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
+            ret.BOLV = item.BOLV == rhs.BOLV;
+            ret.Spline = EqualsMaskHelper.EqualsHelper(
+                item.Spline,
+                rhs.Spline,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.XNSE = MemorySliceExt.SequenceEqual(item.XNSE, rhs.XNSE);
+            ret.AttachRef = item.AttachRef.Equals(rhs.AttachRef);
+            ret.RagdollBipedRotation = item.RagdollBipedRotation.Equals(rhs.RagdollBipedRotation);
+            ret.HealthPercent = item.HealthPercent.Equals(rhs.HealthPercent);
+            ret.TimeOfDay = item.TimeOfDay.Equals(rhs.TimeOfDay);
+            ret.EnableParent = EqualsMaskHelper.EqualsHelper(
+                item.EnableParent,
+                rhs.EnableParent,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Traversals = item.Traversals.CollectionEqualsHelper(
+                rhs.Traversals,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.NavigationDoorLink = EqualsMaskHelper.EqualsHelper(
+                item.NavigationDoorLink,
+                rhs.NavigationDoorLink,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.IsActivationPoint = item.IsActivationPoint == rhs.IsActivationPoint;
+            ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
+            ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
+            ret.Comments = string.Equals(item.Comments, rhs.Comments);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -849,6 +5275,464 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Base ?? true)
+            {
+                sb.AppendItem(item.Base.FormKey, "Base");
+            }
+            if ((printMask?.VolumeData?.Overall ?? true)
+                && item.VolumeData is {} VolumeDataItem)
+            {
+                VolumeDataItem?.Print(sb, "VolumeData");
+            }
+            if ((printMask?.ShipArrival?.Overall ?? true)
+                && item.ShipArrival is {} ShipArrivalItem)
+            {
+                ShipArrivalItem?.Print(sb, "ShipArrival");
+            }
+            if ((printMask?.LevelModifier ?? true)
+                && item.LevelModifier is {} LevelModifierItem)
+            {
+                sb.AppendItem(LevelModifierItem, "LevelModifier");
+            }
+            if ((printMask?.Action ?? true)
+                && item.Action is {} ActionItem)
+            {
+                sb.AppendItem(ActionItem, "Action");
+            }
+            if ((printMask?.Primitive?.Overall ?? true)
+                && item.Primitive is {} PrimitiveItem)
+            {
+                PrimitiveItem?.Print(sb, "Primitive");
+            }
+            if ((printMask?.VolumeReflectionProbeOffsetIntensity?.Overall ?? true)
+                && item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityItem)
+            {
+                VolumeReflectionProbeOffsetIntensityItem?.Print(sb, "VolumeReflectionProbeOffsetIntensity");
+            }
+            if ((printMask?.DebugText?.Overall ?? true)
+                && item.DebugText is {} DebugTextItem)
+            {
+                DebugTextItem?.Print(sb, "DebugText");
+            }
+            if (printMask?.Emittance ?? true)
+            {
+                sb.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
+            }
+            if ((printMask?.Radius ?? true)
+                && item.Radius is {} RadiusItem)
+            {
+                sb.AppendItem(RadiusItem, "Radius");
+            }
+            if ((printMask?.Lighting?.Overall ?? true)
+                && item.Lighting is {} LightingItem)
+            {
+                LightingItem?.Print(sb, "Lighting");
+            }
+            if ((printMask?.LightBarndoorData?.Overall ?? true)
+                && item.LightBarndoorData is {} LightBarndoorDataItem)
+            {
+                LightBarndoorDataItem?.Print(sb, "LightBarndoorData");
+            }
+            if ((printMask?.LightArea?.Overall ?? true)
+                && item.LightArea is {} LightAreaItem)
+            {
+                LightAreaItem?.Print(sb, "LightArea");
+            }
+            if (printMask?.CurrentZoneCell ?? true)
+            {
+                sb.AppendItem(item.CurrentZoneCell.FormKeyNullable, "CurrentZoneCell");
+            }
+            if ((printMask?.XCZA ?? true)
+                && item.XCZA is {} XCZAItem)
+            {
+                sb.AppendLine($"XCZA => {SpanExt.ToHexString(XCZAItem)}");
+            }
+            if ((printMask?.Patrol?.Overall ?? true)
+                && item.Patrol is {} PatrolItem)
+            {
+                PatrolItem?.Print(sb, "Patrol");
+            }
+            if ((printMask?.RagdollData?.Overall ?? true)
+                && item.RagdollData is {} RagdollDataItem)
+            {
+                sb.AppendLine("RagdollData =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RagdollDataItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.TeleportDestination?.Overall ?? true)
+                && item.TeleportDestination is {} TeleportDestinationItem)
+            {
+                TeleportDestinationItem?.Print(sb, "TeleportDestination");
+            }
+            if (printMask?.TeleportName ?? true)
+            {
+                sb.AppendItem(item.TeleportName.FormKeyNullable, "TeleportName");
+            }
+            if (printMask?.ReferenceGroup ?? true)
+            {
+                sb.AppendItem(item.ReferenceGroup.FormKeyNullable, "ReferenceGroup");
+            }
+            if ((printMask?.LocationRefTypes?.Overall ?? true)
+                && item.LocationRefTypes is {} LocationRefTypesItem)
+            {
+                sb.AppendLine("LocationRefTypes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in LocationRefTypesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.LayeredMaterialSwaps?.Overall ?? true)
+                && item.LayeredMaterialSwaps is {} LayeredMaterialSwapsItem)
+            {
+                sb.AppendLine("LayeredMaterialSwaps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in LayeredMaterialSwapsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.XPCK ?? true)
+            {
+                sb.AppendItem(item.XPCK.FormKeyNullable, "XPCK");
+            }
+            if (printMask?.SourcePackIn ?? true)
+            {
+                sb.AppendItem(item.SourcePackIn.FormKeyNullable, "SourcePackIn");
+            }
+            if (printMask?.PersistentLocation ?? true)
+            {
+                sb.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
+            }
+            if ((printMask?.ProjectedDecal?.Overall ?? true)
+                && item.ProjectedDecal is {} ProjectedDecalItem)
+            {
+                ProjectedDecalItem?.Print(sb, "ProjectedDecal");
+            }
+            if ((printMask?.ProjectedDecalReferences?.Overall ?? true)
+                && item.ProjectedDecalReferences is {} ProjectedDecalReferencesItem)
+            {
+                sb.AppendLine("ProjectedDecalReferences =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ProjectedDecalReferencesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ConstrainedDecal ?? true)
+                && item.ConstrainedDecal is {} ConstrainedDecalItem)
+            {
+                sb.AppendItem(ConstrainedDecalItem, "ConstrainedDecal");
+            }
+            if (printMask?.IsIgnoredBySandbox ?? true)
+            {
+                sb.AppendItem(item.IsIgnoredBySandbox, "IsIgnoredBySandbox");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
+            }
+            if ((printMask?.LightGobo?.Overall ?? true)
+                && item.LightGobo is {} LightGoboItem)
+            {
+                LightGoboItem?.Print(sb, "LightGobo");
+            }
+            if ((printMask?.Collision?.Overall ?? true)
+                && item.Collision is {} CollisionItem)
+            {
+                CollisionItem?.Print(sb, "Collision");
+            }
+            if (printMask?.PowerLinks?.Overall ?? true)
+            {
+                sb.AppendLine("PowerLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.PowerLinks)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Count ?? true)
+                && item.Count is {} CountItem)
+            {
+                sb.AppendItem(CountItem, "Count");
+            }
+            if ((printMask?.XFLG ?? true)
+                && item.XFLG is {} XFLGItem)
+            {
+                sb.AppendLine($"XFLG => {SpanExt.ToHexString(XFLGItem)}");
+            }
+            if ((printMask?.LightFlicker?.Overall ?? true)
+                && item.LightFlicker is {} LightFlickerItem)
+            {
+                LightFlickerItem?.Print(sb, "LightFlicker");
+            }
+            if ((printMask?.MapMarker?.Overall ?? true)
+                && item.MapMarker is {} MapMarkerItem)
+            {
+                MapMarkerItem?.Print(sb, "MapMarker");
+            }
+            if ((printMask?.LightLayerData ?? true)
+                && item.LightLayerData is {} LightLayerDataItem)
+            {
+                sb.AppendItem(LightLayerDataItem, "LightLayerData");
+            }
+            if ((printMask?.LightStaticShadowMap ?? true)
+                && item.LightStaticShadowMap is {} LightStaticShadowMapItem)
+            {
+                sb.AppendItem(LightStaticShadowMapItem, "LightStaticShadowMap");
+            }
+            if ((printMask?.LightVolumetricData ?? true)
+                && item.LightVolumetricData is {} LightVolumetricDataItem)
+            {
+                sb.AppendItem(LightVolumetricDataItem, "LightVolumetricData");
+            }
+            if ((printMask?.Ownership?.Overall ?? true)
+                && item.Ownership is {} OwnershipItem)
+            {
+                OwnershipItem?.Print(sb, "Ownership");
+            }
+            if (printMask?.LightColors?.Overall ?? true)
+            {
+                sb.AppendLine("LightColors =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.LightColors)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.GroupedPackIn?.Overall ?? true)
+                && item.GroupedPackIn is {} GroupedPackInItem)
+            {
+                GroupedPackInItem?.Print(sb, "GroupedPackIn");
+            }
+            if ((printMask?.BlueprintPartOrigin ?? true)
+                && item.BlueprintPartOrigin is {} BlueprintPartOriginItem)
+            {
+                sb.AppendItem(BlueprintPartOriginItem, "BlueprintPartOrigin");
+            }
+            if (printMask?.Layer ?? true)
+            {
+                sb.AppendItem(item.Layer.FormKeyNullable, "Layer");
+            }
+            if ((printMask?.LightRoundedness?.Overall ?? true)
+                && item.LightRoundedness is {} LightRoundednessItem)
+            {
+                LightRoundednessItem?.Print(sb, "LightRoundedness");
+            }
+            if (printMask?.LinkedReferences?.Overall ?? true)
+            {
+                sb.AppendLine("LinkedReferences =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.LinkedReferences)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.IsLinkedRefTransient ?? true)
+            {
+                sb.AppendItem(item.IsLinkedRefTransient, "IsLinkedRefTransient");
+            }
+            if ((printMask?.SnapLinks?.Overall ?? true)
+                && item.SnapLinks is {} SnapLinksItem)
+            {
+                sb.AppendLine("SnapLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in SnapLinksItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.EncounterZone ?? true)
+            {
+                sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
+            }
+            if ((printMask?.GeometryDirtinessScale ?? true)
+                && item.GeometryDirtinessScale is {} GeometryDirtinessScaleItem)
+            {
+                sb.AppendItem(GeometryDirtinessScaleItem, "GeometryDirtinessScale");
+            }
+            if ((printMask?.Lock?.Overall ?? true)
+                && item.Lock is {} LockItem)
+            {
+                LockItem?.Print(sb, "Lock");
+            }
+            if ((printMask?.Properties?.Overall ?? true)
+                && item.Properties is {} PropertiesItem)
+            {
+                sb.AppendLine("Properties =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PropertiesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ExternalEmittance?.Overall ?? true)
+                && item.ExternalEmittance is {} ExternalEmittanceItem)
+            {
+                ExternalEmittanceItem?.Print(sb, "ExternalEmittance");
+            }
+            if ((printMask?.HeadTrackingWeight ?? true)
+                && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
+            {
+                sb.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
+            }
+            if ((printMask?.BOLV ?? true)
+                && item.BOLV is {} BOLVItem)
+            {
+                sb.AppendItem(BOLVItem, "BOLV");
+            }
+            if ((printMask?.Spline?.Overall ?? true)
+                && item.Spline is {} SplineItem)
+            {
+                SplineItem?.Print(sb, "Spline");
+            }
+            if ((printMask?.XNSE ?? true)
+                && item.XNSE is {} XNSEItem)
+            {
+                sb.AppendLine($"XNSE => {SpanExt.ToHexString(XNSEItem)}");
+            }
+            if (printMask?.AttachRef ?? true)
+            {
+                sb.AppendItem(item.AttachRef.FormKeyNullable, "AttachRef");
+            }
+            if ((printMask?.RagdollBipedRotation ?? true)
+                && item.RagdollBipedRotation is {} RagdollBipedRotationItem)
+            {
+                sb.AppendItem(RagdollBipedRotationItem, "RagdollBipedRotation");
+            }
+            if ((printMask?.HealthPercent ?? true)
+                && item.HealthPercent is {} HealthPercentItem)
+            {
+                sb.AppendItem(HealthPercentItem, "HealthPercent");
+            }
+            if (printMask?.TimeOfDay ?? true)
+            {
+                sb.AppendItem(item.TimeOfDay.FormKeyNullable, "TimeOfDay");
+            }
+            if ((printMask?.EnableParent?.Overall ?? true)
+                && item.EnableParent is {} EnableParentItem)
+            {
+                EnableParentItem?.Print(sb, "EnableParent");
+            }
+            if ((printMask?.Traversals?.Overall ?? true)
+                && item.Traversals is {} TraversalsItem)
+            {
+                sb.AppendLine("Traversals =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in TraversalsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.NavigationDoorLink?.Overall ?? true)
+                && item.NavigationDoorLink is {} NavigationDoorLinkItem)
+            {
+                NavigationDoorLinkItem?.Print(sb, "NavigationDoorLink");
+            }
+            if (printMask?.IsActivationPoint ?? true)
+            {
+                sb.AppendItem(item.IsActivationPoint, "IsActivationPoint");
+            }
+            if ((printMask?.Scale ?? true)
+                && item.Scale is {} ScaleItem)
+            {
+                sb.AppendItem(ScaleItem, "Scale");
+            }
+            if (printMask?.OpenByDefault ?? true)
+            {
+                sb.AppendItem(item.OpenByDefault, "OpenByDefault");
+            }
+            if (printMask?.Position ?? true)
+            {
+                sb.AppendItem(item.Position, "Position");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                sb.AppendItem(item.Rotation, "Rotation");
+            }
+            if ((printMask?.Comments ?? true)
+                && item.Comments is {} CommentsItem)
+            {
+                sb.AppendItem(CommentsItem, "Comments");
+            }
         }
         
         public static PlacedObject_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -899,6 +5783,398 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VolumeData, rhs.VolumeData, out var lhsVolumeData, out var rhsVolumeData, out var isVolumeDataEqual))
+                {
+                    if (!((PlacedObjectVolumeDataCommon)((IPlacedObjectVolumeDataGetter)lhsVolumeData).CommonInstance()!).Equals(lhsVolumeData, rhsVolumeData, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VolumeData))) return false;
+                }
+                else if (!isVolumeDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ShipArrival) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ShipArrival, rhs.ShipArrival, out var lhsShipArrival, out var rhsShipArrival, out var isShipArrivalEqual))
+                {
+                    if (!((PlacedObjectShipArrivalCommon)((IPlacedObjectShipArrivalGetter)lhsShipArrival).CommonInstance()!).Equals(lhsShipArrival, rhsShipArrival, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ShipArrival))) return false;
+                }
+                else if (!isShipArrivalEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
+            {
+                if (lhs.LevelModifier != rhs.LevelModifier) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Action) ?? true))
+            {
+                if (lhs.Action != rhs.Action) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Primitive) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Primitive, rhs.Primitive, out var lhsPrimitive, out var rhsPrimitive, out var isPrimitiveEqual))
+                {
+                    if (!((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)lhsPrimitive).CommonInstance()!).Equals(lhsPrimitive, rhsPrimitive, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive))) return false;
+                }
+                else if (!isPrimitiveEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VolumeReflectionProbeOffsetIntensity, rhs.VolumeReflectionProbeOffsetIntensity, out var lhsVolumeReflectionProbeOffsetIntensity, out var rhsVolumeReflectionProbeOffsetIntensity, out var isVolumeReflectionProbeOffsetIntensityEqual))
+                {
+                    if (!((VolumeReflectionProbeOffsetIntensityCommon)((IVolumeReflectionProbeOffsetIntensityGetter)lhsVolumeReflectionProbeOffsetIntensity).CommonInstance()!).Equals(lhsVolumeReflectionProbeOffsetIntensity, rhsVolumeReflectionProbeOffsetIntensity, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity))) return false;
+                }
+                else if (!isVolumeReflectionProbeOffsetIntensityEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DebugText) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DebugText, rhs.DebugText, out var lhsDebugText, out var rhsDebugText, out var isDebugTextEqual))
+                {
+                    if (!((PlacedObjectDebugTextCommon)((IPlacedObjectDebugTextGetter)lhsDebugText).CommonInstance()!).Equals(lhsDebugText, rhsDebugText, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DebugText))) return false;
+                }
+                else if (!isDebugTextEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
+            {
+                if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lighting) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Lighting, rhs.Lighting, out var lhsLighting, out var rhsLighting, out var isLightingEqual))
+                {
+                    if (!((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)lhsLighting).CommonInstance()!).Equals(lhsLighting, rhsLighting, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lighting))) return false;
+                }
+                else if (!isLightingEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightBarndoorData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightBarndoorData, rhs.LightBarndoorData, out var lhsLightBarndoorData, out var rhsLightBarndoorData, out var isLightBarndoorDataEqual))
+                {
+                    if (!((PlacedObjectLightBarndoorDataCommon)((IPlacedObjectLightBarndoorDataGetter)lhsLightBarndoorData).CommonInstance()!).Equals(lhsLightBarndoorData, rhsLightBarndoorData, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightBarndoorData))) return false;
+                }
+                else if (!isLightBarndoorDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightArea) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightArea, rhs.LightArea, out var lhsLightArea, out var rhsLightArea, out var isLightAreaEqual))
+                {
+                    if (!((PlacedObjectLightAreaCommon)((IPlacedObjectLightAreaGetter)lhsLightArea).CommonInstance()!).Equals(lhsLightArea, rhsLightArea, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightArea))) return false;
+                }
+                else if (!isLightAreaEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CurrentZoneCell) ?? true))
+            {
+                if (!lhs.CurrentZoneCell.Equals(rhs.CurrentZoneCell)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XCZA, rhs.XCZA)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Patrol, rhs.Patrol, out var lhsPatrol, out var rhsPatrol, out var isPatrolEqual))
+                {
+                    if (!((PatrolCommon)((IPatrolGetter)lhsPatrol).CommonInstance()!).Equals(lhsPatrol, rhsPatrol, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol))) return false;
+                }
+                else if (!isPatrolEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
+            {
+                if (!lhs.RagdollData.SequenceEqualNullable(rhs.RagdollData, (l, r) => ((RagdollDataCommon)((IRagdollDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RagdollData)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.TeleportDestination, rhs.TeleportDestination, out var lhsTeleportDestination, out var rhsTeleportDestination, out var isTeleportDestinationEqual))
+                {
+                    if (!((TeleportDestinationCommon)((ITeleportDestinationGetter)lhsTeleportDestination).CommonInstance()!).Equals(lhsTeleportDestination, rhsTeleportDestination, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination))) return false;
+                }
+                else if (!isTeleportDestinationEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportName) ?? true))
+            {
+                if (!lhs.TeleportName.Equals(rhs.TeleportName)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ReferenceGroup) ?? true))
+            {
+                if (!lhs.ReferenceGroup.Equals(rhs.ReferenceGroup)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefTypes) ?? true))
+            {
+                if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LayeredMaterialSwaps) ?? true))
+            {
+                if (!lhs.LayeredMaterialSwaps.SequenceEqualNullable(rhs.LayeredMaterialSwaps)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCK) ?? true))
+            {
+                if (!lhs.XPCK.Equals(rhs.XPCK)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SourcePackIn) ?? true))
+            {
+                if (!lhs.SourcePackIn.Equals(rhs.SourcePackIn)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
+            {
+                if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ProjectedDecal) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ProjectedDecal, rhs.ProjectedDecal, out var lhsProjectedDecal, out var rhsProjectedDecal, out var isProjectedDecalEqual))
+                {
+                    if (!((PlacedObjectProjectedDecalCommon)((IPlacedObjectProjectedDecalGetter)lhsProjectedDecal).CommonInstance()!).Equals(lhsProjectedDecal, rhsProjectedDecal, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ProjectedDecal))) return false;
+                }
+                else if (!isProjectedDecalEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ProjectedDecalReferences) ?? true))
+            {
+                if (!lhs.ProjectedDecalReferences.SequenceEqualNullable(rhs.ProjectedDecalReferences)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ConstrainedDecal) ?? true))
+            {
+                if (!lhs.ConstrainedDecal.Equals(rhs.ConstrainedDecal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsIgnoredBySandbox) ?? true))
+            {
+                if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightGobo) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightGobo, rhs.LightGobo, out var lhsLightGobo, out var rhsLightGobo, out var isLightGoboEqual))
+                {
+                    if (!((LightGoboCommon)((ILightGoboGetter)lhsLightGobo).CommonInstance()!).Equals(lhsLightGobo, rhsLightGobo, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightGobo))) return false;
+                }
+                else if (!isLightGoboEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Collision) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Collision, rhs.Collision, out var lhsCollision, out var rhsCollision, out var isCollisionEqual))
+                {
+                    if (!((PlacedObjectCollisionCommon)((IPlacedObjectCollisionGetter)lhsCollision).CommonInstance()!).Equals(lhsCollision, rhsCollision, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Collision))) return false;
+                }
+                else if (!isCollisionEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PowerLinks) ?? true))
+            {
+                if (!lhs.PowerLinks.SequenceEqual(rhs.PowerLinks, (l, r) => ((PowerLinkCommon)((IPowerLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.PowerLinks)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Count) ?? true))
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XFLG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XFLG, rhs.XFLG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightFlicker) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightFlicker, rhs.LightFlicker, out var lhsLightFlicker, out var rhsLightFlicker, out var isLightFlickerEqual))
+                {
+                    if (!((PlacedObjectLightFlickerCommon)((IPlacedObjectLightFlickerGetter)lhsLightFlicker).CommonInstance()!).Equals(lhsLightFlicker, rhsLightFlicker, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightFlicker))) return false;
+                }
+                else if (!isLightFlickerEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MapMarker, rhs.MapMarker, out var lhsMapMarker, out var rhsMapMarker, out var isMapMarkerEqual))
+                {
+                    if (!((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)lhsMapMarker).CommonInstance()!).Equals(lhsMapMarker, rhsMapMarker, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker))) return false;
+                }
+                else if (!isMapMarkerEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightLayerData) ?? true))
+            {
+                if (lhs.LightLayerData != rhs.LightLayerData) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightStaticShadowMap) ?? true))
+            {
+                if (lhs.LightStaticShadowMap != rhs.LightStaticShadowMap) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightVolumetricData) ?? true))
+            {
+                if (!lhs.LightVolumetricData.EqualsWithin(rhs.LightVolumetricData)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
+                {
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership))) return false;
+                }
+                else if (!isOwnershipEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightColors) ?? true))
+            {
+                if (!lhs.LightColors.SequenceEqual(rhs.LightColors, (l, r) => ((PlacedObjectLightColorCommon)((IPlacedObjectLightColorGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightColors)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GroupedPackIn) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GroupedPackIn, rhs.GroupedPackIn, out var lhsGroupedPackIn, out var rhsGroupedPackIn, out var isGroupedPackInEqual))
+                {
+                    if (!((GroupedPackInCommon)((IGroupedPackInGetter)lhsGroupedPackIn).CommonInstance()!).Equals(lhsGroupedPackIn, rhsGroupedPackIn, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.GroupedPackIn))) return false;
+                }
+                else if (!isGroupedPackInEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BlueprintPartOrigin) ?? true))
+            {
+                if (lhs.BlueprintPartOrigin != rhs.BlueprintPartOrigin) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Layer) ?? true))
+            {
+                if (!lhs.Layer.Equals(rhs.Layer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightRoundedness) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightRoundedness, rhs.LightRoundedness, out var lhsLightRoundedness, out var rhsLightRoundedness, out var isLightRoundednessEqual))
+                {
+                    if (!((PlacedObjectLightRoundednessCommon)((IPlacedObjectLightRoundednessGetter)lhsLightRoundedness).CommonInstance()!).Equals(lhsLightRoundedness, rhsLightRoundedness, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightRoundedness))) return false;
+                }
+                else if (!isLightRoundednessEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
+            {
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LinkedReferences)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsLinkedRefTransient) ?? true))
+            {
+                if (lhs.IsLinkedRefTransient != rhs.IsLinkedRefTransient) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SnapLinks) ?? true))
+            {
+                if (!lhs.SnapLinks.SequenceEqualNullable(rhs.SnapLinks, (l, r) => ((SnapLinkCommon)((ISnapLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.SnapLinks)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
+            {
+                if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GeometryDirtinessScale) ?? true))
+            {
+                if (!lhs.GeometryDirtinessScale.EqualsWithin(rhs.GeometryDirtinessScale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Lock, rhs.Lock, out var lhsLock, out var rhsLock, out var isLockEqual))
+                {
+                    if (!((LockDataCommon)((ILockDataGetter)lhsLock).CommonInstance()!).Equals(lhsLock, rhsLock, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock))) return false;
+                }
+                else if (!isLockEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Properties) ?? true))
+            {
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Properties)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ExternalEmittance) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ExternalEmittance, rhs.ExternalEmittance, out var lhsExternalEmittance, out var rhsExternalEmittance, out var isExternalEmittanceEqual))
+                {
+                    if (!((ExternalEmittanceCommon)((IExternalEmittanceGetter)lhsExternalEmittance).CommonInstance()!).Equals(lhsExternalEmittance, rhsExternalEmittance, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ExternalEmittance))) return false;
+                }
+                else if (!isExternalEmittanceEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
+            {
+                if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BOLV) ?? true))
+            {
+                if (lhs.BOLV != rhs.BOLV) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Spline) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Spline, rhs.Spline, out var lhsSpline, out var rhsSpline, out var isSplineEqual))
+                {
+                    if (!((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)lhsSpline).CommonInstance()!).Equals(lhsSpline, rhsSpline, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Spline))) return false;
+                }
+                else if (!isSplineEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XNSE) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XNSE, rhs.XNSE)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
+            {
+                if (!lhs.AttachRef.Equals(rhs.AttachRef)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedRotation) ?? true))
+            {
+                if (!lhs.RagdollBipedRotation.Equals(rhs.RagdollBipedRotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HealthPercent) ?? true))
+            {
+                if (!lhs.HealthPercent.Equals(rhs.HealthPercent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TimeOfDay) ?? true))
+            {
+                if (!lhs.TimeOfDay.Equals(rhs.TimeOfDay)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
+                {
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent))) return false;
+                }
+                else if (!isEnableParentEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Traversals) ?? true))
+            {
+                if (!lhs.Traversals.SequenceEqualNullable(rhs.Traversals, (l, r) => ((TraversalReferenceCommon)((ITraversalReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Traversals)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavigationDoorLink, rhs.NavigationDoorLink, out var lhsNavigationDoorLink, out var rhsNavigationDoorLink, out var isNavigationDoorLinkEqual))
+                {
+                    if (!((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)lhsNavigationDoorLink).CommonInstance()!).Equals(lhsNavigationDoorLink, rhsNavigationDoorLink, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink))) return false;
+                }
+                else if (!isNavigationDoorLinkEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsActivationPoint) ?? true))
+            {
+                if (lhs.IsActivationPoint != rhs.IsActivationPoint) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            {
+                if (lhs.OpenByDefault != rhs.OpenByDefault) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
+            {
+                if (!lhs.Position.Equals(rhs.Position)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
+            {
+                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Comments) ?? true))
+            {
+                if (!string.Equals(lhs.Comments, rhs.Comments)) return false;
+            }
             return true;
         }
         
@@ -927,6 +6203,215 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPlacedObjectGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            hash.Add(item.Components);
+            hash.Add(item.Base);
+            if (item.VolumeData is {} VolumeDataitem)
+            {
+                hash.Add(VolumeDataitem);
+            }
+            if (item.ShipArrival is {} ShipArrivalitem)
+            {
+                hash.Add(ShipArrivalitem);
+            }
+            if (item.LevelModifier is {} LevelModifieritem)
+            {
+                hash.Add(LevelModifieritem);
+            }
+            if (item.Action is {} Actionitem)
+            {
+                hash.Add(Actionitem);
+            }
+            if (item.Primitive is {} Primitiveitem)
+            {
+                hash.Add(Primitiveitem);
+            }
+            if (item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityitem)
+            {
+                hash.Add(VolumeReflectionProbeOffsetIntensityitem);
+            }
+            if (item.DebugText is {} DebugTextitem)
+            {
+                hash.Add(DebugTextitem);
+            }
+            hash.Add(item.Emittance);
+            if (item.Radius is {} Radiusitem)
+            {
+                hash.Add(Radiusitem);
+            }
+            if (item.Lighting is {} Lightingitem)
+            {
+                hash.Add(Lightingitem);
+            }
+            if (item.LightBarndoorData is {} LightBarndoorDataitem)
+            {
+                hash.Add(LightBarndoorDataitem);
+            }
+            if (item.LightArea is {} LightAreaitem)
+            {
+                hash.Add(LightAreaitem);
+            }
+            hash.Add(item.CurrentZoneCell);
+            if (item.XCZA is {} XCZAItem)
+            {
+                hash.Add(XCZAItem);
+            }
+            if (item.Patrol is {} Patrolitem)
+            {
+                hash.Add(Patrolitem);
+            }
+            hash.Add(item.RagdollData);
+            if (item.TeleportDestination is {} TeleportDestinationitem)
+            {
+                hash.Add(TeleportDestinationitem);
+            }
+            hash.Add(item.TeleportName);
+            hash.Add(item.ReferenceGroup);
+            hash.Add(item.LocationRefTypes);
+            hash.Add(item.LayeredMaterialSwaps);
+            hash.Add(item.XPCK);
+            hash.Add(item.SourcePackIn);
+            hash.Add(item.PersistentLocation);
+            if (item.ProjectedDecal is {} ProjectedDecalitem)
+            {
+                hash.Add(ProjectedDecalitem);
+            }
+            hash.Add(item.ProjectedDecalReferences);
+            if (item.ConstrainedDecal is {} ConstrainedDecalitem)
+            {
+                hash.Add(ConstrainedDecalitem);
+            }
+            hash.Add(item.IsIgnoredBySandbox);
+            if (item.FactionRank is {} FactionRankitem)
+            {
+                hash.Add(FactionRankitem);
+            }
+            if (item.LightGobo is {} LightGoboitem)
+            {
+                hash.Add(LightGoboitem);
+            }
+            if (item.Collision is {} Collisionitem)
+            {
+                hash.Add(Collisionitem);
+            }
+            hash.Add(item.PowerLinks);
+            if (item.Count is {} Countitem)
+            {
+                hash.Add(Countitem);
+            }
+            if (item.XFLG is {} XFLGItem)
+            {
+                hash.Add(XFLGItem);
+            }
+            if (item.LightFlicker is {} LightFlickeritem)
+            {
+                hash.Add(LightFlickeritem);
+            }
+            if (item.MapMarker is {} MapMarkeritem)
+            {
+                hash.Add(MapMarkeritem);
+            }
+            if (item.LightLayerData is {} LightLayerDataitem)
+            {
+                hash.Add(LightLayerDataitem);
+            }
+            if (item.LightStaticShadowMap is {} LightStaticShadowMapitem)
+            {
+                hash.Add(LightStaticShadowMapitem);
+            }
+            if (item.LightVolumetricData is {} LightVolumetricDataitem)
+            {
+                hash.Add(LightVolumetricDataitem);
+            }
+            if (item.Ownership is {} Ownershipitem)
+            {
+                hash.Add(Ownershipitem);
+            }
+            hash.Add(item.LightColors);
+            if (item.GroupedPackIn is {} GroupedPackInitem)
+            {
+                hash.Add(GroupedPackInitem);
+            }
+            if (item.BlueprintPartOrigin is {} BlueprintPartOriginitem)
+            {
+                hash.Add(BlueprintPartOriginitem);
+            }
+            hash.Add(item.Layer);
+            if (item.LightRoundedness is {} LightRoundednessitem)
+            {
+                hash.Add(LightRoundednessitem);
+            }
+            hash.Add(item.LinkedReferences);
+            hash.Add(item.IsLinkedRefTransient);
+            hash.Add(item.SnapLinks);
+            hash.Add(item.EncounterZone);
+            if (item.GeometryDirtinessScale is {} GeometryDirtinessScaleitem)
+            {
+                hash.Add(GeometryDirtinessScaleitem);
+            }
+            if (item.Lock is {} Lockitem)
+            {
+                hash.Add(Lockitem);
+            }
+            hash.Add(item.Properties);
+            if (item.ExternalEmittance is {} ExternalEmittanceitem)
+            {
+                hash.Add(ExternalEmittanceitem);
+            }
+            if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
+            {
+                hash.Add(HeadTrackingWeightitem);
+            }
+            if (item.BOLV is {} BOLVitem)
+            {
+                hash.Add(BOLVitem);
+            }
+            if (item.Spline is {} Splineitem)
+            {
+                hash.Add(Splineitem);
+            }
+            if (item.XNSE is {} XNSEItem)
+            {
+                hash.Add(XNSEItem);
+            }
+            hash.Add(item.AttachRef);
+            if (item.RagdollBipedRotation is {} RagdollBipedRotationitem)
+            {
+                hash.Add(RagdollBipedRotationitem);
+            }
+            if (item.HealthPercent is {} HealthPercentitem)
+            {
+                hash.Add(HealthPercentitem);
+            }
+            hash.Add(item.TimeOfDay);
+            if (item.EnableParent is {} EnableParentitem)
+            {
+                hash.Add(EnableParentitem);
+            }
+            hash.Add(item.Traversals);
+            if (item.NavigationDoorLink is {} NavigationDoorLinkitem)
+            {
+                hash.Add(NavigationDoorLinkitem);
+            }
+            hash.Add(item.IsActivationPoint);
+            if (item.Scale is {} Scaleitem)
+            {
+                hash.Add(Scaleitem);
+            }
+            hash.Add(item.OpenByDefault);
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
+            if (item.Comments is {} Commentsitem)
+            {
+                hash.Add(Commentsitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -955,6 +6440,186 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield return FormLinkInformation.Factory(obj.Base);
+            if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
+            {
+                yield return EmittanceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.CurrentZoneCell, out var CurrentZoneCellInfo))
+            {
+                yield return CurrentZoneCellInfo;
+            }
+            if (obj.Patrol is {} PatrolItems)
+            {
+                foreach (var item in PatrolItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.TeleportDestination is {} TeleportDestinationItems)
+            {
+                foreach (var item in TeleportDestinationItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.TeleportName, out var TeleportNameInfo))
+            {
+                yield return TeleportNameInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ReferenceGroup, out var ReferenceGroupInfo))
+            {
+                yield return ReferenceGroupInfo;
+            }
+            if (obj.LocationRefTypes is {} LocationRefTypesItem)
+            {
+                foreach (var item in LocationRefTypesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.LayeredMaterialSwaps is {} LayeredMaterialSwapsItem)
+            {
+                foreach (var item in LayeredMaterialSwapsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.XPCK, out var XPCKInfo))
+            {
+                yield return XPCKInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.SourcePackIn, out var SourcePackInInfo))
+            {
+                yield return SourcePackInInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PersistentLocation, out var PersistentLocationInfo))
+            {
+                yield return PersistentLocationInfo;
+            }
+            if (obj.ProjectedDecalReferences is {} ProjectedDecalReferencesItem)
+            {
+                foreach (var item in ProjectedDecalReferencesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Collision is {} CollisionItems)
+            {
+                foreach (var item in CollisionItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.PowerLinks.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Ownership is {} OwnershipItems)
+            {
+                foreach (var item in OwnershipItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.GroupedPackIn is {} GroupedPackInItems)
+            {
+                foreach (var item in GroupedPackInItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Layer, out var LayerInfo))
+            {
+                yield return LayerInfo;
+            }
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.SnapLinks is {} SnapLinksItem)
+            {
+                foreach (var item in SnapLinksItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
+            {
+                yield return EncounterZoneInfo;
+            }
+            if (obj.Lock is {} LockItems)
+            {
+                foreach (var item in LockItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Properties is {} PropertiesItem)
+            {
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.AttachRef, out var AttachRefInfo))
+            {
+                yield return AttachRefInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.TimeOfDay, out var TimeOfDayInfo))
+            {
+                yield return TimeOfDayInfo;
+            }
+            if (obj.EnableParent is {} EnableParentItems)
+            {
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Traversals is {} TraversalsItem)
+            {
+                foreach (var item in TraversalsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.NavigationDoorLink is {} NavigationDoorLinkItems)
+            {
+                foreach (var item in NavigationDoorLinkItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPlacedObjectGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1030,6 +6695,1119 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                item.Base.SetTo(rhs.Base.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeData) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.VolumeData);
+                try
+                {
+                    if(rhs.VolumeData is {} rhsVolumeData)
+                    {
+                        item.VolumeData = rhsVolumeData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VolumeData));
+                    }
+                    else
+                    {
+                        item.VolumeData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ShipArrival) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.ShipArrival);
+                try
+                {
+                    if(rhs.ShipArrival is {} rhsShipArrival)
+                    {
+                        item.ShipArrival = rhsShipArrival.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ShipArrival));
+                    }
+                    else
+                    {
+                        item.ShipArrival = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
+            {
+                item.LevelModifier = rhs.LevelModifier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Action) ?? true))
+            {
+                item.Action = rhs.Action;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Primitive) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Primitive);
+                try
+                {
+                    if(rhs.Primitive is {} rhsPrimitive)
+                    {
+                        item.Primitive = rhsPrimitive.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive));
+                    }
+                    else
+                    {
+                        item.Primitive = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity);
+                try
+                {
+                    if(rhs.VolumeReflectionProbeOffsetIntensity is {} rhsVolumeReflectionProbeOffsetIntensity)
+                    {
+                        item.VolumeReflectionProbeOffsetIntensity = rhsVolumeReflectionProbeOffsetIntensity.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity));
+                    }
+                    else
+                    {
+                        item.VolumeReflectionProbeOffsetIntensity = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DebugText) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.DebugText);
+                try
+                {
+                    if(rhs.DebugText is {} rhsDebugText)
+                    {
+                        item.DebugText = rhsDebugText.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DebugText));
+                    }
+                    else
+                    {
+                        item.DebugText = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
+            {
+                item.Emittance.SetTo(rhs.Emittance.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lighting) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lighting);
+                try
+                {
+                    if(rhs.Lighting is {} rhsLighting)
+                    {
+                        item.Lighting = rhsLighting.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lighting));
+                    }
+                    else
+                    {
+                        item.Lighting = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightBarndoorData) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightBarndoorData);
+                try
+                {
+                    if(rhs.LightBarndoorData is {} rhsLightBarndoorData)
+                    {
+                        item.LightBarndoorData = rhsLightBarndoorData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightBarndoorData));
+                    }
+                    else
+                    {
+                        item.LightBarndoorData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightArea) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightArea);
+                try
+                {
+                    if(rhs.LightArea is {} rhsLightArea)
+                    {
+                        item.LightArea = rhsLightArea.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightArea));
+                    }
+                    else
+                    {
+                        item.LightArea = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CurrentZoneCell) ?? true))
+            {
+                item.CurrentZoneCell.SetTo(rhs.CurrentZoneCell.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
+            {
+                if(rhs.XCZA is {} XCZArhs)
+                {
+                    item.XCZA = XCZArhs.ToArray();
+                }
+                else
+                {
+                    item.XCZA = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Patrol);
+                try
+                {
+                    if(rhs.Patrol is {} rhsPatrol)
+                    {
+                        item.Patrol = rhsPatrol.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol));
+                    }
+                    else
+                    {
+                        item.Patrol = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.RagdollData);
+                try
+                {
+                    if ((rhs.RagdollData != null))
+                    {
+                        item.RagdollData = 
+                            rhs.RagdollData
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<RagdollData>();
+                    }
+                    else
+                    {
+                        item.RagdollData = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
+                try
+                {
+                    if(rhs.TeleportDestination is {} rhsTeleportDestination)
+                    {
+                        item.TeleportDestination = rhsTeleportDestination.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
+                    }
+                    else
+                    {
+                        item.TeleportDestination = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportName) ?? true))
+            {
+                item.TeleportName.SetTo(rhs.TeleportName.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ReferenceGroup) ?? true))
+            {
+                item.ReferenceGroup.SetTo(rhs.ReferenceGroup.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LocationRefTypes);
+                try
+                {
+                    if ((rhs.LocationRefTypes != null))
+                    {
+                        item.LocationRefTypes = 
+                            rhs.LocationRefTypes
+                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    }
+                    else
+                    {
+                        item.LocationRefTypes = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LayeredMaterialSwaps) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LayeredMaterialSwaps);
+                try
+                {
+                    if ((rhs.LayeredMaterialSwaps != null))
+                    {
+                        item.LayeredMaterialSwaps = 
+                            rhs.LayeredMaterialSwaps
+                            .Select(r => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
+                    }
+                    else
+                    {
+                        item.LayeredMaterialSwaps = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCK) ?? true))
+            {
+                item.XPCK.SetTo(rhs.XPCK.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SourcePackIn) ?? true))
+            {
+                item.SourcePackIn.SetTo(rhs.SourcePackIn.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
+            {
+                item.PersistentLocation.SetTo(rhs.PersistentLocation.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ProjectedDecal) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.ProjectedDecal);
+                try
+                {
+                    if(rhs.ProjectedDecal is {} rhsProjectedDecal)
+                    {
+                        item.ProjectedDecal = rhsProjectedDecal.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ProjectedDecal));
+                    }
+                    else
+                    {
+                        item.ProjectedDecal = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ProjectedDecalReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.ProjectedDecalReferences);
+                try
+                {
+                    if ((rhs.ProjectedDecalReferences != null))
+                    {
+                        item.ProjectedDecalReferences = 
+                            rhs.ProjectedDecalReferences
+                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
+                    }
+                    else
+                    {
+                        item.ProjectedDecalReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ConstrainedDecal) ?? true))
+            {
+                item.ConstrainedDecal = rhs.ConstrainedDecal;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsIgnoredBySandbox) ?? true))
+            {
+                item.IsIgnoredBySandbox = rhs.IsIgnoredBySandbox;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightGobo) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightGobo);
+                try
+                {
+                    if(rhs.LightGobo is {} rhsLightGobo)
+                    {
+                        item.LightGobo = rhsLightGobo.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightGobo));
+                    }
+                    else
+                    {
+                        item.LightGobo = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Collision) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Collision);
+                try
+                {
+                    if(rhs.Collision is {} rhsCollision)
+                    {
+                        item.Collision = rhsCollision.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Collision));
+                    }
+                    else
+                    {
+                        item.Collision = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PowerLinks) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.PowerLinks);
+                try
+                {
+                    item.PowerLinks.SetTo(
+                        rhs.PowerLinks
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Count) ?? true))
+            {
+                item.Count = rhs.Count;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XFLG) ?? true))
+            {
+                if(rhs.XFLG is {} XFLGrhs)
+                {
+                    item.XFLG = XFLGrhs.ToArray();
+                }
+                else
+                {
+                    item.XFLG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightFlicker) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightFlicker);
+                try
+                {
+                    if(rhs.LightFlicker is {} rhsLightFlicker)
+                    {
+                        item.LightFlicker = rhsLightFlicker.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightFlicker));
+                    }
+                    else
+                    {
+                        item.LightFlicker = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
+                try
+                {
+                    if(rhs.MapMarker is {} rhsMapMarker)
+                    {
+                        item.MapMarker = rhsMapMarker.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
+                    }
+                    else
+                    {
+                        item.MapMarker = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightLayerData) ?? true))
+            {
+                item.LightLayerData = rhs.LightLayerData;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightStaticShadowMap) ?? true))
+            {
+                item.LightStaticShadowMap = rhs.LightStaticShadowMap;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightVolumetricData) ?? true))
+            {
+                item.LightVolumetricData = rhs.LightVolumetricData;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Ownership);
+                try
+                {
+                    if(rhs.Ownership is {} rhsOwnership)
+                    {
+                        item.Ownership = rhsOwnership.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership));
+                    }
+                    else
+                    {
+                        item.Ownership = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightColors) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightColors);
+                try
+                {
+                    item.LightColors.SetTo(
+                        rhs.LightColors
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GroupedPackIn) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.GroupedPackIn);
+                try
+                {
+                    if(rhs.GroupedPackIn is {} rhsGroupedPackIn)
+                    {
+                        item.GroupedPackIn = rhsGroupedPackIn.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.GroupedPackIn));
+                    }
+                    else
+                    {
+                        item.GroupedPackIn = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BlueprintPartOrigin) ?? true))
+            {
+                item.BlueprintPartOrigin = rhs.BlueprintPartOrigin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Layer) ?? true))
+            {
+                item.Layer.SetTo(rhs.Layer.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightRoundedness) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightRoundedness);
+                try
+                {
+                    if(rhs.LightRoundedness is {} rhsLightRoundedness)
+                    {
+                        item.LightRoundedness = rhsLightRoundedness.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightRoundedness));
+                    }
+                    else
+                    {
+                        item.LightRoundedness = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LinkedReferences);
+                try
+                {
+                    item.LinkedReferences.SetTo(
+                        rhs.LinkedReferences
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsLinkedRefTransient) ?? true))
+            {
+                item.IsLinkedRefTransient = rhs.IsLinkedRefTransient;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SnapLinks) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.SnapLinks);
+                try
+                {
+                    if ((rhs.SnapLinks != null))
+                    {
+                        item.SnapLinks = 
+                            rhs.SnapLinks
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<SnapLink>();
+                    }
+                    else
+                    {
+                        item.SnapLinks = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
+            {
+                item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GeometryDirtinessScale) ?? true))
+            {
+                item.GeometryDirtinessScale = rhs.GeometryDirtinessScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
+                try
+                {
+                    if(rhs.Lock is {} rhsLock)
+                    {
+                        item.Lock = rhsLock.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
+                    }
+                    else
+                    {
+                        item.Lock = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Properties) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Properties);
+                try
+                {
+                    if ((rhs.Properties != null))
+                    {
+                        item.Properties = 
+                            rhs.Properties
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectProperty>();
+                    }
+                    else
+                    {
+                        item.Properties = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ExternalEmittance) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.ExternalEmittance);
+                try
+                {
+                    if(rhs.ExternalEmittance is {} rhsExternalEmittance)
+                    {
+                        item.ExternalEmittance = rhsExternalEmittance.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ExternalEmittance));
+                    }
+                    else
+                    {
+                        item.ExternalEmittance = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
+            {
+                item.HeadTrackingWeight = rhs.HeadTrackingWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BOLV) ?? true))
+            {
+                item.BOLV = rhs.BOLV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Spline) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Spline);
+                try
+                {
+                    if(rhs.Spline is {} rhsSpline)
+                    {
+                        item.Spline = rhsSpline.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Spline));
+                    }
+                    else
+                    {
+                        item.Spline = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XNSE) ?? true))
+            {
+                if(rhs.XNSE is {} XNSErhs)
+                {
+                    item.XNSE = XNSErhs.ToArray();
+                }
+                else
+                {
+                    item.XNSE = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
+            {
+                item.AttachRef.SetTo(rhs.AttachRef.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedRotation) ?? true))
+            {
+                item.RagdollBipedRotation = rhs.RagdollBipedRotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HealthPercent) ?? true))
+            {
+                item.HealthPercent = rhs.HealthPercent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TimeOfDay) ?? true))
+            {
+                item.TimeOfDay.SetTo(rhs.TimeOfDay.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
+                try
+                {
+                    if(rhs.EnableParent is {} rhsEnableParent)
+                    {
+                        item.EnableParent = rhsEnableParent.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
+                    }
+                    else
+                    {
+                        item.EnableParent = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Traversals) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Traversals);
+                try
+                {
+                    if ((rhs.Traversals != null))
+                    {
+                        item.Traversals = 
+                            rhs.Traversals
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<TraversalReference>();
+                    }
+                    else
+                    {
+                        item.Traversals = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                try
+                {
+                    if(rhs.NavigationDoorLink is {} rhsNavigationDoorLink)
+                    {
+                        item.NavigationDoorLink = rhsNavigationDoorLink.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink));
+                    }
+                    else
+                    {
+                        item.NavigationDoorLink = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsActivationPoint) ?? true))
+            {
+                item.IsActivationPoint = rhs.IsActivationPoint;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
+            {
+                item.Scale = rhs.Scale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            {
+                item.OpenByDefault = rhs.OpenByDefault;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
+            {
+                item.Position = rhs.Position;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
+            {
+                item.Rotation = rhs.Rotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Comments) ?? true))
+            {
+                item.Comments = rhs.Comments;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1178,6 +7956,471 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly PlacedObjectBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IPlacedObjectGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Base,
+                header: translationParams.ConvertToCustom(RecordTypes.NAME));
+            if (item.VolumeData is {} VolumeDataItem)
+            {
+                ((PlacedObjectVolumeDataBinaryWriteTranslation)((IBinaryItem)VolumeDataItem).BinaryWriteTranslator).Write(
+                    item: VolumeDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.ShipArrival is {} ShipArrivalItem)
+            {
+                ((PlacedObjectShipArrivalBinaryWriteTranslation)((IBinaryItem)ShipArrivalItem).BinaryWriteTranslator).Write(
+                    item: ShipArrivalItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.LevelModifier,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.XLCM));
+            EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Action,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.XACT));
+            if (item.Primitive is {} PrimitiveItem)
+            {
+                ((PlacedPrimitiveBinaryWriteTranslation)((IBinaryItem)PrimitiveItem).BinaryWriteTranslator).Write(
+                    item: PrimitiveItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.VolumeReflectionProbeOffsetIntensity is {} VolumeReflectionProbeOffsetIntensityItem)
+            {
+                ((VolumeReflectionProbeOffsetIntensityBinaryWriteTranslation)((IBinaryItem)VolumeReflectionProbeOffsetIntensityItem).BinaryWriteTranslator).Write(
+                    item: VolumeReflectionProbeOffsetIntensityItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.DebugText is {} DebugTextItem)
+            {
+                ((PlacedObjectDebugTextBinaryWriteTranslation)((IBinaryItem)DebugTextItem).BinaryWriteTranslator).Write(
+                    item: DebugTextItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Emittance,
+                header: translationParams.ConvertToCustom(RecordTypes.XEMI));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Radius,
+                header: translationParams.ConvertToCustom(RecordTypes.XRDS));
+            if (item.Lighting is {} LightingItem)
+            {
+                ((PlacedObjectLightingBinaryWriteTranslation)((IBinaryItem)LightingItem).BinaryWriteTranslator).Write(
+                    item: LightingItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.LightBarndoorData is {} LightBarndoorDataItem)
+            {
+                ((PlacedObjectLightBarndoorDataBinaryWriteTranslation)((IBinaryItem)LightBarndoorDataItem).BinaryWriteTranslator).Write(
+                    item: LightBarndoorDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.LightArea is {} LightAreaItem)
+            {
+                ((PlacedObjectLightAreaBinaryWriteTranslation)((IBinaryItem)LightAreaItem).BinaryWriteTranslator).Write(
+                    item: LightAreaItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CurrentZoneCell,
+                header: translationParams.ConvertToCustom(RecordTypes.XCZC));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XCZA,
+                header: translationParams.ConvertToCustom(RecordTypes.XCZA));
+            if (item.Patrol is {} PatrolItem)
+            {
+                ((PatrolBinaryWriteTranslation)((IBinaryItem)PatrolItem).BinaryWriteTranslator).Write(
+                    item: PatrolItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRagdollDataGetter>.Instance.Write(
+                writer: writer,
+                items: item.RagdollData,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XRGD),
+                transl: (MutagenWriter subWriter, IRagdollDataGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RagdollDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.TeleportDestination is {} TeleportDestinationItem)
+            {
+                ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)TeleportDestinationItem).BinaryWriteTranslator).Write(
+                    item: TeleportDestinationItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TeleportName,
+                header: translationParams.ConvertToCustom(RecordTypes.XTNM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ReferenceGroup,
+                header: translationParams.ConvertToCustom(RecordTypes.XRFG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LocationRefTypes,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XLRT),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILayeredMaterialSwapGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LayeredMaterialSwaps,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XLMS),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILayeredMaterialSwapGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.XPCK,
+                header: translationParams.ConvertToCustom(RecordTypes.XPCK));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SourcePackIn,
+                header: translationParams.ConvertToCustom(RecordTypes.XPCS));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PersistentLocation,
+                header: translationParams.ConvertToCustom(RecordTypes.XLCN));
+            if (item.ProjectedDecal is {} ProjectedDecalItem)
+            {
+                ((PlacedObjectProjectedDecalBinaryWriteTranslation)((IBinaryItem)ProjectedDecalItem).BinaryWriteTranslator).Write(
+                    item: ProjectedDecalItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ProjectedDecalReferences,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XPDO),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ConstrainedDecal,
+                header: translationParams.ConvertToCustom(RecordTypes.XCDD));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsIgnoredBySandbox,
+                header: translationParams.ConvertToCustom(RecordTypes.XIS2));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
+            if (item.LightGobo is {} LightGoboItem)
+            {
+                ((LightGoboBinaryWriteTranslation)((IBinaryItem)LightGoboItem).BinaryWriteTranslator).Write(
+                    item: LightGoboItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Collision is {} CollisionItem)
+            {
+                ((PlacedObjectCollisionBinaryWriteTranslation)((IBinaryItem)CollisionItem).BinaryWriteTranslator).Write(
+                    item: CollisionItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPowerLinkGetter>.Instance.Write(
+                writer: writer,
+                items: item.PowerLinks,
+                transl: (MutagenWriter subWriter, IPowerLinkGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PowerLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Count,
+                header: translationParams.ConvertToCustom(RecordTypes.XCNT));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XFLG,
+                header: translationParams.ConvertToCustom(RecordTypes.XFLG));
+            if (item.LightFlicker is {} LightFlickerItem)
+            {
+                ((PlacedObjectLightFlickerBinaryWriteTranslation)((IBinaryItem)LightFlickerItem).BinaryWriteTranslator).Write(
+                    item: LightFlickerItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.MapMarker is {} MapMarkerItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.XMRK)) { }
+                ((PlacedObjectMapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
+                    item: MapMarkerItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LightLayerData,
+                header: translationParams.ConvertToCustom(RecordTypes.XLLD),
+                byteLength: 4);
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LightStaticShadowMap,
+                header: translationParams.ConvertToCustom(RecordTypes.XLSM),
+                byteLength: 4);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LightVolumetricData,
+                header: translationParams.ConvertToCustom(RecordTypes.XLVD));
+            if (item.Ownership is {} OwnershipItem)
+            {
+                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
+                    item: OwnershipItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlacedObjectLightColorGetter>.Instance.Write(
+                writer: writer,
+                items: item.LightColors,
+                transl: (MutagenWriter subWriter, IPlacedObjectLightColorGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PlacedObjectLightColorBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.GroupedPackIn is {} GroupedPackInItem)
+            {
+                ((GroupedPackInBinaryWriteTranslation)((IBinaryItem)GroupedPackInItem).BinaryWriteTranslator).Write(
+                    item: GroupedPackInItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.BlueprintPartOrigin,
+                header: translationParams.ConvertToCustom(RecordTypes.XBPO));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Layer,
+                header: translationParams.ConvertToCustom(RecordTypes.XLYR));
+            if (item.LightRoundedness is {} LightRoundednessItem)
+            {
+                ((PlacedObjectLightRoundednessBinaryWriteTranslation)((IBinaryItem)LightRoundednessItem).BinaryWriteTranslator).Write(
+                    item: LightRoundednessItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILinkedReferencesGetter>.Instance.Write(
+                writer: writer,
+                items: item.LinkedReferences,
+                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LinkedReferencesBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsLinkedRefTransient,
+                header: translationParams.ConvertToCustom(RecordTypes.XLKT));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISnapLinkGetter>.Instance.Write(
+                writer: writer,
+                items: item.SnapLinks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XSL1),
+                transl: (MutagenWriter subWriter, ISnapLinkGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SnapLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EncounterZone,
+                header: translationParams.ConvertToCustom(RecordTypes.XEZN));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.GeometryDirtinessScale,
+                header: translationParams.ConvertToCustom(RecordTypes.XGDS));
+            if (item.Lock is {} LockItem)
+            {
+                ((LockDataBinaryWriteTranslation)((IBinaryItem)LockItem).BinaryWriteTranslator).Write(
+                    item: LockItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
+                writer: writer,
+                items: item.Properties,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XPPS),
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.ExternalEmittance is {} ExternalEmittanceItem)
+            {
+                ((ExternalEmittanceBinaryWriteTranslation)((IBinaryItem)ExternalEmittanceItem).BinaryWriteTranslator).Write(
+                    item: ExternalEmittanceItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.HeadTrackingWeight,
+                header: translationParams.ConvertToCustom(RecordTypes.XHTW));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.BOLV,
+                header: translationParams.ConvertToCustom(RecordTypes.BOLV));
+            if (item.Spline is {} SplineItem)
+            {
+                ((PlacedObjectSplineBinaryWriteTranslation)((IBinaryItem)SplineItem).BinaryWriteTranslator).Write(
+                    item: SplineItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XNSE,
+                header: translationParams.ConvertToCustom(RecordTypes.XNSE));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AttachRef,
+                header: translationParams.ConvertToCustom(RecordTypes.XATR));
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.RagdollBipedRotation,
+                header: translationParams.ConvertToCustom(RecordTypes.XRGB));
+            PercentBinaryTranslation.Write(
+                writer: writer,
+                item: item.HealthPercent,
+                integerType: FloatIntegerType.UInt,
+                header: translationParams.ConvertToCustom(RecordTypes.XHLT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TimeOfDay,
+                header: translationParams.ConvertToCustom(RecordTypes.TODD));
+            if (item.EnableParent is {} EnableParentItem)
+            {
+                ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
+                    item: EnableParentItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITraversalReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.Traversals,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XTV2),
+                transl: (MutagenWriter subWriter, ITraversalReferenceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((TraversalReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.NavigationDoorLink is {} NavigationDoorLinkItem)
+            {
+                ((NavigationDoorLinkBinaryWriteTranslation)((IBinaryItem)NavigationDoorLinkItem).BinaryWriteTranslator).Write(
+                    item: NavigationDoorLinkItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsActivationPoint,
+                header: translationParams.ConvertToCustom(RecordTypes.XATP));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Scale,
+                header: translationParams.ConvertToCustom(RecordTypes.XSCL));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.OpenByDefault,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Position);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Rotation);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Comments,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             IPlacedObjectGetter item,
@@ -1194,10 +8437,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1247,6 +8492,517 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REFR;
+        public static ParseResult FillBinaryRecordTypes(
+            IPlacedObjectInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)PlacedObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.NAME:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.Base;
+                }
+                case RecordTypeInts.XVL2:
+                {
+                    item.VolumeData = Mutagen.Bethesda.Starfield.PlacedObjectVolumeData.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.VolumeData;
+                }
+                case RecordTypeInts.XSAD:
+                {
+                    item.ShipArrival = Mutagen.Bethesda.Starfield.PlacedObjectShipArrival.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.ShipArrival;
+                }
+                case RecordTypeInts.XLCM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LevelModifier = EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)PlacedObject_FieldIndex.LevelModifier;
+                }
+                case RecordTypeInts.XACT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Action = EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)PlacedObject_FieldIndex.Action;
+                }
+                case RecordTypeInts.XPRM:
+                {
+                    item.Primitive = Mutagen.Bethesda.Starfield.PlacedPrimitive.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.Primitive;
+                }
+                case RecordTypeInts.XVOI:
+                {
+                    item.VolumeReflectionProbeOffsetIntensity = Mutagen.Bethesda.Starfield.VolumeReflectionProbeOffsetIntensity.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity;
+                }
+                case RecordTypeInts.XDTS:
+                case RecordTypeInts.XDTF:
+                {
+                    item.DebugText = Mutagen.Bethesda.Starfield.PlacedObjectDebugText.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.DebugText;
+                }
+                case RecordTypeInts.XEMI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.Emittance;
+                }
+                case RecordTypeInts.XRDS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.Radius;
+                }
+                case RecordTypeInts.XLIG:
+                {
+                    item.Lighting = Mutagen.Bethesda.Starfield.PlacedObjectLighting.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.Lighting;
+                }
+                case RecordTypeInts.XLBD:
+                {
+                    item.LightBarndoorData = Mutagen.Bethesda.Starfield.PlacedObjectLightBarndoorData.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.LightBarndoorData;
+                }
+                case RecordTypeInts.XALD:
+                {
+                    item.LightArea = Mutagen.Bethesda.Starfield.PlacedObjectLightArea.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.LightArea;
+                }
+                case RecordTypeInts.XCZC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CurrentZoneCell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.CurrentZoneCell;
+                }
+                case RecordTypeInts.XCZA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XCZA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.XCZA;
+                }
+                case RecordTypeInts.XPRD:
+                {
+                    item.Patrol = Mutagen.Bethesda.Starfield.Patrol.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.Patrol;
+                }
+                case RecordTypeInts.XRGD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollData = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RagdollData>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: RagdollData.TryCreateFromBinary)
+                        .CastExtendedList<RagdollData>();
+                    return (int)PlacedObject_FieldIndex.RagdollData;
+                }
+                case RecordTypeInts.XTEL:
+                {
+                    item.TeleportDestination = Mutagen.Bethesda.Starfield.TeleportDestination.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.TeleportDestination;
+                }
+                case RecordTypeInts.XTNM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TeleportName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.TeleportName;
+                }
+                case RecordTypeInts.XRFG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.ReferenceGroup;
+                }
+                case RecordTypeInts.XLRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationRefTypes = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    return (int)PlacedObject_FieldIndex.LocationRefTypes;
+                }
+                case RecordTypeInts.XLMS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LayeredMaterialSwaps = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILayeredMaterialSwapGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
+                    return (int)PlacedObject_FieldIndex.LayeredMaterialSwaps;
+                }
+                case RecordTypeInts.XPCK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XPCK.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.XPCK;
+                }
+                case RecordTypeInts.XPCS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.SourcePackIn;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.PersistentLocation;
+                }
+                case RecordTypeInts.XPDD:
+                {
+                    item.ProjectedDecal = Mutagen.Bethesda.Starfield.PlacedObjectProjectedDecal.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.ProjectedDecal;
+                }
+                case RecordTypeInts.XPDO:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ProjectedDecalReferences = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IPlacedGetter>>();
+                    return (int)PlacedObject_FieldIndex.ProjectedDecalReferences;
+                }
+                case RecordTypeInts.XCDD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ConstrainedDecal = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.ConstrainedDecal;
+                }
+                case RecordTypeInts.XIS2:
+                {
+                    item.IsIgnoredBySandbox = true;
+                    return (int)PlacedObject_FieldIndex.IsIgnoredBySandbox;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)PlacedObject_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XLGD:
+                {
+                    item.LightGobo = Mutagen.Bethesda.Starfield.LightGobo.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.LightGobo;
+                }
+                case RecordTypeInts.XCOL:
+                {
+                    item.Collision = Mutagen.Bethesda.Starfield.PlacedObjectCollision.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.Collision;
+                }
+                case RecordTypeInts.XPLK:
+                {
+                    item.PowerLinks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PowerLink>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: PowerLink_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: PowerLink.TryCreateFromBinary));
+                    return (int)PlacedObject_FieldIndex.PowerLinks;
+                }
+                case RecordTypeInts.XCNT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Count = frame.ReadInt32();
+                    return (int)PlacedObject_FieldIndex.Count;
+                }
+                case RecordTypeInts.XFLG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XFLG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.XFLG;
+                }
+                case RecordTypeInts.XLFD:
+                {
+                    item.LightFlicker = Mutagen.Bethesda.Starfield.PlacedObjectLightFlicker.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.LightFlicker;
+                }
+                case RecordTypeInts.XMRK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.MapMarker = Mutagen.Bethesda.Starfield.PlacedObjectMapMarker.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.MapMarker;
+                }
+                case RecordTypeInts.XLLD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LightLayerData = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        byteLength: 4);
+                    return (int)PlacedObject_FieldIndex.LightLayerData;
+                }
+                case RecordTypeInts.XLSM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LightStaticShadowMap = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        byteLength: 4);
+                    return (int)PlacedObject_FieldIndex.LightStaticShadowMap;
+                }
+                case RecordTypeInts.XLVD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LightVolumetricData = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.LightVolumetricData;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    item.Ownership = Mutagen.Bethesda.Starfield.Ownership.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.Ownership;
+                }
+                case RecordTypeInts.XLCD:
+                {
+                    item.LightColors.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlacedObjectLightColor>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: PlacedObjectLightColor_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: PlacedObjectLightColor.TryCreateFromBinary));
+                    return (int)PlacedObject_FieldIndex.LightColors;
+                }
+                case RecordTypeInts.XWPK:
+                {
+                    item.GroupedPackIn = Mutagen.Bethesda.Starfield.GroupedPackIn.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.GroupedPackIn;
+                }
+                case RecordTypeInts.XBPO:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BlueprintPartOrigin = frame.ReadUInt32();
+                    return (int)PlacedObject_FieldIndex.BlueprintPartOrigin;
+                }
+                case RecordTypeInts.XLYR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.Layer;
+                }
+                case RecordTypeInts.XLRD:
+                {
+                    item.LightRoundedness = Mutagen.Bethesda.Starfield.PlacedObjectLightRoundedness.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.LightRoundedness;
+                }
+                case RecordTypeInts.XLKR:
+                {
+                    item.LinkedReferences.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: LinkedReferences_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: LinkedReferences.TryCreateFromBinary));
+                    return (int)PlacedObject_FieldIndex.LinkedReferences;
+                }
+                case RecordTypeInts.XLKT:
+                {
+                    item.IsLinkedRefTransient = true;
+                    return (int)PlacedObject_FieldIndex.IsLinkedRefTransient;
+                }
+                case RecordTypeInts.XSL1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SnapLinks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SnapLink>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: SnapLink.TryCreateFromBinary)
+                        .CastExtendedList<SnapLink>();
+                    return (int)PlacedObject_FieldIndex.SnapLinks;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.EncounterZone;
+                }
+                case RecordTypeInts.XGDS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GeometryDirtinessScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.GeometryDirtinessScale;
+                }
+                case RecordTypeInts.XLOC:
+                {
+                    item.Lock = Mutagen.Bethesda.Starfield.LockData.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.Lock;
+                }
+                case RecordTypeInts.XPPS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Properties = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectProperty>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ObjectProperty.TryCreateFromBinary)
+                        .CastExtendedList<ObjectProperty>();
+                    return (int)PlacedObject_FieldIndex.Properties;
+                }
+                case RecordTypeInts.XEED:
+                {
+                    item.ExternalEmittance = Mutagen.Bethesda.Starfield.ExternalEmittance.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.ExternalEmittance;
+                }
+                case RecordTypeInts.XHTW:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
+                }
+                case RecordTypeInts.BOLV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BOLV = frame.ReadUInt16();
+                    return (int)PlacedObject_FieldIndex.BOLV;
+                }
+                case RecordTypeInts.XBSD:
+                {
+                    item.Spline = Mutagen.Bethesda.Starfield.PlacedObjectSpline.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.Spline;
+                }
+                case RecordTypeInts.XNSE:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XNSE = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.XNSE;
+                }
+                case RecordTypeInts.XATR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.AttachRef;
+                }
+                case RecordTypeInts.XRGB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.RagdollBipedRotation;
+                }
+                case RecordTypeInts.XHLT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HealthPercent = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)PlacedObject_FieldIndex.HealthPercent;
+                }
+                case RecordTypeInts.TODD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.TimeOfDay;
+                }
+                case RecordTypeInts.XESP:
+                {
+                    item.EnableParent = Mutagen.Bethesda.Starfield.EnableParent.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.EnableParent;
+                }
+                case RecordTypeInts.XTV2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Traversals = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TraversalReference>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: TraversalReference.TryCreateFromBinary)
+                        .CastExtendedList<TraversalReference>();
+                    return (int)PlacedObject_FieldIndex.Traversals;
+                }
+                case RecordTypeInts.XNDP:
+                {
+                    item.NavigationDoorLink = Mutagen.Bethesda.Starfield.NavigationDoorLink.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.NavigationDoorLink;
+                }
+                case RecordTypeInts.XATP:
+                {
+                    item.IsActivationPoint = true;
+                    return (int)PlacedObject_FieldIndex.IsActivationPoint;
+                }
+                case RecordTypeInts.XSCL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.Scale;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    item.OpenByDefault = true;
+                    return (int)PlacedObject_FieldIndex.OpenByDefault;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)PlacedObject_FieldIndex.Rotation;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Comments = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)PlacedObject_FieldIndex.Comments;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1279,6 +9035,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PlacedObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1293,6 +9051,259 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IPlacedObject);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Base
+        private int? _BaseLocation;
+        public IFormLinkGetter<IPlaceableObjectGetter> Base => _BaseLocation.HasValue ? new FormLink<IPlaceableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLink<IPlaceableObjectGetter>.Null;
+        #endregion
+        #region VolumeData
+        private RangeInt32? _VolumeDataLocation;
+        public IPlacedObjectVolumeDataGetter? VolumeData => _VolumeDataLocation.HasValue ? PlacedObjectVolumeDataBinaryOverlay.PlacedObjectVolumeDataFactory(_recordData.Slice(_VolumeDataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region ShipArrival
+        private RangeInt32? _ShipArrivalLocation;
+        public IPlacedObjectShipArrivalGetter? ShipArrival => _ShipArrivalLocation.HasValue ? PlacedObjectShipArrivalBinaryOverlay.PlacedObjectShipArrivalFactory(_recordData.Slice(_ShipArrivalLocation!.Value.Min), _package) : default;
+        #endregion
+        #region LevelModifier
+        private int? _LevelModifierLocation;
+        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
+        #endregion
+        #region Action
+        private int? _ActionLocation;
+        public PlacedObject.ActionFlag? Action => _ActionLocation.HasValue ? (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionLocation!.Value, _package.MetaData.Constants)) : default(PlacedObject.ActionFlag?);
+        #endregion
+        #region Primitive
+        private RangeInt32? _PrimitiveLocation;
+        public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(_recordData.Slice(_PrimitiveLocation!.Value.Min), _package) : default;
+        #endregion
+        #region VolumeReflectionProbeOffsetIntensity
+        private RangeInt32? _VolumeReflectionProbeOffsetIntensityLocation;
+        public IVolumeReflectionProbeOffsetIntensityGetter? VolumeReflectionProbeOffsetIntensity => _VolumeReflectionProbeOffsetIntensityLocation.HasValue ? VolumeReflectionProbeOffsetIntensityBinaryOverlay.VolumeReflectionProbeOffsetIntensityFactory(_recordData.Slice(_VolumeReflectionProbeOffsetIntensityLocation!.Value.Min), _package) : default;
+        #endregion
+        public IPlacedObjectDebugTextGetter? DebugText { get; private set; }
+        #region Emittance
+        private int? _EmittanceLocation;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        #endregion
+        #region Radius
+        private int? _RadiusLocation;
+        public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Lighting
+        private RangeInt32? _LightingLocation;
+        public IPlacedObjectLightingGetter? Lighting => _LightingLocation.HasValue ? PlacedObjectLightingBinaryOverlay.PlacedObjectLightingFactory(_recordData.Slice(_LightingLocation!.Value.Min), _package) : default;
+        #endregion
+        #region LightBarndoorData
+        private RangeInt32? _LightBarndoorDataLocation;
+        public IPlacedObjectLightBarndoorDataGetter? LightBarndoorData => _LightBarndoorDataLocation.HasValue ? PlacedObjectLightBarndoorDataBinaryOverlay.PlacedObjectLightBarndoorDataFactory(_recordData.Slice(_LightBarndoorDataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region LightArea
+        private RangeInt32? _LightAreaLocation;
+        public IPlacedObjectLightAreaGetter? LightArea => _LightAreaLocation.HasValue ? PlacedObjectLightAreaBinaryOverlay.PlacedObjectLightAreaFactory(_recordData.Slice(_LightAreaLocation!.Value.Min), _package) : default;
+        #endregion
+        #region CurrentZoneCell
+        private int? _CurrentZoneCellLocation;
+        public IFormLinkNullableGetter<ICellGetter> CurrentZoneCell => _CurrentZoneCellLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CurrentZoneCellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        #endregion
+        #region XCZA
+        private int? _XCZALocation;
+        public ReadOnlyMemorySlice<Byte>? XCZA => _XCZALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XCZALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IPatrolGetter? Patrol { get; private set; }
+        public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
+        #region TeleportDestination
+        private RangeInt32? _TeleportDestinationLocation;
+        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(_recordData.Slice(_TeleportDestinationLocation!.Value.Min), _package) : default;
+        #endregion
+        #region TeleportName
+        private int? _TeleportNameLocation;
+        public IFormLinkNullableGetter<IMessageGetter> TeleportName => _TeleportNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TeleportNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        #endregion
+        #region ReferenceGroup
+        private int? _ReferenceGroupLocation;
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => _ReferenceGroupLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? LayeredMaterialSwaps { get; private set; }
+        #region XPCK
+        private int? _XPCKLocation;
+        public IFormLinkNullableGetter<IReferenceGroupGetter> XPCK => _XPCKLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XPCKLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
+        #endregion
+        #region SourcePackIn
+        private int? _SourcePackInLocation;
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => _SourcePackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourcePackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        #endregion
+        #region PersistentLocation
+        private int? _PersistentLocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region ProjectedDecal
+        private RangeInt32? _ProjectedDecalLocation;
+        public IPlacedObjectProjectedDecalGetter? ProjectedDecal => _ProjectedDecalLocation.HasValue ? PlacedObjectProjectedDecalBinaryOverlay.PlacedObjectProjectedDecalFactory(_recordData.Slice(_ProjectedDecalLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ProjectedDecalReferences { get; private set; }
+        #region ConstrainedDecal
+        private int? _ConstrainedDecalLocation;
+        public P3Float? ConstrainedDecal => _ConstrainedDecalLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConstrainedDecalLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region IsIgnoredBySandbox
+        private int? _IsIgnoredBySandboxLocation;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region LightGobo
+        private RangeInt32? _LightGoboLocation;
+        public ILightGoboGetter? LightGobo => _LightGoboLocation.HasValue ? LightGoboBinaryOverlay.LightGoboFactory(_recordData.Slice(_LightGoboLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Collision
+        private RangeInt32? _CollisionLocation;
+        public IPlacedObjectCollisionGetter? Collision => _CollisionLocation.HasValue ? PlacedObjectCollisionBinaryOverlay.PlacedObjectCollisionFactory(_recordData.Slice(_CollisionLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IPowerLinkGetter> PowerLinks { get; private set; } = Array.Empty<IPowerLinkGetter>();
+        #region Count
+        private int? _CountLocation;
+        public Int32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region XFLG
+        private int? _XFLGLocation;
+        public ReadOnlyMemorySlice<Byte>? XFLG => _XFLGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XFLGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region LightFlicker
+        private RangeInt32? _LightFlickerLocation;
+        public IPlacedObjectLightFlickerGetter? LightFlicker => _LightFlickerLocation.HasValue ? PlacedObjectLightFlickerBinaryOverlay.PlacedObjectLightFlickerFactory(_recordData.Slice(_LightFlickerLocation!.Value.Min), _package) : default;
+        #endregion
+        public IPlacedObjectMapMarkerGetter? MapMarker { get; private set; }
+        #region LightLayerData
+        private int? _LightLayerDataLocation;
+        public Boolean? LightLayerData => _LightLayerDataLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightLayerDataLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
+        #endregion
+        #region LightStaticShadowMap
+        private int? _LightStaticShadowMapLocation;
+        public Boolean? LightStaticShadowMap => _LightStaticShadowMapLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightStaticShadowMapLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
+        #endregion
+        #region LightVolumetricData
+        private int? _LightVolumetricDataLocation;
+        public Single? LightVolumetricData => _LightVolumetricDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightVolumetricDataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IOwnershipGetter? Ownership { get; private set; }
+        public IReadOnlyList<IPlacedObjectLightColorGetter> LightColors { get; private set; } = Array.Empty<IPlacedObjectLightColorGetter>();
+        public IGroupedPackInGetter? GroupedPackIn { get; private set; }
+        #region BlueprintPartOrigin
+        private int? _BlueprintPartOriginLocation;
+        public UInt32? BlueprintPartOrigin => _BlueprintPartOriginLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlueprintPartOriginLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region Layer
+        private int? _LayerLocation;
+        public IFormLinkNullableGetter<ILayerGetter> Layer => _LayerLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        #endregion
+        #region LightRoundedness
+        private RangeInt32? _LightRoundednessLocation;
+        public IPlacedObjectLightRoundednessGetter? LightRoundedness => _LightRoundednessLocation.HasValue ? PlacedObjectLightRoundednessBinaryOverlay.PlacedObjectLightRoundednessFactory(_recordData.Slice(_LightRoundednessLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        #region IsLinkedRefTransient
+        private int? _IsLinkedRefTransientLocation;
+        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default;
+        #endregion
+        public IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; private set; }
+        #region EncounterZone
+        private int? _EncounterZoneLocation;
+        public IFormLinkNullableGetter<ILocationGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region GeometryDirtinessScale
+        private int? _GeometryDirtinessScaleLocation;
+        public Single? GeometryDirtinessScale => _GeometryDirtinessScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GeometryDirtinessScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Lock
+        private RangeInt32? _LockLocation;
+        public ILockDataGetter? Lock => _LockLocation.HasValue ? LockDataBinaryOverlay.LockDataFactory(_recordData.Slice(_LockLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
+        #region ExternalEmittance
+        private RangeInt32? _ExternalEmittanceLocation;
+        public IExternalEmittanceGetter? ExternalEmittance => _ExternalEmittanceLocation.HasValue ? ExternalEmittanceBinaryOverlay.ExternalEmittanceFactory(_recordData.Slice(_ExternalEmittanceLocation!.Value.Min), _package) : default;
+        #endregion
+        #region HeadTrackingWeight
+        private int? _HeadTrackingWeightLocation;
+        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region BOLV
+        private int? _BOLVLocation;
+        public UInt16? BOLV => _BOLVLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BOLVLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region Spline
+        private RangeInt32? _SplineLocation;
+        public IPlacedObjectSplineGetter? Spline => _SplineLocation.HasValue ? PlacedObjectSplineBinaryOverlay.PlacedObjectSplineFactory(_recordData.Slice(_SplineLocation!.Value.Min), _package) : default;
+        #endregion
+        #region XNSE
+        private int? _XNSELocation;
+        public ReadOnlyMemorySlice<Byte>? XNSE => _XNSELocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XNSELocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region AttachRef
+        private int? _AttachRefLocation;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => _AttachRefLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttachRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        #endregion
+        #region RagdollBipedRotation
+        private int? _RagdollBipedRotationLocation;
+        public P3Float? RagdollBipedRotation => _RagdollBipedRotationLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollBipedRotationLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region HealthPercent
+        private int? _HealthPercentLocation;
+        public Percent? HealthPercent => _HealthPercentLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HealthPercentLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent?);
+        #endregion
+        #region TimeOfDay
+        private int? _TimeOfDayLocation;
+        public IFormLinkNullableGetter<ITimeOfDayDataGetter> TimeOfDay => _TimeOfDayLocation.HasValue ? new FormLinkNullable<ITimeOfDayDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimeOfDayLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayDataGetter>.Null;
+        #endregion
+        #region EnableParent
+        private RangeInt32? _EnableParentLocation;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; private set; }
+        #region NavigationDoorLink
+        private RangeInt32? _NavigationDoorLinkLocation;
+        public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(_recordData.Slice(_NavigationDoorLinkLocation!.Value.Min), _package) : default;
+        #endregion
+        #region IsActivationPoint
+        private int? _IsActivationPointLocation;
+        public Boolean IsActivationPoint => _IsActivationPointLocation.HasValue ? true : default;
+        #endregion
+        #region Scale
+        private int? _ScaleLocation;
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region OpenByDefault
+        private int? _OpenByDefaultLocation;
+        public Boolean OpenByDefault => _OpenByDefaultLocation.HasValue ? true : default;
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region Position
+        private int _PositionLocation => _DATALocation!.Value.Min;
+        private bool _Position_IsSet => _DATALocation.HasValue;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
+        #endregion
+        #region Rotation
+        private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Rotation_IsSet => _DATALocation.HasValue;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
+        #endregion
+        #region Comments
+        private int? _CommentsLocation;
+        public String? Comments => _CommentsLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CommentsLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1350,6 +9361,502 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)PlacedObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.NAME:
+                {
+                    _BaseLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Base;
+                }
+                case RecordTypeInts.XVL2:
+                {
+                    _VolumeDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.VolumeData;
+                }
+                case RecordTypeInts.XSAD:
+                {
+                    _ShipArrivalLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.ShipArrival;
+                }
+                case RecordTypeInts.XLCM:
+                {
+                    _LevelModifierLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.LevelModifier;
+                }
+                case RecordTypeInts.XACT:
+                {
+                    _ActionLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Action;
+                }
+                case RecordTypeInts.XPRM:
+                {
+                    _PrimitiveLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.Primitive;
+                }
+                case RecordTypeInts.XVOI:
+                {
+                    _VolumeReflectionProbeOffsetIntensityLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.VolumeReflectionProbeOffsetIntensity;
+                }
+                case RecordTypeInts.XDTS:
+                case RecordTypeInts.XDTF:
+                {
+                    this.DebugText = PlacedObjectDebugTextBinaryOverlay.PlacedObjectDebugTextFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.DebugText;
+                }
+                case RecordTypeInts.XEMI:
+                {
+                    _EmittanceLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Emittance;
+                }
+                case RecordTypeInts.XRDS:
+                {
+                    _RadiusLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Radius;
+                }
+                case RecordTypeInts.XLIG:
+                {
+                    _LightingLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.Lighting;
+                }
+                case RecordTypeInts.XLBD:
+                {
+                    _LightBarndoorDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.LightBarndoorData;
+                }
+                case RecordTypeInts.XALD:
+                {
+                    _LightAreaLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.LightArea;
+                }
+                case RecordTypeInts.XCZC:
+                {
+                    _CurrentZoneCellLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.CurrentZoneCell;
+                }
+                case RecordTypeInts.XCZA:
+                {
+                    _XCZALocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XCZA;
+                }
+                case RecordTypeInts.XPRD:
+                {
+                    this.Patrol = PatrolBinaryOverlay.PatrolFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.Patrol;
+                }
+                case RecordTypeInts.XRGD:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 28,
+                        getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)PlacedObject_FieldIndex.RagdollData;
+                }
+                case RecordTypeInts.XTEL:
+                {
+                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.TeleportDestination;
+                }
+                case RecordTypeInts.XTNM:
+                {
+                    _TeleportNameLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.TeleportName;
+                }
+                case RecordTypeInts.XRFG:
+                {
+                    _ReferenceGroupLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.ReferenceGroup;
+                }
+                case RecordTypeInts.XLRT:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)PlacedObject_FieldIndex.LocationRefTypes;
+                }
+                case RecordTypeInts.XLMS:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LayeredMaterialSwaps = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)PlacedObject_FieldIndex.LayeredMaterialSwaps;
+                }
+                case RecordTypeInts.XPCK:
+                {
+                    _XPCKLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XPCK;
+                }
+                case RecordTypeInts.XPCS:
+                {
+                    _SourcePackInLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.SourcePackIn;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    _PersistentLocationLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.PersistentLocation;
+                }
+                case RecordTypeInts.XPDD:
+                {
+                    _ProjectedDecalLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.ProjectedDecal;
+                }
+                case RecordTypeInts.XPDO:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ProjectedDecalReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)PlacedObject_FieldIndex.ProjectedDecalReferences;
+                }
+                case RecordTypeInts.XCDD:
+                {
+                    _ConstrainedDecalLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.ConstrainedDecal;
+                }
+                case RecordTypeInts.XIS2:
+                {
+                    _IsIgnoredBySandboxLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.IsIgnoredBySandbox;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XLGD:
+                {
+                    _LightGoboLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.LightGobo;
+                }
+                case RecordTypeInts.XCOL:
+                {
+                    _CollisionLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.Collision;
+                }
+                case RecordTypeInts.XPLK:
+                {
+                    this.PowerLinks = BinaryOverlayList.FactoryByArray<IPowerLinkGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => PowerLinkBinaryOverlay.PowerLinkFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: PowerLink_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)PlacedObject_FieldIndex.PowerLinks;
+                }
+                case RecordTypeInts.XCNT:
+                {
+                    _CountLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Count;
+                }
+                case RecordTypeInts.XFLG:
+                {
+                    _XFLGLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XFLG;
+                }
+                case RecordTypeInts.XLFD:
+                {
+                    _LightFlickerLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.LightFlicker;
+                }
+                case RecordTypeInts.XMRK:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.MapMarker = PlacedObjectMapMarkerBinaryOverlay.PlacedObjectMapMarkerFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.MapMarker;
+                }
+                case RecordTypeInts.XLLD:
+                {
+                    _LightLayerDataLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.LightLayerData;
+                }
+                case RecordTypeInts.XLSM:
+                {
+                    _LightStaticShadowMapLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.LightStaticShadowMap;
+                }
+                case RecordTypeInts.XLVD:
+                {
+                    _LightVolumetricDataLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.LightVolumetricData;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.Ownership;
+                }
+                case RecordTypeInts.XLCD:
+                {
+                    this.LightColors = BinaryOverlayList.FactoryByArray<IPlacedObjectLightColorGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => PlacedObjectLightColorBinaryOverlay.PlacedObjectLightColorFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: PlacedObjectLightColor_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)PlacedObject_FieldIndex.LightColors;
+                }
+                case RecordTypeInts.XWPK:
+                {
+                    this.GroupedPackIn = GroupedPackInBinaryOverlay.GroupedPackInFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlacedObject_FieldIndex.GroupedPackIn;
+                }
+                case RecordTypeInts.XBPO:
+                {
+                    _BlueprintPartOriginLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.BlueprintPartOrigin;
+                }
+                case RecordTypeInts.XLYR:
+                {
+                    _LayerLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Layer;
+                }
+                case RecordTypeInts.XLRD:
+                {
+                    _LightRoundednessLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.LightRoundedness;
+                }
+                case RecordTypeInts.XLKR:
+                {
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: LinkedReferences_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)PlacedObject_FieldIndex.LinkedReferences;
+                }
+                case RecordTypeInts.XLKT:
+                {
+                    _IsLinkedRefTransientLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.IsLinkedRefTransient;
+                }
+                case RecordTypeInts.XSL1:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.SnapLinks = BinaryOverlayList.FactoryByLazyParse<ISnapLinkGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        getter: (s, p) => SnapLinkBinaryOverlay.SnapLinkFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)PlacedObject_FieldIndex.SnapLinks;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    _EncounterZoneLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.EncounterZone;
+                }
+                case RecordTypeInts.XGDS:
+                {
+                    _GeometryDirtinessScaleLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.GeometryDirtinessScale;
+                }
+                case RecordTypeInts.XLOC:
+                {
+                    _LockLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.Lock;
+                }
+                case RecordTypeInts.XPPS:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)PlacedObject_FieldIndex.Properties;
+                }
+                case RecordTypeInts.XEED:
+                {
+                    _ExternalEmittanceLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.ExternalEmittance;
+                }
+                case RecordTypeInts.XHTW:
+                {
+                    _HeadTrackingWeightLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
+                }
+                case RecordTypeInts.BOLV:
+                {
+                    _BOLVLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.BOLV;
+                }
+                case RecordTypeInts.XBSD:
+                {
+                    _SplineLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.Spline;
+                }
+                case RecordTypeInts.XNSE:
+                {
+                    _XNSELocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XNSE;
+                }
+                case RecordTypeInts.XATR:
+                {
+                    _AttachRefLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.AttachRef;
+                }
+                case RecordTypeInts.XRGB:
+                {
+                    _RagdollBipedRotationLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.RagdollBipedRotation;
+                }
+                case RecordTypeInts.XHLT:
+                {
+                    _HealthPercentLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.HealthPercent;
+                }
+                case RecordTypeInts.TODD:
+                {
+                    _TimeOfDayLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.TimeOfDay;
+                }
+                case RecordTypeInts.XESP:
+                {
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.EnableParent;
+                }
+                case RecordTypeInts.XTV2:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Traversals = BinaryOverlayList.FactoryByLazyParse<ITraversalReferenceGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        getter: (s, p) => TraversalReferenceBinaryOverlay.TraversalReferenceFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)PlacedObject_FieldIndex.Traversals;
+                }
+                case RecordTypeInts.XNDP:
+                {
+                    _NavigationDoorLinkLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedObject_FieldIndex.NavigationDoorLink;
+                }
+                case RecordTypeInts.XATP:
+                {
+                    _IsActivationPointLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.IsActivationPoint;
+                }
+                case RecordTypeInts.XSCL:
+                {
+                    _ScaleLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Scale;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _OpenByDefaultLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.OpenByDefault;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)PlacedObject_FieldIndex.Rotation;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _CommentsLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Comments;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

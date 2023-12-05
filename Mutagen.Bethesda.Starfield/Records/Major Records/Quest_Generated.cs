@@ -3419,6 +3419,12 @@ namespace Mutagen.Bethesda.Starfield
                 case "ObjectPaletteDefaultsComponent":
                 case "IObjectPaletteDefaultsComponentGetter":
                 case "IObjectPaletteDefaultsComponent":
+                case "VolumesComponent":
+                case "IVolumesComponentGetter":
+                case "IVolumesComponent":
+                case "PlanetContentManagerContentProperties":
+                case "IPlanetContentManagerContentPropertiesGetter":
+                case "IPlanetContentManagerContentProperties":
                     break;
                 case "Condition":
                 case "IConditionGetter":

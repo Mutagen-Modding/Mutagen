@@ -31,12 +31,4 @@
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
-  <Object name="LockData" objType="Subrecord" recordType="XLOC">
-    <Fields>
-      <Enum name="Level" enumName="LockLevel" byteLength="4" />
-      <FormLink name="Key" refName="Key" />
-      <Enum name="Flags" enumName="LockData.Flag" byteLength="4" />
-      <Int32 name="Unused" unknown="true" />
-    </Fields>
-  </Object>
 </Loqui>
