@@ -319,7 +319,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         }
     }
 
-    public static int[] ParseRecordLocations(
+    public static IReadOnlyList<int> ParseRecordLocations(
         OverlayStream stream,
         RecordType trigger,
         RecordHeaderConstants constants,
@@ -348,10 +348,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 stream.Position += (int)varMeta.TotalLength;
             }
         }
-        return ret.ToArray();
+        return ret;
     }
 
-    public static int[] ParseLocationsRecordPerTrigger(
+    public static IReadOnlyList<int> ParseLocationsRecordPerTrigger(
         OverlayStream stream,
         RecordTriggerSpecs triggers,
         RecordHeaderConstants constants,
@@ -378,10 +378,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 stream.Position += (int)varMeta.TotalLength;
             }
         }
-        return ret.ToArray();
+        return ret;
     }
 
-    public static int[] ParseRecordLocations(
+    public static IReadOnlyList<int> ParseRecordLocations(
         OverlayStream stream,
         long finalPos,
         RecordType trigger,
@@ -417,10 +417,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 stream.Position += (int)varMeta.TotalLength;
             }
         }
-        return ret.ToArray();
+        return ret;
     }
 
-    public static int[] ParseRecordLocationsByCount(
+    public static IReadOnlyList<int> ParseRecordLocationsByCount(
         OverlayStream stream,
         uint count,
         RecordType trigger,
@@ -458,10 +458,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 break;
             }
         }
-        return ret.ToArray();
+        return ret;
     }
         
-    private static int[] ParseRecordLocationsInternal(
+    private static IReadOnlyList<int> ParseRecordLocationsInternal(
         OverlayStream stream,
         uint? count,
         RecordTriggerSpecs trigger,
@@ -564,10 +564,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 }
             }
         }
-        return ret.ToArray();
+        return ret;
     }
         
-    public static int[] ParseRecordLocationsEnder(
+    public static IReadOnlyList<int> ParseRecordLocationsEnder(
         OverlayStream stream,
         IReadOnlyRecordCollection startTriggers,
         IReadOnlyRecordCollection endTriggers,
@@ -617,7 +617,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             }
         }
 
-        return ret.ToArray();
+        return ret;
     }
 
 
@@ -633,7 +633,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
     /// <param name="triggersAlwaysAreNewRecords">If false, RecordTypes that are triggers but not before the last parsed
     /// RecordType in the order type will be considered part of the last section</param>
     /// <returns>Array of located positions relative to the stream's position at the start</returns>
-    public static int[] ParseRecordLocationsByCount(
+    public static IReadOnlyList<int> ParseRecordLocationsByCount(
         OverlayStream stream,
         uint count,
         RecordTriggerSpecs trigger,
@@ -654,7 +654,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
     /// <param name="constants">Metadata for reference</param>
     /// <param name="skipHeader">Whether to skip the header in the return location values</param>
     /// <returns>Array of located positions relative to the stream's position at the start</returns>
-    public static int[] ParseRecordLocations(
+    public static IReadOnlyList<int> ParseRecordLocations(
         OverlayStream stream,
         RecordTriggerSpecs trigger,
         RecordHeaderConstants constants,
@@ -665,7 +665,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams);
     }
 
-    public static int[] ParseRecordLocations(
+    public static IReadOnlyList<int> ParseRecordLocations(
         OverlayStream stream,
         long finalPos,
         RecordType trigger,
@@ -701,7 +701,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 stream.Position += (int)varMeta.TotalLength;
             }
         }
-        return ret.ToArray();
+        return ret;
     }
 
     public delegate T Factory<T>(

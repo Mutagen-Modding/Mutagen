@@ -41,7 +41,7 @@ public class BinaryOverlayTests
             triggers,
             GameConstants.Oblivion.SubConstants,
             skipHeader: false);
-        Assert.Equal(3, pos.Length);
+        Assert.Equal(3, pos.Count);
         Assert.Equal(0, pos[0]);
         Assert.Equal(10, pos[1]);
         Assert.Equal(20, pos[2]);
@@ -82,7 +82,7 @@ public class BinaryOverlayTests
             triggers,
             GameConstants.Oblivion.SubConstants,
             skipHeader: false);
-        Assert.Equal(3, pos.Length);
+        Assert.Equal(3, pos.Count);
         Assert.Equal(0, pos[0]);
         Assert.Equal(10, pos[1]);
         Assert.Equal(20, pos[2]);
@@ -131,7 +131,7 @@ public class BinaryOverlayTests
             triggers,
             GameConstants.Oblivion.SubConstants,
             skipHeader: false);
-        Assert.Equal(3, pos.Length);
+        Assert.Equal(3, pos.Count);
         Assert.Equal(0, pos[0]);
         Assert.Equal(20, pos[1]);
         Assert.Equal(40, pos[2]);
@@ -184,7 +184,7 @@ public class BinaryOverlayTests
             triggers,
             GameConstants.Oblivion.SubConstants,
             skipHeader: false);
-        Assert.Equal(3, pos.Length);
+        Assert.Equal(3, pos.Count);
         Assert.Equal(0, pos[0]);
         Assert.Equal(20, pos[1]);
         Assert.Equal(40, pos[2]);

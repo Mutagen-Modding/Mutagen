@@ -14,7 +14,7 @@ internal abstract class BinaryOverlayList
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
         PluginBinaryOverlay.SpanFactory<T> getter,
-        int[] locs)
+        IReadOnlyList<int> locs)
     {
         return new BinaryOverlayListByLocationArray<T>(
             mem,
@@ -28,7 +28,7 @@ internal abstract class BinaryOverlayList
         BinaryOverlayFactoryPackage package,
         TypedParseParams translationParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
-        int[] locs)
+        IReadOnlyList<int> locs)
     {
         return new BinaryOverlayRecordListByLocationArray<T>(
             mem,
@@ -489,7 +489,7 @@ internal abstract class BinaryOverlayList
 
     private class BinaryOverlayListByLocationArray<T> : IReadOnlyList<T>
     {
-        private int[] _locations;
+        private IReadOnlyList<int> _locations;
         BinaryOverlayFactoryPackage _package;
         private ReadOnlyMemorySlice<byte> _mem;
         private PluginBinaryOverlay.SpanFactory<T> _getter;
@@ -498,7 +498,7 @@ internal abstract class BinaryOverlayList
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             PluginBinaryOverlay.SpanFactory<T> getter,
-            int[] locs)
+            IReadOnlyList<int> locs)
         {
             _mem = mem;
             _getter = getter;
@@ -508,11 +508,11 @@ internal abstract class BinaryOverlayList
 
         public T this[int index] => _getter(_mem.Slice(_locations[index]), _package);
 
-        public int Count => _locations.Length;
+        public int Count => _locations.Count;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < _locations.Length; i++)
+            for (int i = 0; i < _locations.Count; i++)
             {
                 yield return this[i];
             }
@@ -523,7 +523,7 @@ internal abstract class BinaryOverlayList
 
     private class BinaryOverlayRecordListByLocationArray<T> : IReadOnlyList<T>
     {
-        private int[] _locations;
+        private IReadOnlyList<int> _locations;
         private BinaryOverlayFactoryPackage _package;
         private ReadOnlyMemorySlice<byte> _mem;
         private PluginBinaryOverlay.SpanRecordFactory<T> _getter;
@@ -534,7 +534,7 @@ internal abstract class BinaryOverlayList
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter,
             PluginBinaryOverlay.SpanRecordFactory<T> getter,
-            int[] locs)
+            IReadOnlyList<int> locs)
         {
             _mem = mem;
             _getter = getter;
@@ -545,11 +545,11 @@ internal abstract class BinaryOverlayList
 
         public T this[int index] => _getter(_mem.Slice(_locations[index]), _package, _recordTypeConverter);
 
-        public int Count => _locations.Length;
+        public int Count => _locations.Count;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < _locations.Length; i++)
+            for (int i = 0; i < _locations.Count; i++)
             {
                 yield return this[i];
             }
