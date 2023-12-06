@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
@@ -74,11 +75,15 @@ public sealed class ModHeaderWriteLogic
                 {
                     majAction(maj);
                 }
-                foreach (var linkInfo in maj.EnumerateFormLinks())
+
+                if (_formLinkIterationActions.Count > 0)
                 {
-                    foreach (var formLinkAction in _formLinkIterationActions)
+                    foreach (var linkInfo in maj.EnumerateFormLinks())
                     {
-                        formLinkAction(maj.FormKey, linkInfo);
+                        foreach (var formLinkAction in _formLinkIterationActions)
+                        {
+                            formLinkAction(maj.FormKey, linkInfo);
+                        }
                     }
                 }
             }
