@@ -1,6 +1,9 @@
-﻿using Mutagen.Bethesda.Plugins;
+﻿using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Starfield.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Starfield;
@@ -98,10 +101,72 @@ partial class TraversalReferenceBinaryWriteTranslation
 
 partial class TraversalReferenceBinaryOverlay
 {
+    private bool HasFormKey => !Enums.HasFlag(BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x28)), 4);
+    
     public partial IFormLinkNullableGetter<ITraversalGetter> GetTraversalCustom(int location)
     {
-        throw new NotImplementedException();
+        if (HasFormKey)
+        {
+            return new FormLinkNullable<ITraversalGetter>(
+                FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(
+                    _structData.Slice(0x2C))));
+        }
+        else
+        {
+            return FormLinkNullable<ITraversalGetter>.Null;
+        }
     }
-    
-    public ReadOnlyMemorySlice<byte> Unknown { get; }
+
+    public ReadOnlyMemorySlice<byte> Unknown => _structData.Slice(HasFormKey ? 0x30 : 0x2C, 8);
+
+    public static IReadOnlyList<ITraversalReferenceGetter> Factory(
+        OverlayStream stream, BinaryOverlayFactoryPackage package,
+        long finalPos, int offset, PreviousParse lastParsed)
+    {
+        stream.ReadSubrecordHeader(RecordTypes.XTV2);
+        return BinaryOverlayList.FactoryByArray(
+            mem: stream.RemainingMemory,
+            package: package,
+            getter: (s, p) =>
+            {
+                return TraversalReferenceFactory(s, p);
+            },
+            locs: GetLocs(stream, package, finalPos, offset, lastParsed));
+    }
+
+    public static IReadOnlyList<int> GetLocs(
+        OverlayStream stream, BinaryOverlayFactoryPackage package,
+        long finalPos, int offset, PreviousParse lastParsed)
+    {
+        List<int> locs = new();
+        var startingPos = stream.Position;
+        while (stream.Position < finalPos)
+        {
+            try
+            {
+                var itemPos = stream.Position;
+                var bytes = stream.ReadMemory(0x10);
+                if (bytes.All(b => b == 0)) break;
+                locs.Add(itemPos - startingPos);
+                stream.Position += 0x18;
+                var flags = stream.ReadInt32();
+                if (Enums.HasFlag(flags, 4))
+                {
+                    stream.Position += 8;
+                }
+                else
+                {
+                    stream.Position += 12;
+                }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // Expected to occur within Starfield.esm, due to fluff bytes of unknown length
+                stream.Position += checked((int)stream.Remaining);
+                break;
+            }
+        }
+
+        return locs;
+    }
 }

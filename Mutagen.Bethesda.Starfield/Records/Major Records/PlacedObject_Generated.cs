@@ -8374,18 +8374,9 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITraversalReferenceGetter>.Instance.Write(
+            PlacedObjectBinaryWriteTranslation.WriteBinaryTraversals(
                 writer: writer,
-                items: item.Traversals,
-                recordType: translationParams.ConvertToCustom(RecordTypes.XTV2),
-                transl: (MutagenWriter subWriter, ITraversalReferenceGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((TraversalReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                item: item);
             if (item.NavigationDoorLink is {} NavigationDoorLinkItem)
             {
                 ((NavigationDoorLinkBinaryWriteTranslation)((IBinaryItem)NavigationDoorLinkItem).BinaryWriteTranslator).Write(
@@ -8419,6 +8410,19 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Comments,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
+        }
+
+        public static partial void WriteBinaryTraversalsCustom(
+            MutagenWriter writer,
+            IPlacedObjectGetter item);
+
+        public static void WriteBinaryTraversals(
+            MutagenWriter writer,
+            IPlacedObjectGetter item)
+        {
+            WriteBinaryTraversalsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -8939,12 +8943,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XTV2:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Traversals = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TraversalReference>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            transl: TraversalReference.TryCreateFromBinary)
-                        .CastExtendedList<TraversalReference>();
+                    PlacedObjectBinaryCreateTranslation.FillBinaryTraversalsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PlacedObject_FieldIndex.Traversals;
                 }
                 case RecordTypeInts.XNDP:
@@ -9002,6 +9004,11 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinaryTraversalsCustom(
+            MutagenFrame frame,
+            IPlacedObjectInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -9272,7 +9279,14 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; private set; }
+        #region Traversals
+        partial void TraversalsCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed);
+        #endregion
         #region NavigationDoorLink
         private RangeInt32? _NavigationDoorLinkLocation;
         public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(_recordData.Slice(_NavigationDoorLinkLocation!.Value.Min), _package) : default;
@@ -9802,13 +9816,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XTV2:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Traversals = BinaryOverlayList.FactoryByLazyParse<ITraversalReferenceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
-                        package: _package,
-                        getter: (s, p) => TraversalReferenceBinaryOverlay.TraversalReferenceFactory(s, p));
-                    stream.Position += subLen;
+                    TraversalsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
                     return (int)PlacedObject_FieldIndex.Traversals;
                 }
                 case RecordTypeInts.XNDP:

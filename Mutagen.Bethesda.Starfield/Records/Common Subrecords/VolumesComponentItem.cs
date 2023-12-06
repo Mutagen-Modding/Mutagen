@@ -59,9 +59,23 @@ partial class VolumesComponentItemBinaryCreateTranslation
 
 partial class VolumesComponentItemBinaryOverlay
 {
+    partial void CustomEnderEndPos()
+    {
+        var val = BinaryPrimitives.ReadInt32LittleEndian(_structData);
+        EnderEndingPos = 0x50;
+        EnderEndingPos += val switch
+        {
+            1 => 4,
+            3 => 8,
+            5 => 12,
+            _ => throw new NotImplementedException()
+        };
+    }
+    
     public partial IAVolumesUnknownEnderGetter GetEnderCustom(int location)
     {
-        return BinaryPrimitives.ReadInt32LittleEndian(_structData) switch
+        var val = BinaryPrimitives.ReadInt32LittleEndian(_structData);
+        return val switch
         {
             1 => VolumesUnknownEnderSingleBinaryOverlay.VolumesUnknownEnderSingleFactory(_structData.Slice(location),
                 _package),
@@ -69,6 +83,7 @@ partial class VolumesComponentItemBinaryOverlay
                 _package),
             5 => VolumesUnknownEnderTrioBinaryOverlay.VolumesUnknownEnderTrioFactory(_structData.Slice(location),
                 _package),
+            _ => throw new NotImplementedException()
         };
     }
 }

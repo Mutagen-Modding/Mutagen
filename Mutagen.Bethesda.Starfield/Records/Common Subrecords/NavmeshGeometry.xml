@@ -16,7 +16,7 @@
       <P2Float name="GridMaxDistance" />
       <P3Float name="GridMin" />
       <P3Float name="GridMax" />
-      <RefDirect name="GridArrays" refName="NavmeshGridArray" />
+      <RefList name="GridArrays" refName="NavmeshGridArray" />
       <Break />
       <Int32 name="Unknown3" />
     </Fields>

@@ -399,10 +399,19 @@ public abstract class PassthroughTest
                     o.OnNext(FilePath.ToString());
                     using (var wrapper = await ImportBinaryOverlay(trimmedPath, StringsParams))
                     {
-                        doStrings = wrapper.UsingLocalization;
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
-                        wrapper.WriteToBinary(binaryOverlayPath, writeParam);
-                        writeParam.StringsWriter?.Dispose();
+                        try
+                        {
+                            
+                            doStrings = wrapper.UsingLocalization;
+                            var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
+                            wrapper.WriteToBinary(binaryOverlayPath, writeParam);
+                            writeParam.StringsWriter?.Dispose();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
                     }
 
                     using var stream = new MutagenBinaryReadStream(processedPath, GameRelease);

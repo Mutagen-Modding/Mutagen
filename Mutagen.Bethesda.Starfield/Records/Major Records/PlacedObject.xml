@@ -82,7 +82,7 @@
       <Percent name="HealthPercent" recordType="XHLT" />
       <FormLink name="TimeOfDay" refName="TimeOfDayData" recordType="TODD" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" />
+      <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" binary="Custom" />
       <RefDirect name="NavigationDoorLink" refName="NavigationDoorLink" />
       <Bool name="IsActivationPoint" boolAsMarker="XATP" />
       <Float name="Scale" recordType="XSCL" />

@@ -427,7 +427,6 @@ public class StarfieldProcessor : Processor
                 if (remainingLen < ushort.MaxValue && xtv2.LengthOverrideRecordLocation.HasValue)
                 {
                     RemoveOverflowRecord(majorFrame, xtv2, fileOffset, checked((uint)remainingLen));
-                    xtv2 = xtv2.WithoutOverflow();
                     cutLen += 10;
                     ProcessLengths(majorFrame, -cutLen, fileOffset);
                 }

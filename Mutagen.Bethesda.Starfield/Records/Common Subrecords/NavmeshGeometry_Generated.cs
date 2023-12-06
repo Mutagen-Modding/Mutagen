@@ -180,9 +180,18 @@ namespace Mutagen.Bethesda.Starfield
         public P3Float GridMax { get; set; } = default;
         #endregion
         #region GridArrays
-        public NavmeshGridArray GridArrays { get; set; } = new NavmeshGridArray();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INavmeshGridArrayGetter INavmeshGeometryGetter.GridArrays => GridArrays;
+        private ExtendedList<NavmeshGridArray> _GridArrays = new ExtendedList<NavmeshGridArray>();
+        public ExtendedList<NavmeshGridArray> GridArrays
+        {
+            get => this._GridArrays;
+            init => this._GridArrays = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INavmeshGridArrayGetter> INavmeshGeometryGetter.GridArrays => _GridArrays;
+        #endregion
+
         #endregion
         #region Unknown3
         public Int32 Unknown3 { get; set; } = default;
@@ -241,7 +250,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GridMaxDistance = initialValue;
                 this.GridMin = initialValue;
                 this.GridMax = initialValue;
-                this.GridArrays = new MaskItem<TItem, NavmeshGridArray.Mask<TItem>?>(initialValue, new NavmeshGridArray.Mask<TItem>(initialValue));
+                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>());
                 this.Unknown3 = initialValue;
             }
 
@@ -279,7 +288,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GridMaxDistance = GridMaxDistance;
                 this.GridMin = GridMin;
                 this.GridMax = GridMax;
-                this.GridArrays = new MaskItem<TItem, NavmeshGridArray.Mask<TItem>?>(GridArrays, new NavmeshGridArray.Mask<TItem>(GridArrays));
+                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(GridArrays, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>());
                 this.Unknown3 = Unknown3;
             }
 
@@ -307,7 +316,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem GridMaxDistance;
             public TItem GridMin;
             public TItem GridMax;
-            public MaskItem<TItem, NavmeshGridArray.Mask<TItem>?>? GridArrays { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>? GridArrays;
             public TItem Unknown3;
             #endregion
 
@@ -464,10 +473,17 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.GridMaxDistance)) return false;
                 if (!eval(this.GridMin)) return false;
                 if (!eval(this.GridMax)) return false;
-                if (GridArrays != null)
+                if (this.GridArrays != null)
                 {
                     if (!eval(this.GridArrays.Overall)) return false;
-                    if (this.GridArrays.Specific != null && !this.GridArrays.Specific.All(eval)) return false;
+                    if (this.GridArrays.Specific != null)
+                    {
+                        foreach (var item in this.GridArrays.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (!eval(this.Unknown3)) return false;
                 return true;
@@ -573,10 +589,17 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.GridMaxDistance)) return true;
                 if (eval(this.GridMin)) return true;
                 if (eval(this.GridMax)) return true;
-                if (GridArrays != null)
+                if (this.GridArrays != null)
                 {
                     if (eval(this.GridArrays.Overall)) return true;
-                    if (this.GridArrays.Specific != null && this.GridArrays.Specific.Any(eval)) return true;
+                    if (this.GridArrays.Specific != null)
+                    {
+                        foreach (var item in this.GridArrays.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (eval(this.Unknown3)) return true;
                 return false;
@@ -706,7 +729,21 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GridMaxDistance = eval(this.GridMaxDistance);
                 obj.GridMin = eval(this.GridMin);
                 obj.GridMax = eval(this.GridMax);
-                obj.GridArrays = this.GridArrays == null ? null : new MaskItem<R, NavmeshGridArray.Mask<R>?>(eval(this.GridArrays.Overall), this.GridArrays.Specific?.Translate(eval));
+                if (GridArrays != null)
+                {
+                    obj.GridArrays = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>?>(eval(this.GridArrays.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>());
+                    if (GridArrays.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>();
+                        obj.GridArrays.Specific = l;
+                        foreach (var item in GridArrays.Specific)
+                        {
+                            MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.Unknown3 = eval(this.Unknown3);
             }
             #endregion
@@ -891,9 +928,24 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(GridMax, "GridMax");
                     }
-                    if (printMask?.GridArrays?.Overall ?? true)
+                    if ((printMask?.GridArrays?.Overall ?? true)
+                        && GridArrays is {} GridArraysItem)
                     {
-                        GridArrays?.Print(sb);
+                        sb.AppendLine("GridArrays =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(GridArraysItem.Overall);
+                            if (GridArraysItem.Specific != null)
+                            {
+                                foreach (var subItem in GridArraysItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
@@ -938,7 +990,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? GridMaxDistance;
             public Exception? GridMin;
             public Exception? GridMax;
-            public MaskItem<Exception?, NavmeshGridArray.ErrorMask?>? GridArrays;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>? GridArrays;
             public Exception? Unknown3;
             #endregion
 
@@ -1038,7 +1090,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.GridMax = ex;
                         break;
                     case NavmeshGeometry_FieldIndex.GridArrays:
-                        this.GridArrays = new MaskItem<Exception?, NavmeshGridArray.ErrorMask?>(ex, null);
+                        this.GridArrays = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>(ex, null);
                         break;
                     case NavmeshGeometry_FieldIndex.Unknown3:
                         this.Unknown3 = ex;
@@ -1099,7 +1151,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.GridMax = (Exception?)obj;
                         break;
                     case NavmeshGeometry_FieldIndex.GridArrays:
-                        this.GridArrays = (MaskItem<Exception?, NavmeshGridArray.ErrorMask?>?)obj;
+                        this.GridArrays = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>)obj;
                         break;
                     case NavmeshGeometry_FieldIndex.Unknown3:
                         this.Unknown3 = (Exception?)obj;
@@ -1302,7 +1354,24 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(GridMax, "GridMax");
                 }
-                GridArrays?.Print(sb);
+                if (GridArrays is {} GridArraysItem)
+                {
+                    sb.AppendLine("GridArrays =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(GridArraysItem.Overall);
+                        if (GridArraysItem.Specific != null)
+                        {
+                            foreach (var subItem in GridArraysItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(Unknown3, "Unknown3");
                 }
@@ -1329,7 +1398,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.GridMaxDistance = this.GridMaxDistance.Combine(rhs.GridMaxDistance);
                 ret.GridMin = this.GridMin.Combine(rhs.GridMin);
                 ret.GridMax = this.GridMax.Combine(rhs.GridMax);
-                ret.GridArrays = this.GridArrays.Combine(rhs.GridArrays, (l, r) => l.Combine(r));
+                ret.GridArrays = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshGridArray.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.GridArrays?.Overall, rhs.GridArrays?.Overall), Noggog.ExceptionExt.Combine(this.GridArrays?.Specific, rhs.GridArrays?.Specific));
                 ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
                 return ret;
             }
@@ -1418,7 +1487,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((GridMaxDistance, null));
                 ret.Add((GridMin, null));
                 ret.Add((GridMax, null));
-                ret.Add((GridArrays != null ? GridArrays.OnOverall : DefaultOn, GridArrays?.GetCrystal()));
+                ret.Add((GridArrays == null ? DefaultOn : !GridArrays.GetCrystal().CopyNothing, GridArrays?.GetCrystal()));
                 ret.Add((Unknown3, null));
             }
 
@@ -1518,7 +1587,7 @@ namespace Mutagen.Bethesda.Starfield
         new P2Float GridMaxDistance { get; set; }
         new P3Float GridMin { get; set; }
         new P3Float GridMax { get; set; }
-        new NavmeshGridArray GridArrays { get; set; }
+        new ExtendedList<NavmeshGridArray> GridArrays { get; }
         new Int32 Unknown3 { get; set; }
     }
 
@@ -1550,7 +1619,7 @@ namespace Mutagen.Bethesda.Starfield
         P2Float GridMaxDistance { get; }
         P3Float GridMin { get; }
         P3Float GridMax { get; }
-        INavmeshGridArrayGetter GridArrays { get; }
+        IReadOnlyList<INavmeshGridArrayGetter> GridArrays { get; }
         Int32 Unknown3 { get; }
 
     }
@@ -1932,7 +2001,10 @@ namespace Mutagen.Bethesda.Starfield
             ret.GridMaxDistance = item.GridMaxDistance.Equals(rhs.GridMaxDistance);
             ret.GridMin = item.GridMin.Equals(rhs.GridMin);
             ret.GridMax = item.GridMax.Equals(rhs.GridMax);
-            ret.GridArrays = MaskItemExt.Factory(item.GridArrays.GetEqualsMask(rhs.GridArrays, include), include);
+            ret.GridArrays = item.GridArrays.CollectionEqualsHelper(
+                rhs.GridArrays,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
         }
         
@@ -2110,7 +2182,17 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (printMask?.GridArrays?.Overall ?? true)
             {
-                item.GridArrays?.Print(sb, "GridArrays");
+                sb.AppendLine("GridArrays =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.GridArrays)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if (printMask?.Unknown3 ?? true)
             {
@@ -2191,11 +2273,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.GridArrays, rhs.GridArrays, out var lhsGridArrays, out var rhsGridArrays, out var isGridArraysEqual))
-                {
-                    if (!((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)lhsGridArrays).CommonInstance()!).Equals(lhsGridArrays, rhsGridArrays, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays))) return false;
-                }
-                else if (!isGridArraysEqual) return false;
+                if (!lhs.GridArrays.SequenceEqual(rhs.GridArrays, (l, r) => ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown3) ?? true))
             {
@@ -2494,12 +2572,14 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.GridArrays);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
-                    {
-                        item.GridArrays = rhs.GridArrays.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays),
-                            errorMask: errorMask);
-                    }
+                    item.GridArrays.SetTo(
+                        rhs.GridArrays
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2711,10 +2791,17 @@ namespace Mutagen.Bethesda.Starfield
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GridMax);
-            var GridArraysItem = item.GridArrays;
-            ((NavmeshGridArrayBinaryWriteTranslation)((IBinaryItem)GridArraysItem).BinaryWriteTranslator).Write(
-                item: GridArraysItem,
-                writer: writer);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshGridArrayGetter>.Instance.Write(
+                writer: writer,
+                items: item.GridArrays,
+                transl: (MutagenWriter subWriter, INavmeshGridArrayGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavmeshGridArrayBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             if (!item.Versioning.HasFlag(NavmeshGeometry.VersioningBreaks.Break0))
             {
                 writer.Write(item.Unknown3);
@@ -2816,7 +2903,10 @@ namespace Mutagen.Bethesda.Starfield
             item.GridMaxDistance = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.GridMin = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.GridMax = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.GridArrays = Mutagen.Bethesda.Starfield.NavmeshGridArray.CreateFromBinary(frame: frame);
+            item.GridArrays.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshGridArray>.Instance.Parse(
+                    reader: frame,
+                    transl: NavmeshGridArray.TryCreateFromBinary));
             if (frame.Complete)
             {
                 item.Versioning |= NavmeshGeometry.VersioningBreaks.Break0;
@@ -2933,7 +3023,7 @@ namespace Mutagen.Bethesda.Starfield
         public P3Float GridMin => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0xC, 0xC));
         public P3Float GridMax => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(WaypointsEndingPos + 0x18, 0xC));
         #region GridArrays
-        public INavmeshGridArrayGetter GridArrays => NavmeshGridArrayBinaryOverlay.NavmeshGridArrayFactory(_structData.Slice(WaypointsEndingPos + 0x24), _package, default(TypedParseParams));
+        public IReadOnlyList<INavmeshGridArrayGetter> GridArrays => BinaryOverlayList.FactoryByLazyParse<INavmeshGridArrayGetter>(_structData.Slice(WaypointsEndingPos + 0x24), _package, (s, p) => NavmeshGridArrayBinaryOverlay.NavmeshGridArrayFactory(s, p));
         protected int GridArraysEndingPos;
         #endregion
         public Int32 Unknown3 => _structData.Length <= GridArraysEndingPos + 0x0 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(GridArraysEndingPos + 0x0, 0x4));
@@ -2975,6 +3065,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.CoverEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DoorTrianglesEndingPos)) * 12 + 4;
             ret.CoverTriangleMappingsEndingPos = ret.CoverEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverEndingPos)) * 4 + 4;
             ret.WaypointsEndingPos = ret.CoverTriangleMappingsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverTriangleMappingsEndingPos)) * 18 + 4;
+            ret.GridArraysEndingPos = ret._structData.Length;
             if (ret._structData.Length <= ret.GridArraysEndingPos)
             {
                 ret.Versioning |= NavmeshGeometry.VersioningBreaks.Break0;

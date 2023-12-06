@@ -359,7 +359,7 @@ partial class CellBinaryOverlay
 
     private ReadOnlyMemorySlice<byte>? _grupData;
 
-    public IReadOnlyList<ITraversalReferenceGetter>? Traversals => throw new NotImplementedException();
+    public IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; private set; }
     public IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; private set; } = Array.Empty<INavigationMeshGetter>();
 
     public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
@@ -571,5 +571,10 @@ partial class CellBinaryOverlay
                     throw new NotImplementedException();
             }
         }
+    }
+
+    partial void TraversalsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    {
+        Traversals = TraversalReferenceBinaryOverlay.Factory(stream, _package, finalPos, offset, lastParsed);
     }
 }

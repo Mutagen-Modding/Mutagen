@@ -1,4 +1,10 @@
-﻿namespace Mutagen.Bethesda.Starfield;
+﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Starfield.Internals;
+
+namespace Mutagen.Bethesda.Starfield;
 
 public partial class PlacedObject
 {
@@ -154,5 +160,63 @@ public partial class PlacedObject
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
         Multibound = 0x8000_0000,
+    }
+}
+
+partial class PlacedObjectBinaryWriteTranslation
+{
+    public static partial void WriteBinaryTraversalsCustom(
+        MutagenWriter writer,
+        IPlacedObjectGetter item)
+    {
+        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITraversalReferenceGetter>.Instance.Write(
+            writer: writer,
+            items: item.Traversals,
+            recordType: RecordTypes.XTV2,
+            overflowRecord: RecordTypes.XXXX,
+            transl: (MutagenWriter subWriter, ITraversalReferenceGetter subItem, TypedWriteParams conv) =>
+            {
+                var Item = subItem;
+                ((TraversalReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    item: Item,
+                    writer: subWriter,
+                    translationParams: conv);
+            });
+    }
+}
+
+partial class PlacedObjectBinaryCreateTranslation
+{
+    public static partial void FillBinaryTraversalsCustom(
+        MutagenFrame frame,
+        IPlacedObjectInternal item,
+        PreviousParse lastParsed)
+    {
+        var sub = frame.ReadSubrecordHeader();
+        int len;
+        if (lastParsed.LengthOverride.HasValue)
+        {
+            len = lastParsed.LengthOverride.Value;
+        }
+        else
+        {
+            len = sub.ContentLength;
+        }
+        item.Traversals = TraversalReferenceBinaryCreateTranslation.Parse(frame.SpawnWithLength(len));
+    }
+}
+
+partial class PlacedObjectBinaryOverlay
+{
+    public IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; private set; }
+    
+    partial void TraversalsCustomParse(
+        OverlayStream stream,
+        long finalPos,
+        int offset,
+        RecordType type,
+        PreviousParse lastParsed)
+    {
+        Traversals = TraversalReferenceBinaryOverlay.Factory(stream, _package, finalPos, offset, lastParsed);
     }
 }
