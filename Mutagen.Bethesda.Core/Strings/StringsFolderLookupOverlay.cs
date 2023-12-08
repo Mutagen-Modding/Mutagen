@@ -83,7 +83,8 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                                     file.Name.String, 
                                     out var type,
                                     out var lang, 
-                                    out _))
+                                    out var modName)
+                                || !modKey.Name.AsSpan().Equals(modName, StringComparison.InvariantCulture))
                             {
                                 continue;
                             }
