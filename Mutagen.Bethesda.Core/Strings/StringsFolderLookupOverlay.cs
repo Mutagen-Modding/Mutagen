@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Archives.Exceptions;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Installs.DI;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings.DI;
 
@@ -52,8 +52,10 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         GameRelease release, 
         ModKey modKey, 
         DirectoryPath dataPath,
-        StringsReadParameters? instructions)
+        StringsReadParameters? instructions,
+        IFileSystem? fileSystem = null)
     {
+        fileSystem = fileSystem.GetOrDefault();
         var languageFormat = GameConstants.Get(release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
         var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
         var stringsFolderPath = instructions?.StringsFolderOverride;
@@ -71,9 +73,9 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                 valueFactory: () =>
                 {
                     var bundle = new DictionaryBundle();
-                    if (stringsFolderPath.Value.Exists)
+                    if (fileSystem.Directory.Exists(stringsFolderPath.Value))
                     {
-                        var bsaEnumer = stringsFolderPath.Value.EnumerateFiles(searchPattern: $"{modKey.Name}*{StringsUtility.StringsFileExtension}");
+                        var bsaEnumer = stringsFolderPath.Value.EnumerateFiles(searchPattern: $"{modKey.Name}*{StringsUtility.StringsFileExtension}", fileSystem: fileSystem);
                         foreach (var file in bsaEnumer)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
@@ -86,14 +88,14 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                                 continue;
                             }
                             var dict = bundle.Get(type);
-                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang)), LazyThreadSafetyMode.ExecutionAndPublication);
+                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang), fileSystem: fileSystem), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
-                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, instructions?.BsaOrdering))
+                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, instructions?.BsaOrdering, fileSystem: fileSystem))
                     {
                         try
                         {
-                            var bsaReader = Archive.CreateReader(release, bsaFile);
+                            var bsaReader = Archive.CreateReader(release, bsaFile, fileSystem);
                             if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
                             try
                             {

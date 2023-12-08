@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 using Mutagen.Bethesda.Archives.DI;
@@ -10,14 +11,18 @@ namespace Mutagen.Bethesda.Archives;
 
 public static class Archive
 {
-    private static GetApplicableArchivePaths GetApplicableArchivePathsDi(GameRelease release, DirectoryPath dataFolderPath)
+    private static GetApplicableArchivePaths GetApplicableArchivePathsDi(
+        GameRelease release, 
+        DirectoryPath dataFolderPath,
+        IFileSystem? fileSystem = null)
     {
+        fileSystem ??= fileSystem.GetOrDefault();
         var gameReleaseInjection = new GameReleaseInjection(release);
         var ext = new ArchiveExtensionProvider(gameReleaseInjection);
         return new GetApplicableArchivePaths(
-            IFileSystemExt.DefaultFilesystem,
+            fileSystem,
             new GetArchiveIniListings(
-                IFileSystemExt.DefaultFilesystem,
+                fileSystem,
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
@@ -53,10 +58,10 @@ public static class Archive
     /// <param name="release">GameRelease the archive is for</param>
     /// <param name="path">Path to create archive reader from</param>
     /// <returns>Archive reader object</returns>
-    public static IArchiveReader CreateReader(GameRelease release, FilePath path)
+    public static IArchiveReader CreateReader(GameRelease release, FilePath path, IFileSystem? fileSystem = null)
     {
         return new ArchiveReaderProvider(
-                IFileSystemExt.DefaultFilesystem,
+                fileSystem.GetOrDefault(),
                 new GameReleaseInjection(release))
             .Create(path);
     }
@@ -66,10 +71,11 @@ public static class Archive
     /// </summary>
     /// <param name="release">GameRelease to query for</param>
     /// <param name="dataFolderPath">Folder to query within</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath)
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IFileSystem? fileSystem = null)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
             .Get();
     }
 
@@ -79,10 +85,12 @@ public static class Archive
     /// <param name="release">GameRelease to query for</param>
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IEnumerable<FileName>? archiveOrdering)
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
+        IEnumerable<FileName>? archiveOrdering, IFileSystem? fileSystem = null)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
             .Get(archiveOrdering);
     }
 
@@ -94,10 +102,12 @@ public static class Archive
     /// <param name="release">GameRelease to query for</param>
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modKey">ModKey to query about</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey)
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
+        ModKey modKey, IFileSystem? fileSystem = null)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
             .Get(modKey);
     }
 
@@ -110,10 +120,13 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IEnumerable<FileName>? archiveOrdering)
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, 
+        ModKey modKey, IEnumerable<FileName>? archiveOrdering, 
+        IFileSystem? fileSystem = null)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
             .Get(modKey, archiveOrdering);
     }
 
@@ -126,10 +139,12 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering)
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, 
+        ModKey modKey, IComparer<FileName>? archiveOrdering, IFileSystem? fileSystem = null)
     {
-        return GetApplicableArchivePathsDi(release, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath, fileSystem)
             .Get(modKey, archiveOrdering);
     }
 
@@ -156,11 +171,12 @@ public static class Archive
     /// Queries the related ini file and looks for Archive ordering information
     /// </summary>
     /// <param name="release">GameRelease to query for</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    public static IEnumerable<FileName> GetIniListings(GameRelease release)
+    public static IEnumerable<FileName> GetIniListings(GameRelease release, IFileSystem? fileSystem = null)
     {
         return new GetArchiveIniListings(
-                IFileSystemExt.DefaultFilesystem,
+                fileSystem.GetOrDefault(),
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
@@ -173,11 +189,12 @@ public static class Archive
     /// </summary>
     /// <param name="release">GameRelease to query for</param>
     /// <param name="path">Path to the file containing INI data</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path)
+    public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path, IFileSystem? fileSystem = null)
     {
         return new GetArchiveIniListings(
-                IFileSystemExt.DefaultFilesystem,
+                fileSystem.GetOrDefault(),
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
@@ -190,11 +207,12 @@ public static class Archive
     /// </summary>
     /// <param name="release">GameRelease ini is for</param>
     /// <param name="iniStream">Stream containing INI data</param>
+    /// <param name="fileSystem">FileSystem to use</param>
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream)
+    public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream, IFileSystem? fileSystem = null)
     {
         return new GetArchiveIniListings(
-                IFileSystemExt.DefaultFilesystem,
+                fileSystem.GetOrDefault(),
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
