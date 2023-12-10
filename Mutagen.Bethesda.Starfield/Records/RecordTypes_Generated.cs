@@ -307,6 +307,7 @@ public partial class RecordTypes
     public static readonly RecordType HERD = new(0x44524548);
     public static readonly RecordType HNAM = new(0x4D414E48);
     public static readonly RecordType HTID = new(0x44495448);
+    public static readonly RecordType ICON = new(0x4E4F4349);
     public static readonly RecordType IDLE = new(0x454C4449);
     public static readonly RecordType IDLM = new(0x4D4C4449);
     public static readonly RecordType IMAD = new(0x44414D49);

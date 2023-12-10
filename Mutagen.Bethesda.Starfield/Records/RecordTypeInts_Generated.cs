@@ -305,6 +305,7 @@ public partial class RecordTypeInts
     public const int HERD = 0x44524548;
     public const int HNAM = 0x4D414E48;
     public const int HTID = 0x44495448;
+    public const int ICON = 0x4E4F4349;
     public const int IDLE = 0x454C4449;
     public const int IDLM = 0x4D4C4449;
     public const int IMAD = 0x44414D49;

@@ -2143,6 +2143,9 @@
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LoadScreen.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
