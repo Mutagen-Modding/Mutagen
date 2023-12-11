@@ -163,6 +163,7 @@ public class StarfieldProcessor : Processor
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
                     new RecordType[] { "MISC", "FULL", "NNAM" },
                     new RecordType[] { "IRES", "FULL", "NNAM" },
+                    new RecordType[] { "LSCR", "DESC" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
