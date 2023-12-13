@@ -576,7 +576,7 @@ public static class HeaderExt
         foreach (var varRec in group)
         {
             if (varRec.IsGroup) continue;
-            yield return new MajorRecordPinFrame(group.Meta, group.Content.Slice(varRec.Location), varRec.Location);
+            yield return new MajorRecordPinFrame(group.Meta, group.HeaderAndContentData.Slice(varRec.Location), varRec.Location);
         }
     }
 
@@ -585,7 +585,7 @@ public static class HeaderExt
         foreach (var varRec in group)
         {
             if (!varRec.IsGroup) continue;
-            yield return new GroupPinFrame(group.Meta, group.Content.Slice(varRec.Location), varRec.Location);
+            yield return new GroupPinFrame(group.Meta, group.HeaderAndContentData.Slice(varRec.Location), varRec.Location);
         }
     }
 
