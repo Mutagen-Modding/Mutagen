@@ -474,6 +474,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
+            sb.AppendLine($"fileSystem = fileSystem.GetOrDefault();");
             sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
             sb.AppendLine($"parallelParam ??= {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)};");
             using (var args = sb.Call(
@@ -484,10 +485,10 @@ public class ModModule : GenerationModule
             }
             if (obj.GetObjectData().UsesStringFiles)
             {
-                sb.AppendLine($"param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncoding)}.{nameof(MutagenEncoding.Default)}) : null;");
+                sb.AppendLine($"param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncoding)}.{nameof(MutagenEncoding.Default)}, fileSystem: fileSystem) : null;");
                 sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
             }
-            sb.AppendLine("using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))");
+            sb.AppendLine("using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))");
             using (sb.CurlyBrace())
             {
                 using (var args = sb.Call(

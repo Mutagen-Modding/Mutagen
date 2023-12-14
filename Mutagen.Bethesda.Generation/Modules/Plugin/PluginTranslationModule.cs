@@ -402,7 +402,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         if (objData.UsesStringFiles)
         {
-            sb.AppendLine($"param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int){obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncoding)}.{nameof(MutagenEncoding.Default)}) : null;");
+            sb.AppendLine($"param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int){obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncoding)}.{nameof(MutagenEncoding.Default)}, fileSystem: fileSystem.GetOrDefault()) : null;");
             sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
         }
         sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");

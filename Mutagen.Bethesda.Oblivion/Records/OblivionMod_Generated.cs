@@ -3735,12 +3735,13 @@ namespace Mutagen.Bethesda.Oblivion
             ParallelWriteParameters? parallelParam = null,
             IFileSystem? fileSystem = null)
         {
+            fileSystem = fileSystem.GetOrDefault();
             param ??= BinaryWriteParameters.Default;
             parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 OblivionModCommon.WriteParallel(
                     item: item,

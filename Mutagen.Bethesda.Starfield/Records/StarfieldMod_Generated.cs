@@ -3887,14 +3887,15 @@ namespace Mutagen.Bethesda.Starfield
             ParallelWriteParameters? parallelParam = null,
             IFileSystem? fileSystem = null)
         {
+            fileSystem = fileSystem.GetOrDefault();
             param ??= BinaryWriteParameters.Default;
             parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem) : null;
             bool disposeStrings = param.StringsWriter != null;
-            using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 StarfieldModCommon.WriteParallel(
                     item: item,
@@ -12841,7 +12842,7 @@ namespace Mutagen.Bethesda.Starfield
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)StarfieldModHeader.HeaderFlag.Localized) ? new StringsWriter(item.StarfieldRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)StarfieldModHeader.HeaderFlag.Localized) ? new StringsWriter(item.StarfieldRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem.GetOrDefault()) : null;
             bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(item.StarfieldRelease.ToGameRelease())
             {
