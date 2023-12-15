@@ -24,4 +24,5 @@ public enum Language
     Arabic,
     Korean,
     Thai,
+    ChineseSimplified,
 }
