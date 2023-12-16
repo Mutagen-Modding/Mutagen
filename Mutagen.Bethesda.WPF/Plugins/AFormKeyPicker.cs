@@ -680,7 +680,7 @@ public class AFormKeyPicker : NoggogControl
                                 .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
                                 {
                                     var edid = ident.EditorID;
-                                    return edid.IsNullOrWhitespace() || term.IsNullOrWhitespace() ? true : edid.ContainsInsensitive(term);
+                                    return term.IsNullOrWhitespace() ? true : edid != null && edid.ContainsInsensitive(term);
                                 });
                         case FormKeyPickerSearchMode.FormKey:
 
