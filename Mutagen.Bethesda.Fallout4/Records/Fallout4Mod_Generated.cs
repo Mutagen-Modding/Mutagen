@@ -25195,7 +25195,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var flags = stream.GetInt32(offset: 8);
                 if (Enums.HasFlag(flags, (int)Fallout4ModHeader.HeaderFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam, fileSystem: fileSystem);
                 }
                 return Fallout4ModFactory(
                     stream: stream,

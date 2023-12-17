@@ -13300,7 +13300,7 @@ namespace Mutagen.Bethesda.Starfield
                 var flags = stream.GetInt32(offset: 8);
                 if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam, fileSystem: fileSystem);
                 }
                 return StarfieldModFactory(
                     stream: stream,

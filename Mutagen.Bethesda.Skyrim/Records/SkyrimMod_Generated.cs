@@ -23561,7 +23561,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = stream.GetInt32(offset: 8);
                 if (Enums.HasFlag(flags, (int)SkyrimModHeader.HeaderFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam, fileSystem: fileSystem);
                 }
                 return SkyrimModFactory(
                     stream: stream,
