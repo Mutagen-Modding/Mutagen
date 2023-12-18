@@ -426,6 +426,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILeveledNpc :
         ILeveledNpcGetter,
         ILoquiObjectSetter<ILeveledNpcInternal>,
+        INpcTemplateTarget,
         IStarfieldMajorRecordInternal
     {
     }
@@ -442,7 +443,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ILeveledNpcGetter>,
-        IMapsToGetter<ILeveledNpcGetter>
+        IMapsToGetter<ILeveledNpcGetter>,
+        INpcTemplateTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledNpc_Registration.Instance;
 

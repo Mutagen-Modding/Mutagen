@@ -222,4 +222,8 @@
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
     </Fields>
   </Object>
+  <Object name="ShipManagementComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
 </Loqui>

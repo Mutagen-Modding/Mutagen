@@ -3,5 +3,6 @@
   <Object name="LeveledNpc" recordType="LVLN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>INpcTemplateTarget</LinkInterface>
   </Object>
 </Loqui>

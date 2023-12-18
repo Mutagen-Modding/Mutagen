@@ -3425,6 +3425,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "PlanetContentManagerContentProperties":
                 case "IPlanetContentManagerContentPropertiesGetter":
                 case "IPlanetContentManagerContentProperties":
+                case "ShipManagementComponent":
+                case "IShipManagementComponentGetter":
+                case "IShipManagementComponent":
                     break;
                 case "Condition":
                 case "IConditionGetter":

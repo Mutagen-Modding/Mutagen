@@ -35,6 +35,7 @@ public partial class AComponent
         BGSObjectPaletteDefaults_Component,
         Volumes_Component,
         BGSPlanetContentManagerContentProperties_Component,
+        BGSShipManagement,
     }
 
     public static bool TryCreateFromBinary(
@@ -103,6 +104,8 @@ public partial class AComponent
                 return VolumesComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSPlanetContentManagerContentProperties_Component:
                 return PlanetContentManagerContentProperties.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSShipManagement:
+                return ShipManagementComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -169,6 +172,7 @@ partial class AComponentBinaryWriteTranslation
             IObjectPaletteDefaultsComponentGetter _ => AComponent.ComponentType.BGSObjectPaletteDefaults_Component,
             IVolumesComponentGetter _ => AComponent.ComponentType.Volumes_Component,
             IPlanetContentManagerContentPropertiesGetter _ => AComponent.ComponentType.BGSPlanetContentManagerContentProperties_Component,
+            IShipManagementComponentGetter _ => AComponent.ComponentType.BGSShipManagement,
             _ => throw new NotImplementedException()
         };
 
@@ -235,6 +239,8 @@ partial class AComponentBinaryOverlay
                 return VolumesComponentBinaryOverlay.VolumesComponentFactory(stream, package);
             case AComponent.ComponentType.BGSPlanetContentManagerContentProperties_Component:
                 return PlanetContentManagerContentPropertiesBinaryOverlay.PlanetContentManagerContentPropertiesFactory(stream, package);
+            case AComponent.ComponentType.BGSShipManagement:
+                return ShipManagementComponentBinaryOverlay.ShipManagementComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

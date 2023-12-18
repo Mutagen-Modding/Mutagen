@@ -146,6 +146,7 @@
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TargetType.cs" />
     <Compile Include="Enums\TimeOfDay.cs" />
+    <Compile Include="Enums\TintType.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\Aspect\IHaveVirtualMachineAdapter.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
@@ -2194,8 +2195,17 @@
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverride.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideGeneral.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ObjectModification.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PcLevelMult.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Perk.cs">
       <DependentUpon>Perk.xml</DependentUpon>
@@ -5818,6 +5828,85 @@
     </Compile>
     <Compile Include="Records\Major Records\CellXCLAItem_Generated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TemplateActors_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANpcLevel_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcLevel_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PcLevelMult_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcFLEE_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RankPlacement_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkPlacement_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRDSA_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcWeight_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcSound_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcTint_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcBodyMorphRegionValues_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\INpcTemplateTarget_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\ShipManagementComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcFaceDialPosition_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcFaceMorph_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcMorphGroup_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverride_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcMorphBlend_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideSize_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideUnknown1_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideUnknown2_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideUnarmedWeapon_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideFlag_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideUnknown5_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideGeneral_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcRaceOverrideUnknown7_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

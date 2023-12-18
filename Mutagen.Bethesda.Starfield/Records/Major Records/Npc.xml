@@ -1,10 +1,375 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
+      <RefList name="Components" refName="AComponent" />
+      <Data recordType="ACBS">
+        <Fields>
+          <Enum name="Flags" enumName="Npc.Flag" byteLength="4" binary="Custom" />
+          <Int16 name="XpValueOffset" />
+          <RefDirect name="Level" refName="ANpcLevel" binary="Custom" generateClassMembers="false" byteLength="2" />
+          <Int16 name="CalcMinLevel" />
+          <Int16 name="CalcMaxLevel" />
+          <Int16 name="DispositionBase" />
+          <Enum name="UseTemplateActors" enumName="Npc.TemplateActorType" byteLength="2" />
+        </Fields>
+      </Data>
+      <RefList name="Factions" refName="RankPlacement" />
+      <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
+      <FormLink name="Voice" refName="VoiceType" recordType="VTCK" />
+      <FormLink name="DefaultTemplate" recordType="TPLT">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="LegendaryTemplate" recordType="LTPT">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="LegendaryChance" refName="Global" recordType="LTPC" />
+      <RefDirect name="TemplateActors" refName="TemplateActors" />
       <FormLink name="Race" refName="Race" recordType="RNAM" nullable="False" />
+      <List name="ActorEffect" >
+        <FormLink recordType="SPLO">
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
+      </List>
+      <FormLink name="Skin" refName="Armor" recordType="WNAM" />
+      <FormLink name="AttackRace" refName="Race" recordType="ATKR" />
+      <FormLink name="SpectatorOverridePackageList" refName="FormList" recordType="SPOR" />
+      <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
+      <RefList name="Perks" counterRecType="PRKZ" refName="PerkPlacement" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
+      <Data recordType="AIDT">
+        <Fields>
+          <Enum name="Aggression" enumName="Npc.AggressionType" byteLength="1" />
+          <Enum name="Confidence" enumName="Npc.ConfidenceType" byteLength="1" />
+          <UInt8 name="EnergyLevel" />
+          <Enum name="Responsibility" enumName="Npc.ResponsibilityType" byteLength="1" />
+          <Enum name="Mood" enumName="Npc.MoodType" byteLength="1" />
+          <Enum name="Assistance" enumName="Npc.AssistanceType" byteLength="1" />
+          <UInt8 name="UnknownAIDT" />
+        </Fields>
+      </Data>
+      <List name="Packages">
+        <FormLink refName="Package" recordType="PKID" />
+      </List>
+      <RefDirect name="FLEE" refName="NpcFLEE" />
+      <List name="RDSAs" recordType="RDSA" >
+        <RefDirect refName="NpcRDSA" />
+      </List>
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" >
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Npc.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <Marker name="STOPMarker" recordType="STOP" />
+      <FormLink name="Class" refName="Class" recordType="CNAM" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="ShortName" recordType="SHRT" translated="Normal" />
+      <String name="LongName" recordType="LNAM" translated="Normal" />
+      <Marker name="Marker" recordType="DATA" />
+      <Data recordType="DNAM">
+        <Fields>
+          <UInt16 name="CalculatedHealth" />
+          <UInt16 name="CalculatedActionPoints" />
+          <UInt16 name="FarAwayModelDistance" />
+          <UInt8 name="GearedUpWeapons" />
+          <UInt8 name="Unused" />
+        </Fields>
+      </Data>
+      <List name="HeadParts">
+        <FormLink refName="HeadPart" recordType="PNAM" />
+      </List>
+      <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
+      <ByteArray name="NAM5" recordType="NAM5" />
+      <Float name="HeightMin" recordType="NAM6" nullable="False" />
+      <Float name="HeightMax" recordType="NAM4" nullable="False" />
+      <RefDirect name="Weight" refName="NpcWeight" />
+      <RefList name="Sounds" counterRecType="CS3H" counterLength="4" endMarker="CS3E" refName="NpcSound" />
+      <FormLink name="InheritsSoundsFrom" recordType="CSCR" refName="Npc" />
+      <FormLink name="CompanionInfoQuest" refName="Quest" recordType="QSTA" />
+      <FormLink name="CompanionInfoDialogue" refName="DialogBranch" recordType="BNAM" />
+      <FormLink name="DefaultOutfit" recordType="DOFT" refName="Outfit" />
+      <FormLink name="SpaceOutfit" recordType="SOFT" refName="Outfit" />
+      <FormLink name="DefaultPackageList" recordType="DPLT" refName="FormList" />
+      <FormLink name="CrimeFaction" recordType="CRIF" refName="Faction" />
+      <FormLink name="FormationFaction" recordType="HEFA" refName="Faction" />
+      <RefList name="Tints" counterRecType="EDCT" counterLength="1" refName="NpcTint" />
+      <RefDirect name="BodyMorphRegionValues" refName="NpcBodyMorphRegionValues" recordType="MRSV" />
+      <RefList name="FaceDialPositions" refName="NpcFaceDialPosition" />
+      <RefList name="FaceMorphs" refName="NpcFaceMorph" />
+      <RefList name="MorphBlends" refName="NpcMorphBlend" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <UInt8 name="SkinToneIndex" recordType="STON" />
+      <String name="HairColor" recordType="HCOL" />
+      <String name="FacialHairColor" recordType="FHCL" />
+      <String name="EyebrowColor" recordType="BCOL" />
+      <String name="EyeColor" recordType="ECOL" />
+      <String name="JewelryColor" recordType="JCOL" />
+      <String name="TeethColor" recordType="TETC" />
+      <Enum name="Pronoun" enumName="Pronoun" byteLength="1" recordType="PRON" />
+      <ByteArray name="ONA2" recordType="ONA2" unknown="true" />
+      <!-- Finish parsing ONA2 -->
+<!--      <RefDirect name="RaceOverrides" refName="NpcRaceOverride" />-->
     </Fields>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>INpcTemplateTarget</LinkInterface>
+  </Object>
+  <Object name="TemplateActors" objType="Subrecord" recordType="TPTA">
+    <Fields>
+      <FormLink name="TraitTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="StatsTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="FactionsTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="SpellListTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="AiDataTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="AiPackagesTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="ModelOrAnimationTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="BaseDataTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="InventoryTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="ScriptTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="DefPackListTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="AttackDataTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="KeywordsTemplate">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="Unknown1">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+      <FormLink name="Unknown2">
+        <Interface>INpcTemplateTarget</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="ANpcLevel" abstract="true" objType="Subrecord" />
+  <Object name="NpcLevel" baseClass="ANpcLevel" objType="Subrecord">
+    <Fields>
+      <Int16 name="Level" />
+    </Fields>
+  </Object>
+  <Object name="PcLevelMult" baseClass="ANpcLevel" objType="Subrecord">
+    <Fields>
+      <Float name="LevelMult" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="NpcFLEE" objType="Subrecord" recordType="FLEE" >
+    <Fields>
+      <FormLink name="UnknownLink1" refName="StarfieldMajorRecord" />
+      <FormLink name="UnknownLink2" refName="StarfieldMajorRecord" />
+      <FormLink name="UnknownLink3" refName="StarfieldMajorRecord" />
+      <Float name="UnknownFloat1" />
+      <Float name="UnknownFloat2" />
+      <Int32 name="UnknownInt" />
+    </Fields>
+  </Object>
+  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM">
+    <Fields>
+      <FormLink name="Faction" refName="Faction" />
+      <Int8 name="Rank" />
+    </Fields>
+  </Object>
+  <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR">
+    <Fields>
+      <FormLink name="Perk" refName="Perk" />
+      <UInt8 name="Rank" />
+    </Fields>
+  </Object>
+  <Object name="NpcRDSA" objType="Subrecord" >
+    <Fields>
+      <Int32 name="UnknownInt" />
+      <Int32 name="UnknownInt2" />
+      <FormLink name="UnknownLink1" refName="StarfieldMajorRecord" />
+      <Int32 name="UnknownInt3" />
+      <FormLink name="UnknownLink2" refName="StarfieldMajorRecord" />
+      <FormLink name="UnknownLink3" refName="StarfieldMajorRecord" />
+      <FormLink name="UnknownLink4" refName="StarfieldMajorRecord" />
+      <FormLink name="UnknownLink5" refName="StarfieldMajorRecord" />
+      <FormLink name="UnknownLink6" refName="StarfieldMajorRecord" />
+      <Float name="UnknownFloat1" />
+      <Float name="UnknownFloat2" />
+      <Float name="UnknownFloat3" />
+      <Float name="UnknownFloat4" />
+      <Float name="UnknownFloat5" />
+      <FormLink name="UnknownLink7" refName="StarfieldMajorRecord" />
+      <Int32 name="UnknownInt4" />
+      <FormLink name="UnknownLink8" refName="StarfieldMajorRecord" />
+      <Float name="UnknownFloat6" />
+      <Int32 name="UnknownInt5" />
+      <FormLink name="UnknownLink9" refName="StarfieldMajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="NpcWeight" objType="Subrecord" recordType="MWGT">
+    <Fields>
+      <Float name="Thin" />
+      <Float name="Muscular" />
+      <Float name="Fat" />
+    </Fields>
+  </Object>
+  <Object name="NpcSound" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Sound" recordType="CS3S" refName="SoundReference" />
+      <ByteArray name="CS3F" recordType="CS3F" />
+    </Fields>
+  </Object>
+  <Object name="NpcTint" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="TintType" recordType="MNAM" nullable="false" />
+      <String name="Group" recordType="TNAM" nullable="false" />
+      <String name="Name" recordType="QNAM" nullable="false" />
+      <String name="Texture" recordType="VNAM" nullable="false" />
+      <Color name="Color" recordType="NNAM" nullable="false" />
+      <UInt32 name="Intensity" recordType="INTV" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="NpcBodyMorphRegionValues" objType="Subrecord">
+    <Fields>
+      <Float name="Head" />
+      <Float name="UpperTorso" />
+      <Float name="Arms" />
+      <Float name="LowerTorso" />
+      <Float name="Legs" />
+    </Fields>
+  </Object>
+  <Object name="NpcFaceDialPosition" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Index" recordType="FMSI" nullable="false" />
+      <Float name="Position" recordType="FMRS" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="NpcFaceMorph" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Index" recordType="FMRI" />
+      <RefList name="MorphGroups" refName="NpcMorphGroup" />
+    </Fields>
+  </Object>
+  <Object name="NpcMorphBlend" objType="Subrecord">
+    <Fields>
+      <String name="BlendName" recordType="BMPN" nullable="false" />
+      <Float name="Intensity" recordType="BMPV" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="NpcMorphGroup" objType="Subrecord">
+    <Fields>
+      <String name="MorphGroup" recordType="FMRG" nullable="false" />
+      <Float name="BlendIntensity" recordType="FMRS" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverride" objType="Subrecord" recordType="ONA2" >
+    <Fields>
+      <CustomLogic name="FlagParse" byteLength="4" />
+      <RefDirect name="Size" refName="NpcRaceOverrideSize" nullable="true" />
+      <RefDirect name="Unknown1" refName="NpcRaceOverrideUnknown1" nullable="true" />
+      <RefDirect name="Unknown2" refName="NpcRaceOverrideUnknown2" nullable="true" />
+      <RefDirect name="UnarmedWeapon" refName="NpcRaceOverrideUnarmedWeapon" nullable="true" />
+      <RefDirect name="Flag" refName="NpcRaceOverrideFlag" nullable="true" />
+      <RefDirect name="Unknown5" refName="NpcRaceOverrideUnknown5" nullable="true" />
+      <RefDirect name="General" refName="NpcRaceOverrideGeneral" nullable="true" />
+      <RefDirect name="Unknown7" refName="NpcRaceOverrideUnknown7" nullable="true" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideSize" objType="Subrecord" >
+    <Fields>
+      <Enum name="Size" enumName="Size" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideUnknown1" objType="Subrecord" >
+    <Fields>
+      <Float name="AccelerationRate" />
+      <Float name="DecelerationRate" />
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideUnknown2" objType="Subrecord" >
+    <Fields>
+      <Float name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideUnarmedWeapon" objType="Subrecord" >
+    <Fields>
+      <Float name="Unknown" />
+      <FormLink name="UnarmedWeapon" refName="Weapon" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideFlag" objType="Subrecord" >
+    <Fields>
+      <Enum name="RaceDataFlags" enumName="Race.Flag" byteLength="8"/>
+      <Enum name="OverrideActive" enumName="Race.Flag" byteLength="8"/>
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideUnknown5" objType="Subrecord" >
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+      <Float name="Unknown5" />
+      <Float name="Unknown6" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideGeneral" objType="Subrecord" >
+    <Fields>
+      <FormLink name="ImpactMaterialType" refName="MaterialType" />
+      <RefDirect name="WED0" unknown="true" refName="SoundReference" />
+      <RefDirect name="WED1" unknown="true" refName="SoundReference" />
+      <FormLink name="UnknownForm1" refName="Explosion" />
+      <FormLink name="UnknownForm2" refName="Debris" />
+      <FormLink name="UnknownForm3" refName="ImpactDataSet" />
+      <Float name="UnknownFloat" />
+      <UInt16 name="UnknownInt16" />
+      <Enum name="ActiveOverrides" enumName="NpcRaceOverrideGeneral.ActiveOverride" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="NpcRaceOverrideUnknown7" objType="Subrecord" >
+    <Fields>
+      <UInt8 name="UnknownUInt8" />
+      <Float name="UnknownFloat1" />
+      <Float name="UnknownFloat2" />
+      <Float name="UnknownFloat3" />
+      <Float name="UnknownFloat4" />
+      <Float name="UnknownFloat5" />
+      <Float name="UnknownFloat6" />
+      <Float name="UnknownFloat7" />
+    </Fields>
   </Object>
 </Loqui>

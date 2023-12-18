@@ -36,6 +36,7 @@
       <Group name="MiscItems" refName="MiscItem" />
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="Weapons" refName="Weapon" />
+      <Group name="Npcs" refName="Npc" />
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />

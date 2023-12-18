@@ -49,6 +49,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
         AddDynamicProcessing(RecordTypes.PGRE, ProcessTraps);
         AddDynamicProcessing(RecordTypes.PHZD, ProcessHazards);
+        AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -156,6 +157,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "DIAL", "FULL" },
                     new RecordType[] { "INFO", "RNAM" },
                     new RecordType[] { "CELL", "FULL" },
+                    new RecordType[] { "NPC_", "FULL", "SHRT", "LNAM", "ATTX" },
                     new RecordType[] { "REFR", "FULL", "UNAM" },
                     new RecordType[] { "QUST", "FULL", "NNAM", "QMDP", "QMSU", "QMDT", "QMDS" },
                     new RecordType[] { "MGEF", "FULL", "DNAM" },
@@ -406,6 +408,27 @@ public class StarfieldProcessor : Processor
         long fileOffset)
     {
         ProcessPositionRotationData(majorFrame, fileOffset);
+    }
+
+    private HashSet<RecordType> _stopRecs = new HashSet<RecordType>()
+    {
+        RecordTypes.DATA,
+        RecordTypes.CNAM,
+    };
+    
+    private void ProcessNpcs(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (!majorFrame.TryFindSubrecord(RecordTypes.STOP, out var rec))
+        {
+            var subRec = majorFrame.FindEnumerateSubrecords(_stopRecs).First();
+            var b = new byte[6];
+            BinaryPrimitives.WriteInt32LittleEndian(b, RecordTypes.STOP.TypeInt);
+            Instructions.SetAddition(fileOffset + subRec.Location, b);
+            ProcessLengths(majorFrame, 6, fileOffset);
+        }
     }
 
     private void ProcessPositionRotationData(MajorRecordFrame majorFrame, long fileOffset)

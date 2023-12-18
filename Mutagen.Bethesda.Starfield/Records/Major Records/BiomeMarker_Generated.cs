@@ -426,6 +426,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IBiomeMarker :
         IBiomeMarkerGetter,
         ILoquiObjectSetter<IBiomeMarkerInternal>,
+        INpcTemplateTarget,
         IStarfieldMajorRecordInternal
     {
     }
@@ -442,7 +443,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IBiomeMarkerGetter>,
-        IMapsToGetter<IBiomeMarkerGetter>
+        IMapsToGetter<IBiomeMarkerGetter>,
+        INpcTemplateTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => BiomeMarker_Registration.Instance;
 

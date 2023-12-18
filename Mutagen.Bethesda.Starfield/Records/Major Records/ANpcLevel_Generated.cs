@@ -7,15 +7,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -41,15 +38,15 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent, LightAttachmentFormComponent, LightAnimFormComponent, ParticleSystemComponent, LodOwnerComponent, SoundTagComponent, DisplayCaseComponent, ObjectPaletteDefaultsComponent, VolumesComponent, PlanetContentManagerContentProperties, ShipManagementComponent]
+    /// Implemented by: [NpcLevel, PcLevelMult]
     /// </summary>
-    public abstract partial class AComponent :
-        IAComponent,
-        IEquatable<IAComponentGetter>,
-        ILoquiObjectSetter<AComponent>
+    public abstract partial class ANpcLevel :
+        IANpcLevel,
+        IEquatable<IANpcLevelGetter>,
+        ILoquiObjectSetter<ANpcLevel>
     {
         #region Ctor
-        public AComponent()
+        public ANpcLevel()
         {
             CustomCtor();
         }
@@ -63,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AComponentMixIn.Print(
+            ANpcLevelMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -74,16 +71,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IAComponentGetter rhs) return false;
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IANpcLevelGetter rhs) return false;
+            return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAComponentGetter? obj)
+        public bool Equals(IANpcLevelGetter? obj)
         {
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -143,7 +140,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new AComponent.Mask<R>();
+                var ret = new ANpcLevel.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -156,16 +153,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(AComponent.Mask<bool>? printMask = null)
+            public string Print(ANpcLevel.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, AComponent.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ANpcLevel.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(AComponent.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ANpcLevel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -197,7 +194,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public virtual object? GetNthMask(int index)
             {
-                AComponent_FieldIndex enu = (AComponent_FieldIndex)index;
+                ANpcLevel_FieldIndex enu = (ANpcLevel_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -207,7 +204,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public virtual void SetNthException(int index, Exception ex)
             {
-                AComponent_FieldIndex enu = (AComponent_FieldIndex)index;
+                ANpcLevel_FieldIndex enu = (ANpcLevel_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -217,7 +214,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public virtual void SetNthMask(int index, object obj)
             {
-                AComponent_FieldIndex enu = (AComponent_FieldIndex)index;
+                ANpcLevel_FieldIndex enu = (ANpcLevel_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -318,25 +315,16 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
-        #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AComponentCommon.Instance.EnumerateFormLinks(this);
-        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AComponentSetterCommon.Instance.RemapLinks(this, mapping);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AComponentSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public virtual void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AComponentSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AComponentSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => AComponentBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ANpcLevelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ANpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -347,10 +335,10 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((AComponentSetterCommon)((IAComponentGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ANpcLevelSetterCommon)((IANpcLevelGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static AComponent GetNew()
+        internal static ANpcLevel GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -360,25 +348,21 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent, LightAttachmentFormComponent, LightAnimFormComponent, ParticleSystemComponent, LodOwnerComponent, SoundTagComponent, DisplayCaseComponent, ObjectPaletteDefaultsComponent, VolumesComponent, PlanetContentManagerContentProperties, ShipManagementComponent]
+    /// Implemented by: [NpcLevel, PcLevelMult]
     /// </summary>
-    public partial interface IAComponent :
-        IAComponentGetter,
-        IAssetLinkContainer,
-        IFormLinkContainer,
-        ILoquiObjectSetter<IAComponent>
+    public partial interface IANpcLevel :
+        IANpcLevelGetter,
+        ILoquiObjectSetter<IANpcLevel>
     {
     }
 
     /// <summary>
-    /// Implemented by: [AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent, LightAttachmentFormComponent, LightAnimFormComponent, ParticleSystemComponent, LodOwnerComponent, SoundTagComponent, DisplayCaseComponent, ObjectPaletteDefaultsComponent, VolumesComponent, PlanetContentManagerContentProperties, ShipManagementComponent]
+    /// Implemented by: [NpcLevel, PcLevelMult]
     /// </summary>
-    public partial interface IAComponentGetter :
+    public partial interface IANpcLevelGetter :
         ILoquiObject,
-        IAssetLinkContainerGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        ILoquiObject<IAComponentGetter>
+        ILoquiObject<IANpcLevelGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -386,49 +370,49 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => AComponent_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AComponentMixIn
+    public static partial class ANpcLevelMixIn
     {
-        public static void Clear(this IAComponent item)
+        public static void Clear(this IANpcLevel item)
         {
-            ((AComponentSetterCommon)((IAComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ANpcLevelSetterCommon)((IANpcLevelGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AComponent.Mask<bool> GetEqualsMask(
-            this IAComponentGetter item,
-            IAComponentGetter rhs,
+        public static ANpcLevel.Mask<bool> GetEqualsMask(
+            this IANpcLevelGetter item,
+            IANpcLevelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IAComponentGetter item,
+            this IANpcLevelGetter item,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            ANpcLevel.Mask<bool>? printMask = null)
         {
-            return ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).Print(
+            return ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IAComponentGetter item,
+            this IANpcLevelGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            ANpcLevel.Mask<bool>? printMask = null)
         {
-            ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).Print(
+            ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -436,21 +420,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IAComponentGetter item,
-            IAComponentGetter rhs,
-            AComponent.TranslationMask? equalsMask = null)
+            this IANpcLevelGetter item,
+            IANpcLevelGetter rhs,
+            ANpcLevel.TranslationMask? equalsMask = null)
         {
-            return ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).Equals(
+            return ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs)
+            this IANpcLevel lhs,
+            IANpcLevelGetter rhs)
         {
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -459,11 +443,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs,
-            AComponent.TranslationMask? copyMask = null)
+            this IANpcLevel lhs,
+            IANpcLevelGetter rhs,
+            ANpcLevel.TranslationMask? copyMask = null)
         {
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -472,28 +456,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs,
-            out AComponent.ErrorMask errorMask,
-            AComponent.TranslationMask? copyMask = null)
+            this IANpcLevel lhs,
+            IANpcLevelGetter rhs,
+            out ANpcLevel.ErrorMask errorMask,
+            ANpcLevel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = AComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ANpcLevel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs,
+            this IANpcLevel lhs,
+            IANpcLevelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -501,32 +485,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static AComponent DeepCopy(
-            this IAComponentGetter item,
-            AComponent.TranslationMask? copyMask = null)
+        public static ANpcLevel DeepCopy(
+            this IANpcLevelGetter item,
+            ANpcLevel.TranslationMask? copyMask = null)
         {
-            return ((AComponentSetterTranslationCommon)((IAComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static AComponent DeepCopy(
-            this IAComponentGetter item,
-            out AComponent.ErrorMask errorMask,
-            AComponent.TranslationMask? copyMask = null)
+        public static ANpcLevel DeepCopy(
+            this IANpcLevelGetter item,
+            out ANpcLevel.ErrorMask errorMask,
+            ANpcLevel.TranslationMask? copyMask = null)
         {
-            return ((AComponentSetterTranslationCommon)((IAComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static AComponent DeepCopy(
-            this IAComponentGetter item,
+        public static ANpcLevel DeepCopy(
+            this IANpcLevelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AComponentSetterTranslationCommon)((IAComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -534,11 +518,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IAComponent item,
+            this IANpcLevel item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((AComponentSetterCommon)((IAComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ANpcLevelSetterCommon)((IANpcLevelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -554,15 +538,15 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum AComponent_FieldIndex
+    internal enum ANpcLevel_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    internal partial class AComponent_Registration : ILoquiRegistration
+    internal partial class ANpcLevel_Registration : ILoquiRegistration
     {
-        public static readonly AComponent_Registration Instance = new AComponent_Registration();
+        public static readonly ANpcLevel_Registration Instance = new ANpcLevel_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -570,23 +554,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 0;
 
-        public static readonly Type MaskType = typeof(AComponent.Mask<>);
+        public static readonly Type MaskType = typeof(ANpcLevel.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AComponent.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ANpcLevel.ErrorMask);
 
-        public static readonly Type ClassType = typeof(AComponent);
+        public static readonly Type ClassType = typeof(ANpcLevel);
 
-        public static readonly Type GetterType = typeof(IAComponentGetter);
+        public static readonly Type GetterType = typeof(IANpcLevelGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAComponent);
+        public static readonly Type SetterType = typeof(IANpcLevel);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.AComponent";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ANpcLevel";
 
-        public const string Name = "AComponent";
+        public const string Name = "ANpcLevel";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -594,17 +578,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BFCB;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var triggers = RecordCollection.Factory(RecordTypes.BFCB);
-            var all = RecordCollection.Factory(
-                RecordTypes.BFCB,
-                RecordTypes.BFCE);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
-        });
-        public static readonly Type BinaryWriteTranslation = typeof(AComponentBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ANpcLevelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -635,32 +609,19 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class AComponentSetterCommon
+    internal partial class ANpcLevelSetterCommon
     {
-        public static readonly AComponentSetterCommon Instance = new AComponentSetterCommon();
+        public static readonly ANpcLevelSetterCommon Instance = new ANpcLevelSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IAComponent item)
+        public virtual void Clear(IANpcLevel item)
         {
             ClearPartial();
         }
         
         #region Mutagen
-        public void RemapLinks(IAComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAComponent obj)
-        {
-            yield break;
-        }
-        
-        public void RemapAssetLinks(
-            IAComponent obj,
-            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
-            AssetLinkQuery queryCategories)
+        public void RemapLinks(IANpcLevel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -668,31 +629,26 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAComponent item,
+            IANpcLevel item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.SubrecordParse(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillTyped: AComponentBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class AComponentCommon
+    internal partial class ANpcLevelCommon
     {
-        public static readonly AComponentCommon Instance = new AComponentCommon();
+        public static readonly ANpcLevelCommon Instance = new ANpcLevelCommon();
 
-        public AComponent.Mask<bool> GetEqualsMask(
-            IAComponentGetter item,
-            IAComponentGetter rhs,
+        public ANpcLevel.Mask<bool> GetEqualsMask(
+            IANpcLevelGetter item,
+            IANpcLevelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AComponent.Mask<bool>(false);
-            ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ANpcLevel.Mask<bool>(false);
+            ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -701,17 +657,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IAComponentGetter item,
-            IAComponentGetter rhs,
-            AComponent.Mask<bool> ret,
+            IANpcLevelGetter item,
+            IANpcLevelGetter rhs,
+            ANpcLevel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
         }
         
         public string Print(
-            IAComponentGetter item,
+            IANpcLevelGetter item,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            ANpcLevel.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -723,18 +679,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IAComponentGetter item,
+            IANpcLevelGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            ANpcLevel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"AComponent =>");
+                sb.AppendLine($"ANpcLevel =>");
             }
             else
             {
-                sb.AppendLine($"{name} (AComponent) =>");
+                sb.AppendLine($"{name} (ANpcLevel) =>");
             }
             using (sb.Brace())
             {
@@ -746,23 +702,23 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IAComponentGetter item,
+            IANpcLevelGetter item,
             StructuredStringBuilder sb,
-            AComponent.Mask<bool>? printMask = null)
+            ANpcLevel.Mask<bool>? printMask = null)
         {
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAComponentGetter? lhs,
-            IAComponentGetter? rhs,
+            IANpcLevelGetter? lhs,
+            IANpcLevelGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             return true;
         }
         
-        public virtual int GetHashCode(IAComponentGetter item)
+        public virtual int GetHashCode(IANpcLevelGetter item)
         {
             var hash = new HashCode();
             return hash.ToHashCode();
@@ -773,16 +729,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public virtual object GetNew()
         {
-            return AComponent.GetNew();
+            return ANpcLevel.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAComponentGetter obj)
-        {
-            yield break;
-        }
-        
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAComponentGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IANpcLevelGetter obj)
         {
             yield break;
         }
@@ -790,14 +741,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class AComponentSetterTranslationCommon
+    internal partial class ANpcLevelSetterTranslationCommon
     {
-        public static readonly AComponentSetterTranslationCommon Instance = new AComponentSetterTranslationCommon();
+        public static readonly ANpcLevelSetterTranslationCommon Instance = new ANpcLevelSetterTranslationCommon();
 
         #region DeepCopyIn
         public virtual void DeepCopyIn(
-            IAComponent item,
-            IAComponentGetter rhs,
+            IANpcLevel item,
+            IANpcLevelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -806,12 +757,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public AComponent DeepCopy(
-            IAComponentGetter item,
-            AComponent.TranslationMask? copyMask = null)
+        public ANpcLevel DeepCopy(
+            IANpcLevelGetter item,
+            ANpcLevel.TranslationMask? copyMask = null)
         {
-            AComponent ret = (AComponent)((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetNew();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ANpcLevel ret = (ANpcLevel)((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).GetNew();
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -820,30 +771,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public AComponent DeepCopy(
-            IAComponentGetter item,
-            out AComponent.ErrorMask errorMask,
-            AComponent.TranslationMask? copyMask = null)
+        public ANpcLevel DeepCopy(
+            IANpcLevelGetter item,
+            out ANpcLevel.ErrorMask errorMask,
+            ANpcLevel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AComponent ret = (AComponent)((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetNew();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ANpcLevel ret = (ANpcLevel)((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).GetNew();
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = AComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ANpcLevel.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public AComponent DeepCopy(
-            IAComponentGetter item,
+        public ANpcLevel DeepCopy(
+            IANpcLevelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            AComponent ret = (AComponent)((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetNew();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ANpcLevel ret = (ANpcLevel)((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).GetNew();
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -859,27 +810,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AComponent
+    public partial class ANpcLevel
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AComponent_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => AComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => AComponentCommon.Instance;
+        protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonSetterInstance()
         {
-            return AComponentSetterCommon.Instance;
+            return ANpcLevelSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => AComponentSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ANpcLevelSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonInstance() => this.CommonInstance();
+        object IANpcLevelGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IANpcLevelGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IANpcLevelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -890,43 +841,15 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AComponentBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ANpcLevelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AComponentBinaryWriteTranslation Instance = new();
-
-        public static void WriteRecordTypes(
-            IAComponentGetter item,
-            MutagenWriter writer,
-            TypedWriteParams translationParams)
-        {
-            AComponentBinaryWriteTranslation.WriteBinaryBFCBString(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryBFCBStringCustom(
-            MutagenWriter writer,
-            IAComponentGetter item);
-
-        public static void WriteBinaryBFCBString(
-            MutagenWriter writer,
-            IAComponentGetter item)
-        {
-            WriteBinaryBFCBStringCustom(
-                writer: writer,
-                item: item);
-        }
+        public static readonly ANpcLevelBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,
-            IAComponentGetter item,
+            IANpcLevelGetter item,
             TypedWriteParams translationParams)
         {
-            WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, RecordTypes.BFCE)) { } // End Marker
         }
 
         public virtual void Write(
@@ -935,50 +858,16 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IAComponentGetter)item,
+                item: (IANpcLevelGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class AComponentBinaryCreateTranslation
+    internal partial class ANpcLevelBinaryCreateTranslation
     {
-        public static readonly AComponentBinaryCreateTranslation Instance = new AComponentBinaryCreateTranslation();
-
-        public static ParseResult FillBinaryRecordTypes(
-            IAComponent item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.BFCB:
-                {
-                    return AComponentBinaryCreateTranslation.FillBinaryBFCBStringCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
-                }
-                case RecordTypeInts.BFCE: // End Marker
-                {
-                    frame.ReadSubrecord();
-                    return ParseResult.Stop;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
-        }
-
-        public static partial ParseResult FillBinaryBFCBStringCustom(
-            MutagenFrame frame,
-            IAComponent item,
-            PreviousParse lastParsed);
+        public static readonly ANpcLevelBinaryCreateTranslation Instance = new ANpcLevelBinaryCreateTranslation();
 
     }
 
@@ -986,14 +875,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class AComponentBinaryTranslationMixIn
+    public static class ANpcLevelBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IAComponentGetter item,
+            this IANpcLevelGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AComponentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ANpcLevelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1006,58 +895,50 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal abstract partial class AComponentBinaryOverlay :
+    internal abstract partial class ANpcLevelBinaryOverlay :
         PluginBinaryOverlay,
-        IAComponentGetter
+        IANpcLevelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AComponent_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => AComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => AComponentCommon.Instance;
+        protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => AComponentSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ANpcLevelSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonInstance() => this.CommonInstance();
+        object IANpcLevelGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IAComponentGetter.CommonSetterInstance() => null;
+        object? IANpcLevelGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IANpcLevelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AComponentCommon.Instance.EnumerateFormLinks(this);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => AComponentBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ANpcLevelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ANpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region BFCBString
-        public partial ParseResult BFCBStringCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected AComponentBinaryOverlay(
+        protected ANpcLevelBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1068,41 +949,13 @@ namespace Mutagen.Bethesda.Starfield
         }
 
 
-        public virtual ParseResult FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams translationParams = default)
-        {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.BFCB:
-                {
-                    return BFCBStringCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
-                }
-                case RecordTypeInts.BFCE: // End Marker
-                {
-                    stream.ReadSubrecord();
-                    return ParseResult.Stop;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
-        }
         #region To String
 
         public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AComponentMixIn.Print(
+            ANpcLevelMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1113,16 +966,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IAComponentGetter rhs) return false;
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IANpcLevelGetter rhs) return false;
+            return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAComponentGetter? obj)
+        public bool Equals(IANpcLevelGetter? obj)
         {
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

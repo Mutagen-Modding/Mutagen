@@ -14,6 +14,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - NavigationMesh
+- Npc
 - Perk
 - PlacedArrow
 - PlacedBarrier
@@ -40,6 +41,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - KeywordFormComponent
 - MagicEffect
 - MiscItem
+- Npc
 - ObjectTemplate
 - Quest
 - QuestReferenceAlias
@@ -107,7 +109,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MorphGroup
 - MoveSceneAction
+- Npc
 - NpcModification
+- NpcTint
 - ObjectEffect
 - ObjectModification
 - ObjectTemplate
@@ -161,6 +165,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LegendaryItem
 - LeveledItem
 - MiscItem
+- Npc
 - ObjectEffect
 - ProjectedDecal
 - SoundEchoMarker
@@ -195,6 +200,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - NavigationMesh
+- Npc
 - PlacedArrow
 - PlacedBarrier
 - PlacedBeam
@@ -345,8 +351,16 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### NavigationMesh
 - IHaveVirtualMachineAdapter
 - IScripted
+### Npc
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- INamed
+- IObjectBounded
+- IScripted
 ### NpcModification
 - IModeled
+- INamed
+### NpcTint
 - INamed
 ### ObjectEffect
 - INamed

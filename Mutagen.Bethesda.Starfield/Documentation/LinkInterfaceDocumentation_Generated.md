@@ -67,6 +67,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - PlacedObject
 ### ILocationRecord
 - LocationReferenceType
+### INpcTemplateTarget
+- BiomeMarker
+- LeveledNpc
+- Npc
 ### IObjectId
 - Faction
 - TextureSet
@@ -140,6 +144,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IConstructible
 - IItem
 - IOutfitTarget
+### BiomeMarker
+- INpcTemplateTarget
 ### Book
 - IConstructible
 - IItem
@@ -183,6 +189,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 - IOutfitTarget
 - IResourceTarget
+### LeveledNpc
+- INpcTemplateTarget
 ### Light
 - IEmittance
 ### LocationReferenceType
@@ -197,6 +205,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IStaticTarget
 ### Npc
 - IConstructible
+- INpcTemplateTarget
 - IOwner
 ### PackIn
 - IConstructible

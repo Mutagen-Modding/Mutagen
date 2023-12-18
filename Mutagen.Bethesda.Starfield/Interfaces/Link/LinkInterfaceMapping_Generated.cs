@@ -94,6 +94,13 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IBindableEquipmentGetter)] = dict[typeof(IBindableEquipment)] with { Setter = false };
+        dict[typeof(INpcTemplateTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            BiomeMarker_Registration.Instance,
+            LeveledNpc_Registration.Instance,
+            Npc_Registration.Instance,
+        });
+        dict[typeof(INpcTemplateTargetGetter)] = dict[typeof(INpcTemplateTarget)] with { Setter = false };
         dict[typeof(IResourceTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ConstructibleObject_Registration.Instance,
