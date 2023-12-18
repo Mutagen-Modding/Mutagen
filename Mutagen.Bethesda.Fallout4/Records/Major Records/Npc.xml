@@ -89,8 +89,8 @@
       <Marker name="Marker" recordType="DATA" />
       <Data recordType="DNAM">
         <Fields>
-          <UInt16 name="BaseHealth" />
-          <UInt16 name="BaseActionPoints" />
+          <UInt16 name="CalculatedHealth" />
+          <UInt16 name="CalculatedActionPoints" />
           <UInt16 name="FarAwayModelDistance" />
           <UInt8 name="GearedUpWeapons" />
           <UInt8 name="Unused" />
