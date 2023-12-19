@@ -219,13 +219,23 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         }  
         else  
         {  
+            var data = typeGen.GetFieldData();  
+            var gendered = data.Parent as GenderedType;  
             switch (str.BinaryType)  
             {  
-                case StringBinaryType.Plain:  
-                case StringBinaryType.NullTerminate:  
-                case StringBinaryType.NullTerminateIfNotEmpty:  
-                    var data = typeGen.GetFieldData();  
-                    var gendered = data.Parent as GenderedType;  
+                case StringBinaryType.Plain:
+                    if (data.HasTrigger  
+                        || (gendered?.MaleMarker.HasValue ?? false))  
+                    {  
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ToZString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
+                    }  
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                case StringBinaryType.NullTerminate:
+                case StringBinaryType.NullTerminateIfNotEmpty:
+                {
                     if (data.HasTrigger  
                         || (gendered?.MaleMarker.HasValue ?? false))  
                     {  
@@ -235,6 +245,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                     {  
                         return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                     }  
+                }
                 case StringBinaryType.PrependLength:
                 case StringBinaryType.PrependLengthWithNullIfContent: 
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  

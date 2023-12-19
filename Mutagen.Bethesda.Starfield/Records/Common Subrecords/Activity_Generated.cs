@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Configuration
         private int? _ConfigurationLocation;
-        public String Configuration => _ConfigurationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConfigurationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String Configuration => _ConfigurationLocation.HasValue ? BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConfigurationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region ATAF
         private int? _ATAFLocation;
