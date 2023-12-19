@@ -2574,12 +2574,16 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 _TypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.Type, type);
+                            }
                             case 1:
+                            {
                                 stream.ReadSubrecord();
                                 return ParseResult.Stop;
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -2628,11 +2632,15 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _StartPhaseLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
+                            }
                             case 1:
+                            {
                                 _TimerSecondsLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

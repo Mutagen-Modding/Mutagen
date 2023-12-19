@@ -1401,10 +1401,13 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.MSSI, translationParams)) return ParseResult.Stop;
                                 _MSSILocation = (stream.Position - offset);
                                 return new ParseResult((int)MannequinSkinSwap_FieldIndex.MSSI, type);
+                            }
                             case 1:
+                            {
                                 if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.Items, translationParams)) return ParseResult.Stop;
                                 this.Items = this.ParseRepeatedTypelessSubrecord<IMannequinSkinSwapItemGetter>(
                                     stream: stream,
@@ -1412,6 +1415,7 @@ namespace Mutagen.Bethesda.Starfield
                                     trigger: MannequinSkinSwapItem_Registration.TriggerSpecs,
                                     factory: MannequinSkinSwapItemBinaryOverlay.MannequinSkinSwapItemFactory);
                                 return new ParseResult((int)MannequinSkinSwap_FieldIndex.Items, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

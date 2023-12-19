@@ -9002,11 +9002,15 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _LeveledItemBaseObjectLocation = (stream.Position - offset);
                                 return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, type);
+                            }
                             case 1:
+                            {
                                 _LocationRefTypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

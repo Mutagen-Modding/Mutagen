@@ -1863,7 +1863,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                                                 var doublesFieldData = doublesField.Field.GetFieldData();
                                                 sb.AppendLine($"case {count++}:");
-                                                using (sb.IncreaseDepth())
+                                                using (sb.CurlyBrace())
                                                 {
                                                     await GenerateLastParsedShortCircuit(
                                                         obj: obj,

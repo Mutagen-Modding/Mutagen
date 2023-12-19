@@ -3466,11 +3466,15 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _CNAMLocation = (stream.Position - offset);
                                 return new ParseResult((int)Planet_FieldIndex.CNAM, type);
+                            }
                             case 1:
+                            {
                                 _BodyTypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)Planet_FieldIndex.BodyType, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -3509,11 +3513,15 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _SurfaceTreeLocation = (stream.Position - offset);
                                 return new ParseResult((int)Planet_FieldIndex.SurfaceTree, type);
+                            }
                             case 1:
+                            {
                                 _FNAMLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                                 return new ParseResult((int)Planet_FieldIndex.FNAM, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -3537,11 +3545,15 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _GNAMLocation = (stream.Position - offset);
                                 return new ParseResult((int)Planet_FieldIndex.GNAM, type);
+                            }
                             case 1:
+                            {
                                 _IDsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                                 return new ParseResult((int)Planet_FieldIndex.IDs, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

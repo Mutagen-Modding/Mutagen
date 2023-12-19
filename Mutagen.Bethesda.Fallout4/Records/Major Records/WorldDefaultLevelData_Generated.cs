@@ -1336,10 +1336,13 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                                 _WLEVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                                 return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, type);
+                            }
                             case 1:
+                            {
                                 _DataLocation = (stream.Position - offset);
                                 _DataLengthOverride = lastParsed.LengthOverride;
                                 if (lastParsed.LengthOverride.HasValue)
@@ -1347,6 +1350,7 @@ namespace Mutagen.Bethesda.Fallout4
                                     stream.Position += lastParsed.LengthOverride.Value;
                                 }
                                 return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

@@ -5037,15 +5037,19 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 TypeCustomParse(
                                     stream,
                                     finalPos,
                                     offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.Type, type);
+                            }
                             case 1:
+                            {
                                 stream.ReadSubrecord();
                                 return ParseResult.Stop;
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -5089,11 +5093,15 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _StartPhaseLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
+                            }
                             case 1:
+                            {
                                 _TimerMaxSecondsLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.TimerMaxSeconds, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -5170,11 +5178,15 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _PlayerPositiveSubtypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.PlayerPositiveSubtype, type);
+                            }
                             case 1:
+                            {
                                 _DialogueSubtypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.DialogueSubtype, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -5279,6 +5291,7 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                                     mem: stream.RemainingMemory,
                                     package: _package,
@@ -5290,9 +5303,12 @@ namespace Mutagen.Bethesda.Fallout4
                                         skipHeader: true,
                                         translationParams: translationParams));
                                 return new ParseResult((int)SceneAction_FieldIndex.Packages, type);
+                            }
                             case 1:
+                            {
                                 _AnimArchTypeLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneAction_FieldIndex.AnimArchType, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -5330,11 +5346,14 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 return HTIDParsingCustomParse(
                                     stream,
                                     offset,
                                     lastParsed: lastParsed);
+                            }
                             case 1:
+                            {
                                 var subMeta = stream.ReadSubrecordHeader();
                                 var subLen = finalPos - stream.Position;
                                 this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
@@ -5344,6 +5363,7 @@ namespace Mutagen.Bethesda.Fallout4
                                     getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
                                 stream.Position += subLen;
                                 return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

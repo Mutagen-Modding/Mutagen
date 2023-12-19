@@ -5948,11 +5948,14 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 return MNAMLogicCustomParse(
                                     stream,
                                     offset,
                                     lastParsed: lastParsed);
+                            }
                             case 1:
+                            {
                                 _HeadPartsAndBoneModifiersOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadPartsAndBoneModifiersGetter>(
                                     package: _package,
                                     male: RecordTypes.MNAM,
@@ -5961,6 +5964,7 @@ namespace Mutagen.Bethesda.Starfield
                                     creator: static (s, p, r) => HeadPartsAndBoneModifiersBinaryOverlay.HeadPartsAndBoneModifiersFactory(s, p, r),
                                     translationParams: translationParams);
                                 return new ParseResult((int)Race_FieldIndex.HeadPartsAndBoneModifiers, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -5992,11 +5996,14 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 return FNAMLogicCustomParse(
                                     stream,
                                     offset,
                                     lastParsed: lastParsed);
+                            }
                             case 1:
+                            {
                                 _HeadPartsAndBoneModifiersOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadPartsAndBoneModifiersGetter>(
                                     package: _package,
                                     male: RecordTypes.MNAM,
@@ -6005,6 +6012,7 @@ namespace Mutagen.Bethesda.Starfield
                                     creator: static (s, p, r) => HeadPartsAndBoneModifiersBinaryOverlay.HeadPartsAndBoneModifiersFactory(s, p, r),
                                     translationParams: translationParams);
                                 return new ParseResult((int)Race_FieldIndex.HeadPartsAndBoneModifiers, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

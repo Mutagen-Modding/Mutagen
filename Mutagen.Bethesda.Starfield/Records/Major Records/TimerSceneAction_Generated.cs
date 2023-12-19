@@ -1544,6 +1544,7 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 return base.FillRecordType(
                                     stream: stream,
                                     finalPos: finalPos,
@@ -1552,9 +1553,12 @@ namespace Mutagen.Bethesda.Starfield
                                     lastParsed: lastParsed,
                                     recordParseCount: recordParseCount,
                                     translationParams: translationParams.WithNoConverter());
+                            }
                             case 1:
+                            {
                                 _MaxSecondsLocation = (stream.Position - offset);
                                 return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

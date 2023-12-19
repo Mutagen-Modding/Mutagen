@@ -1556,6 +1556,7 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 return base.FillRecordType(
                                     stream: stream,
                                     finalPos: finalPos,
@@ -1564,9 +1565,12 @@ namespace Mutagen.Bethesda.Starfield
                                     lastParsed: lastParsed,
                                     recordParseCount: recordParseCount,
                                     translationParams: translationParams.WithNoConverter());
+                            }
                             case 1:
+                            {
                                 _SNAMLocation = (stream.Position - offset);
                                 return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

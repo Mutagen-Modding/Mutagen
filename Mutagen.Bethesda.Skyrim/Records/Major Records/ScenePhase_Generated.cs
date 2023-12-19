@@ -1962,11 +1962,15 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 stream.ReadSubrecord();
                                 return new ParseResult(default(int?), type);
+                            }
                             case 1:
+                            {
                                 stream.ReadSubrecord();
                                 return ParseResult.Stop;
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
@@ -2014,6 +2018,7 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 CompletionConditionsCustomParse(
                                     stream: stream,
                                     finalPos: finalPos,
@@ -2021,13 +2026,16 @@ namespace Mutagen.Bethesda.Skyrim
                                     type: type,
                                     lastParsed: lastParsed);
                                 return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, type);
+                            }
                             case 1:
+                            {
                                 stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
                                 this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                                     stream: stream,
                                     package: _package,
                                     translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

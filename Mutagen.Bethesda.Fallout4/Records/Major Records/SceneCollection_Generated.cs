@@ -2043,11 +2043,15 @@ namespace Mutagen.Bethesda.Fallout4
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 _VNAMLocation = (stream.Position - offset);
                                 return new ParseResult((int)SceneCollection_FieldIndex.VNAM, type);
+                            }
                             case 1:
+                            {
                                 _VNAM2Location = (stream.Position - offset);
                                 return new ParseResult((int)SceneCollection_FieldIndex.VNAM2, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

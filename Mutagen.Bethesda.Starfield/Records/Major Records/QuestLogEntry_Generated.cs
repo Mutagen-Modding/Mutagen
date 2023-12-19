@@ -1855,6 +1855,7 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                                 this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                                     mem: stream.RemainingMemory,
@@ -1868,7 +1869,9 @@ namespace Mutagen.Bethesda.Starfield
                                         constants: _package.MetaData.Constants.SubConstants,
                                         skipHeader: false));
                                 return new ParseResult((int)QuestLogEntry_FieldIndex.Conditions, type);
+                            }
                             case 1:
+                            {
                                 if (lastParsed.ShortCircuit((int)QuestLogEntry_FieldIndex.StageCompleteDatas, translationParams)) return ParseResult.Stop;
                                 this.StageCompleteDatas = this.ParseRepeatedTypelessSubrecord<IQuestStageCompleteDataGetter>(
                                     stream: stream,
@@ -1876,6 +1879,7 @@ namespace Mutagen.Bethesda.Starfield
                                     trigger: QuestStageCompleteData_Registration.TriggerSpecs,
                                     factory: QuestStageCompleteDataBinaryOverlay.QuestStageCompleteDataFactory);
                                 return new ParseResult((int)QuestLogEntry_FieldIndex.StageCompleteDatas, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

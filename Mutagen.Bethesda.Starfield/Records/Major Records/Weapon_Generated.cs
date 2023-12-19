@@ -13346,17 +13346,21 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 this.Model = ModelBinaryOverlay.ModelFactory(
                                     stream: stream,
                                     package: _package,
                                     translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)Weapon_FieldIndex.Model, type);
+                            }
                             case 1:
+                            {
                                 this.FirstPersonModel = FirstPersonModelBinaryOverlay.FirstPersonModelFactory(
                                     stream: stream,
                                     package: _package,
                                     translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)Weapon_FieldIndex.FirstPersonModel, type);
+                            }
                             default:
                                 throw new NotImplementedException();
                         }

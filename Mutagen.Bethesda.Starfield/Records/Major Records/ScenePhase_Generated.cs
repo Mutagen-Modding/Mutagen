@@ -1977,11 +1977,15 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(type) ?? 0)
                         {
                             case 0:
+                            {
                                 stream.ReadSubrecord();
                                 return new ParseResult(default(int?), type);
+                            }
                             case 1:
+                            {
                                 stream.ReadSubrecord();
                                 return ParseResult.Stop;
+                            }
                             default:
                                 throw new NotImplementedException();
                         }
