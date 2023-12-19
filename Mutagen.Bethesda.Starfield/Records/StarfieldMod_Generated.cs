@@ -101,18 +101,18 @@ namespace Mutagen.Bethesda.Starfield
             _Weathers_Object = new StarfieldGroup<Weather>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
             _LoadScreens_Object = new StarfieldGroup<LoadScreen>(this);
+            _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
+            _Debris_Object = new StarfieldGroup<Debris>(this);
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
-            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
-            _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
-            _Resources_Object = new StarfieldGroup<Resource>(this);
-            _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
-            _Debris_Object = new StarfieldGroup<Debris>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
+            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
+            _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
+            _Resources_Object = new StarfieldGroup<Resource>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
@@ -419,6 +419,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ILoadScreenGetter> IStarfieldModGetter.LoadScreens => _LoadScreens_Object;
         #endregion
+        #region AnimatedObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<AnimatedObject> _AnimatedObjects_Object;
+        public StarfieldGroup<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IAnimatedObjectGetter> IStarfieldModGetter.AnimatedObjects => _AnimatedObjects_Object;
+        #endregion
+        #region Debris
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Debris> _Debris_Object;
+        public StarfieldGroup<Debris> Debris => _Debris_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IDebrisGetter> IStarfieldModGetter.Debris => _Debris_Object;
+        #endregion
         #region FormLists
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<FormList> _FormLists_Object;
@@ -439,41 +453,6 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<Location> Locations => _Locations_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ILocationGetter> IStarfieldModGetter.Locations => _Locations_Object;
-        #endregion
-        #region ConstructibleObjects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<ConstructibleObject> _ConstructibleObjects_Object;
-        public StarfieldGroup<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IConstructibleObjectGetter> IStarfieldModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
-        #endregion
-        #region ObjectModifications
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<AObjectModification> _ObjectModifications_Object;
-        public StarfieldGroup<AObjectModification> ObjectModifications => _ObjectModifications_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IAObjectModificationGetter> IStarfieldModGetter.ObjectModifications => _ObjectModifications_Object;
-        #endregion
-        #region Resources
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<Resource> _Resources_Object;
-        public StarfieldGroup<Resource> Resources => _Resources_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IResourceGetter> IStarfieldModGetter.Resources => _Resources_Object;
-        #endregion
-        #region AnimatedObjects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<AnimatedObject> _AnimatedObjects_Object;
-        public StarfieldGroup<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IAnimatedObjectGetter> IStarfieldModGetter.AnimatedObjects => _AnimatedObjects_Object;
-        #endregion
-        #region Debris
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<Debris> _Debris_Object;
-        public StarfieldGroup<Debris> Debris => _Debris_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IDebrisGetter> IStarfieldModGetter.Debris => _Debris_Object;
         #endregion
         #region DefaultObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -496,12 +475,33 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAimModelGetter> IStarfieldModGetter.AimModels => _AimModels_Object;
         #endregion
+        #region ConstructibleObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ConstructibleObject> _ConstructibleObjects_Object;
+        public StarfieldGroup<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IConstructibleObjectGetter> IStarfieldModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
+        #endregion
+        #region ObjectModifications
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<AObjectModification> _ObjectModifications_Object;
+        public StarfieldGroup<AObjectModification> ObjectModifications => _ObjectModifications_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IAObjectModificationGetter> IStarfieldModGetter.ObjectModifications => _ObjectModifications_Object;
+        #endregion
         #region AttractionRules
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AttractionRule> _AttractionRules_Object;
         public StarfieldGroup<AttractionRule> AttractionRules => _AttractionRules_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAttractionRuleGetter> IStarfieldModGetter.AttractionRules => _AttractionRules_Object;
+        #endregion
+        #region Resources
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Resource> _Resources_Object;
+        public StarfieldGroup<Resource> Resources => _Resources_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IResourceGetter> IStarfieldModGetter.Resources => _Resources_Object;
         #endregion
         #region BiomeSwaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -633,18 +633,18 @@ namespace Mutagen.Bethesda.Starfield
                 this.Cells = new MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>(initialValue, new StarfieldListGroup.Mask<TItem>(initialValue));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LoadScreens = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -697,18 +697,18 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Cells,
                 TItem Quests,
                 TItem LoadScreens,
+                TItem AnimatedObjects,
+                TItem Debris,
                 TItem FormLists,
                 TItem Perks,
                 TItem Locations,
-                TItem ConstructibleObjects,
-                TItem ObjectModifications,
-                TItem Resources,
-                TItem AnimatedObjects,
-                TItem Debris,
                 TItem DefaultObjects,
                 TItem Outfits,
                 TItem AimModels,
+                TItem ConstructibleObjects,
+                TItem ObjectModifications,
                 TItem AttractionRules,
+                TItem Resources,
                 TItem BiomeSwaps,
                 TItem Planets,
                 TItem ConditionRecords,
@@ -759,18 +759,18 @@ namespace Mutagen.Bethesda.Starfield
                 this.Cells = new MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>(Cells, new StarfieldListGroup.Mask<TItem>(Cells));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Quests, new StarfieldGroup.Mask<TItem>(Quests));
                 this.LoadScreens = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LoadScreens, new StarfieldGroup.Mask<TItem>(LoadScreens));
+                this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObjects, new StarfieldGroup.Mask<TItem>(AnimatedObjects));
+                this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FormLists, new StarfieldGroup.Mask<TItem>(FormLists));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Perks, new StarfieldGroup.Mask<TItem>(Perks));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Locations, new StarfieldGroup.Mask<TItem>(Locations));
-                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
-                this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ObjectModifications, new StarfieldGroup.Mask<TItem>(ObjectModifications));
-                this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
-                this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObjects, new StarfieldGroup.Mask<TItem>(AnimatedObjects));
-                this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Outfits, new StarfieldGroup.Mask<TItem>(Outfits));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimModels, new StarfieldGroup.Mask<TItem>(AimModels));
+                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
+                this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ObjectModifications, new StarfieldGroup.Mask<TItem>(ObjectModifications));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AttractionRules, new StarfieldGroup.Mask<TItem>(AttractionRules));
+                this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeSwaps, new StarfieldGroup.Mask<TItem>(BiomeSwaps));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConditionRecords, new StarfieldGroup.Mask<TItem>(ConditionRecords));
@@ -831,18 +831,18 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>? Cells { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Quests { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LoadScreens { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Perks { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Locations { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ObjectModifications { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Outfits { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimModels { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ObjectModifications { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AttractionRules { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeSwaps { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConditionRecords { get; set; }
@@ -904,18 +904,18 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Cells, rhs.Cells)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
                 if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
+                if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
+                if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.Perks, rhs.Perks)) return false;
                 if (!object.Equals(this.Locations, rhs.Locations)) return false;
-                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
-                if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
-                if (!object.Equals(this.Resources, rhs.Resources)) return false;
-                if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
-                if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
                 if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
                 if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
+                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
+                if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
                 if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
+                if (!object.Equals(this.Resources, rhs.Resources)) return false;
                 if (!object.Equals(this.BiomeSwaps, rhs.BiomeSwaps)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
                 if (!object.Equals(this.ConditionRecords, rhs.ConditionRecords)) return false;
@@ -970,18 +970,18 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Cells);
                 hash.Add(this.Quests);
                 hash.Add(this.LoadScreens);
+                hash.Add(this.AnimatedObjects);
+                hash.Add(this.Debris);
                 hash.Add(this.FormLists);
                 hash.Add(this.Perks);
                 hash.Add(this.Locations);
-                hash.Add(this.ConstructibleObjects);
-                hash.Add(this.ObjectModifications);
-                hash.Add(this.Resources);
-                hash.Add(this.AnimatedObjects);
-                hash.Add(this.Debris);
                 hash.Add(this.DefaultObjects);
                 hash.Add(this.Outfits);
                 hash.Add(this.AimModels);
+                hash.Add(this.ConstructibleObjects);
+                hash.Add(this.ObjectModifications);
                 hash.Add(this.AttractionRules);
+                hash.Add(this.Resources);
                 hash.Add(this.BiomeSwaps);
                 hash.Add(this.Planets);
                 hash.Add(this.ConditionRecords);
@@ -1207,6 +1207,16 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.LoadScreens.Overall)) return false;
                     if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.All(eval)) return false;
                 }
+                if (AnimatedObjects != null)
+                {
+                    if (!eval(this.AnimatedObjects.Overall)) return false;
+                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
+                }
+                if (Debris != null)
+                {
+                    if (!eval(this.Debris.Overall)) return false;
+                    if (this.Debris.Specific != null && !this.Debris.Specific.All(eval)) return false;
+                }
                 if (FormLists != null)
                 {
                     if (!eval(this.FormLists.Overall)) return false;
@@ -1221,31 +1231,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Locations.Overall)) return false;
                     if (this.Locations.Specific != null && !this.Locations.Specific.All(eval)) return false;
-                }
-                if (ConstructibleObjects != null)
-                {
-                    if (!eval(this.ConstructibleObjects.Overall)) return false;
-                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
-                }
-                if (ObjectModifications != null)
-                {
-                    if (!eval(this.ObjectModifications.Overall)) return false;
-                    if (this.ObjectModifications.Specific != null && !this.ObjectModifications.Specific.All(eval)) return false;
-                }
-                if (Resources != null)
-                {
-                    if (!eval(this.Resources.Overall)) return false;
-                    if (this.Resources.Specific != null && !this.Resources.Specific.All(eval)) return false;
-                }
-                if (AnimatedObjects != null)
-                {
-                    if (!eval(this.AnimatedObjects.Overall)) return false;
-                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
-                }
-                if (Debris != null)
-                {
-                    if (!eval(this.Debris.Overall)) return false;
-                    if (this.Debris.Specific != null && !this.Debris.Specific.All(eval)) return false;
                 }
                 if (DefaultObjects != null)
                 {
@@ -1262,10 +1247,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.AimModels.Overall)) return false;
                     if (this.AimModels.Specific != null && !this.AimModels.Specific.All(eval)) return false;
                 }
+                if (ConstructibleObjects != null)
+                {
+                    if (!eval(this.ConstructibleObjects.Overall)) return false;
+                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
+                }
+                if (ObjectModifications != null)
+                {
+                    if (!eval(this.ObjectModifications.Overall)) return false;
+                    if (this.ObjectModifications.Specific != null && !this.ObjectModifications.Specific.All(eval)) return false;
+                }
                 if (AttractionRules != null)
                 {
                     if (!eval(this.AttractionRules.Overall)) return false;
                     if (this.AttractionRules.Specific != null && !this.AttractionRules.Specific.All(eval)) return false;
+                }
+                if (Resources != null)
+                {
+                    if (!eval(this.Resources.Overall)) return false;
+                    if (this.Resources.Specific != null && !this.Resources.Specific.All(eval)) return false;
                 }
                 if (BiomeSwaps != null)
                 {
@@ -1519,6 +1519,16 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.LoadScreens.Overall)) return true;
                     if (this.LoadScreens.Specific != null && this.LoadScreens.Specific.Any(eval)) return true;
                 }
+                if (AnimatedObjects != null)
+                {
+                    if (eval(this.AnimatedObjects.Overall)) return true;
+                    if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
+                }
+                if (Debris != null)
+                {
+                    if (eval(this.Debris.Overall)) return true;
+                    if (this.Debris.Specific != null && this.Debris.Specific.Any(eval)) return true;
+                }
                 if (FormLists != null)
                 {
                     if (eval(this.FormLists.Overall)) return true;
@@ -1533,31 +1543,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.Locations.Overall)) return true;
                     if (this.Locations.Specific != null && this.Locations.Specific.Any(eval)) return true;
-                }
-                if (ConstructibleObjects != null)
-                {
-                    if (eval(this.ConstructibleObjects.Overall)) return true;
-                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
-                }
-                if (ObjectModifications != null)
-                {
-                    if (eval(this.ObjectModifications.Overall)) return true;
-                    if (this.ObjectModifications.Specific != null && this.ObjectModifications.Specific.Any(eval)) return true;
-                }
-                if (Resources != null)
-                {
-                    if (eval(this.Resources.Overall)) return true;
-                    if (this.Resources.Specific != null && this.Resources.Specific.Any(eval)) return true;
-                }
-                if (AnimatedObjects != null)
-                {
-                    if (eval(this.AnimatedObjects.Overall)) return true;
-                    if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
-                }
-                if (Debris != null)
-                {
-                    if (eval(this.Debris.Overall)) return true;
-                    if (this.Debris.Specific != null && this.Debris.Specific.Any(eval)) return true;
                 }
                 if (DefaultObjects != null)
                 {
@@ -1574,10 +1559,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AimModels.Overall)) return true;
                     if (this.AimModels.Specific != null && this.AimModels.Specific.Any(eval)) return true;
                 }
+                if (ConstructibleObjects != null)
+                {
+                    if (eval(this.ConstructibleObjects.Overall)) return true;
+                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
+                }
+                if (ObjectModifications != null)
+                {
+                    if (eval(this.ObjectModifications.Overall)) return true;
+                    if (this.ObjectModifications.Specific != null && this.ObjectModifications.Specific.Any(eval)) return true;
+                }
                 if (AttractionRules != null)
                 {
                     if (eval(this.AttractionRules.Overall)) return true;
                     if (this.AttractionRules.Specific != null && this.AttractionRules.Specific.Any(eval)) return true;
+                }
+                if (Resources != null)
+                {
+                    if (eval(this.Resources.Overall)) return true;
+                    if (this.Resources.Specific != null && this.Resources.Specific.Any(eval)) return true;
                 }
                 if (BiomeSwaps != null)
                 {
@@ -1670,18 +1670,18 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Cells = this.Cells == null ? null : new MaskItem<R, StarfieldListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
                 obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
+                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
+                obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.Perks = this.Perks == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
                 obj.Locations = this.Locations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
-                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
-                obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
-                obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
-                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
-                obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
                 obj.Outfits = this.Outfits == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
                 obj.AimModels = this.AimModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
+                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
+                obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
                 obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
+                obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
                 obj.BiomeSwaps = this.BiomeSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeSwaps.Overall), this.BiomeSwaps.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
                 obj.ConditionRecords = this.ConditionRecords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConditionRecords.Overall), this.ConditionRecords.Specific?.Translate(eval));
@@ -1875,6 +1875,14 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         LoadScreens?.Print(sb);
                     }
+                    if (printMask?.AnimatedObjects?.Overall ?? true)
+                    {
+                        AnimatedObjects?.Print(sb);
+                    }
+                    if (printMask?.Debris?.Overall ?? true)
+                    {
+                        Debris?.Print(sb);
+                    }
                     if (printMask?.FormLists?.Overall ?? true)
                     {
                         FormLists?.Print(sb);
@@ -1886,26 +1894,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Locations?.Overall ?? true)
                     {
                         Locations?.Print(sb);
-                    }
-                    if (printMask?.ConstructibleObjects?.Overall ?? true)
-                    {
-                        ConstructibleObjects?.Print(sb);
-                    }
-                    if (printMask?.ObjectModifications?.Overall ?? true)
-                    {
-                        ObjectModifications?.Print(sb);
-                    }
-                    if (printMask?.Resources?.Overall ?? true)
-                    {
-                        Resources?.Print(sb);
-                    }
-                    if (printMask?.AnimatedObjects?.Overall ?? true)
-                    {
-                        AnimatedObjects?.Print(sb);
-                    }
-                    if (printMask?.Debris?.Overall ?? true)
-                    {
-                        Debris?.Print(sb);
                     }
                     if (printMask?.DefaultObjects?.Overall ?? true)
                     {
@@ -1919,9 +1907,21 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AimModels?.Print(sb);
                     }
+                    if (printMask?.ConstructibleObjects?.Overall ?? true)
+                    {
+                        ConstructibleObjects?.Print(sb);
+                    }
+                    if (printMask?.ObjectModifications?.Overall ?? true)
+                    {
+                        ObjectModifications?.Print(sb);
+                    }
                     if (printMask?.AttractionRules?.Overall ?? true)
                     {
                         AttractionRules?.Print(sb);
+                    }
+                    if (printMask?.Resources?.Overall ?? true)
+                    {
+                        Resources?.Print(sb);
                     }
                     if (printMask?.BiomeSwaps?.Overall ?? true)
                     {
@@ -2017,18 +2017,18 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>? Quests;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>? Perks;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Location.ErrorMask>?>? Locations;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>? Outfits;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>? AimModels;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>? BiomeSwaps;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>? ConditionRecords;
@@ -2128,30 +2128,30 @@ namespace Mutagen.Bethesda.Starfield
                         return Quests;
                     case StarfieldMod_FieldIndex.LoadScreens:
                         return LoadScreens;
+                    case StarfieldMod_FieldIndex.AnimatedObjects:
+                        return AnimatedObjects;
+                    case StarfieldMod_FieldIndex.Debris:
+                        return Debris;
                     case StarfieldMod_FieldIndex.FormLists:
                         return FormLists;
                     case StarfieldMod_FieldIndex.Perks:
                         return Perks;
                     case StarfieldMod_FieldIndex.Locations:
                         return Locations;
-                    case StarfieldMod_FieldIndex.ConstructibleObjects:
-                        return ConstructibleObjects;
-                    case StarfieldMod_FieldIndex.ObjectModifications:
-                        return ObjectModifications;
-                    case StarfieldMod_FieldIndex.Resources:
-                        return Resources;
-                    case StarfieldMod_FieldIndex.AnimatedObjects:
-                        return AnimatedObjects;
-                    case StarfieldMod_FieldIndex.Debris:
-                        return Debris;
                     case StarfieldMod_FieldIndex.DefaultObjects:
                         return DefaultObjects;
                     case StarfieldMod_FieldIndex.Outfits:
                         return Outfits;
                     case StarfieldMod_FieldIndex.AimModels:
                         return AimModels;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        return ConstructibleObjects;
+                    case StarfieldMod_FieldIndex.ObjectModifications:
+                        return ObjectModifications;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         return AttractionRules;
+                    case StarfieldMod_FieldIndex.Resources:
+                        return Resources;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         return BiomeSwaps;
                     case StarfieldMod_FieldIndex.Planets:
@@ -2302,6 +2302,12 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.LoadScreens:
                         this.LoadScreens = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
                         break;
+                    case StarfieldMod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Debris:
+                        this.Debris = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>(ex, null);
+                        break;
                     case StarfieldMod_FieldIndex.FormLists:
                         this.FormLists = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>(ex, null);
                         break;
@@ -2310,21 +2316,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Locations:
                         this.Locations = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Location.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.ConstructibleObjects:
-                        this.ConstructibleObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.ObjectModifications:
-                        this.ObjectModifications = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.Resources:
-                        this.Resources = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.AnimatedObjects:
-                        this.AnimatedObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.Debris:
-                        this.Debris = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.DefaultObjects:
                         this.DefaultObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>(ex, null);
@@ -2335,8 +2326,17 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AimModels:
                         this.AimModels = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>(ex, null);
                         break;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ObjectModifications:
+                        this.ObjectModifications = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>(ex, null);
+                        break;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Resources:
+                        this.Resources = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         this.BiomeSwaps = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>(ex, null);
@@ -2495,6 +2495,12 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.LoadScreens:
                         this.LoadScreens = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.Debris:
+                        this.Debris = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.FormLists:
                         this.FormLists = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>?)obj;
                         break;
@@ -2503,21 +2509,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Locations:
                         this.Locations = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Location.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.ConstructibleObjects:
-                        this.ConstructibleObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.ObjectModifications:
-                        this.ObjectModifications = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.Resources:
-                        this.Resources = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.AnimatedObjects:
-                        this.AnimatedObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.Debris:
-                        this.Debris = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.DefaultObjects:
                         this.DefaultObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>?)obj;
@@ -2528,8 +2519,17 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AimModels:
                         this.AimModels = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.ObjectModifications:
+                        this.ObjectModifications = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.Resources:
+                        this.Resources = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         this.BiomeSwaps = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>?)obj;
@@ -2602,18 +2602,18 @@ namespace Mutagen.Bethesda.Starfield
                 if (Cells != null) return true;
                 if (Quests != null) return true;
                 if (LoadScreens != null) return true;
+                if (AnimatedObjects != null) return true;
+                if (Debris != null) return true;
                 if (FormLists != null) return true;
                 if (Perks != null) return true;
                 if (Locations != null) return true;
-                if (ConstructibleObjects != null) return true;
-                if (ObjectModifications != null) return true;
-                if (Resources != null) return true;
-                if (AnimatedObjects != null) return true;
-                if (Debris != null) return true;
                 if (DefaultObjects != null) return true;
                 if (Outfits != null) return true;
                 if (AimModels != null) return true;
+                if (ConstructibleObjects != null) return true;
+                if (ObjectModifications != null) return true;
                 if (AttractionRules != null) return true;
+                if (Resources != null) return true;
                 if (BiomeSwaps != null) return true;
                 if (Planets != null) return true;
                 if (ConditionRecords != null) return true;
@@ -2688,18 +2688,18 @@ namespace Mutagen.Bethesda.Starfield
                 Cells?.Print(sb);
                 Quests?.Print(sb);
                 LoadScreens?.Print(sb);
+                AnimatedObjects?.Print(sb);
+                Debris?.Print(sb);
                 FormLists?.Print(sb);
                 Perks?.Print(sb);
                 Locations?.Print(sb);
-                ConstructibleObjects?.Print(sb);
-                ObjectModifications?.Print(sb);
-                Resources?.Print(sb);
-                AnimatedObjects?.Print(sb);
-                Debris?.Print(sb);
                 DefaultObjects?.Print(sb);
                 Outfits?.Print(sb);
                 AimModels?.Print(sb);
+                ConstructibleObjects?.Print(sb);
+                ObjectModifications?.Print(sb);
                 AttractionRules?.Print(sb);
+                Resources?.Print(sb);
                 BiomeSwaps?.Print(sb);
                 Planets?.Print(sb);
                 ConditionRecords?.Print(sb);
@@ -2757,18 +2757,18 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
                 ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
+                ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
+                ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
                 ret.Locations = this.Locations.Combine(rhs.Locations, (l, r) => l.Combine(r));
-                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
-                ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
-                ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
-                ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
-                ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
                 ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
                 ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
+                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
+                ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
                 ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
+                ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
                 ret.BiomeSwaps = this.BiomeSwaps.Combine(rhs.BiomeSwaps, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
                 ret.ConditionRecords = this.ConditionRecords.Combine(rhs.ConditionRecords, (l, r) => l.Combine(r));
@@ -2841,18 +2841,18 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
             public StarfieldGroup.TranslationMask<Quest.TranslationMask>? Quests;
             public StarfieldGroup.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
+            public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
+            public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
             public StarfieldGroup.TranslationMask<FormList.TranslationMask>? FormLists;
             public StarfieldGroup.TranslationMask<Perk.TranslationMask>? Perks;
             public StarfieldGroup.TranslationMask<Location.TranslationMask>? Locations;
-            public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
-            public StarfieldGroup.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
-            public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
-            public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
-            public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
             public StarfieldGroup.TranslationMask<Outfit.TranslationMask>? Outfits;
             public StarfieldGroup.TranslationMask<AimModel.TranslationMask>? AimModels;
+            public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
+            public StarfieldGroup.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
             public StarfieldGroup.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
+            public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
             public StarfieldGroup.TranslationMask<BiomeSwap.TranslationMask>? BiomeSwaps;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
             public StarfieldGroup.TranslationMask<ConditionRecord.TranslationMask>? ConditionRecords;
@@ -2926,18 +2926,18 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Cells != null ? Cells.OnOverall : DefaultOn, Cells?.GetCrystal()));
                 ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
                 ret.Add((LoadScreens != null ? LoadScreens.OnOverall : DefaultOn, LoadScreens?.GetCrystal()));
+                ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
+                ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
                 ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
                 ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
                 ret.Add((Locations != null ? Locations.OnOverall : DefaultOn, Locations?.GetCrystal()));
-                ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
-                ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
-                ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
-                ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
-                ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
                 ret.Add((Outfits != null ? Outfits.OnOverall : DefaultOn, Outfits?.GetCrystal()));
                 ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
+                ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
+                ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
                 ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
+                ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
                 ret.Add((BiomeSwaps != null ? BiomeSwaps.OnOverall : DefaultOn, BiomeSwaps?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
                 ret.Add((ConditionRecords != null ? ConditionRecords.OnOverall : DefaultOn, ConditionRecords?.GetCrystal()));
@@ -3032,18 +3032,18 @@ namespace Mutagen.Bethesda.Starfield
             _Weathers_Object = new StarfieldGroup<Weather>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
             _LoadScreens_Object = new StarfieldGroup<LoadScreen>(this);
+            _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
+            _Debris_Object = new StarfieldGroup<Debris>(this);
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
-            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
-            _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
-            _Resources_Object = new StarfieldGroup<Resource>(this);
-            _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
-            _Debris_Object = new StarfieldGroup<Debris>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
+            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
+            _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
+            _Resources_Object = new StarfieldGroup<Resource>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
@@ -3224,6 +3224,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.LoadScreens.RecordCache.Set(rhsMod.LoadScreens.RecordCache.Items);
             }
+            if (mask?.AnimatedObjects ?? true)
+            {
+                this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
+            }
+            if (mask?.Debris ?? true)
+            {
+                this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
+            }
             if (mask?.FormLists ?? true)
             {
                 this.FormLists.RecordCache.Set(rhsMod.FormLists.RecordCache.Items);
@@ -3235,26 +3243,6 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.Locations ?? true)
             {
                 this.Locations.RecordCache.Set(rhsMod.Locations.RecordCache.Items);
-            }
-            if (mask?.ConstructibleObjects ?? true)
-            {
-                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
-            }
-            if (mask?.ObjectModifications ?? true)
-            {
-                this.ObjectModifications.RecordCache.Set(rhsMod.ObjectModifications.RecordCache.Items);
-            }
-            if (mask?.Resources ?? true)
-            {
-                this.Resources.RecordCache.Set(rhsMod.Resources.RecordCache.Items);
-            }
-            if (mask?.AnimatedObjects ?? true)
-            {
-                this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
-            }
-            if (mask?.Debris ?? true)
-            {
-                this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
             }
             if (mask?.DefaultObjects ?? true)
             {
@@ -3268,9 +3256,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.AimModels.RecordCache.Set(rhsMod.AimModels.RecordCache.Items);
             }
+            if (mask?.ConstructibleObjects ?? true)
+            {
+                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
+            }
+            if (mask?.ObjectModifications ?? true)
+            {
+                this.ObjectModifications.RecordCache.Set(rhsMod.ObjectModifications.RecordCache.Items);
+            }
             if (mask?.AttractionRules ?? true)
             {
                 this.AttractionRules.RecordCache.Set(rhsMod.AttractionRules.RecordCache.Items);
+            }
+            if (mask?.Resources ?? true)
+            {
+                this.Resources.RecordCache.Set(rhsMod.Resources.RecordCache.Items);
             }
             if (mask?.BiomeSwaps ?? true)
             {
@@ -3351,18 +3351,18 @@ namespace Mutagen.Bethesda.Starfield
             count += Cells.Records.Count > 0 ? 1 : default(uint);
             count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
             count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
             count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
             count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
             count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
@@ -3685,18 +3685,18 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldListGroup<CellBlock> Cells { get; }
         new StarfieldGroup<Quest> Quests { get; }
         new StarfieldGroup<LoadScreen> LoadScreens { get; }
+        new StarfieldGroup<AnimatedObject> AnimatedObjects { get; }
+        new StarfieldGroup<Debris> Debris { get; }
         new StarfieldGroup<FormList> FormLists { get; }
         new StarfieldGroup<Perk> Perks { get; }
         new StarfieldGroup<Location> Locations { get; }
-        new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
-        new StarfieldGroup<AObjectModification> ObjectModifications { get; }
-        new StarfieldGroup<Resource> Resources { get; }
-        new StarfieldGroup<AnimatedObject> AnimatedObjects { get; }
-        new StarfieldGroup<Debris> Debris { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
         new StarfieldGroup<Outfit> Outfits { get; }
         new StarfieldGroup<AimModel> AimModels { get; }
+        new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
+        new StarfieldGroup<AObjectModification> ObjectModifications { get; }
         new StarfieldGroup<AttractionRule> AttractionRules { get; }
+        new StarfieldGroup<Resource> Resources { get; }
         new StarfieldGroup<BiomeSwap> BiomeSwaps { get; }
         new StarfieldGroup<Planet> Planets { get; }
         new StarfieldGroup<ConditionRecord> ConditionRecords { get; }
@@ -3765,18 +3765,18 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldListGroupGetter<ICellBlockGetter> Cells { get; }
         IStarfieldGroupGetter<IQuestGetter> Quests { get; }
         IStarfieldGroupGetter<ILoadScreenGetter> LoadScreens { get; }
+        IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
+        IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
         IStarfieldGroupGetter<IFormListGetter> FormLists { get; }
         IStarfieldGroupGetter<IPerkGetter> Perks { get; }
         IStarfieldGroupGetter<ILocationGetter> Locations { get; }
-        IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
-        IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
-        IStarfieldGroupGetter<IResourceGetter> Resources { get; }
-        IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
-        IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
         IStarfieldGroupGetter<IOutfitGetter> Outfits { get; }
         IStarfieldGroupGetter<IAimModelGetter> AimModels { get; }
+        IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
+        IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
         IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules { get; }
+        IStarfieldGroupGetter<IResourceGetter> Resources { get; }
         IStarfieldGroupGetter<IBiomeSwapGetter> BiomeSwaps { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
         IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords { get; }
@@ -4408,18 +4408,18 @@ namespace Mutagen.Bethesda.Starfield
         Cells = 39,
         Quests = 40,
         LoadScreens = 41,
-        FormLists = 42,
-        Perks = 43,
-        Locations = 44,
-        ConstructibleObjects = 45,
-        ObjectModifications = 46,
-        Resources = 47,
-        AnimatedObjects = 48,
-        Debris = 49,
-        DefaultObjects = 50,
-        Outfits = 51,
-        AimModels = 52,
-        AttractionRules = 53,
+        AnimatedObjects = 42,
+        Debris = 43,
+        FormLists = 44,
+        Perks = 45,
+        Locations = 46,
+        DefaultObjects = 47,
+        Outfits = 48,
+        AimModels = 49,
+        ConstructibleObjects = 50,
+        ObjectModifications = 51,
+        AttractionRules = 52,
+        Resources = 53,
         BiomeSwaps = 54,
         Planets = 55,
         ConditionRecords = 56,
@@ -4546,18 +4546,18 @@ namespace Mutagen.Bethesda.Starfield
             item.Weathers.Clear();
             item.Quests.Clear();
             item.LoadScreens.Clear();
+            item.AnimatedObjects.Clear();
+            item.Debris.Clear();
             item.FormLists.Clear();
             item.Perks.Clear();
             item.Locations.Clear();
-            item.ConstructibleObjects.Clear();
-            item.ObjectModifications.Clear();
-            item.Resources.Clear();
-            item.AnimatedObjects.Clear();
-            item.Debris.Clear();
             item.DefaultObjects.Clear();
             item.Outfits.Clear();
             item.AimModels.Clear();
+            item.ConstructibleObjects.Clear();
+            item.ObjectModifications.Clear();
             item.AttractionRules.Clear();
+            item.Resources.Clear();
             item.BiomeSwaps.Clear();
             item.Planets.Clear();
             item.ConditionRecords.Clear();
@@ -4603,15 +4603,15 @@ namespace Mutagen.Bethesda.Starfield
             obj.Cells.RemapLinks(mapping);
             obj.Quests.RemapLinks(mapping);
             obj.LoadScreens.RemapLinks(mapping);
+            obj.AnimatedObjects.RemapLinks(mapping);
             obj.FormLists.RemapLinks(mapping);
             obj.Perks.RemapLinks(mapping);
             obj.Locations.RemapLinks(mapping);
+            obj.DefaultObjects.RemapLinks(mapping);
+            obj.Outfits.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
             obj.ObjectModifications.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
-            obj.AnimatedObjects.RemapLinks(mapping);
-            obj.DefaultObjects.RemapLinks(mapping);
-            obj.Outfits.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
             obj.ConditionRecords.RemapLinks(mapping);
             obj.TerminalMenus.RemapLinks(mapping);
@@ -4692,18 +4692,18 @@ namespace Mutagen.Bethesda.Starfield
             obj.Cells.Remove(keys);
             obj.Quests.Remove(keys);
             obj.LoadScreens.Remove(keys);
+            obj.AnimatedObjects.Remove(keys);
+            obj.Debris.Remove(keys);
             obj.FormLists.Remove(keys);
             obj.Perks.Remove(keys);
             obj.Locations.Remove(keys);
-            obj.ConstructibleObjects.Remove(keys);
-            obj.ObjectModifications.Remove(keys);
-            obj.Resources.Remove(keys);
-            obj.AnimatedObjects.Remove(keys);
-            obj.Debris.Remove(keys);
             obj.DefaultObjects.Remove(keys);
             obj.Outfits.Remove(keys);
             obj.AimModels.Remove(keys);
+            obj.ConstructibleObjects.Remove(keys);
+            obj.ObjectModifications.Remove(keys);
             obj.AttractionRules.Remove(keys);
+            obj.Resources.Remove(keys);
             obj.BiomeSwaps.Remove(keys);
             obj.Planets.Remove(keys);
             obj.ConditionRecords.Remove(keys);
@@ -5070,6 +5070,22 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    obj.AnimatedObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    obj.Debris.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
@@ -5091,6 +5107,30 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILocation":
                 case "ILocationInternal":
                     obj.Locations.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DefaultObject":
+                case "IDefaultObjectGetter":
+                case "IDefaultObject":
+                case "IDefaultObjectInternal":
+                    obj.DefaultObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    obj.Outfits.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AimModel":
+                case "IAimModelGetter":
+                case "IAimModel":
+                case "IAimModelInternal":
+                    obj.AimModels.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -5138,59 +5178,19 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
-                case "Resource":
-                case "IResourceGetter":
-                case "IResource":
-                case "IResourceInternal":
-                    obj.Resources.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "AnimatedObject":
-                case "IAnimatedObjectGetter":
-                case "IAnimatedObject":
-                case "IAnimatedObjectInternal":
-                    obj.AnimatedObjects.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Debris":
-                case "IDebrisGetter":
-                case "IDebris":
-                case "IDebrisInternal":
-                    obj.Debris.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "DefaultObject":
-                case "IDefaultObjectGetter":
-                case "IDefaultObject":
-                case "IDefaultObjectInternal":
-                    obj.DefaultObjects.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Outfit":
-                case "IOutfitGetter":
-                case "IOutfit":
-                case "IOutfitInternal":
-                    obj.Outfits.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "AimModel":
-                case "IAimModelGetter":
-                case "IAimModel":
-                case "IAimModelInternal":
-                    obj.AimModels.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "AttractionRule":
                 case "IAttractionRuleGetter":
                 case "IAttractionRule":
                 case "IAttractionRuleInternal":
                     obj.AttractionRules.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Resource":
+                case "IResourceGetter":
+                case "IResource":
+                case "IResourceInternal":
+                    obj.Resources.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -5670,6 +5670,19 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.AnimatedObjects is IAssetLinkContainer AnimatedObjectslinkCont)
+            {
+                foreach (var item in AnimatedObjectslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Debris.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.FormLists is IAssetLinkContainer FormListslinkCont)
             {
                 foreach (var item in FormListslinkCont.EnumerateListedAssetLinks())
@@ -5693,19 +5706,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.ObjectModifications is IAssetLinkContainer ObjectModificationslinkCont)
             {
                 foreach (var item in ObjectModificationslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.AnimatedObjects is IAssetLinkContainer AnimatedObjectslinkCont)
-            {
-                foreach (var item in AnimatedObjectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            {
-                foreach (var item in obj.Debris.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -5767,12 +5767,12 @@ namespace Mutagen.Bethesda.Starfield
             obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Cells.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.FormLists.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ObjectModifications.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueModulations.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -5863,18 +5863,18 @@ namespace Mutagen.Bethesda.Starfield
             ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
             ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
+            ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
+            ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
             ret.Locations = MaskItemExt.Factory(item.Locations.GetEqualsMask(rhs.Locations, include), include);
-            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
-            ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
-            ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
-            ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
-            ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
             ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
             ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
+            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
+            ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
             ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
+            ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
             ret.BiomeSwaps = MaskItemExt.Factory(item.BiomeSwaps.GetEqualsMask(rhs.BiomeSwaps, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
             ret.ConditionRecords = MaskItemExt.Factory(item.ConditionRecords.GetEqualsMask(rhs.ConditionRecords, include), include);
@@ -6094,6 +6094,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LoadScreens?.Print(sb, "LoadScreens");
             }
+            if (printMask?.AnimatedObjects?.Overall ?? true)
+            {
+                item.AnimatedObjects?.Print(sb, "AnimatedObjects");
+            }
+            if (printMask?.Debris?.Overall ?? true)
+            {
+                item.Debris?.Print(sb, "Debris");
+            }
             if (printMask?.FormLists?.Overall ?? true)
             {
                 item.FormLists?.Print(sb, "FormLists");
@@ -6105,26 +6113,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Locations?.Overall ?? true)
             {
                 item.Locations?.Print(sb, "Locations");
-            }
-            if (printMask?.ConstructibleObjects?.Overall ?? true)
-            {
-                item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
-            }
-            if (printMask?.ObjectModifications?.Overall ?? true)
-            {
-                item.ObjectModifications?.Print(sb, "ObjectModifications");
-            }
-            if (printMask?.Resources?.Overall ?? true)
-            {
-                item.Resources?.Print(sb, "Resources");
-            }
-            if (printMask?.AnimatedObjects?.Overall ?? true)
-            {
-                item.AnimatedObjects?.Print(sb, "AnimatedObjects");
-            }
-            if (printMask?.Debris?.Overall ?? true)
-            {
-                item.Debris?.Print(sb, "Debris");
             }
             if (printMask?.DefaultObjects?.Overall ?? true)
             {
@@ -6138,9 +6126,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.AimModels?.Print(sb, "AimModels");
             }
+            if (printMask?.ConstructibleObjects?.Overall ?? true)
+            {
+                item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
+            }
+            if (printMask?.ObjectModifications?.Overall ?? true)
+            {
+                item.ObjectModifications?.Print(sb, "ObjectModifications");
+            }
             if (printMask?.AttractionRules?.Overall ?? true)
             {
                 item.AttractionRules?.Print(sb, "AttractionRules");
+            }
+            if (printMask?.Resources?.Overall ?? true)
+            {
+                item.Resources?.Print(sb, "Resources");
             }
             if (printMask?.BiomeSwaps?.Overall ?? true)
             {
@@ -6515,6 +6515,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isLoadScreensEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
+                {
+                    if (!object.Equals(lhsAnimatedObjects, rhsAnimatedObjects)) return false;
+                }
+                else if (!isAnimatedObjectsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Debris, rhs.Debris, out var lhsDebris, out var rhsDebris, out var isDebrisEqual))
+                {
+                    if (!object.Equals(lhsDebris, rhsDebris)) return false;
+                }
+                else if (!isDebrisEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FormLists) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FormLists, rhs.FormLists, out var lhsFormLists, out var rhsFormLists, out var isFormListsEqual))
@@ -6538,46 +6554,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsLocations, rhsLocations)) return false;
                 }
                 else if (!isLocationsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
-                {
-                    if (!object.Equals(lhsConstructibleObjects, rhsConstructibleObjects)) return false;
-                }
-                else if (!isConstructibleObjectsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ObjectModifications) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.ObjectModifications, rhs.ObjectModifications, out var lhsObjectModifications, out var rhsObjectModifications, out var isObjectModificationsEqual))
-                {
-                    if (!object.Equals(lhsObjectModifications, rhsObjectModifications)) return false;
-                }
-                else if (!isObjectModificationsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Resources) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Resources, rhs.Resources, out var lhsResources, out var rhsResources, out var isResourcesEqual))
-                {
-                    if (!object.Equals(lhsResources, rhsResources)) return false;
-                }
-                else if (!isResourcesEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
-                {
-                    if (!object.Equals(lhsAnimatedObjects, rhsAnimatedObjects)) return false;
-                }
-                else if (!isAnimatedObjectsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Debris, rhs.Debris, out var lhsDebris, out var rhsDebris, out var isDebrisEqual))
-                {
-                    if (!object.Equals(lhsDebris, rhsDebris)) return false;
-                }
-                else if (!isDebrisEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.DefaultObjects) ?? true))
             {
@@ -6603,6 +6579,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAimModelsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
+                {
+                    if (!object.Equals(lhsConstructibleObjects, rhsConstructibleObjects)) return false;
+                }
+                else if (!isConstructibleObjectsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ObjectModifications) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectModifications, rhs.ObjectModifications, out var lhsObjectModifications, out var rhsObjectModifications, out var isObjectModificationsEqual))
+                {
+                    if (!object.Equals(lhsObjectModifications, rhsObjectModifications)) return false;
+                }
+                else if (!isObjectModificationsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AttractionRules) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AttractionRules, rhs.AttractionRules, out var lhsAttractionRules, out var rhsAttractionRules, out var isAttractionRulesEqual))
@@ -6610,6 +6602,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsAttractionRules, rhsAttractionRules)) return false;
                 }
                 else if (!isAttractionRulesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Resources) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Resources, rhs.Resources, out var lhsResources, out var rhsResources, out var isResourcesEqual))
+                {
+                    if (!object.Equals(lhsResources, rhsResources)) return false;
+                }
+                else if (!isResourcesEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.BiomeSwaps) ?? true))
             {
@@ -6715,18 +6715,18 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Cells);
             hash.Add(item.Quests);
             hash.Add(item.LoadScreens);
+            hash.Add(item.AnimatedObjects);
+            hash.Add(item.Debris);
             hash.Add(item.FormLists);
             hash.Add(item.Perks);
             hash.Add(item.Locations);
-            hash.Add(item.ConstructibleObjects);
-            hash.Add(item.ObjectModifications);
-            hash.Add(item.Resources);
-            hash.Add(item.AnimatedObjects);
-            hash.Add(item.Debris);
             hash.Add(item.DefaultObjects);
             hash.Add(item.Outfits);
             hash.Add(item.AimModels);
+            hash.Add(item.ConstructibleObjects);
+            hash.Add(item.ObjectModifications);
             hash.Add(item.AttractionRules);
+            hash.Add(item.Resources);
             hash.Add(item.BiomeSwaps);
             hash.Add(item.Planets);
             hash.Add(item.ConditionRecords);
@@ -6956,6 +6956,16 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
                     return obj.LoadScreens;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    return obj.AnimatedObjects;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    return obj.Debris;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
@@ -6971,31 +6981,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILocation":
                 case "ILocationInternal":
                     return obj.Locations;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    return obj.ConstructibleObjects;
-                case "AObjectModification":
-                case "IAObjectModificationGetter":
-                case "IAObjectModification":
-                case "IAObjectModificationInternal":
-                    return obj.ObjectModifications;
-                case "Resource":
-                case "IResourceGetter":
-                case "IResource":
-                case "IResourceInternal":
-                    return obj.Resources;
-                case "AnimatedObject":
-                case "IAnimatedObjectGetter":
-                case "IAnimatedObject":
-                case "IAnimatedObjectInternal":
-                    return obj.AnimatedObjects;
-                case "Debris":
-                case "IDebrisGetter":
-                case "IDebris":
-                case "IDebrisInternal":
-                    return obj.Debris;
                 case "DefaultObject":
                 case "IDefaultObjectGetter":
                 case "IDefaultObject":
@@ -7011,11 +6996,26 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAimModel":
                 case "IAimModelInternal":
                     return obj.AimModels;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    return obj.ConstructibleObjects;
+                case "AObjectModification":
+                case "IAObjectModificationGetter":
+                case "IAObjectModification":
+                case "IAObjectModificationInternal":
+                    return obj.ObjectModifications;
                 case "AttractionRule":
                 case "IAttractionRuleGetter":
                 case "IAttractionRule":
                 case "IAttractionRuleInternal":
                     return obj.AttractionRules;
+                case "Resource":
+                case "IResourceGetter":
+                case "IResource":
+                case "IResourceInternal":
+                    return obj.Resources;
                 case "BiomeSwap":
                 case "IBiomeSwapGetter":
                 case "IBiomeSwap":
@@ -7120,18 +7120,18 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteCellsParallel(item.Cells, 38, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteQuestsParallel(item.Quests, 39, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LoadScreens, 40, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 41, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 42, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 43, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 44, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 45, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 46, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 47, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 48, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 49, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 50, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 51, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 52, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 42, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 43, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 44, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 45, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 46, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 47, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 48, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 49, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 51, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 52, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 53, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Planets, 54, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 55, outputStreams, bundle, parallelParam));
@@ -7321,6 +7321,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.AnimatedObjects is IFormLinkContainerGetter AnimatedObjectslinkCont)
+            {
+                foreach (var item in AnimatedObjectslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.FormLists.EnumerateFormLinks())
             {
                 yield return item;
@@ -7333,6 +7340,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.DefaultObjects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Outfits.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             foreach (var item in obj.ConstructibleObjects.EnumerateFormLinks())
             {
                 yield return item;
@@ -7342,21 +7357,6 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Resources.EnumerateFormLinks())
-            {
-                yield return item;
-            }
-            if (obj.AnimatedObjects is IFormLinkContainerGetter AnimatedObjectslinkCont)
-            {
-                foreach (var item in AnimatedObjectslinkCont.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in obj.DefaultObjects.EnumerateFormLinks())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Outfits.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -7555,6 +7555,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.FormLists.EnumerateMajorRecords())
             {
                 yield return item;
@@ -7564,26 +7572,6 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Locations.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.ObjectModifications.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Resources.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Debris.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7599,7 +7587,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectModifications.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.AttractionRules.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Resources.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8026,6 +8026,24 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
@@ -8049,51 +8067,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILocation":
                 case "ILocationInternal":
                     foreach (var item in obj.Locations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "AObjectModification":
-                case "IAObjectModificationGetter":
-                case "IAObjectModification":
-                case "IAObjectModificationInternal":
-                    foreach (var item in obj.ObjectModifications.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Resource":
-                case "IResourceGetter":
-                case "IResource":
-                case "IResourceInternal":
-                    foreach (var item in obj.Resources.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "AnimatedObject":
-                case "IAnimatedObjectGetter":
-                case "IAnimatedObject":
-                case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Debris":
-                case "IDebrisGetter":
-                case "IDebris":
-                case "IDebrisInternal":
-                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -8125,11 +8098,38 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AObjectModification":
+                case "IAObjectModificationGetter":
+                case "IAObjectModification":
+                case "IAObjectModificationInternal":
+                    foreach (var item in obj.ObjectModifications.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AttractionRule":
                 case "IAttractionRuleGetter":
                 case "IAttractionRule":
                 case "IAttractionRuleInternal":
                     foreach (var item in obj.AttractionRules.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Resource":
+                case "IResourceGetter":
+                case "IResource":
+                case "IResourceInternal":
+                    foreach (var item in obj.Resources.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -8682,6 +8682,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                srcGroup: obj.AnimatedObjects,
+                type: typeof(IAnimatedObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AnimatedObjects,
+                groupGetter: (m) => m.AnimatedObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Debris, IDebrisGetter>(
+                srcGroup: obj.Debris,
+                type: typeof(IDebrisGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Debris,
+                groupGetter: (m) => m.Debris))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FormList, IFormListGetter>(
                 srcGroup: obj.FormLists,
                 type: typeof(IFormListGetter),
@@ -8706,51 +8724,6 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Locations,
                 groupGetter: (m) => m.Locations))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                srcGroup: obj.ConstructibleObjects,
-                type: typeof(IConstructibleObjectGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ConstructibleObjects,
-                groupGetter: (m) => m.ConstructibleObjects))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AObjectModification, IAObjectModificationGetter>(
-                srcGroup: obj.ObjectModifications,
-                type: typeof(IAObjectModificationGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ObjectModifications,
-                groupGetter: (m) => m.ObjectModifications))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Resource, IResourceGetter>(
-                srcGroup: obj.Resources,
-                type: typeof(IResourceGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Resources,
-                groupGetter: (m) => m.Resources))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                srcGroup: obj.AnimatedObjects,
-                type: typeof(IAnimatedObjectGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.AnimatedObjects,
-                groupGetter: (m) => m.AnimatedObjects))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Debris, IDebrisGetter>(
-                srcGroup: obj.Debris,
-                type: typeof(IDebrisGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Debris,
-                groupGetter: (m) => m.Debris))
             {
                 yield return item;
             }
@@ -8781,12 +8754,39 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                srcGroup: obj.ConstructibleObjects,
+                type: typeof(IConstructibleObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ConstructibleObjects,
+                groupGetter: (m) => m.ConstructibleObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AObjectModification, IAObjectModificationGetter>(
+                srcGroup: obj.ObjectModifications,
+                type: typeof(IAObjectModificationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ObjectModifications,
+                groupGetter: (m) => m.ObjectModifications))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AttractionRule, IAttractionRuleGetter>(
                 srcGroup: obj.AttractionRules,
                 type: typeof(IAttractionRuleGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.AttractionRules,
                 groupGetter: (m) => m.AttractionRules))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Resource, IResourceGetter>(
+                srcGroup: obj.Resources,
+                type: typeof(IResourceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Resources,
+                groupGetter: (m) => m.Resources))
             {
                 yield return item;
             }
@@ -9444,6 +9444,34 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                        srcGroup: obj.AnimatedObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AnimatedObjects,
+                        groupGetter: (m) => m.AnimatedObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Debris, IDebrisGetter>(
+                        srcGroup: obj.Debris,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Debris,
+                        groupGetter: (m) => m.Debris))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
@@ -9482,76 +9510,6 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Locations,
                         groupGetter: (m) => m.Locations))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                        srcGroup: obj.ConstructibleObjects,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ConstructibleObjects,
-                        groupGetter: (m) => m.ConstructibleObjects))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "AObjectModification":
-                case "IAObjectModificationGetter":
-                case "IAObjectModification":
-                case "IAObjectModificationInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AObjectModification, IAObjectModificationGetter>(
-                        srcGroup: obj.ObjectModifications,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ObjectModifications,
-                        groupGetter: (m) => m.ObjectModifications))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Resource":
-                case "IResourceGetter":
-                case "IResource":
-                case "IResourceInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Resource, IResourceGetter>(
-                        srcGroup: obj.Resources,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Resources,
-                        groupGetter: (m) => m.Resources))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "AnimatedObject":
-                case "IAnimatedObjectGetter":
-                case "IAnimatedObject":
-                case "IAnimatedObjectInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                        srcGroup: obj.AnimatedObjects,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.AnimatedObjects,
-                        groupGetter: (m) => m.AnimatedObjects))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Debris":
-                case "IDebrisGetter":
-                case "IDebris":
-                case "IDebrisInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Debris, IDebrisGetter>(
-                        srcGroup: obj.Debris,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Debris,
-                        groupGetter: (m) => m.Debris))
                     {
                         yield return item;
                     }
@@ -9598,6 +9556,34 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                        srcGroup: obj.ConstructibleObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ConstructibleObjects,
+                        groupGetter: (m) => m.ConstructibleObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AObjectModification":
+                case "IAObjectModificationGetter":
+                case "IAObjectModification":
+                case "IAObjectModificationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AObjectModification, IAObjectModificationGetter>(
+                        srcGroup: obj.ObjectModifications,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ObjectModifications,
+                        groupGetter: (m) => m.ObjectModifications))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AttractionRule":
                 case "IAttractionRuleGetter":
                 case "IAttractionRule":
@@ -9608,6 +9594,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.AttractionRules,
                         groupGetter: (m) => m.AttractionRules))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Resource":
+                case "IResourceGetter":
+                case "IResource":
+                case "IResourceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Resource, IResourceGetter>(
+                        srcGroup: obj.Resources,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Resources,
+                        groupGetter: (m) => m.Resources))
                     {
                         yield return item;
                     }
@@ -10042,6 +10042,17 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                 }
+                if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
+                {
+                    foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
                 if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
                 {
                     foreach (var item in FormListslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
@@ -10066,17 +10077,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         yield return item;
                     }
-                }
-                if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
-                {
-                    foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
                 }
                 if (obj.Planets is IAssetLinkContainerGetter PlanetslinkCont)
                 {
@@ -10955,6 +10955,46 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AnimatedObjects);
+                try
+                {
+                    item.AnimatedObjects.DeepCopyIn(
+                        rhs: rhs.AnimatedObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AnimatedObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Debris);
+                try
+                {
+                    item.Debris.DeepCopyIn(
+                        rhs: rhs.Debris,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Debris));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FormLists) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.FormLists);
@@ -11004,106 +11044,6 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.Locations,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Locations));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ConstructibleObjects);
-                try
-                {
-                    item.ConstructibleObjects.DeepCopyIn(
-                        rhs: rhs.ConstructibleObjects,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ConstructibleObjects));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ObjectModifications) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ObjectModifications);
-                try
-                {
-                    item.ObjectModifications.DeepCopyIn(
-                        rhs: rhs.ObjectModifications,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ObjectModifications));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Resources) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Resources);
-                try
-                {
-                    item.Resources.DeepCopyIn(
-                        rhs: rhs.Resources,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Resources));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AnimatedObjects);
-                try
-                {
-                    item.AnimatedObjects.DeepCopyIn(
-                        rhs: rhs.AnimatedObjects,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AnimatedObjects));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Debris);
-                try
-                {
-                    item.Debris.DeepCopyIn(
-                        rhs: rhs.Debris,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Debris));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -11175,6 +11115,46 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ConstructibleObjects);
+                try
+                {
+                    item.ConstructibleObjects.DeepCopyIn(
+                        rhs: rhs.ConstructibleObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ConstructibleObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ObjectModifications) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ObjectModifications);
+                try
+                {
+                    item.ObjectModifications.DeepCopyIn(
+                        rhs: rhs.ObjectModifications,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ObjectModifications));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AttractionRules) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AttractionRules);
@@ -11184,6 +11164,26 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.AttractionRules,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AttractionRules));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Resources) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Resources);
+                try
+                {
+                    item.Resources.DeepCopyIn(
+                        rhs: rhs.Resources,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Resources));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -11466,18 +11466,18 @@ namespace Mutagen.Bethesda.Starfield
         public bool Cells;
         public bool Quests;
         public bool LoadScreens;
+        public bool AnimatedObjects;
+        public bool Debris;
         public bool FormLists;
         public bool Perks;
         public bool Locations;
-        public bool ConstructibleObjects;
-        public bool ObjectModifications;
-        public bool Resources;
-        public bool AnimatedObjects;
-        public bool Debris;
         public bool DefaultObjects;
         public bool Outfits;
         public bool AimModels;
+        public bool ConstructibleObjects;
+        public bool ObjectModifications;
         public bool AttractionRules;
+        public bool Resources;
         public bool BiomeSwaps;
         public bool Planets;
         public bool ConditionRecords;
@@ -11531,18 +11531,18 @@ namespace Mutagen.Bethesda.Starfield
             Cells = defaultValue;
             Quests = defaultValue;
             LoadScreens = defaultValue;
+            AnimatedObjects = defaultValue;
+            Debris = defaultValue;
             FormLists = defaultValue;
             Perks = defaultValue;
             Locations = defaultValue;
-            ConstructibleObjects = defaultValue;
-            ObjectModifications = defaultValue;
-            Resources = defaultValue;
-            AnimatedObjects = defaultValue;
-            Debris = defaultValue;
             DefaultObjects = defaultValue;
             Outfits = defaultValue;
             AimModels = defaultValue;
+            ConstructibleObjects = defaultValue;
+            ObjectModifications = defaultValue;
             AttractionRules = defaultValue;
+            Resources = defaultValue;
             BiomeSwaps = defaultValue;
             Planets = defaultValue;
             ConditionRecords = defaultValue;
@@ -12060,6 +12060,28 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.AnimatedObjects ?? true)
+            {
+                var AnimatedObjectsItem = item.AnimatedObjects;
+                if (AnimatedObjectsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
+                        item: AnimatedObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Debris ?? true)
+            {
+                var DebrisItem = item.Debris;
+                if (DebrisItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
+                        item: DebrisItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.FormLists ?? true)
             {
                 var FormListsItem = item.FormLists;
@@ -12089,61 +12111,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)LocationsItem).BinaryWriteTranslator).Write<ILocationGetter>(
                         item: LocationsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.ConstructibleObjects ?? true)
-            {
-                var ConstructibleObjectsItem = item.ConstructibleObjects;
-                if (ConstructibleObjectsItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
-                        item: ConstructibleObjectsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.ObjectModifications ?? true)
-            {
-                var ObjectModificationsItem = item.ObjectModifications;
-                if (ObjectModificationsItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ObjectModificationsItem).BinaryWriteTranslator).Write<IAObjectModificationGetter>(
-                        item: ObjectModificationsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.Resources ?? true)
-            {
-                var ResourcesItem = item.Resources;
-                if (ResourcesItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ResourcesItem).BinaryWriteTranslator).Write<IResourceGetter>(
-                        item: ResourcesItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.AnimatedObjects ?? true)
-            {
-                var AnimatedObjectsItem = item.AnimatedObjects;
-                if (AnimatedObjectsItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
-                        item: AnimatedObjectsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.Debris ?? true)
-            {
-                var DebrisItem = item.Debris;
-                if (DebrisItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
-                        item: DebrisItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -12181,6 +12148,28 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.ConstructibleObjects ?? true)
+            {
+                var ConstructibleObjectsItem = item.ConstructibleObjects;
+                if (ConstructibleObjectsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
+                        item: ConstructibleObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ObjectModifications ?? true)
+            {
+                var ObjectModificationsItem = item.ObjectModifications;
+                if (ObjectModificationsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ObjectModificationsItem).BinaryWriteTranslator).Write<IAObjectModificationGetter>(
+                        item: ObjectModificationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.AttractionRules ?? true)
             {
                 var AttractionRulesItem = item.AttractionRules;
@@ -12188,6 +12177,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AttractionRulesItem).BinaryWriteTranslator).Write<IAttractionRuleGetter>(
                         item: AttractionRulesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Resources ?? true)
+            {
+                var ResourcesItem = item.Resources;
+                if (ResourcesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ResourcesItem).BinaryWriteTranslator).Write<IResourceGetter>(
+                        item: ResourcesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -12903,6 +12903,34 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.LoadScreens;
                 }
+                case RecordTypeInts.ANIO:
+                {
+                    if (importMask?.AnimatedObjects ?? true)
+                    {
+                        item.AnimatedObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.AnimatedObjects;
+                }
+                case RecordTypeInts.DEBR:
+                {
+                    if (importMask?.Debris ?? true)
+                    {
+                        item.Debris.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Debris;
+                }
                 case RecordTypeInts.FLST:
                 {
                     if (importMask?.FormLists ?? true)
@@ -12944,76 +12972,6 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.Locations;
-                }
-                case RecordTypeInts.COBJ:
-                {
-                    if (importMask?.ConstructibleObjects ?? true)
-                    {
-                        item.ConstructibleObjects.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
-                }
-                case RecordTypeInts.OMOD:
-                {
-                    if (importMask?.ObjectModifications ?? true)
-                    {
-                        item.ObjectModifications.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.ObjectModifications;
-                }
-                case RecordTypeInts.IRES:
-                {
-                    if (importMask?.Resources ?? true)
-                    {
-                        item.Resources.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.Resources;
-                }
-                case RecordTypeInts.ANIO:
-                {
-                    if (importMask?.AnimatedObjects ?? true)
-                    {
-                        item.AnimatedObjects.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.AnimatedObjects;
-                }
-                case RecordTypeInts.DEBR:
-                {
-                    if (importMask?.Debris ?? true)
-                    {
-                        item.Debris.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.DFOB:
                 {
@@ -13057,6 +13015,34 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.AimModels;
                 }
+                case RecordTypeInts.COBJ:
+                {
+                    if (importMask?.ConstructibleObjects ?? true)
+                    {
+                        item.ConstructibleObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
+                }
+                case RecordTypeInts.OMOD:
+                {
+                    if (importMask?.ObjectModifications ?? true)
+                    {
+                        item.ObjectModifications.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ObjectModifications;
+                }
                 case RecordTypeInts.AORU:
                 {
                     if (importMask?.AttractionRules ?? true)
@@ -13070,6 +13056,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.AttractionRules;
+                }
+                case RecordTypeInts.IRES:
+                {
+                    if (importMask?.Resources ?? true)
+                    {
+                        item.Resources.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Resources;
                 }
                 case RecordTypeInts.OSWP:
                 {
@@ -13545,6 +13545,16 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? StarfieldGroupBinaryOverlay<ILoadScreenGetter>.StarfieldGroupFactory(_stream, _LoadScreensLocations, _package) : default;
         public IStarfieldGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new StarfieldGroup<LoadScreen>(this);
         #endregion
+        #region AnimatedObjects
+        private List<RangeInt64>? _AnimatedObjectsLocations;
+        private IStarfieldGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? StarfieldGroupBinaryOverlay<IAnimatedObjectGetter>.StarfieldGroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
+        public IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new StarfieldGroup<AnimatedObject>(this);
+        #endregion
+        #region Debris
+        private List<RangeInt64>? _DebrisLocations;
+        private IStarfieldGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? StarfieldGroupBinaryOverlay<IDebrisGetter>.StarfieldGroupFactory(_stream, _DebrisLocations, _package) : default;
+        public IStarfieldGroupGetter<IDebrisGetter> Debris => _Debris ?? new StarfieldGroup<Debris>(this);
+        #endregion
         #region FormLists
         private List<RangeInt64>? _FormListsLocations;
         private IStarfieldGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? StarfieldGroupBinaryOverlay<IFormListGetter>.StarfieldGroupFactory(_stream, _FormListsLocations, _package) : default;
@@ -13559,31 +13569,6 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _LocationsLocations;
         private IStarfieldGroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? StarfieldGroupBinaryOverlay<ILocationGetter>.StarfieldGroupFactory(_stream, _LocationsLocations, _package) : default;
         public IStarfieldGroupGetter<ILocationGetter> Locations => _Locations ?? new StarfieldGroup<Location>(this);
-        #endregion
-        #region ConstructibleObjects
-        private List<RangeInt64>? _ConstructibleObjectsLocations;
-        private IStarfieldGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? StarfieldGroupBinaryOverlay<IConstructibleObjectGetter>.StarfieldGroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
-        public IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new StarfieldGroup<ConstructibleObject>(this);
-        #endregion
-        #region ObjectModifications
-        private List<RangeInt64>? _ObjectModificationsLocations;
-        private IStarfieldGroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? StarfieldGroupBinaryOverlay<IAObjectModificationGetter>.StarfieldGroupFactory(_stream, _ObjectModificationsLocations, _package) : default;
-        public IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications => _ObjectModifications ?? new StarfieldGroup<AObjectModification>(this);
-        #endregion
-        #region Resources
-        private List<RangeInt64>? _ResourcesLocations;
-        private IStarfieldGroupGetter<IResourceGetter>? _Resources => _ResourcesLocations != null ? StarfieldGroupBinaryOverlay<IResourceGetter>.StarfieldGroupFactory(_stream, _ResourcesLocations, _package) : default;
-        public IStarfieldGroupGetter<IResourceGetter> Resources => _Resources ?? new StarfieldGroup<Resource>(this);
-        #endregion
-        #region AnimatedObjects
-        private List<RangeInt64>? _AnimatedObjectsLocations;
-        private IStarfieldGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? StarfieldGroupBinaryOverlay<IAnimatedObjectGetter>.StarfieldGroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
-        public IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new StarfieldGroup<AnimatedObject>(this);
-        #endregion
-        #region Debris
-        private List<RangeInt64>? _DebrisLocations;
-        private IStarfieldGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? StarfieldGroupBinaryOverlay<IDebrisGetter>.StarfieldGroupFactory(_stream, _DebrisLocations, _package) : default;
-        public IStarfieldGroupGetter<IDebrisGetter> Debris => _Debris ?? new StarfieldGroup<Debris>(this);
         #endregion
         #region DefaultObjects
         private List<RangeInt64>? _DefaultObjectsLocations;
@@ -13600,10 +13585,25 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? StarfieldGroupBinaryOverlay<IAimModelGetter>.StarfieldGroupFactory(_stream, _AimModelsLocations, _package) : default;
         public IStarfieldGroupGetter<IAimModelGetter> AimModels => _AimModels ?? new StarfieldGroup<AimModel>(this);
         #endregion
+        #region ConstructibleObjects
+        private List<RangeInt64>? _ConstructibleObjectsLocations;
+        private IStarfieldGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? StarfieldGroupBinaryOverlay<IConstructibleObjectGetter>.StarfieldGroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
+        public IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new StarfieldGroup<ConstructibleObject>(this);
+        #endregion
+        #region ObjectModifications
+        private List<RangeInt64>? _ObjectModificationsLocations;
+        private IStarfieldGroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? StarfieldGroupBinaryOverlay<IAObjectModificationGetter>.StarfieldGroupFactory(_stream, _ObjectModificationsLocations, _package) : default;
+        public IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications => _ObjectModifications ?? new StarfieldGroup<AObjectModification>(this);
+        #endregion
         #region AttractionRules
         private List<RangeInt64>? _AttractionRulesLocations;
         private IStarfieldGroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? StarfieldGroupBinaryOverlay<IAttractionRuleGetter>.StarfieldGroupFactory(_stream, _AttractionRulesLocations, _package) : default;
         public IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules => _AttractionRules ?? new StarfieldGroup<AttractionRule>(this);
+        #endregion
+        #region Resources
+        private List<RangeInt64>? _ResourcesLocations;
+        private IStarfieldGroupGetter<IResourceGetter>? _Resources => _ResourcesLocations != null ? StarfieldGroupBinaryOverlay<IResourceGetter>.StarfieldGroupFactory(_stream, _ResourcesLocations, _package) : default;
+        public IStarfieldGroupGetter<IResourceGetter> Resources => _Resources ?? new StarfieldGroup<Resource>(this);
         #endregion
         #region BiomeSwaps
         private List<RangeInt64>? _BiomeSwapsLocations;
@@ -13979,6 +13979,18 @@ namespace Mutagen.Bethesda.Starfield
                     _LoadScreensLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.LoadScreens;
                 }
+                case RecordTypeInts.ANIO:
+                {
+                    _AnimatedObjectsLocations ??= new();
+                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.AnimatedObjects;
+                }
+                case RecordTypeInts.DEBR:
+                {
+                    _DebrisLocations ??= new();
+                    _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Debris;
+                }
                 case RecordTypeInts.FLST:
                 {
                     _FormListsLocations ??= new();
@@ -13996,36 +14008,6 @@ namespace Mutagen.Bethesda.Starfield
                     _LocationsLocations ??= new();
                     _LocationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Locations;
-                }
-                case RecordTypeInts.COBJ:
-                {
-                    _ConstructibleObjectsLocations ??= new();
-                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
-                }
-                case RecordTypeInts.OMOD:
-                {
-                    _ObjectModificationsLocations ??= new();
-                    _ObjectModificationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.ObjectModifications;
-                }
-                case RecordTypeInts.IRES:
-                {
-                    _ResourcesLocations ??= new();
-                    _ResourcesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.Resources;
-                }
-                case RecordTypeInts.ANIO:
-                {
-                    _AnimatedObjectsLocations ??= new();
-                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.AnimatedObjects;
-                }
-                case RecordTypeInts.DEBR:
-                {
-                    _DebrisLocations ??= new();
-                    _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.DFOB:
                 {
@@ -14045,11 +14027,29 @@ namespace Mutagen.Bethesda.Starfield
                     _AimModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AimModels;
                 }
+                case RecordTypeInts.COBJ:
+                {
+                    _ConstructibleObjectsLocations ??= new();
+                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
+                }
+                case RecordTypeInts.OMOD:
+                {
+                    _ObjectModificationsLocations ??= new();
+                    _ObjectModificationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ObjectModifications;
+                }
                 case RecordTypeInts.AORU:
                 {
                     _AttractionRulesLocations ??= new();
                     _AttractionRulesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AttractionRules;
+                }
+                case RecordTypeInts.IRES:
+                {
+                    _ResourcesLocations ??= new();
+                    _ResourcesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Resources;
                 }
                 case RecordTypeInts.OSWP:
                 {
