@@ -743,9 +743,9 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IWeaponBarrelModelGetter> IWeaponGetter.WeaponBarrel => this.WeaponBarrel;
         #endregion
         #region General
-        public String? General { get; set; }
+        public TranslatedString? General { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWeaponGetter.General => this.General;
+        ITranslatedStringGetter? IWeaponGetter.General => this.General;
         #endregion
         #region WMELUnknown1
         public Byte WMELUnknown1 { get; set; } = default;
@@ -6647,7 +6647,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single BaseSpeed { get; set; }
         new Single AttackOxygenCost { get; set; }
         new IFormLink<IWeaponBarrelModelGetter> WeaponBarrel { get; set; }
-        new String? General { get; set; }
+        new TranslatedString? General { get; set; }
         new Byte WMELUnknown1 { get; set; }
         new Single MeleeBashDamage { get; set; }
         new Single MeleeReach { get; set; }
@@ -6867,7 +6867,7 @@ namespace Mutagen.Bethesda.Starfield
         Single BaseSpeed { get; }
         Single AttackOxygenCost { get; }
         IFormLinkGetter<IWeaponBarrelModelGetter> WeaponBarrel { get; }
-        String? General { get; }
+        ITranslatedStringGetter? General { get; }
         Byte WMELUnknown1 { get; }
         Single MeleeBashDamage { get; }
         Single MeleeReach { get; }
@@ -7870,7 +7870,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.BaseSpeed = item.BaseSpeed.EqualsWithin(rhs.BaseSpeed);
             ret.AttackOxygenCost = item.AttackOxygenCost.EqualsWithin(rhs.AttackOxygenCost);
             ret.WeaponBarrel = item.WeaponBarrel.Equals(rhs.WeaponBarrel);
-            ret.General = string.Equals(item.General, rhs.General);
+            ret.General = object.Equals(item.General, rhs.General);
             ret.WMELUnknown1 = item.WMELUnknown1 == rhs.WMELUnknown1;
             ret.MeleeBashDamage = item.MeleeBashDamage.EqualsWithin(rhs.MeleeBashDamage);
             ret.MeleeReach = item.MeleeReach.EqualsWithin(rhs.MeleeReach);
@@ -9233,7 +9233,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.General) ?? true))
             {
-                if (!string.Equals(lhs.General, rhs.General)) return false;
+                if (!object.Equals(lhs.General, rhs.General)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown1) ?? true))
             {
@@ -10794,7 +10794,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.General) ?? true))
             {
-                item.General = rhs.General;
+                item.General = rhs.General?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown1) ?? true))
             {
@@ -11556,7 +11556,8 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.General,
                 header: translationParams.ConvertToCustom(RecordTypes.WABB),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WMEL)))
             {
                 writer.Write(item.WMELUnknown1);
@@ -12223,6 +12224,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.General = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Weapon_FieldIndex.General;
                 }
@@ -12974,7 +12976,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region General
         private int? _GeneralLocation;
-        public String? General => _GeneralLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GeneralLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? General => _GeneralLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GeneralLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         private RangeInt32? _WMELLocation;
         #region WMELUnknown1

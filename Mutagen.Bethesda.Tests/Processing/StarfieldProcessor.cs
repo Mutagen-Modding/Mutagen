@@ -150,7 +150,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "ACTI", "FULL", "ATTX" },
                     new RecordType[] { "FLST", "FULL" },
                     new RecordType[] { "TMLM", "FULL", "BTXT", "INAM", "ITXT", "ISTX", "UNAM" },
-                    new RecordType[] { "WEAP", "FULL" },
+                    new RecordType[] { "WEAP", "FULL", "WABB" },
                     new RecordType[] { "PERK", "FULL" },
                     new RecordType[] { "ARMO", "FULL" },
                     new RecordType[] { "CONT", "FULL" },

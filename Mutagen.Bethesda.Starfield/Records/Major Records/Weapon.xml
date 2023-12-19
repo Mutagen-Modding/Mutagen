@@ -159,7 +159,7 @@
           <FormLink name="WeaponBarrel" refName="WeaponBarrelModel" />
         </Fields>
       </Data>
-      <String name="General" recordType="WABB" translate="Normal" />
+      <String name="General" recordType="WABB" translated="Normal" />
       <Data recordType="WMEL">
         <Fields>
           <UInt8 name="WMELUnknown1" unknown="true" />
