@@ -99,9 +99,9 @@ public class StarfieldProcessor : Processor
     {
         if (majorFrame.TryFindSubrecord(RecordTypes.OPDS, out var frame))
         {
+            int offset = 0;
             for (int i = 0; i < 20; i++)
             {
-                int offset = 0;
                 ProcessZeroFloat(frame, fileOffset, ref offset);
             }
         }
@@ -284,11 +284,7 @@ public class StarfieldProcessor : Processor
 
         ProcessRagdollData(majorFrame, fileOffset);
 
-        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.OPDS))
-        {
-            int loc = 4;
-            ProcessZeroFloats(subRec, fileOffset, ref loc);
-        }
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
 
         foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
         {

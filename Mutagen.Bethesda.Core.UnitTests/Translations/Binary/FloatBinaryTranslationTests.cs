@@ -351,18 +351,25 @@ public class FloatBinaryTranslationTests
     }
 
     public float? GetReadFloat(
-        float f,
-        Action<byte[], float> writer,
+        byte[] bytes,
         Func<FloatBinaryTranslation<MutagenFrame, MutagenWriter>, MutagenFrame, float> toDo)
     {
-        var bytes = new byte[4];
-        writer(bytes, f);
         var memStream = new MemoryStream(bytes);
         var mutagenFrame = new MutagenFrame(
             new MutagenInterfaceReadStream(
                 new BinaryReadStream(memStream),
                 new ParsingBundle(GameConstants.SkyrimSE, new MasterReferenceCollection(ModKey.Null))));
         return toDo(FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance, mutagenFrame);
+    }
+
+    public float? GetReadFloat(
+        float f,
+        Action<byte[], float> writer,
+        Func<FloatBinaryTranslation<MutagenFrame, MutagenWriter>, MutagenFrame, float> toDo)
+    {
+        var bytes = new byte[4];
+        writer(bytes, f);
+        return GetReadFloat(bytes, toDo);
     }
 
     [Fact]
@@ -376,6 +383,17 @@ public class FloatBinaryTranslationTests
     public void ReadEpsilon()
     {
         GetReadFloat(float.Epsilon, (t, f) => t.Parse(f))
+            .Should().Be(0f);
+    }
+
+    [Fact]
+    public void ReadOne()
+    {
+        var bytes = new byte[]
+        {
+            1, 0, 0, 0
+        };
+        GetReadFloat(bytes, (t, f) => t.Parse(f))
             .Should().Be(0f);
     }
 
