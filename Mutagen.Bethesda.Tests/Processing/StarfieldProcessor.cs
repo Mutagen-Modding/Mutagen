@@ -620,6 +620,8 @@ public class StarfieldProcessor : Processor
 
             SwapSubrecordContent(fileOffset, majorFrame, rec, b);
         }
+        
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
     }
 
     private void ProcessQuests(
