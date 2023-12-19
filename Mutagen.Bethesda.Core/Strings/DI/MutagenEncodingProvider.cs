@@ -117,6 +117,7 @@ public static class MutagenEncoding
                 return _1256;
             case Language.Korean:
             case Language.Chinese:
+            case Language.ChineseSimplified:
             case Language.Japanese:
             case Language.Thai:
                 return _utf8;
@@ -157,6 +158,7 @@ public static class MutagenEncoding
             case Language.Arabic:
                 return _utf8_1256;
             case Language.Chinese:
+            case Language.ChineseSimplified:
             case Language.Korean:
             case Language.Thai:
             default:
