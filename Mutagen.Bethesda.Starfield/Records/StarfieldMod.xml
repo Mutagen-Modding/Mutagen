@@ -52,21 +52,21 @@
       <Group name="Perks" refName="Perk" />
       <Group name="Locations" refName="Location" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
-      <Group name="TerminalMenus" refName="TerminalMenu" />
+      <Group name="ObjectModifications" refName="AObjectModification" />
+      <Group name="Resources" refName="Resource" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Debris" refName="Debris" />
-      <Group name="ObjectModifications" refName="AObjectModification" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />
       <Group name="AttractionRules" refName="AttractionRule" />
       <Group name="BiomeSwaps" refName="BiomeSwap" />
       <Group name="Planets" refName="Planet" />
+      <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
+      <Group name="TerminalMenus" refName="TerminalMenu" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
-      <Group name="Resources" refName="Resource" />
-      <Group name="ConditionRecords" refName="ConditionRecord" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>
