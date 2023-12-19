@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         #region UnknownStrings
-        public IReadOnlyList<String> UnknownStrings => BinaryOverlayList.FactoryByCountLength<String>(_structData, _package, countLength: 2, (s, p) => BinaryStringUtility.ParsePrependedString(s, lengthLength: 2, encoding: p.MetaData.Encodings.NonTranslated));
+        public IReadOnlyList<String> UnknownStrings => BinaryOverlayList.FactoryByCountLengthWithItemLength<String>(_structData, _package, countLength: 2, itemLengthLength: 2, (s, p) => BinaryStringUtility.ParsePrependedString(s, lengthLength: 2, encoding: p.MetaData.Encodings.NonTranslated));
         protected int UnknownStringsEndingPos;
         #endregion
         #region UnknownSubItems

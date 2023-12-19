@@ -713,7 +713,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                              && (str.BinaryType == StringBinaryType.PrependLength
                                  || str.BinaryType == StringBinaryType.PrependLengthUShort))
                     {
-                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => BinaryOverlayList.FactoryByCountLengthWithItemLength<{typeName}>({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, countLength: {(byte)list.CustomData[CounterByteLength]}, itemLengthLength: {(str.BinaryType == StringBinaryType.PrependLength ? 4 : 2)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                     }
                     break;
                 default:

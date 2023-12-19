@@ -386,10 +386,11 @@ internal abstract class BinaryOverlayList
             itemLength);
     }
 
-    public static IReadOnlyList<string> FactoryByCountLength<T>(
+    public static IReadOnlyList<string> FactoryByCountLengthWithItemLength<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
         byte countLength,
+        byte itemLengthLength,
         PluginBinaryOverlay.SpanFactory<string> getter)
     {
         var count = countLength switch
@@ -399,12 +400,19 @@ internal abstract class BinaryOverlayList
             1 => mem[0],
             _ => throw new NotImplementedException(),
         };
+        Func<ReadOnlyMemorySlice<byte>, int> itemLenGetter = itemLengthLength switch
+        {
+            4 => (mem) => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(mem)),
+            2 => (mem) => BinaryPrimitives.ReadUInt16LittleEndian(mem),
+            1 => (mem) => mem[0],
+            _ => throw new NotImplementedException(),
+        };
         int[] locs = new int[count];
         int loc = 0;
         for (int i = 0; i < count - 1; i++)
         {
             locs[i] = loc;
-            var len = BinaryPrimitives.ReadUInt16LittleEndian(mem.Slice(loc));
+            var len = itemLenGetter(mem.Slice(loc));
             loc += len + 2;
         }
         return FactoryByArray(

@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         #region Data
-        public IReadOnlyList<String> Data => BinaryOverlayList.FactoryByCountLength<String>(_structData, _package, countLength: 4, (s, p) => BinaryStringUtility.ParsePrependedString(s, lengthLength: 2, encoding: p.MetaData.Encodings.NonTranslated));
+        public IReadOnlyList<String> Data => BinaryOverlayList.FactoryByCountLengthWithItemLength<String>(_structData, _package, countLength: 4, itemLengthLength: 2, (s, p) => BinaryStringUtility.ParsePrependedString(s, lengthLength: 2, encoding: p.MetaData.Encodings.NonTranslated));
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(
