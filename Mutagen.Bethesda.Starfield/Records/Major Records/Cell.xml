@@ -64,6 +64,7 @@
         <Interface>IPlaced</Interface>
       </RefList>
     </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
   <Object name="CellGrid" objType="Subrecord" recordType="XCLC">
     <Fields>

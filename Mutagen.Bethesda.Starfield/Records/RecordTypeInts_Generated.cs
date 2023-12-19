@@ -356,9 +356,15 @@ public partial class RecordTypeInts
     public const int KWDA = 0x4144574B;
     public const int KYWD = 0x4457594B;
     public const int LAYR = 0x5259414C;
+    public const int LCEC = 0x4345434C;
     public const int LCEP = 0x5045434C;
+    public const int LCID = 0x4449434C;
+    public const int LCPR = 0x5250434C;
     public const int LCRT = 0x5452434C;
+    public const int LCSR = 0x5253434C;
     public const int LCTN = 0x4E54434C;
+    public const int LCUN = 0x4E55434C;
+    public const int LCUR = 0x5255434C;
     public const int LENS = 0x534E454C;
     public const int LGDI = 0x4944474C;
     public const int LGTM = 0x4D54474C;

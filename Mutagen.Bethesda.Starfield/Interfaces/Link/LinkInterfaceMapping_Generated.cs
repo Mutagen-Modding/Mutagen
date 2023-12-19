@@ -101,6 +101,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Npc_Registration.Instance,
         });
         dict[typeof(INpcTemplateTargetGetter)] = dict[typeof(INpcTemplateTarget)] with { Setter = false };
+        dict[typeof(IComplexLocation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Cell_Registration.Instance,
+            Worldspace_Registration.Instance,
+        });
+        dict[typeof(IComplexLocationGetter)] = dict[typeof(IComplexLocation)] with { Setter = false };
         dict[typeof(IResourceTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ConstructibleObject_Registration.Instance,

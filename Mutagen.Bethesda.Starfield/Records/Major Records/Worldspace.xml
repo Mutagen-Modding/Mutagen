@@ -3,5 +3,6 @@
   <Object name="Worldspace" recordType="WRLD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
 </Loqui>

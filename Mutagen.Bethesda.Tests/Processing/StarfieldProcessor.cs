@@ -50,6 +50,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PGRE, ProcessTraps);
         AddDynamicProcessing(RecordTypes.PHZD, ProcessHazards);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
+        AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -157,6 +158,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "DIAL", "FULL" },
                     new RecordType[] { "INFO", "RNAM" },
                     new RecordType[] { "CELL", "FULL" },
+                    new RecordType[] { "LCTN", "FULL" },
                     new RecordType[] { "NPC_", "FULL", "SHRT", "LNAM", "ATTX" },
                     new RecordType[] { "REFR", "FULL", "UNAM" },
                     new RecordType[] { "QUST", "FULL", "NNAM", "QMDP", "QMSU", "QMDT", "QMDS" },
@@ -430,7 +432,23 @@ public class StarfieldProcessor : Processor
             ProcessLengths(majorFrame, 6, fileOffset);
         }
     }
-
+    
+    private void ProcessLocations(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.LCEP, out var rec))
+        {
+            int loc = 0;
+            while (loc < rec.ContentLength)
+            {
+                ProcessBool(rec, offsetLoc: fileOffset, loc + 8, 4, 1);
+                loc += 12;
+            }
+        }
+    }
+    
     private void ProcessPositionRotationData(MajorRecordFrame majorFrame, long fileOffset)
     {
         foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))

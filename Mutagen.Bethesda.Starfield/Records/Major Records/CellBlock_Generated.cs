@@ -1319,6 +1319,13 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IOwner":
                 case "IOwnerGetter":
                     foreach (var subItem in obj.SubBlocks)

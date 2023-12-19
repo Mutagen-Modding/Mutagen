@@ -424,6 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IWorldspace :
+        IComplexLocation,
         ILoquiObjectSetter<IWorldspaceInternal>,
         IStarfieldMajorRecordInternal,
         IWorldspaceGetter
@@ -441,6 +442,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IWorldspaceGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IComplexLocationGetter,
         ILoquiObject<IWorldspaceGetter>,
         IMapsToGetter<IWorldspaceGetter>
     {

@@ -39,6 +39,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - Ingestible
 - KeywordFormComponent
+- Location
 - MagicEffect
 - MiscItem
 - Npc
@@ -105,6 +106,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Ingestible
 - Keyword
+- Location
 - MagicEffect
 - MiscItem
 - MorphGroup
@@ -330,6 +332,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - IObjectBounded
 - IScripted
+### Location
+- IKeyworded
+- INamed
 ### MagicEffect
 - IHaveVirtualMachineAdapter
 - IKeyworded

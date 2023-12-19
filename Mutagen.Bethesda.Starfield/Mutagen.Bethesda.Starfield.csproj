@@ -2147,6 +2147,9 @@
     <Compile Include="Records\Major Records\LoadScreen.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Location.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -5908,5 +5911,24 @@
     <Compile Include="Records\Major Records\NpcRaceOverrideUnknown7_Generated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LocationReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellUniqueReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellUnique_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellStaticReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCoordinate_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellEnablePoint_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IComplexLocation_Generated.cs" />
   </ItemGroup>
 </Project>

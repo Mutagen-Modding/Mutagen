@@ -48,9 +48,10 @@
       </Ref>
       <Group name="Quests" refName="Quest" />
       <Group name="LoadScreens" refName="LoadScreen" />
-      <Group name="Perks" refName="Perk" />
-      <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="FormLists" refName="FormList" />
+      <Group name="Perks" refName="Perk" />
+      <Group name="Locations" refName="Location" />
+      <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="TerminalMenus" refName="TerminalMenu" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Debris" refName="Debris" />

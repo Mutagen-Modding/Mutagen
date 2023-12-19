@@ -358,9 +358,15 @@ public partial class RecordTypes
     public static readonly RecordType KWDA = new(0x4144574B);
     public static readonly RecordType KYWD = new(0x4457594B);
     public static readonly RecordType LAYR = new(0x5259414C);
+    public static readonly RecordType LCEC = new(0x4345434C);
     public static readonly RecordType LCEP = new(0x5045434C);
+    public static readonly RecordType LCID = new(0x4449434C);
+    public static readonly RecordType LCPR = new(0x5250434C);
     public static readonly RecordType LCRT = new(0x5452434C);
+    public static readonly RecordType LCSR = new(0x5253434C);
     public static readonly RecordType LCTN = new(0x4E54434C);
+    public static readonly RecordType LCUN = new(0x4E55434C);
+    public static readonly RecordType LCUR = new(0x5255434C);
     public static readonly RecordType LENS = new(0x534E454C);
     public static readonly RecordType LGDI = new(0x4944474C);
     public static readonly RecordType LGTM = new(0x4D54474C);

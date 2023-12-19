@@ -51,6 +51,12 @@ public class StarfieldPassthroughTest : PassthroughTest
     {
         var ret = new AlignmentRules();
         
+        ret.SetGroupAlignment(
+            (int)GroupTypeEnum.QuestChildren,
+            RecordTypes.DLBR,
+            RecordTypes.DIAL,
+            RecordTypes.SCEN);
+        
         ret.StartMarkers.Add(RecordTypes.REFR, new[]
         {
             RecordTypes.NAME

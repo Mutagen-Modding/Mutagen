@@ -10,6 +10,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IBindableEquipment
 - Armor
 - Weapon
+### IComplexLocation
+- Cell
+- Worldspace
 ### IConstructible
 - ActionRecord
 - Activator
@@ -150,6 +153,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IConstructible
 - IItem
 - IStaticTarget
+### Cell
+- IComplexLocation
 ### ConstructibleObject
 - IResourceTarget
 ### Container
@@ -249,3 +254,5 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IConstructible
 - IItem
 - IStaticTarget
+### Worldspace
+- IComplexLocation
