@@ -614,7 +614,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         Accessor recordDataAccessor,
         int? currentPosition,
         string passedLengthAccessor,
-        DataType dataType = null)
+        DataType? dataType = null)
     {
         ListType list = typeGen as ListType;
         var data = list.GetFieldData();
@@ -1154,7 +1154,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         TypeGeneration typeGen,
         Accessor dataAccessor, 
         int? passedLength,
-        string passedLengthAccessor)
+        string? passedLengthAccessor,
+        DataType? data = null)
     {
         ListType list = typeGen as ListType;
         ListBinaryType listBinaryType = GetListType(list, list.GetFieldData(), list.SubTypeGeneration.GetFieldData());

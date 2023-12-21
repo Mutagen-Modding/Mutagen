@@ -73,7 +73,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         Accessor recordDataAccessor,
         int? passedLength,
         string passedLengthAccessor,
-        DataType data = null)
+        DataType? data = null)
     {
     }
 
@@ -83,7 +83,8 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         TypeGeneration typeGen,
         Accessor dataAccessor,
         int? passedLength,
-        string passedLengthAccessor)
+        string passedLengthAccessor,
+        DataType? data = null)
     {
     }
 

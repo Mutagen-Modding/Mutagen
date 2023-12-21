@@ -273,7 +273,8 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         TypeGeneration typeGen,
         Accessor dataAccessor, 
         int? passedLength,
-        string passedLengthAccessor)
+        string passedLengthAccessor,
+        DataType? data = null)
     {
         var dataType = typeGen as DataType;
         var lengths = await this.Module.IteratePassedLengths(
@@ -316,7 +317,8 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                         field.Field,
                         dataAccessor,
                         length.PassedLength,
-                        $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {length.PassedAccessor}");
+                        $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {length.PassedAccessor}",
+                        data: dataType);
                     break;
             }
         }

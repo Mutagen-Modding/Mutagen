@@ -263,7 +263,8 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         TypeGeneration typeGen,  
         Accessor dataAccessor, 
         int? passedLength,  
-        string? passedLengthAccessor)  
+        string? passedLengthAccessor,
+        DataType? data = null)  
     {  
         StringType str = typeGen as StringType;  
         switch (str.BinaryType)  

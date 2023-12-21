@@ -163,7 +163,8 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         TypeGeneration typeGen,
         Accessor dataAccessor,
         int? passedLength, 
-        string? passedLengthAccessor)
+        string? passedLengthAccessor,
+        DataType? data = null)
     {
         AssetLinkType asset = typeGen as AssetLinkType;
         switch (asset.BinaryType)
