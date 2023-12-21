@@ -116,6 +116,28 @@ internal abstract class BinaryOverlayList
         }
     }
 
+    public static IReadOnlyList<T> EagerFactoryByPrependedCount<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        int countLength,
+        PluginBinaryOverlay.StreamFactory<T> getter)
+    {
+        var count = countLength switch
+        {
+            1 => (int)stream.ReadUInt8(),
+            2 => (int)stream.ReadUInt16(),
+            4 => checked((int)stream.ReadUInt32()),
+            _ => throw new NotImplementedException(),
+        };
+        List<T> ret = new();
+        for (int i = 0; i < count; i++)
+        {
+            ret.Add(getter(stream, package));
+        }
+
+        return ret;
+    }
+
     public static IReadOnlyList<T>? FactoryByCountNullIfZero<T>(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
@@ -255,6 +277,53 @@ internal abstract class BinaryOverlayList
                     trigger: trigger,
                     skipHeader: skipHeader,
                     translationParams: translationParams.RecordTypeConverter));
+        }
+    }
+
+    public static IReadOnlyList<T> FactoryByCountPerItem<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        int countLength,
+        RecordType trigger,
+        RecordType countType,
+        PluginBinaryOverlay.SpanFactory<T> getter,
+        bool skipHeader = true)
+    {
+        var mem = stream.RemainingMemory;
+        var initialHeader = package.MetaData.Constants.Subrecord(mem);
+        var recType = initialHeader.RecordType;
+        if (recType == countType)
+        {
+            var count = countLength switch
+            {
+                1 => initialHeader.Content[0],
+                2 => BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
+                4 => BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content),
+                _ => throw new NotImplementedException(),
+            };
+            stream.Position += initialHeader.TotalLength;
+            return FactoryByArray(
+                mem: stream.RemainingMemory,
+                package: package,
+                getter: getter,
+                locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
+                    stream: stream,
+                    count: count,
+                    trigger: trigger,
+                    constants: package.MetaData.Constants.SubConstants,
+                    skipHeader: false));
+        }
+        else
+        {
+            return FactoryByArray(
+                mem: stream.RemainingMemory,
+                package: package,
+                getter: getter,
+                locs: PluginBinaryOverlay.ParseRecordLocations(
+                    stream: stream,
+                    constants: package.MetaData.Constants.SubConstants,
+                    trigger: trigger,
+                    skipHeader: skipHeader));
         }
     }
 

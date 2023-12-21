@@ -663,12 +663,19 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             } 
             if (!IsLoqui) 
             { 
-                reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
-            } 
-            if (transl(reader, out var subIitem)) 
-            { 
-                ret.Add(subIitem); 
-            } 
+                reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
+                if (transl(reader.SpawnWithLength(subHeader.ContentLength), out var subIitem)) 
+                { 
+                    ret.Add(subIitem); 
+                } 
+            }
+            else
+            {
+                if (transl(reader, out var subIitem)) 
+                { 
+                    ret.Add(subIitem); 
+                } 
+            }
         } 
         if (reader.Position == startingPos) 
         { 
@@ -1170,6 +1177,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         RecordType recordType, 
         BinarySubWriteDelegate<MutagenWriter, T> transl, 
         byte counterLength, 
+        bool subRecordPerItem = false, 
         bool writeCounterIfNull = false) 
     { 
         try 
@@ -1198,11 +1206,24 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         
         try 
         { 
-            using (HeaderExport.Subrecord(writer, recordType)) 
+            if (subRecordPerItem) 
             { 
                 foreach (var item in items) 
                 { 
-                    transl(writer, item); 
+                    using (HeaderExport.Subrecord(writer, recordType)) 
+                    { 
+                        transl(writer, item); 
+                    } 
+                } 
+            } 
+            else 
+            { 
+                using (HeaderExport.Subrecord(writer, recordType)) 
+                { 
+                    foreach (var item in items) 
+                    { 
+                        transl(writer, item); 
+                    } 
                 } 
             } 
         } 
