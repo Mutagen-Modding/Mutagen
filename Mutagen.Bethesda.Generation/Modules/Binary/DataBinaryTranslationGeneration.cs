@@ -285,8 +285,8 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         foreach (var field in dataType.IterateFieldsWithMeta())
         {
             if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
-            var data = field.Field.GetFieldData();
-            switch (data.BinaryOverlayFallback)
+            var fieldData = field.Field.GetFieldData();
+            switch (fieldData.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                 case BinaryGenerationType.Custom:
@@ -294,11 +294,11 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 default:
                     continue;
             }
-            if (data.HasTrigger) continue;
+            if (fieldData.HasTrigger) continue;
             var amount = await subTypeGen.GetPassedAmount(objGen, field.Field);
             if (amount != null) continue;
             if (field.Field is CustomLogic) continue;
-            switch (data.BinaryOverlayFallback)
+            switch (fieldData.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Custom:
                     sb.AppendLine($"ret.Custom{field.Field.Name}EndPos();");
