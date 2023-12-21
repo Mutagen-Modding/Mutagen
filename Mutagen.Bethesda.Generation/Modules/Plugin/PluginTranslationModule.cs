@@ -3579,7 +3579,25 @@ public class PluginTranslationModule : BinaryTranslationModule
                             }
                             using (sb.CurlyBrace(doIt: dataType.Nullable))
                             {
-                                sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, translationParams.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                string writerAccess = WriterMemberName;
+                                if (fieldData.OverflowRecordType.HasValue)
+                                {
+                                    writerAccess = $"{field.Name}writerToUse";
+                                    using (var args = sb.Call(
+                                               $"using ({nameof(HeaderExport)}.Subrecord",
+                                               ")",
+                                               semiColon: false))
+                                    {
+                                        args.AddPassArg(WriterMemberName);
+                                        args.Add($"translationParams.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})");
+                                        args.Add($"overflowRecord: {obj.RecordTypeHeaderName(fieldData.OverflowRecordType.Value)}");
+                                        args.Add("out var writerToUse");
+                                    }
+                                }
+                                else
+                                {
+                                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, translationParams.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                }
                                 using (sb.CurlyBrace())
                                 {
                                     bool isInRange = false;
@@ -3603,7 +3621,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 using (var args = sb.Call(
                                                            $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
                                                 {
-                                                    args.AddPassArg(WriterMemberName);
+                                                    args.AddPassArg(writerAccess);
                                                     args.AddPassArg("item");
                                                 }
                                                 continue;
@@ -3631,7 +3649,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         }
                                         if (subData.HasVersioning)
                                         {
-                                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(subData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
+                                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(subData, $"{writerAccess}.MetaData.FormVersion!.Value")})");
                                         }
                                         using (sb.CurlyBrace(doIt: subData.HasVersioning))
                                         {
@@ -3639,7 +3657,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 sb: sb,
                                                 objGen: obj,
                                                 typeGen: subField.Field,
-                                                writerAccessor: WriterMemberName,
+                                                writerAccessor: writerAccess,
                                                 translationAccessor: null,
                                                 itemAccessor: Accessor.FromType(subField.Field, "item"),
                                                 errorMaskAccessor: null,
