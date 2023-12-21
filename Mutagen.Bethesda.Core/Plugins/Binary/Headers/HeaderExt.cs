@@ -378,6 +378,24 @@ public static class HeaderExt
     /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
+    /// <param name="afterSubrecord">Subrecord to start searching after</param>
+    /// <param name="type">Type to search for</param>
+    /// <returns>SubrecordHeader if found, otherwise null</returns>
+    public static SubrecordPinFrame? TryFindSubrecordAfter(this MajorRecordFrame majorFrame, SubrecordPinFrame afterSubrecord, params RecordType[] type)
+    {
+        var spanToSearch = majorFrame.HeaderAndContentData.Slice(afterSubrecord.EndLocation);
+        var find = RecordSpanExtensions.TryFindSubrecord(spanToSearch, majorFrame.Meta, type);
+        if (find == null)
+        {
+            return default;
+        }
+        return find.Value.Frame.Pin(find.Value.Location + afterSubrecord.EndLocation);
+    }
+
+    /// <summary>
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
+    /// </summary>
+    /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
     /// <param name="offset">Offset within the Major Record's contents to start searching</param>
     /// <param name="pin">SubrecordPinFrame if found</param>
@@ -494,6 +512,35 @@ public static class HeaderExt
         bool encountered = false;
         foreach (var subrecord in majorFrame)
         {
+            if (subrecord.RecordType == type)
+            {
+                encountered = true;
+                yield return subrecord;
+            }
+            else if (onlyFirstSet && encountered)
+            {
+                yield break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds and iterates subrecords of a given type
+    /// </summary>
+    /// <param name="majorFrame">Frame to read from</param>
+    /// <param name="type">Type to search for</param>
+    /// <param name="afterSubrecord">Subrecord to start searching after</param>
+    /// <param name="onlyFirstSet">
+    /// If true, iteration will stop after finding the first non-applicable record after some applicable ones.<br/>
+    /// If false, records will continue to be searched in their entirety for all matching subrecords.
+    /// </param>
+    /// <returns>Encountered SubrecordFrames with the given type</returns>
+    public static IEnumerable<SubrecordPinFrame> FindEnumerateSubrecordsAfter(this MajorRecordFrame majorFrame, RecordType type, SubrecordPinFrame afterSubrecord, bool onlyFirstSet = false)
+    {
+        bool encountered = false;
+        foreach (var subrecord in majorFrame)
+        {
+            if (subrecord.Location <= afterSubrecord.Location) continue;
             if (subrecord.RecordType == type)
             {
                 encountered = true;
