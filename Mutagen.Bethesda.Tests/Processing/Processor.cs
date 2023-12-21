@@ -840,7 +840,7 @@ public abstract class Processor
         public delegate void Handle(long loc, MajorRecordFrame major, List<StringEntry> processedStrings,
             IStringsLookup overlay);
 
-        public RecordType MajorType;
+        public RecordType? MajorType;
 
         public abstract Handle Handler { get; }
 
@@ -885,7 +885,7 @@ public abstract class Processor
     {
         public override Handle Handler { get; }
 
-        public StringsAlignmentCustom(RecordType majorType, Handle handler)
+        public StringsAlignmentCustom(RecordType? majorType, Handle handler)
         {
             MajorType = majorType;
             Handler = handler;
@@ -1023,10 +1023,18 @@ public abstract class Processor
         var sourceDict = folderOverlay.Get(source);
         if (!sourceDict.TryGetValue(language, out var overlay)) return Array.Empty<StringEntry>();
         var ret = new List<StringEntry>();
-        var dict = new Dictionary<RecordType, AStringsAlignment>();
+        var stringAlignmentLookup = new Dictionary<RecordType, AStringsAlignment>();
+        var stringAlignmentsForAll = new List<AStringsAlignment>();
         foreach (var item in recordTypes)
         {
-            dict[item.MajorType] = item;
+            if (item.MajorType == null)
+            {
+                stringAlignmentsForAll.Add(item);
+            }
+            else
+            {
+                stringAlignmentLookup[item.MajorType.Value] = item;
+            }
         }
 
         stream.Position = 0;
@@ -1036,20 +1044,20 @@ public abstract class Processor
             return Array.Empty<StringEntry>();
 
         stream.Position = 0;
-        var locs = RecordLocator.GetLocations(
-            stream,
-            interest: new RecordInterest(dict.Keys));
+        var locs = RecordLocator.GetLocations(stream);
 
         foreach (var rec in locs.ListedRecords)
         {
             stream.Position = rec.Key;
             var major = stream.GetMajorRecord();
-            if (!dict.TryGetValue(major.RecordType, out var instructions))
+            foreach (var alignment in stringAlignmentsForAll)
             {
-                continue;
+                alignment.Handler(stream.Position, major, ret, overlay.Value);
             }
-
-            instructions.Handler(stream.Position, major, ret, overlay.Value);
+            if (stringAlignmentLookup.TryGetValue(major.RecordType, out var instructions))
+            {
+                instructions.Handler(stream.Position, major, ret, overlay.Value);
+            }
         }
 
         return ret;
