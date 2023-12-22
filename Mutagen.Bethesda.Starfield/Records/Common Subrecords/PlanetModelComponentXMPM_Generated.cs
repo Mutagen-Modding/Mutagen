@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Starfield
         protected int UnknownStringsEndingPos;
         #endregion
         #region UnknownSubItems
-        public IReadOnlyList<IPlanetModelComponentXMPMSubItemGetter> UnknownSubItems => BinaryOverlayList.FactoryByLazyParse<IPlanetModelComponentXMPMSubItemGetter>(_structData.Slice(UnknownStringsEndingPos), _package, countLength: 2, (s, p) => PlanetModelComponentXMPMSubItemBinaryOverlay.PlanetModelComponentXMPMSubItemFactory(s, p));
+        public IReadOnlyList<IPlanetModelComponentXMPMSubItemGetter> UnknownSubItems { get; private set; } = null!;
         protected int UnknownSubItemsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1389,6 +1389,14 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: memoryPair,
                 package: package);
             ret.UnknownStringsEndingPos = StringBinaryTranslation.Instance.ExtractManyUInt16PrependedStringsLength(2, ret._structData) + 2;
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                    Position = ret.UnknownStringsEndingPos
+                };
+                ret.UnknownSubItems = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 2, (s, p) => PlanetModelComponentXMPMSubItemBinaryOverlay.PlanetModelComponentXMPMSubItemFactory(s, p));
+                ret.UnknownSubItemsEndingPos = tempStream.Position;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

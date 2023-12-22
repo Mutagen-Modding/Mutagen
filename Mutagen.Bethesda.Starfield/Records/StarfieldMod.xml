@@ -40,6 +40,7 @@
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="GenericBaseForms" refName="GenericBaseForm" />
       <Group name="Weathers" refName="Weather" />
       <Ref name="Cells" singleton="true">
         <Direct refName="StarfieldListGroup">

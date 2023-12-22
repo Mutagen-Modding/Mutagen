@@ -169,4 +169,9 @@ partial class TraversalReferenceBinaryOverlay
 
         return locs;
     }
+
+    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
+    {
+        stream.Position += 0x30 + (HasFormKey ? 8 : 4);
+    }
 }

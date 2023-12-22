@@ -36,6 +36,26 @@ public partial class AComponent
         Volumes_Component,
         BGSPlanetContentManagerContentProperties_Component,
         BGSShipManagement,
+        BGSExternalComponentDataSource_Component,
+        BGSForcedLocRefType_Component,
+        BGSLinkedVoiceType_Component,
+        BGSPapyrusScripts_Component,
+        BGSPathingData_Component,
+        BGSPropertySheet_Component,
+        BGSSpaceshipAIActor_Component,
+        BGSSpaceshipEquipment_Component,
+        BGSSpaceshipWeaponBindings_Component,
+        BGSFormLinkData_Component,
+        Blueprint_Component,
+        BGSDestructibleObject_Component,
+        TESContainer_Component,
+        TESMagicTargetForm_Component,
+        BGSStoredTraversals_Component,
+        BGSAddToInventoryOnDestroy_Component,
+        BGSCrowdComponent_Component,
+        BGSSpaceshipHullCode_Component,
+        BGSPrimitive_Component,
+        BGSSpawnOnDestroy_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -103,9 +123,49 @@ public partial class AComponent
             case ComponentType.Volumes_Component:
                 return VolumesComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSPlanetContentManagerContentProperties_Component:
-                return PlanetContentManagerContentProperties.CreateFromBinary(frame, translationParams);
+                return PlanetContentManagerContentPropertiesComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSShipManagement:
                 return ShipManagementComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSExternalComponentDataSource_Component:
+                return ExternalDataSourceComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSForcedLocRefType_Component:
+                return ForcedLocRefTypeComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSLinkedVoiceType_Component:
+                return LinkedVoiceTypeComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSPapyrusScripts_Component:
+                return PapyrusScriptsComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSPathingData_Component:
+                return PathingDataComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSPropertySheet_Component:
+                return PropertySheetComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSpaceshipAIActor_Component:
+                return SpaceshipAIActorComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSpaceshipEquipment_Component:
+                return SpaceshipEquipmentComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSpaceshipWeaponBindings_Component:
+                return SpaceshipWeaponBindingsComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSFormLinkData_Component:
+                return FormLinkDataComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.Blueprint_Component:
+                return BlueprintComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSDestructibleObject_Component:
+                return DestructibleObjectComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.TESContainer_Component:
+                return ContainerComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.TESMagicTargetForm_Component:
+                return MagicTargetFormComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSStoredTraversals_Component:
+                return StoredTraversalsComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSAddToInventoryOnDestroy_Component:
+                return AddToInventoryOnDestroyComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSCrowdComponent_Component:
+                return CrowdComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSpaceshipHullCode_Component:
+                return SpaceshipHullCodeComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSPrimitive_Component:
+                return PrimitiveComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSpawnOnDestroy_Component:
+                return SpawnOnDestroyComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -171,8 +231,28 @@ partial class AComponentBinaryWriteTranslation
             IDisplayCaseComponentGetter _ => AComponent.ComponentType.BGSDisplayCase,
             IObjectPaletteDefaultsComponentGetter _ => AComponent.ComponentType.BGSObjectPaletteDefaults_Component,
             IVolumesComponentGetter _ => AComponent.ComponentType.Volumes_Component,
-            IPlanetContentManagerContentPropertiesGetter _ => AComponent.ComponentType.BGSPlanetContentManagerContentProperties_Component,
+            IPlanetContentManagerContentPropertiesComponentGetter _ => AComponent.ComponentType.BGSPlanetContentManagerContentProperties_Component,
             IShipManagementComponentGetter _ => AComponent.ComponentType.BGSShipManagement,
+            IExternalDataSourceComponentGetter _ => AComponent.ComponentType.BGSExternalComponentDataSource_Component,
+            IForcedLocRefTypeComponentGetter _ => AComponent.ComponentType.BGSForcedLocRefType_Component,
+            ILinkedVoiceTypeComponentGetter _ => AComponent.ComponentType.BGSLinkedVoiceType_Component,
+            IPapyrusScriptsComponentGetter _ => AComponent.ComponentType.BGSPapyrusScripts_Component,
+            IPathingDataComponentGetter _ => AComponent.ComponentType.BGSPathingData_Component,
+            IPropertySheetComponentGetter _ => AComponent.ComponentType.BGSPropertySheet_Component,
+            ISpaceshipAIActorComponentGetter _ => AComponent.ComponentType.BGSSpaceshipAIActor_Component,
+            ISpaceshipEquipmentComponentGetter _ => AComponent.ComponentType.BGSSpaceshipEquipment_Component,
+            ISpaceshipWeaponBindingsComponentGetter _ => AComponent.ComponentType.BGSSpaceshipWeaponBindings_Component,
+            IFormLinkDataComponentGetter _ => AComponent.ComponentType.BGSFormLinkData_Component,
+            IBlueprintComponentGetter _ => AComponent.ComponentType.Blueprint_Component,
+            IDestructibleObjectComponentGetter _ => AComponent.ComponentType.BGSDestructibleObject_Component,
+            IContainerComponentGetter _ => AComponent.ComponentType.TESContainer_Component,
+            IMagicTargetFormComponentGetter _ => AComponent.ComponentType.TESMagicTargetForm_Component,
+            IStoredTraversalsComponentGetter _ => AComponent.ComponentType.BGSStoredTraversals_Component,
+            IAddToInventoryOnDestroyComponentGetter _ => AComponent.ComponentType.BGSAddToInventoryOnDestroy_Component,
+            ICrowdComponentGetter _ => AComponent.ComponentType.BGSCrowdComponent_Component,
+            ISpaceshipHullCodeComponentGetter _ => AComponent.ComponentType.BGSSpaceshipHullCode_Component,
+            IPrimitiveComponentGetter _ => AComponent.ComponentType.BGSPrimitive_Component,
+            ISpawnOnDestroyComponentGetter _ => AComponent.ComponentType.BGSSpawnOnDestroy_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -238,9 +318,49 @@ partial class AComponentBinaryOverlay
             case AComponent.ComponentType.Volumes_Component:
                 return VolumesComponentBinaryOverlay.VolumesComponentFactory(stream, package);
             case AComponent.ComponentType.BGSPlanetContentManagerContentProperties_Component:
-                return PlanetContentManagerContentPropertiesBinaryOverlay.PlanetContentManagerContentPropertiesFactory(stream, package);
+                return PlanetContentManagerContentPropertiesComponentBinaryOverlay.PlanetContentManagerContentPropertiesComponentFactory(stream, package);
             case AComponent.ComponentType.BGSShipManagement:
                 return ShipManagementComponentBinaryOverlay.ShipManagementComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSExternalComponentDataSource_Component:
+                return ExternalDataSourceComponentBinaryOverlay.ExternalDataSourceComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSForcedLocRefType_Component:
+                return ForcedLocRefTypeComponentBinaryOverlay.ForcedLocRefTypeComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSLinkedVoiceType_Component:
+                return LinkedVoiceTypeComponentBinaryOverlay.LinkedVoiceTypeComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSPapyrusScripts_Component:
+                return PapyrusScriptsComponentBinaryOverlay.PapyrusScriptsComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSPathingData_Component:
+                return PathingDataComponentBinaryOverlay.PathingDataComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSPropertySheet_Component:
+                return PropertySheetComponentBinaryOverlay.PropertySheetComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSpaceshipAIActor_Component:
+                return SpaceshipAIActorComponentBinaryOverlay.SpaceshipAIActorComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSpaceshipEquipment_Component:
+                return SpaceshipEquipmentComponentBinaryOverlay.SpaceshipEquipmentComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSpaceshipWeaponBindings_Component:
+                return SpaceshipWeaponBindingsComponentBinaryOverlay.SpaceshipWeaponBindingsComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSFormLinkData_Component:
+                return FormLinkDataComponentBinaryOverlay.FormLinkDataComponentFactory(stream, package);
+            case AComponent.ComponentType.Blueprint_Component:
+                return BlueprintComponentBinaryOverlay.BlueprintComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSDestructibleObject_Component:
+                return DestructibleObjectComponentBinaryOverlay.DestructibleObjectComponentFactory(stream, package);
+            case AComponent.ComponentType.TESContainer_Component:
+                return ContainerComponentBinaryOverlay.ContainerComponentFactory(stream, package);
+            case AComponent.ComponentType.TESMagicTargetForm_Component:
+                return MagicTargetFormComponentBinaryOverlay.MagicTargetFormComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSStoredTraversals_Component:
+                return StoredTraversalsComponentBinaryOverlay.StoredTraversalsComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSAddToInventoryOnDestroy_Component:
+                return AddToInventoryOnDestroyComponentBinaryOverlay.AddToInventoryOnDestroyComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSCrowdComponent_Component:
+                return CrowdComponentBinaryOverlay.CrowdComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSpaceshipHullCode_Component:
+                return SpaceshipHullCodeComponentBinaryOverlay.SpaceshipHullCodeComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSPrimitive_Component:
+                return PrimitiveComponentBinaryOverlay.PrimitiveComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSpawnOnDestroy_Component:
+                return SpawnOnDestroyComponentBinaryOverlay.SpawnOnDestroyComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

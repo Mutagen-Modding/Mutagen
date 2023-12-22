@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         #region PhaseFragments
-        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList.FactoryByLazyParse<IScenePhaseFragmentGetter>(_structData.Slice(0x1), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
+        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments { get; private set; } = null!;
         protected int PhaseFragmentsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1235,6 +1235,14 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new SceneScriptFragmentsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                    Position = 0x1
+                };
+                ret.PhaseFragments = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
+                ret.PhaseFragmentsEndingPos = tempStream.Position;
+            }
             stream.Position += ret.PhaseFragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

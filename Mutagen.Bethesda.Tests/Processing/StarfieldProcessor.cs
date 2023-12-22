@@ -35,6 +35,7 @@ public class StarfieldProcessor : Processor
     protected override void AddDynamicProcessorInstructions()
     {
         base.AddDynamicProcessorInstructions();
+        AddDynamicProcessing(RecordType.Null, ProcessComponents);
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
@@ -135,6 +136,7 @@ public class StarfieldProcessor : Processor
             case StringsSource.Normal:
                 return new AStringsAlignment[]
                 {
+                    new StringsAlignmentCustom(null, ComponentsStringHandler),
                     new StringsAlignmentCustom("GMST", GameSettingStringHandler),
                     new RecordType[] { "KYWD", "FULL" },
                     new RecordType[] { "DMGT", "FULL" },
@@ -200,6 +202,92 @@ public class StarfieldProcessor : Processor
         if (edidRec.Content[0] != (byte)'s') return;
         if (!major.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
         AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, dataRec);
+    }
+
+    public void ComponentsStringHandler(
+        long loc,
+        MajorRecordFrame major,
+        List<StringEntry> processedStrings,
+        IStringsLookup overlay)
+    {
+        foreach (var bfcb in major.FindEnumerateSubrecords(RecordTypes.BFCB))
+        {
+            var componentStr = bfcb.AsString(major.Meta.Encodings.NonTranslated);
+            switch (componentStr)
+            {
+                case "TESFullName_Component":
+                {
+                    var full = major.TryFindSubrecordAfter(bfcb, RecordTypes.FULL);
+                    var bfce2 = major.TryFindSubrecordAfter(bfcb, RecordTypes.BFCE);
+                    if (full != null && bfce2 != null && full.Value.Location < bfce2.Value.Location)
+                    {
+                        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, full.Value);
+                    }
+
+                    break;
+                }
+                case "BGSSpaceshipHullCode_Component":
+                {
+                    var hull = major.TryFindSubrecordAfter(bfcb, RecordTypes.HULL);
+                    var bfce2 = major.TryFindSubrecordAfter(bfcb, RecordTypes.BFCE);
+                    if (hull != null && bfce2 != null && hull.Value.Location < bfce2.Value.Location)
+                    {
+                        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, hull.Value);
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    private void ProcessComponents(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var bfcb in majorFrame.FindEnumerateSubrecords(RecordTypes.BFCB))
+        {
+            switch (bfcb.AsString(majorFrame.Meta.Encodings.NonTranslated))
+            {
+                case "Blueprint_Component":
+                    ProcessBlueprintComponent(majorFrame, bfcb, fileOffset);
+                    break;
+            }
+        }
+    }
+
+    private void ProcessBlueprintComponent(
+        MajorRecordFrame majorFrame,
+        SubrecordPinFrame bfcb,
+        long fileOffset)
+    {
+        var buo4 = majorFrame.TryFindSubrecordAfter(bfcb, RecordTypes.BUO4);
+        var bfce = majorFrame.TryFindSubrecordAfter(bfcb, RecordTypes.BFCE);
+        if (bfce == null)
+        {
+            throw new ArgumentException();
+        }
+        if (buo4 != null)
+        {
+            int loc = 0;
+            while (loc < buo4.Value.ContentLength)
+            {
+                loc += 8;
+                ProcessZeroFloats(buo4.Value, fileOffset, ref loc, 6);
+                loc += 4;
+            }
+        }
+
+        foreach (var bodv in majorFrame.FindEnumerateSubrecords(RecordTypes.BODV))
+        {
+            if (bodv.Location > bfce.Value.Location)
+            {
+                break;
+            }
+
+            int loc = 0;
+            ProcessColorFloats(bodv, fileOffset, ref loc, alpha: false, amount: 3);
+        }
     }
 
     private void ProcessGameSettings(

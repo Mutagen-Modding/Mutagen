@@ -41,6 +41,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Region
 ### IExplodeSpawn
 - TextureSet
+### IExternalBaseTemplate
+- GenericBaseForm
+- LeveledBaseForm
 ### IIdleRelation
 - ActionRecord
 ### IItem
@@ -179,6 +182,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IStaticTarget
 ### GenericBaseForm
 - IConstructible
+- IExternalBaseTemplate
 ### Ingestible
 - IConstructible
 - IItem
@@ -189,6 +193,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IKeywordLinkedReference
 ### LegendaryItem
 - IItem
+### LeveledBaseForm
+- IExternalBaseTemplate
 ### LeveledItem
 - IConstructible
 - IItem

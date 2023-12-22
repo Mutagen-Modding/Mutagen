@@ -1692,9 +1692,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GenericBaseForm</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter> GenericBaseForm(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter> GenericBaseForm(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGenericBaseFormGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1704,9 +1704,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on GenericBaseForm</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter> GenericBaseForm(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter> GenericBaseForm(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGenericBaseFormGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGenericBaseForm, IGenericBaseFormGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4592,6 +4592,30 @@ namespace Mutagen.Bethesda.Starfield
             return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVoiceTypeOrList, IVoiceTypeOrListGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IVoiceTypeOrListGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IVoiceTypeOrList, IVoiceTypeOrListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IExternalBaseTemplate
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IExternalBaseTemplate</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IExternalBaseTemplate, IExternalBaseTemplateGetter> IExternalBaseTemplate(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IExternalBaseTemplate, IExternalBaseTemplateGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IExternalBaseTemplateGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IExternalBaseTemplate, IExternalBaseTemplateGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IExternalBaseTemplate
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IExternalBaseTemplate</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IExternalBaseTemplate, IExternalBaseTemplateGetter> IExternalBaseTemplate(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IExternalBaseTemplate, IExternalBaseTemplateGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IExternalBaseTemplateGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IExternalBaseTemplate, IExternalBaseTemplateGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

@@ -202,7 +202,7 @@
       <Float name="Unknown3" />
     </Fields>
   </Object>
-  <Object name="PlanetContentManagerContentProperties" objType="Subrecord" baseClass="AComponent">
+  <Object name="PlanetContentManagerContentPropertiesComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
       <UInt32 name="ZNAM" recordType="ZNAM" unknown="true" />
       <UInt8 name="YNAM" recordType="YNAM" unknown="true" />
@@ -224,6 +224,183 @@
   </Object>
   <Object name="ShipManagementComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
+    </Fields>
+  </Object>
+  <Object name="ExternalDataSourceComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="ExternalBaseTemplate" recordType="EXDC" >
+        <Interface>IExternalBaseTemplate</Interface>
+      </FormLink>
+      <RefList name="Sources" refName="ExternalDataSource" counterRecType="EXDZ" allowNoCounter="false" nullable="false" />
+      <List name="EXASs" counterRecType="EXAC" allowNoCounter="false" nullable="false" >
+        <String recordType="EXAS" />
+      </List>
+      <String name="EXBS" recordType="EXBS" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="ExternalDataSource" objType="Subrecord" >
+    <Fields>
+      <String name="Name" recordType="EXCN" nullable="false" />
+      <FormLink name="Source" recordType="EXCI" nullable="false" >
+        <Interface>IExternalBaseTemplate</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="ForcedLocRefTypeComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+    </Fields>
+  </Object>
+  <Object name="LinkedVoiceTypeComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="VoiceType" recordType="FCTF" refName="VoiceType" />
+    </Fields>
+  </Object>
+  <Object name="PapyrusScriptsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="PathingDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="PropertySheetComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipAIActorComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="SpaceshipAIActor" recordType="SAIA" refName="Npc" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipEquipmentComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="ESSF" recordType="ESSF" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipWeaponBindingsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data recordType="SHWB" >
+        <Fields>
+          <Int32 name="Slot1" />
+          <Int32 name="Slot2" />
+          <Int32 name="Slot3" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="FormLinkDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Links" refName="FormLinkComponentLink" counterRecType="ITMC" />
+    </Fields>
+  </Object>
+  <Object name="FormLinkComponentLink" objType="Subrecord">
+    <Fields>
+      <FormLink name="Keyword" refName="Keyword" recordType="FLKW" />
+      <FormLink name="LinkedForm" refName="StarfieldMajorRecord" recordType="FLFM" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Items" refName="BlueprintComponentItem" recordType="BUO4" />
+      <RefList name="BODSRows" refName="BlueprintComponentBODSRow" counterRecType="BODM" allowNoCounter="false" nullable="false" />
+      <UInt8 name="BLUF" recordType="BLUF" unknown="true" />
+      <UInt32 name="NextPartID" recordType="BOID" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponentItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="BaseItem" refName="GenericBaseForm" />
+      <FormLink name="ConstructionObject" refName="ConstructibleObject" />
+      <P3Float name="Position" />
+      <P3Float name="Rotation" />
+      <UInt32 name="PartID" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponentBODSRow" objType="Subrecord" >
+    <Fields>
+      <RefList name="BODSItems" refName="BlueprintComponentBODSItem" counterRecType="BODC" allowNoCounter="false" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="BlueprintComponentBODSItem" objType="Subrecord" >
+    <Fields>
+      <String name="Name" recordType="BODS" nullable="false" />
+      <Data recordType="BODV" >
+        <Fields>
+          <Color name="Color1" binaryType="NoAlphaFloat" unknown="true" />
+          <Color name="Color2" binaryType="NoAlphaFloat" unknown="true" />
+          <Color name="Color3" binaryType="NoAlphaFloat" unknown="true" />
+          <Int32 name="Unknown" unknown="true" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="DestructibleObjectComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefDirect name="Destructible" refName="Destructible" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="ContainerComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
+    </Fields>
+  </Object>
+  <Object name="MagicTargetFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="StoredTraversalsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data recordType="STRD" overflowRecordType="XXXX">
+        <Fields>
+          <RefList name="Traversals" counterLength="4" refName="TraversalReference" />
+          <RefList name="ActivatorTraversals" counterLength="4" refName="StoredTraversalsComponentItem" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="StoredTraversalsComponentItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Activator" refName="Activator" />
+      <P3Float name="Vector" />
+      <RefList name="Traversals" counterLength="4" refName="TraversalReference" />
+    </Fields>
+  </Object>
+  <Object name="AddToInventoryOnDestroyComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="Item" refName="LeveledItem" recordType="INAM" />
+    </Fields>
+  </Object>
+  <Object name="CrowdComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Float name="CDND" recordType="CDND" unknown="true" />
+      <ByteArray name="CDNS" recordType="CDNS" unknown="true" />
+      <RefList name="Items" refName="CrowdComponentItem" />
+    </Fields>
+  </Object>
+  <Object name="CrowdComponentItem" objType="Subrecord" >
+    <Fields>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <String name="STRV" recordType="STRV" unknown="true" />
+      <Float name="FLTV" recordType="FLTV" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="SpaceshipHullCodeComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <String name="HullCode" recordType="HULL" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="PrimitiveComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="SpawnOnDestroyComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="SpawnOnDestroy" recordType="SODA" >
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
     </Fields>
   </Object>
 </Loqui>

@@ -959,7 +959,9 @@ public abstract class Processor
 
         var deadKeys = KnownDeadStringKeys();
 
-        foreach (var entry in stringEntries.OrderBy(x => x.FileLocation))
+        foreach (var entry in stringEntries
+                     .DistinctBy(x => x.FileLocation)
+                     .OrderBy(x => x.FileLocation))
         {
             var knownDeadKeys = deadKeys?.GetOrDefault((ModKey, entry.Source));
             var dict = overlays[entry.Source];

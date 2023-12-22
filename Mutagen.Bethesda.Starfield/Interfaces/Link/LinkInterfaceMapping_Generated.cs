@@ -143,6 +143,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             VoiceType_Registration.Instance,
         });
         dict[typeof(IVoiceTypeOrListGetter)] = dict[typeof(IVoiceTypeOrList)] with { Setter = false };
+        dict[typeof(IExternalBaseTemplate)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            GenericBaseForm_Registration.Instance,
+            LeveledBaseForm_Registration.Instance,
+        });
+        dict[typeof(IExternalBaseTemplateGetter)] = dict[typeof(IExternalBaseTemplate)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,

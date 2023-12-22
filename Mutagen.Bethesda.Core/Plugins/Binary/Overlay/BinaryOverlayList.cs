@@ -22,6 +22,19 @@ internal abstract class BinaryOverlayList
             getter,
             locs);
     }
+    
+    public static IReadOnlyList<T> FactoryBySubrecordArray<T>(
+        ReadOnlyMemorySlice<byte> mem,
+        BinaryOverlayFactoryPackage package,
+        PluginBinaryOverlay.SpanFactory<T> getter,
+        IReadOnlyList<int> locs)
+    {
+        return new BinaryOverlayListBySubrecordLocationArray<T>(
+            mem,
+            package,
+            getter,
+            locs);
+    }
 
     public static IReadOnlyList<T> FactoryByArray<T>(
         ReadOnlyMemorySlice<byte> mem,
@@ -289,9 +302,10 @@ internal abstract class BinaryOverlayList
         PluginBinaryOverlay.SpanFactory<T> getter,
         bool skipHeader = true)
     {
-        var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.Subrecord(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(stream.RemainingMemory);
         var recType = initialHeader.RecordType;
+        IReadOnlyList<int> locs;
+        ReadOnlyMemorySlice<byte> mem;
         if (recType == countType)
         {
             var count = countLength switch
@@ -302,28 +316,38 @@ internal abstract class BinaryOverlayList
                 _ => throw new NotImplementedException(),
             };
             stream.Position += initialHeader.TotalLength;
-            return FactoryByArray(
-                mem: stream.RemainingMemory,
+            mem = stream.RemainingMemory;
+            locs = PluginBinaryOverlay.ParseRecordLocationsByCount(
+                stream: stream,
+                count: count,
+                trigger: trigger,
+                constants: package.MetaData.Constants.SubConstants,
+                skipHeader: false);
+        }
+        else
+        {
+            mem = stream.RemainingMemory;
+            locs = PluginBinaryOverlay.ParseRecordLocations(
+                stream: stream,
+                constants: package.MetaData.Constants.SubConstants,
+                trigger: trigger,
+                skipHeader: false);
+        }
+        if (skipHeader)
+        {
+            return FactoryBySubrecordArray(
+                mem: mem,
                 package: package,
                 getter: getter,
-                locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
-                    stream: stream,
-                    count: count,
-                    trigger: trigger,
-                    constants: package.MetaData.Constants.SubConstants,
-                    skipHeader: false));
+                locs: locs);
         }
         else
         {
             return FactoryByArray(
-                mem: stream.RemainingMemory,
+                mem: mem,
                 package: package,
                 getter: getter,
-                locs: PluginBinaryOverlay.ParseRecordLocations(
-                    stream: stream,
-                    constants: package.MetaData.Constants.SubConstants,
-                    trigger: trigger,
-                    skipHeader: skipHeader));
+                locs: locs);
         }
     }
 
@@ -584,6 +608,47 @@ internal abstract class BinaryOverlayList
         }
 
         public T this[int index] => _getter(_mem.Slice(_locations[index]), _package);
+
+        public int Count => _locations.Count;
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < _locations.Count; i++)
+            {
+                yield return this[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    private class BinaryOverlayListBySubrecordLocationArray<T> : IReadOnlyList<T>
+    {
+        private IReadOnlyList<int> _locations;
+        BinaryOverlayFactoryPackage _package;
+        private ReadOnlyMemorySlice<byte> _mem;
+        private PluginBinaryOverlay.SpanFactory<T> _getter;
+
+        public BinaryOverlayListBySubrecordLocationArray(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryOverlayFactoryPackage package,
+            PluginBinaryOverlay.SpanFactory<T> getter,
+            IReadOnlyList<int> locs)
+        {
+            _mem = mem;
+            _getter = getter;
+            _package = package;
+            _locations = locs;
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                var subRec = new SubrecordFrame(_package.MetaData, _mem.Slice(_locations[index]));
+                return _getter(subRec.Content, _package);
+            }
+        }
 
         public int Count => _locations.Count;
 

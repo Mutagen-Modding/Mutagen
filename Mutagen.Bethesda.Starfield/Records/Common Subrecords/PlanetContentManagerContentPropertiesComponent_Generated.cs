@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class PlanetContentManagerContentProperties :
+    public partial class PlanetContentManagerContentPropertiesComponent :
         AComponent,
-        IEquatable<IPlanetContentManagerContentPropertiesGetter>,
-        ILoquiObjectSetter<PlanetContentManagerContentProperties>,
-        IPlanetContentManagerContentProperties
+        IEquatable<IPlanetContentManagerContentPropertiesComponentGetter>,
+        ILoquiObjectSetter<PlanetContentManagerContentPropertiesComponent>,
+        IPlanetContentManagerContentPropertiesComponent
     {
         #region Ctor
-        public PlanetContentManagerContentProperties()
+        public PlanetContentManagerContentPropertiesComponent()
         {
             CustomCtor();
         }
@@ -56,37 +56,37 @@ namespace Mutagen.Bethesda.Starfield
         #region ZNAM
         public UInt32? ZNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.ZNAM => this.ZNAM;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.ZNAM => this.ZNAM;
         #endregion
         #region YNAM
         public Byte? YNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? IPlanetContentManagerContentPropertiesGetter.YNAM => this.YNAM;
+        Byte? IPlanetContentManagerContentPropertiesComponentGetter.YNAM => this.YNAM;
         #endregion
         #region XNAM
         public UInt32? XNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.XNAM => this.XNAM;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.XNAM => this.XNAM;
         #endregion
         #region WNAM
         public UInt32? WNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.WNAM => this.WNAM;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.WNAM => this.WNAM;
         #endregion
         #region VNAM
         public Byte? VNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? IPlanetContentManagerContentPropertiesGetter.VNAM => this.VNAM;
+        Byte? IPlanetContentManagerContentPropertiesComponentGetter.VNAM => this.VNAM;
         #endregion
         #region UNAM
         public UInt32? UNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.UNAM => this.UNAM;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.UNAM => this.UNAM;
         #endregion
         #region NAM1
         public Single? NAM1 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IPlanetContentManagerContentPropertiesGetter.NAM1 => this.NAM1;
+        Single? IPlanetContentManagerContentPropertiesComponentGetter.NAM1 => this.NAM1;
         #endregion
         #region Global
         private readonly IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
@@ -96,12 +96,12 @@ namespace Mutagen.Bethesda.Starfield
             set => _Global.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IPlanetContentManagerContentPropertiesGetter.Global => this.Global;
+        IFormLinkNullableGetter<IGlobalGetter> IPlanetContentManagerContentPropertiesComponentGetter.Global => this.Global;
         #endregion
         #region NAM3
         public UInt32? NAM3 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.NAM3 => this.NAM3;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.NAM3 => this.NAM3;
         #endregion
         #region NAM4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -112,32 +112,32 @@ namespace Mutagen.Bethesda.Starfield
             set => this._NAM4 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetContentManagerContentPropertiesGetter.NAM4 => this.NAM4;
+        ReadOnlyMemorySlice<Byte>? IPlanetContentManagerContentPropertiesComponentGetter.NAM4 => this.NAM4;
         #endregion
         #region NAM5
         public UInt32? NAM5 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.NAM5 => this.NAM5;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.NAM5 => this.NAM5;
         #endregion
         #region NAM6
         public UInt32? NAM6 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.NAM6 => this.NAM6;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.NAM6 => this.NAM6;
         #endregion
         #region NAM7
         public UInt32? NAM7 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.NAM7 => this.NAM7;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.NAM7 => this.NAM7;
         #endregion
         #region NAM8
         public Byte? NAM8 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? IPlanetContentManagerContentPropertiesGetter.NAM8 => this.NAM8;
+        Byte? IPlanetContentManagerContentPropertiesComponentGetter.NAM8 => this.NAM8;
         #endregion
         #region NAM9
         public UInt32? NAM9 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IPlanetContentManagerContentPropertiesGetter.NAM9 => this.NAM9;
+        UInt32? IPlanetContentManagerContentPropertiesComponentGetter.NAM9 => this.NAM9;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter>? IPlanetContentManagerContentPropertiesGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter>? IPlanetContentManagerContentPropertiesComponentGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlanetContentManagerContentPropertiesMixIn.Print(
+            PlanetContentManagerContentPropertiesComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -171,16 +171,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlanetContentManagerContentPropertiesGetter rhs) return false;
-            return ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlanetContentManagerContentPropertiesComponentGetter rhs) return false;
+            return ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlanetContentManagerContentPropertiesGetter? obj)
+        public bool Equals(IPlanetContentManagerContentPropertiesComponentGetter? obj)
         {
-            return ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PlanetContentManagerContentProperties.Mask<R>();
+                var ret = new PlanetContentManagerContentPropertiesComponent.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -447,16 +447,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(PlanetContentManagerContentProperties.Mask<bool>? printMask = null)
+            public string Print(PlanetContentManagerContentPropertiesComponent.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, PlanetContentManagerContentProperties.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlanetContentManagerContentPropertiesComponent.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(PlanetContentManagerContentProperties.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PlanetContentManagerContentPropertiesComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.ZNAM ?? true)
@@ -570,40 +570,40 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                PlanetContentManagerContentProperties_FieldIndex enu = (PlanetContentManagerContentProperties_FieldIndex)index;
+                PlanetContentManagerContentPropertiesComponent_FieldIndex enu = (PlanetContentManagerContentPropertiesComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetContentManagerContentProperties_FieldIndex.ZNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM:
                         return ZNAM;
-                    case PlanetContentManagerContentProperties_FieldIndex.YNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM:
                         return YNAM;
-                    case PlanetContentManagerContentProperties_FieldIndex.XNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM:
                         return XNAM;
-                    case PlanetContentManagerContentProperties_FieldIndex.WNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM:
                         return WNAM;
-                    case PlanetContentManagerContentProperties_FieldIndex.VNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM:
                         return VNAM;
-                    case PlanetContentManagerContentProperties_FieldIndex.UNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM:
                         return UNAM;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM1:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1:
                         return NAM1;
-                    case PlanetContentManagerContentProperties_FieldIndex.Global:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.Global:
                         return Global;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM3:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3:
                         return NAM3;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM4:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM4:
                         return NAM4;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM5:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5:
                         return NAM5;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM6:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6:
                         return NAM6;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM7:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7:
                         return NAM7;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM8:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8:
                         return NAM8;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM9:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9:
                         return NAM9;
-                    case PlanetContentManagerContentProperties_FieldIndex.Conditions:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions:
                         return Conditions;
                     default:
                         return base.GetNthMask(index);
@@ -612,55 +612,55 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                PlanetContentManagerContentProperties_FieldIndex enu = (PlanetContentManagerContentProperties_FieldIndex)index;
+                PlanetContentManagerContentPropertiesComponent_FieldIndex enu = (PlanetContentManagerContentPropertiesComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetContentManagerContentProperties_FieldIndex.ZNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM:
                         this.ZNAM = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.YNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM:
                         this.YNAM = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.XNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM:
                         this.XNAM = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.WNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM:
                         this.WNAM = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.VNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM:
                         this.VNAM = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.UNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM:
                         this.UNAM = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM1:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1:
                         this.NAM1 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.Global:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.Global:
                         this.Global = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM3:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3:
                         this.NAM3 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM4:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM4:
                         this.NAM4 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM5:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5:
                         this.NAM5 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM6:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6:
                         this.NAM6 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM7:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7:
                         this.NAM7 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM8:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8:
                         this.NAM8 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM9:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9:
                         this.NAM9 = ex;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.Conditions:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -671,55 +671,55 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                PlanetContentManagerContentProperties_FieldIndex enu = (PlanetContentManagerContentProperties_FieldIndex)index;
+                PlanetContentManagerContentPropertiesComponent_FieldIndex enu = (PlanetContentManagerContentPropertiesComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetContentManagerContentProperties_FieldIndex.ZNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM:
                         this.ZNAM = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.YNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM:
                         this.YNAM = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.XNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM:
                         this.XNAM = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.WNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM:
                         this.WNAM = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.VNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM:
                         this.VNAM = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.UNAM:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM:
                         this.UNAM = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM1:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1:
                         this.NAM1 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.Global:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.Global:
                         this.Global = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM3:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3:
                         this.NAM3 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM4:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM4:
                         this.NAM4 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM5:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5:
                         this.NAM5 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM6:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6:
                         this.NAM6 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM7:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7:
                         this.NAM7 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM8:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8:
                         this.NAM8 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.NAM9:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9:
                         this.NAM9 = (Exception?)obj;
                         break;
-                    case PlanetContentManagerContentProperties_FieldIndex.Conditions:
+                    case PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -955,29 +955,29 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlanetContentManagerContentPropertiesCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlanetContentManagerContentPropertiesSetterCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlanetContentManagerContentPropertiesComponentCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlanetContentManagerContentPropertiesComponentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PlanetContentManagerContentPropertiesBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlanetContentManagerContentPropertiesComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetContentManagerContentPropertiesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlanetContentManagerContentPropertiesComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static PlanetContentManagerContentProperties CreateFromBinary(
+        public new static PlanetContentManagerContentPropertiesComponent CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new PlanetContentManagerContentProperties();
-            ((PlanetContentManagerContentPropertiesSetterCommon)((IPlanetContentManagerContentPropertiesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PlanetContentManagerContentPropertiesComponent();
+            ((PlanetContentManagerContentPropertiesComponentSetterCommon)((IPlanetContentManagerContentPropertiesComponentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PlanetContentManagerContentProperties item,
+            out PlanetContentManagerContentPropertiesComponent item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -1003,23 +1003,23 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((PlanetContentManagerContentPropertiesSetterCommon)((IPlanetContentManagerContentPropertiesGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PlanetContentManagerContentPropertiesComponentSetterCommon)((IPlanetContentManagerContentPropertiesComponentGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new PlanetContentManagerContentProperties GetNew()
+        internal static new PlanetContentManagerContentPropertiesComponent GetNew()
         {
-            return new PlanetContentManagerContentProperties();
+            return new PlanetContentManagerContentPropertiesComponent();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPlanetContentManagerContentProperties :
+    public partial interface IPlanetContentManagerContentPropertiesComponent :
         IAComponent,
         IFormLinkContainer,
-        ILoquiObjectSetter<IPlanetContentManagerContentProperties>,
-        IPlanetContentManagerContentPropertiesGetter
+        ILoquiObjectSetter<IPlanetContentManagerContentPropertiesComponent>,
+        IPlanetContentManagerContentPropertiesComponentGetter
     {
         new UInt32? ZNAM { get; set; }
         new Byte? YNAM { get; set; }
@@ -1039,13 +1039,13 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<Condition>? Conditions { get; set; }
     }
 
-    public partial interface IPlanetContentManagerContentPropertiesGetter :
+    public partial interface IPlanetContentManagerContentPropertiesComponentGetter :
         IAComponentGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlanetContentManagerContentPropertiesGetter>
+        ILoquiObject<IPlanetContentManagerContentPropertiesComponentGetter>
     {
-        static new ILoquiRegistration StaticRegistration => PlanetContentManagerContentProperties_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlanetContentManagerContentPropertiesComponent_Registration.Instance;
         UInt32? ZNAM { get; }
         Byte? YNAM { get; }
         UInt32? XNAM { get; }
@@ -1068,42 +1068,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class PlanetContentManagerContentPropertiesMixIn
+    public static partial class PlanetContentManagerContentPropertiesComponentMixIn
     {
-        public static void Clear(this IPlanetContentManagerContentProperties item)
+        public static void Clear(this IPlanetContentManagerContentPropertiesComponent item)
         {
-            ((PlanetContentManagerContentPropertiesSetterCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PlanetContentManagerContentPropertiesComponentSetterCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PlanetContentManagerContentProperties.Mask<bool> GetEqualsMask(
-            this IPlanetContentManagerContentPropertiesGetter item,
-            IPlanetContentManagerContentPropertiesGetter rhs,
+        public static PlanetContentManagerContentPropertiesComponent.Mask<bool> GetEqualsMask(
+            this IPlanetContentManagerContentPropertiesComponentGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IPlanetContentManagerContentPropertiesGetter item,
+            this IPlanetContentManagerContentPropertiesComponentGetter item,
             string? name = null,
-            PlanetContentManagerContentProperties.Mask<bool>? printMask = null)
+            PlanetContentManagerContentPropertiesComponent.Mask<bool>? printMask = null)
         {
-            return ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).Print(
+            return ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IPlanetContentManagerContentPropertiesGetter item,
+            this IPlanetContentManagerContentPropertiesComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlanetContentManagerContentProperties.Mask<bool>? printMask = null)
+            PlanetContentManagerContentPropertiesComponent.Mask<bool>? printMask = null)
         {
-            ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).Print(
+            ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1111,39 +1111,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IPlanetContentManagerContentPropertiesGetter item,
-            IPlanetContentManagerContentPropertiesGetter rhs,
-            PlanetContentManagerContentProperties.TranslationMask? equalsMask = null)
+            this IPlanetContentManagerContentPropertiesComponentGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter rhs,
+            PlanetContentManagerContentPropertiesComponent.TranslationMask? equalsMask = null)
         {
-            return ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).Equals(
+            return ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPlanetContentManagerContentProperties lhs,
-            IPlanetContentManagerContentPropertiesGetter rhs,
-            out PlanetContentManagerContentProperties.ErrorMask errorMask,
-            PlanetContentManagerContentProperties.TranslationMask? copyMask = null)
+            this IPlanetContentManagerContentPropertiesComponent lhs,
+            IPlanetContentManagerContentPropertiesComponentGetter rhs,
+            out PlanetContentManagerContentPropertiesComponent.ErrorMask errorMask,
+            PlanetContentManagerContentPropertiesComponent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PlanetContentManagerContentProperties.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlanetContentManagerContentPropertiesComponent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPlanetContentManagerContentProperties lhs,
-            IPlanetContentManagerContentPropertiesGetter rhs,
+            this IPlanetContentManagerContentPropertiesComponent lhs,
+            IPlanetContentManagerContentPropertiesComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1151,32 +1151,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static PlanetContentManagerContentProperties DeepCopy(
-            this IPlanetContentManagerContentPropertiesGetter item,
-            PlanetContentManagerContentProperties.TranslationMask? copyMask = null)
+        public static PlanetContentManagerContentPropertiesComponent DeepCopy(
+            this IPlanetContentManagerContentPropertiesComponentGetter item,
+            PlanetContentManagerContentPropertiesComponent.TranslationMask? copyMask = null)
         {
-            return ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PlanetContentManagerContentProperties DeepCopy(
-            this IPlanetContentManagerContentPropertiesGetter item,
-            out PlanetContentManagerContentProperties.ErrorMask errorMask,
-            PlanetContentManagerContentProperties.TranslationMask? copyMask = null)
+        public static PlanetContentManagerContentPropertiesComponent DeepCopy(
+            this IPlanetContentManagerContentPropertiesComponentGetter item,
+            out PlanetContentManagerContentPropertiesComponent.ErrorMask errorMask,
+            PlanetContentManagerContentPropertiesComponent.TranslationMask? copyMask = null)
         {
-            return ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PlanetContentManagerContentProperties DeepCopy(
-            this IPlanetContentManagerContentPropertiesGetter item,
+        public static PlanetContentManagerContentPropertiesComponent DeepCopy(
+            this IPlanetContentManagerContentPropertiesComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1184,11 +1184,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPlanetContentManagerContentProperties item,
+            this IPlanetContentManagerContentPropertiesComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((PlanetContentManagerContentPropertiesSetterCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PlanetContentManagerContentPropertiesComponentSetterCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum PlanetContentManagerContentProperties_FieldIndex
+    internal enum PlanetContentManagerContentPropertiesComponent_FieldIndex
     {
         ZNAM = 0,
         YNAM = 1,
@@ -1226,9 +1226,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class PlanetContentManagerContentProperties_Registration : ILoquiRegistration
+    internal partial class PlanetContentManagerContentPropertiesComponent_Registration : ILoquiRegistration
     {
-        public static readonly PlanetContentManagerContentProperties_Registration Instance = new PlanetContentManagerContentProperties_Registration();
+        public static readonly PlanetContentManagerContentPropertiesComponent_Registration Instance = new PlanetContentManagerContentPropertiesComponent_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -1236,23 +1236,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 16;
 
-        public static readonly Type MaskType = typeof(PlanetContentManagerContentProperties.Mask<>);
+        public static readonly Type MaskType = typeof(PlanetContentManagerContentPropertiesComponent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PlanetContentManagerContentProperties.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PlanetContentManagerContentPropertiesComponent.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PlanetContentManagerContentProperties);
+        public static readonly Type ClassType = typeof(PlanetContentManagerContentPropertiesComponent);
 
-        public static readonly Type GetterType = typeof(IPlanetContentManagerContentPropertiesGetter);
+        public static readonly Type GetterType = typeof(IPlanetContentManagerContentPropertiesComponentGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPlanetContentManagerContentProperties);
+        public static readonly Type SetterType = typeof(IPlanetContentManagerContentPropertiesComponent);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.PlanetContentManagerContentProperties";
+        public const string FullName = "Mutagen.Bethesda.Starfield.PlanetContentManagerContentPropertiesComponent";
 
-        public const string Name = "PlanetContentManagerContentProperties";
+        public const string Name = "PlanetContentManagerContentPropertiesComponent";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS2);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(PlanetContentManagerContentPropertiesBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PlanetContentManagerContentPropertiesComponentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -1319,13 +1319,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class PlanetContentManagerContentPropertiesSetterCommon : AComponentSetterCommon
+    internal partial class PlanetContentManagerContentPropertiesComponentSetterCommon : AComponentSetterCommon
     {
-        public new static readonly PlanetContentManagerContentPropertiesSetterCommon Instance = new PlanetContentManagerContentPropertiesSetterCommon();
+        public new static readonly PlanetContentManagerContentPropertiesComponentSetterCommon Instance = new PlanetContentManagerContentPropertiesComponentSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPlanetContentManagerContentProperties item)
+        public void Clear(IPlanetContentManagerContentPropertiesComponent item)
         {
             ClearPartial();
             item.ZNAM = default;
@@ -1349,11 +1349,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IAComponent item)
         {
-            Clear(item: (IPlanetContentManagerContentProperties)item);
+            Clear(item: (IPlanetContentManagerContentPropertiesComponent)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IPlanetContentManagerContentProperties obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPlanetContentManagerContentPropertiesComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Global.Relink(mapping);
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPlanetContentManagerContentProperties item,
+            IPlanetContentManagerContentPropertiesComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: PlanetContentManagerContentPropertiesBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: PlanetContentManagerContentPropertiesComponentBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (PlanetContentManagerContentProperties)item,
+                item: (PlanetContentManagerContentPropertiesComponent)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1389,17 +1389,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class PlanetContentManagerContentPropertiesCommon : AComponentCommon
+    internal partial class PlanetContentManagerContentPropertiesComponentCommon : AComponentCommon
     {
-        public new static readonly PlanetContentManagerContentPropertiesCommon Instance = new PlanetContentManagerContentPropertiesCommon();
+        public new static readonly PlanetContentManagerContentPropertiesComponentCommon Instance = new PlanetContentManagerContentPropertiesComponentCommon();
 
-        public PlanetContentManagerContentProperties.Mask<bool> GetEqualsMask(
-            IPlanetContentManagerContentPropertiesGetter item,
-            IPlanetContentManagerContentPropertiesGetter rhs,
+        public PlanetContentManagerContentPropertiesComponent.Mask<bool> GetEqualsMask(
+            IPlanetContentManagerContentPropertiesComponentGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PlanetContentManagerContentProperties.Mask<bool>(false);
-            ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PlanetContentManagerContentPropertiesComponent.Mask<bool>(false);
+            ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1408,9 +1408,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IPlanetContentManagerContentPropertiesGetter item,
-            IPlanetContentManagerContentPropertiesGetter rhs,
-            PlanetContentManagerContentProperties.Mask<bool> ret,
+            IPlanetContentManagerContentPropertiesComponentGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter rhs,
+            PlanetContentManagerContentPropertiesComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ZNAM = item.ZNAM == rhs.ZNAM;
@@ -1436,9 +1436,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IPlanetContentManagerContentPropertiesGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter item,
             string? name = null,
-            PlanetContentManagerContentProperties.Mask<bool>? printMask = null)
+            PlanetContentManagerContentPropertiesComponent.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1450,18 +1450,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IPlanetContentManagerContentPropertiesGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlanetContentManagerContentProperties.Mask<bool>? printMask = null)
+            PlanetContentManagerContentPropertiesComponent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"PlanetContentManagerContentProperties =>");
+                sb.AppendLine($"PlanetContentManagerContentPropertiesComponent =>");
             }
             else
             {
-                sb.AppendLine($"{name} (PlanetContentManagerContentProperties) =>");
+                sb.AppendLine($"{name} (PlanetContentManagerContentPropertiesComponent) =>");
             }
             using (sb.Brace())
             {
@@ -1473,9 +1473,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IPlanetContentManagerContentPropertiesGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter item,
             StructuredStringBuilder sb,
-            PlanetContentManagerContentProperties.Mask<bool>? printMask = null)
+            PlanetContentManagerContentPropertiesComponent.Mask<bool>? printMask = null)
         {
             AComponentCommon.ToStringFields(
                 item: item,
@@ -1572,7 +1572,7 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static PlanetContentManagerContentProperties_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
+        public static PlanetContentManagerContentPropertiesComponent_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
         {
             switch (index)
             {
@@ -1583,75 +1583,75 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPlanetContentManagerContentPropertiesGetter? lhs,
-            IPlanetContentManagerContentPropertiesGetter? rhs,
+            IPlanetContentManagerContentPropertiesComponentGetter? lhs,
+            IPlanetContentManagerContentPropertiesComponentGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.ZNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM) ?? true))
             {
                 if (lhs.ZNAM != rhs.ZNAM) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.YNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM) ?? true))
             {
                 if (lhs.YNAM != rhs.YNAM) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.XNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM) ?? true))
             {
                 if (lhs.XNAM != rhs.XNAM) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.WNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM) ?? true))
             {
                 if (lhs.WNAM != rhs.WNAM) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.VNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM) ?? true))
             {
                 if (lhs.VNAM != rhs.VNAM) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.UNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM) ?? true))
             {
                 if (lhs.UNAM != rhs.UNAM) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1) ?? true))
             {
                 if (!lhs.NAM1.EqualsWithin(rhs.NAM1)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.Global) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Global) ?? true))
             {
                 if (!lhs.Global.Equals(rhs.Global)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3) ?? true))
             {
                 if (lhs.NAM3 != rhs.NAM3) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM4) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.NAM4, rhs.NAM4)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5) ?? true))
             {
                 if (lhs.NAM5 != rhs.NAM5) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6) ?? true))
             {
                 if (lhs.NAM6 != rhs.NAM6) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM7) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7) ?? true))
             {
                 if (lhs.NAM7 != rhs.NAM7) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM8) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8) ?? true))
             {
                 if (lhs.NAM8 != rhs.NAM8) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM9) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9) ?? true))
             {
                 if (lhs.NAM9 != rhs.NAM9) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlanetContentManagerContentProperties_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1662,12 +1662,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IPlanetContentManagerContentPropertiesGetter?)lhs,
-                rhs: rhs as IPlanetContentManagerContentPropertiesGetter,
+                lhs: (IPlanetContentManagerContentPropertiesComponentGetter?)lhs,
+                rhs: rhs as IPlanetContentManagerContentPropertiesComponentGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IPlanetContentManagerContentPropertiesGetter item)
+        public virtual int GetHashCode(IPlanetContentManagerContentPropertiesComponentGetter item)
         {
             var hash = new HashCode();
             if (item.ZNAM is {} ZNAMitem)
@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IAComponentGetter item)
         {
-            return GetHashCode(item: (IPlanetContentManagerContentPropertiesGetter)item);
+            return GetHashCode(item: (IPlanetContentManagerContentPropertiesComponentGetter)item);
         }
         
         #endregion
@@ -1742,11 +1742,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return PlanetContentManagerContentProperties.GetNew();
+            return PlanetContentManagerContentPropertiesComponent.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetContentManagerContentPropertiesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetContentManagerContentPropertiesComponentGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -1769,14 +1769,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class PlanetContentManagerContentPropertiesSetterTranslationCommon : AComponentSetterTranslationCommon
+    internal partial class PlanetContentManagerContentPropertiesComponentSetterTranslationCommon : AComponentSetterTranslationCommon
     {
-        public new static readonly PlanetContentManagerContentPropertiesSetterTranslationCommon Instance = new PlanetContentManagerContentPropertiesSetterTranslationCommon();
+        public new static readonly PlanetContentManagerContentPropertiesComponentSetterTranslationCommon Instance = new PlanetContentManagerContentPropertiesComponentSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPlanetContentManagerContentProperties item,
-            IPlanetContentManagerContentPropertiesGetter rhs,
+            IPlanetContentManagerContentPropertiesComponent item,
+            IPlanetContentManagerContentPropertiesComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1787,43 +1787,43 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.ZNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM) ?? true))
             {
                 item.ZNAM = rhs.ZNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.YNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM) ?? true))
             {
                 item.YNAM = rhs.YNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.XNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM) ?? true))
             {
                 item.XNAM = rhs.XNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.WNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM) ?? true))
             {
                 item.WNAM = rhs.WNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.VNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM) ?? true))
             {
                 item.VNAM = rhs.VNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.UNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM) ?? true))
             {
                 item.UNAM = rhs.UNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1) ?? true))
             {
                 item.NAM1 = rhs.NAM1;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.Global) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Global) ?? true))
             {
                 item.Global.SetTo(rhs.Global.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3) ?? true))
             {
                 item.NAM3 = rhs.NAM3;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM4) ?? true))
             {
                 if(rhs.NAM4 is {} NAM4rhs)
                 {
@@ -1834,29 +1834,29 @@ namespace Mutagen.Bethesda.Starfield
                     item.NAM4 = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5) ?? true))
             {
                 item.NAM5 = rhs.NAM5;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM6) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6) ?? true))
             {
                 item.NAM6 = rhs.NAM6;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM7) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7) ?? true))
             {
                 item.NAM7 = rhs.NAM7;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM8) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8) ?? true))
             {
                 item.NAM8 = rhs.NAM8;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.NAM9) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9) ?? true))
             {
                 item.NAM9 = rhs.NAM9;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentProperties_FieldIndex.Conditions) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions) ?? true))
             {
-                errorMask?.PushIndex((int)PlanetContentManagerContentProperties_FieldIndex.Conditions);
+                errorMask?.PushIndex((int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions);
                 try
                 {
                     if ((rhs.Conditions != null))
@@ -1897,8 +1897,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IPlanetContentManagerContentProperties)item,
-                rhs: (IPlanetContentManagerContentPropertiesGetter)rhs,
+                item: (IPlanetContentManagerContentPropertiesComponent)item,
+                rhs: (IPlanetContentManagerContentPropertiesComponentGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1906,12 +1906,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public PlanetContentManagerContentProperties DeepCopy(
-            IPlanetContentManagerContentPropertiesGetter item,
-            PlanetContentManagerContentProperties.TranslationMask? copyMask = null)
+        public PlanetContentManagerContentPropertiesComponent DeepCopy(
+            IPlanetContentManagerContentPropertiesComponentGetter item,
+            PlanetContentManagerContentPropertiesComponent.TranslationMask? copyMask = null)
         {
-            PlanetContentManagerContentProperties ret = (PlanetContentManagerContentProperties)((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).GetNew();
-            ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlanetContentManagerContentPropertiesComponent ret = (PlanetContentManagerContentPropertiesComponent)((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).GetNew();
+            ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1920,30 +1920,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public PlanetContentManagerContentProperties DeepCopy(
-            IPlanetContentManagerContentPropertiesGetter item,
-            out PlanetContentManagerContentProperties.ErrorMask errorMask,
-            PlanetContentManagerContentProperties.TranslationMask? copyMask = null)
+        public PlanetContentManagerContentPropertiesComponent DeepCopy(
+            IPlanetContentManagerContentPropertiesComponentGetter item,
+            out PlanetContentManagerContentPropertiesComponent.ErrorMask errorMask,
+            PlanetContentManagerContentPropertiesComponent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PlanetContentManagerContentProperties ret = (PlanetContentManagerContentProperties)((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).GetNew();
-            ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlanetContentManagerContentPropertiesComponent ret = (PlanetContentManagerContentPropertiesComponent)((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).GetNew();
+            ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PlanetContentManagerContentProperties.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlanetContentManagerContentPropertiesComponent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PlanetContentManagerContentProperties DeepCopy(
-            IPlanetContentManagerContentPropertiesGetter item,
+        public PlanetContentManagerContentPropertiesComponent DeepCopy(
+            IPlanetContentManagerContentPropertiesComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PlanetContentManagerContentProperties ret = (PlanetContentManagerContentProperties)((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)item).CommonInstance()!).GetNew();
-            ((PlanetContentManagerContentPropertiesSetterTranslationCommon)((IPlanetContentManagerContentPropertiesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlanetContentManagerContentPropertiesComponent ret = (PlanetContentManagerContentPropertiesComponent)((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)item).CommonInstance()!).GetNew();
+            ((PlanetContentManagerContentPropertiesComponentSetterTranslationCommon)((IPlanetContentManagerContentPropertiesComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1959,21 +1959,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlanetContentManagerContentProperties
+    public partial class PlanetContentManagerContentPropertiesComponent
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlanetContentManagerContentProperties_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => PlanetContentManagerContentProperties_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlanetContentManagerContentPropertiesComponent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlanetContentManagerContentPropertiesComponent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PlanetContentManagerContentPropertiesCommon.Instance;
+        protected override object CommonInstance() => PlanetContentManagerContentPropertiesComponentCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return PlanetContentManagerContentPropertiesSetterCommon.Instance;
+            return PlanetContentManagerContentPropertiesComponentSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PlanetContentManagerContentPropertiesSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlanetContentManagerContentPropertiesComponentSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1984,14 +1984,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlanetContentManagerContentPropertiesBinaryWriteTranslation :
+    public partial class PlanetContentManagerContentPropertiesComponentBinaryWriteTranslation :
         AComponentBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PlanetContentManagerContentPropertiesBinaryWriteTranslation Instance = new();
+        public new static readonly PlanetContentManagerContentPropertiesComponentBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IPlanetContentManagerContentPropertiesGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -2076,7 +2076,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IPlanetContentManagerContentPropertiesGetter item,
+            IPlanetContentManagerContentPropertiesComponentGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IPlanetContentManagerContentPropertiesGetter)item,
+                item: (IPlanetContentManagerContentPropertiesComponentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -2103,19 +2103,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IPlanetContentManagerContentPropertiesGetter)item,
+                item: (IPlanetContentManagerContentPropertiesComponentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class PlanetContentManagerContentPropertiesBinaryCreateTranslation : AComponentBinaryCreateTranslation
+    internal partial class PlanetContentManagerContentPropertiesComponentBinaryCreateTranslation : AComponentBinaryCreateTranslation
     {
-        public new static readonly PlanetContentManagerContentPropertiesBinaryCreateTranslation Instance = new PlanetContentManagerContentPropertiesBinaryCreateTranslation();
+        public new static readonly PlanetContentManagerContentPropertiesComponentBinaryCreateTranslation Instance = new PlanetContentManagerContentPropertiesComponentBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IPlanetContentManagerContentProperties item,
+            IPlanetContentManagerContentPropertiesComponent item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -2130,91 +2130,91 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ZNAM = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.ZNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.YNAM = frame.ReadUInt8();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.YNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XNAM = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.XNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WNAM = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.WNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VNAM = frame.ReadUInt8();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.VNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UNAM = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.UNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM1;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.Global;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Global;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM3 = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM3;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM4 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM4;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM4;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM5 = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM5;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM6 = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM6;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM7 = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM7;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM8 = frame.ReadUInt8();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM8;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM9 = frame.ReadUInt32();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM9;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary)
                         .CastExtendedList<Condition>();
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.Conditions;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions;
                 }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2248,7 +2248,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class PlanetContentManagerContentPropertiesBinaryTranslationMixIn
+    public static class PlanetContentManagerContentPropertiesComponentBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2257,31 +2257,31 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class PlanetContentManagerContentPropertiesBinaryOverlay :
+    internal partial class PlanetContentManagerContentPropertiesComponentBinaryOverlay :
         AComponentBinaryOverlay,
-        IPlanetContentManagerContentPropertiesGetter
+        IPlanetContentManagerContentPropertiesComponentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlanetContentManagerContentProperties_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => PlanetContentManagerContentProperties_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlanetContentManagerContentPropertiesComponent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlanetContentManagerContentPropertiesComponent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PlanetContentManagerContentPropertiesCommon.Instance;
+        protected override object CommonInstance() => PlanetContentManagerContentPropertiesComponentCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PlanetContentManagerContentPropertiesSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlanetContentManagerContentPropertiesComponentSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlanetContentManagerContentPropertiesCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlanetContentManagerContentPropertiesComponentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PlanetContentManagerContentPropertiesBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlanetContentManagerContentPropertiesComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetContentManagerContentPropertiesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlanetContentManagerContentPropertiesComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -2354,7 +2354,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected PlanetContentManagerContentPropertiesBinaryOverlay(
+        protected PlanetContentManagerContentPropertiesComponentBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2364,7 +2364,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IPlanetContentManagerContentPropertiesGetter PlanetContentManagerContentPropertiesFactory(
+        public static IPlanetContentManagerContentPropertiesComponentGetter PlanetContentManagerContentPropertiesComponentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -2376,7 +2376,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new PlanetContentManagerContentPropertiesBinaryOverlay(
+            var ret = new PlanetContentManagerContentPropertiesComponentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -2388,12 +2388,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IPlanetContentManagerContentPropertiesGetter PlanetContentManagerContentPropertiesFactory(
+        public static IPlanetContentManagerContentPropertiesComponentGetter PlanetContentManagerContentPropertiesComponentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return PlanetContentManagerContentPropertiesFactory(
+            return PlanetContentManagerContentPropertiesComponentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -2414,77 +2414,77 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ZNAM:
                 {
                     _ZNAMLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.ZNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _YNAMLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.YNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _XNAMLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.XNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     _WNAMLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.WNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _VNAMLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.VNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     _UNAMLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.UNAM;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _NAM1Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM1;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _GlobalLocation = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.Global;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Global;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     _NAM3Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM3;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     _NAM4Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM4;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM4;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     _NAM5Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM5;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     _NAM6Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM6;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     _NAM7Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM7;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     _NAM8Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM8;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     _NAM9Location = (stream.Position - offset);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.NAM9;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return (int)PlanetContentManagerContentProperties_FieldIndex.Conditions;
+                    return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(
@@ -2517,7 +2517,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlanetContentManagerContentPropertiesMixIn.Print(
+            PlanetContentManagerContentPropertiesComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -2528,16 +2528,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlanetContentManagerContentPropertiesGetter rhs) return false;
-            return ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlanetContentManagerContentPropertiesComponentGetter rhs) return false;
+            return ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlanetContentManagerContentPropertiesGetter? obj)
+        public bool Equals(IPlanetContentManagerContentPropertiesComponentGetter? obj)
         {
-            return ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlanetContentManagerContentPropertiesCommon)((IPlanetContentManagerContentPropertiesGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlanetContentManagerContentPropertiesComponentCommon)((IPlanetContentManagerContentPropertiesComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

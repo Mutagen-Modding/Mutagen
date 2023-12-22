@@ -424,6 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILeveledBaseForm :
+        IExternalBaseTemplate,
         ILeveledBaseFormGetter,
         ILoquiObjectSetter<ILeveledBaseFormInternal>,
         IStarfieldMajorRecordInternal
@@ -441,6 +442,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILeveledBaseFormGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IExternalBaseTemplateGetter,
         ILoquiObject<ILeveledBaseFormGetter>,
         IMapsToGetter<ILeveledBaseFormGetter>
     {

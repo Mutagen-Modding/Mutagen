@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         #region Structs
-        public IReadOnlyList<IScriptEntryStructsGetter> Structs => BinaryOverlayList.FactoryByLazyParse<IScriptEntryStructsGetter>(_structData, _package, countLength: 4, (s, p) => ScriptEntryStructsBinaryOverlay.ScriptEntryStructsFactory(s, p));
+        public IReadOnlyList<IScriptEntryStructsGetter> Structs { get; private set; } = null!;
         protected int StructsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1230,6 +1230,13 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new ScriptStructListPropertyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                };
+                ret.Structs = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 4, (s, p) => ScriptEntryStructsBinaryOverlay.ScriptEntryStructsFactory(s, p));
+                ret.StructsEndingPos = tempStream.Position;
+            }
             stream.Position += ret.StructsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -1948,12 +1948,72 @@ namespace Mutagen.Bethesda.Starfield
                 case "VolumesComponent":
                 case "IVolumesComponentGetter":
                 case "IVolumesComponent":
-                case "PlanetContentManagerContentProperties":
-                case "IPlanetContentManagerContentPropertiesGetter":
-                case "IPlanetContentManagerContentProperties":
+                case "PlanetContentManagerContentPropertiesComponent":
+                case "IPlanetContentManagerContentPropertiesComponentGetter":
+                case "IPlanetContentManagerContentPropertiesComponent":
                 case "ShipManagementComponent":
                 case "IShipManagementComponentGetter":
                 case "IShipManagementComponent":
+                case "ExternalDataSourceComponent":
+                case "IExternalDataSourceComponentGetter":
+                case "IExternalDataSourceComponent":
+                case "ForcedLocRefTypeComponent":
+                case "IForcedLocRefTypeComponentGetter":
+                case "IForcedLocRefTypeComponent":
+                case "LinkedVoiceTypeComponent":
+                case "ILinkedVoiceTypeComponentGetter":
+                case "ILinkedVoiceTypeComponent":
+                case "PapyrusScriptsComponent":
+                case "IPapyrusScriptsComponentGetter":
+                case "IPapyrusScriptsComponent":
+                case "PathingDataComponent":
+                case "IPathingDataComponentGetter":
+                case "IPathingDataComponent":
+                case "PropertySheetComponent":
+                case "IPropertySheetComponentGetter":
+                case "IPropertySheetComponent":
+                case "SpaceshipAIActorComponent":
+                case "ISpaceshipAIActorComponentGetter":
+                case "ISpaceshipAIActorComponent":
+                case "SpaceshipEquipmentComponent":
+                case "ISpaceshipEquipmentComponentGetter":
+                case "ISpaceshipEquipmentComponent":
+                case "SpaceshipWeaponBindingsComponent":
+                case "ISpaceshipWeaponBindingsComponentGetter":
+                case "ISpaceshipWeaponBindingsComponent":
+                case "FormLinkDataComponent":
+                case "IFormLinkDataComponentGetter":
+                case "IFormLinkDataComponent":
+                case "BlueprintComponent":
+                case "IBlueprintComponentGetter":
+                case "IBlueprintComponent":
+                case "DestructibleObjectComponent":
+                case "IDestructibleObjectComponentGetter":
+                case "IDestructibleObjectComponent":
+                case "ContainerComponent":
+                case "IContainerComponentGetter":
+                case "IContainerComponent":
+                case "MagicTargetFormComponent":
+                case "IMagicTargetFormComponentGetter":
+                case "IMagicTargetFormComponent":
+                case "StoredTraversalsComponent":
+                case "IStoredTraversalsComponentGetter":
+                case "IStoredTraversalsComponent":
+                case "AddToInventoryOnDestroyComponent":
+                case "IAddToInventoryOnDestroyComponentGetter":
+                case "IAddToInventoryOnDestroyComponent":
+                case "CrowdComponent":
+                case "ICrowdComponentGetter":
+                case "ICrowdComponent":
+                case "SpaceshipHullCodeComponent":
+                case "ISpaceshipHullCodeComponentGetter":
+                case "ISpaceshipHullCodeComponent":
+                case "PrimitiveComponent":
+                case "IPrimitiveComponentGetter":
+                case "IPrimitiveComponent":
+                case "SpawnOnDestroyComponent":
+                case "ISpawnOnDestroyComponentGetter":
+                case "ISpawnOnDestroyComponent":
                     break;
                 case "DialogResponses":
                 case "IDialogResponsesGetter":

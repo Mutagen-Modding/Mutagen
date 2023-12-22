@@ -3,5 +3,6 @@
   <Object name="LeveledBaseForm" recordType="LVLB" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IExternalBaseTemplate</LinkInterface>
   </Object>
 </Loqui>

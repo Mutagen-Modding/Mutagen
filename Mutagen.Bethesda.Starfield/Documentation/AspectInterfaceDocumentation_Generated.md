@@ -10,6 +10,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - DialogResponses
+- GenericBaseForm
 - LeveledItem
 - MagicEffect
 - MiscItem
@@ -87,6 +88,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ArmorModification
 - ASceneAction
 - BipedObjectData
+- BlueprintComponentBODSItem
 - Book
 - CameraSceneAction
 - Cell
@@ -96,6 +98,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DamageType
 - DialogTopic
 - DialogueSceneAction
+- ExternalDataSource
 - FaceMorphPhenotype
 - FaceMorphPhenotypeItem
 - Faction
@@ -163,6 +166,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BendableSpline
 - Book
 - Container
+- GenericBaseForm
 - Ingestible
 - LegendaryItem
 - LeveledItem
@@ -178,6 +182,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### IPositionRotation
 - APlacedTrap
+- BlueprintComponentItem
 - PlacedArrow
 - PlacedBarrier
 - PlacedBeam
@@ -198,6 +203,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- GenericBaseForm
 - LeveledItem
 - MagicEffect
 - MiscItem
@@ -259,6 +265,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### BipedObjectData
 - INamed
+### BlueprintComponentBODSItem
+- INamed
+### BlueprintComponentItem
+- IPositionRotation
 ### BodyData
 - IModeled
 ### Book
@@ -295,6 +305,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### DialogueSceneAction
 - INamed
+### ExternalDataSource
+- INamed
 ### FaceMorphPhenotype
 - INamed
 ### FaceMorphPhenotypeItem
@@ -310,6 +322,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### FxSceneAction
 - INamed
+### GenericBaseForm
+- IHaveVirtualMachineAdapter
+- IObjectBounded
+- IScripted
 ### HeadPart
 - IModeled
 - INamed
