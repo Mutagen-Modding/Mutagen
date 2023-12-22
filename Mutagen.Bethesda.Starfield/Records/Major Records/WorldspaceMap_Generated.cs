@@ -37,38 +37,27 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class CellWaterVelocity :
-        ICellWaterVelocity,
-        IEquatable<ICellWaterVelocityGetter>,
-        ILoquiObjectSetter<CellWaterVelocity>
+    public partial class WorldspaceMap :
+        IEquatable<IWorldspaceMapGetter>,
+        ILoquiObjectSetter<WorldspaceMap>,
+        IWorldspaceMap
     {
         #region Ctor
-        public CellWaterVelocity()
+        public WorldspaceMap()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Offset
-        public P3Float Offset { get; set; } = default;
+        #region UsableDimensions
+        public P2Int UsableDimensions { get; set; } = default;
         #endregion
-        #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        #region NorthwestCellCoords
+        public P2Int16 NorthwestCellCoords { get; set; } = default;
         #endregion
-        #region Angle
-        public P3Float Angle { get; set; } = default;
-        #endregion
-        #region UnknownBytes
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _UnknownBytes = new byte[0];
-        public MemorySlice<Byte> UnknownBytes
-        {
-            get => _UnknownBytes;
-            set => this._UnknownBytes = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellWaterVelocityGetter.UnknownBytes => this.UnknownBytes;
+        #region SoutheastCellCoords
+        public P2Int16 SoutheastCellCoords { get; set; } = default;
         #endregion
 
         #region To String
@@ -77,7 +66,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellWaterVelocityMixIn.Print(
+            WorldspaceMapMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -88,16 +77,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellWaterVelocityGetter rhs) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWorldspaceMapGetter rhs) return false;
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ICellWaterVelocityGetter? obj)
+        public bool Equals(IWorldspaceMapGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -109,22 +98,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Offset = initialValue;
-                this.Unknown = initialValue;
-                this.Angle = initialValue;
-                this.UnknownBytes = initialValue;
+                this.UsableDimensions = initialValue;
+                this.NorthwestCellCoords = initialValue;
+                this.SoutheastCellCoords = initialValue;
             }
 
             public Mask(
-                TItem Offset,
-                TItem Unknown,
-                TItem Angle,
-                TItem UnknownBytes)
+                TItem UsableDimensions,
+                TItem NorthwestCellCoords,
+                TItem SoutheastCellCoords)
             {
-                this.Offset = Offset;
-                this.Unknown = Unknown;
-                this.Angle = Angle;
-                this.UnknownBytes = UnknownBytes;
+                this.UsableDimensions = UsableDimensions;
+                this.NorthwestCellCoords = NorthwestCellCoords;
+                this.SoutheastCellCoords = SoutheastCellCoords;
             }
 
             #pragma warning disable CS8618
@@ -136,10 +122,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Offset;
-            public TItem Unknown;
-            public TItem Angle;
-            public TItem UnknownBytes;
+            public TItem UsableDimensions;
+            public TItem NorthwestCellCoords;
+            public TItem SoutheastCellCoords;
             #endregion
 
             #region Equals
@@ -152,19 +137,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Offset, rhs.Offset)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Angle, rhs.Angle)) return false;
-                if (!object.Equals(this.UnknownBytes, rhs.UnknownBytes)) return false;
+                if (!object.Equals(this.UsableDimensions, rhs.UsableDimensions)) return false;
+                if (!object.Equals(this.NorthwestCellCoords, rhs.NorthwestCellCoords)) return false;
+                if (!object.Equals(this.SoutheastCellCoords, rhs.SoutheastCellCoords)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Offset);
-                hash.Add(this.Unknown);
-                hash.Add(this.Angle);
-                hash.Add(this.UnknownBytes);
+                hash.Add(this.UsableDimensions);
+                hash.Add(this.NorthwestCellCoords);
+                hash.Add(this.SoutheastCellCoords);
                 return hash.ToHashCode();
             }
 
@@ -173,10 +156,9 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Offset)) return false;
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Angle)) return false;
-                if (!eval(this.UnknownBytes)) return false;
+                if (!eval(this.UsableDimensions)) return false;
+                if (!eval(this.NorthwestCellCoords)) return false;
+                if (!eval(this.SoutheastCellCoords)) return false;
                 return true;
             }
             #endregion
@@ -184,10 +166,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Offset)) return true;
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Angle)) return true;
-                if (eval(this.UnknownBytes)) return true;
+                if (eval(this.UsableDimensions)) return true;
+                if (eval(this.NorthwestCellCoords)) return true;
+                if (eval(this.SoutheastCellCoords)) return true;
                 return false;
             }
             #endregion
@@ -195,50 +176,45 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new CellWaterVelocity.Mask<R>();
+                var ret = new WorldspaceMap.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Offset = eval(this.Offset);
-                obj.Unknown = eval(this.Unknown);
-                obj.Angle = eval(this.Angle);
-                obj.UnknownBytes = eval(this.UnknownBytes);
+                obj.UsableDimensions = eval(this.UsableDimensions);
+                obj.NorthwestCellCoords = eval(this.NorthwestCellCoords);
+                obj.SoutheastCellCoords = eval(this.SoutheastCellCoords);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(CellWaterVelocity.Mask<bool>? printMask = null)
+            public string Print(WorldspaceMap.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, CellWaterVelocity.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceMap.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(CellWaterVelocity.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(WorldspaceMap.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Offset ?? true)
+                    if (printMask?.UsableDimensions ?? true)
                     {
-                        sb.AppendItem(Offset, "Offset");
+                        sb.AppendItem(UsableDimensions, "UsableDimensions");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.NorthwestCellCoords ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(NorthwestCellCoords, "NorthwestCellCoords");
                     }
-                    if (printMask?.Angle ?? true)
+                    if (printMask?.SoutheastCellCoords ?? true)
                     {
-                        sb.AppendItem(Angle, "Angle");
-                    }
-                    if (printMask?.UnknownBytes ?? true)
-                    {
-                        sb.AppendItem(UnknownBytes, "UnknownBytes");
+                        sb.AppendItem(SoutheastCellCoords, "SoutheastCellCoords");
                     }
                 }
             }
@@ -264,26 +240,23 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Offset;
-            public Exception? Unknown;
-            public Exception? Angle;
-            public Exception? UnknownBytes;
+            public Exception? UsableDimensions;
+            public Exception? NorthwestCellCoords;
+            public Exception? SoutheastCellCoords;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                CellWaterVelocity_FieldIndex enu = (CellWaterVelocity_FieldIndex)index;
+                WorldspaceMap_FieldIndex enu = (WorldspaceMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellWaterVelocity_FieldIndex.Offset:
-                        return Offset;
-                    case CellWaterVelocity_FieldIndex.Unknown:
-                        return Unknown;
-                    case CellWaterVelocity_FieldIndex.Angle:
-                        return Angle;
-                    case CellWaterVelocity_FieldIndex.UnknownBytes:
-                        return UnknownBytes;
+                    case WorldspaceMap_FieldIndex.UsableDimensions:
+                        return UsableDimensions;
+                    case WorldspaceMap_FieldIndex.NorthwestCellCoords:
+                        return NorthwestCellCoords;
+                    case WorldspaceMap_FieldIndex.SoutheastCellCoords:
+                        return SoutheastCellCoords;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -291,20 +264,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                CellWaterVelocity_FieldIndex enu = (CellWaterVelocity_FieldIndex)index;
+                WorldspaceMap_FieldIndex enu = (WorldspaceMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellWaterVelocity_FieldIndex.Offset:
-                        this.Offset = ex;
+                    case WorldspaceMap_FieldIndex.UsableDimensions:
+                        this.UsableDimensions = ex;
                         break;
-                    case CellWaterVelocity_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case WorldspaceMap_FieldIndex.NorthwestCellCoords:
+                        this.NorthwestCellCoords = ex;
                         break;
-                    case CellWaterVelocity_FieldIndex.Angle:
-                        this.Angle = ex;
-                        break;
-                    case CellWaterVelocity_FieldIndex.UnknownBytes:
-                        this.UnknownBytes = ex;
+                    case WorldspaceMap_FieldIndex.SoutheastCellCoords:
+                        this.SoutheastCellCoords = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -313,20 +283,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                CellWaterVelocity_FieldIndex enu = (CellWaterVelocity_FieldIndex)index;
+                WorldspaceMap_FieldIndex enu = (WorldspaceMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellWaterVelocity_FieldIndex.Offset:
-                        this.Offset = (Exception?)obj;
+                    case WorldspaceMap_FieldIndex.UsableDimensions:
+                        this.UsableDimensions = (Exception?)obj;
                         break;
-                    case CellWaterVelocity_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case WorldspaceMap_FieldIndex.NorthwestCellCoords:
+                        this.NorthwestCellCoords = (Exception?)obj;
                         break;
-                    case CellWaterVelocity_FieldIndex.Angle:
-                        this.Angle = (Exception?)obj;
-                        break;
-                    case CellWaterVelocity_FieldIndex.UnknownBytes:
-                        this.UnknownBytes = (Exception?)obj;
+                    case WorldspaceMap_FieldIndex.SoutheastCellCoords:
+                        this.SoutheastCellCoords = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -336,10 +303,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Offset != null) return true;
-                if (Unknown != null) return true;
-                if (Angle != null) return true;
-                if (UnknownBytes != null) return true;
+                if (UsableDimensions != null) return true;
+                if (NorthwestCellCoords != null) return true;
+                if (SoutheastCellCoords != null) return true;
                 return false;
             }
             #endregion
@@ -366,16 +332,13 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Offset, "Offset");
+                    sb.AppendItem(UsableDimensions, "UsableDimensions");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(NorthwestCellCoords, "NorthwestCellCoords");
                 }
                 {
-                    sb.AppendItem(Angle, "Angle");
-                }
-                {
-                    sb.AppendItem(UnknownBytes, "UnknownBytes");
+                    sb.AppendItem(SoutheastCellCoords, "SoutheastCellCoords");
                 }
             }
             #endregion
@@ -385,10 +348,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Offset = this.Offset.Combine(rhs.Offset);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Angle = this.Angle.Combine(rhs.Angle);
-                ret.UnknownBytes = this.UnknownBytes.Combine(rhs.UnknownBytes);
+                ret.UsableDimensions = this.UsableDimensions.Combine(rhs.UsableDimensions);
+                ret.NorthwestCellCoords = this.NorthwestCellCoords.Combine(rhs.NorthwestCellCoords);
+                ret.SoutheastCellCoords = this.SoutheastCellCoords.Combine(rhs.SoutheastCellCoords);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -412,10 +374,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Offset;
-            public bool Unknown;
-            public bool Angle;
-            public bool UnknownBytes;
+            public bool UsableDimensions;
+            public bool NorthwestCellCoords;
+            public bool SoutheastCellCoords;
             #endregion
 
             #region Ctors
@@ -425,10 +386,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Offset = defaultOn;
-                this.Unknown = defaultOn;
-                this.Angle = defaultOn;
-                this.UnknownBytes = defaultOn;
+                this.UsableDimensions = defaultOn;
+                this.NorthwestCellCoords = defaultOn;
+                this.SoutheastCellCoords = defaultOn;
             }
 
             #endregion
@@ -444,10 +404,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Offset, null));
-                ret.Add((Unknown, null));
-                ret.Add((Angle, null));
-                ret.Add((UnknownBytes, null));
+                ret.Add((UsableDimensions, null));
+                ret.Add((NorthwestCellCoords, null));
+                ret.Add((SoutheastCellCoords, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -460,25 +419,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellWaterVelocityBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WorldspaceMapBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellWaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static CellWaterVelocity CreateFromBinary(
+        public static WorldspaceMap CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new CellWaterVelocity();
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WorldspaceMap();
+            ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -489,7 +448,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out CellWaterVelocity item,
+            out WorldspaceMap item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -504,32 +463,31 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static CellWaterVelocity GetNew()
+        internal static WorldspaceMap GetNew()
         {
-            return new CellWaterVelocity();
+            return new WorldspaceMap();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ICellWaterVelocity :
-        ICellWaterVelocityGetter,
-        ILoquiObjectSetter<ICellWaterVelocity>
+    public partial interface IWorldspaceMap :
+        ILoquiObjectSetter<IWorldspaceMap>,
+        IWorldspaceMapGetter
     {
-        new P3Float Offset { get; set; }
-        new Int32 Unknown { get; set; }
-        new P3Float Angle { get; set; }
-        new MemorySlice<Byte> UnknownBytes { get; set; }
+        new P2Int UsableDimensions { get; set; }
+        new P2Int16 NorthwestCellCoords { get; set; }
+        new P2Int16 SoutheastCellCoords { get; set; }
     }
 
-    public partial interface ICellWaterVelocityGetter :
+    public partial interface IWorldspaceMapGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ICellWaterVelocityGetter>
+        ILoquiObject<IWorldspaceMapGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -537,53 +495,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
-        P3Float Offset { get; }
-        Int32 Unknown { get; }
-        P3Float Angle { get; }
-        ReadOnlyMemorySlice<Byte> UnknownBytes { get; }
+        static ILoquiRegistration StaticRegistration => WorldspaceMap_Registration.Instance;
+        P2Int UsableDimensions { get; }
+        P2Int16 NorthwestCellCoords { get; }
+        P2Int16 SoutheastCellCoords { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class CellWaterVelocityMixIn
+    public static partial class WorldspaceMapMixIn
     {
-        public static void Clear(this ICellWaterVelocity item)
+        public static void Clear(this IWorldspaceMap item)
         {
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CellWaterVelocity.Mask<bool> GetEqualsMask(
-            this ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
+        public static WorldspaceMap.Mask<bool> GetEqualsMask(
+            this IWorldspaceMapGetter item,
+            IWorldspaceMapGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ICellWaterVelocityGetter item,
+            this IWorldspaceMapGetter item,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceMap.Mask<bool>? printMask = null)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Print(
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ICellWaterVelocityGetter item,
+            this IWorldspaceMapGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceMap.Mask<bool>? printMask = null)
         {
-            ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Print(
+            ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -591,21 +548,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
-            CellWaterVelocity.TranslationMask? equalsMask = null)
+            this IWorldspaceMapGetter item,
+            IWorldspaceMapGetter rhs,
+            WorldspaceMap.TranslationMask? equalsMask = null)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Equals(
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs)
+            this IWorldspaceMap lhs,
+            IWorldspaceMapGetter rhs)
         {
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -614,11 +571,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+            this IWorldspaceMap lhs,
+            IWorldspaceMapGetter rhs,
+            WorldspaceMap.TranslationMask? copyMask = null)
         {
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -627,28 +584,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs,
-            out CellWaterVelocity.ErrorMask errorMask,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+            this IWorldspaceMap lhs,
+            IWorldspaceMapGetter rhs,
+            out WorldspaceMap.ErrorMask errorMask,
+            WorldspaceMap.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = CellWaterVelocity.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceMap.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs,
+            this IWorldspaceMap lhs,
+            IWorldspaceMapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -656,32 +613,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static CellWaterVelocity DeepCopy(
-            this ICellWaterVelocityGetter item,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public static WorldspaceMap DeepCopy(
+            this IWorldspaceMapGetter item,
+            WorldspaceMap.TranslationMask? copyMask = null)
         {
-            return ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static CellWaterVelocity DeepCopy(
-            this ICellWaterVelocityGetter item,
-            out CellWaterVelocity.ErrorMask errorMask,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public static WorldspaceMap DeepCopy(
+            this IWorldspaceMapGetter item,
+            out WorldspaceMap.ErrorMask errorMask,
+            WorldspaceMap.TranslationMask? copyMask = null)
         {
-            return ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static CellWaterVelocity DeepCopy(
-            this ICellWaterVelocityGetter item,
+        public static WorldspaceMap DeepCopy(
+            this IWorldspaceMapGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -689,11 +646,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ICellWaterVelocity item,
+            this IWorldspaceMap item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -709,43 +666,42 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum CellWaterVelocity_FieldIndex
+    internal enum WorldspaceMap_FieldIndex
     {
-        Offset = 0,
-        Unknown = 1,
-        Angle = 2,
-        UnknownBytes = 3,
+        UsableDimensions = 0,
+        NorthwestCellCoords = 1,
+        SoutheastCellCoords = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class CellWaterVelocity_Registration : ILoquiRegistration
+    internal partial class WorldspaceMap_Registration : ILoquiRegistration
     {
-        public static readonly CellWaterVelocity_Registration Instance = new CellWaterVelocity_Registration();
+        public static readonly WorldspaceMap_Registration Instance = new WorldspaceMap_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(CellWaterVelocity.Mask<>);
+        public static readonly Type MaskType = typeof(WorldspaceMap.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CellWaterVelocity.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WorldspaceMap.ErrorMask);
 
-        public static readonly Type ClassType = typeof(CellWaterVelocity);
+        public static readonly Type ClassType = typeof(WorldspaceMap);
 
-        public static readonly Type GetterType = typeof(ICellWaterVelocityGetter);
+        public static readonly Type GetterType = typeof(IWorldspaceMapGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ICellWaterVelocity);
+        public static readonly Type SetterType = typeof(IWorldspaceMap);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.CellWaterVelocity";
+        public const string FullName = "Mutagen.Bethesda.Starfield.WorldspaceMap";
 
-        public const string Name = "CellWaterVelocity";
+        public const string Name = "WorldspaceMap";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -753,14 +709,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.XWCU;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MNAM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.XWCU);
+            var all = RecordCollection.Factory(RecordTypes.MNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(CellWaterVelocityBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -791,23 +747,22 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class CellWaterVelocitySetterCommon
+    internal partial class WorldspaceMapSetterCommon
     {
-        public static readonly CellWaterVelocitySetterCommon Instance = new CellWaterVelocitySetterCommon();
+        public static readonly WorldspaceMapSetterCommon Instance = new WorldspaceMapSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ICellWaterVelocity item)
+        public void Clear(IWorldspaceMap item)
         {
             ClearPartial();
-            item.Offset = default;
-            item.Unknown = default;
-            item.Angle = default;
-            item.UnknownBytes = Array.Empty<byte>();
+            item.UsableDimensions = default;
+            item.NorthwestCellCoords = default;
+            item.SoutheastCellCoords = default;
         }
         
         #region Mutagen
-        public void RemapLinks(ICellWaterVelocity obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWorldspaceMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -815,35 +770,35 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ICellWaterVelocity item,
+            IWorldspaceMap item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.XWCU),
+                translationParams.ConvertToCustom(RecordTypes.MNAM),
                 translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: CellWaterVelocityBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: WorldspaceMapBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class CellWaterVelocityCommon
+    internal partial class WorldspaceMapCommon
     {
-        public static readonly CellWaterVelocityCommon Instance = new CellWaterVelocityCommon();
+        public static readonly WorldspaceMapCommon Instance = new WorldspaceMapCommon();
 
-        public CellWaterVelocity.Mask<bool> GetEqualsMask(
-            ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
+        public WorldspaceMap.Mask<bool> GetEqualsMask(
+            IWorldspaceMapGetter item,
+            IWorldspaceMapGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellWaterVelocity.Mask<bool>(false);
-            ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WorldspaceMap.Mask<bool>(false);
+            ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -852,21 +807,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
-            CellWaterVelocity.Mask<bool> ret,
+            IWorldspaceMapGetter item,
+            IWorldspaceMapGetter rhs,
+            WorldspaceMap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Offset = item.Offset.Equals(rhs.Offset);
-            ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Angle = item.Angle.Equals(rhs.Angle);
-            ret.UnknownBytes = MemoryExtensions.SequenceEqual(item.UnknownBytes.Span, rhs.UnknownBytes.Span);
+            ret.UsableDimensions = item.UsableDimensions.Equals(rhs.UsableDimensions);
+            ret.NorthwestCellCoords = item.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords);
+            ret.SoutheastCellCoords = item.SoutheastCellCoords.Equals(rhs.SoutheastCellCoords);
         }
         
         public string Print(
-            ICellWaterVelocityGetter item,
+            IWorldspaceMapGetter item,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceMap.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -878,18 +832,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ICellWaterVelocityGetter item,
+            IWorldspaceMapGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceMap.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"CellWaterVelocity =>");
+                sb.AppendLine($"WorldspaceMap =>");
             }
             else
             {
-                sb.AppendLine($"{name} (CellWaterVelocity) =>");
+                sb.AppendLine($"{name} (WorldspaceMap) =>");
             }
             using (sb.Brace())
             {
@@ -901,61 +855,52 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ICellWaterVelocityGetter item,
+            IWorldspaceMapGetter item,
             StructuredStringBuilder sb,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceMap.Mask<bool>? printMask = null)
         {
-            if (printMask?.Offset ?? true)
+            if (printMask?.UsableDimensions ?? true)
             {
-                sb.AppendItem(item.Offset, "Offset");
+                sb.AppendItem(item.UsableDimensions, "UsableDimensions");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.NorthwestCellCoords ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.NorthwestCellCoords, "NorthwestCellCoords");
             }
-            if (printMask?.Angle ?? true)
+            if (printMask?.SoutheastCellCoords ?? true)
             {
-                sb.AppendItem(item.Angle, "Angle");
-            }
-            if (printMask?.UnknownBytes ?? true)
-            {
-                sb.AppendLine($"UnknownBytes => {SpanExt.ToHexString(item.UnknownBytes)}");
+                sb.AppendItem(item.SoutheastCellCoords, "SoutheastCellCoords");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ICellWaterVelocityGetter? lhs,
-            ICellWaterVelocityGetter? rhs,
+            IWorldspaceMapGetter? lhs,
+            IWorldspaceMapGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.UsableDimensions) ?? true))
             {
-                if (!lhs.Offset.Equals(rhs.Offset)) return false;
+                if (!lhs.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.NorthwestCellCoords) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (!lhs.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Angle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.SoutheastCellCoords) ?? true))
             {
-                if (!lhs.Angle.Equals(rhs.Angle)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.UnknownBytes) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.UnknownBytes.Span, rhs.UnknownBytes.Span)) return false;
+                if (!lhs.SoutheastCellCoords.Equals(rhs.SoutheastCellCoords)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ICellWaterVelocityGetter item)
+        public virtual int GetHashCode(IWorldspaceMapGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Offset);
-            hash.Add(item.Unknown);
-            hash.Add(item.Angle);
-            hash.Add(item.UnknownBytes);
+            hash.Add(item.UsableDimensions);
+            hash.Add(item.NorthwestCellCoords);
+            hash.Add(item.SoutheastCellCoords);
             return hash.ToHashCode();
         }
         
@@ -964,11 +909,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return CellWaterVelocity.GetNew();
+            return WorldspaceMap.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellWaterVelocityGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceMapGetter obj)
         {
             yield break;
         }
@@ -976,44 +921,40 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class CellWaterVelocitySetterTranslationCommon
+    internal partial class WorldspaceMapSetterTranslationCommon
     {
-        public static readonly CellWaterVelocitySetterTranslationCommon Instance = new CellWaterVelocitySetterTranslationCommon();
+        public static readonly WorldspaceMapSetterTranslationCommon Instance = new WorldspaceMapSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ICellWaterVelocity item,
-            ICellWaterVelocityGetter rhs,
+            IWorldspaceMap item,
+            IWorldspaceMapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.UsableDimensions) ?? true))
             {
-                item.Offset = rhs.Offset;
+                item.UsableDimensions = rhs.UsableDimensions;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.NorthwestCellCoords) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.NorthwestCellCoords = rhs.NorthwestCellCoords;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Angle) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.SoutheastCellCoords) ?? true))
             {
-                item.Angle = rhs.Angle;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.UnknownBytes) ?? true))
-            {
-                item.UnknownBytes = rhs.UnknownBytes.ToArray();
+                item.SoutheastCellCoords = rhs.SoutheastCellCoords;
             }
         }
         
         #endregion
         
-        public CellWaterVelocity DeepCopy(
-            ICellWaterVelocityGetter item,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public WorldspaceMap DeepCopy(
+            IWorldspaceMapGetter item,
+            WorldspaceMap.TranslationMask? copyMask = null)
         {
-            CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceMap ret = (WorldspaceMap)((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1022,30 +963,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public CellWaterVelocity DeepCopy(
-            ICellWaterVelocityGetter item,
-            out CellWaterVelocity.ErrorMask errorMask,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public WorldspaceMap DeepCopy(
+            IWorldspaceMapGetter item,
+            out WorldspaceMap.ErrorMask errorMask,
+            WorldspaceMap.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceMap ret = (WorldspaceMap)((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = CellWaterVelocity.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceMap.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public CellWaterVelocity DeepCopy(
-            ICellWaterVelocityGetter item,
+        public WorldspaceMap DeepCopy(
+            IWorldspaceMapGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceMap ret = (WorldspaceMap)((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceMapSetterTranslationCommon)((IWorldspaceMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1061,27 +1002,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class CellWaterVelocity
+    public partial class WorldspaceMap
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellWaterVelocityCommon.Instance;
+        protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return CellWaterVelocitySetterCommon.Instance;
+            return WorldspaceMapSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellWaterVelocitySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WorldspaceMapSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceMapGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWorldspaceMapGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWorldspaceMapGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1092,34 +1033,33 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class CellWaterVelocityBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class WorldspaceMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellWaterVelocityBinaryWriteTranslation Instance = new();
+        public static readonly WorldspaceMapBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ICellWaterVelocityGetter item,
+            IWorldspaceMapGetter item,
             MutagenWriter writer)
         {
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Offset);
-            writer.Write(item.Unknown);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.UsableDimensions);
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Angle);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.NorthwestCellCoords);
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.UnknownBytes);
+                item: item.SoutheastCellCoords);
         }
 
         public void Write(
             MutagenWriter writer,
-            ICellWaterVelocityGetter item,
+            IWorldspaceMapGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.XWCU),
+                record: translationParams.ConvertToCustom(RecordTypes.MNAM),
                 overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
@@ -1135,25 +1075,24 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ICellWaterVelocityGetter)item,
+                item: (IWorldspaceMapGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class CellWaterVelocityBinaryCreateTranslation
+    internal partial class WorldspaceMapBinaryCreateTranslation
     {
-        public static readonly CellWaterVelocityBinaryCreateTranslation Instance = new CellWaterVelocityBinaryCreateTranslation();
+        public static readonly WorldspaceMapBinaryCreateTranslation Instance = new WorldspaceMapBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ICellWaterVelocity item,
+            IWorldspaceMap item,
             MutagenFrame frame)
         {
-            item.Offset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown = frame.ReadInt32();
-            item.Angle = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.UnknownBytes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.UsableDimensions = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NorthwestCellCoords = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.SoutheastCellCoords = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1162,14 +1101,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class CellWaterVelocityBinaryTranslationMixIn
+    public static class WorldspaceMapBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ICellWaterVelocityGetter item,
+            this IWorldspaceMapGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellWaterVelocityBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((WorldspaceMapBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1182,57 +1121,53 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class CellWaterVelocityBinaryOverlay :
+    internal partial class WorldspaceMapBinaryOverlay :
         PluginBinaryOverlay,
-        ICellWaterVelocityGetter
+        IWorldspaceMapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellWaterVelocityCommon.Instance;
+        protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellWaterVelocitySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WorldspaceMapSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceMapGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ICellWaterVelocityGetter.CommonSetterInstance() => null;
+        object? IWorldspaceMapGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWorldspaceMapGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellWaterVelocityBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WorldspaceMapBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellWaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
-        public P3Float Angle => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
-        #region UnknownBytes
-        public ReadOnlyMemorySlice<Byte> UnknownBytes => _structData.Span.Slice(0x1C).ToArray();
-        protected int UnknownBytesEndingPos;
-        #endregion
+        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x8));
+        public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4));
+        public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected CellWaterVelocityBinaryOverlay(
+        protected WorldspaceMapBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1242,7 +1177,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ICellWaterVelocityGetter CellWaterVelocityFactory(
+        public static IWorldspaceMapGetter WorldspaceMapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1251,12 +1186,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x10,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new CellWaterVelocityBinaryOverlay(
+                offset: out var offset);
+            var ret = new WorldspaceMapBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1264,12 +1200,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ICellWaterVelocityGetter CellWaterVelocityFactory(
+        public static IWorldspaceMapGetter WorldspaceMapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return CellWaterVelocityFactory(
+            return WorldspaceMapFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1281,7 +1217,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellWaterVelocityMixIn.Print(
+            WorldspaceMapMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1292,16 +1228,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellWaterVelocityGetter rhs) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWorldspaceMapGetter rhs) return false;
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ICellWaterVelocityGetter? obj)
+        public bool Equals(IWorldspaceMapGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -2338,6 +2338,15 @@
     </Compile>
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\Major Records\Worldspace.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceParent.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceSubBlock.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\ProtocolDefinition_Starfield.cs" />
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
@@ -6010,6 +6019,33 @@
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\CrowdComponentItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceBlock_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceSubBlock_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceGridReference_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceReference_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceParent_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceLandDefaults_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceMap_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WorldSpaceOverlayComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ReflectionProbesComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>

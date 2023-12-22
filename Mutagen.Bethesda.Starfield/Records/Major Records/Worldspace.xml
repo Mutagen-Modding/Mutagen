@@ -1,8 +1,113 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Worldspace" recordType="WRLD" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Worldspace" recordType="WRLD" objType="Record" customBinaryEnd="Normal" baseClass="StarfieldMajorRecord" majorFlag="true" >
     <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <RefList name="LargeReferences" refName="WorldspaceGridReference" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <FormLink name="EncounterLocation" recordType="XEZN" refName="Location" />
+      <FormLink name="Location" recordType="XLCN" refName="Location" />
+      <FormLink name="Biome" recordType="BNAM" refName="Biome" />
+      <RefDirect name="Parent" refName="WorldspaceParent" />
+      <FormLink name="Climate" refName="Climate" recordType="CNAM" />
+      <FormLink name="Water" refName="Water" recordType="NAM2" />
+      <String name="NAM7" recordType="NAM7" unknown="true" />
+      <FormLink name="LodWater" refName="Water" recordType="NAM3" />
+      <Float name="LodWaterHeight" recordType="NAM4" />
+      <RefDirect name="LandDefaults" refName="WorldspaceLandDefaults" />
+      <RefDirect name="MapData" refName="WorldspaceMap" />
+      <Data recordType="ONAM">
+        <Fields>
+          <Float name="WorldMapOffsetScale" />
+          <P3Float name="WorldMapCellOffset" />
+        </Fields>
+      </Data>
+      <Float name="DistantLodMultiplier" recordType="NAMA" />
+      <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" nullable="False" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <Data recordType="NAM0">
+        <Fields>
+          <P2Float name="ObjectBoundsMin" binary="Custom" />
+        </Fields>
+      </Data>
+      <Data recordType="NAM9">
+        <Fields>
+          <P2Float name="ObjectBoundsMax" binary="Custom" />
+        </Fields>
+      </Data>
+      <FormLink name="Music" refName="MusicType" recordType="ZNAM" />
+      <FormLink name="AmbienceSet" refName="AmbienceSet" recordType="WAMB" />
+      <String name="EnvironmentMap" recordType="XEMP" />
+      <String name="WaterEnvironmentMap" recordType="XWEM" />
+      <Float name="GNAM" recordType="GNAM" unknown="true" />
+      <List name="LandscapeTextures" >
+        <FormLink refName="LandscapeTexture" recordType="LNAM" />
+      </List>
+      <List name="XCLWs" recordType="XCLW" >
+        <Float />
+      </List>
+      <List name="WHGTs" recordType="WHGT" >
+        <Float />
+      </List>
+      <ByteArray name="HNAM" recordType="HNAM" unknown="true" />
+      <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
+      <ByteArray name="CellSizeData" recordType="CLSZ" overflowRecordType="XXXX" />
+      <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
+      <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
+      <Int32 name="SubCellsUnknown" binary="NoGeneration" />
+      <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
     </Fields>
     <LinkInterface>IComplexLocation</LinkInterface>
+  </Object>
+  <Object name="WorldspaceBlock" objType="Group">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceSubBlock" objType="Group">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceGridReference" objType="Subrecord" recordType="RNAM">
+    <Fields>
+      <P2Int16 name="GridPosition" swapCoords="true" />
+      <RefList name="References" refName="WorldspaceReference" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference" refName="PlacedObject" />
+      <P2Int16 name="Position" swapCoords="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceParent" objType="Subrecord">
+    <Fields>
+      <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" nullable="False" />
+      <Enum name="Flags" enumName="WorldspaceParent.Flag" byteLength="2" nullable="False" recordType="PNAM" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceLandDefaults" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <Float name="DefaultLandHeight" />
+      <Float name="DefaultWaterHeight" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceMap" recordType="MNAM" objType="Subrecord">
+    <Fields>
+      <P2Int32 name="UsableDimensions" />
+      <P2Int16 name="NorthwestCellCoords" />
+      <P2Int16 name="SoutheastCellCoords" />
+    </Fields>
   </Object>
 </Loqui>

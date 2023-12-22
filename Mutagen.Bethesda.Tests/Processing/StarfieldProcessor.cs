@@ -52,6 +52,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PHZD, ProcessHazards);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
+        AddDynamicProcessing(RecordTypes.WRLD, ProcessWorldspaces);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -170,6 +171,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "MISC", "FULL", "NNAM" },
                     new RecordType[] { "IRES", "FULL", "NNAM" },
                     new RecordType[] { "LSCR", "DESC" },
+                    new RecordType[] { "WRLD", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -530,6 +532,17 @@ public class StarfieldProcessor : Processor
                 ProcessBool(rec, offsetLoc: fileOffset, loc + 8, 4, 1);
                 loc += 12;
             }
+        }
+    }
+    
+    private void ProcessWorldspaces(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.XCLW))
+        {
+            ProcessZeroFloats(subRec, fileOffset);
         }
     }
     

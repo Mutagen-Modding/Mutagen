@@ -158,6 +158,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - UnknownObjectModification
 - Weapon
 - WeaponModification
+- Worldspace
 ### IObjectBounded
 - AcousticSpace
 - Activator
@@ -551,3 +552,5 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Weather
 - IKeyworded
+### Worldspace
+- INamed

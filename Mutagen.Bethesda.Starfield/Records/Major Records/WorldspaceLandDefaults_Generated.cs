@@ -37,38 +37,24 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class CellWaterVelocity :
-        ICellWaterVelocity,
-        IEquatable<ICellWaterVelocityGetter>,
-        ILoquiObjectSetter<CellWaterVelocity>
+    public partial class WorldspaceLandDefaults :
+        IEquatable<IWorldspaceLandDefaultsGetter>,
+        ILoquiObjectSetter<WorldspaceLandDefaults>,
+        IWorldspaceLandDefaults
     {
         #region Ctor
-        public CellWaterVelocity()
+        public WorldspaceLandDefaults()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Offset
-        public P3Float Offset { get; set; } = default;
+        #region DefaultLandHeight
+        public Single DefaultLandHeight { get; set; } = default;
         #endregion
-        #region Unknown
-        public Int32 Unknown { get; set; } = default;
-        #endregion
-        #region Angle
-        public P3Float Angle { get; set; } = default;
-        #endregion
-        #region UnknownBytes
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _UnknownBytes = new byte[0];
-        public MemorySlice<Byte> UnknownBytes
-        {
-            get => _UnknownBytes;
-            set => this._UnknownBytes = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellWaterVelocityGetter.UnknownBytes => this.UnknownBytes;
+        #region DefaultWaterHeight
+        public Single DefaultWaterHeight { get; set; } = default;
         #endregion
 
         #region To String
@@ -77,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellWaterVelocityMixIn.Print(
+            WorldspaceLandDefaultsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -88,16 +74,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellWaterVelocityGetter rhs) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWorldspaceLandDefaultsGetter rhs) return false;
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ICellWaterVelocityGetter? obj)
+        public bool Equals(IWorldspaceLandDefaultsGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -109,22 +95,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Offset = initialValue;
-                this.Unknown = initialValue;
-                this.Angle = initialValue;
-                this.UnknownBytes = initialValue;
+                this.DefaultLandHeight = initialValue;
+                this.DefaultWaterHeight = initialValue;
             }
 
             public Mask(
-                TItem Offset,
-                TItem Unknown,
-                TItem Angle,
-                TItem UnknownBytes)
+                TItem DefaultLandHeight,
+                TItem DefaultWaterHeight)
             {
-                this.Offset = Offset;
-                this.Unknown = Unknown;
-                this.Angle = Angle;
-                this.UnknownBytes = UnknownBytes;
+                this.DefaultLandHeight = DefaultLandHeight;
+                this.DefaultWaterHeight = DefaultWaterHeight;
             }
 
             #pragma warning disable CS8618
@@ -136,10 +116,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Offset;
-            public TItem Unknown;
-            public TItem Angle;
-            public TItem UnknownBytes;
+            public TItem DefaultLandHeight;
+            public TItem DefaultWaterHeight;
             #endregion
 
             #region Equals
@@ -152,19 +130,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Offset, rhs.Offset)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Angle, rhs.Angle)) return false;
-                if (!object.Equals(this.UnknownBytes, rhs.UnknownBytes)) return false;
+                if (!object.Equals(this.DefaultLandHeight, rhs.DefaultLandHeight)) return false;
+                if (!object.Equals(this.DefaultWaterHeight, rhs.DefaultWaterHeight)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Offset);
-                hash.Add(this.Unknown);
-                hash.Add(this.Angle);
-                hash.Add(this.UnknownBytes);
+                hash.Add(this.DefaultLandHeight);
+                hash.Add(this.DefaultWaterHeight);
                 return hash.ToHashCode();
             }
 
@@ -173,10 +147,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Offset)) return false;
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Angle)) return false;
-                if (!eval(this.UnknownBytes)) return false;
+                if (!eval(this.DefaultLandHeight)) return false;
+                if (!eval(this.DefaultWaterHeight)) return false;
                 return true;
             }
             #endregion
@@ -184,10 +156,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Offset)) return true;
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Angle)) return true;
-                if (eval(this.UnknownBytes)) return true;
+                if (eval(this.DefaultLandHeight)) return true;
+                if (eval(this.DefaultWaterHeight)) return true;
                 return false;
             }
             #endregion
@@ -195,50 +165,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new CellWaterVelocity.Mask<R>();
+                var ret = new WorldspaceLandDefaults.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Offset = eval(this.Offset);
-                obj.Unknown = eval(this.Unknown);
-                obj.Angle = eval(this.Angle);
-                obj.UnknownBytes = eval(this.UnknownBytes);
+                obj.DefaultLandHeight = eval(this.DefaultLandHeight);
+                obj.DefaultWaterHeight = eval(this.DefaultWaterHeight);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(CellWaterVelocity.Mask<bool>? printMask = null)
+            public string Print(WorldspaceLandDefaults.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, CellWaterVelocity.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceLandDefaults.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(CellWaterVelocity.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(WorldspaceLandDefaults.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Offset ?? true)
+                    if (printMask?.DefaultLandHeight ?? true)
                     {
-                        sb.AppendItem(Offset, "Offset");
+                        sb.AppendItem(DefaultLandHeight, "DefaultLandHeight");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.DefaultWaterHeight ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
-                    }
-                    if (printMask?.Angle ?? true)
-                    {
-                        sb.AppendItem(Angle, "Angle");
-                    }
-                    if (printMask?.UnknownBytes ?? true)
-                    {
-                        sb.AppendItem(UnknownBytes, "UnknownBytes");
+                        sb.AppendItem(DefaultWaterHeight, "DefaultWaterHeight");
                     }
                 }
             }
@@ -264,26 +224,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Offset;
-            public Exception? Unknown;
-            public Exception? Angle;
-            public Exception? UnknownBytes;
+            public Exception? DefaultLandHeight;
+            public Exception? DefaultWaterHeight;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                CellWaterVelocity_FieldIndex enu = (CellWaterVelocity_FieldIndex)index;
+                WorldspaceLandDefaults_FieldIndex enu = (WorldspaceLandDefaults_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellWaterVelocity_FieldIndex.Offset:
-                        return Offset;
-                    case CellWaterVelocity_FieldIndex.Unknown:
-                        return Unknown;
-                    case CellWaterVelocity_FieldIndex.Angle:
-                        return Angle;
-                    case CellWaterVelocity_FieldIndex.UnknownBytes:
-                        return UnknownBytes;
+                    case WorldspaceLandDefaults_FieldIndex.DefaultLandHeight:
+                        return DefaultLandHeight;
+                    case WorldspaceLandDefaults_FieldIndex.DefaultWaterHeight:
+                        return DefaultWaterHeight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -291,20 +245,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                CellWaterVelocity_FieldIndex enu = (CellWaterVelocity_FieldIndex)index;
+                WorldspaceLandDefaults_FieldIndex enu = (WorldspaceLandDefaults_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellWaterVelocity_FieldIndex.Offset:
-                        this.Offset = ex;
+                    case WorldspaceLandDefaults_FieldIndex.DefaultLandHeight:
+                        this.DefaultLandHeight = ex;
                         break;
-                    case CellWaterVelocity_FieldIndex.Unknown:
-                        this.Unknown = ex;
-                        break;
-                    case CellWaterVelocity_FieldIndex.Angle:
-                        this.Angle = ex;
-                        break;
-                    case CellWaterVelocity_FieldIndex.UnknownBytes:
-                        this.UnknownBytes = ex;
+                    case WorldspaceLandDefaults_FieldIndex.DefaultWaterHeight:
+                        this.DefaultWaterHeight = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -313,20 +261,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                CellWaterVelocity_FieldIndex enu = (CellWaterVelocity_FieldIndex)index;
+                WorldspaceLandDefaults_FieldIndex enu = (WorldspaceLandDefaults_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellWaterVelocity_FieldIndex.Offset:
-                        this.Offset = (Exception?)obj;
+                    case WorldspaceLandDefaults_FieldIndex.DefaultLandHeight:
+                        this.DefaultLandHeight = (Exception?)obj;
                         break;
-                    case CellWaterVelocity_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
-                        break;
-                    case CellWaterVelocity_FieldIndex.Angle:
-                        this.Angle = (Exception?)obj;
-                        break;
-                    case CellWaterVelocity_FieldIndex.UnknownBytes:
-                        this.UnknownBytes = (Exception?)obj;
+                    case WorldspaceLandDefaults_FieldIndex.DefaultWaterHeight:
+                        this.DefaultWaterHeight = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -336,10 +278,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Offset != null) return true;
-                if (Unknown != null) return true;
-                if (Angle != null) return true;
-                if (UnknownBytes != null) return true;
+                if (DefaultLandHeight != null) return true;
+                if (DefaultWaterHeight != null) return true;
                 return false;
             }
             #endregion
@@ -366,16 +306,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Offset, "Offset");
+                    sb.AppendItem(DefaultLandHeight, "DefaultLandHeight");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
-                }
-                {
-                    sb.AppendItem(Angle, "Angle");
-                }
-                {
-                    sb.AppendItem(UnknownBytes, "UnknownBytes");
+                    sb.AppendItem(DefaultWaterHeight, "DefaultWaterHeight");
                 }
             }
             #endregion
@@ -385,10 +319,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Offset = this.Offset.Combine(rhs.Offset);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Angle = this.Angle.Combine(rhs.Angle);
-                ret.UnknownBytes = this.UnknownBytes.Combine(rhs.UnknownBytes);
+                ret.DefaultLandHeight = this.DefaultLandHeight.Combine(rhs.DefaultLandHeight);
+                ret.DefaultWaterHeight = this.DefaultWaterHeight.Combine(rhs.DefaultWaterHeight);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -412,10 +344,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Offset;
-            public bool Unknown;
-            public bool Angle;
-            public bool UnknownBytes;
+            public bool DefaultLandHeight;
+            public bool DefaultWaterHeight;
             #endregion
 
             #region Ctors
@@ -425,10 +355,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Offset = defaultOn;
-                this.Unknown = defaultOn;
-                this.Angle = defaultOn;
-                this.UnknownBytes = defaultOn;
+                this.DefaultLandHeight = defaultOn;
+                this.DefaultWaterHeight = defaultOn;
             }
 
             #endregion
@@ -444,10 +372,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Offset, null));
-                ret.Add((Unknown, null));
-                ret.Add((Angle, null));
-                ret.Add((UnknownBytes, null));
+                ret.Add((DefaultLandHeight, null));
+                ret.Add((DefaultWaterHeight, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -460,25 +386,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellWaterVelocityBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WorldspaceLandDefaultsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellWaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceLandDefaultsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static CellWaterVelocity CreateFromBinary(
+        public static WorldspaceLandDefaults CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new CellWaterVelocity();
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WorldspaceLandDefaults();
+            ((WorldspaceLandDefaultsSetterCommon)((IWorldspaceLandDefaultsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -489,7 +415,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out CellWaterVelocity item,
+            out WorldspaceLandDefaults item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -504,32 +430,30 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WorldspaceLandDefaultsSetterCommon)((IWorldspaceLandDefaultsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static CellWaterVelocity GetNew()
+        internal static WorldspaceLandDefaults GetNew()
         {
-            return new CellWaterVelocity();
+            return new WorldspaceLandDefaults();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ICellWaterVelocity :
-        ICellWaterVelocityGetter,
-        ILoquiObjectSetter<ICellWaterVelocity>
+    public partial interface IWorldspaceLandDefaults :
+        ILoquiObjectSetter<IWorldspaceLandDefaults>,
+        IWorldspaceLandDefaultsGetter
     {
-        new P3Float Offset { get; set; }
-        new Int32 Unknown { get; set; }
-        new P3Float Angle { get; set; }
-        new MemorySlice<Byte> UnknownBytes { get; set; }
+        new Single DefaultLandHeight { get; set; }
+        new Single DefaultWaterHeight { get; set; }
     }
 
-    public partial interface ICellWaterVelocityGetter :
+    public partial interface IWorldspaceLandDefaultsGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ICellWaterVelocityGetter>
+        ILoquiObject<IWorldspaceLandDefaultsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -537,53 +461,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
-        P3Float Offset { get; }
-        Int32 Unknown { get; }
-        P3Float Angle { get; }
-        ReadOnlyMemorySlice<Byte> UnknownBytes { get; }
+        static ILoquiRegistration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
+        Single DefaultLandHeight { get; }
+        Single DefaultWaterHeight { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class CellWaterVelocityMixIn
+    public static partial class WorldspaceLandDefaultsMixIn
     {
-        public static void Clear(this ICellWaterVelocity item)
+        public static void Clear(this IWorldspaceLandDefaults item)
         {
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WorldspaceLandDefaultsSetterCommon)((IWorldspaceLandDefaultsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CellWaterVelocity.Mask<bool> GetEqualsMask(
-            this ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
+        public static WorldspaceLandDefaults.Mask<bool> GetEqualsMask(
+            this IWorldspaceLandDefaultsGetter item,
+            IWorldspaceLandDefaultsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ICellWaterVelocityGetter item,
+            this IWorldspaceLandDefaultsGetter item,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceLandDefaults.Mask<bool>? printMask = null)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Print(
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ICellWaterVelocityGetter item,
+            this IWorldspaceLandDefaultsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceLandDefaults.Mask<bool>? printMask = null)
         {
-            ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Print(
+            ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -591,21 +513,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
-            CellWaterVelocity.TranslationMask? equalsMask = null)
+            this IWorldspaceLandDefaultsGetter item,
+            IWorldspaceLandDefaultsGetter rhs,
+            WorldspaceLandDefaults.TranslationMask? equalsMask = null)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Equals(
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs)
+            this IWorldspaceLandDefaults lhs,
+            IWorldspaceLandDefaultsGetter rhs)
         {
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -614,11 +536,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+            this IWorldspaceLandDefaults lhs,
+            IWorldspaceLandDefaultsGetter rhs,
+            WorldspaceLandDefaults.TranslationMask? copyMask = null)
         {
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -627,28 +549,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs,
-            out CellWaterVelocity.ErrorMask errorMask,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+            this IWorldspaceLandDefaults lhs,
+            IWorldspaceLandDefaultsGetter rhs,
+            out WorldspaceLandDefaults.ErrorMask errorMask,
+            WorldspaceLandDefaults.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = CellWaterVelocity.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceLandDefaults.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ICellWaterVelocity lhs,
-            ICellWaterVelocityGetter rhs,
+            this IWorldspaceLandDefaults lhs,
+            IWorldspaceLandDefaultsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -656,32 +578,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static CellWaterVelocity DeepCopy(
-            this ICellWaterVelocityGetter item,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public static WorldspaceLandDefaults DeepCopy(
+            this IWorldspaceLandDefaultsGetter item,
+            WorldspaceLandDefaults.TranslationMask? copyMask = null)
         {
-            return ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static CellWaterVelocity DeepCopy(
-            this ICellWaterVelocityGetter item,
-            out CellWaterVelocity.ErrorMask errorMask,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public static WorldspaceLandDefaults DeepCopy(
+            this IWorldspaceLandDefaultsGetter item,
+            out WorldspaceLandDefaults.ErrorMask errorMask,
+            WorldspaceLandDefaults.TranslationMask? copyMask = null)
         {
-            return ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static CellWaterVelocity DeepCopy(
-            this ICellWaterVelocityGetter item,
+        public static WorldspaceLandDefaults DeepCopy(
+            this IWorldspaceLandDefaultsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -689,11 +611,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ICellWaterVelocity item,
+            this IWorldspaceLandDefaults item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((CellWaterVelocitySetterCommon)((ICellWaterVelocityGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceLandDefaultsSetterCommon)((IWorldspaceLandDefaultsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -709,43 +631,41 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum CellWaterVelocity_FieldIndex
+    internal enum WorldspaceLandDefaults_FieldIndex
     {
-        Offset = 0,
-        Unknown = 1,
-        Angle = 2,
-        UnknownBytes = 3,
+        DefaultLandHeight = 0,
+        DefaultWaterHeight = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class CellWaterVelocity_Registration : ILoquiRegistration
+    internal partial class WorldspaceLandDefaults_Registration : ILoquiRegistration
     {
-        public static readonly CellWaterVelocity_Registration Instance = new CellWaterVelocity_Registration();
+        public static readonly WorldspaceLandDefaults_Registration Instance = new WorldspaceLandDefaults_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(CellWaterVelocity.Mask<>);
+        public static readonly Type MaskType = typeof(WorldspaceLandDefaults.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CellWaterVelocity.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WorldspaceLandDefaults.ErrorMask);
 
-        public static readonly Type ClassType = typeof(CellWaterVelocity);
+        public static readonly Type ClassType = typeof(WorldspaceLandDefaults);
 
-        public static readonly Type GetterType = typeof(ICellWaterVelocityGetter);
+        public static readonly Type GetterType = typeof(IWorldspaceLandDefaultsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ICellWaterVelocity);
+        public static readonly Type SetterType = typeof(IWorldspaceLandDefaults);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.CellWaterVelocity";
+        public const string FullName = "Mutagen.Bethesda.Starfield.WorldspaceLandDefaults";
 
-        public const string Name = "CellWaterVelocity";
+        public const string Name = "WorldspaceLandDefaults";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -753,14 +673,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.XWCU;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DNAM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.XWCU);
+            var all = RecordCollection.Factory(RecordTypes.DNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(CellWaterVelocityBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WorldspaceLandDefaultsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -791,23 +711,21 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class CellWaterVelocitySetterCommon
+    internal partial class WorldspaceLandDefaultsSetterCommon
     {
-        public static readonly CellWaterVelocitySetterCommon Instance = new CellWaterVelocitySetterCommon();
+        public static readonly WorldspaceLandDefaultsSetterCommon Instance = new WorldspaceLandDefaultsSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ICellWaterVelocity item)
+        public void Clear(IWorldspaceLandDefaults item)
         {
             ClearPartial();
-            item.Offset = default;
-            item.Unknown = default;
-            item.Angle = default;
-            item.UnknownBytes = Array.Empty<byte>();
+            item.DefaultLandHeight = default;
+            item.DefaultWaterHeight = default;
         }
         
         #region Mutagen
-        public void RemapLinks(ICellWaterVelocity obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWorldspaceLandDefaults obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -815,35 +733,35 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ICellWaterVelocity item,
+            IWorldspaceLandDefaults item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.XWCU),
+                translationParams.ConvertToCustom(RecordTypes.DNAM),
                 translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: CellWaterVelocityBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: WorldspaceLandDefaultsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class CellWaterVelocityCommon
+    internal partial class WorldspaceLandDefaultsCommon
     {
-        public static readonly CellWaterVelocityCommon Instance = new CellWaterVelocityCommon();
+        public static readonly WorldspaceLandDefaultsCommon Instance = new WorldspaceLandDefaultsCommon();
 
-        public CellWaterVelocity.Mask<bool> GetEqualsMask(
-            ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
+        public WorldspaceLandDefaults.Mask<bool> GetEqualsMask(
+            IWorldspaceLandDefaultsGetter item,
+            IWorldspaceLandDefaultsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellWaterVelocity.Mask<bool>(false);
-            ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WorldspaceLandDefaults.Mask<bool>(false);
+            ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -852,21 +770,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs,
-            CellWaterVelocity.Mask<bool> ret,
+            IWorldspaceLandDefaultsGetter item,
+            IWorldspaceLandDefaultsGetter rhs,
+            WorldspaceLandDefaults.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Offset = item.Offset.Equals(rhs.Offset);
-            ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Angle = item.Angle.Equals(rhs.Angle);
-            ret.UnknownBytes = MemoryExtensions.SequenceEqual(item.UnknownBytes.Span, rhs.UnknownBytes.Span);
+            ret.DefaultLandHeight = item.DefaultLandHeight.EqualsWithin(rhs.DefaultLandHeight);
+            ret.DefaultWaterHeight = item.DefaultWaterHeight.EqualsWithin(rhs.DefaultWaterHeight);
         }
         
         public string Print(
-            ICellWaterVelocityGetter item,
+            IWorldspaceLandDefaultsGetter item,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceLandDefaults.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -878,18 +794,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ICellWaterVelocityGetter item,
+            IWorldspaceLandDefaultsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceLandDefaults.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"CellWaterVelocity =>");
+                sb.AppendLine($"WorldspaceLandDefaults =>");
             }
             else
             {
-                sb.AppendLine($"{name} (CellWaterVelocity) =>");
+                sb.AppendLine($"{name} (WorldspaceLandDefaults) =>");
             }
             using (sb.Brace())
             {
@@ -901,61 +817,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ICellWaterVelocityGetter item,
+            IWorldspaceLandDefaultsGetter item,
             StructuredStringBuilder sb,
-            CellWaterVelocity.Mask<bool>? printMask = null)
+            WorldspaceLandDefaults.Mask<bool>? printMask = null)
         {
-            if (printMask?.Offset ?? true)
+            if (printMask?.DefaultLandHeight ?? true)
             {
-                sb.AppendItem(item.Offset, "Offset");
+                sb.AppendItem(item.DefaultLandHeight, "DefaultLandHeight");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.DefaultWaterHeight ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
-            }
-            if (printMask?.Angle ?? true)
-            {
-                sb.AppendItem(item.Angle, "Angle");
-            }
-            if (printMask?.UnknownBytes ?? true)
-            {
-                sb.AppendLine($"UnknownBytes => {SpanExt.ToHexString(item.UnknownBytes)}");
+                sb.AppendItem(item.DefaultWaterHeight, "DefaultWaterHeight");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ICellWaterVelocityGetter? lhs,
-            ICellWaterVelocityGetter? rhs,
+            IWorldspaceLandDefaultsGetter? lhs,
+            IWorldspaceLandDefaultsGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultLandHeight) ?? true))
             {
-                if (!lhs.Offset.Equals(rhs.Offset)) return false;
+                if (!lhs.DefaultLandHeight.EqualsWithin(rhs.DefaultLandHeight)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultWaterHeight) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Angle) ?? true))
-            {
-                if (!lhs.Angle.Equals(rhs.Angle)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.UnknownBytes) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.UnknownBytes.Span, rhs.UnknownBytes.Span)) return false;
+                if (!lhs.DefaultWaterHeight.EqualsWithin(rhs.DefaultWaterHeight)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ICellWaterVelocityGetter item)
+        public virtual int GetHashCode(IWorldspaceLandDefaultsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Offset);
-            hash.Add(item.Unknown);
-            hash.Add(item.Angle);
-            hash.Add(item.UnknownBytes);
+            hash.Add(item.DefaultLandHeight);
+            hash.Add(item.DefaultWaterHeight);
             return hash.ToHashCode();
         }
         
@@ -964,11 +862,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return CellWaterVelocity.GetNew();
+            return WorldspaceLandDefaults.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellWaterVelocityGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceLandDefaultsGetter obj)
         {
             yield break;
         }
@@ -976,44 +874,36 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class CellWaterVelocitySetterTranslationCommon
+    internal partial class WorldspaceLandDefaultsSetterTranslationCommon
     {
-        public static readonly CellWaterVelocitySetterTranslationCommon Instance = new CellWaterVelocitySetterTranslationCommon();
+        public static readonly WorldspaceLandDefaultsSetterTranslationCommon Instance = new WorldspaceLandDefaultsSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ICellWaterVelocity item,
-            ICellWaterVelocityGetter rhs,
+            IWorldspaceLandDefaults item,
+            IWorldspaceLandDefaultsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultLandHeight) ?? true))
             {
-                item.Offset = rhs.Offset;
+                item.DefaultLandHeight = rhs.DefaultLandHeight;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultWaterHeight) ?? true))
             {
-                item.Unknown = rhs.Unknown;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Angle) ?? true))
-            {
-                item.Angle = rhs.Angle;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.UnknownBytes) ?? true))
-            {
-                item.UnknownBytes = rhs.UnknownBytes.ToArray();
+                item.DefaultWaterHeight = rhs.DefaultWaterHeight;
             }
         }
         
         #endregion
         
-        public CellWaterVelocity DeepCopy(
-            ICellWaterVelocityGetter item,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public WorldspaceLandDefaults DeepCopy(
+            IWorldspaceLandDefaultsGetter item,
+            WorldspaceLandDefaults.TranslationMask? copyMask = null)
         {
-            CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceLandDefaults ret = (WorldspaceLandDefaults)((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1022,30 +912,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public CellWaterVelocity DeepCopy(
-            ICellWaterVelocityGetter item,
-            out CellWaterVelocity.ErrorMask errorMask,
-            CellWaterVelocity.TranslationMask? copyMask = null)
+        public WorldspaceLandDefaults DeepCopy(
+            IWorldspaceLandDefaultsGetter item,
+            out WorldspaceLandDefaults.ErrorMask errorMask,
+            WorldspaceLandDefaults.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceLandDefaults ret = (WorldspaceLandDefaults)((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = CellWaterVelocity.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceLandDefaults.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public CellWaterVelocity DeepCopy(
-            ICellWaterVelocityGetter item,
+        public WorldspaceLandDefaults DeepCopy(
+            IWorldspaceLandDefaultsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceLandDefaults ret = (WorldspaceLandDefaults)((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceLandDefaultsSetterTranslationCommon)((IWorldspaceLandDefaultsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1061,27 +951,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class CellWaterVelocity
+    public partial class WorldspaceLandDefaults
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellWaterVelocityCommon.Instance;
+        protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return CellWaterVelocitySetterCommon.Instance;
+            return WorldspaceLandDefaultsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellWaterVelocitySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WorldspaceLandDefaultsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceLandDefaultsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWorldspaceLandDefaultsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWorldspaceLandDefaultsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1092,34 +982,30 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class CellWaterVelocityBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class WorldspaceLandDefaultsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellWaterVelocityBinaryWriteTranslation Instance = new();
+        public static readonly WorldspaceLandDefaultsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ICellWaterVelocityGetter item,
+            IWorldspaceLandDefaultsGetter item,
             MutagenWriter writer)
         {
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Offset);
-            writer.Write(item.Unknown);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.DefaultLandHeight);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Angle);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.UnknownBytes);
+                item: item.DefaultWaterHeight);
         }
 
         public void Write(
             MutagenWriter writer,
-            ICellWaterVelocityGetter item,
+            IWorldspaceLandDefaultsGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.XWCU),
+                record: translationParams.ConvertToCustom(RecordTypes.DNAM),
                 overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
@@ -1135,25 +1021,23 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ICellWaterVelocityGetter)item,
+                item: (IWorldspaceLandDefaultsGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class CellWaterVelocityBinaryCreateTranslation
+    internal partial class WorldspaceLandDefaultsBinaryCreateTranslation
     {
-        public static readonly CellWaterVelocityBinaryCreateTranslation Instance = new CellWaterVelocityBinaryCreateTranslation();
+        public static readonly WorldspaceLandDefaultsBinaryCreateTranslation Instance = new WorldspaceLandDefaultsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ICellWaterVelocity item,
+            IWorldspaceLandDefaults item,
             MutagenFrame frame)
         {
-            item.Offset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown = frame.ReadInt32();
-            item.Angle = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.UnknownBytes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DefaultLandHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DefaultWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1162,14 +1046,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class CellWaterVelocityBinaryTranslationMixIn
+    public static class WorldspaceLandDefaultsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ICellWaterVelocityGetter item,
+            this IWorldspaceLandDefaultsGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellWaterVelocityBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((WorldspaceLandDefaultsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1182,57 +1066,52 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class CellWaterVelocityBinaryOverlay :
+    internal partial class WorldspaceLandDefaultsBinaryOverlay :
         PluginBinaryOverlay,
-        ICellWaterVelocityGetter
+        IWorldspaceLandDefaultsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellWaterVelocityCommon.Instance;
+        protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellWaterVelocitySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WorldspaceLandDefaultsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceLandDefaultsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ICellWaterVelocityGetter.CommonSetterInstance() => null;
+        object? IWorldspaceLandDefaultsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ICellWaterVelocityGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWorldspaceLandDefaultsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellWaterVelocityBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WorldspaceLandDefaultsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellWaterVelocityBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceLandDefaultsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
-        public P3Float Angle => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
-        #region UnknownBytes
-        public ReadOnlyMemorySlice<Byte> UnknownBytes => _structData.Span.Slice(0x1C).ToArray();
-        protected int UnknownBytesEndingPos;
-        #endregion
+        public Single DefaultLandHeight => _structData.Slice(0x0, 0x4).Float();
+        public Single DefaultWaterHeight => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected CellWaterVelocityBinaryOverlay(
+        protected WorldspaceLandDefaultsBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1242,7 +1121,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ICellWaterVelocityGetter CellWaterVelocityFactory(
+        public static IWorldspaceLandDefaultsGetter WorldspaceLandDefaultsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1251,12 +1130,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x8,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new CellWaterVelocityBinaryOverlay(
+                offset: out var offset);
+            var ret = new WorldspaceLandDefaultsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1264,12 +1144,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ICellWaterVelocityGetter CellWaterVelocityFactory(
+        public static IWorldspaceLandDefaultsGetter WorldspaceLandDefaultsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return CellWaterVelocityFactory(
+            return WorldspaceLandDefaultsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1281,7 +1161,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellWaterVelocityMixIn.Print(
+            WorldspaceLandDefaultsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1292,16 +1172,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellWaterVelocityGetter rhs) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWorldspaceLandDefaultsGetter rhs) return false;
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ICellWaterVelocityGetter? obj)
+        public bool Equals(IWorldspaceLandDefaultsGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

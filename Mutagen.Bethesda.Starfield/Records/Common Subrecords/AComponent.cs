@@ -56,6 +56,8 @@ public partial class AComponent
         BGSSpaceshipHullCode_Component,
         BGSPrimitive_Component,
         BGSSpawnOnDestroy_Component,
+        BGSWorldSpaceOverlay_Component,
+        ReflectionProbes_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -166,6 +168,10 @@ public partial class AComponent
                 return PrimitiveComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSSpawnOnDestroy_Component:
                 return SpawnOnDestroyComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSWorldSpaceOverlay_Component:
+                return WorldSpaceOverlayComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.ReflectionProbes_Component:
+                return ReflectionProbesComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -253,6 +259,8 @@ partial class AComponentBinaryWriteTranslation
             ISpaceshipHullCodeComponentGetter _ => AComponent.ComponentType.BGSSpaceshipHullCode_Component,
             IPrimitiveComponentGetter _ => AComponent.ComponentType.BGSPrimitive_Component,
             ISpawnOnDestroyComponentGetter _ => AComponent.ComponentType.BGSSpawnOnDestroy_Component,
+            IWorldSpaceOverlayComponentGetter _ => AComponent.ComponentType.BGSWorldSpaceOverlay_Component,
+            IReflectionProbesComponentGetter _ => AComponent.ComponentType.ReflectionProbes_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -361,6 +369,10 @@ partial class AComponentBinaryOverlay
                 return PrimitiveComponentBinaryOverlay.PrimitiveComponentFactory(stream, package);
             case AComponent.ComponentType.BGSSpawnOnDestroy_Component:
                 return SpawnOnDestroyComponentBinaryOverlay.SpawnOnDestroyComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSWorldSpaceOverlay_Component:
+                return WorldSpaceOverlayComponentBinaryOverlay.WorldSpaceOverlayComponentFactory(stream, package);
+            case AComponent.ComponentType.ReflectionProbes_Component:
+                return ReflectionProbesComponentBinaryOverlay.ReflectionProbesComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

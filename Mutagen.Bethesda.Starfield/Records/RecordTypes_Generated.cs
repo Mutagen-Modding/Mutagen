@@ -181,6 +181,7 @@ public partial class RecordTypes
     public static readonly RecordType CLDF = new(0x46444C43);
     public static readonly RecordType CLFM = new(0x4D464C43);
     public static readonly RecordType CLMT = new(0x544D4C43);
+    public static readonly RecordType CLSZ = new(0x5A534C43);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType CNDF = new(0x46444E43);
     public static readonly RecordType CNTO = new(0x4F544E43);
@@ -469,6 +470,7 @@ public partial class RecordTypes
     public static readonly RecordType NAM7 = new(0x374D414E);
     public static readonly RecordType NAM8 = new(0x384D414E);
     public static readonly RecordType NAM9 = new(0x394D414E);
+    public static readonly RecordType NAMA = new(0x414D414E);
     public static readonly RecordType NAME = new(0x454D414E);
     public static readonly RecordType NARO = new(0x4F52414E);
     public static readonly RecordType NAVI = new(0x4956414E);
@@ -739,6 +741,7 @@ public partial class RecordTypes
     public static readonly RecordType WADL = new(0x4C444157);
     public static readonly RecordType WAIM = new(0x4D494157);
     public static readonly RecordType WAM2 = new(0x324D4157);
+    public static readonly RecordType WAMB = new(0x424D4157);
     public static readonly RecordType WAOC = new(0x434F4157);
     public static readonly RecordType WAOS = new(0x534F4157);
     public static readonly RecordType WATR = new(0x52544157);
@@ -778,6 +781,7 @@ public partial class RecordTypes
     public static readonly RecordType WFSC = new(0x43534657);
     public static readonly RecordType WGEN = new(0x4E454757);
     public static readonly RecordType WHBV = new(0x56424857);
+    public static readonly RecordType WHGT = new(0x54474857);
     public static readonly RecordType WHIP = new(0x50494857);
     public static readonly RecordType WIMP = new(0x504D4957);
     public static readonly RecordType WKEY = new(0x59454B57);

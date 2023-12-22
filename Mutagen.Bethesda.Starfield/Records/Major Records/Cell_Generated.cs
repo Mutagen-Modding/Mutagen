@@ -3528,6 +3528,12 @@ namespace Mutagen.Bethesda.Starfield
                 case "SpawnOnDestroyComponent":
                 case "ISpawnOnDestroyComponentGetter":
                 case "ISpawnOnDestroyComponent":
+                case "WorldSpaceOverlayComponent":
+                case "IWorldSpaceOverlayComponentGetter":
+                case "IWorldSpaceOverlayComponent":
+                case "ReflectionProbesComponent":
+                case "IReflectionProbesComponentGetter":
+                case "IReflectionProbesComponent":
                     break;
                 case "CellXCLAItem":
                 case "ICellXCLAItemGetter":

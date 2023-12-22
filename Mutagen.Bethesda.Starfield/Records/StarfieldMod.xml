@@ -47,6 +47,7 @@
           <GenericSpecification Definition="Starfield.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Group name="Worldspaces" refName="Worldspace" />
       <Group name="Quests" refName="Quest" />
       <Group name="LoadScreens" refName="LoadScreen" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />

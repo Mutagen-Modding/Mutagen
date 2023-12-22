@@ -179,6 +179,7 @@ public partial class RecordTypeInts
     public const int CLDF = 0x46444C43;
     public const int CLFM = 0x4D464C43;
     public const int CLMT = 0x544D4C43;
+    public const int CLSZ = 0x5A534C43;
     public const int CNAM = 0x4D414E43;
     public const int CNDF = 0x46444E43;
     public const int CNTO = 0x4F544E43;
@@ -467,6 +468,7 @@ public partial class RecordTypeInts
     public const int NAM7 = 0x374D414E;
     public const int NAM8 = 0x384D414E;
     public const int NAM9 = 0x394D414E;
+    public const int NAMA = 0x414D414E;
     public const int NAME = 0x454D414E;
     public const int NARO = 0x4F52414E;
     public const int NAVI = 0x4956414E;
@@ -737,6 +739,7 @@ public partial class RecordTypeInts
     public const int WADL = 0x4C444157;
     public const int WAIM = 0x4D494157;
     public const int WAM2 = 0x324D4157;
+    public const int WAMB = 0x424D4157;
     public const int WAOC = 0x434F4157;
     public const int WAOS = 0x534F4157;
     public const int WATR = 0x52544157;
@@ -776,6 +779,7 @@ public partial class RecordTypeInts
     public const int WFSC = 0x43534657;
     public const int WGEN = 0x4E454757;
     public const int WHBV = 0x56424857;
+    public const int WHGT = 0x54474857;
     public const int WHIP = 0x50494857;
     public const int WIMP = 0x504D4957;
     public const int WKEY = 0x59454B57;

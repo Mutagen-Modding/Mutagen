@@ -403,4 +403,16 @@
       </FormLink>
     </Fields>
   </Object>
+  <Object name="WorldSpaceOverlayComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="SNAM" recordType="SNAM" unknown="true" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
+      <FormLink name="SurfaceBlock" recordType="BNAM" refName="SurfaceBlock" />
+    </Fields>
+  </Object>
+  <Object name="ReflectionProbesComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>

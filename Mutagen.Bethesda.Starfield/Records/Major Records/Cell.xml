@@ -108,6 +108,7 @@
       <P3Float name="Offset" />
       <Int32 name="Unknown" />
       <P3Float name="Angle" />
+      <ByteArray name="UnknownBytes" />
     </Fields>
   </Object>
   <Object name="CellShipBlueprintSnapLink" objType="Subrecord">

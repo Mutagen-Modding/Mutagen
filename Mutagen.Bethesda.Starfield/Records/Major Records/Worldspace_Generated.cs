@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,345 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IWorldspaceGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region LargeReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<WorldspaceGridReference> _LargeReferences = new ExtendedList<WorldspaceGridReference>();
+        public ExtendedList<WorldspaceGridReference> LargeReferences
+        {
+            get => this._LargeReferences;
+            init => this._LargeReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IWorldspaceGridReferenceGetter> IWorldspaceGetter.LargeReferences => _LargeReferences;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IWorldspaceGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region EncounterLocation
+        private readonly IFormLinkNullable<ILocationGetter> _EncounterLocation = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> EncounterLocation
+        {
+            get => _EncounterLocation;
+            set => _EncounterLocation.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IWorldspaceGetter.EncounterLocation => this.EncounterLocation;
+        #endregion
+        #region Location
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IWorldspaceGetter.Location => this.Location;
+        #endregion
+        #region Biome
+        private readonly IFormLinkNullable<IBiomeGetter> _Biome = new FormLinkNullable<IBiomeGetter>();
+        public IFormLinkNullable<IBiomeGetter> Biome
+        {
+            get => _Biome;
+            set => _Biome.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IBiomeGetter> IWorldspaceGetter.Biome => this.Biome;
+        #endregion
+        #region Parent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WorldspaceParent? _Parent;
+        public WorldspaceParent? Parent
+        {
+            get => _Parent;
+            set => _Parent = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWorldspaceParentGetter? IWorldspaceGetter.Parent => this.Parent;
+        #endregion
+        #region Climate
+        private readonly IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
+        public IFormLinkNullable<IClimateGetter> Climate
+        {
+            get => _Climate;
+            set => _Climate.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
+        #endregion
+        #region Water
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water
+        {
+            get => _Water;
+            set => _Water.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
+        #endregion
+        #region NAM7
+        public String? NAM7 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWorldspaceGetter.NAM7 => this.NAM7;
+        #endregion
+        #region LodWater
+        private readonly IFormLinkNullable<IWaterGetter> _LodWater = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> LodWater
+        {
+            get => _LodWater;
+            set => _LodWater.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.LodWater => this.LodWater;
+        #endregion
+        #region LodWaterHeight
+        public Single? LodWaterHeight { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IWorldspaceGetter.LodWaterHeight => this.LodWaterHeight;
+        #endregion
+        #region LandDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WorldspaceLandDefaults? _LandDefaults;
+        public WorldspaceLandDefaults? LandDefaults
+        {
+            get => _LandDefaults;
+            set => _LandDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWorldspaceLandDefaultsGetter? IWorldspaceGetter.LandDefaults => this.LandDefaults;
+        #endregion
+        #region MapData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WorldspaceMap? _MapData;
+        public WorldspaceMap? MapData
+        {
+            get => _MapData;
+            set => _MapData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWorldspaceMapGetter? IWorldspaceGetter.MapData => this.MapData;
+        #endregion
+        #region WorldMapOffsetScale
+        public Single WorldMapOffsetScale { get; set; } = default;
+        #endregion
+        #region WorldMapCellOffset
+        public P3Float WorldMapCellOffset { get; set; } = default;
+        #endregion
+        #region DistantLodMultiplier
+        public Single? DistantLodMultiplier { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IWorldspaceGetter.DistantLodMultiplier => this.DistantLodMultiplier;
+        #endregion
+        #region Flags
+        public Worldspace.Flag Flags { get; set; } = default;
+        #endregion
+        #region FNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FNAM;
+        public MemorySlice<Byte>? FNAM
+        {
+            get => this._FNAM;
+            set => this._FNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.FNAM => this.FNAM;
+        #endregion
+        #region ObjectBoundsMin
+        public P2Float ObjectBoundsMin { get; set; } = default;
+        #endregion
+        #region ObjectBoundsMax
+        public P2Float ObjectBoundsMax { get; set; } = default;
+        #endregion
+        #region Music
+        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> Music
+        {
+            get => _Music;
+            set => _Music.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;
+        #endregion
+        #region AmbienceSet
+        private readonly IFormLinkNullable<IAmbienceSetGetter> _AmbienceSet = new FormLinkNullable<IAmbienceSetGetter>();
+        public IFormLinkNullable<IAmbienceSetGetter> AmbienceSet
+        {
+            get => _AmbienceSet;
+            set => _AmbienceSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAmbienceSetGetter> IWorldspaceGetter.AmbienceSet => this.AmbienceSet;
+        #endregion
+        #region EnvironmentMap
+        public String? EnvironmentMap { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWorldspaceGetter.EnvironmentMap => this.EnvironmentMap;
+        #endregion
+        #region WaterEnvironmentMap
+        public String? WaterEnvironmentMap { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWorldspaceGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
+        #endregion
+        #region GNAM
+        public Single? GNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IWorldspaceGetter.GNAM => this.GNAM;
+        #endregion
+        #region LandscapeTextures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> _LandscapeTextures = new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>();
+        public ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures
+        {
+            get => this._LandscapeTextures;
+            init => this._LandscapeTextures = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> IWorldspaceGetter.LandscapeTextures => _LandscapeTextures;
+        #endregion
+
+        #endregion
+        #region XCLWs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Single>? _XCLWs;
+        public ExtendedList<Single>? XCLWs
+        {
+            get => this._XCLWs;
+            set => this._XCLWs = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<Single>? IWorldspaceGetter.XCLWs => _XCLWs;
+        #endregion
+
+        #endregion
+        #region WHGTs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Single>? _WHGTs;
+        public ExtendedList<Single>? WHGTs
+        {
+            get => this._WHGTs;
+            set => this._WHGTs = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<Single>? IWorldspaceGetter.WHGTs => _WHGTs;
+        #endregion
+
+        #endregion
+        #region HNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _HNAM;
+        public MemorySlice<Byte>? HNAM
+        {
+            get => this._HNAM;
+            set => this._HNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.HNAM => this.HNAM;
+        #endregion
+        #region OffsetData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _OffsetData;
+        public MemorySlice<Byte>? OffsetData
+        {
+            get => this._OffsetData;
+            set => this._OffsetData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.OffsetData => this.OffsetData;
+        #endregion
+        #region CellSizeData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _CellSizeData;
+        public MemorySlice<Byte>? CellSizeData
+        {
+            get => this._CellSizeData;
+            set => this._CellSizeData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.CellSizeData => this.CellSizeData;
+        #endregion
+        #region TopCell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Cell? _TopCell;
+        public Cell? TopCell
+        {
+            get => _TopCell;
+            set => _TopCell = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICellGetter? IWorldspaceGetter.TopCell => this.TopCell;
+        #endregion
+        #region SubCellsTimestamp
+        public Int32 SubCellsTimestamp { get; set; } = default;
+        #endregion
+        #region SubCellsUnknown
+        public Int32 SubCellsUnknown { get; set; } = default;
+        #endregion
+        #region SubCells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
+        public ExtendedList<WorldspaceBlock> SubCells
+        {
+            get => this._SubCells;
+            init => this._SubCells = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IWorldspaceBlockGetter> IWorldspaceGetter.SubCells => _SubCells;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +423,42 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.EncounterLocation = initialValue;
+                this.Location = initialValue;
+                this.Biome = initialValue;
+                this.Parent = new MaskItem<TItem, WorldspaceParent.Mask<TItem>?>(initialValue, new WorldspaceParent.Mask<TItem>(initialValue));
+                this.Climate = initialValue;
+                this.Water = initialValue;
+                this.NAM7 = initialValue;
+                this.LodWater = initialValue;
+                this.LodWaterHeight = initialValue;
+                this.LandDefaults = new MaskItem<TItem, WorldspaceLandDefaults.Mask<TItem>?>(initialValue, new WorldspaceLandDefaults.Mask<TItem>(initialValue));
+                this.MapData = new MaskItem<TItem, WorldspaceMap.Mask<TItem>?>(initialValue, new WorldspaceMap.Mask<TItem>(initialValue));
+                this.WorldMapOffsetScale = initialValue;
+                this.WorldMapCellOffset = initialValue;
+                this.DistantLodMultiplier = initialValue;
+                this.Flags = initialValue;
+                this.FNAM = initialValue;
+                this.ObjectBoundsMin = initialValue;
+                this.ObjectBoundsMax = initialValue;
+                this.Music = initialValue;
+                this.AmbienceSet = initialValue;
+                this.EnvironmentMap = initialValue;
+                this.WaterEnvironmentMap = initialValue;
+                this.GNAM = initialValue;
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.XCLWs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WHGTs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HNAM = initialValue;
+                this.OffsetData = initialValue;
+                this.CellSizeData = initialValue;
+                this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
+                this.SubCellsTimestamp = initialValue;
+                this.SubCellsUnknown = initialValue;
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +468,43 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem LargeReferences,
+                TItem Name,
+                TItem EncounterLocation,
+                TItem Location,
+                TItem Biome,
+                TItem Parent,
+                TItem Climate,
+                TItem Water,
+                TItem NAM7,
+                TItem LodWater,
+                TItem LodWaterHeight,
+                TItem LandDefaults,
+                TItem MapData,
+                TItem WorldMapOffsetScale,
+                TItem WorldMapCellOffset,
+                TItem DistantLodMultiplier,
+                TItem Flags,
+                TItem FNAM,
+                TItem ObjectBoundsMin,
+                TItem ObjectBoundsMax,
+                TItem Music,
+                TItem AmbienceSet,
+                TItem EnvironmentMap,
+                TItem WaterEnvironmentMap,
+                TItem GNAM,
+                TItem LandscapeTextures,
+                TItem XCLWs,
+                TItem WHGTs,
+                TItem HNAM,
+                TItem OffsetData,
+                TItem CellSizeData,
+                TItem TopCell,
+                TItem SubCellsTimestamp,
+                TItem SubCellsUnknown,
+                TItem SubCells)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +514,42 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
+                this.Name = Name;
+                this.EncounterLocation = EncounterLocation;
+                this.Location = Location;
+                this.Biome = Biome;
+                this.Parent = new MaskItem<TItem, WorldspaceParent.Mask<TItem>?>(Parent, new WorldspaceParent.Mask<TItem>(Parent));
+                this.Climate = Climate;
+                this.Water = Water;
+                this.NAM7 = NAM7;
+                this.LodWater = LodWater;
+                this.LodWaterHeight = LodWaterHeight;
+                this.LandDefaults = new MaskItem<TItem, WorldspaceLandDefaults.Mask<TItem>?>(LandDefaults, new WorldspaceLandDefaults.Mask<TItem>(LandDefaults));
+                this.MapData = new MaskItem<TItem, WorldspaceMap.Mask<TItem>?>(MapData, new WorldspaceMap.Mask<TItem>(MapData));
+                this.WorldMapOffsetScale = WorldMapOffsetScale;
+                this.WorldMapCellOffset = WorldMapCellOffset;
+                this.DistantLodMultiplier = DistantLodMultiplier;
+                this.Flags = Flags;
+                this.FNAM = FNAM;
+                this.ObjectBoundsMin = ObjectBoundsMin;
+                this.ObjectBoundsMax = ObjectBoundsMax;
+                this.Music = Music;
+                this.AmbienceSet = AmbienceSet;
+                this.EnvironmentMap = EnvironmentMap;
+                this.WaterEnvironmentMap = WaterEnvironmentMap;
+                this.GNAM = GNAM;
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, Enumerable.Empty<(int Index, TItem Value)>());
+                this.XCLWs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(XCLWs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WHGTs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WHGTs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HNAM = HNAM;
+                this.OffsetData = OffsetData;
+                this.CellSizeData = CellSizeData;
+                this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
+                this.SubCellsTimestamp = SubCellsTimestamp;
+                this.SubCellsUnknown = SubCellsUnknown;
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +558,45 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>? LargeReferences;
+            public TItem Name;
+            public TItem EncounterLocation;
+            public TItem Location;
+            public TItem Biome;
+            public MaskItem<TItem, WorldspaceParent.Mask<TItem>?>? Parent { get; set; }
+            public TItem Climate;
+            public TItem Water;
+            public TItem NAM7;
+            public TItem LodWater;
+            public TItem LodWaterHeight;
+            public MaskItem<TItem, WorldspaceLandDefaults.Mask<TItem>?>? LandDefaults { get; set; }
+            public MaskItem<TItem, WorldspaceMap.Mask<TItem>?>? MapData { get; set; }
+            public TItem WorldMapOffsetScale;
+            public TItem WorldMapCellOffset;
+            public TItem DistantLodMultiplier;
+            public TItem Flags;
+            public TItem FNAM;
+            public TItem ObjectBoundsMin;
+            public TItem ObjectBoundsMax;
+            public TItem Music;
+            public TItem AmbienceSet;
+            public TItem EnvironmentMap;
+            public TItem WaterEnvironmentMap;
+            public TItem GNAM;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LandscapeTextures;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? XCLWs;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WHGTs;
+            public TItem HNAM;
+            public TItem OffsetData;
+            public TItem CellSizeData;
+            public MaskItem<TItem, Cell.Mask<TItem>?>? TopCell { get; set; }
+            public TItem SubCellsTimestamp;
+            public TItem SubCellsUnknown;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>? SubCells;
             #endregion
 
             #region Equals
@@ -119,11 +610,83 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.LargeReferences, rhs.LargeReferences)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.EncounterLocation, rhs.EncounterLocation)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Biome, rhs.Biome)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.Climate, rhs.Climate)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
+                if (!object.Equals(this.NAM7, rhs.NAM7)) return false;
+                if (!object.Equals(this.LodWater, rhs.LodWater)) return false;
+                if (!object.Equals(this.LodWaterHeight, rhs.LodWaterHeight)) return false;
+                if (!object.Equals(this.LandDefaults, rhs.LandDefaults)) return false;
+                if (!object.Equals(this.MapData, rhs.MapData)) return false;
+                if (!object.Equals(this.WorldMapOffsetScale, rhs.WorldMapOffsetScale)) return false;
+                if (!object.Equals(this.WorldMapCellOffset, rhs.WorldMapCellOffset)) return false;
+                if (!object.Equals(this.DistantLodMultiplier, rhs.DistantLodMultiplier)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.ObjectBoundsMin, rhs.ObjectBoundsMin)) return false;
+                if (!object.Equals(this.ObjectBoundsMax, rhs.ObjectBoundsMax)) return false;
+                if (!object.Equals(this.Music, rhs.Music)) return false;
+                if (!object.Equals(this.AmbienceSet, rhs.AmbienceSet)) return false;
+                if (!object.Equals(this.EnvironmentMap, rhs.EnvironmentMap)) return false;
+                if (!object.Equals(this.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+                if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
+                if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
+                if (!object.Equals(this.XCLWs, rhs.XCLWs)) return false;
+                if (!object.Equals(this.WHGTs, rhs.WHGTs)) return false;
+                if (!object.Equals(this.HNAM, rhs.HNAM)) return false;
+                if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
+                if (!object.Equals(this.CellSizeData, rhs.CellSizeData)) return false;
+                if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
+                if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
+                if (!object.Equals(this.SubCellsUnknown, rhs.SubCellsUnknown)) return false;
+                if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.LargeReferences);
+                hash.Add(this.Name);
+                hash.Add(this.EncounterLocation);
+                hash.Add(this.Location);
+                hash.Add(this.Biome);
+                hash.Add(this.Parent);
+                hash.Add(this.Climate);
+                hash.Add(this.Water);
+                hash.Add(this.NAM7);
+                hash.Add(this.LodWater);
+                hash.Add(this.LodWaterHeight);
+                hash.Add(this.LandDefaults);
+                hash.Add(this.MapData);
+                hash.Add(this.WorldMapOffsetScale);
+                hash.Add(this.WorldMapCellOffset);
+                hash.Add(this.DistantLodMultiplier);
+                hash.Add(this.Flags);
+                hash.Add(this.FNAM);
+                hash.Add(this.ObjectBoundsMin);
+                hash.Add(this.ObjectBoundsMax);
+                hash.Add(this.Music);
+                hash.Add(this.AmbienceSet);
+                hash.Add(this.EnvironmentMap);
+                hash.Add(this.WaterEnvironmentMap);
+                hash.Add(this.GNAM);
+                hash.Add(this.LandscapeTextures);
+                hash.Add(this.XCLWs);
+                hash.Add(this.WHGTs);
+                hash.Add(this.HNAM);
+                hash.Add(this.OffsetData);
+                hash.Add(this.CellSizeData);
+                hash.Add(this.TopCell);
+                hash.Add(this.SubCellsTimestamp);
+                hash.Add(this.SubCellsUnknown);
+                hash.Add(this.SubCells);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +697,121 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LargeReferences != null)
+                {
+                    if (!eval(this.LargeReferences.Overall)) return false;
+                    if (this.LargeReferences.Specific != null)
+                    {
+                        foreach (var item in this.LargeReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.EncounterLocation)) return false;
+                if (!eval(this.Location)) return false;
+                if (!eval(this.Biome)) return false;
+                if (Parent != null)
+                {
+                    if (!eval(this.Parent.Overall)) return false;
+                    if (this.Parent.Specific != null && !this.Parent.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Climate)) return false;
+                if (!eval(this.Water)) return false;
+                if (!eval(this.NAM7)) return false;
+                if (!eval(this.LodWater)) return false;
+                if (!eval(this.LodWaterHeight)) return false;
+                if (LandDefaults != null)
+                {
+                    if (!eval(this.LandDefaults.Overall)) return false;
+                    if (this.LandDefaults.Specific != null && !this.LandDefaults.Specific.All(eval)) return false;
+                }
+                if (MapData != null)
+                {
+                    if (!eval(this.MapData.Overall)) return false;
+                    if (this.MapData.Specific != null && !this.MapData.Specific.All(eval)) return false;
+                }
+                if (!eval(this.WorldMapOffsetScale)) return false;
+                if (!eval(this.WorldMapCellOffset)) return false;
+                if (!eval(this.DistantLodMultiplier)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.FNAM)) return false;
+                if (!eval(this.ObjectBoundsMin)) return false;
+                if (!eval(this.ObjectBoundsMax)) return false;
+                if (!eval(this.Music)) return false;
+                if (!eval(this.AmbienceSet)) return false;
+                if (!eval(this.EnvironmentMap)) return false;
+                if (!eval(this.WaterEnvironmentMap)) return false;
+                if (!eval(this.GNAM)) return false;
+                if (this.LandscapeTextures != null)
+                {
+                    if (!eval(this.LandscapeTextures.Overall)) return false;
+                    if (this.LandscapeTextures.Specific != null)
+                    {
+                        foreach (var item in this.LandscapeTextures.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.XCLWs != null)
+                {
+                    if (!eval(this.XCLWs.Overall)) return false;
+                    if (this.XCLWs.Specific != null)
+                    {
+                        foreach (var item in this.XCLWs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.WHGTs != null)
+                {
+                    if (!eval(this.WHGTs.Overall)) return false;
+                    if (this.WHGTs.Specific != null)
+                    {
+                        foreach (var item in this.WHGTs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.HNAM)) return false;
+                if (!eval(this.OffsetData)) return false;
+                if (!eval(this.CellSizeData)) return false;
+                if (TopCell != null)
+                {
+                    if (!eval(this.TopCell.Overall)) return false;
+                    if (this.TopCell.Specific != null && !this.TopCell.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SubCellsTimestamp)) return false;
+                if (!eval(this.SubCellsUnknown)) return false;
+                if (this.SubCells != null)
+                {
+                    if (!eval(this.SubCells.Overall)) return false;
+                    if (this.SubCells.Specific != null)
+                    {
+                        foreach (var item in this.SubCells.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +820,121 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LargeReferences != null)
+                {
+                    if (eval(this.LargeReferences.Overall)) return true;
+                    if (this.LargeReferences.Specific != null)
+                    {
+                        foreach (var item in this.LargeReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.EncounterLocation)) return true;
+                if (eval(this.Location)) return true;
+                if (eval(this.Biome)) return true;
+                if (Parent != null)
+                {
+                    if (eval(this.Parent.Overall)) return true;
+                    if (this.Parent.Specific != null && this.Parent.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Climate)) return true;
+                if (eval(this.Water)) return true;
+                if (eval(this.NAM7)) return true;
+                if (eval(this.LodWater)) return true;
+                if (eval(this.LodWaterHeight)) return true;
+                if (LandDefaults != null)
+                {
+                    if (eval(this.LandDefaults.Overall)) return true;
+                    if (this.LandDefaults.Specific != null && this.LandDefaults.Specific.Any(eval)) return true;
+                }
+                if (MapData != null)
+                {
+                    if (eval(this.MapData.Overall)) return true;
+                    if (this.MapData.Specific != null && this.MapData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.WorldMapOffsetScale)) return true;
+                if (eval(this.WorldMapCellOffset)) return true;
+                if (eval(this.DistantLodMultiplier)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.FNAM)) return true;
+                if (eval(this.ObjectBoundsMin)) return true;
+                if (eval(this.ObjectBoundsMax)) return true;
+                if (eval(this.Music)) return true;
+                if (eval(this.AmbienceSet)) return true;
+                if (eval(this.EnvironmentMap)) return true;
+                if (eval(this.WaterEnvironmentMap)) return true;
+                if (eval(this.GNAM)) return true;
+                if (this.LandscapeTextures != null)
+                {
+                    if (eval(this.LandscapeTextures.Overall)) return true;
+                    if (this.LandscapeTextures.Specific != null)
+                    {
+                        foreach (var item in this.LandscapeTextures.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.XCLWs != null)
+                {
+                    if (eval(this.XCLWs.Overall)) return true;
+                    if (this.XCLWs.Specific != null)
+                    {
+                        foreach (var item in this.XCLWs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.WHGTs != null)
+                {
+                    if (eval(this.WHGTs.Overall)) return true;
+                    if (this.WHGTs.Specific != null)
+                    {
+                        foreach (var item in this.WHGTs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.HNAM)) return true;
+                if (eval(this.OffsetData)) return true;
+                if (eval(this.CellSizeData)) return true;
+                if (TopCell != null)
+                {
+                    if (eval(this.TopCell.Overall)) return true;
+                    if (this.TopCell.Specific != null && this.TopCell.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SubCellsTimestamp)) return true;
+                if (eval(this.SubCellsUnknown)) return true;
+                if (this.SubCells != null)
+                {
+                    if (eval(this.SubCells.Overall)) return true;
+                    if (this.SubCells.Specific != null)
+                    {
+                        foreach (var item in this.SubCells.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +950,123 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LargeReferences != null)
+                {
+                    obj.LargeReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>?>(eval(this.LargeReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>());
+                    if (LargeReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>();
+                        obj.LargeReferences.Specific = l;
+                        foreach (var item in LargeReferences.Specific)
+                        {
+                            MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.EncounterLocation = eval(this.EncounterLocation);
+                obj.Location = eval(this.Location);
+                obj.Biome = eval(this.Biome);
+                obj.Parent = this.Parent == null ? null : new MaskItem<R, WorldspaceParent.Mask<R>?>(eval(this.Parent.Overall), this.Parent.Specific?.Translate(eval));
+                obj.Climate = eval(this.Climate);
+                obj.Water = eval(this.Water);
+                obj.NAM7 = eval(this.NAM7);
+                obj.LodWater = eval(this.LodWater);
+                obj.LodWaterHeight = eval(this.LodWaterHeight);
+                obj.LandDefaults = this.LandDefaults == null ? null : new MaskItem<R, WorldspaceLandDefaults.Mask<R>?>(eval(this.LandDefaults.Overall), this.LandDefaults.Specific?.Translate(eval));
+                obj.MapData = this.MapData == null ? null : new MaskItem<R, WorldspaceMap.Mask<R>?>(eval(this.MapData.Overall), this.MapData.Specific?.Translate(eval));
+                obj.WorldMapOffsetScale = eval(this.WorldMapOffsetScale);
+                obj.WorldMapCellOffset = eval(this.WorldMapCellOffset);
+                obj.DistantLodMultiplier = eval(this.DistantLodMultiplier);
+                obj.Flags = eval(this.Flags);
+                obj.FNAM = eval(this.FNAM);
+                obj.ObjectBoundsMin = eval(this.ObjectBoundsMin);
+                obj.ObjectBoundsMax = eval(this.ObjectBoundsMax);
+                obj.Music = eval(this.Music);
+                obj.AmbienceSet = eval(this.AmbienceSet);
+                obj.EnvironmentMap = eval(this.EnvironmentMap);
+                obj.WaterEnvironmentMap = eval(this.WaterEnvironmentMap);
+                obj.GNAM = eval(this.GNAM);
+                if (LandscapeTextures != null)
+                {
+                    obj.LandscapeTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LandscapeTextures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LandscapeTextures.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LandscapeTextures.Specific = l;
+                        foreach (var item in LandscapeTextures.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (XCLWs != null)
+                {
+                    obj.XCLWs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.XCLWs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (XCLWs.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.XCLWs.Specific = l;
+                        foreach (var item in XCLWs.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (WHGTs != null)
+                {
+                    obj.WHGTs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WHGTs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (WHGTs.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.WHGTs.Specific = l;
+                        foreach (var item in WHGTs.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.HNAM = eval(this.HNAM);
+                obj.OffsetData = eval(this.OffsetData);
+                obj.CellSizeData = eval(this.CellSizeData);
+                obj.TopCell = this.TopCell == null ? null : new MaskItem<R, Cell.Mask<R>?>(eval(this.TopCell.Overall), this.TopCell.Specific?.Translate(eval));
+                obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
+                obj.SubCellsUnknown = eval(this.SubCellsUnknown);
+                if (SubCells != null)
+                {
+                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>());
+                    if (SubCells.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();
+                        obj.SubCells.Specific = l;
+                        foreach (var item in SubCells.Specific)
+                        {
+                            MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +1085,246 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Worldspace.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.LargeReferences?.Overall ?? true)
+                        && LargeReferences is {} LargeReferencesItem)
+                    {
+                        sb.AppendLine("LargeReferences =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LargeReferencesItem.Overall);
+                            if (LargeReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in LargeReferencesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.EncounterLocation ?? true)
+                    {
+                        sb.AppendItem(EncounterLocation, "EncounterLocation");
+                    }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.Biome ?? true)
+                    {
+                        sb.AppendItem(Biome, "Biome");
+                    }
+                    if (printMask?.Parent?.Overall ?? true)
+                    {
+                        Parent?.Print(sb);
+                    }
+                    if (printMask?.Climate ?? true)
+                    {
+                        sb.AppendItem(Climate, "Climate");
+                    }
+                    if (printMask?.Water ?? true)
+                    {
+                        sb.AppendItem(Water, "Water");
+                    }
+                    if (printMask?.NAM7 ?? true)
+                    {
+                        sb.AppendItem(NAM7, "NAM7");
+                    }
+                    if (printMask?.LodWater ?? true)
+                    {
+                        sb.AppendItem(LodWater, "LodWater");
+                    }
+                    if (printMask?.LodWaterHeight ?? true)
+                    {
+                        sb.AppendItem(LodWaterHeight, "LodWaterHeight");
+                    }
+                    if (printMask?.LandDefaults?.Overall ?? true)
+                    {
+                        LandDefaults?.Print(sb);
+                    }
+                    if (printMask?.MapData?.Overall ?? true)
+                    {
+                        MapData?.Print(sb);
+                    }
+                    if (printMask?.WorldMapOffsetScale ?? true)
+                    {
+                        sb.AppendItem(WorldMapOffsetScale, "WorldMapOffsetScale");
+                    }
+                    if (printMask?.WorldMapCellOffset ?? true)
+                    {
+                        sb.AppendItem(WorldMapCellOffset, "WorldMapCellOffset");
+                    }
+                    if (printMask?.DistantLodMultiplier ?? true)
+                    {
+                        sb.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.FNAM ?? true)
+                    {
+                        sb.AppendItem(FNAM, "FNAM");
+                    }
+                    if (printMask?.ObjectBoundsMin ?? true)
+                    {
+                        sb.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
+                    }
+                    if (printMask?.ObjectBoundsMax ?? true)
+                    {
+                        sb.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
+                    }
+                    if (printMask?.Music ?? true)
+                    {
+                        sb.AppendItem(Music, "Music");
+                    }
+                    if (printMask?.AmbienceSet ?? true)
+                    {
+                        sb.AppendItem(AmbienceSet, "AmbienceSet");
+                    }
+                    if (printMask?.EnvironmentMap ?? true)
+                    {
+                        sb.AppendItem(EnvironmentMap, "EnvironmentMap");
+                    }
+                    if (printMask?.WaterEnvironmentMap ?? true)
+                    {
+                        sb.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
+                    }
+                    if (printMask?.GNAM ?? true)
+                    {
+                        sb.AppendItem(GNAM, "GNAM");
+                    }
+                    if ((printMask?.LandscapeTextures?.Overall ?? true)
+                        && LandscapeTextures is {} LandscapeTexturesItem)
+                    {
+                        sb.AppendLine("LandscapeTextures =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LandscapeTexturesItem.Overall);
+                            if (LandscapeTexturesItem.Specific != null)
+                            {
+                                foreach (var subItem in LandscapeTexturesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.XCLWs?.Overall ?? true)
+                        && XCLWs is {} XCLWsItem)
+                    {
+                        sb.AppendLine("XCLWs =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(XCLWsItem.Overall);
+                            if (XCLWsItem.Specific != null)
+                            {
+                                foreach (var subItem in XCLWsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.WHGTs?.Overall ?? true)
+                        && WHGTs is {} WHGTsItem)
+                    {
+                        sb.AppendLine("WHGTs =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(WHGTsItem.Overall);
+                            if (WHGTsItem.Specific != null)
+                            {
+                                foreach (var subItem in WHGTsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.HNAM ?? true)
+                    {
+                        sb.AppendItem(HNAM, "HNAM");
+                    }
+                    if (printMask?.OffsetData ?? true)
+                    {
+                        sb.AppendItem(OffsetData, "OffsetData");
+                    }
+                    if (printMask?.CellSizeData ?? true)
+                    {
+                        sb.AppendItem(CellSizeData, "CellSizeData");
+                    }
+                    if (printMask?.TopCell?.Overall ?? true)
+                    {
+                        TopCell?.Print(sb);
+                    }
+                    if (printMask?.SubCellsTimestamp ?? true)
+                    {
+                        sb.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                    }
+                    if (printMask?.SubCellsUnknown ?? true)
+                    {
+                        sb.AppendItem(SubCellsUnknown, "SubCellsUnknown");
+                    }
+                    if ((printMask?.SubCells?.Overall ?? true)
+                        && SubCells is {} SubCellsItem)
+                    {
+                        sb.AppendLine("SubCells =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SubCellsItem.Overall);
+                            if (SubCellsItem.Specific != null)
+                            {
+                                foreach (var subItem in SubCellsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +1335,123 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>? LargeReferences;
+            public Exception? Name;
+            public Exception? EncounterLocation;
+            public Exception? Location;
+            public Exception? Biome;
+            public MaskItem<Exception?, WorldspaceParent.ErrorMask?>? Parent;
+            public Exception? Climate;
+            public Exception? Water;
+            public Exception? NAM7;
+            public Exception? LodWater;
+            public Exception? LodWaterHeight;
+            public MaskItem<Exception?, WorldspaceLandDefaults.ErrorMask?>? LandDefaults;
+            public MaskItem<Exception?, WorldspaceMap.ErrorMask?>? MapData;
+            public Exception? WorldMapOffsetScale;
+            public Exception? WorldMapCellOffset;
+            public Exception? DistantLodMultiplier;
+            public Exception? Flags;
+            public Exception? FNAM;
+            public Exception? ObjectBoundsMin;
+            public Exception? ObjectBoundsMax;
+            public Exception? Music;
+            public Exception? AmbienceSet;
+            public Exception? EnvironmentMap;
+            public Exception? WaterEnvironmentMap;
+            public Exception? GNAM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LandscapeTextures;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? XCLWs;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WHGTs;
+            public Exception? HNAM;
+            public Exception? OffsetData;
+            public Exception? CellSizeData;
+            public MaskItem<Exception?, Cell.ErrorMask?>? TopCell;
+            public Exception? SubCellsTimestamp;
+            public Exception? SubCellsUnknown;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>? SubCells;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
                 switch (enu)
                 {
+                    case Worldspace_FieldIndex.Components:
+                        return Components;
+                    case Worldspace_FieldIndex.LargeReferences:
+                        return LargeReferences;
+                    case Worldspace_FieldIndex.Name:
+                        return Name;
+                    case Worldspace_FieldIndex.EncounterLocation:
+                        return EncounterLocation;
+                    case Worldspace_FieldIndex.Location:
+                        return Location;
+                    case Worldspace_FieldIndex.Biome:
+                        return Biome;
+                    case Worldspace_FieldIndex.Parent:
+                        return Parent;
+                    case Worldspace_FieldIndex.Climate:
+                        return Climate;
+                    case Worldspace_FieldIndex.Water:
+                        return Water;
+                    case Worldspace_FieldIndex.NAM7:
+                        return NAM7;
+                    case Worldspace_FieldIndex.LodWater:
+                        return LodWater;
+                    case Worldspace_FieldIndex.LodWaterHeight:
+                        return LodWaterHeight;
+                    case Worldspace_FieldIndex.LandDefaults:
+                        return LandDefaults;
+                    case Worldspace_FieldIndex.MapData:
+                        return MapData;
+                    case Worldspace_FieldIndex.WorldMapOffsetScale:
+                        return WorldMapOffsetScale;
+                    case Worldspace_FieldIndex.WorldMapCellOffset:
+                        return WorldMapCellOffset;
+                    case Worldspace_FieldIndex.DistantLodMultiplier:
+                        return DistantLodMultiplier;
+                    case Worldspace_FieldIndex.Flags:
+                        return Flags;
+                    case Worldspace_FieldIndex.FNAM:
+                        return FNAM;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        return ObjectBoundsMin;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        return ObjectBoundsMax;
+                    case Worldspace_FieldIndex.Music:
+                        return Music;
+                    case Worldspace_FieldIndex.AmbienceSet:
+                        return AmbienceSet;
+                    case Worldspace_FieldIndex.EnvironmentMap:
+                        return EnvironmentMap;
+                    case Worldspace_FieldIndex.WaterEnvironmentMap:
+                        return WaterEnvironmentMap;
+                    case Worldspace_FieldIndex.GNAM:
+                        return GNAM;
+                    case Worldspace_FieldIndex.LandscapeTextures:
+                        return LandscapeTextures;
+                    case Worldspace_FieldIndex.XCLWs:
+                        return XCLWs;
+                    case Worldspace_FieldIndex.WHGTs:
+                        return WHGTs;
+                    case Worldspace_FieldIndex.HNAM:
+                        return HNAM;
+                    case Worldspace_FieldIndex.OffsetData:
+                        return OffsetData;
+                    case Worldspace_FieldIndex.CellSizeData:
+                        return CellSizeData;
+                    case Worldspace_FieldIndex.TopCell:
+                        return TopCell;
+                    case Worldspace_FieldIndex.SubCellsTimestamp:
+                        return SubCellsTimestamp;
+                    case Worldspace_FieldIndex.SubCellsUnknown:
+                        return SubCellsUnknown;
+                    case Worldspace_FieldIndex.SubCells:
+                        return SubCells;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +1462,114 @@ namespace Mutagen.Bethesda.Starfield
                 Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
                 switch (enu)
                 {
+                    case Worldspace_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.LargeReferences:
+                        this.LargeReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Worldspace_FieldIndex.EncounterLocation:
+                        this.EncounterLocation = ex;
+                        break;
+                    case Worldspace_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case Worldspace_FieldIndex.Biome:
+                        this.Biome = ex;
+                        break;
+                    case Worldspace_FieldIndex.Parent:
+                        this.Parent = new MaskItem<Exception?, WorldspaceParent.ErrorMask?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.Climate:
+                        this.Climate = ex;
+                        break;
+                    case Worldspace_FieldIndex.Water:
+                        this.Water = ex;
+                        break;
+                    case Worldspace_FieldIndex.NAM7:
+                        this.NAM7 = ex;
+                        break;
+                    case Worldspace_FieldIndex.LodWater:
+                        this.LodWater = ex;
+                        break;
+                    case Worldspace_FieldIndex.LodWaterHeight:
+                        this.LodWaterHeight = ex;
+                        break;
+                    case Worldspace_FieldIndex.LandDefaults:
+                        this.LandDefaults = new MaskItem<Exception?, WorldspaceLandDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.MapData:
+                        this.MapData = new MaskItem<Exception?, WorldspaceMap.ErrorMask?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.WorldMapOffsetScale:
+                        this.WorldMapOffsetScale = ex;
+                        break;
+                    case Worldspace_FieldIndex.WorldMapCellOffset:
+                        this.WorldMapCellOffset = ex;
+                        break;
+                    case Worldspace_FieldIndex.DistantLodMultiplier:
+                        this.DistantLodMultiplier = ex;
+                        break;
+                    case Worldspace_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Worldspace_FieldIndex.FNAM:
+                        this.FNAM = ex;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        this.ObjectBoundsMin = ex;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        this.ObjectBoundsMax = ex;
+                        break;
+                    case Worldspace_FieldIndex.Music:
+                        this.Music = ex;
+                        break;
+                    case Worldspace_FieldIndex.AmbienceSet:
+                        this.AmbienceSet = ex;
+                        break;
+                    case Worldspace_FieldIndex.EnvironmentMap:
+                        this.EnvironmentMap = ex;
+                        break;
+                    case Worldspace_FieldIndex.WaterEnvironmentMap:
+                        this.WaterEnvironmentMap = ex;
+                        break;
+                    case Worldspace_FieldIndex.GNAM:
+                        this.GNAM = ex;
+                        break;
+                    case Worldspace_FieldIndex.LandscapeTextures:
+                        this.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.XCLWs:
+                        this.XCLWs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.WHGTs:
+                        this.WHGTs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.HNAM:
+                        this.HNAM = ex;
+                        break;
+                    case Worldspace_FieldIndex.OffsetData:
+                        this.OffsetData = ex;
+                        break;
+                    case Worldspace_FieldIndex.CellSizeData:
+                        this.CellSizeData = ex;
+                        break;
+                    case Worldspace_FieldIndex.TopCell:
+                        this.TopCell = new MaskItem<Exception?, Cell.ErrorMask?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.SubCellsTimestamp:
+                        this.SubCellsTimestamp = ex;
+                        break;
+                    case Worldspace_FieldIndex.SubCellsUnknown:
+                        this.SubCellsUnknown = ex;
+                        break;
+                    case Worldspace_FieldIndex.SubCells:
+                        this.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1581,114 @@ namespace Mutagen.Bethesda.Starfield
                 Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
                 switch (enu)
                 {
+                    case Worldspace_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Worldspace_FieldIndex.LargeReferences:
+                        this.LargeReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Worldspace_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.EncounterLocation:
+                        this.EncounterLocation = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Biome:
+                        this.Biome = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Parent:
+                        this.Parent = (MaskItem<Exception?, WorldspaceParent.ErrorMask?>?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Climate:
+                        this.Climate = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Water:
+                        this.Water = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.NAM7:
+                        this.NAM7 = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.LodWater:
+                        this.LodWater = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.LodWaterHeight:
+                        this.LodWaterHeight = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.LandDefaults:
+                        this.LandDefaults = (MaskItem<Exception?, WorldspaceLandDefaults.ErrorMask?>?)obj;
+                        break;
+                    case Worldspace_FieldIndex.MapData:
+                        this.MapData = (MaskItem<Exception?, WorldspaceMap.ErrorMask?>?)obj;
+                        break;
+                    case Worldspace_FieldIndex.WorldMapOffsetScale:
+                        this.WorldMapOffsetScale = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.WorldMapCellOffset:
+                        this.WorldMapCellOffset = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.DistantLodMultiplier:
+                        this.DistantLodMultiplier = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.FNAM:
+                        this.FNAM = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        this.ObjectBoundsMin = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        this.ObjectBoundsMax = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Music:
+                        this.Music = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.AmbienceSet:
+                        this.AmbienceSet = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.EnvironmentMap:
+                        this.EnvironmentMap = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.WaterEnvironmentMap:
+                        this.WaterEnvironmentMap = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.GNAM:
+                        this.GNAM = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.LandscapeTextures:
+                        this.LandscapeTextures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Worldspace_FieldIndex.XCLWs:
+                        this.XCLWs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Worldspace_FieldIndex.WHGTs:
+                        this.WHGTs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Worldspace_FieldIndex.HNAM:
+                        this.HNAM = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.OffsetData:
+                        this.OffsetData = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.CellSizeData:
+                        this.CellSizeData = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.TopCell:
+                        this.TopCell = (MaskItem<Exception?, Cell.ErrorMask?>?)obj;
+                        break;
+                    case Worldspace_FieldIndex.SubCellsTimestamp:
+                        this.SubCellsTimestamp = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.SubCellsUnknown:
+                        this.SubCellsUnknown = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.SubCells:
+                        this.SubCells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1698,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (LargeReferences != null) return true;
+                if (Name != null) return true;
+                if (EncounterLocation != null) return true;
+                if (Location != null) return true;
+                if (Biome != null) return true;
+                if (Parent != null) return true;
+                if (Climate != null) return true;
+                if (Water != null) return true;
+                if (NAM7 != null) return true;
+                if (LodWater != null) return true;
+                if (LodWaterHeight != null) return true;
+                if (LandDefaults != null) return true;
+                if (MapData != null) return true;
+                if (WorldMapOffsetScale != null) return true;
+                if (WorldMapCellOffset != null) return true;
+                if (DistantLodMultiplier != null) return true;
+                if (Flags != null) return true;
+                if (FNAM != null) return true;
+                if (ObjectBoundsMin != null) return true;
+                if (ObjectBoundsMax != null) return true;
+                if (Music != null) return true;
+                if (AmbienceSet != null) return true;
+                if (EnvironmentMap != null) return true;
+                if (WaterEnvironmentMap != null) return true;
+                if (GNAM != null) return true;
+                if (LandscapeTextures != null) return true;
+                if (XCLWs != null) return true;
+                if (WHGTs != null) return true;
+                if (HNAM != null) return true;
+                if (OffsetData != null) return true;
+                if (CellSizeData != null) return true;
+                if (TopCell != null) return true;
+                if (SubCellsTimestamp != null) return true;
+                if (SubCellsUnknown != null) return true;
+                if (SubCells != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1760,202 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (LargeReferences is {} LargeReferencesItem)
+                {
+                    sb.AppendLine("LargeReferences =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LargeReferencesItem.Overall);
+                        if (LargeReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in LargeReferencesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(EncounterLocation, "EncounterLocation");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Biome, "Biome");
+                }
+                Parent?.Print(sb);
+                {
+                    sb.AppendItem(Climate, "Climate");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                {
+                    sb.AppendItem(NAM7, "NAM7");
+                }
+                {
+                    sb.AppendItem(LodWater, "LodWater");
+                }
+                {
+                    sb.AppendItem(LodWaterHeight, "LodWaterHeight");
+                }
+                LandDefaults?.Print(sb);
+                MapData?.Print(sb);
+                {
+                    sb.AppendItem(WorldMapOffsetScale, "WorldMapOffsetScale");
+                }
+                {
+                    sb.AppendItem(WorldMapCellOffset, "WorldMapCellOffset");
+                }
+                {
+                    sb.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
+                }
+                {
+                    sb.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
+                }
+                {
+                    sb.AppendItem(Music, "Music");
+                }
+                {
+                    sb.AppendItem(AmbienceSet, "AmbienceSet");
+                }
+                {
+                    sb.AppendItem(EnvironmentMap, "EnvironmentMap");
+                }
+                {
+                    sb.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
+                }
+                {
+                    sb.AppendItem(GNAM, "GNAM");
+                }
+                if (LandscapeTextures is {} LandscapeTexturesItem)
+                {
+                    sb.AppendLine("LandscapeTextures =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LandscapeTexturesItem.Overall);
+                        if (LandscapeTexturesItem.Specific != null)
+                        {
+                            foreach (var subItem in LandscapeTexturesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (XCLWs is {} XCLWsItem)
+                {
+                    sb.AppendLine("XCLWs =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(XCLWsItem.Overall);
+                        if (XCLWsItem.Specific != null)
+                        {
+                            foreach (var subItem in XCLWsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (WHGTs is {} WHGTsItem)
+                {
+                    sb.AppendLine("WHGTs =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(WHGTsItem.Overall);
+                        if (WHGTsItem.Specific != null)
+                        {
+                            foreach (var subItem in WHGTsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(HNAM, "HNAM");
+                }
+                {
+                    sb.AppendItem(OffsetData, "OffsetData");
+                }
+                {
+                    sb.AppendItem(CellSizeData, "CellSizeData");
+                }
+                TopCell?.Print(sb);
+                {
+                    sb.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                }
+                {
+                    sb.AppendItem(SubCellsUnknown, "SubCellsUnknown");
+                }
+                if (SubCells is {} SubCellsItem)
+                {
+                    sb.AppendLine("SubCells =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SubCellsItem.Overall);
+                        if (SubCellsItem.Specific != null)
+                        {
+                            foreach (var subItem in SubCellsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +1964,42 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.LargeReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LargeReferences?.Overall, rhs.LargeReferences?.Overall), Noggog.ExceptionExt.Combine(this.LargeReferences?.Specific, rhs.LargeReferences?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.EncounterLocation = this.EncounterLocation.Combine(rhs.EncounterLocation);
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.Biome = this.Biome.Combine(rhs.Biome);
+                ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
+                ret.Climate = this.Climate.Combine(rhs.Climate);
+                ret.Water = this.Water.Combine(rhs.Water);
+                ret.NAM7 = this.NAM7.Combine(rhs.NAM7);
+                ret.LodWater = this.LodWater.Combine(rhs.LodWater);
+                ret.LodWaterHeight = this.LodWaterHeight.Combine(rhs.LodWaterHeight);
+                ret.LandDefaults = this.LandDefaults.Combine(rhs.LandDefaults, (l, r) => l.Combine(r));
+                ret.MapData = this.MapData.Combine(rhs.MapData, (l, r) => l.Combine(r));
+                ret.WorldMapOffsetScale = this.WorldMapOffsetScale.Combine(rhs.WorldMapOffsetScale);
+                ret.WorldMapCellOffset = this.WorldMapCellOffset.Combine(rhs.WorldMapCellOffset);
+                ret.DistantLodMultiplier = this.DistantLodMultiplier.Combine(rhs.DistantLodMultiplier);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.ObjectBoundsMin = this.ObjectBoundsMin.Combine(rhs.ObjectBoundsMin);
+                ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
+                ret.Music = this.Music.Combine(rhs.Music);
+                ret.AmbienceSet = this.AmbienceSet.Combine(rhs.AmbienceSet);
+                ret.EnvironmentMap = this.EnvironmentMap.Combine(rhs.EnvironmentMap);
+                ret.WaterEnvironmentMap = this.WaterEnvironmentMap.Combine(rhs.WaterEnvironmentMap);
+                ret.GNAM = this.GNAM.Combine(rhs.GNAM);
+                ret.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Overall, rhs.LandscapeTextures?.Overall), Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Specific, rhs.LandscapeTextures?.Specific));
+                ret.XCLWs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.XCLWs?.Overall, rhs.XCLWs?.Overall), Noggog.ExceptionExt.Combine(this.XCLWs?.Specific, rhs.XCLWs?.Specific));
+                ret.WHGTs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WHGTs?.Overall, rhs.WHGTs?.Overall), Noggog.ExceptionExt.Combine(this.WHGTs?.Specific, rhs.WHGTs?.Specific));
+                ret.HNAM = this.HNAM.Combine(rhs.HNAM);
+                ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
+                ret.CellSizeData = this.CellSizeData.Combine(rhs.CellSizeData);
+                ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
+                ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
+                ret.SubCellsUnknown = this.SubCellsUnknown.Combine(rhs.SubCellsUnknown);
+                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), Noggog.ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +2021,124 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public WorldspaceGridReference.TranslationMask? LargeReferences;
+            public bool Name;
+            public bool EncounterLocation;
+            public bool Location;
+            public bool Biome;
+            public WorldspaceParent.TranslationMask? Parent;
+            public bool Climate;
+            public bool Water;
+            public bool NAM7;
+            public bool LodWater;
+            public bool LodWaterHeight;
+            public WorldspaceLandDefaults.TranslationMask? LandDefaults;
+            public WorldspaceMap.TranslationMask? MapData;
+            public bool WorldMapOffsetScale;
+            public bool WorldMapCellOffset;
+            public bool DistantLodMultiplier;
+            public bool Flags;
+            public bool FNAM;
+            public bool ObjectBoundsMin;
+            public bool ObjectBoundsMax;
+            public bool Music;
+            public bool AmbienceSet;
+            public bool EnvironmentMap;
+            public bool WaterEnvironmentMap;
+            public bool GNAM;
+            public bool LandscapeTextures;
+            public bool XCLWs;
+            public bool WHGTs;
+            public bool HNAM;
+            public bool OffsetData;
+            public bool CellSizeData;
+            public Cell.TranslationMask? TopCell;
+            public bool SubCellsTimestamp;
+            public bool SubCellsUnknown;
+            public WorldspaceBlock.TranslationMask? SubCells;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.EncounterLocation = defaultOn;
+                this.Location = defaultOn;
+                this.Biome = defaultOn;
+                this.Climate = defaultOn;
+                this.Water = defaultOn;
+                this.NAM7 = defaultOn;
+                this.LodWater = defaultOn;
+                this.LodWaterHeight = defaultOn;
+                this.WorldMapOffsetScale = defaultOn;
+                this.WorldMapCellOffset = defaultOn;
+                this.DistantLodMultiplier = defaultOn;
+                this.Flags = defaultOn;
+                this.FNAM = defaultOn;
+                this.ObjectBoundsMin = defaultOn;
+                this.ObjectBoundsMax = defaultOn;
+                this.Music = defaultOn;
+                this.AmbienceSet = defaultOn;
+                this.EnvironmentMap = defaultOn;
+                this.WaterEnvironmentMap = defaultOn;
+                this.GNAM = defaultOn;
+                this.LandscapeTextures = defaultOn;
+                this.XCLWs = defaultOn;
+                this.WHGTs = defaultOn;
+                this.HNAM = defaultOn;
+                this.OffsetData = defaultOn;
+                this.CellSizeData = defaultOn;
+                this.SubCellsTimestamp = defaultOn;
+                this.SubCellsUnknown = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((LargeReferences == null ? DefaultOn : !LargeReferences.GetCrystal().CopyNothing, LargeReferences?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((EncounterLocation, null));
+                ret.Add((Location, null));
+                ret.Add((Biome, null));
+                ret.Add((Parent != null ? Parent.OnOverall : DefaultOn, Parent?.GetCrystal()));
+                ret.Add((Climate, null));
+                ret.Add((Water, null));
+                ret.Add((NAM7, null));
+                ret.Add((LodWater, null));
+                ret.Add((LodWaterHeight, null));
+                ret.Add((LandDefaults != null ? LandDefaults.OnOverall : DefaultOn, LandDefaults?.GetCrystal()));
+                ret.Add((MapData != null ? MapData.OnOverall : DefaultOn, MapData?.GetCrystal()));
+                ret.Add((WorldMapOffsetScale, null));
+                ret.Add((WorldMapCellOffset, null));
+                ret.Add((DistantLodMultiplier, null));
+                ret.Add((Flags, null));
+                ret.Add((FNAM, null));
+                ret.Add((ObjectBoundsMin, null));
+                ret.Add((ObjectBoundsMax, null));
+                ret.Add((Music, null));
+                ret.Add((AmbienceSet, null));
+                ret.Add((EnvironmentMap, null));
+                ret.Add((WaterEnvironmentMap, null));
+                ret.Add((GNAM, null));
+                ret.Add((LandscapeTextures, null));
+                ret.Add((XCLWs, null));
+                ret.Add((WHGTs, null));
+                ret.Add((HNAM, null));
+                ret.Add((OffsetData, null));
+                ret.Add((CellSizeData, null));
+                ret.Add((TopCell != null ? TopCell.OnOverall : DefaultOn, TopCell?.GetCrystal()));
+                ret.Add((SubCellsTimestamp, null));
+                ret.Add((SubCellsUnknown, null));
+                ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +2150,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +2201,49 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IWorldspace);
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WorldspaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => WorldspaceSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WorldspaceSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,11 +2323,61 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IWorldspace :
+        IAssetLinkContainer,
         IComplexLocation,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceInternal>,
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
         IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
         IWorldspaceGetter
     {
+        new ExtendedList<AComponent> Components { get; }
+        new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new IFormLinkNullable<ILocationGetter> EncounterLocation { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
+        new IFormLinkNullable<IBiomeGetter> Biome { get; set; }
+        new WorldspaceParent? Parent { get; set; }
+        new IFormLinkNullable<IClimateGetter> Climate { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
+        new String? NAM7 { get; set; }
+        new IFormLinkNullable<IWaterGetter> LodWater { get; set; }
+        new Single? LodWaterHeight { get; set; }
+        new WorldspaceLandDefaults? LandDefaults { get; set; }
+        new WorldspaceMap? MapData { get; set; }
+        new Single WorldMapOffsetScale { get; set; }
+        new P3Float WorldMapCellOffset { get; set; }
+        new Single? DistantLodMultiplier { get; set; }
+        new Worldspace.Flag Flags { get; set; }
+        new MemorySlice<Byte>? FNAM { get; set; }
+        new P2Float ObjectBoundsMin { get; set; }
+        new P2Float ObjectBoundsMax { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new IFormLinkNullable<IAmbienceSetGetter> AmbienceSet { get; set; }
+        new String? EnvironmentMap { get; set; }
+        new String? WaterEnvironmentMap { get; set; }
+        new Single? GNAM { get; set; }
+        new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
+        new ExtendedList<Single>? XCLWs { get; set; }
+        new ExtendedList<Single>? WHGTs { get; set; }
+        new MemorySlice<Byte>? HNAM { get; set; }
+        new MemorySlice<Byte>? OffsetData { get; set; }
+        new MemorySlice<Byte>? CellSizeData { get; set; }
+        new Cell? TopCell { get; set; }
+        new Int32 SubCellsTimestamp { get; set; }
+        new Int32 SubCellsUnknown { get; set; }
+        new ExtendedList<WorldspaceBlock> SubCells { get; }
+        #region Mutagen
+        new Worldspace.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IWorldspaceInternal :
@@ -441,12 +2390,64 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.WRLD)]
     public partial interface IWorldspaceGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IComplexLocationGetter,
+        IFormLinkContainerGetter,
         ILoquiObject<IWorldspaceGetter>,
-        IMapsToGetter<IWorldspaceGetter>
+        IMajorRecordGetterEnumerable,
+        IMapsToGetter<IWorldspaceGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Worldspace_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IFormLinkNullableGetter<ILocationGetter> EncounterLocation { get; }
+        IFormLinkNullableGetter<ILocationGetter> Location { get; }
+        IFormLinkNullableGetter<IBiomeGetter> Biome { get; }
+        IWorldspaceParentGetter? Parent { get; }
+        IFormLinkNullableGetter<IClimateGetter> Climate { get; }
+        IFormLinkNullableGetter<IWaterGetter> Water { get; }
+        String? NAM7 { get; }
+        IFormLinkNullableGetter<IWaterGetter> LodWater { get; }
+        Single? LodWaterHeight { get; }
+        IWorldspaceLandDefaultsGetter? LandDefaults { get; }
+        IWorldspaceMapGetter? MapData { get; }
+        Single WorldMapOffsetScale { get; }
+        P3Float WorldMapCellOffset { get; }
+        Single? DistantLodMultiplier { get; }
+        Worldspace.Flag Flags { get; }
+        ReadOnlyMemorySlice<Byte>? FNAM { get; }
+        P2Float ObjectBoundsMin { get; }
+        P2Float ObjectBoundsMax { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
+        IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet { get; }
+        String? EnvironmentMap { get; }
+        String? WaterEnvironmentMap { get; }
+        Single? GNAM { get; }
+        IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
+        IReadOnlyList<Single>? XCLWs { get; }
+        IReadOnlyList<Single>? WHGTs { get; }
+        ReadOnlyMemorySlice<Byte>? HNAM { get; }
+        ReadOnlyMemorySlice<Byte>? OffsetData { get; }
+        ReadOnlyMemorySlice<Byte>? CellSizeData { get; }
+        ICellGetter? TopCell { get; }
+        Int32 SubCellsTimestamp { get; }
+        Int32 SubCellsUnknown { get; }
+        IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; }
+
+        #region Mutagen
+        Worldspace.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -568,6 +2569,218 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IWorldspaceGetter obj)
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IWorldspaceGetter obj,
+            bool throwIfUnknown = true)
+            where TMajor : class, IMajorRecordQueryableGetter
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            this IWorldspaceGetter obj,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecordGetter)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IWorldspaceInternal obj)
+        {
+            return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceInternal obj)
+            where TMajor : class, IMajorRecordQueryable
+        {
+            return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: true)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
+            this IWorldspaceInternal obj,
+            Type? type,
+            bool throwIfUnknown = true)
+        {
+            return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecord)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
         public static Worldspace Duplicate(
             this IWorldspaceGetter item,
             FormKey formKey,
@@ -623,6 +2836,42 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        LargeReferences = 8,
+        Name = 9,
+        EncounterLocation = 10,
+        Location = 11,
+        Biome = 12,
+        Parent = 13,
+        Climate = 14,
+        Water = 15,
+        NAM7 = 16,
+        LodWater = 17,
+        LodWaterHeight = 18,
+        LandDefaults = 19,
+        MapData = 20,
+        WorldMapOffsetScale = 21,
+        WorldMapCellOffset = 22,
+        DistantLodMultiplier = 23,
+        Flags = 24,
+        FNAM = 25,
+        ObjectBoundsMin = 26,
+        ObjectBoundsMax = 27,
+        Music = 28,
+        AmbienceSet = 29,
+        EnvironmentMap = 30,
+        WaterEnvironmentMap = 31,
+        GNAM = 32,
+        LandscapeTextures = 33,
+        XCLWs = 34,
+        WHGTs = 35,
+        HNAM = 36,
+        OffsetData = 37,
+        CellSizeData = 38,
+        TopCell = 39,
+        SubCellsTimestamp = 40,
+        SubCellsUnknown = 41,
+        SubCells = 42,
     }
     #endregion
 
@@ -633,9 +2882,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 36;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 43;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -665,8 +2914,87 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.WRLD);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.WRLD);
+            var all = RecordCollection.Factory(
+                RecordTypes.WRLD,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.RNAM,
+                RecordTypes.FULL,
+                RecordTypes.XEZN,
+                RecordTypes.XLCN,
+                RecordTypes.BNAM,
+                RecordTypes.WNAM,
+                RecordTypes.CNAM,
+                RecordTypes.NAM2,
+                RecordTypes.NAM7,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.DNAM,
+                RecordTypes.MNAM,
+                RecordTypes.ONAM,
+                RecordTypes.NAMA,
+                RecordTypes.DATA,
+                RecordTypes.FNAM,
+                RecordTypes.NAM0,
+                RecordTypes.NAM9,
+                RecordTypes.ZNAM,
+                RecordTypes.WAMB,
+                RecordTypes.XEMP,
+                RecordTypes.XWEM,
+                RecordTypes.GNAM,
+                RecordTypes.LNAM,
+                RecordTypes.XCLW,
+                RecordTypes.WHGT,
+                RecordTypes.HNAM,
+                RecordTypes.OFST,
+                RecordTypes.XXXX,
+                RecordTypes.CLSZ,
+                RecordTypes.CELL,
+                RecordTypes.GRUP,
+                RecordTypes.XCLC,
+                RecordTypes.XCLL,
+                RecordTypes.MHDT,
+                RecordTypes.LTMP,
+                RecordTypes.XILS,
+                RecordTypes.XCLA,
+                RecordTypes.XCLD,
+                RecordTypes.XWCN,
+                RecordTypes.XCCM,
+                RecordTypes.XOWN,
+                RecordTypes.XCWT,
+                RecordTypes.XCWM,
+                RecordTypes.XBPS,
+                RecordTypes.XWCU,
+                RecordTypes.XCAS,
+                RecordTypes.XCIM,
+                RecordTypes.XCMO,
+                RecordTypes.XCGD,
+                RecordTypes.XCIB,
+                RecordTypes.TODD,
+                RecordTypes.XLKR,
+                RecordTypes.XLKT,
+                RecordTypes.XTV2,
+                RecordTypes.NAVM,
+                RecordTypes.VMAD,
+                RecordTypes.NVNM,
+                RecordTypes.NNAM,
+                RecordTypes.ACHR,
+                RecordTypes.REFR,
+                RecordTypes.NAME,
+                RecordTypes.XEMI,
+                RecordTypes.XRGD,
+                RecordTypes.XRFG,
+                RecordTypes.XPCS,
+                RecordTypes.XIS2,
+                RecordTypes.XRNK,
+                RecordTypes.XLYR,
+                RecordTypes.XHTW,
+                RecordTypes.XLRT,
+                RecordTypes.XESP,
+                RecordTypes.XATP,
+                RecordTypes.XSCL);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
@@ -708,6 +3036,42 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IWorldspaceInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.LargeReferences.Clear();
+            item.Name = default;
+            item.EncounterLocation.Clear();
+            item.Location.Clear();
+            item.Biome.Clear();
+            item.Parent = null;
+            item.Climate.Clear();
+            item.Water.Clear();
+            item.NAM7 = default;
+            item.LodWater.Clear();
+            item.LodWaterHeight = default;
+            item.LandDefaults = null;
+            item.MapData = null;
+            item.WorldMapOffsetScale = default;
+            item.WorldMapCellOffset = default;
+            item.DistantLodMultiplier = default;
+            item.Flags = default;
+            item.FNAM = default;
+            item.ObjectBoundsMin = default;
+            item.ObjectBoundsMax = default;
+            item.Music.Clear();
+            item.AmbienceSet.Clear();
+            item.EnvironmentMap = default;
+            item.WaterEnvironmentMap = default;
+            item.GNAM = default;
+            item.LandscapeTextures.Clear();
+            item.XCLWs = null;
+            item.WHGTs = null;
+            item.HNAM = default;
+            item.OffsetData = default;
+            item.CellSizeData = default;
+            item.TopCell = null;
+            item.SubCellsTimestamp = default;
+            item.SubCellsUnknown = default;
+            item.SubCells.Clear();
             base.Clear(item);
         }
         
@@ -725,6 +3089,474 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IWorldspace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.LargeReferences.RemapLinks(mapping);
+            obj.EncounterLocation.Relink(mapping);
+            obj.Location.Relink(mapping);
+            obj.Biome.Relink(mapping);
+            obj.Parent?.RemapLinks(mapping);
+            obj.Climate.Relink(mapping);
+            obj.Water.Relink(mapping);
+            obj.LodWater.Relink(mapping);
+            obj.Music.Relink(mapping);
+            obj.AmbienceSet.Relink(mapping);
+            obj.LandscapeTextures.RemapLinks(mapping);
+            obj.TopCell?.RemapLinks(mapping);
+            obj.SubCells.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IWorldspaceInternal obj)
+        {
+            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecord)!;
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IWorldspaceInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IWorldspaceInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            {
+                yield return item;
+            }
+        }
+        
+        public void Remove(
+            IWorldspaceInternal obj,
+            HashSet<FormKey> keys)
+        {
+            obj.TopCell?.Remove(keys);
+            if (obj.TopCell != null && keys.Contains(obj.TopCell.FormKey))
+            {
+                obj.TopCell = null;
+            }
+            obj.SubCells.ForEach(i => i.Remove(keys));
+            obj.SubCells.RemoveWhere(i => i.Items.Count == 0);
+        }
+        
+        public void Remove(
+            IWorldspaceInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IStarfieldMajorRecord":
+                case "StarfieldMajorRecord":
+                case "IMajorRecordGetter":
+                case "IStarfieldMajorRecordGetter":
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                case "AComponent":
+                case "IAComponentGetter":
+                case "IAComponent":
+                case "AnimationGraphComponent":
+                case "IAnimationGraphComponentGetter":
+                case "IAnimationGraphComponent":
+                case "AttachParentArrayComponent":
+                case "IAttachParentArrayComponentGetter":
+                case "IAttachParentArrayComponent":
+                case "ActivityTrackerComponent":
+                case "IActivityTrackerComponentGetter":
+                case "IActivityTrackerComponent":
+                case "ScannableComponent":
+                case "IScannableComponentGetter":
+                case "IScannableComponent":
+                case "KeywordFormComponent":
+                case "IKeywordFormComponentGetter":
+                case "IKeywordFormComponent":
+                case "ObjectWindowFilterComponent":
+                case "IObjectWindowFilterComponentGetter":
+                case "IObjectWindowFilterComponent":
+                case "ContactShadowComponent":
+                case "IContactShadowComponentGetter":
+                case "IContactShadowComponent":
+                case "FullNameComponent":
+                case "IFullNameComponentGetter":
+                case "IFullNameComponent":
+                case "ModelComponent":
+                case "IModelComponentGetter":
+                case "IModelComponent":
+                case "PlanetModelComponent":
+                case "IPlanetModelComponentGetter":
+                case "IPlanetModelComponent":
+                case "HoudiniDataComponent":
+                case "IHoudiniDataComponentGetter":
+                case "IHoudiniDataComponent":
+                case "SkinFormComponent":
+                case "ISkinFormComponentGetter":
+                case "ISkinFormComponent":
+                case "BodyPartInfoComponent":
+                case "IBodyPartInfoComponentGetter":
+                case "IBodyPartInfoComponent":
+                case "EffectSequenceComponent":
+                case "IEffectSequenceComponentGetter":
+                case "IEffectSequenceComponent":
+                case "LightAttachmentFormComponent":
+                case "ILightAttachmentFormComponentGetter":
+                case "ILightAttachmentFormComponent":
+                case "LightAnimFormComponent":
+                case "ILightAnimFormComponentGetter":
+                case "ILightAnimFormComponent":
+                case "ParticleSystemComponent":
+                case "IParticleSystemComponentGetter":
+                case "IParticleSystemComponent":
+                case "LodOwnerComponent":
+                case "ILodOwnerComponentGetter":
+                case "ILodOwnerComponent":
+                case "SoundTagComponent":
+                case "ISoundTagComponentGetter":
+                case "ISoundTagComponent":
+                case "DisplayCaseComponent":
+                case "IDisplayCaseComponentGetter":
+                case "IDisplayCaseComponent":
+                case "ObjectPaletteDefaultsComponent":
+                case "IObjectPaletteDefaultsComponentGetter":
+                case "IObjectPaletteDefaultsComponent":
+                case "VolumesComponent":
+                case "IVolumesComponentGetter":
+                case "IVolumesComponent":
+                case "PlanetContentManagerContentPropertiesComponent":
+                case "IPlanetContentManagerContentPropertiesComponentGetter":
+                case "IPlanetContentManagerContentPropertiesComponent":
+                case "ShipManagementComponent":
+                case "IShipManagementComponentGetter":
+                case "IShipManagementComponent":
+                case "ExternalDataSourceComponent":
+                case "IExternalDataSourceComponentGetter":
+                case "IExternalDataSourceComponent":
+                case "ForcedLocRefTypeComponent":
+                case "IForcedLocRefTypeComponentGetter":
+                case "IForcedLocRefTypeComponent":
+                case "LinkedVoiceTypeComponent":
+                case "ILinkedVoiceTypeComponentGetter":
+                case "ILinkedVoiceTypeComponent":
+                case "PapyrusScriptsComponent":
+                case "IPapyrusScriptsComponentGetter":
+                case "IPapyrusScriptsComponent":
+                case "PathingDataComponent":
+                case "IPathingDataComponentGetter":
+                case "IPathingDataComponent":
+                case "PropertySheetComponent":
+                case "IPropertySheetComponentGetter":
+                case "IPropertySheetComponent":
+                case "SpaceshipAIActorComponent":
+                case "ISpaceshipAIActorComponentGetter":
+                case "ISpaceshipAIActorComponent":
+                case "SpaceshipEquipmentComponent":
+                case "ISpaceshipEquipmentComponentGetter":
+                case "ISpaceshipEquipmentComponent":
+                case "SpaceshipWeaponBindingsComponent":
+                case "ISpaceshipWeaponBindingsComponentGetter":
+                case "ISpaceshipWeaponBindingsComponent":
+                case "FormLinkDataComponent":
+                case "IFormLinkDataComponentGetter":
+                case "IFormLinkDataComponent":
+                case "BlueprintComponent":
+                case "IBlueprintComponentGetter":
+                case "IBlueprintComponent":
+                case "DestructibleObjectComponent":
+                case "IDestructibleObjectComponentGetter":
+                case "IDestructibleObjectComponent":
+                case "ContainerComponent":
+                case "IContainerComponentGetter":
+                case "IContainerComponent":
+                case "MagicTargetFormComponent":
+                case "IMagicTargetFormComponentGetter":
+                case "IMagicTargetFormComponent":
+                case "StoredTraversalsComponent":
+                case "IStoredTraversalsComponentGetter":
+                case "IStoredTraversalsComponent":
+                case "AddToInventoryOnDestroyComponent":
+                case "IAddToInventoryOnDestroyComponentGetter":
+                case "IAddToInventoryOnDestroyComponent":
+                case "CrowdComponent":
+                case "ICrowdComponentGetter":
+                case "ICrowdComponent":
+                case "SpaceshipHullCodeComponent":
+                case "ISpaceshipHullCodeComponentGetter":
+                case "ISpaceshipHullCodeComponent":
+                case "PrimitiveComponent":
+                case "IPrimitiveComponentGetter":
+                case "IPrimitiveComponent":
+                case "SpawnOnDestroyComponent":
+                case "ISpawnOnDestroyComponentGetter":
+                case "ISpawnOnDestroyComponent":
+                case "WorldSpaceOverlayComponent":
+                case "IWorldSpaceOverlayComponentGetter":
+                case "IWorldSpaceOverlayComponent":
+                case "ReflectionProbesComponent":
+                case "IReflectionProbesComponentGetter":
+                case "IReflectionProbesComponent":
+                    break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
+                    break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    {
+                        if (obj.TopCell is {} NavigationMeshTopCellitem)
+                        {
+                            NavigationMeshTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    {
+                        if (obj.TopCell is {} PlacedNpcTopCellitem)
+                        {
+                            PlacedNpcTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    {
+                        if (obj.TopCell is {} PlacedObjectTopCellitem)
+                        {
+                            PlacedObjectTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
+                    {
+                        if (obj.TopCell is {} APlacedTrapTopCellitem)
+                        {
+                            APlacedTrapTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlacedSimple":
+                case "IPlacedSimpleGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWorldspace obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.TopCell is IAssetLinkContainer TopCelllinkCont)
+            {
+                foreach (var item in TopCelllinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IWorldspace obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.TopCell?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -741,6 +3573,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams,
                 fillStructs: WorldspaceBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: WorldspaceBinaryCreateTranslation.FillBinaryRecordTypes);
+            WorldspaceBinaryCreateTranslation.CustomBinaryEndImportPublic(
+                frame: frame,
+                obj: item);
         }
         
         public override void CopyInFromBinary(
@@ -792,6 +3627,76 @@ namespace Mutagen.Bethesda.Starfield
             Worldspace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LargeReferences = item.LargeReferences.CollectionEqualsHelper(
+                rhs.LargeReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.EncounterLocation = item.EncounterLocation.Equals(rhs.EncounterLocation);
+            ret.Location = item.Location.Equals(rhs.Location);
+            ret.Biome = item.Biome.Equals(rhs.Biome);
+            ret.Parent = EqualsMaskHelper.EqualsHelper(
+                item.Parent,
+                rhs.Parent,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Climate = item.Climate.Equals(rhs.Climate);
+            ret.Water = item.Water.Equals(rhs.Water);
+            ret.NAM7 = string.Equals(item.NAM7, rhs.NAM7);
+            ret.LodWater = item.LodWater.Equals(rhs.LodWater);
+            ret.LodWaterHeight = item.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight);
+            ret.LandDefaults = EqualsMaskHelper.EqualsHelper(
+                item.LandDefaults,
+                rhs.LandDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.MapData = EqualsMaskHelper.EqualsHelper(
+                item.MapData,
+                rhs.MapData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.WorldMapOffsetScale = item.WorldMapOffsetScale.EqualsWithin(rhs.WorldMapOffsetScale);
+            ret.WorldMapCellOffset = item.WorldMapCellOffset.Equals(rhs.WorldMapCellOffset);
+            ret.DistantLodMultiplier = item.DistantLodMultiplier.EqualsWithin(rhs.DistantLodMultiplier);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
+            ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
+            ret.ObjectBoundsMax = item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
+            ret.Music = item.Music.Equals(rhs.Music);
+            ret.AmbienceSet = item.AmbienceSet.Equals(rhs.AmbienceSet);
+            ret.EnvironmentMap = string.Equals(item.EnvironmentMap, rhs.EnvironmentMap);
+            ret.WaterEnvironmentMap = string.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
+            ret.GNAM = item.GNAM.EqualsWithin(rhs.GNAM);
+            ret.LandscapeTextures = item.LandscapeTextures.CollectionEqualsHelper(
+                rhs.LandscapeTextures,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.XCLWs = item.XCLWs.CollectionEqualsHelper(
+                rhs.XCLWs,
+                (l, r) => l.EqualsWithin(r),
+                include);
+            ret.WHGTs = item.WHGTs.CollectionEqualsHelper(
+                rhs.WHGTs,
+                (l, r) => l.EqualsWithin(r),
+                include);
+            ret.HNAM = MemorySliceExt.SequenceEqual(item.HNAM, rhs.HNAM);
+            ret.OffsetData = MemorySliceExt.SequenceEqual(item.OffsetData, rhs.OffsetData);
+            ret.CellSizeData = MemorySliceExt.SequenceEqual(item.CellSizeData, rhs.CellSizeData);
+            ret.TopCell = EqualsMaskHelper.EqualsHelper(
+                item.TopCell,
+                rhs.TopCell,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SubCellsTimestamp = item.SubCellsTimestamp == rhs.SubCellsTimestamp;
+            ret.SubCellsUnknown = item.SubCellsUnknown == rhs.SubCellsUnknown;
+            ret.SubCells = item.SubCells.CollectionEqualsHelper(
+                rhs.SubCells,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -841,6 +3746,227 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.LargeReferences?.Overall ?? true)
+            {
+                sb.AppendLine("LargeReferences =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.LargeReferences)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.EncounterLocation ?? true)
+            {
+                sb.AppendItem(item.EncounterLocation.FormKeyNullable, "EncounterLocation");
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location.FormKeyNullable, "Location");
+            }
+            if (printMask?.Biome ?? true)
+            {
+                sb.AppendItem(item.Biome.FormKeyNullable, "Biome");
+            }
+            if ((printMask?.Parent?.Overall ?? true)
+                && item.Parent is {} ParentItem)
+            {
+                ParentItem?.Print(sb, "Parent");
+            }
+            if (printMask?.Climate ?? true)
+            {
+                sb.AppendItem(item.Climate.FormKeyNullable, "Climate");
+            }
+            if (printMask?.Water ?? true)
+            {
+                sb.AppendItem(item.Water.FormKeyNullable, "Water");
+            }
+            if ((printMask?.NAM7 ?? true)
+                && item.NAM7 is {} NAM7Item)
+            {
+                sb.AppendItem(NAM7Item, "NAM7");
+            }
+            if (printMask?.LodWater ?? true)
+            {
+                sb.AppendItem(item.LodWater.FormKeyNullable, "LodWater");
+            }
+            if ((printMask?.LodWaterHeight ?? true)
+                && item.LodWaterHeight is {} LodWaterHeightItem)
+            {
+                sb.AppendItem(LodWaterHeightItem, "LodWaterHeight");
+            }
+            if ((printMask?.LandDefaults?.Overall ?? true)
+                && item.LandDefaults is {} LandDefaultsItem)
+            {
+                LandDefaultsItem?.Print(sb, "LandDefaults");
+            }
+            if ((printMask?.MapData?.Overall ?? true)
+                && item.MapData is {} MapDataItem)
+            {
+                MapDataItem?.Print(sb, "MapData");
+            }
+            if (printMask?.WorldMapOffsetScale ?? true)
+            {
+                sb.AppendItem(item.WorldMapOffsetScale, "WorldMapOffsetScale");
+            }
+            if (printMask?.WorldMapCellOffset ?? true)
+            {
+                sb.AppendItem(item.WorldMapCellOffset, "WorldMapCellOffset");
+            }
+            if ((printMask?.DistantLodMultiplier ?? true)
+                && item.DistantLodMultiplier is {} DistantLodMultiplierItem)
+            {
+                sb.AppendItem(DistantLodMultiplierItem, "DistantLodMultiplier");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if ((printMask?.FNAM ?? true)
+                && item.FNAM is {} FNAMItem)
+            {
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+            }
+            if (printMask?.ObjectBoundsMin ?? true)
+            {
+                sb.AppendItem(item.ObjectBoundsMin, "ObjectBoundsMin");
+            }
+            if (printMask?.ObjectBoundsMax ?? true)
+            {
+                sb.AppendItem(item.ObjectBoundsMax, "ObjectBoundsMax");
+            }
+            if (printMask?.Music ?? true)
+            {
+                sb.AppendItem(item.Music.FormKeyNullable, "Music");
+            }
+            if (printMask?.AmbienceSet ?? true)
+            {
+                sb.AppendItem(item.AmbienceSet.FormKeyNullable, "AmbienceSet");
+            }
+            if ((printMask?.EnvironmentMap ?? true)
+                && item.EnvironmentMap is {} EnvironmentMapItem)
+            {
+                sb.AppendItem(EnvironmentMapItem, "EnvironmentMap");
+            }
+            if ((printMask?.WaterEnvironmentMap ?? true)
+                && item.WaterEnvironmentMap is {} WaterEnvironmentMapItem)
+            {
+                sb.AppendItem(WaterEnvironmentMapItem, "WaterEnvironmentMap");
+            }
+            if ((printMask?.GNAM ?? true)
+                && item.GNAM is {} GNAMItem)
+            {
+                sb.AppendItem(GNAMItem, "GNAM");
+            }
+            if (printMask?.LandscapeTextures?.Overall ?? true)
+            {
+                sb.AppendLine("LandscapeTextures =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.LandscapeTextures)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.XCLWs?.Overall ?? true)
+                && item.XCLWs is {} XCLWsItem)
+            {
+                sb.AppendLine("XCLWs =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in XCLWsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.WHGTs?.Overall ?? true)
+                && item.WHGTs is {} WHGTsItem)
+            {
+                sb.AppendLine("WHGTs =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in WHGTsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.HNAM ?? true)
+                && item.HNAM is {} HNAMItem)
+            {
+                sb.AppendLine($"HNAM => {SpanExt.ToHexString(HNAMItem)}");
+            }
+            if ((printMask?.OffsetData ?? true)
+                && item.OffsetData is {} OffsetDataItem)
+            {
+                sb.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
+            }
+            if ((printMask?.CellSizeData ?? true)
+                && item.CellSizeData is {} CellSizeDataItem)
+            {
+                sb.AppendLine($"CellSizeData => {SpanExt.ToHexString(CellSizeDataItem)}");
+            }
+            if ((printMask?.TopCell?.Overall ?? true)
+                && item.TopCell is {} TopCellItem)
+            {
+                TopCellItem?.Print(sb, "TopCell");
+            }
+            if (printMask?.SubCellsTimestamp ?? true)
+            {
+                sb.AppendItem(item.SubCellsTimestamp, "SubCellsTimestamp");
+            }
+            if (printMask?.SubCellsUnknown ?? true)
+            {
+                sb.AppendItem(item.SubCellsUnknown, "SubCellsUnknown");
+            }
+            if (printMask?.SubCells?.Overall ?? true)
+            {
+                sb.AppendLine("SubCells =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SubCells)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Worldspace_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -891,6 +4017,166 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LargeReferences) ?? true))
+            {
+                if (!lhs.LargeReferences.SequenceEqual(rhs.LargeReferences, (l, r) => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.LargeReferences)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterLocation) ?? true))
+            {
+                if (!lhs.EncounterLocation.Equals(rhs.EncounterLocation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Biome) ?? true))
+            {
+                if (!lhs.Biome.Equals(rhs.Biome)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Parent, rhs.Parent, out var lhsParent, out var rhsParent, out var isParentEqual))
+                {
+                    if (!((WorldspaceParentCommon)((IWorldspaceParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.Parent))) return false;
+                }
+                else if (!isParentEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
+            {
+                if (!lhs.Climate.Equals(rhs.Climate)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM7) ?? true))
+            {
+                if (!string.Equals(lhs.NAM7, rhs.NAM7)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
+            {
+                if (!lhs.LodWater.Equals(rhs.LodWater)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
+            {
+                if (!lhs.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LandDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LandDefaults, rhs.LandDefaults, out var lhsLandDefaults, out var rhsLandDefaults, out var isLandDefaultsEqual))
+                {
+                    if (!((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)lhsLandDefaults).CommonInstance()!).Equals(lhsLandDefaults, rhsLandDefaults, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.LandDefaults))) return false;
+                }
+                else if (!isLandDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MapData, rhs.MapData, out var lhsMapData, out var rhsMapData, out var isMapDataEqual))
+                {
+                    if (!((WorldspaceMapCommon)((IWorldspaceMapGetter)lhsMapData).CommonInstance()!).Equals(lhsMapData, rhsMapData, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData))) return false;
+                }
+                else if (!isMapDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
+            {
+                if (!lhs.WorldMapOffsetScale.EqualsWithin(rhs.WorldMapOffsetScale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
+            {
+                if (!lhs.WorldMapCellOffset.Equals(rhs.WorldMapCellOffset)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
+            {
+                if (!lhs.DistantLodMultiplier.EqualsWithin(rhs.DistantLodMultiplier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
+            {
+                if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
+            {
+                if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
+            {
+                if (!lhs.Music.Equals(rhs.Music)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.AmbienceSet) ?? true))
+            {
+                if (!lhs.AmbienceSet.Equals(rhs.AmbienceSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EnvironmentMap) ?? true))
+            {
+                if (!string.Equals(lhs.EnvironmentMap, rhs.EnvironmentMap)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
+            {
+                if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.GNAM) ?? true))
+            {
+                if (!lhs.GNAM.EqualsWithin(rhs.GNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LandscapeTextures) ?? true))
+            {
+                if (!lhs.LandscapeTextures.SequenceEqualNullable(rhs.LandscapeTextures)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.XCLWs) ?? true))
+            {
+                if (!lhs.XCLWs.SequenceEqualNullable(rhs.XCLWs)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WHGTs) ?? true))
+            {
+                if (!lhs.WHGTs.SequenceEqualNullable(rhs.WHGTs)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.HNAM, rhs.HNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CellSizeData) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.CellSizeData, rhs.CellSizeData)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.TopCell, rhs.TopCell, out var lhsTopCell, out var rhsTopCell, out var isTopCellEqual))
+                {
+                    if (!((CellCommon)((ICellGetter)lhsTopCell).CommonInstance()!).Equals(lhsTopCell, rhsTopCell, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell))) return false;
+                }
+                else if (!isTopCellEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
+            {
+                if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsUnknown) ?? true))
+            {
+                if (lhs.SubCellsUnknown != rhs.SubCellsUnknown) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
+            {
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
+            }
             return true;
         }
         
@@ -919,6 +4205,87 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IWorldspaceGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            hash.Add(item.LargeReferences);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.EncounterLocation);
+            hash.Add(item.Location);
+            hash.Add(item.Biome);
+            if (item.Parent is {} Parentitem)
+            {
+                hash.Add(Parentitem);
+            }
+            hash.Add(item.Climate);
+            hash.Add(item.Water);
+            if (item.NAM7 is {} NAM7item)
+            {
+                hash.Add(NAM7item);
+            }
+            hash.Add(item.LodWater);
+            if (item.LodWaterHeight is {} LodWaterHeightitem)
+            {
+                hash.Add(LodWaterHeightitem);
+            }
+            if (item.LandDefaults is {} LandDefaultsitem)
+            {
+                hash.Add(LandDefaultsitem);
+            }
+            if (item.MapData is {} MapDataitem)
+            {
+                hash.Add(MapDataitem);
+            }
+            hash.Add(item.WorldMapOffsetScale);
+            hash.Add(item.WorldMapCellOffset);
+            if (item.DistantLodMultiplier is {} DistantLodMultiplieritem)
+            {
+                hash.Add(DistantLodMultiplieritem);
+            }
+            hash.Add(item.Flags);
+            if (item.FNAM is {} FNAMItem)
+            {
+                hash.Add(FNAMItem);
+            }
+            hash.Add(item.ObjectBoundsMin);
+            hash.Add(item.ObjectBoundsMax);
+            hash.Add(item.Music);
+            hash.Add(item.AmbienceSet);
+            if (item.EnvironmentMap is {} EnvironmentMapitem)
+            {
+                hash.Add(EnvironmentMapitem);
+            }
+            if (item.WaterEnvironmentMap is {} WaterEnvironmentMapitem)
+            {
+                hash.Add(WaterEnvironmentMapitem);
+            }
+            if (item.GNAM is {} GNAMitem)
+            {
+                hash.Add(GNAMitem);
+            }
+            hash.Add(item.LandscapeTextures);
+            hash.Add(item.XCLWs);
+            hash.Add(item.WHGTs);
+            if (item.HNAM is {} HNAMItem)
+            {
+                hash.Add(HNAMItem);
+            }
+            if (item.OffsetData is {} OffsetDataItem)
+            {
+                hash.Add(OffsetDataItem);
+            }
+            if (item.CellSizeData is {} CellSizeDataItem)
+            {
+                hash.Add(CellSizeDataItem);
+            }
+            if (item.TopCell is {} TopCellitem)
+            {
+                hash.Add(TopCellitem);
+            }
+            hash.Add(item.SubCellsTimestamp);
+            hash.Add(item.SubCellsUnknown);
+            hash.Add(item.SubCells);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -947,6 +4314,717 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.LargeReferences.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.EncounterLocation, out var EncounterLocationInfo))
+            {
+                yield return EncounterLocationInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
+            {
+                yield return LocationInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Biome, out var BiomeInfo))
+            {
+                yield return BiomeInfo;
+            }
+            if (obj.Parent is {} ParentItems)
+            {
+                foreach (var item in ParentItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Climate, out var ClimateInfo))
+            {
+                yield return ClimateInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
+            {
+                yield return WaterInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.LodWater, out var LodWaterInfo))
+            {
+                yield return LodWaterInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
+            {
+                yield return MusicInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.AmbienceSet, out var AmbienceSetInfo))
+            {
+                yield return AmbienceSetInfo;
+            }
+            foreach (var item in obj.LandscapeTextures)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.TopCell is {} TopCellItems)
+            {
+                foreach (var item in TopCellItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.SubCells.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IWorldspaceGetter obj)
+        {
+            if ((obj.TopCell != null))
+            {
+                if (obj.TopCell is {} TopCellitem)
+                {
+                    yield return TopCellitem;
+                    foreach (var item in TopCellitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var subItem in obj.SubCells)
+            {
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IWorldspaceGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IWorldspaceGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IStarfieldMajorRecord":
+                case "StarfieldMajorRecord":
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IStarfieldMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AComponent":
+                case "IAComponentGetter":
+                case "IAComponent":
+                    yield break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    {
+                        if (obj.TopCell is {} NavigationMeshTopCellitem)
+                        {
+                            foreach (var item in NavigationMeshTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    {
+                        if (obj.TopCell is {} PlacedNpcTopCellitem)
+                        {
+                            foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    {
+                        if (obj.TopCell is {} PlacedObjectTopCellitem)
+                        {
+                            foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    {
+                        if (obj.TopCell is {} APlacedTrapTopCellitem)
+                        {
+                            foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IModContext<IStarfieldMod, IStarfieldModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            IWorldspaceGetter obj,
+            ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<IStarfieldMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
+            Func<IStarfieldMod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
+        {
+            var curContext = new ModContext<IStarfieldMod, IStarfieldModGetter, IWorldspace, IWorldspaceGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            {
+                if (obj.TopCell is {} WorldspaceTopCellitem)
+                {
+                    yield return new ModContext<IStarfieldMod, IStarfieldModGetter, ICellInternal, ICellGetter>(
+                        modKey: modKey,
+                        record: WorldspaceTopCellitem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e, f) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            baseRec.TopCell = dupRec;
+                            return dupRec;
+                        });
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e, f) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            baseRec.TopCell = dupRec;
+                            return dupRec;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getOrAddAsOverride: getOrAddAsOverride))
+            {
+                yield return item;
+            }
+        }
+        
+        public IEnumerable<IModContext<IStarfieldMod, IStarfieldModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            IWorldspaceGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<IStarfieldMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
+            Func<IStarfieldMod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
+        {
+            var curContext = new ModContext<IStarfieldMod, IStarfieldModGetter, IWorldspace, IWorldspaceGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IStarfieldMajorRecord":
+                case "StarfieldMajorRecord":
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IStarfieldMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AComponent":
+                case "IAComponentGetter":
+                case "IAComponent":
+                    yield break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    {
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
+                        {
+                            yield return new ModContext<IStarfieldMod, IStarfieldModGetter, ICellInternal, ICellGetter>(
+                                modKey: modKey,
+                                record: WorldspaceTopCellitem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    {
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    {
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    {
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    {
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IWorldspaceGetter, IStarfieldMod, IStarfieldModGetter>(
+                        GameCategory.Starfield,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWorldspaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
+                {
+                    foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1022,6 +5100,385 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LargeReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.LargeReferences);
+                try
+                {
+                    item.LargeReferences.SetTo(
+                        rhs.LargeReferences
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterLocation) ?? true))
+            {
+                item.EncounterLocation.SetTo(rhs.EncounterLocation.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
+            {
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Biome) ?? true))
+            {
+                item.Biome.SetTo(rhs.Biome.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
+                try
+                {
+                    if(rhs.Parent is {} rhsParent)
+                    {
+                        item.Parent = rhsParent.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.Parent));
+                    }
+                    else
+                    {
+                        item.Parent = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
+            {
+                item.Climate.SetTo(rhs.Climate.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
+            {
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM7) ?? true))
+            {
+                item.NAM7 = rhs.NAM7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
+            {
+                item.LodWater.SetTo(rhs.LodWater.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
+            {
+                item.LodWaterHeight = rhs.LodWaterHeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LandDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.LandDefaults);
+                try
+                {
+                    if(rhs.LandDefaults is {} rhsLandDefaults)
+                    {
+                        item.LandDefaults = rhsLandDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.LandDefaults));
+                    }
+                    else
+                    {
+                        item.LandDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
+                try
+                {
+                    if(rhs.MapData is {} rhsMapData)
+                    {
+                        item.MapData = rhsMapData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData));
+                    }
+                    else
+                    {
+                        item.MapData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
+            {
+                item.WorldMapOffsetScale = rhs.WorldMapOffsetScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
+            {
+                item.WorldMapCellOffset = rhs.WorldMapCellOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
+            {
+                item.DistantLodMultiplier = rhs.DistantLodMultiplier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FNAM) ?? true))
+            {
+                if(rhs.FNAM is {} FNAMrhs)
+                {
+                    item.FNAM = FNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.FNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
+            {
+                item.ObjectBoundsMin = rhs.ObjectBoundsMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
+            {
+                item.ObjectBoundsMax = rhs.ObjectBoundsMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
+            {
+                item.Music.SetTo(rhs.Music.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.AmbienceSet) ?? true))
+            {
+                item.AmbienceSet.SetTo(rhs.AmbienceSet.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EnvironmentMap) ?? true))
+            {
+                item.EnvironmentMap = rhs.EnvironmentMap;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
+            {
+                item.WaterEnvironmentMap = rhs.WaterEnvironmentMap;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.GNAM) ?? true))
+            {
+                item.GNAM = rhs.GNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LandscapeTextures) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.LandscapeTextures);
+                try
+                {
+                    item.LandscapeTextures.SetTo(
+                        rhs.LandscapeTextures
+                        .Select(r => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.XCLWs) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.XCLWs);
+                try
+                {
+                    if ((rhs.XCLWs != null))
+                    {
+                        item.XCLWs = 
+                            rhs.XCLWs
+                            .ToExtendedList<Single>();
+                    }
+                    else
+                    {
+                        item.XCLWs = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WHGTs) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.WHGTs);
+                try
+                {
+                    if ((rhs.WHGTs != null))
+                    {
+                        item.WHGTs = 
+                            rhs.WHGTs
+                            .ToExtendedList<Single>();
+                    }
+                    else
+                    {
+                        item.WHGTs = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HNAM) ?? true))
+            {
+                if(rhs.HNAM is {} HNAMrhs)
+                {
+                    item.HNAM = HNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.HNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
+            {
+                if(rhs.OffsetData is {} OffsetDatarhs)
+                {
+                    item.OffsetData = OffsetDatarhs.ToArray();
+                }
+                else
+                {
+                    item.OffsetData = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CellSizeData) ?? true))
+            {
+                if(rhs.CellSizeData is {} CellSizeDatarhs)
+                {
+                    item.CellSizeData = CellSizeDatarhs.ToArray();
+                }
+                else
+                {
+                    item.CellSizeData = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
+                try
+                {
+                    if(rhs.TopCell is {} rhsTopCell)
+                    {
+                        item.TopCell = (Cell)rhsTopCell.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell),
+                            errorMask: errorMask);
+                    }
+                    else
+                    {
+                        item.TopCell = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
+            {
+                item.SubCellsTimestamp = rhs.SubCellsTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsUnknown) ?? true))
+            {
+                item.SubCellsUnknown = rhs.SubCellsUnknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
+                try
+                {
+                    item.SubCells.SetTo(
+                        rhs.SubCells
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1170,6 +5627,235 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly WorldspaceBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IWorldspaceGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IWorldspaceGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWorldspaceGridReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.LargeReferences,
+                transl: (MutagenWriter subWriter, IWorldspaceGridReferenceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((WorldspaceGridReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EncounterLocation,
+                header: translationParams.ConvertToCustom(RecordTypes.XEZN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Location,
+                header: translationParams.ConvertToCustom(RecordTypes.XLCN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Biome,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            if (item.Parent is {} ParentItem)
+            {
+                ((WorldspaceParentBinaryWriteTranslation)((IBinaryItem)ParentItem).BinaryWriteTranslator).Write(
+                    item: ParentItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Climate,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Water,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM7,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM7),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LodWater,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LodWaterHeight,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4));
+            if (item.LandDefaults is {} LandDefaultsItem)
+            {
+                ((WorldspaceLandDefaultsBinaryWriteTranslation)((IBinaryItem)LandDefaultsItem).BinaryWriteTranslator).Write(
+                    item: LandDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.MapData is {} MapDataItem)
+            {
+                ((WorldspaceMapBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
+                    item: MapDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ONAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WorldMapOffsetScale);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WorldMapCellOffset);
+            }
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.DistantLodMultiplier,
+                header: translationParams.ConvertToCustom(RecordTypes.NAMA));
+            EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.NAM0)))
+            {
+                WorldspaceBinaryWriteTranslation.WriteBinaryObjectBoundsMin(
+                    writer: writer,
+                    item: item);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.NAM9)))
+            {
+                WorldspaceBinaryWriteTranslation.WriteBinaryObjectBoundsMax(
+                    writer: writer,
+                    item: item);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Music,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AmbienceSet,
+                header: translationParams.ConvertToCustom(RecordTypes.WAMB));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EnvironmentMap,
+                header: translationParams.ConvertToCustom(RecordTypes.XEMP),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WaterEnvironmentMap,
+                header: translationParams.ConvertToCustom(RecordTypes.XWEM),
+                binaryType: StringBinaryType.NullTerminate);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.GNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandscapeTextureGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LandscapeTextures,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandscapeTextureGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
+                writer: writer,
+                items: item.XCLWs,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XCLW),
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
+                writer: writer,
+                items: item.WHGTs,
+                recordType: translationParams.ConvertToCustom(RecordTypes.WHGT),
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.HNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.HNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.OffsetData,
+                header: translationParams.ConvertToCustom(RecordTypes.OFST),
+                overflowRecord: RecordTypes.XXXX);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.CellSizeData,
+                header: translationParams.ConvertToCustom(RecordTypes.CLSZ),
+                overflowRecord: RecordTypes.XXXX);
+        }
+
+        public static partial void WriteBinaryObjectBoundsMinCustom(
+            MutagenWriter writer,
+            IWorldspaceGetter item);
+
+        public static void WriteBinaryObjectBoundsMin(
+            MutagenWriter writer,
+            IWorldspaceGetter item)
+        {
+            WriteBinaryObjectBoundsMinCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryObjectBoundsMaxCustom(
+            MutagenWriter writer,
+            IWorldspaceGetter item);
+
+        public static void WriteBinaryObjectBoundsMax(
+            MutagenWriter writer,
+            IWorldspaceGetter item)
+        {
+            WriteBinaryObjectBoundsMaxCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IWorldspaceGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IWorldspaceGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,
@@ -1181,15 +5867,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1197,6 +5885,9 @@ namespace Mutagen.Bethesda.Starfield
                     throw RecordException.Enrich(ex, item);
                 }
             }
+            CustomBinaryEndExportInternal(
+                writer: writer,
+                obj: item);
         }
 
         public override void Write(
@@ -1239,6 +5930,288 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WRLD;
+        public static void FillBinaryStructs(
+            IWorldspaceInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IWorldspaceInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Worldspace_FieldIndex.Components;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    item.LargeReferences.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WorldspaceGridReference>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: WorldspaceGridReference_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: WorldspaceGridReference.TryCreateFromBinary));
+                    return (int)Worldspace_FieldIndex.LargeReferences;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Worldspace_FieldIndex.Name;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EncounterLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.EncounterLocation;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.Location;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Biome.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.Biome;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    item.Parent = Mutagen.Bethesda.Starfield.WorldspaceParent.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Worldspace_FieldIndex.Parent;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.Climate;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.Water;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM7 = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Worldspace_FieldIndex.NAM7;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LodWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.LodWater;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LodWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Worldspace_FieldIndex.LodWaterHeight;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    item.LandDefaults = Mutagen.Bethesda.Starfield.WorldspaceLandDefaults.CreateFromBinary(frame: frame);
+                    return (int)Worldspace_FieldIndex.LandDefaults;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    item.MapData = Mutagen.Bethesda.Starfield.WorldspaceMap.CreateFromBinary(frame: frame);
+                    return (int)Worldspace_FieldIndex.MapData;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WorldMapOffsetScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.WorldMapCellOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Worldspace_FieldIndex.WorldMapCellOffset;
+                }
+                case RecordTypeInts.NAMA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DistantLodMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Worldspace_FieldIndex.DistantLodMultiplier;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Worldspace_FieldIndex.Flags;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Worldspace_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    WorldspaceBinaryCreateTranslation.FillBinaryObjectBoundsMinCustom(
+                        frame: dataFrame,
+                        item: item);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMin;
+                }
+                case RecordTypeInts.NAM9:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    WorldspaceBinaryCreateTranslation.FillBinaryObjectBoundsMaxCustom(
+                        frame: dataFrame,
+                        item: item);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMax;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.Music;
+                }
+                case RecordTypeInts.WAMB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AmbienceSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Worldspace_FieldIndex.AmbienceSet;
+                }
+                case RecordTypeInts.XEMP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EnvironmentMap = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Worldspace_FieldIndex.EnvironmentMap;
+                }
+                case RecordTypeInts.XWEM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WaterEnvironmentMap = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Worldspace_FieldIndex.GNAM;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    item.LandscapeTextures.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandscapeTextureGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.LNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Worldspace_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.XCLW:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XCLWs = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<Single>();
+                    return (int)Worldspace_FieldIndex.XCLWs;
+                }
+                case RecordTypeInts.WHGT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WHGTs = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<Single>();
+                    return (int)Worldspace_FieldIndex.WHGTs;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Worldspace_FieldIndex.HNAM;
+                }
+                case RecordTypeInts.OFST:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OffsetData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Worldspace_FieldIndex.OffsetData;
+                }
+                case RecordTypeInts.CLSZ:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CellSizeData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Worldspace_FieldIndex.CellSizeData;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial void FillBinaryObjectBoundsMinCustom(
+            MutagenFrame frame,
+            IWorldspaceInternal item);
+
+        public static partial void FillBinaryObjectBoundsMaxCustom(
+            MutagenFrame frame,
+            IWorldspaceInternal item);
+
+        public static partial void CustomBinaryEndImport(
+            MutagenFrame frame,
+            IWorldspaceInternal obj);
+        public static void CustomBinaryEndImportPublic(
+            MutagenFrame frame,
+            IWorldspaceInternal obj)
+        {
+            CustomBinaryEndImport(
+                frame: frame,
+                obj: obj);
+        }
     }
 
 }
@@ -1271,6 +6244,14 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1284,8 +6265,150 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IWorldspace);
 
+        public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = Array.Empty<IWorldspaceGridReferenceGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region EncounterLocation
+        private int? _EncounterLocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => _EncounterLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region Location
+        private int? _LocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region Biome
+        private int? _BiomeLocation;
+        public IFormLinkNullableGetter<IBiomeGetter> Biome => _BiomeLocation.HasValue ? new FormLinkNullable<IBiomeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BiomeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBiomeGetter>.Null;
+        #endregion
+        public IWorldspaceParentGetter? Parent { get; private set; }
+        #region Climate
+        private int? _ClimateLocation;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
+        #endregion
+        #region Water
+        private int? _WaterLocation;
+        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        #endregion
+        #region NAM7
+        private int? _NAM7Location;
+        public String? NAM7 => _NAM7Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM7Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region LodWater
+        private int? _LodWaterLocation;
+        public IFormLinkNullableGetter<IWaterGetter> LodWater => _LodWaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodWaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        #endregion
+        #region LodWaterHeight
+        private int? _LodWaterHeightLocation;
+        public Single? LodWaterHeight => _LodWaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodWaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region LandDefaults
+        private RangeInt32? _LandDefaultsLocation;
+        public IWorldspaceLandDefaultsGetter? LandDefaults => _LandDefaultsLocation.HasValue ? WorldspaceLandDefaultsBinaryOverlay.WorldspaceLandDefaultsFactory(_recordData.Slice(_LandDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region MapData
+        private RangeInt32? _MapDataLocation;
+        public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(_recordData.Slice(_MapDataLocation!.Value.Min), _package) : default;
+        #endregion
+        private RangeInt32? _ONAMLocation;
+        #region WorldMapOffsetScale
+        private int _WorldMapOffsetScaleLocation => _ONAMLocation!.Value.Min;
+        private bool _WorldMapOffsetScale_IsSet => _ONAMLocation.HasValue;
+        public Single WorldMapOffsetScale => _WorldMapOffsetScale_IsSet ? _recordData.Slice(_WorldMapOffsetScaleLocation, 4).Float() : default;
+        #endregion
+        #region WorldMapCellOffset
+        private int _WorldMapCellOffsetLocation => _ONAMLocation!.Value.Min + 0x4;
+        private bool _WorldMapCellOffset_IsSet => _ONAMLocation.HasValue;
+        public P3Float WorldMapCellOffset => _WorldMapCellOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_WorldMapCellOffsetLocation, 12)) : default;
+        #endregion
+        #region DistantLodMultiplier
+        private int? _DistantLodMultiplierLocation;
+        public Single? DistantLodMultiplier => _DistantLodMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DistantLodMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Worldspace.Flag Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag);
+        #endregion
+        #region FNAM
+        private int? _FNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        private RangeInt32? _NAM0Location;
+        #region ObjectBoundsMin
+        private int _ObjectBoundsMinLocation => _NAM0Location!.Value.Min;
+        public partial P2Float GetObjectBoundsMinCustom();
+        public P2Float ObjectBoundsMin => GetObjectBoundsMinCustom();
+        partial void CustomObjectBoundsMinEndPos();
+        #endregion
+        private RangeInt32? _NAM9Location;
+        #region ObjectBoundsMax
+        private int _ObjectBoundsMaxLocation => _NAM9Location!.Value.Min;
+        public partial P2Float GetObjectBoundsMaxCustom();
+        public P2Float ObjectBoundsMax => GetObjectBoundsMaxCustom();
+        partial void CustomObjectBoundsMaxEndPos();
+        #endregion
+        #region Music
+        private int? _MusicLocation;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        #endregion
+        #region AmbienceSet
+        private int? _AmbienceSetLocation;
+        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet => _AmbienceSetLocation.HasValue ? new FormLinkNullable<IAmbienceSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmbienceSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAmbienceSetGetter>.Null;
+        #endregion
+        #region EnvironmentMap
+        private int? _EnvironmentMapLocation;
+        public String? EnvironmentMap => _EnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region WaterEnvironmentMap
+        private int? _WaterEnvironmentMapLocation;
+        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region GNAM
+        private int? _GNAMLocation;
+        public Single? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = Array.Empty<IFormLinkGetter<ILandscapeTextureGetter>>();
+        public IReadOnlyList<Single>? XCLWs { get; private set; }
+        public IReadOnlyList<Single>? WHGTs { get; private set; }
+        #region HNAM
+        private int? _HNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? HNAM => _HNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region OffsetData
+        private int? _OffsetDataLocation;
+        private int? _OffsetDataLengthOverride;
+        public ReadOnlyMemorySlice<Byte>? OffsetData => PluginUtilityTranslation.ReadByteArrayWithOverflow(
+            _recordData,
+            _package.MetaData.Constants,
+            _OffsetDataLocation,
+            _OffsetDataLengthOverride);
+        #endregion
+        #region CellSizeData
+        private int? _CellSizeDataLocation;
+        private int? _CellSizeDataLengthOverride;
+        public ReadOnlyMemorySlice<Byte>? CellSizeData => PluginUtilityTranslation.ReadByteArrayWithOverflow(
+            _recordData,
+            _package.MetaData.Constants,
+            _CellSizeDataLocation,
+            _CellSizeDataLengthOverride);
+        #endregion
         partial void CustomFactoryEnd(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        partial void CustomEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
@@ -1306,6 +6429,7 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
+            var origStream = stream;
             stream = Decompression.DecompressStream(stream);
             stream = ExtractRecordMemory(
                 stream: stream,
@@ -1328,6 +6452,10 @@ namespace Mutagen.Bethesda.Starfield
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
+            ret.CustomEnd(
+                stream: origStream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 
@@ -1342,6 +6470,239 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Worldspace_FieldIndex.Components;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    this.LargeReferences = BinaryOverlayList.FactoryByArray<IWorldspaceGridReferenceGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => WorldspaceGridReferenceBinaryOverlay.WorldspaceGridReferenceFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: WorldspaceGridReference_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Worldspace_FieldIndex.LargeReferences;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.Name;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    _EncounterLocationLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.EncounterLocation;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    _LocationLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.Location;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BiomeLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.Biome;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    this.Parent = WorldspaceParentBinaryOverlay.WorldspaceParentFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Worldspace_FieldIndex.Parent;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _ClimateLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.Climate;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _WaterLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.Water;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    _NAM7Location = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.NAM7;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    _LodWaterLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.LodWater;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    _LodWaterHeightLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.LodWaterHeight;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _LandDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Worldspace_FieldIndex.LandDefaults;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _MapDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Worldspace_FieldIndex.MapData;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _ONAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Worldspace_FieldIndex.WorldMapCellOffset;
+                }
+                case RecordTypeInts.NAMA:
+                {
+                    _DistantLodMultiplierLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.DistantLodMultiplier;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.Flags;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FNAMLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _NAM0Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMin;
+                }
+                case RecordTypeInts.NAM9:
+                {
+                    _NAM9Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMax;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    _MusicLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.Music;
+                }
+                case RecordTypeInts.WAMB:
+                {
+                    _AmbienceSetLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.AmbienceSet;
+                }
+                case RecordTypeInts.XEMP:
+                {
+                    _EnvironmentMapLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.EnvironmentMap;
+                }
+                case RecordTypeInts.XWEM:
+                {
+                    _WaterEnvironmentMapLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _GNAMLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.GNAM;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    this.LandscapeTextures = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ILandscapeTextureGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)Worldspace_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.XCLW:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.XCLWs = BinaryOverlayList.FactoryByStartIndex<Single>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => s.Float());
+                    stream.Position += subLen;
+                    return (int)Worldspace_FieldIndex.XCLWs;
+                }
+                case RecordTypeInts.WHGT:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.WHGTs = BinaryOverlayList.FactoryByStartIndex<Single>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => s.Float());
+                    stream.Position += subLen;
+                    return (int)Worldspace_FieldIndex.WHGTs;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _HNAMLocation = (stream.Position - offset);
+                    return (int)Worldspace_FieldIndex.HNAM;
+                }
+                case RecordTypeInts.OFST:
+                {
+                    _OffsetDataLocation = (stream.Position - offset);
+                    _OffsetDataLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Worldspace_FieldIndex.OffsetData;
+                }
+                case RecordTypeInts.CLSZ:
+                {
+                    _CellSizeDataLocation = (stream.Position - offset);
+                    _CellSizeDataLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Worldspace_FieldIndex.CellSizeData;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
