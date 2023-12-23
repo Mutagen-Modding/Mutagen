@@ -1,6 +1,5 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
-using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -8,7 +7,7 @@ using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslationGeneration
 {

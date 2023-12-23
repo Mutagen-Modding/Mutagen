@@ -1,5 +1,6 @@
 ﻿using Loqui.Generation;
-using Mutagen.Bethesda.Generation.Modules.Binary;
+
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class GuidBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<Guid>
 {

@@ -1,19 +1,19 @@
+using System.Xml.Linq;
 using Loqui.Generation;
-using Mutagen.Bethesda.Generation.Modules.Binary;
+using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
-using System.Xml.Linq;
-using Mutagen.Bethesda.Generation.Fields;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGeneration
 {

@@ -1,11 +1,11 @@
 using Loqui.Generation;
-using Mutagen.Bethesda.Generation.Modules.Binary;
-using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class BreakBinaryTranslationGeneration : BinaryTranslationGeneration
 {

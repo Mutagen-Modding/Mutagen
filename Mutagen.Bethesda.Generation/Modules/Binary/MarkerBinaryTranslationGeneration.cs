@@ -1,8 +1,7 @@
 using Loqui.Generation;
-using Mutagen.Bethesda.Generation.Modules.Binary;
 using Noggog.StructuredStrings;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class MarkerBinaryTranslationGeneration : BinaryTranslationGeneration
 {

@@ -1,9 +1,8 @@
 using System.Buffers.Binary;
 using Loqui.Generation;
-using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class RecordTypeBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<RecordType>
 {

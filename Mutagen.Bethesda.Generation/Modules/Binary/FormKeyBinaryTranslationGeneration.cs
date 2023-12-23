@@ -1,13 +1,13 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
-using Mutagen.Bethesda.Generation.Modules.Binary;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormKey>
 {

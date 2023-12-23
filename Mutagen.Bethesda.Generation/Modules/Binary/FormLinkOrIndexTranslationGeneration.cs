@@ -6,7 +6,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class FormLinkOrIndexTranslationGeneration : FormLinkBinaryTranslationGeneration
 {
