@@ -1450,6 +1450,9 @@
     <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SceneScriptFragments.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\StoryManagerEventNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>

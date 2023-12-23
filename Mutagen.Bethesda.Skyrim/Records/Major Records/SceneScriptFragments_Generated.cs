@@ -1196,8 +1196,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region PhaseFragments
-        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList.FactoryByLazyParse<IScenePhaseFragmentGetter>(_structData.Slice(FlagsEndingPos), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
         protected int PhaseFragmentsEndingPos;
+        partial void CustomPhaseFragmentsEndPos();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1230,6 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new SceneScriptFragmentsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            ret.CustomPhaseFragmentsEndPos();
             stream.Position += ret.PhaseFragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

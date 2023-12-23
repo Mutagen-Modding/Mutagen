@@ -22,7 +22,7 @@
   </Object>
   <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord">
     <Fields>
-      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" />
+      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" binaryOverlay="Custom" />
     </Fields>
   </Object>
   <Object name="ScenePhaseFragment" objType="Subrecord">
