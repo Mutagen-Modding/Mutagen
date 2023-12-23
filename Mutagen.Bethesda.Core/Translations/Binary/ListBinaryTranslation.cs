@@ -4,10 +4,6 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
-public sealed class ListBinaryTranslation<TItem> : ListBinaryTranslation<IBinaryWriteStream, IBinaryReadStream, TItem>
-{
-}
-
 public class ListBinaryTranslation<TWriter, TReader, TItem>
     where TWriter : IBinaryWriteStream
     where TReader : IBinaryReadStream

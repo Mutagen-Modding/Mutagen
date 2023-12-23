@@ -1343,4 +1343,14 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         throw new NotImplementedException();
     }
+
+    public override bool AllowDirectWrite(ObjectGeneration objGen, TypeGeneration typeGen)
+    {
+        return false;
+    }
+
+    public override bool AllowDirectParse(ObjectGeneration objGen, TypeGeneration typeGen, bool squashedRepeatedList)
+    {
+        return false;
+    }
 }
