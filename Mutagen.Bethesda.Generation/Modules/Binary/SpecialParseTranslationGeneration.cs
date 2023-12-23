@@ -27,7 +27,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         }
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 

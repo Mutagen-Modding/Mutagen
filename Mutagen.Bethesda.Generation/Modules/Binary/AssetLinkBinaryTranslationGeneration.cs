@@ -115,7 +115,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         } 
     } 
  
-    public override void GenerateCopyInRet( 
+    public override async Task GenerateCopyInRet( 
         StructuredStringBuilder fg, 
         ObjectGeneration objGen, 
         TypeGeneration targetGen, 

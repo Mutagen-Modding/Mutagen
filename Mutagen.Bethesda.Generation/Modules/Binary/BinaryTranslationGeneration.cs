@@ -51,7 +51,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         Accessor errorMaskAccessor,
         Accessor translationAccessor);
 
-    public abstract void GenerateCopyInRet(
+    public abstract Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,

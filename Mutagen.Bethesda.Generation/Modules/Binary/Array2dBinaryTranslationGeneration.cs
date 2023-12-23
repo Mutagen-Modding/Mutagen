@@ -291,7 +291,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         }
     }
 
-    public override void GenerateCopyInRet(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen,
+    public override async Task GenerateCopyInRet(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen,
         Accessor readerAccessor, AsyncMode asyncMode, Accessor retAccessor, Accessor outItemAccessor,
         Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor, bool inline)
     {

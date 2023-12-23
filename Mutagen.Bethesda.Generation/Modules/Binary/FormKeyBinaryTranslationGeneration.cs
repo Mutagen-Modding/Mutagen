@@ -40,7 +40,7 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({structDataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!);");
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,

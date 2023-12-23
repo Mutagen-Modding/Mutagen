@@ -1327,7 +1327,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         return itemAccessor.Access;
     }
 
-    public override void GenerateCopyInRet(
+    public override async Task GenerateCopyInRet(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,

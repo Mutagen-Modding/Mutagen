@@ -18,7 +18,7 @@ public class MarkerBinaryTranslationGeneration : BinaryTranslationGeneration
         sb.AppendLine($"{readerAccessor}.ReadSubrecord();");
     }
 
-    public override void GenerateCopyInRet(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen, Accessor readerAccessor, AsyncMode asyncMode, Accessor retAccessor, Accessor outItemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor, bool inline)
+    public override async Task GenerateCopyInRet(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen, Accessor readerAccessor, AsyncMode asyncMode, Accessor retAccessor, Accessor outItemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor, bool inline)
     {
         throw new NotImplementedException();
     }
