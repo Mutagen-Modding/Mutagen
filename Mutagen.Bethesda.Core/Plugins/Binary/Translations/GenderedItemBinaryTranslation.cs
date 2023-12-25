@@ -9,6 +9,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
 internal sealed class GenderedItemBinaryTranslation
 {
+    internal enum GenderEnum
+    {
+        Male = 0,
+        Female = 1,
+    }
+    
     public static GenderedItem<TItem> Parse<TItem>(
         MutagenFrame frame,
         BinarySubParseDelegate<MutagenFrame, TItem> transl)
@@ -20,6 +26,46 @@ internal sealed class GenderedItemBinaryTranslation
         if (!transl(frame, out var female))
         {
             throw new ArgumentException();
+        }
+        return new GenderedItem<TItem>(male, female);
+    }
+    
+    public static GenderedItem<TItem> Parse<TItem>(
+        MutagenFrame frame,
+        RecordType genderEnumRecord,
+        RecordType contentMarker,
+        BinarySubParseDelegate<MutagenFrame, TItem> transl)
+        where TItem : new()
+    {
+        int i = 0;
+        TItem? male = default, female = default;
+        while (i < 2 && frame.TryReadSubrecord(genderEnumRecord, out var markerRec))
+        {
+            i++;
+            switch ((GenderEnum)markerRec.AsInt32())
+            {
+                case GenderEnum.Male:
+                    if (!transl(frame, out male))
+                    {
+                        throw new ArgumentException();
+                    }
+                    break;
+                case GenderEnum.Female:
+                    if (!transl(frame, out female))
+                    {
+                        throw new ArgumentException();
+                    }
+                    break;
+            }
+        }
+
+        if (male == null)
+        {
+            male = new TItem();
+        }
+        if (female == null)
+        {
+            female = new TItem();
         }
         return new GenderedItem<TItem>(male, female);
     }
@@ -412,6 +458,26 @@ internal sealed class GenderedItemBinaryTranslation
         {
             transl(writer, female);
         }
+    }
+
+    public static void WriteGenderedEnumRecord<T>(
+        MutagenWriter writer,
+        IGenderedItemGetter<T> item,
+        RecordType genderEnumRecord,
+        BinarySubWriteDelegate<MutagenWriter, T> transl)
+    {
+        var male = item.Male;
+        using (HeaderExport.Subrecord(writer, genderEnumRecord))
+        {
+            writer.Write((int)GenderEnum.Male);
+        }
+        transl(writer, male);
+        using (HeaderExport.Subrecord(writer, genderEnumRecord))
+        {
+            writer.Write((int)GenderEnum.Female);
+        }
+        var female = item.Female;
+        transl(writer, female);
     }
 
     public static void Write<T>(

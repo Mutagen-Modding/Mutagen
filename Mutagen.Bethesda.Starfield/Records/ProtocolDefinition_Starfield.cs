@@ -51,6 +51,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Armor_Registration.Instance,
             ArmorAddon_Registration.Instance,
             ArmorAddonModel_Registration.Instance,
+            ArmorAddonMorph_Registration.Instance,
             ArmorCategoryValue_Registration.Instance,
             ArmorModification_Registration.Instance,
             ArmorMorph_Registration.Instance,

@@ -54,6 +54,7 @@
       <Group name="Debris" refName="Debris" />
       <Group name="FormLists" refName="FormList" />
       <Group name="Perks" refName="Perk" />
+      <Group name="ArmorAddons" refName="ArmorAddon" />
       <Group name="Locations" refName="Location" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="Outfits" refName="Outfit" />

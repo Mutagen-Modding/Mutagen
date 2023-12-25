@@ -56,7 +56,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         MutagenFrame reader, 
         RecordType triggeringRecord, 
         BinarySubParseDelegate<IBinaryReadStream, T> transl) 
-    { 
+    {
         var ret = new ExtendedList<T>(); 
         while (!reader.Complete && !reader.Reader.Complete) 
         { 

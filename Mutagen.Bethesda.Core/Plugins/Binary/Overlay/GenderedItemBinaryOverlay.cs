@@ -79,7 +79,7 @@ internal static class GenderedItemBinaryOverlay
                     recordTypeConverter: femaleRecordConverter,
                     doNotShortCircuit: !shortCircuit));
             }
-            else if (parseNonConvertedItems && i == 0)
+            else if ((parseNonConvertedItems || maleRecordConverter == null) && i == 0)
             {
                 maleObj = creator(stream, package, new TypedParseParams(
                     lengthOverride: null,
@@ -94,11 +94,13 @@ internal static class GenderedItemBinaryOverlay
                     doNotShortCircuit: !shortCircuit));
             }
         }
+
         var readLen = stream.Position - initialPos;
         if (readLen == 0)
         {
             throw new ArgumentException("Expected things to be read.");
         }
+
         return new GenderedItem<T?>(maleObj, femaleObj);
     }
 
@@ -116,7 +118,8 @@ internal static class GenderedItemBinaryOverlay
         for (int i = 0; i < 2; i++)
         {
             if (stream.Complete) break;
-            var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
+            var recType = HeaderTranslation.ReadNextRecordType(stream,
+                package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
             stream.Position += markerLen;
             if (recType == male)
             {
@@ -130,14 +133,18 @@ internal static class GenderedItemBinaryOverlay
             {
                 break;
             }
-            HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var recLen);
+
+            HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength,
+                out var recLen);
             stream.Position += recLen;
         }
+
         var readLen = stream.Position - initialPos;
         if (readLen == 0)
         {
             throw new ArgumentException("Expected things to be read.");
         }
+
         return new GenderedItemBinaryOverlay<T>(
             stream.ReadMemory(readLen),
             package,
@@ -162,7 +169,8 @@ internal static class GenderedItemBinaryOverlay
         for (int i = 0; i < 2; i++)
         {
             if (stream.Complete) break;
-            var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
+            var recType = HeaderTranslation.ReadNextRecordType(stream,
+                package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
             stream.Position += markerLen;
             if (recType == male)
             {
@@ -187,11 +195,13 @@ internal static class GenderedItemBinaryOverlay
                 break;
             }
         }
+
         var readLen = stream.Position - initialPos;
         if (readLen == 0)
         {
             throw new ArgumentException("Expected things to be read.");
         }
+
         return new GenderedItem<T?>(maleObj, femaleObj);
     }
 
@@ -253,11 +263,13 @@ internal static class GenderedItemBinaryOverlay
                 break;
             }
         }
+
         var readLen = stream.Position - initialPos;
         if (readLen == 0)
         {
             throw new ArgumentException("Expected things to be read.");
         }
+
         return new GenderedItem<T?>(maleObj, femaleObj);
     }
 
@@ -270,15 +282,18 @@ internal static class GenderedItemBinaryOverlay
         where T : class
     {
         int? maleLoc = null, femaleLoc = null;
-        var find = RecordSpanExtensions.TryFindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
+        var find = RecordSpanExtensions.TryFindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants,
+            out var lenParsed, male, female);
         if (find[0] is { } firstFind)
         {
             maleLoc = firstFind.Location;
         }
+
         if (find[1] is { } secondFind)
         {
             femaleLoc = secondFind.Location;
         }
+
         var ret = new GenderedItemBinaryOverlay<T?>(
             stream.RemainingMemory.Slice(0, lenParsed),
             package,
@@ -288,6 +303,32 @@ internal static class GenderedItemBinaryOverlay
             default);
         stream.Position += lenParsed;
         return ret;
+    }
+
+    internal static IGenderedItemGetter<T> Factory<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        RecordType genderEnumRecord,
+        Func<T> getDefault,
+        Func<OverlayStream, BinaryOverlayFactoryPackage, T> creator)
+        where T : class
+    {
+        T? male = null, female = null;
+        for (int i = 0; i < 2; i++)
+        {
+            if (!stream.TryReadSubrecord(genderEnumRecord, out var enumRec)) break;
+            switch ((GenderedItemBinaryTranslation.GenderEnum)enumRec.AsInt32())
+            {
+                case GenderedItemBinaryTranslation.GenderEnum.Male:
+                    male = creator(stream, package);
+                    break;
+                case GenderedItemBinaryTranslation.GenderEnum.Female:
+                    female = creator(stream, package);
+                    break;
+            }
+        }
+
+        return new GenderedItem<T>(male ?? getDefault(), female ?? getDefault());
     }
 
     internal static GenderedItemBinaryOverlay<T> Factory<T>(
@@ -300,15 +341,18 @@ internal static class GenderedItemBinaryOverlay
         where T : notnull
     {
         int? maleLoc = null, femaleLoc = null;
-        var find = RecordSpanExtensions.TryFindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
+        var find = RecordSpanExtensions.TryFindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants,
+            out var lenParsed, male, female);
         if (find[0] is { } firstFind)
         {
             maleLoc = firstFind.Location;
         }
+
         if (find[1] is { } secondFind)
         {
             femaleLoc = secondFind.Location;
         }
+
         var ret = new GenderedItemBinaryOverlay<T>(
             stream.RemainingMemory.Slice(0, lenParsed),
             package,

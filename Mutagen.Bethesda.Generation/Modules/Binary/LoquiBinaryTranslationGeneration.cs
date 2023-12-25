@@ -221,11 +221,11 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
  
                     if (trans.Count > 0)
                     {
-                        args.Add($"translationParams: translationParams.With({string.Join(", ", trans)}).DoNotShortCircuit()");
+                        args.Add($"translationParams: translationParams.With({string.Join(", ", trans)}){(data.ShortCircuit ? null : ".DoNotShortCircuit()")}");
                     }
                     else if (await NeedsRecordTypeConverter(loqui))
                     {
-                        args.Add($"translationParams: translationParams.DoNotShortCircuit()");
+                        args.Add($"translationParams: translationParams{(data.ShortCircuit ? null : ".DoNotShortCircuit()")}");
                     }
                 }
             }
@@ -652,7 +652,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     args.AddPassArg($"finalPos");
                 }
-                args.Add($"translationParams: {converterAccessor}.DoNotShortCircuit()");
+                args.Add($"translationParams: {converterAccessor}{(data.ShortCircuit ? null : ".DoNotShortCircuit()")}");
             }
         }
         if (data.EndMarkerType.HasValue)

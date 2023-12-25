@@ -2051,6 +2051,9 @@
     <Compile Include="Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ArmorAddon.cs">
+      <DependentUpon>ArmorAddon.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ASceneAction.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
@@ -6047,6 +6050,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ReflectionProbesComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorAddonMorph_Generated.cs">
+      <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -44,11 +44,13 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
 
         if (data.RecordType.HasValue)
         {
-            sb.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine(
+                $"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
         else if (data.MarkerType.HasValue && !gender.MarkerPerGender)
         {
-            sb.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
+            sb.AppendLine(
+                $"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
         }
 
         bool notNull = gender.ItemNullable && !gender.SubTypeGeneration.IsNullable;
@@ -62,7 +64,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             parseSuffix = "MarkerWithinItem";
         }
-        
+
         using (var args = sb.Call(
                    $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{parseSuffix}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
         {
@@ -72,16 +74,24 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 args.Add($"maleMarker: {objGen.RecordTypeHeaderName(gender.MaleMarker.Value)}");
                 args.Add($"femaleMarker: {objGen.RecordTypeHeaderName(gender.FemaleMarker.Value)}");
             }
+
+            if (gender.GenderEnumRecord.HasValue)
+            {
+                args.Add($"genderEnumRecord: {objGen.RecordTypeHeaderName(gender.GenderEnumRecord.Value)}");
+            }
+
             if (data.MarkerType.HasValue && gender.MarkerPerGender)
             {
                 args.Add($"marker: {objGen.RecordTypeHeaderName(data.MarkerType.Value)}");
             }
+
             var subData = gender.SubTypeGeneration.GetFieldData();
             if (subData.RecordType.HasValue
                 && !(gender.SubTypeGeneration is LoquiType))
             {
                 args.Add($"contentMarker: {objGen.RecordTypeHeaderName(subData.RecordType.Value)}");
             }
+
             LoquiType loqui = gender.SubTypeGeneration as LoquiType;
             if (loqui != null)
             {
@@ -91,10 +101,12 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     args.Add($"translationParams: {objGen.RegistrationName}.{typeGen.Name}Converter");
                 }
             }
+
             if (gender.FemaleConversions != null)
             {
                 args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
             }
+
             if (gender.MaleConversions != null)
             {
                 args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
@@ -114,7 +126,8 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 }
                 else
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse");
+                    args.Add(
+                        $"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse");
                     if (gender.ItemNullable)
                     {
                         args.Add($"skipMarker: false");
@@ -125,7 +138,8 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             {
                 args.Add(gen =>
                 {
-                    gen.AppendLine($"transl: (MutagenFrame r, [MaybeNullWhen(false)] out {gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} genSubItem{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                    gen.AppendLine(
+                        $"transl: (MutagenFrame r, [MaybeNullWhen(false)] out {gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} genSubItem{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                     using (gen.CurlyBrace())
                     {
                         subTransl.GenerateCopyInRet(
@@ -142,12 +156,14 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             converterAccessor: "conv",
                             inline: false);
                     }
+
                     if (gender.ItemNullable)
                     {
                         args.Add($"skipMarker: false");
                     }
                 });
             }
+
             if (notNull)
             {
                 args.Add($"fallback: {gender.SubTypeGeneration.GetDefault(getter: false)}");
@@ -189,16 +205,20 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             throw new ArgumentException("Unsupported type generator: " + gendered.SubTypeGeneration);
         }
+
         var allowDirectWrite = subTransl.AllowDirectWrite(objGen, gendered.SubTypeGeneration);
-        var loqui = gendered.SubTypeGeneration as LoquiType; 
-        bool needsMasters = gendered.SubTypeGeneration is FormLinkType || (loqui != null && loqui.GetFieldData().HasTrigger); 
+        var loqui = gendered.SubTypeGeneration as LoquiType;
+        bool needsMasters = gendered.SubTypeGeneration is FormLinkType ||
+                            (loqui != null && loqui.GetFieldData().HasTrigger);
         var typeName = gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
         if (loqui != null)
         {
             typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
         }
 
-        var generics = gendered.SubTypeGeneration is FormLinkType linkType && linkType.Nullable ? $"<{linkType.GenericString}>" : string.Empty;
+        var generics = gendered.SubTypeGeneration is FormLinkType linkType && linkType.Nullable
+            ? $"<{linkType.GenericString}>"
+            : string.Empty;
 
         string writeSuffix = string.Empty;
         if (gendered.MarkerPerGender)
@@ -209,7 +229,11 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             writeSuffix = "MarkerWithinItem";
         }
-        
+        else if (gendered.GenderEnumRecord.HasValue)
+        {
+            writeSuffix = "GenderedEnumRecord";
+        }
+
         using (var args = sb.Call(
                    $"GenderedItemBinaryTranslation.Write{writeSuffix}{generics}"))
         {
@@ -223,37 +247,51 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             {
                 args.Add($"markerType: {objGen.RecordTypeHeaderName(data.MarkerType.Value)}");
             }
+
             if (gendered.MaleMarker.HasValue)
             {
                 args.Add($"maleMarker: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
             }
+
             if (gendered.FemaleMarker.HasValue)
             {
                 args.Add($"femaleMarker: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
             }
+            
+            if (gendered.GenderEnumRecord.HasValue)
+            {
+                args.Add($"genderEnumRecord: {objGen.RecordTypeHeaderName(gendered.GenderEnumRecord.Value)}");
+            }
+            
             if (gendered.MaleMarker.HasValue
                 && loqui != null)
             {
                 args.Add("markerWrap: false");
             }
+
             if (gendered.FemaleConversions != null)
             {
                 args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
             }
+
             if (gendered.MaleConversions != null)
             {
                 args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
             }
+
             if (allowDirectWrite)
             {
-                args.Add($"transl: {subTransl.GetTranslatorInstance(gendered.SubTypeGeneration, getter: true)}.Write{(gendered.SubTypeGeneration.Nullable ? "Nullable" : string.Empty)}");
+                args.Add(
+                    $"transl: {subTransl.GetTranslatorInstance(gendered.SubTypeGeneration, getter: true)}.Write{(gendered.SubTypeGeneration.Nullable ? "Nullable" : string.Empty)}");
             }
             else
             {
                 await args.Add(async (gen) =>
                 {
-                    var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
-                    gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(TypedWriteParams)} conv" : null)}) =>");
+                    var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType())
+                        .GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
+                    gen.AppendLine(
+                        $"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(TypedWriteParams)} conv" : null)}) =>");
                     using (gen.CurlyBrace())
                     {
                         await subTransl.GenerateWrite(
@@ -309,30 +347,52 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
 
         var gendered = typeGen as GenderedType;
         this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subBin);
-        var typeName = $"{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{gendered.SubTypeGeneration.NullChar}";
+        var typeName =
+            $"{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{gendered.SubTypeGeneration.NullChar}";
 
         if (data.HasTrigger
             && !gendered.ItemNullable)
         {
-            var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
             if (data.HasTrigger)
             {
                 sb.AppendLine($"private int? _{typeGen.Name}Location;");
             }
-            sb.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
-            using (sb.CurlyBrace())
+
+            if (gendered.GenderEnumRecord.HasValue)
             {
-                sb.AppendLine("get");
+                if (data.HasTrigger)
+                {
+                    sb.AppendLine(
+                        $"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{gendered.SubTypeGeneration.NullChar}>? _{typeGen.Name}Overlay;");
+                }
+
+                sb.AppendLine(
+                    $"public IGenderedItemGetter<{typeName}>{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Overlay{(typeGen.Nullable ? null : $" ?? new GenderedItem<{typeName}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)})")};");
+            }
+            else
+            {
+                sb.AppendLine(
+                    $"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
                 using (sb.CurlyBrace())
                 {
-                    var subTypeDefault = gendered.SubTypeGeneration.GetDefault(getter: true);
-                    sb.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.Nullable ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
-                    sb.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
-                    using (var args = sb.Call(
-                               $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
+                    sb.AppendLine("get");
+                    using (sb.CurlyBrace())
                     {
-                        args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
-                        args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
+                        var subTypeDefault = gendered.SubTypeGeneration.GetDefault(getter: true);
+                        sb.AppendLine(
+                            $"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.Nullable ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
+                        sb.AppendLine(
+                            $"var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
+
+                        var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
+                        using (var args = sb.Call(
+                                   $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
+                        {
+                            args.Add(
+                                $"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
+                            args.Add(
+                                $"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
+                        }
                     }
                 }
             }
@@ -350,7 +410,8 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 }
                 else
                 {
-                    sb.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}> {typeGen.Name}");
+                    sb.AppendLine(
+                        $"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}> {typeGen.Name}");
                     using (sb.CurlyBrace())
                     {
                         sb.AppendLine("get");
@@ -358,14 +419,19 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         {
                             if (data.HasTrigger)
                             {
-                                sb.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault(getter: true)};");
+                                sb.AppendLine(
+                                    $"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault(getter: true)};");
                             }
-                            sb.AppendLine($"var data = {structDataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
+
+                            sb.AppendLine(
+                                $"var data = {structDataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
                             using (var args = sb.Call(
                                        $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                             {
-                                args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
-                                args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
+                                args.Add(
+                                    $"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
+                                args.Add(
+                                    $"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
                             }
                         }
                     }
@@ -373,20 +439,25 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             }
             else
             {
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen,
+                    passedLengthAccessor);
+                sb.AppendLine(
+                    $"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
                 using (sb.CurlyBrace())
                 {
                     sb.AppendLine("get");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine($"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
+                        sb.AppendLine(
+                            $"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
                         sb.AppendLine($"var data = {recordDataAccessor}.Slice(_{typeGen.Name}Location);");
                         using (var args = sb.Call(
                                    $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                         {
-                            args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
-                            args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
+                            args.Add(
+                                $"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
+                            args.Add(
+                                $"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
                         }
                     }
                 }
@@ -396,9 +467,12 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             if (data.HasTrigger)
             {
-                sb.AppendLine($"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{gendered.SubTypeGeneration.NullChar}>? _{typeGen.Name}Overlay;");
+                sb.AppendLine(
+                    $"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{gendered.SubTypeGeneration.NullChar}>? _{typeGen.Name}Overlay;");
             }
-            sb.AppendLine($"public IGenderedItemGetter<{typeName}>{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Overlay{(typeGen.Nullable ? null : $" ?? new GenderedItem<{typeName}>(default, default)")};");
+
+            sb.AppendLine(
+                $"public IGenderedItemGetter<{typeName}>{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Overlay{(typeGen.Nullable ? null : $" ?? new GenderedItem<{typeName}>(default, default)")};");
         }
     }
 
@@ -410,15 +484,22 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         Accessor packageAccessor,
         Accessor converterAccessor)
     {
-        var gendered = typeGen as GenderedType;
+        var gendered = (GenderedType)typeGen;
         if (typeGen.GetFieldData().MarkerType.HasValue && !gendered.MarkerPerGender)
         {
-            sb.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
+            sb.AppendLine(
+                $"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
+        
+        if (!this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subTransl))
+        {
+            throw new ArgumentException("Unsupported type generator: " + gendered.SubTypeGeneration);
+        }
+
         switch (typeGen.GetFieldData().BinaryOverlayFallback)
         {
             case BinaryGenerationType.Normal:
-                if (gendered.ItemNullable)
+                if (gendered.ItemNullable || gendered.GenderEnumRecord.HasValue)
                 {
                     string callName;
                     if (gendered.SubTypeGeneration is LoquiType
@@ -431,6 +512,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     {
                         callName = "Factory";
                     }
+
                     bool notNull = gendered.ItemNullable && !gendered.SubTypeGeneration.IsNullable;
                     using (var args = sb.Call(
                                $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
@@ -441,19 +523,29 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             args.Add($"male: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
                             args.Add($"female: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
                         }
+
                         if (gendered.MarkerPerGender)
                         {
                             args.Add($"marker: {objGen.RecordTypeHeaderName(typeGen.GetFieldData().MarkerType.Value)}");
                         }
+
+                        if (gendered.GenderEnumRecord.HasValue)
+                        {
+                            args.Add($"genderEnumRecord: {objGen.RecordTypeHeaderName(gendered.GenderEnumRecord.Value)}");
+                            args.Add($"getDefault: () => {gendered.SubTypeGeneration.GetDefault(getter: true)}");
+                        }
+
                         if (gendered.SubTypeGeneration is LoquiType loqui)
                         {
                             args.AddPassArg("stream");
-                            args.Add($"creator: static (s, p, r) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(s, p, r)");
+                            args.Add(
+                                $"creator: static (s, p, r) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(s, p, r)");
                             var subData = loqui.GetFieldData();
                             if (subData?.RecordTypeConverter != null
                                 && subData.RecordTypeConverter.FromConversions.Count > 0)
                             {
-                                args.Add($"translationParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                                args.Add(
+                                    $"translationParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
                             }
                             else if (converterAccessor != null
                                      && gendered.FemaleConversions == null
@@ -462,16 +554,38 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                                 args.Add($"translationParams: {converterAccessor}");
                             }
                         }
+                        else if (gendered.SubTypeGeneration is ListType list
+                                 && subTransl is PluginListBinaryTranslationGeneration pluginListBinaryTranslationGeneration)
+                        {
+                            args.AddPassArg("stream");
+                            await args.Add(async subFg =>
+                            {
+                                subFg.AppendLine("creator: (s, p) => ");
+                                using (subFg.CurlyBrace())
+                                {
+                                    await pluginListBinaryTranslationGeneration.GenerateWrapperRecordTypeParseGeneral(
+                                        subFg, objGen, list,
+                                        streamAccessor: "s",
+                                        locationAccessor: null,
+                                        packageAccessor: "p",
+                                        retAccessor: "return ",
+                                        converterAccessor: converterAccessor);
+                                }
+                            });
+                        }
                         else
                         {
                             args.AddPassArg("stream");
                             this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subGen);
-                            args.Add($"creator: static (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})", "p")}");
+                            args.Add(
+                                $"creator: static (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})", "p")}");
                         }
+
                         if (gendered.FemaleConversions != null)
                         {
                             args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
                         }
+
                         if (gendered.MaleConversions != null)
                         {
                             args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
@@ -486,7 +600,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         {
                             args.Add("parseNonConvertedItems: true");
                         }
-                        
+
                         if (notNull)
                         {
                             args.Add($"fallback: {gendered.SubTypeGeneration.GetDefault(getter: false)}");
@@ -495,11 +609,15 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 }
                 else
                 {
-                    await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
+                    
+                    await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor,
+                        converterAccessor);
                 }
+
                 break;
             default:
-                await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
+                await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor,
+                    converterAccessor);
                 break;
         }
     }

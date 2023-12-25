@@ -116,7 +116,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MoveSceneAction
 - Npc
 - NpcModification
-- NpcTint
 - ObjectEffect
 - ObjectModification
 - ObjectTemplate
@@ -381,8 +380,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### NpcModification
 - IModeled
-- INamed
-### NpcTint
 - INamed
 ### ObjectEffect
 - INamed

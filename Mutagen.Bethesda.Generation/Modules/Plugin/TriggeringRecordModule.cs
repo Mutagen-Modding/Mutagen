@@ -380,12 +380,12 @@ public class TriggeringRecordModule : GenerationModule
         }
         else if (field is GenderedType gendered)
         {
-            if (gendered.SubTypeGeneration is LoquiType loqui)
+            if (gendered.SubTypeGeneration is LoquiType or ListType)
             {
                 await SetRecordTrigger(
                     obj,
-                    loqui,
-                    loqui.GetFieldData());
+                    gendered.SubTypeGeneration,
+                    gendered.SubTypeGeneration.GetFieldData());
             }
         }
     }
@@ -554,6 +554,11 @@ public class TriggeringRecordModule : GenerationModule
                 data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.FemaleMarker.Value));
                 data.TriggeringRecordTypes.Add(gendered.MaleMarker.Value);
                 data.TriggeringRecordTypes.Add(gendered.FemaleMarker.Value);
+            }
+            else if (gendered.GenderEnumRecord.HasValue)
+            {
+                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.GenderEnumRecord.Value));
+                data.TriggeringRecordTypes.Add(gendered.GenderEnumRecord.Value);
             }
             else if (gendered.SubTypeGeneration is LoquiType genderedLoqui)
             {

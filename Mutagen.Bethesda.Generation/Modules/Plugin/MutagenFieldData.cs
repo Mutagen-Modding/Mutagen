@@ -35,6 +35,7 @@ public class MutagenFieldData
     public bool IsAfterBreak;
     public bool Circular;
     public bool NotDuplicate;
+    public bool ShortCircuit;
 
     public MutagenFieldData(TypeGeneration source)
     {

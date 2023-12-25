@@ -193,7 +193,6 @@ namespace Mutagen.Bethesda.Starfield
                 MoveSceneAction_Registration.Instance,
                 Npc_Registration.Instance,
                 NpcModification_Registration.Instance,
-                NpcTint_Registration.Instance,
                 ObjectEffect_Registration.Instance,
                 ObjectModification_Registration.Instance,
                 ObjectTemplate_Registration.Instance,

@@ -34,6 +34,7 @@ public class GenderedType : WrapperType
 
     public RecordType? MaleMarker;
     public RecordType? FemaleMarker;
+    public RecordType? GenderEnumRecord;
     public bool MarkerPerGender;
     public bool ShortCircuit;
     public bool ParseNonConvertedItems;
@@ -257,6 +258,11 @@ public class GenderedType : WrapperType
         if (node.TryGetAttribute<string>("femaleMarker", out var femaleMarker))
         {
             FemaleMarker = new RecordType(femaleMarker);
+        }
+
+        if (node.TryGetAttribute<string>("genderEnumRecord", out var genderEnumRecord))
+        {
+            GenderEnumRecord = new RecordType(genderEnumRecord);
         }
 
         if (MaleMarker.HasValue != FemaleMarker.HasValue)

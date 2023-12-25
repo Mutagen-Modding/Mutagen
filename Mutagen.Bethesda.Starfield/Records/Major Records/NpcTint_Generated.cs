@@ -9,7 +9,6 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -52,26 +51,23 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Type
-        public TintType Type { get; set; } = default;
+        #region TintType
+        public TintType TintType { get; set; } = default;
         #endregion
-        #region Group
-        public String Group { get; set; } = string.Empty;
+        #region TintGroup
+        public String TintGroup { get; set; } = string.Empty;
         #endregion
-        #region Name
-        /// <summary>
-        /// Aspects: INamedRequired
-        /// </summary>
-        public String Name { get; set; } = string.Empty;
+        #region TintName
+        public String TintName { get; set; } = string.Empty;
         #endregion
-        #region Texture
-        public String Texture { get; set; } = string.Empty;
+        #region TintTexture
+        public String TintTexture { get; set; } = string.Empty;
         #endregion
-        #region Color
-        public Color Color { get; set; } = default;
+        #region TintColor
+        public Color TintColor { get; set; } = default;
         #endregion
-        #region Intensity
-        public UInt32 Intensity { get; set; } = default;
+        #region TintIntensity
+        public UInt32 TintIntensity { get; set; } = default;
         #endregion
 
         #region To String
@@ -112,28 +108,28 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Type = initialValue;
-                this.Group = initialValue;
-                this.Name = initialValue;
-                this.Texture = initialValue;
-                this.Color = initialValue;
-                this.Intensity = initialValue;
+                this.TintType = initialValue;
+                this.TintGroup = initialValue;
+                this.TintName = initialValue;
+                this.TintTexture = initialValue;
+                this.TintColor = initialValue;
+                this.TintIntensity = initialValue;
             }
 
             public Mask(
-                TItem Type,
-                TItem Group,
-                TItem Name,
-                TItem Texture,
-                TItem Color,
-                TItem Intensity)
+                TItem TintType,
+                TItem TintGroup,
+                TItem TintName,
+                TItem TintTexture,
+                TItem TintColor,
+                TItem TintIntensity)
             {
-                this.Type = Type;
-                this.Group = Group;
-                this.Name = Name;
-                this.Texture = Texture;
-                this.Color = Color;
-                this.Intensity = Intensity;
+                this.TintType = TintType;
+                this.TintGroup = TintGroup;
+                this.TintName = TintName;
+                this.TintTexture = TintTexture;
+                this.TintColor = TintColor;
+                this.TintIntensity = TintIntensity;
             }
 
             #pragma warning disable CS8618
@@ -145,12 +141,12 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Type;
-            public TItem Group;
-            public TItem Name;
-            public TItem Texture;
-            public TItem Color;
-            public TItem Intensity;
+            public TItem TintType;
+            public TItem TintGroup;
+            public TItem TintName;
+            public TItem TintTexture;
+            public TItem TintColor;
+            public TItem TintIntensity;
             #endregion
 
             #region Equals
@@ -163,23 +159,23 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
-                if (!object.Equals(this.Group, rhs.Group)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Texture, rhs.Texture)) return false;
-                if (!object.Equals(this.Color, rhs.Color)) return false;
-                if (!object.Equals(this.Intensity, rhs.Intensity)) return false;
+                if (!object.Equals(this.TintType, rhs.TintType)) return false;
+                if (!object.Equals(this.TintGroup, rhs.TintGroup)) return false;
+                if (!object.Equals(this.TintName, rhs.TintName)) return false;
+                if (!object.Equals(this.TintTexture, rhs.TintTexture)) return false;
+                if (!object.Equals(this.TintColor, rhs.TintColor)) return false;
+                if (!object.Equals(this.TintIntensity, rhs.TintIntensity)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Type);
-                hash.Add(this.Group);
-                hash.Add(this.Name);
-                hash.Add(this.Texture);
-                hash.Add(this.Color);
-                hash.Add(this.Intensity);
+                hash.Add(this.TintType);
+                hash.Add(this.TintGroup);
+                hash.Add(this.TintName);
+                hash.Add(this.TintTexture);
+                hash.Add(this.TintColor);
+                hash.Add(this.TintIntensity);
                 return hash.ToHashCode();
             }
 
@@ -188,12 +184,12 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Type)) return false;
-                if (!eval(this.Group)) return false;
-                if (!eval(this.Name)) return false;
-                if (!eval(this.Texture)) return false;
-                if (!eval(this.Color)) return false;
-                if (!eval(this.Intensity)) return false;
+                if (!eval(this.TintType)) return false;
+                if (!eval(this.TintGroup)) return false;
+                if (!eval(this.TintName)) return false;
+                if (!eval(this.TintTexture)) return false;
+                if (!eval(this.TintColor)) return false;
+                if (!eval(this.TintIntensity)) return false;
                 return true;
             }
             #endregion
@@ -201,12 +197,12 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Type)) return true;
-                if (eval(this.Group)) return true;
-                if (eval(this.Name)) return true;
-                if (eval(this.Texture)) return true;
-                if (eval(this.Color)) return true;
-                if (eval(this.Intensity)) return true;
+                if (eval(this.TintType)) return true;
+                if (eval(this.TintGroup)) return true;
+                if (eval(this.TintName)) return true;
+                if (eval(this.TintTexture)) return true;
+                if (eval(this.TintColor)) return true;
+                if (eval(this.TintIntensity)) return true;
                 return false;
             }
             #endregion
@@ -221,12 +217,12 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Type = eval(this.Type);
-                obj.Group = eval(this.Group);
-                obj.Name = eval(this.Name);
-                obj.Texture = eval(this.Texture);
-                obj.Color = eval(this.Color);
-                obj.Intensity = eval(this.Intensity);
+                obj.TintType = eval(this.TintType);
+                obj.TintGroup = eval(this.TintGroup);
+                obj.TintName = eval(this.TintName);
+                obj.TintTexture = eval(this.TintTexture);
+                obj.TintColor = eval(this.TintColor);
+                obj.TintIntensity = eval(this.TintIntensity);
             }
             #endregion
 
@@ -245,29 +241,29 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(NpcTint.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Type ?? true)
+                    if (printMask?.TintType ?? true)
                     {
-                        sb.AppendItem(Type, "Type");
+                        sb.AppendItem(TintType, "TintType");
                     }
-                    if (printMask?.Group ?? true)
+                    if (printMask?.TintGroup ?? true)
                     {
-                        sb.AppendItem(Group, "Group");
+                        sb.AppendItem(TintGroup, "TintGroup");
                     }
-                    if (printMask?.Name ?? true)
+                    if (printMask?.TintName ?? true)
                     {
-                        sb.AppendItem(Name, "Name");
+                        sb.AppendItem(TintName, "TintName");
                     }
-                    if (printMask?.Texture ?? true)
+                    if (printMask?.TintTexture ?? true)
                     {
-                        sb.AppendItem(Texture, "Texture");
+                        sb.AppendItem(TintTexture, "TintTexture");
                     }
-                    if (printMask?.Color ?? true)
+                    if (printMask?.TintColor ?? true)
                     {
-                        sb.AppendItem(Color, "Color");
+                        sb.AppendItem(TintColor, "TintColor");
                     }
-                    if (printMask?.Intensity ?? true)
+                    if (printMask?.TintIntensity ?? true)
                     {
-                        sb.AppendItem(Intensity, "Intensity");
+                        sb.AppendItem(TintIntensity, "TintIntensity");
                     }
                 }
             }
@@ -293,12 +289,12 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Type;
-            public Exception? Group;
-            public Exception? Name;
-            public Exception? Texture;
-            public Exception? Color;
-            public Exception? Intensity;
+            public Exception? TintType;
+            public Exception? TintGroup;
+            public Exception? TintName;
+            public Exception? TintTexture;
+            public Exception? TintColor;
+            public Exception? TintIntensity;
             #endregion
 
             #region IErrorMask
@@ -307,18 +303,18 @@ namespace Mutagen.Bethesda.Starfield
                 NpcTint_FieldIndex enu = (NpcTint_FieldIndex)index;
                 switch (enu)
                 {
-                    case NpcTint_FieldIndex.Type:
-                        return Type;
-                    case NpcTint_FieldIndex.Group:
-                        return Group;
-                    case NpcTint_FieldIndex.Name:
-                        return Name;
-                    case NpcTint_FieldIndex.Texture:
-                        return Texture;
-                    case NpcTint_FieldIndex.Color:
-                        return Color;
-                    case NpcTint_FieldIndex.Intensity:
-                        return Intensity;
+                    case NpcTint_FieldIndex.TintType:
+                        return TintType;
+                    case NpcTint_FieldIndex.TintGroup:
+                        return TintGroup;
+                    case NpcTint_FieldIndex.TintName:
+                        return TintName;
+                    case NpcTint_FieldIndex.TintTexture:
+                        return TintTexture;
+                    case NpcTint_FieldIndex.TintColor:
+                        return TintColor;
+                    case NpcTint_FieldIndex.TintIntensity:
+                        return TintIntensity;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -329,23 +325,23 @@ namespace Mutagen.Bethesda.Starfield
                 NpcTint_FieldIndex enu = (NpcTint_FieldIndex)index;
                 switch (enu)
                 {
-                    case NpcTint_FieldIndex.Type:
-                        this.Type = ex;
+                    case NpcTint_FieldIndex.TintType:
+                        this.TintType = ex;
                         break;
-                    case NpcTint_FieldIndex.Group:
-                        this.Group = ex;
+                    case NpcTint_FieldIndex.TintGroup:
+                        this.TintGroup = ex;
                         break;
-                    case NpcTint_FieldIndex.Name:
-                        this.Name = ex;
+                    case NpcTint_FieldIndex.TintName:
+                        this.TintName = ex;
                         break;
-                    case NpcTint_FieldIndex.Texture:
-                        this.Texture = ex;
+                    case NpcTint_FieldIndex.TintTexture:
+                        this.TintTexture = ex;
                         break;
-                    case NpcTint_FieldIndex.Color:
-                        this.Color = ex;
+                    case NpcTint_FieldIndex.TintColor:
+                        this.TintColor = ex;
                         break;
-                    case NpcTint_FieldIndex.Intensity:
-                        this.Intensity = ex;
+                    case NpcTint_FieldIndex.TintIntensity:
+                        this.TintIntensity = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -357,23 +353,23 @@ namespace Mutagen.Bethesda.Starfield
                 NpcTint_FieldIndex enu = (NpcTint_FieldIndex)index;
                 switch (enu)
                 {
-                    case NpcTint_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
+                    case NpcTint_FieldIndex.TintType:
+                        this.TintType = (Exception?)obj;
                         break;
-                    case NpcTint_FieldIndex.Group:
-                        this.Group = (Exception?)obj;
+                    case NpcTint_FieldIndex.TintGroup:
+                        this.TintGroup = (Exception?)obj;
                         break;
-                    case NpcTint_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case NpcTint_FieldIndex.TintName:
+                        this.TintName = (Exception?)obj;
                         break;
-                    case NpcTint_FieldIndex.Texture:
-                        this.Texture = (Exception?)obj;
+                    case NpcTint_FieldIndex.TintTexture:
+                        this.TintTexture = (Exception?)obj;
                         break;
-                    case NpcTint_FieldIndex.Color:
-                        this.Color = (Exception?)obj;
+                    case NpcTint_FieldIndex.TintColor:
+                        this.TintColor = (Exception?)obj;
                         break;
-                    case NpcTint_FieldIndex.Intensity:
-                        this.Intensity = (Exception?)obj;
+                    case NpcTint_FieldIndex.TintIntensity:
+                        this.TintIntensity = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -383,12 +379,12 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Type != null) return true;
-                if (Group != null) return true;
-                if (Name != null) return true;
-                if (Texture != null) return true;
-                if (Color != null) return true;
-                if (Intensity != null) return true;
+                if (TintType != null) return true;
+                if (TintGroup != null) return true;
+                if (TintName != null) return true;
+                if (TintTexture != null) return true;
+                if (TintColor != null) return true;
+                if (TintIntensity != null) return true;
                 return false;
             }
             #endregion
@@ -415,22 +411,22 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Type, "Type");
+                    sb.AppendItem(TintType, "TintType");
                 }
                 {
-                    sb.AppendItem(Group, "Group");
+                    sb.AppendItem(TintGroup, "TintGroup");
                 }
                 {
-                    sb.AppendItem(Name, "Name");
+                    sb.AppendItem(TintName, "TintName");
                 }
                 {
-                    sb.AppendItem(Texture, "Texture");
+                    sb.AppendItem(TintTexture, "TintTexture");
                 }
                 {
-                    sb.AppendItem(Color, "Color");
+                    sb.AppendItem(TintColor, "TintColor");
                 }
                 {
-                    sb.AppendItem(Intensity, "Intensity");
+                    sb.AppendItem(TintIntensity, "TintIntensity");
                 }
             }
             #endregion
@@ -440,12 +436,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Type = this.Type.Combine(rhs.Type);
-                ret.Group = this.Group.Combine(rhs.Group);
-                ret.Name = this.Name.Combine(rhs.Name);
-                ret.Texture = this.Texture.Combine(rhs.Texture);
-                ret.Color = this.Color.Combine(rhs.Color);
-                ret.Intensity = this.Intensity.Combine(rhs.Intensity);
+                ret.TintType = this.TintType.Combine(rhs.TintType);
+                ret.TintGroup = this.TintGroup.Combine(rhs.TintGroup);
+                ret.TintName = this.TintName.Combine(rhs.TintName);
+                ret.TintTexture = this.TintTexture.Combine(rhs.TintTexture);
+                ret.TintColor = this.TintColor.Combine(rhs.TintColor);
+                ret.TintIntensity = this.TintIntensity.Combine(rhs.TintIntensity);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -469,12 +465,12 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Type;
-            public bool Group;
-            public bool Name;
-            public bool Texture;
-            public bool Color;
-            public bool Intensity;
+            public bool TintType;
+            public bool TintGroup;
+            public bool TintName;
+            public bool TintTexture;
+            public bool TintColor;
+            public bool TintIntensity;
             #endregion
 
             #region Ctors
@@ -484,12 +480,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Type = defaultOn;
-                this.Group = defaultOn;
-                this.Name = defaultOn;
-                this.Texture = defaultOn;
-                this.Color = defaultOn;
-                this.Intensity = defaultOn;
+                this.TintType = defaultOn;
+                this.TintGroup = defaultOn;
+                this.TintName = defaultOn;
+                this.TintTexture = defaultOn;
+                this.TintColor = defaultOn;
+                this.TintIntensity = defaultOn;
             }
 
             #endregion
@@ -505,12 +501,12 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Type, null));
-                ret.Add((Group, null));
-                ret.Add((Name, null));
-                ret.Add((Texture, null));
-                ret.Add((Color, null));
-                ret.Add((Intensity, null));
+                ret.Add((TintType, null));
+                ret.Add((TintGroup, null));
+                ret.Add((TintName, null));
+                ret.Add((TintTexture, null));
+                ret.Add((TintColor, null));
+                ret.Add((TintIntensity, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -581,25 +577,20 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface INpcTint :
         ILoquiObjectSetter<INpcTint>,
-        INamedRequired,
         INpcTintGetter
     {
-        new TintType Type { get; set; }
-        new String Group { get; set; }
-        /// <summary>
-        /// Aspects: INamedRequired
-        /// </summary>
-        new String Name { get; set; }
-        new String Texture { get; set; }
-        new Color Color { get; set; }
-        new UInt32 Intensity { get; set; }
+        new TintType TintType { get; set; }
+        new String TintGroup { get; set; }
+        new String TintName { get; set; }
+        new String TintTexture { get; set; }
+        new Color TintColor { get; set; }
+        new UInt32 TintIntensity { get; set; }
     }
 
     public partial interface INpcTintGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<INpcTintGetter>,
-        INamedRequiredGetter
+        ILoquiObject<INpcTintGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -608,17 +599,12 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NpcTint_Registration.Instance;
-        TintType Type { get; }
-        String Group { get; }
-        #region Name
-        /// <summary>
-        /// Aspects: INamedRequiredGetter
-        /// </summary>
-        String Name { get; }
-        #endregion
-        String Texture { get; }
-        Color Color { get; }
-        UInt32 Intensity { get; }
+        TintType TintType { get; }
+        String TintGroup { get; }
+        String TintName { get; }
+        String TintTexture { get; }
+        Color TintColor { get; }
+        UInt32 TintIntensity { get; }
 
     }
 
@@ -788,12 +774,12 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum NpcTint_FieldIndex
     {
-        Type = 0,
-        Group = 1,
-        Name = 2,
-        Texture = 3,
-        Color = 4,
-        Intensity = 5,
+        TintType = 0,
+        TintGroup = 1,
+        TintName = 2,
+        TintTexture = 3,
+        TintColor = 4,
+        TintIntensity = 5,
     }
     #endregion
 
@@ -886,12 +872,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcTint item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Group = string.Empty;
-            item.Name = string.Empty;
-            item.Texture = string.Empty;
-            item.Color = default;
-            item.Intensity = default;
+            item.TintType = default;
+            item.TintGroup = string.Empty;
+            item.TintName = string.Empty;
+            item.TintTexture = string.Empty;
+            item.TintColor = default;
+            item.TintIntensity = default;
         }
         
         #region Mutagen
@@ -941,12 +927,12 @@ namespace Mutagen.Bethesda.Starfield
             NpcTint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Type = item.Type == rhs.Type;
-            ret.Group = string.Equals(item.Group, rhs.Group);
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Texture = string.Equals(item.Texture, rhs.Texture);
-            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.Intensity = item.Intensity == rhs.Intensity;
+            ret.TintType = item.TintType == rhs.TintType;
+            ret.TintGroup = string.Equals(item.TintGroup, rhs.TintGroup);
+            ret.TintName = string.Equals(item.TintName, rhs.TintName);
+            ret.TintTexture = string.Equals(item.TintTexture, rhs.TintTexture);
+            ret.TintColor = item.TintColor.ColorOnlyEquals(rhs.TintColor);
+            ret.TintIntensity = item.TintIntensity == rhs.TintIntensity;
         }
         
         public string Print(
@@ -991,29 +977,29 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             NpcTint.Mask<bool>? printMask = null)
         {
-            if (printMask?.Type ?? true)
+            if (printMask?.TintType ?? true)
             {
-                sb.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.TintType, "TintType");
             }
-            if (printMask?.Group ?? true)
+            if (printMask?.TintGroup ?? true)
             {
-                sb.AppendItem(item.Group, "Group");
+                sb.AppendItem(item.TintGroup, "TintGroup");
             }
-            if (printMask?.Name ?? true)
+            if (printMask?.TintName ?? true)
             {
-                sb.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.TintName, "TintName");
             }
-            if (printMask?.Texture ?? true)
+            if (printMask?.TintTexture ?? true)
             {
-                sb.AppendItem(item.Texture, "Texture");
+                sb.AppendItem(item.TintTexture, "TintTexture");
             }
-            if (printMask?.Color ?? true)
+            if (printMask?.TintColor ?? true)
             {
-                sb.AppendItem(item.Color, "Color");
+                sb.AppendItem(item.TintColor, "TintColor");
             }
-            if (printMask?.Intensity ?? true)
+            if (printMask?.TintIntensity ?? true)
             {
-                sb.AppendItem(item.Intensity, "Intensity");
+                sb.AppendItem(item.TintIntensity, "TintIntensity");
             }
         }
         
@@ -1024,29 +1010,29 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintType) ?? true))
             {
-                if (lhs.Type != rhs.Type) return false;
+                if (lhs.TintType != rhs.TintType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Group) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintGroup) ?? true))
             {
-                if (!string.Equals(lhs.Group, rhs.Group)) return false;
+                if (!string.Equals(lhs.TintGroup, rhs.TintGroup)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintName) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!string.Equals(lhs.TintName, rhs.TintName)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Texture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintTexture) ?? true))
             {
-                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+                if (!string.Equals(lhs.TintTexture, rhs.TintTexture)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintColor) ?? true))
             {
-                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+                if (!lhs.TintColor.ColorOnlyEquals(rhs.TintColor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Intensity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintIntensity) ?? true))
             {
-                if (lhs.Intensity != rhs.Intensity) return false;
+                if (lhs.TintIntensity != rhs.TintIntensity) return false;
             }
             return true;
         }
@@ -1054,12 +1040,12 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(INpcTintGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Type);
-            hash.Add(item.Group);
-            hash.Add(item.Name);
-            hash.Add(item.Texture);
-            hash.Add(item.Color);
-            hash.Add(item.Intensity);
+            hash.Add(item.TintType);
+            hash.Add(item.TintGroup);
+            hash.Add(item.TintName);
+            hash.Add(item.TintTexture);
+            hash.Add(item.TintColor);
+            hash.Add(item.TintIntensity);
             return hash.ToHashCode();
         }
         
@@ -1092,29 +1078,29 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintType) ?? true))
             {
-                item.Type = rhs.Type;
+                item.TintType = rhs.TintType;
             }
-            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Group) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintGroup) ?? true))
             {
-                item.Group = rhs.Group;
+                item.TintGroup = rhs.TintGroup;
             }
-            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintName) ?? true))
             {
-                item.Name = rhs.Name;
+                item.TintName = rhs.TintName;
             }
-            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Texture) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintTexture) ?? true))
             {
-                item.Texture = rhs.Texture;
+                item.TintTexture = rhs.TintTexture;
             }
-            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Color) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintColor) ?? true))
             {
-                item.Color = rhs.Color;
+                item.TintColor = rhs.TintColor;
             }
-            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.Intensity) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcTint_FieldIndex.TintIntensity) ?? true))
             {
-                item.Intensity = rhs.Intensity;
+                item.TintIntensity = rhs.TintIntensity;
             }
         }
         
@@ -1215,31 +1201,31 @@ namespace Mutagen.Bethesda.Starfield
         {
             EnumBinaryTranslation<TintType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.Type,
+                item.TintType,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM));
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Group,
+                item: item.TintGroup,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Name,
+                item: item.TintName,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Texture,
+                item: item.TintTexture,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM),
                 binaryType: StringBinaryType.NullTerminate);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Color,
+                item: item.TintColor,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Intensity,
+                item: item.TintIntensity,
                 header: translationParams.ConvertToCustom(RecordTypes.INTV));
         }
 
@@ -1285,48 +1271,48 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.MNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)NpcTint_FieldIndex.Type, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcTint_FieldIndex.TintType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<TintType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.TintType = EnumBinaryTranslation<TintType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
-                    return (int)NpcTint_FieldIndex.Type;
+                    return (int)NpcTint_FieldIndex.TintType;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Group = StringBinaryTranslation.Instance.Parse(
+                    item.TintGroup = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)NpcTint_FieldIndex.Group;
+                    return (int)NpcTint_FieldIndex.TintGroup;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = StringBinaryTranslation.Instance.Parse(
+                    item.TintName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)NpcTint_FieldIndex.Name;
+                    return (int)NpcTint_FieldIndex.TintName;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Texture = StringBinaryTranslation.Instance.Parse(
+                    item.TintTexture = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)NpcTint_FieldIndex.Texture;
+                    return (int)NpcTint_FieldIndex.TintTexture;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-                    return (int)NpcTint_FieldIndex.Color;
+                    item.TintColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)NpcTint_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Intensity = frame.ReadUInt32();
-                    return (int)NpcTint_FieldIndex.Intensity;
+                    item.TintIntensity = frame.ReadUInt32();
+                    return (int)NpcTint_FieldIndex.TintIntensity;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1396,29 +1382,29 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region Type
-        private int? _TypeLocation;
-        public TintType Type => _TypeLocation.HasValue ? (TintType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(TintType);
+        #region TintType
+        private int? _TintTypeLocation;
+        public TintType TintType => _TintTypeLocation.HasValue ? (TintType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintTypeLocation!.Value, _package.MetaData.Constants)) : default(TintType);
         #endregion
-        #region Group
-        private int? _GroupLocation;
-        public String Group => _GroupLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GroupLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #region TintGroup
+        private int? _TintGroupLocation;
+        public String TintGroup => _TintGroupLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintGroupLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        #region Name
-        private int? _NameLocation;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #region TintName
+        private int? _TintNameLocation;
+        public String TintName => _TintNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        #region Texture
-        private int? _TextureLocation;
-        public String Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #region TintTexture
+        private int? _TintTextureLocation;
+        public String TintTexture => _TintTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        #region Color
-        private int? _ColorLocation;
-        public Color Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        #region TintColor
+        private int? _TintColorLocation;
+        public Color TintColor => _TintColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
-        #region Intensity
-        private int? _IntensityLocation;
-        public UInt32 Intensity => _IntensityLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntensityLocation.Value, _package.MetaData.Constants)) : default;
+        #region TintIntensity
+        private int? _TintIntensityLocation;
+        public UInt32 TintIntensity => _TintIntensityLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintIntensityLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1485,34 +1471,34 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.MNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)NpcTint_FieldIndex.Type, translationParams)) return ParseResult.Stop;
-                    _TypeLocation = (stream.Position - offset);
-                    return (int)NpcTint_FieldIndex.Type;
+                    if (lastParsed.ShortCircuit((int)NpcTint_FieldIndex.TintType, translationParams)) return ParseResult.Stop;
+                    _TintTypeLocation = (stream.Position - offset);
+                    return (int)NpcTint_FieldIndex.TintType;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _GroupLocation = (stream.Position - offset);
-                    return (int)NpcTint_FieldIndex.Group;
+                    _TintGroupLocation = (stream.Position - offset);
+                    return (int)NpcTint_FieldIndex.TintGroup;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _NameLocation = (stream.Position - offset);
-                    return (int)NpcTint_FieldIndex.Name;
+                    _TintNameLocation = (stream.Position - offset);
+                    return (int)NpcTint_FieldIndex.TintName;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _TextureLocation = (stream.Position - offset);
-                    return (int)NpcTint_FieldIndex.Texture;
+                    _TintTextureLocation = (stream.Position - offset);
+                    return (int)NpcTint_FieldIndex.TintTexture;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _ColorLocation = (stream.Position - offset);
-                    return (int)NpcTint_FieldIndex.Color;
+                    _TintColorLocation = (stream.Position - offset);
+                    return (int)NpcTint_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    _IntensityLocation = (stream.Position - offset);
-                    return (int)NpcTint_FieldIndex.Intensity;
+                    _TintIntensityLocation = (stream.Position - offset);
+                    return (int)NpcTint_FieldIndex.TintIntensity;
                 }
                 default:
                     return ParseResult.Stop;

@@ -253,12 +253,12 @@
   </Object>
   <Object name="NpcTint" objType="Subrecord">
     <Fields>
-      <Enum name="Type" enumName="TintType" recordType="MNAM" nullable="false" />
-      <String name="Group" recordType="TNAM" nullable="false" />
-      <String name="Name" recordType="QNAM" nullable="false" />
-      <String name="Texture" recordType="VNAM" nullable="false" />
-      <Color name="Color" recordType="NNAM" nullable="false" />
-      <UInt32 name="Intensity" recordType="INTV" nullable="false" />
+      <Enum name="TintType" enumName="TintType" recordType="MNAM" nullable="false" />
+      <String name="TintGroup" recordType="TNAM" nullable="false" />
+      <String name="TintName" recordType="QNAM" nullable="false" />
+      <String name="TintTexture" recordType="VNAM" nullable="false" />
+      <Color name="TintColor" recordType="NNAM" nullable="false" />
+      <UInt32 name="TintIntensity" recordType="INTV" nullable="false" />
     </Fields>
   </Object>
   <Object name="NpcBodyMorphRegionValues" objType="Subrecord">
