@@ -2797,7 +2797,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ANAM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)SoundDescriptor_FieldIndex.SoundFiles;
@@ -2843,7 +2843,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.DNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)SoundDescriptor_FieldIndex.Descriptors;

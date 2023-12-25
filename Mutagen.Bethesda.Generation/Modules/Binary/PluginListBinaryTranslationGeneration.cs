@@ -911,7 +911,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                             {
                                 subArgs.AddPassArg("stream");
                                 subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
-                                subArgs.Add("trigger: type");
+                                subArgs.Add($"trigger: {list.SubTypeGeneration.GetFieldData().TriggeringRecordAccessor}");
                                 subArgs.Add("skipHeader: true");
                                 subArgs.Add($"translationParams: {converterAccessor}");
                             }
@@ -933,7 +933,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                             {
                                 subArgs.AddPassArg("stream");
                                 subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
-                                subArgs.Add("trigger: type");
+                                subArgs.Add($"trigger: {list.SubTypeGeneration.GetFieldData().TriggeringRecordAccessor}");
                                 subArgs.Add("skipHeader: false");
                                 subArgs.Add($"translationParams: {converterAccessor}");
                             }

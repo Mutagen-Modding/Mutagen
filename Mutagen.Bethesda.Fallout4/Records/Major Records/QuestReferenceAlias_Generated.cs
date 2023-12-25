@@ -4416,7 +4416,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALSP,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestReferenceAlias_FieldIndex.Spells;
@@ -4430,7 +4430,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALFC,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestReferenceAlias_FieldIndex.Factions;
@@ -4444,7 +4444,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALPC,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestReferenceAlias_FieldIndex.PackageData;

@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.LNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)FormList_FieldIndex.Items;

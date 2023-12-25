@@ -1480,7 +1480,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.DATA,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.DATAs;

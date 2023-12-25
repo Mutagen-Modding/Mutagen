@@ -8815,7 +8815,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.MTNM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.MovementTypeNames;
@@ -8975,7 +8975,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.QNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.EquipmentSlots;

@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.BNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)DialogView_FieldIndex.Branches;
@@ -2040,7 +2040,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TNAM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)DialogView_FieldIndex.TNAMs;

@@ -4121,7 +4121,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALSP,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Spells;
@@ -4135,7 +4135,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALFC,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Factions;
@@ -4149,7 +4149,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.ALPC,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.PackageData;

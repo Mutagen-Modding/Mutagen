@@ -5276,7 +5276,7 @@ namespace Mutagen.Bethesda.Fallout4
                             locs: ParseRecordLocations(
                                 stream: stream,
                                 constants: _package.MetaData.Constants.SubConstants,
-                                trigger: type,
+                                trigger: RecordTypes.PNAM,
                                 skipHeader: true,
                                 translationParams: translationParams));
                         return new ParseResult((int)SceneAction_FieldIndex.Packages, type);
@@ -5299,7 +5299,7 @@ namespace Mutagen.Bethesda.Fallout4
                                     locs: ParseRecordLocations(
                                         stream: stream,
                                         constants: _package.MetaData.Constants.SubConstants,
-                                        trigger: type,
+                                        trigger: RecordTypes.PNAM,
                                         skipHeader: true,
                                         translationParams: translationParams));
                                 return new ParseResult((int)SceneAction_FieldIndex.Packages, type);

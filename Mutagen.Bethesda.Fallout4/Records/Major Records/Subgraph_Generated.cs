@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SAKD,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Subgraph_FieldIndex.ActorKeywords;
@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.STKD,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Subgraph_FieldIndex.TargetKeywords;
@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SAPT,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)Subgraph_FieldIndex.AnimationPaths;

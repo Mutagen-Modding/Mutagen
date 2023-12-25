@@ -7436,7 +7436,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.XLTW,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)PlacedObject_FieldIndex.LitWater;

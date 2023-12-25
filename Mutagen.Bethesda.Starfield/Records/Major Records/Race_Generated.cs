@@ -5877,7 +5877,7 @@ namespace Mutagen.Bethesda.Starfield
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SPLO,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.ActorEffect;
@@ -6027,7 +6027,7 @@ namespace Mutagen.Bethesda.Starfield
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.MTNM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.MovementTypeNames;

@@ -4103,7 +4103,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SPLO,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.Spells;
@@ -4142,7 +4142,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PKID,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.AIPackages;

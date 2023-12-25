@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PKC2,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)PackageBranch_FieldIndex.DataInputIndices;
@@ -2250,7 +2250,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PFOR,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)PackageBranch_FieldIndex.Unknown;

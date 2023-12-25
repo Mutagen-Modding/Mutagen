@@ -10389,7 +10389,7 @@ namespace Mutagen.Bethesda.Starfield
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.SPLO,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.ActorEffect;
@@ -10478,7 +10478,7 @@ namespace Mutagen.Bethesda.Starfield
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PKID,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.Packages;
@@ -10582,7 +10582,7 @@ namespace Mutagen.Bethesda.Starfield
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.PNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Npc_FieldIndex.HeadParts;

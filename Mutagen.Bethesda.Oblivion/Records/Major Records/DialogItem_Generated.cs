@@ -2790,7 +2790,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.NAME,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.Topics;
@@ -2831,7 +2831,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TCLT,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.Choices;
@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Oblivion
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TCLF,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.LinkFrom;

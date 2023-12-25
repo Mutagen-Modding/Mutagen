@@ -8604,7 +8604,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Weather_FieldIndex.SkyStatics;

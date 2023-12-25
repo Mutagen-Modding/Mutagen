@@ -2765,7 +2765,7 @@ namespace Mutagen.Bethesda.Starfield
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.RNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Perk_FieldIndex.BackgroundSkills;

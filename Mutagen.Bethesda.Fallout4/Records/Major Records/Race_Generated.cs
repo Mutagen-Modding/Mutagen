@@ -9894,7 +9894,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.MTNM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)Race_FieldIndex.MovementTypeNames;

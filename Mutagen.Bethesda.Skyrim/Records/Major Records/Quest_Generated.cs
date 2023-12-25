@@ -3555,7 +3555,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.QTGL,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Quest_FieldIndex.TextDisplayGlobals;

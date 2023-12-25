@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.MPGM,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)MorphGroup_FieldIndex.Morphs;

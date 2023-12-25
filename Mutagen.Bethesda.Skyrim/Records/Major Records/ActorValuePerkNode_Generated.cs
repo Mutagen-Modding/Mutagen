@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.CNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices;

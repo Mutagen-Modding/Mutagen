@@ -2676,7 +2676,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.HNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)HeadPart_FieldIndex.ExtraParts;

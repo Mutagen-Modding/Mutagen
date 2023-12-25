@@ -3245,7 +3245,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TCLT,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)DialogResponses_FieldIndex.LinkTo;

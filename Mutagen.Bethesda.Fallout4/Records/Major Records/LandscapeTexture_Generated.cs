@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.GNAM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)LandscapeTexture_FieldIndex.Grasses;

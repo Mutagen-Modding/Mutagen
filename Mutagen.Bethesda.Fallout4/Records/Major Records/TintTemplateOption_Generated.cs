@@ -2163,7 +2163,7 @@ namespace Mutagen.Bethesda.Fallout4
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.TTET,
                             skipHeader: false,
                             translationParams: translationParams));
                     return (int)TintTemplateOption_FieldIndex.Textures;

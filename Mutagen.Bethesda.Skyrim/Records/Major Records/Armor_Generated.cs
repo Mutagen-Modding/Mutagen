@@ -3936,7 +3936,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.MODL,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)Armor_FieldIndex.Armature;

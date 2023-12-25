@@ -2428,7 +2428,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.RPRM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)HeadData_FieldIndex.RacePresets;
@@ -2443,7 +2443,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.AHCM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)HeadData_FieldIndex.AvailableHairColors;
@@ -2458,7 +2458,7 @@ namespace Mutagen.Bethesda.Skyrim
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
-                            trigger: type,
+                            trigger: RecordTypes.FTSM,
                             skipHeader: true,
                             translationParams: translationParams));
                     return (int)HeadData_FieldIndex.FaceDetails;
