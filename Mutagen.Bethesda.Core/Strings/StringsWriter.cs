@@ -165,7 +165,7 @@ public sealed class StringsWriter : IDisposable
                         break;
                     case StringsSource.IL:
                     case StringsSource.DL:
-                        writer.Write(item.String.Length + 1);
+                        writer.Write(encoding.GetByteCount(item.String) + 1);
                         writer.Write(item.String, StringBinaryType.NullTerminate, encoding);
                         break;
                     default:
