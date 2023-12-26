@@ -108,6 +108,39 @@ public static class RecordSpanExtensions
     }
 
     /// <summary>
+    /// Parses span data and locates all uninterrupted repeating instances of target record type
+    /// 
+    /// It is assumed the span contains only subrecords
+    /// </summary>
+    /// <param name="span">Bytes containing subrecords</param>
+    /// <param name="meta">Metadata to use in subrecord parsing</param>
+    /// <param name="recordType">Repeating type to locate</param>
+    /// <param name="offset">Location in the source span to begin looking</param>
+    /// <param name="lenParsed">The amount of data located subrecords cover</param>
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static IReadOnlyList<SubrecordPinFrame> ParseRepeatingSubrecord(
+        ReadOnlyMemorySlice<byte> span, 
+        GameConstants meta,
+        RecordType recordType, 
+        int offset,
+        out int lenParsed)
+    {
+        lenParsed = offset;
+        
+        List<SubrecordPinFrame> list = new List<SubrecordPinFrame>();
+        while (span.Length > lenParsed)
+        {
+            var subMeta = meta.SubrecordHeader(span.Slice(lenParsed));
+            if (subMeta.RecordType != recordType) break;
+            list.Add(new SubrecordPinFrame(meta, span.Slice(lenParsed), lenParsed));
+            lenParsed += subMeta.TotalLength;
+        }
+
+        lenParsed -= offset;
+        return list;
+    }
+
+    /// <summary>
     /// Locates the first encountered instances of all given subrecord types, and returns an array of SubrecordPinFrames
     /// of the ones located.<br/>
     /// <br/>

@@ -1,7 +1,7 @@
-using Mutagen.Bethesda.Plugins.Binary.Streams;
-using static Mutagen.Bethesda.Fallout4.PackageScriptFragmentsBinaryCreateTranslation;
+﻿using Mutagen.Bethesda.Plugins.Binary.Streams;
+using static Mutagen.Bethesda.Starfield.PackageScriptFragmentsBinaryCreateTranslation;
 
-namespace Mutagen.Bethesda.Fallout4;
+namespace Mutagen.Bethesda.Starfield;
 
 partial class PackageScriptFragmentsBinaryCreateTranslation
 {

@@ -2036,6 +2036,12 @@
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\APackageData.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageTarget.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\APerkEffect.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
@@ -2209,6 +2215,51 @@
     </Compile>
     <Compile Include="Records\Major Records\ObjectModification.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Package.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageAdapter.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageBranch.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataBool.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataFloat.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataInt.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataLocation.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataObjectList.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataScene.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataTarget.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataTopic.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageEvent.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageIdles.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageRoot.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageScriptFragments.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PcLevelMult.cs">
       <DependentUpon>Npc.xml</DependentUpon>
@@ -6053,6 +6104,84 @@
     </Compile>
     <Compile Include="Records\Major Records\ArmorAddonMorph_Generated.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageAdapter_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageScriptFragments_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageIdles_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageData_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataBool_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataInt_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataFloat_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataObjectList_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataLocation_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataTarget_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataTopic_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageTarget_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetSpecificReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetObjectID_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetObjectType_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetAlias_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetInterruptData_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetSelf_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetKeyword_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetUnknown_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDataScene_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageBranch_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageFlagsOverride_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageRoot_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageEvent_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
