@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Starfield.Internals;
 using Noggog;
 
@@ -52,16 +53,20 @@ partial class TraversalReferenceBinaryCreateTranslation
     }
  
     public static ExtendedList<TraversalReference> Parse( 
-        MutagenFrame reader)
+        MutagenFrame reader,
+        out uint fluffBytes)
     {
+        fluffBytes = 0;
         var ret = new ExtendedList<TraversalReference>(); 
         while (!reader.Complete) 
         {
+            var remaining = checked((uint)reader.Remaining);
             try
             {
                 if (!TraversalReference.TryCreateFromBinary(reader, out var subItem)
                     || Zeroed.Equals(subItem, _equalsMask))
                 {
+                    fluffBytes = remaining;
                     reader.SkipRemainingBytes();
                     break;
                 } 
@@ -71,6 +76,7 @@ partial class TraversalReferenceBinaryCreateTranslation
             catch (ArgumentOutOfRangeException)
             {
                 // Expected to occur within Starfield.esm, due to fluff bytes of unknown length
+                fluffBytes = remaining;
                 reader.SkipRemainingBytes();
                 break;
             }
@@ -97,6 +103,44 @@ partial class TraversalReferenceBinaryWriteTranslation
         }
         writer.Write(item.Unknown);
     }
+
+    public static void TraversalsListWriterHelper(
+        MutagenWriter writer,
+        IReadOnlyList<ITraversalReferenceGetter>? items,
+        uint numTraversalFluffBytes)
+    {
+        if (items == null) return; 
+        try 
+        { 
+            try 
+            { 
+                using (HeaderExport.Subrecord( 
+                           writer, 
+                           RecordTypes.XTV2,  
+                           overflowRecord: RecordTypes.XXXX, 
+                           out var writerToUse)) 
+                { 
+                    foreach (var item in items) 
+                    { 
+                        ((TraversalReferenceBinaryWriteTranslation)((IBinaryItem)item).BinaryWriteTranslator).Write(
+                            item: item,
+                            writer: writerToUse);
+                    } 
+                    writerToUse.WriteZeros(numTraversalFluffBytes);
+                } 
+            } 
+            catch (OverflowException overflow) 
+            { 
+                throw new OverflowException( 
+                    $"Cell traversals had an overflow with {items?.Count} items.", 
+                    overflow); 
+            } 
+        } 
+        catch (Exception ex) 
+        { 
+            throw SubrecordException.Enrich(ex, RecordTypes.XTV2); 
+        }
+    }
 }
 
 partial class TraversalReferenceBinaryOverlay
@@ -121,7 +165,8 @@ partial class TraversalReferenceBinaryOverlay
 
     public static IReadOnlyList<ITraversalReferenceGetter> Factory(
         OverlayStream stream, BinaryOverlayFactoryPackage package,
-        long finalPos, int offset, PreviousParse lastParsed)
+        long finalPos, int offset, PreviousParse lastParsed,
+        out uint fluffBytes)
     {
         stream.ReadSubrecordHeader(RecordTypes.XTV2);
         return BinaryOverlayList.FactoryByArray(
@@ -131,22 +176,29 @@ partial class TraversalReferenceBinaryOverlay
             {
                 return TraversalReferenceFactory(s, p);
             },
-            locs: GetLocs(stream, package, finalPos, offset, lastParsed));
+            locs: GetLocs(stream, package, finalPos, offset, lastParsed, out fluffBytes));
     }
 
     public static IReadOnlyList<int> GetLocs(
         OverlayStream stream, BinaryOverlayFactoryPackage package,
-        long finalPos, int offset, PreviousParse lastParsed)
+        long finalPos, int offset, PreviousParse lastParsed,
+        out uint fluffBytes)
     {
         List<int> locs = new();
         var startingPos = stream.Position;
+        fluffBytes = 0;
         while (stream.Position < finalPos)
         {
+            var remaining = checked((uint)(finalPos - stream.Position));
             try
             {
                 var itemPos = stream.Position;
                 var bytes = stream.ReadMemory(0x10);
-                if (bytes.All(b => b == 0)) break;
+                if (bytes.All(b => b == 0))
+                {
+                    fluffBytes = remaining;
+                    break;
+                }
                 locs.Add(itemPos - startingPos);
                 stream.Position += 0x18;
                 var flags = stream.ReadInt32();
@@ -162,7 +214,8 @@ partial class TraversalReferenceBinaryOverlay
             catch (ArgumentOutOfRangeException)
             {
                 // Expected to occur within Starfield.esm, due to fluff bytes of unknown length
-                stream.Position += checked((int)stream.Remaining);
+                fluffBytes = remaining;
+                stream.Position += checked((int)remaining);
                 break;
             }
         }

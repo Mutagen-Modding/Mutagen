@@ -718,6 +718,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region NumTraversalFluffBytes
+        public UInt32 NumTraversalFluffBytes { get; set; } = default;
+        #endregion
         #region NavigationDoorLink
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NavigationDoorLink? _NavigationDoorLink;
@@ -843,6 +846,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.TimeOfDay = initialValue;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.NumTraversalFluffBytes = initialValue;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
                 this.IsActivationPoint = initialValue;
                 this.Scale = initialValue;
@@ -927,6 +931,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem TimeOfDay,
                 TItem EnableParent,
                 TItem Traversals,
+                TItem NumTraversalFluffBytes,
                 TItem NavigationDoorLink,
                 TItem IsActivationPoint,
                 TItem Scale,
@@ -1010,6 +1015,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.TimeOfDay = TimeOfDay;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.NumTraversalFluffBytes = NumTraversalFluffBytes;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
                 this.IsActivationPoint = IsActivationPoint;
                 this.Scale = Scale;
@@ -1095,6 +1101,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem TimeOfDay;
             public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>? Traversals;
+            public TItem NumTraversalFluffBytes;
             public MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>? NavigationDoorLink { get; set; }
             public TItem IsActivationPoint;
             public TItem Scale;
@@ -1182,6 +1189,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.TimeOfDay, rhs.TimeOfDay)) return false;
                 if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
                 if (!object.Equals(this.Traversals, rhs.Traversals)) return false;
+                if (!object.Equals(this.NumTraversalFluffBytes, rhs.NumTraversalFluffBytes)) return false;
                 if (!object.Equals(this.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
                 if (!object.Equals(this.IsActivationPoint, rhs.IsActivationPoint)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
@@ -1261,6 +1269,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.TimeOfDay);
                 hash.Add(this.EnableParent);
                 hash.Add(this.Traversals);
+                hash.Add(this.NumTraversalFluffBytes);
                 hash.Add(this.NavigationDoorLink);
                 hash.Add(this.IsActivationPoint);
                 hash.Add(this.Scale);
@@ -1555,6 +1564,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.NumTraversalFluffBytes)) return false;
                 if (NavigationDoorLink != null)
                 {
                     if (!eval(this.NavigationDoorLink.Overall)) return false;
@@ -1851,6 +1861,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.NumTraversalFluffBytes)) return true;
                 if (NavigationDoorLink != null)
                 {
                     if (eval(this.NavigationDoorLink.Overall)) return true;
@@ -2095,6 +2106,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.NumTraversalFluffBytes = eval(this.NumTraversalFluffBytes);
                 obj.NavigationDoorLink = this.NavigationDoorLink == null ? null : new MaskItem<R, NavigationDoorLink.Mask<R>?>(eval(this.NavigationDoorLink.Overall), this.NavigationDoorLink.Specific?.Translate(eval));
                 obj.IsActivationPoint = eval(this.IsActivationPoint);
                 obj.Scale = eval(this.Scale);
@@ -2559,6 +2571,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.NumTraversalFluffBytes ?? true)
+                    {
+                        sb.AppendItem(NumTraversalFluffBytes, "NumTraversalFluffBytes");
+                    }
                     if (printMask?.NavigationDoorLink?.Overall ?? true)
                     {
                         NavigationDoorLink?.Print(sb);
@@ -2665,6 +2681,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? TimeOfDay;
             public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>? Traversals;
+            public Exception? NumTraversalFluffBytes;
             public MaskItem<Exception?, NavigationDoorLink.ErrorMask?>? NavigationDoorLink;
             public Exception? IsActivationPoint;
             public Exception? Scale;
@@ -2814,6 +2831,8 @@ namespace Mutagen.Bethesda.Starfield
                         return EnableParent;
                     case PlacedObject_FieldIndex.Traversals:
                         return Traversals;
+                    case PlacedObject_FieldIndex.NumTraversalFluffBytes:
+                        return NumTraversalFluffBytes;
                     case PlacedObject_FieldIndex.NavigationDoorLink:
                         return NavigationDoorLink;
                     case PlacedObject_FieldIndex.IsActivationPoint:
@@ -3038,6 +3057,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.Traversals:
                         this.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.NumTraversalFluffBytes:
+                        this.NumTraversalFluffBytes = ex;
                         break;
                     case PlacedObject_FieldIndex.NavigationDoorLink:
                         this.NavigationDoorLink = new MaskItem<Exception?, NavigationDoorLink.ErrorMask?>(ex, null);
@@ -3272,6 +3294,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.Traversals:
                         this.Traversals = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>)obj;
                         break;
+                    case PlacedObject_FieldIndex.NumTraversalFluffBytes:
+                        this.NumTraversalFluffBytes = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.NavigationDoorLink:
                         this.NavigationDoorLink = (MaskItem<Exception?, NavigationDoorLink.ErrorMask?>?)obj;
                         break;
@@ -3369,6 +3394,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (TimeOfDay != null) return true;
                 if (EnableParent != null) return true;
                 if (Traversals != null) return true;
+                if (NumTraversalFluffBytes != null) return true;
                 if (NavigationDoorLink != null) return true;
                 if (IsActivationPoint != null) return true;
                 if (Scale != null) return true;
@@ -3728,6 +3754,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(NumTraversalFluffBytes, "NumTraversalFluffBytes");
+                }
                 NavigationDoorLink?.Print(sb);
                 {
                     sb.AppendItem(IsActivationPoint, "IsActivationPoint");
@@ -3822,6 +3851,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.TimeOfDay = this.TimeOfDay.Combine(rhs.TimeOfDay);
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
                 ret.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Traversals?.Overall, rhs.Traversals?.Overall), Noggog.ExceptionExt.Combine(this.Traversals?.Specific, rhs.Traversals?.Specific));
+                ret.NumTraversalFluffBytes = this.NumTraversalFluffBytes.Combine(rhs.NumTraversalFluffBytes);
                 ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
                 ret.IsActivationPoint = this.IsActivationPoint.Combine(rhs.IsActivationPoint);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
@@ -3918,6 +3948,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool TimeOfDay;
             public EnableParent.TranslationMask? EnableParent;
             public TraversalReference.TranslationMask? Traversals;
+            public bool NumTraversalFluffBytes;
             public NavigationDoorLink.TranslationMask? NavigationDoorLink;
             public bool IsActivationPoint;
             public bool Scale;
@@ -3969,6 +4000,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RagdollBipedRotation = defaultOn;
                 this.HealthPercent = defaultOn;
                 this.TimeOfDay = defaultOn;
+                this.NumTraversalFluffBytes = defaultOn;
                 this.IsActivationPoint = defaultOn;
                 this.Scale = defaultOn;
                 this.OpenByDefault = defaultOn;
@@ -4049,6 +4081,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((TimeOfDay, null));
                 ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((Traversals == null ? DefaultOn : !Traversals.GetCrystal().CopyNothing, Traversals?.GetCrystal()));
+                ret.Add((NumTraversalFluffBytes, null));
                 ret.Add((NavigationDoorLink != null ? NavigationDoorLink.OnOverall : DefaultOn, NavigationDoorLink?.GetCrystal()));
                 ret.Add((IsActivationPoint, null));
                 ret.Add((Scale, null));
@@ -4285,6 +4318,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<ITimeOfDayDataGetter> TimeOfDay { get; set; }
         new EnableParent? EnableParent { get; set; }
         new ExtendedList<TraversalReference>? Traversals { get; set; }
+        new UInt32 NumTraversalFluffBytes { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
         new Boolean IsActivationPoint { get; set; }
         new Single? Scale { get; set; }
@@ -4391,6 +4425,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ITimeOfDayDataGetter> TimeOfDay { get; }
         IEnableParentGetter? EnableParent { get; }
         IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; }
+        UInt32 NumTraversalFluffBytes { get; }
         INavigationDoorLinkGetter? NavigationDoorLink { get; }
         Boolean IsActivationPoint { get; }
         Single? Scale { get; }
@@ -4641,13 +4676,14 @@ namespace Mutagen.Bethesda.Starfield
         TimeOfDay = 71,
         EnableParent = 72,
         Traversals = 73,
-        NavigationDoorLink = 74,
-        IsActivationPoint = 75,
-        Scale = 76,
-        OpenByDefault = 77,
-        Position = 78,
-        Rotation = 79,
-        Comments = 80,
+        NumTraversalFluffBytes = 74,
+        NavigationDoorLink = 75,
+        IsActivationPoint = 76,
+        Scale = 77,
+        OpenByDefault = 78,
+        Position = 79,
+        Rotation = 80,
+        Comments = 81,
     }
     #endregion
 
@@ -4658,9 +4694,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 74;
+        public const ushort AdditionalFieldCount = 75;
 
-        public const ushort FieldCount = 81;
+        public const ushort FieldCount = 82;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -4878,6 +4914,7 @@ namespace Mutagen.Bethesda.Starfield
             item.TimeOfDay.Clear();
             item.EnableParent = null;
             item.Traversals = null;
+            item.NumTraversalFluffBytes = default;
             item.NavigationDoorLink = null;
             item.IsActivationPoint = default;
             item.Scale = default;
@@ -5215,6 +5252,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Traversals,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.NumTraversalFluffBytes = item.NumTraversalFluffBytes == rhs.NumTraversalFluffBytes;
             ret.NavigationDoorLink = EqualsMaskHelper.EqualsHelper(
                 item.NavigationDoorLink,
                 rhs.NavigationDoorLink,
@@ -5702,6 +5740,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if (printMask?.NumTraversalFluffBytes ?? true)
+            {
+                sb.AppendItem(item.NumTraversalFluffBytes, "NumTraversalFluffBytes");
+            }
             if ((printMask?.NavigationDoorLink?.Overall ?? true)
                 && item.NavigationDoorLink is {} NavigationDoorLinkItem)
             {
@@ -6143,6 +6185,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Traversals.SequenceEqualNullable(rhs.Traversals, (l, r) => ((TraversalReferenceCommon)((ITraversalReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Traversals)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NumTraversalFluffBytes) ?? true))
+            {
+                if (lhs.NumTraversalFluffBytes != rhs.NumTraversalFluffBytes) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NavigationDoorLink, rhs.NavigationDoorLink, out var lhsNavigationDoorLink, out var rhsNavigationDoorLink, out var isNavigationDoorLinkEqual))
@@ -6396,6 +6442,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(EnableParentitem);
             }
             hash.Add(item.Traversals);
+            hash.Add(item.NumTraversalFluffBytes);
             if (item.NavigationDoorLink is {} NavigationDoorLinkitem)
             {
                 hash.Add(NavigationDoorLinkitem);
@@ -7758,6 +7805,10 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NumTraversalFluffBytes) ?? true))
+            {
+                item.NumTraversalFluffBytes = rhs.NumTraversalFluffBytes;
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
             {
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.NavigationDoorLink);
@@ -7955,6 +8006,15 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryWriteTranslator
     {
         public new static readonly PlacedObjectBinaryWriteTranslation Instance = new();
+
+        public static void WriteEmbedded(
+            IPlacedObjectGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
 
         public static void WriteRecordTypes(
             IPlacedObjectGetter item,
@@ -8436,7 +8496,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -8496,6 +8556,15 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REFR;
+        public static void FillBinaryStructs(
+            IPlacedObjectInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IPlacedObjectInternal item,
             MutagenFrame frame,

@@ -169,19 +169,7 @@ partial class PlacedObjectBinaryWriteTranslation
         MutagenWriter writer,
         IPlacedObjectGetter item)
     {
-        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITraversalReferenceGetter>.Instance.Write(
-            writer: writer,
-            items: item.Traversals,
-            recordType: RecordTypes.XTV2,
-            overflowRecord: RecordTypes.XXXX,
-            transl: (MutagenWriter subWriter, ITraversalReferenceGetter subItem, TypedWriteParams conv) =>
-            {
-                var Item = subItem;
-                ((TraversalReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                    item: Item,
-                    writer: subWriter,
-                    translationParams: conv);
-            });
+        TraversalReferenceBinaryWriteTranslation.TraversalsListWriterHelper(writer, item.Traversals, item.NumTraversalFluffBytes);
     }
 }
 
@@ -202,14 +190,16 @@ partial class PlacedObjectBinaryCreateTranslation
         {
             len = sub.ContentLength;
         }
-        item.Traversals = TraversalReferenceBinaryCreateTranslation.Parse(frame.SpawnWithLength(len));
+        item.Traversals = TraversalReferenceBinaryCreateTranslation.Parse(frame.SpawnWithLength(len), out var fluffBytes);
+        item.NumTraversalFluffBytes = fluffBytes;
     }
 }
 
 partial class PlacedObjectBinaryOverlay
 {
     public IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; private set; }
-    
+    public uint NumTraversalFluffBytes { get; private set; }
+
     partial void TraversalsCustomParse(
         OverlayStream stream,
         long finalPos,
@@ -217,6 +207,7 @@ partial class PlacedObjectBinaryOverlay
         RecordType type,
         PreviousParse lastParsed)
     {
-        Traversals = TraversalReferenceBinaryOverlay.Factory(stream, _package, finalPos, offset, lastParsed);
+        Traversals = TraversalReferenceBinaryOverlay.Factory(stream, _package, finalPos, offset, lastParsed, out var fluffBytes);
+        NumTraversalFluffBytes = fluffBytes;
     }
 }

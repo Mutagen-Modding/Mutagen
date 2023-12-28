@@ -471,7 +471,7 @@ public class StarfieldProcessor : Processor
         long fileOffset)
     {
         ZeroXOWNBool(stream, majorFrame, fileOffset);
-        ProcessXTV2(majorFrame, fileOffset);
+        // ProcessXTV2(majorFrame, fileOffset);
     }
 
     private void ZeroXOWNBool(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset)

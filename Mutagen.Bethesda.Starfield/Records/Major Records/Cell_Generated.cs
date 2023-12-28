@@ -362,6 +362,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region NumTraversalFluffBytes
+        public UInt32 NumTraversalFluffBytes { get; set; } = default;
+        #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<NavigationMesh> _NavigationMeshes = new ExtendedList<NavigationMesh>();
@@ -477,6 +480,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.IsLinkedRefTransient = initialValue;
                 this.EnvironmentMap = initialValue;
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.NumTraversalFluffBytes = initialValue;
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
                 this.Timestamp = initialValue;
                 this.UnknownGroupData = initialValue;
@@ -526,6 +530,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem IsLinkedRefTransient,
                 TItem EnvironmentMap,
                 TItem Traversals,
+                TItem NumTraversalFluffBytes,
                 TItem NavigationMeshes,
                 TItem Timestamp,
                 TItem UnknownGroupData,
@@ -574,6 +579,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.IsLinkedRefTransient = IsLinkedRefTransient;
                 this.EnvironmentMap = EnvironmentMap;
                 this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.NumTraversalFluffBytes = NumTraversalFluffBytes;
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
                 this.Timestamp = Timestamp;
                 this.UnknownGroupData = UnknownGroupData;
@@ -624,6 +630,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem IsLinkedRefTransient;
             public TItem EnvironmentMap;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>? Traversals;
+            public TItem NumTraversalFluffBytes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
             public TItem Timestamp;
             public TItem UnknownGroupData;
@@ -676,6 +683,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.IsLinkedRefTransient, rhs.IsLinkedRefTransient)) return false;
                 if (!object.Equals(this.EnvironmentMap, rhs.EnvironmentMap)) return false;
                 if (!object.Equals(this.Traversals, rhs.Traversals)) return false;
+                if (!object.Equals(this.NumTraversalFluffBytes, rhs.NumTraversalFluffBytes)) return false;
                 if (!object.Equals(this.NavigationMeshes, rhs.NavigationMeshes)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.UnknownGroupData, rhs.UnknownGroupData)) return false;
@@ -720,6 +728,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.IsLinkedRefTransient);
                 hash.Add(this.EnvironmentMap);
                 hash.Add(this.Traversals);
+                hash.Add(this.NumTraversalFluffBytes);
                 hash.Add(this.NavigationMeshes);
                 hash.Add(this.Timestamp);
                 hash.Add(this.UnknownGroupData);
@@ -840,6 +849,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.NumTraversalFluffBytes)) return false;
                 if (this.NavigationMeshes != null)
                 {
                     if (!eval(this.NavigationMeshes.Overall)) return false;
@@ -991,6 +1001,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.NumTraversalFluffBytes)) return true;
                 if (this.NavigationMeshes != null)
                 {
                     if (eval(this.NavigationMeshes.Overall)) return true;
@@ -1148,6 +1159,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.NumTraversalFluffBytes = eval(this.NumTraversalFluffBytes);
                 if (NavigationMeshes != null)
                 {
                     obj.NavigationMeshes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>?>(eval(this.NavigationMeshes.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>());
@@ -1414,6 +1426,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.NumTraversalFluffBytes ?? true)
+                    {
+                        sb.AppendItem(NumTraversalFluffBytes, "NumTraversalFluffBytes");
+                    }
                     if ((printMask?.NavigationMeshes?.Overall ?? true)
                         && NavigationMeshes is {} NavigationMeshesItem)
                     {
@@ -1536,6 +1552,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? IsLinkedRefTransient;
             public Exception? EnvironmentMap;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>? Traversals;
+            public Exception? NumTraversalFluffBytes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>? NavigationMeshes;
             public Exception? Timestamp;
             public Exception? UnknownGroupData;
@@ -1613,6 +1630,8 @@ namespace Mutagen.Bethesda.Starfield
                         return EnvironmentMap;
                     case Cell_FieldIndex.Traversals:
                         return Traversals;
+                    case Cell_FieldIndex.NumTraversalFluffBytes:
+                        return NumTraversalFluffBytes;
                     case Cell_FieldIndex.NavigationMeshes:
                         return NavigationMeshes;
                     case Cell_FieldIndex.Timestamp:
@@ -1730,6 +1749,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Cell_FieldIndex.Traversals:
                         this.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.NumTraversalFluffBytes:
+                        this.NumTraversalFluffBytes = ex;
                         break;
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ex, null);
@@ -1859,6 +1881,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Cell_FieldIndex.Traversals:
                         this.Traversals = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>)obj;
                         break;
+                    case Cell_FieldIndex.NumTraversalFluffBytes:
+                        this.NumTraversalFluffBytes = (Exception?)obj;
+                        break;
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>)obj;
                         break;
@@ -1925,6 +1950,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (IsLinkedRefTransient != null) return true;
                 if (EnvironmentMap != null) return true;
                 if (Traversals != null) return true;
+                if (NumTraversalFluffBytes != null) return true;
                 if (NavigationMeshes != null) return true;
                 if (Timestamp != null) return true;
                 if (UnknownGroupData != null) return true;
@@ -2117,6 +2143,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(NumTraversalFluffBytes, "NumTraversalFluffBytes");
+                }
                 if (NavigationMeshes is {} NavigationMeshesItem)
                 {
                     sb.AppendLine("NavigationMeshes =>");
@@ -2227,6 +2256,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.IsLinkedRefTransient = this.IsLinkedRefTransient.Combine(rhs.IsLinkedRefTransient);
                 ret.EnvironmentMap = this.EnvironmentMap.Combine(rhs.EnvironmentMap);
                 ret.Traversals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TraversalReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Traversals?.Overall, rhs.Traversals?.Overall), Noggog.ExceptionExt.Combine(this.Traversals?.Specific, rhs.Traversals?.Specific));
+                ret.NumTraversalFluffBytes = this.NumTraversalFluffBytes.Combine(rhs.NumTraversalFluffBytes);
                 ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
@@ -2288,6 +2318,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsLinkedRefTransient;
             public bool EnvironmentMap;
             public TraversalReference.TranslationMask? Traversals;
+            public bool NumTraversalFluffBytes;
             public NavigationMesh.TranslationMask? NavigationMeshes;
             public bool Timestamp;
             public bool UnknownGroupData;
@@ -2326,6 +2357,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.EncounterLocation = defaultOn;
                 this.IsLinkedRefTransient = defaultOn;
                 this.EnvironmentMap = defaultOn;
+                this.NumTraversalFluffBytes = defaultOn;
                 this.Timestamp = defaultOn;
                 this.UnknownGroupData = defaultOn;
                 this.PersistentTimestamp = defaultOn;
@@ -2371,6 +2403,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((IsLinkedRefTransient, null));
                 ret.Add((EnvironmentMap, null));
                 ret.Add((Traversals == null ? DefaultOn : !Traversals.GetCrystal().CopyNothing, Traversals?.GetCrystal()));
+                ret.Add((NumTraversalFluffBytes, null));
                 ret.Add((NavigationMeshes == null ? DefaultOn : !NavigationMeshes.GetCrystal().CopyNothing, NavigationMeshes?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
@@ -2610,6 +2643,7 @@ namespace Mutagen.Bethesda.Starfield
         new Boolean IsLinkedRefTransient { get; set; }
         new String? EnvironmentMap { get; set; }
         new ExtendedList<TraversalReference>? Traversals { get; set; }
+        new UInt32 NumTraversalFluffBytes { get; set; }
         new ExtendedList<NavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
@@ -2683,6 +2717,7 @@ namespace Mutagen.Bethesda.Starfield
         Boolean IsLinkedRefTransient { get; }
         String? EnvironmentMap { get; }
         IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; }
+        UInt32 NumTraversalFluffBytes { get; }
         IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; }
         Int32 Timestamp { get; }
         Int32 UnknownGroupData { get; }
@@ -3114,15 +3149,16 @@ namespace Mutagen.Bethesda.Starfield
         IsLinkedRefTransient = 34,
         EnvironmentMap = 35,
         Traversals = 36,
-        NavigationMeshes = 37,
-        Timestamp = 38,
-        UnknownGroupData = 39,
-        PersistentTimestamp = 40,
-        PersistentUnknownGroupData = 41,
-        Persistent = 42,
-        TemporaryTimestamp = 43,
-        TemporaryUnknownGroupData = 44,
-        Temporary = 45,
+        NumTraversalFluffBytes = 37,
+        NavigationMeshes = 38,
+        Timestamp = 39,
+        UnknownGroupData = 40,
+        PersistentTimestamp = 41,
+        PersistentUnknownGroupData = 42,
+        Persistent = 43,
+        TemporaryTimestamp = 44,
+        TemporaryUnknownGroupData = 45,
+        Temporary = 46,
     }
     #endregion
 
@@ -3133,9 +3169,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 39;
+        public const ushort AdditionalFieldCount = 40;
 
-        public const ushort FieldCount = 46;
+        public const ushort FieldCount = 47;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -3294,6 +3330,7 @@ namespace Mutagen.Bethesda.Starfield
             item.IsLinkedRefTransient = default;
             item.EnvironmentMap = default;
             item.Traversals = null;
+            item.NumTraversalFluffBytes = default;
             item.NavigationMeshes.Clear();
             item.Timestamp = default;
             item.UnknownGroupData = default;
@@ -3798,6 +3835,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Traversals,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.NumTraversalFluffBytes = item.NumTraversalFluffBytes == rhs.NumTraversalFluffBytes;
             ret.NavigationMeshes = item.NavigationMeshes.CollectionEqualsHelper(
                 rhs.NavigationMeshes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -4051,6 +4089,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if (printMask?.NumTraversalFluffBytes ?? true)
+            {
+                sb.AppendItem(item.NumTraversalFluffBytes, "NumTraversalFluffBytes");
+            }
             if (printMask?.NavigationMeshes?.Overall ?? true)
             {
                 sb.AppendLine("NavigationMeshes =>");
@@ -4303,6 +4345,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Traversals.SequenceEqualNullable(rhs.Traversals, (l, r) => ((TraversalReferenceCommon)((ITraversalReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.Traversals)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.NumTraversalFluffBytes) ?? true))
+            {
+                if (lhs.NumTraversalFluffBytes != rhs.NumTraversalFluffBytes) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
             {
                 if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes, (l, r) => ((NavigationMeshCommon)((INavigationMeshGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes)))) return false;
@@ -4439,6 +4485,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(EnvironmentMapitem);
             }
             hash.Add(item.Traversals);
+            hash.Add(item.NumTraversalFluffBytes);
             hash.Add(item.NavigationMeshes);
             hash.Add(item.Timestamp);
             hash.Add(item.UnknownGroupData);
@@ -5604,6 +5651,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.NumTraversalFluffBytes) ?? true))
+            {
+                item.NumTraversalFluffBytes = rhs.NumTraversalFluffBytes;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
             {

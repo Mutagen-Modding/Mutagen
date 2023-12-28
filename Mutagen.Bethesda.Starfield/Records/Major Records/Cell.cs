@@ -60,7 +60,8 @@ partial class CellBinaryCreateTranslation
         {
             len = sub.ContentLength;
         }
-        item.Traversals = TraversalReferenceBinaryCreateTranslation.Parse(frame.SpawnWithLength(len));
+        item.Traversals = TraversalReferenceBinaryCreateTranslation.Parse(frame.SpawnWithLength(len), out var fluffBytes);
+        item.NumTraversalFluffBytes = fluffBytes;
     }
     
     public static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
@@ -255,21 +256,9 @@ partial class CellBinaryWriteTranslation
 {
     public static partial void WriteBinaryTraversalsCustom(
         MutagenWriter writer,
-        ICellGetter item)
+        ICellGetter cell)
     {
-        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITraversalReferenceGetter>.Instance.Write(
-            writer: writer,
-            items: item.Traversals,
-            recordType: RecordTypes.XTV2,
-            overflowRecord: RecordTypes.XXXX,
-            transl: (MutagenWriter subWriter, ITraversalReferenceGetter subItem, TypedWriteParams conv) =>
-            {
-                var Item = subItem;
-                ((TraversalReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                    item: Item,
-                    writer: subWriter,
-                    translationParams: conv);
-            });
+        TraversalReferenceBinaryWriteTranslation.TraversalsListWriterHelper(writer, cell.Traversals, cell.NumTraversalFluffBytes);
     }
     
     public static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
@@ -377,6 +366,7 @@ partial class CellBinaryOverlay
     public int PersistentUnknownGroupData => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_persistentLocation.Value + 20)) : 0;
 
     public int TemporaryUnknownGroupData => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_temporaryLocation.Value + 20)) : 0;
+    public uint NumTraversalFluffBytes { get; private set; }
 
     public static int[] ParseRecordLocations(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
@@ -575,6 +565,7 @@ partial class CellBinaryOverlay
 
     partial void TraversalsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        Traversals = TraversalReferenceBinaryOverlay.Factory(stream, _package, finalPos, offset, lastParsed);
+        Traversals = TraversalReferenceBinaryOverlay.Factory(stream, _package, finalPos, offset, lastParsed, out var fluffBytes);
+        NumTraversalFluffBytes = fluffBytes;
     }
 }
