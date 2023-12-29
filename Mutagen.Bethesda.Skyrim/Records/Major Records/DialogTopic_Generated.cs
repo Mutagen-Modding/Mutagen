@@ -1510,7 +1510,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ANAM,
                 RecordTypes.TWAT,
                 RecordTypes.ONAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface

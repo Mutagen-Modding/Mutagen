@@ -1462,7 +1462,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.SNDD,
                 RecordTypes.ONAM,
                 RecordTypes.BSMP);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
@@ -2304,8 +2306,8 @@ namespace Mutagen.Bethesda.Fallout4
                 item.ArtObject.SetTo(rhs.ArtObject.FormKeyNullable);
             }
             item.BoneData = new GenderedItem<ExtendedList<Bone>?>(
-                male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList(),
-                female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList());
+                male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList<Bone>(),
+                female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList<Bone>());
         }
         
         public override void DeepCopyIn(

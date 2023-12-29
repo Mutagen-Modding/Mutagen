@@ -2340,7 +2340,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.CRDT,
                 RecordTypes.VNAM,
                 RecordTypes.CNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter ScopeModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

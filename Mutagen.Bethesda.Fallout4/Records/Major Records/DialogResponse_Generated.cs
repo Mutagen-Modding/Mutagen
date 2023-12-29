@@ -1247,7 +1247,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.NAM9,
                 RecordTypes.SRAF,
                 RecordTypes.WZMD);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseBinaryWriteTranslation);
         #region Interface

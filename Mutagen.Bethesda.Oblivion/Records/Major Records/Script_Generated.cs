@@ -710,7 +710,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.SCPT,
                 RecordTypes.SCHD,
                 RecordTypes.SCHR);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ScriptBinaryWriteTranslation);
         #region Interface

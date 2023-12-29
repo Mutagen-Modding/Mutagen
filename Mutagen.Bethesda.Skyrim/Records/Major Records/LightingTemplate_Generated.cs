@@ -1406,7 +1406,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.LGTM,
                 RecordTypes.DATA,
                 RecordTypes.DALC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LightingTemplateBinaryWriteTranslation);
         #region Interface

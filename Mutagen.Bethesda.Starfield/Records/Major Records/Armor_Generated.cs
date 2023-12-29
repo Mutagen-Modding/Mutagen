@@ -2509,7 +2509,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.STOP,
                 RecordTypes.AVSG,
                 RecordTypes.AFSG);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(

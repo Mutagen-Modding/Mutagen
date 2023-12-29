@@ -1412,7 +1412,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.PRKE,
                 RecordTypes.PRKF,
                 RecordTypes.PRKC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface

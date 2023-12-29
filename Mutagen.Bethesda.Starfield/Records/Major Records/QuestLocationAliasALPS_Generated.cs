@@ -777,7 +777,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
                 RecordTypes.LNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestLocationAliasALPSBinaryWriteTranslation);
         #region Interface

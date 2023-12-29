@@ -762,7 +762,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FMRI,
                 RecordTypes.FMRG,
                 RecordTypes.FMRS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcFaceMorphBinaryWriteTranslation);
         #region Interface

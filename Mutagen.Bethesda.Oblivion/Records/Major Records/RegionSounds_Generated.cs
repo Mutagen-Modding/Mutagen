@@ -732,7 +732,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.RDAT,
                 RecordTypes.RDMD,
                 RecordTypes.RDSD);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionSoundsBinaryWriteTranslation);
         #region Interface

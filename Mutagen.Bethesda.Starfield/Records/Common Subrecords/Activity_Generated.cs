@@ -971,7 +971,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS2,
                 RecordTypes.ANAM,
                 RecordTypes.ATAV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActivityBinaryWriteTranslation);
         #region Interface

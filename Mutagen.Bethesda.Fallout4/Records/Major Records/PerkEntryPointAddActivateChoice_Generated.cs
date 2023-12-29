@@ -714,7 +714,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.PRKE,
                 RecordTypes.EPF2,
                 RecordTypes.EPF3);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddActivateChoiceBinaryWriteTranslation);
         #region Interface

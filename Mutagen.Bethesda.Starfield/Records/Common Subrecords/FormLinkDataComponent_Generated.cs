@@ -682,7 +682,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FLKW,
                 RecordTypes.FLFM,
                 RecordTypes.ITMC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FormLinkDataComponentBinaryWriteTranslation);
         #region Interface

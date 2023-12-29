@@ -5550,7 +5550,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.FMRS,
                 RecordTypes.FMIN,
                 RecordTypes.ATTX);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface

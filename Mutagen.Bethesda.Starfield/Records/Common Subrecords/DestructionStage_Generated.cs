@@ -1116,7 +1116,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODC,
                 RecordTypes.MODF,
                 RecordTypes.DMDS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

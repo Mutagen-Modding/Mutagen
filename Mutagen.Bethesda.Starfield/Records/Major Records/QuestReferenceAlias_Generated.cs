@@ -2591,7 +2591,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SCCM,
                 RecordTypes.VTCK,
                 RecordTypes.ALTM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestReferenceAliasBinaryWriteTranslation);
         #region Interface

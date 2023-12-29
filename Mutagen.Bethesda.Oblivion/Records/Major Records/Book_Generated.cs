@@ -1051,7 +1051,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.ANAM,
                 RecordTypes.DESC,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
         #region Interface

@@ -1527,7 +1527,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.INTV,
                 RecordTypes.INCC,
                 RecordTypes.CHGL);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StarfieldModHeaderBinaryWriteTranslation);
         #region Interface

@@ -858,7 +858,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.HNAM,
                 RecordTypes.VENC,
                 RecordTypes.WED0);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogueSceneActionBinaryWriteTranslation);
         #region Interface

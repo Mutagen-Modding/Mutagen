@@ -7076,7 +7076,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SIAD,
                 RecordTypes._14_IAD,
                 RecordTypes.TIAD);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceAdapterBinaryWriteTranslation);
         #region Interface

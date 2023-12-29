@@ -1226,7 +1226,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.PKC2,
                 RecordTypes.PFO2,
                 RecordTypes.PFOR);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageBranchBinaryWriteTranslation);
         #region Interface

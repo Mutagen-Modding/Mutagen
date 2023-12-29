@@ -823,7 +823,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MCQP,
                 RecordTypes.XMSP,
                 RecordTypes.XLMS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlanetModelComponentBinaryWriteTranslation);
         #region Interface

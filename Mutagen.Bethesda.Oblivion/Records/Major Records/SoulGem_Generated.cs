@@ -1007,7 +1007,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.DATA,
                 RecordTypes.SOUL,
                 RecordTypes.SLCP);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface

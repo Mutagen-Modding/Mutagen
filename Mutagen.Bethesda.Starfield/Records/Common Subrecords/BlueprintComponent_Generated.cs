@@ -881,7 +881,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BODV,
                 RecordTypes.BLUF,
                 RecordTypes.BOID);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BlueprintComponentBinaryWriteTranslation);
         #region Interface

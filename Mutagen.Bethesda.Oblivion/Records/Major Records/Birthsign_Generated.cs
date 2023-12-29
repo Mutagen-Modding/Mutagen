@@ -920,7 +920,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.ICON,
                 RecordTypes.DESC,
                 RecordTypes.SPLO);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BirthsignBinaryWriteTranslation);
         #region Interface

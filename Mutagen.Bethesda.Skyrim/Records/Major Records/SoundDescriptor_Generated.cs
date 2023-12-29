@@ -1367,7 +1367,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.CIS2,
                 RecordTypes.LNAM,
                 RecordTypes.BNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundDescriptorBinaryWriteTranslation);
         #region Interface

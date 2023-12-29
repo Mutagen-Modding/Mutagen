@@ -1052,7 +1052,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.QNAM,
                 RecordTypes.SCRO,
                 RecordTypes.WNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ScenePhaseBinaryWriteTranslation);
         #region Interface

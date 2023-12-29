@@ -3187,7 +3187,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SPKW,
                 RecordTypes.SPPK,
                 RecordTypes.SPKY);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static IReadOnlyCollection<int> SubgroupTypes { get; } = new HashSet<int>(){ 10 };
         public static bool IsPartialFormable => true;

@@ -4641,7 +4641,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.DFTF,
                 RecordTypes.NAM8,
                 RecordTypes.RNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

@@ -1662,7 +1662,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.VNAM,
                 RecordTypes.BSMP,
                 RecordTypes.BNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter SkeletonConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

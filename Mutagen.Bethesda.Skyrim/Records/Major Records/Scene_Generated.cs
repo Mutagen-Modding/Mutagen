@@ -1489,7 +1489,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.DEMO,
                 RecordTypes.DEVA,
                 RecordTypes.VNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SceneBinaryWriteTranslation);
         #region Interface

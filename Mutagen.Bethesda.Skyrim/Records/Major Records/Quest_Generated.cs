@@ -1860,7 +1860,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ALFC,
                 RecordTypes.ALPC,
                 RecordTypes.VTCK);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface

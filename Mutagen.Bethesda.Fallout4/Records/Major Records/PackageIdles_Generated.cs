@@ -846,7 +846,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.IDLA,
                 RecordTypes.IDLC,
                 RecordTypes.IDLB);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageIdlesBinaryWriteTranslation);
         #region Interface

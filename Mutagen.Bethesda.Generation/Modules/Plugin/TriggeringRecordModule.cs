@@ -314,7 +314,7 @@ public class TriggeringRecordModule : GenerationModule
             else
             {
                 using (var args = sb.Call(
-                    "var triggers = RecordCollection.Factory"))
+                           "var triggers = RecordCollection.Factory"))
                 {
                     foreach (var trigger in trigRecordTypes)
                     {
@@ -329,7 +329,12 @@ public class TriggeringRecordModule : GenerationModule
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-                sb.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);");
+
+                using (var c = sb.Call("return new RecordTriggerSpecs"))
+                {
+                    c.Add("allRecordTypes: all");
+                    c.Add("triggeringRecordTypes: triggers");
+                }
             }
         }
 

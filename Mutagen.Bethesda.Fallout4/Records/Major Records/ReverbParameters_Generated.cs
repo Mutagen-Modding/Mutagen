@@ -1150,7 +1150,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.REVB,
                 RecordTypes.DATA,
                 RecordTypes.ANAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ReverbParametersBinaryWriteTranslation);
         #region Interface

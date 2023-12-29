@@ -5280,7 +5280,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.HLTX,
                 RecordTypes.QSTI,
                 RecordTypes.BSMP);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -7754,8 +7756,8 @@ namespace Mutagen.Bethesda.Fallout4
                 item.DialogueQuest.SetTo(rhs.DialogueQuest.FormKeyNullable);
             }
             item.BoneData = new GenderedItem<ExtendedList<Bone>?>(
-                male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList(),
-                female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList());
+                male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList<Bone>(),
+                female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList<Bone>());
         }
         
         public override void DeepCopyIn(

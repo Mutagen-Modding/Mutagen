@@ -959,7 +959,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODC,
                 RecordTypes.MODF,
                 RecordTypes.BNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AnimatedObjectBinaryWriteTranslation);
         #region Interface

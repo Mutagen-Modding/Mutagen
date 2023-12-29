@@ -1009,7 +1009,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.DUAL,
                 RecordTypes.OBND,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DualCastDataBinaryWriteTranslation);
         #region Interface

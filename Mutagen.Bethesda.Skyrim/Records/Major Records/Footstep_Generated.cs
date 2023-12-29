@@ -766,7 +766,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.FSTP,
                 RecordTypes.DATA,
                 RecordTypes.ANAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FootstepBinaryWriteTranslation);
         #region Interface

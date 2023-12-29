@@ -2204,7 +2204,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.CSDT,
                 RecordTypes.CSDI,
                 RecordTypes.CSDC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CreatureBinaryWriteTranslation);
         #region Interface

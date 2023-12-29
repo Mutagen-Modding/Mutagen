@@ -682,7 +682,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CNTO,
                 RecordTypes.COCT,
                 RecordTypes.COED);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ContainerComponentBinaryWriteTranslation);
         #region Interface

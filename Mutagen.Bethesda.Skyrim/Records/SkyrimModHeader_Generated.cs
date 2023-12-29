@@ -1318,7 +1318,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.XXXX,
                 RecordTypes.INTV,
                 RecordTypes.INCC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModHeaderBinaryWriteTranslation);
         #region Interface

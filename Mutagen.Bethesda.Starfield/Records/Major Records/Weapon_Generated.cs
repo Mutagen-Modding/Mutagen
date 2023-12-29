@@ -7350,7 +7350,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MO4S,
                 RecordTypes.WVIS,
                 RecordTypes.WTRM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
         #region Interface

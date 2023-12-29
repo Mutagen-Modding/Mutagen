@@ -907,7 +907,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.VNAM,
                 RecordTypes.UNAM,
                 RecordTypes.VISI);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectMapMarkerBinaryWriteTranslation);
         #region Interface

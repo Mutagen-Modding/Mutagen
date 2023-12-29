@@ -808,7 +808,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.WOOP,
                 RecordTypes.FULL,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WordOfPowerBinaryWriteTranslation);
         #region Interface

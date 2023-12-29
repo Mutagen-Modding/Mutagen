@@ -882,7 +882,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.LFSP,
                 RecordTypes.FNAM,
                 RecordTypes.LFSD);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LensFlareBinaryWriteTranslation);
         #region Interface

@@ -1699,7 +1699,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DENS,
                 RecordTypes.PHLA,
                 RecordTypes.RSCS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlanetBinaryWriteTranslation);
         #region Interface

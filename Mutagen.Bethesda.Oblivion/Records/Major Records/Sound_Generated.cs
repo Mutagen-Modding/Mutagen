@@ -747,7 +747,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.FNAM,
                 RecordTypes.SNDD,
                 RecordTypes.SNDX);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundBinaryWriteTranslation);
         #region Interface

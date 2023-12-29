@@ -1346,7 +1346,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ALSY,
                 RecordTypes.ALKF,
                 RecordTypes.ALDN);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestLocationAliasBinaryWriteTranslation);
         #region Interface

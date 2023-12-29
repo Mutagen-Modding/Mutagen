@@ -790,7 +790,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.FNAM,
                 RecordTypes.FULL,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectMapMarkerBinaryWriteTranslation);
         #region Interface

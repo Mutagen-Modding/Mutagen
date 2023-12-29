@@ -1192,7 +1192,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.RPLD,
                 RecordTypes.ANAM,
                 RecordTypes.RDAT);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface

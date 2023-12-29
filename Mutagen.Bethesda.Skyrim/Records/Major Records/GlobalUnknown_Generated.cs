@@ -756,7 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.GLOB,
                 RecordTypes.FNAM,
                 RecordTypes.FLTV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GlobalUnknownBinaryWriteTranslation);
         #region Interface

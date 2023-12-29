@@ -1223,7 +1223,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SPGD,
                 RecordTypes.DATA,
                 RecordTypes.ICON);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ShaderParticleGeometryBinaryWriteTranslation);
         #region Interface

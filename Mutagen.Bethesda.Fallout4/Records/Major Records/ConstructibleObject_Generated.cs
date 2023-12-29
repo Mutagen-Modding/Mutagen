@@ -1544,7 +1544,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ANAM,
                 RecordTypes.FNAM,
                 RecordTypes.INTV);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ConstructibleObjectBinaryWriteTranslation);
         #region Interface

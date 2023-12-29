@@ -745,7 +745,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PNAM,
                 RecordTypes.PDTO,
                 RecordTypes.TPIC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageDataTopicBinaryWriteTranslation);
         #region Interface

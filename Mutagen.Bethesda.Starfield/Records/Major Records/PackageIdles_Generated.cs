@@ -807,7 +807,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.IDLT,
                 RecordTypes.IDLA,
                 RecordTypes.IDLC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageIdlesBinaryWriteTranslation);
         #region Interface

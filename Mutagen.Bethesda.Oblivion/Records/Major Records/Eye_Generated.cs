@@ -800,7 +800,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.FULL,
                 RecordTypes.ICON,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EyeBinaryWriteTranslation);
         #region Interface

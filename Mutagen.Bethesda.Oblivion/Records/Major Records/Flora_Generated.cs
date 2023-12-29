@@ -932,7 +932,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.SCRI,
                 RecordTypes.PFIG,
                 RecordTypes.PFPC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FloraBinaryWriteTranslation);
         #region Interface

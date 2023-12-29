@@ -1150,7 +1150,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FNAM,
                 RecordTypes.PKC2,
                 RecordTypes.PFO2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageBranchBinaryWriteTranslation);
         #region Interface

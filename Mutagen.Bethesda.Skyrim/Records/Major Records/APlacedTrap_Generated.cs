@@ -1824,7 +1824,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.PHZD,
                 RecordTypes.PMIS,
                 RecordTypes.XXXX);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface

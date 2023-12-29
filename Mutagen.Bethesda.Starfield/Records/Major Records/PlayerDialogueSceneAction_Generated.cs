@@ -969,7 +969,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ATTR,
                 RecordTypes.ACBS,
                 RecordTypes.JAIL);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlayerDialogueSceneActionBinaryWriteTranslation);
         #region Interface

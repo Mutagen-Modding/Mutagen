@@ -1473,7 +1473,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SOUL,
                 RecordTypes.SLCP,
                 RecordTypes.NAM0);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface

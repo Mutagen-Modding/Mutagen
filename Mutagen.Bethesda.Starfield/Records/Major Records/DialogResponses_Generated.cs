@@ -1831,7 +1831,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NAM8,
                 RecordTypes.PERK,
                 RecordTypes.SCSP);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesBinaryWriteTranslation);
         #region Interface

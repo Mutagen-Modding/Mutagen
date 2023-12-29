@@ -1204,7 +1204,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.SCHD,
                 RecordTypes.SCHR,
                 RecordTypes.QSTA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface

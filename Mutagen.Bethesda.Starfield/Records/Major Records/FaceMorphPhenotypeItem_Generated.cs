@@ -771,7 +771,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FMSR,
                 RecordTypes.FMRU,
                 RecordTypes.FMRN);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FaceMorphPhenotypeItemBinaryWriteTranslation);
         #region Interface

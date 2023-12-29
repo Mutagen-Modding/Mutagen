@@ -1320,7 +1320,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.SNAM,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImpactBinaryWriteTranslation);
         #region Interface

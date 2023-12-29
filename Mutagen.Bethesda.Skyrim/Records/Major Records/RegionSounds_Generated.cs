@@ -743,7 +743,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.RDAT,
                 RecordTypes.RDMO,
                 RecordTypes.RDSA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionSoundsBinaryWriteTranslation);
         #region Interface

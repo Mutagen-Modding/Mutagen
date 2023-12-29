@@ -879,7 +879,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FNAM,
                 RecordTypes.SNAM,
                 RecordTypes.ENAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ASceneActionBinaryWriteTranslation);
         #region Interface

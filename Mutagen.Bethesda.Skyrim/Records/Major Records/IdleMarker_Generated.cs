@@ -1045,7 +1045,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.IDLT,
                 RecordTypes.IDLA,
                 RecordTypes.MODL);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(IdleMarkerBinaryWriteTranslation);
         #region Interface

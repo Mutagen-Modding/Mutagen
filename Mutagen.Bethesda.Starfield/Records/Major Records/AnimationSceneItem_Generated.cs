@@ -1403,7 +1403,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DTGT,
                 RecordTypes.DPLT,
                 RecordTypes.ACEP);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AnimationSceneItemBinaryWriteTranslation);
         #region Interface

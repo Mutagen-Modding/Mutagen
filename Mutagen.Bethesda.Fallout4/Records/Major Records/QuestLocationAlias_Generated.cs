@@ -1103,7 +1103,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
                 RecordTypes.ALCC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestLocationAliasBinaryWriteTranslation);
         #region Interface

@@ -741,7 +741,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.RDAT,
                 RecordTypes.ICON,
                 RecordTypes.MICO);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataBinaryWriteTranslation);
         #region Interface

@@ -957,7 +957,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ONAM,
                 RecordTypes.ATTN,
                 RecordTypes.ENAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputModelBinaryWriteTranslation);
         #region Interface

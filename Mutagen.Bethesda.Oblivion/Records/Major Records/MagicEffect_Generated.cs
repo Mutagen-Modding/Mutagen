@@ -1037,7 +1037,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.MODL,
                 RecordTypes.DATA,
                 RecordTypes.ESCE);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface

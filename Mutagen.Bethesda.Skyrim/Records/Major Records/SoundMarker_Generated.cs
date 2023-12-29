@@ -899,7 +899,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.FNAM,
                 RecordTypes.SNDD,
                 RecordTypes.SDSC);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundMarkerBinaryWriteTranslation);
         #region Interface

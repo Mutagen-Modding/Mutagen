@@ -4062,7 +4062,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DAMA,
                 RecordTypes.FLTR,
                 RecordTypes.MASE);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter FirstPersonModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

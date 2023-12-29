@@ -1039,7 +1039,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS2,
                 RecordTypes.BIPL,
                 RecordTypes.LVLO);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FxSceneActionBinaryWriteTranslation);
         #region Interface

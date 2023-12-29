@@ -793,7 +793,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.DSTF,
                 RecordTypes.DMDT,
                 RecordTypes.DMDS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
         #region Interface

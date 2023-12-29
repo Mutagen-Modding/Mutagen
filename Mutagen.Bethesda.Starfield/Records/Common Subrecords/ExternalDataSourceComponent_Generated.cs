@@ -886,7 +886,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.EXAS,
                 RecordTypes.EXAC,
                 RecordTypes.EXBS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ExternalDataSourceComponentBinaryWriteTranslation);
         #region Interface

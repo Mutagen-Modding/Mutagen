@@ -799,7 +799,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.OVIS,
                 RecordTypes.INDX,
                 RecordTypes.DATA);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ObjectVisibilityManagerBinaryWriteTranslation);
         #region Interface

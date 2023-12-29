@@ -746,7 +746,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.DSTF,
                 RecordTypes.DMDT,
                 RecordTypes.DMDS);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

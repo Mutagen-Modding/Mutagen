@@ -2801,7 +2801,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.XLRL,
                 RecordTypes.XLOD,
                 RecordTypes.XSCL);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
