@@ -681,6 +681,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.ATAN,
                 RecordTypes.ATCP,
+                RecordTypes.ATAF,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.DNAM,
@@ -689,8 +690,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
                 RecordTypes.ANAM,
-                RecordTypes.ATAV,
-                RecordTypes.ATAF);
+                RecordTypes.ATAV);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActivityTrackerComponentBinaryWriteTranslation);

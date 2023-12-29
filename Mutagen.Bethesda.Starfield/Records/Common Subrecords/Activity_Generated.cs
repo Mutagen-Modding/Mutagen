@@ -117,17 +117,6 @@ namespace Mutagen.Bethesda.Starfield
         #region Configuration
         public String Configuration { get; set; } = string.Empty;
         #endregion
-        #region ATAF
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _ATAF = new byte[0];
-        public MemorySlice<Byte> ATAF
-        {
-            get => _ATAF;
-            set => this._ATAF = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IActivityGetter.ATAF => this.ATAF;
-        #endregion
 
         #region To String
 
@@ -173,7 +162,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.ProgressionEvalutor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>());
                 this.ANAM = initialValue;
                 this.Configuration = initialValue;
-                this.ATAF = initialValue;
             }
 
             public Mask(
@@ -182,8 +170,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Description,
                 TItem ProgressionEvalutor,
                 TItem ANAM,
-                TItem Configuration,
-                TItem ATAF)
+                TItem Configuration)
             {
                 this.ATAN = ATAN;
                 this.Name = Name;
@@ -191,7 +178,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.ProgressionEvalutor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>?>(ProgressionEvalutor, Enumerable.Empty<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>());
                 this.ANAM = ANAM;
                 this.Configuration = Configuration;
-                this.ATAF = ATAF;
             }
 
             #pragma warning disable CS8618
@@ -209,7 +195,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>?>? ProgressionEvalutor;
             public TItem ANAM;
             public TItem Configuration;
-            public TItem ATAF;
             #endregion
 
             #region Equals
@@ -228,7 +213,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ProgressionEvalutor, rhs.ProgressionEvalutor)) return false;
                 if (!object.Equals(this.ANAM, rhs.ANAM)) return false;
                 if (!object.Equals(this.Configuration, rhs.Configuration)) return false;
-                if (!object.Equals(this.ATAF, rhs.ATAF)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -240,7 +224,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ProgressionEvalutor);
                 hash.Add(this.ANAM);
                 hash.Add(this.Configuration);
-                hash.Add(this.ATAF);
                 return hash.ToHashCode();
             }
 
@@ -266,7 +249,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.ANAM)) return false;
                 if (!eval(this.Configuration)) return false;
-                if (!eval(this.ATAF)) return false;
                 return true;
             }
             #endregion
@@ -291,7 +273,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.ANAM)) return true;
                 if (eval(this.Configuration)) return true;
-                if (eval(this.ATAF)) return true;
                 return false;
             }
             #endregion
@@ -326,7 +307,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.ANAM = eval(this.ANAM);
                 obj.Configuration = eval(this.Configuration);
-                obj.ATAF = eval(this.ATAF);
             }
             #endregion
 
@@ -384,10 +364,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Configuration, "Configuration");
                     }
-                    if (printMask?.ATAF ?? true)
-                    {
-                        sb.AppendItem(ATAF, "ATAF");
-                    }
                 }
             }
             #endregion
@@ -418,7 +394,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ProgressionEvaluatorArgument.ErrorMask?>>?>? ProgressionEvalutor;
             public Exception? ANAM;
             public Exception? Configuration;
-            public Exception? ATAF;
             #endregion
 
             #region IErrorMask
@@ -439,8 +414,6 @@ namespace Mutagen.Bethesda.Starfield
                         return ANAM;
                     case Activity_FieldIndex.Configuration:
                         return Configuration;
-                    case Activity_FieldIndex.ATAF:
-                        return ATAF;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -468,9 +441,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Activity_FieldIndex.Configuration:
                         this.Configuration = ex;
-                        break;
-                    case Activity_FieldIndex.ATAF:
-                        this.ATAF = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -500,9 +470,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Activity_FieldIndex.Configuration:
                         this.Configuration = (Exception?)obj;
                         break;
-                    case Activity_FieldIndex.ATAF:
-                        this.ATAF = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -517,7 +484,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (ProgressionEvalutor != null) return true;
                 if (ANAM != null) return true;
                 if (Configuration != null) return true;
-                if (ATAF != null) return true;
                 return false;
             }
             #endregion
@@ -576,9 +542,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Configuration, "Configuration");
                 }
-                {
-                    sb.AppendItem(ATAF, "ATAF");
-                }
             }
             #endregion
 
@@ -593,7 +556,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ProgressionEvalutor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ProgressionEvaluatorArgument.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ProgressionEvalutor?.Overall, rhs.ProgressionEvalutor?.Overall), Noggog.ExceptionExt.Combine(this.ProgressionEvalutor?.Specific, rhs.ProgressionEvalutor?.Specific));
                 ret.ANAM = this.ANAM.Combine(rhs.ANAM);
                 ret.Configuration = this.Configuration.Combine(rhs.Configuration);
-                ret.ATAF = this.ATAF.Combine(rhs.ATAF);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -623,7 +585,6 @@ namespace Mutagen.Bethesda.Starfield
             public ProgressionEvaluatorArgument.TranslationMask? ProgressionEvalutor;
             public bool ANAM;
             public bool Configuration;
-            public bool ATAF;
             #endregion
 
             #region Ctors
@@ -638,7 +599,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Description = defaultOn;
                 this.ANAM = defaultOn;
                 this.Configuration = defaultOn;
-                this.ATAF = defaultOn;
             }
 
             #endregion
@@ -660,7 +620,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ProgressionEvalutor == null ? DefaultOn : !ProgressionEvalutor.GetCrystal().CopyNothing, ProgressionEvalutor?.GetCrystal()));
                 ret.Add((ANAM, null));
                 ret.Add((Configuration, null));
-                ret.Add((ATAF, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -752,7 +711,6 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<ProgressionEvaluatorArgument> ProgressionEvalutor { get; }
         new String ANAM { get; set; }
         new String Configuration { get; set; }
-        new MemorySlice<Byte> ATAF { get; set; }
     }
 
     public partial interface IActivityGetter :
@@ -783,7 +741,6 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IProgressionEvaluatorArgumentGetter> ProgressionEvalutor { get; }
         String ANAM { get; }
         String Configuration { get; }
-        ReadOnlyMemorySlice<Byte> ATAF { get; }
 
     }
 
@@ -959,7 +916,6 @@ namespace Mutagen.Bethesda.Starfield
         ProgressionEvalutor = 3,
         ANAM = 4,
         Configuration = 5,
-        ATAF = 6,
     }
     #endregion
 
@@ -970,9 +926,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Activity.Mask<>);
 
@@ -1005,6 +961,7 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.ATAN);
             var all = RecordCollection.Factory(
                 RecordTypes.ATAN,
+                RecordTypes.ATAF,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.DNAM,
@@ -1013,8 +970,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
                 RecordTypes.ANAM,
-                RecordTypes.ATAV,
-                RecordTypes.ATAF);
+                RecordTypes.ATAV);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActivityBinaryWriteTranslation);
@@ -1063,7 +1019,6 @@ namespace Mutagen.Bethesda.Starfield
             item.ProgressionEvalutor.Clear();
             item.ANAM = string.Empty;
             item.Configuration = string.Empty;
-            item.ATAF = Array.Empty<byte>();
         }
         
         #region Mutagen
@@ -1123,7 +1078,6 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ANAM = string.Equals(item.ANAM, rhs.ANAM);
             ret.Configuration = string.Equals(item.Configuration, rhs.Configuration);
-            ret.ATAF = MemoryExtensions.SequenceEqual(item.ATAF.Span, rhs.ATAF.Span);
         }
         
         public string Print(
@@ -1203,10 +1157,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Configuration, "Configuration");
             }
-            if (printMask?.ATAF ?? true)
-            {
-                sb.AppendLine($"ATAF => {SpanExt.ToHexString(item.ATAF)}");
-            }
         }
         
         #region Equals and Hash
@@ -1240,10 +1190,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.Configuration, rhs.Configuration)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Activity_FieldIndex.ATAF) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.ATAF.Span, rhs.ATAF.Span)) return false;
-            }
             return true;
         }
         
@@ -1259,7 +1205,6 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ProgressionEvalutor);
             hash.Add(item.ANAM);
             hash.Add(item.Configuration);
-            hash.Add(item.ATAF);
             return hash.ToHashCode();
         }
         
@@ -1339,10 +1284,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Activity_FieldIndex.Configuration) ?? true))
             {
                 item.Configuration = rhs.Configuration;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Activity_FieldIndex.ATAF) ?? true))
-            {
-                item.ATAF = rhs.ATAF.ToArray();
             }
         }
         
@@ -1479,10 +1420,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Configuration,
                 header: translationParams.ConvertToCustom(RecordTypes.ATAV),
                 binaryType: StringBinaryType.Plain);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ATAF,
-                header: translationParams.ConvertToCustom(RecordTypes.ATAF));
         }
 
         public void Write(
@@ -1494,6 +1431,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ATAF)) { } // End Marker
         }
 
         public void Write(
@@ -1580,11 +1518,10 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.Plain);
                     return (int)Activity_FieldIndex.Configuration;
                 }
-                case RecordTypeInts.ATAF:
+                case RecordTypeInts.ATAF: // End Marker
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ATAF = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Activity_FieldIndex.ATAF;
+                    frame.ReadSubrecord();
+                    return ParseResult.Stop;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1683,10 +1620,6 @@ namespace Mutagen.Bethesda.Starfield
         #region Configuration
         private int? _ConfigurationLocation;
         public String Configuration => _ConfigurationLocation.HasValue ? BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConfigurationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
-        #endregion
-        #region ATAF
-        private int? _ATAFLocation;
-        public ReadOnlyMemorySlice<Byte> ATAF => _ATAFLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ATAFLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1788,10 +1721,10 @@ namespace Mutagen.Bethesda.Starfield
                     _ConfigurationLocation = (stream.Position - offset);
                     return (int)Activity_FieldIndex.Configuration;
                 }
-                case RecordTypeInts.ATAF:
+                case RecordTypeInts.ATAF: // End Marker
                 {
-                    _ATAFLocation = (stream.Position - offset);
-                    return (int)Activity_FieldIndex.ATAF;
+                    stream.ReadSubrecord();
+                    return ParseResult.Stop;
                 }
                 default:
                     return ParseResult.Stop;

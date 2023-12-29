@@ -1400,10 +1400,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
+                RecordTypes.ATAF,
                 RecordTypes.DNAM,
                 RecordTypes.ANAM,
                 RecordTypes.ATAV,
-                RecordTypes.ATAF,
                 RecordTypes.RNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });

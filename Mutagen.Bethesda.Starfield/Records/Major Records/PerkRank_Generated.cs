@@ -1004,11 +1004,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
+                RecordTypes.ATAF,
                 RecordTypes.FULL,
                 RecordTypes.DNAM,
                 RecordTypes.ANAM,
-                RecordTypes.ATAV,
-                RecordTypes.ATAF);
+                RecordTypes.ATAV);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkRankBinaryWriteTranslation);
