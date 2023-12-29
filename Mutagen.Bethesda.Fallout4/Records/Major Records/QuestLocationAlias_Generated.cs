@@ -1086,6 +1086,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var endTriggers = RecordCollection.Factory(RecordTypes.ALED);
             var triggers = RecordCollection.Factory();
             var all = RecordCollection.Factory(
                 RecordTypes.ALED,
@@ -1105,7 +1106,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ALCC);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestLocationAliasBinaryWriteTranslation);
         #region Interface

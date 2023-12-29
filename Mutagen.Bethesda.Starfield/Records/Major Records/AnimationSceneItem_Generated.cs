@@ -1376,6 +1376,7 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var endTriggers = RecordCollection.Factory(RecordTypes.XNAM);
             var triggers = RecordCollection.Factory(
                 RecordTypes.BNAM,
                 RecordTypes.STRV,
@@ -1405,7 +1406,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ACEP);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AnimationSceneItemBinaryWriteTranslation);
         #region Interface

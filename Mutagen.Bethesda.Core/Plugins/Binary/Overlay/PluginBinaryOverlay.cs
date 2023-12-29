@@ -553,6 +553,11 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                             stream.Position += (int)varMeta.TotalLength;
                         }
                     }
+                    else if (trigger.EndRecordTypes.Contains(recType))
+                    {
+                        stream.Position += (int)varMeta.TotalLength;
+                        break;
+                    }
                     else
                     {
                         stream.Position += (int)varMeta.TotalLength;

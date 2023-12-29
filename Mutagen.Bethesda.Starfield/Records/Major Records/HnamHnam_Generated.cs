@@ -807,6 +807,7 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var endTriggers = RecordCollection.Factory(RecordTypes.HNAM);
             var triggers = RecordCollection.Factory(RecordTypes.HNAM);
             var all = RecordCollection.Factory(
                 RecordTypes.HNAM,
@@ -815,7 +816,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HnamHnamBinaryWriteTranslation);
         #region Interface

@@ -958,6 +958,7 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var endTriggers = RecordCollection.Factory(RecordTypes.ATAF);
             var triggers = RecordCollection.Factory(RecordTypes.ATAN);
             var all = RecordCollection.Factory(
                 RecordTypes.ATAN,
@@ -973,7 +974,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ATAV);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActivityBinaryWriteTranslation);
         #region Interface

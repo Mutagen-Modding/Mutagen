@@ -680,6 +680,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var endTriggers = RecordCollection.Factory(RecordTypes.ITME);
             var triggers = RecordCollection.Factory(
                 RecordTypes.ITMS,
                 RecordTypes.INTV,
@@ -691,7 +692,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ITME);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+                triggeringRecordTypes: triggers,
+                endRecordTypes: endTriggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundRateOfFireBinaryWriteTranslation);
         #region Interface

@@ -313,6 +313,14 @@ public class TriggeringRecordModule : GenerationModule
             }
             else
             {
+                if (data.EndMarkerType.HasValue)
+                {
+                    using (var args = sb.Call(
+                               "var endTriggers = RecordCollection.Factory"))
+                    {
+                        args.Add($"{obj.RecordTypeHeaderName(data.EndMarkerType.Value)}");
+                    }
+                }
                 using (var args = sb.Call(
                            "var triggers = RecordCollection.Factory"))
                 {
@@ -334,6 +342,10 @@ public class TriggeringRecordModule : GenerationModule
                 {
                     c.Add("allRecordTypes: all");
                     c.Add("triggeringRecordTypes: triggers");
+                    if (data.EndMarkerType.HasValue)
+                    {
+                        c.Add("endRecordTypes: endTriggers");
+                    }
                 }
             }
         }
