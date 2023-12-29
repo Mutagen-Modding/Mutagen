@@ -751,10 +751,10 @@
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="negOneIsNull" type="xs:boolean" >
+        <xs:attribute name="maxIsNone" type="xs:boolean" >
           <xs:annotation>
             <xs:documentation>
-              Whether negative one is interpreted as null
+              Whether max value is interpreted as None
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>

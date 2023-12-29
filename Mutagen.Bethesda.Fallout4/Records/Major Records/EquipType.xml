@@ -6,7 +6,7 @@
         <FormLink refName="EquipType" />
       </List>
       <Enum name="Flag" byteLength="4" recordType="DATA" enumName="EquipType.Flags" />
-      <FormLink name="ConditionActorValue" recordType="ANAM" refName="ActorValueInformation" negOneIsNull="true" />
+      <FormLink name="ConditionActorValue" recordType="ANAM" refName="ActorValueInformation" maxIsNone="true" />
     </Fields>
   </Object>
 </Loqui>

@@ -12,10 +12,10 @@ public sealed class FormLinkBinaryTranslation
     public bool Parse<TReader>(
         TReader reader,
         out FormKey item,
-        bool negativeOneIsNull = false)
+        bool maxIsNone = false)
         where TReader : IMutagenReadStream
     {
-        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id, negativeOneIsNull: negativeOneIsNull))
+        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id, maxIsNone: maxIsNone))
         {
             item = id;
             return true;
@@ -24,9 +24,9 @@ public sealed class FormLinkBinaryTranslation
         return false;
     }
 
-    public FormKey Parse(MutagenFrame reader, bool negativeOneIsNull = false)
+    public FormKey Parse(MutagenFrame reader, bool maxIsNone = false)
     {
-        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id, negativeOneIsNull: negativeOneIsNull))
+        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id, maxIsNone: maxIsNone))
         {
             return id;
         }

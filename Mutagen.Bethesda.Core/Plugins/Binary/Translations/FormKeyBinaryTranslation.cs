@@ -14,12 +14,12 @@ public sealed class FormKeyBinaryTranslation
     public FormKey Parse(
         ReadOnlySpan<byte> span,
         IReadOnlyMasterReferenceCollection masterReferences,
-        bool negativeOneIsNull = false)
+        bool maxIsNone = false)
     {
         var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
-        if (negativeOneIsNull && id == uint.MaxValue)
+        if (maxIsNone && id == uint.MaxValue)
         {
-            id = 0;
+            return FormKey.None;
         }
         return FormKey.Factory(masterReferences, id);
     }
@@ -27,13 +27,13 @@ public sealed class FormKeyBinaryTranslation
     public bool Parse<TReader>(
         TReader reader,
         out FormKey item,
-        bool negativeOneIsNull = false)
+        bool maxIsNone = false)
         where TReader : IMutagenReadStream
     {
         item = Parse(
             reader.ReadSpan(4),
             reader.MetaData.MasterReferences!,
-            negativeOneIsNull: negativeOneIsNull);
+            maxIsNone: maxIsNone);
         return true;
     }
 
@@ -50,6 +50,13 @@ public sealed class FormKeyBinaryTranslation
         FormKey item,
         bool nullable = false)
     {
+        if (item == FormKey.None)
+        {
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: uint.MaxValue);
+            return;
+        }
         if (writer.MetaData.CleanNulls && item.IsNull)
         {
             item = FormKey.Null;

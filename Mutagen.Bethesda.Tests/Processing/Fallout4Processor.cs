@@ -64,7 +64,6 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
         AddDynamicProcessing(RecordTypes.DFOB, ProcessDefaultObjects);
         AddDynamicProcessing(RecordTypes.SMQN, ProcessStoryManagerQuestNodes);
-        AddDynamicProcessing(RecordTypes.EQUP, ProcessEquipTypes);
         AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
         AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
@@ -711,17 +710,6 @@ public class Fallout4Processor : Processor
             {
                 Instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
             }
-        }
-    }
-
-    private void ProcessEquipTypes(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.ANAM))
-        {
-            int loc = 0;
-            ProcessMaxIsNegativeFormID(subRec, fileOffset, ref loc);
         }
     }
 

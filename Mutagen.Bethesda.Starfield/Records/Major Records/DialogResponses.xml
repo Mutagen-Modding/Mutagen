@@ -39,7 +39,7 @@
     <Fields>
       <Data recordType="TRDA">
         <Fields>
-          <FormLink name="Emotion" refName="Keyword" negOneIsNull="true" />
+          <FormLink name="Emotion" refName="Keyword" maxIsNone="true" />
           <UInt32 name="WEMFile" />
           <Float name="TRDAUnknown" unknown="true" />
         </Fields>

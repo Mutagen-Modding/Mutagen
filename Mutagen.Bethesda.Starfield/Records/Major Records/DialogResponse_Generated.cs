@@ -2649,7 +2649,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.Emotion.SetTo(
                         FormLinkBinaryTranslation.Instance.Parse(
                             reader: frame,
-                            negativeOneIsNull : true));
+                            maxIsNone: true));
                     if (dataFrame.Remaining < 4) return null;
                     item.WEMFile = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 4) return null;

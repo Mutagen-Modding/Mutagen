@@ -558,16 +558,6 @@ public abstract class Processor
         }
     }
 
-    public void ProcessMaxIsNegativeFormID(ReadOnlySpan<byte> span, ref long offsetLoc)
-    {
-        offsetLoc += 4;
-        int i = span.Int32();
-        if (i == -1)
-        {
-            Instructions.SetSubstitution(offsetLoc - 4, new byte[4]);
-        }
-    }
-
     public bool ProcessRotationFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, float multiplier = 57.2958f)
     {
         if (loc >= pin.ContentLength) return false;
@@ -617,15 +607,6 @@ public abstract class Processor
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
         ProcessZeroFloat(pin.Content.Slice(loc), ref longLoc);
-        loc += 4;
-        return true;
-    }
-
-    public bool ProcessMaxIsNegativeFormID(SubrecordPinFrame pin, long offsetLoc, ref int loc)
-    {
-        if (loc >= pin.ContentLength) return false;
-        long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
-        ProcessMaxIsNegativeFormID(pin.Content.Slice(loc), ref longLoc);
         loc += 4;
         return true;
     }

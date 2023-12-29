@@ -45,7 +45,6 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.MISC, ProcessMisc);
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(RecordTypes.DIAL, ProcessDialog);
-        AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
         AddDynamicProcessing(RecordTypes.REFR, ProcessPlacedObject);
         AddDynamicProcessing(RecordTypes.ACHR, ProcessPlacedNpc);
         AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
@@ -342,18 +341,6 @@ public class StarfieldProcessor : Processor
                 default:
                     break;
             }
-        }
-    }
-
-    private void ProcessDialogResponses(
-        IMutagenReadStream stream,
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.TRDA))
-        {
-            int loc = 0;
-            ProcessMaxIsNegativeFormID(subRec, fileOffset, ref loc);
         }
     }
 

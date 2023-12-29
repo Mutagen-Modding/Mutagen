@@ -1625,7 +1625,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ConditionActorValue.SetTo(
                         FormLinkBinaryTranslation.Instance.Parse(
                             reader: frame,
-                            negativeOneIsNull : true));
+                            maxIsNone: true));
                     return (int)EquipType_FieldIndex.ConditionActorValue;
                 }
                 default:

@@ -26,9 +26,14 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     public const string NullStr = "Null";
         
     /// <summary>
-    /// A static readonly singleton Null FormKey
+    /// A static readonly singleton Null FormKey (00000000)
     /// </summary>
     public static readonly FormKey Null = new FormKey(ModKey.Null, 0);
+        
+    /// <summary>
+    /// A static readonly singleton None FormKey (FFFFFFFF)
+    /// </summary>
+    public static readonly FormKey None = new FormKey(ModKey.Null, 0xFFFFFF);
         
     /// <summary>
     /// Record ID, with master indices set to zero.
@@ -97,7 +102,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     {
         if (maxIsNull && idWithModID == uint.MaxValue)
         {
-            return FormKey.Null;
+            return FormKey.None;
         }
         return Factory(masterReferences, idWithModID);
     }
