@@ -29,6 +29,11 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// A static readonly singleton Null FormKey (00000000)
     /// </summary>
     public static readonly FormKey Null = new FormKey(ModKey.Null, 0);
+    
+    /// <summary>
+    /// A static readonly singleton string representing a none FormKey
+    /// </summary>
+    public const string NoneStr = "None";
         
     /// <summary>
     /// A static readonly singleton None FormKey (FFFFFFFF)
@@ -128,6 +133,13 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
             return true;
         }
 
+        // If equal to None
+        if (NoneStr.AsSpan().Equals(str, StringComparison.OrdinalIgnoreCase))
+        {
+            formKey = None;
+            return true;
+        }
+
         // If less than Null:Null, is invalid
         const int shortCircuitSize = 9;
         if (str.Length < shortCircuitSize)
@@ -223,9 +235,14 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     {
         if (ID == 0 && ModKey.IsNull)
         {
-            return "Null";
+            return NullStr;
         }
-        return $"{(ID == 0 ? "Null" : IDString())}:{ModKey}";
+
+        if (None == this)
+        {
+            return NoneStr;
+        }
+        return $"{IDString()}:{ModKey}";
     }
          
     /// <summary>

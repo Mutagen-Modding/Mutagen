@@ -67,6 +67,20 @@ public class FormKeyTests
     }
 
     [Fact]
+    public void Import_None()
+    {
+        Assert.True(
+            FormKey.TryFactory(FormKey.NoneStr, out FormKey id));
+        Assert.Equal(
+            FormKey.None,
+            id);
+        Assert.Equal(
+            ModKey.Null,
+            id.ModKey);
+        Assert.True(id.IsNull);
+    }
+
+    [Fact]
     public void Import_Null_ID()
     {
         Assert.True(
@@ -203,6 +217,12 @@ public class FormKeyTests
     }
 
     [Fact]
+    public void Null_NoneIsNull()
+    {
+        FormKey.None.IsNull.Should().BeTrue();
+    }
+
+    [Fact]
     public void Null_ExistingModKeyIsNull()
     {
         new FormKey(TestConstants.Skyrim, 0).IsNull.Should().BeTrue();
@@ -228,6 +248,13 @@ public class FormKeyTests
     public void NullEquality()
     {
         var fk = FormKey.Null;
+        fk.Should().Be(fk);
+    }
+
+    [Fact]
+    public void NoneEquality()
+    {
+        var fk = FormKey.None;
         fk.Should().Be(fk);
     }
 
@@ -455,5 +482,46 @@ public class FormKeyTests
         Assert.Throws<ArgumentOutOfRangeException>(() => compare.Compare(k1, k2));
     }
     #endregion
+    #endregion
+
+    #region Strings
+
+    [Fact]
+    public void TypicalToString()
+    {
+        var str = "123456:Skyrim.esm";
+        FormKey.Factory(str)
+            .ToString()
+            .Should().Be(str);
+    }
+
+    [Fact]
+    public void NoneToString()
+    {
+        FormKey.None
+            .ToString()
+            .Should().Be(FormKey.NoneStr);
+    }
+
+    [Fact]
+    public void NullToString()
+    {
+        FormKey.Null
+            .ToString()
+            .Should().Be(FormKey.NullStr);
+        FormKey.Factory("Null:Null")
+            .ToString()
+            .Should().Be("Null");
+        FormKey.Factory("000000:Null")
+            .ToString()
+            .Should().Be("Null");
+        FormKey.Factory("000000:Skyrim.esm")
+            .ToString()
+            .Should().Be("000000:Skyrim.esm");
+        FormKey.Factory("123456:Null")
+            .ToString()
+            .Should().Be("123456:Null");
+    }
+
     #endregion
 }
