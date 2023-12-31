@@ -68,7 +68,7 @@ public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedS
         set => Set(TargetLanguage, value);
     }
 
-    public int NumLanguages => _localization?.Count ?? StringsLookup?.AvailableLanguages(StringsSource).Count ?? 1;
+    public int NumLanguages => _localization?.Count ?? 1;
 
     private static TranslatedString _empty = new(Language.English, string.Empty);
     public static ITranslatedStringGetter Empty => _empty;
