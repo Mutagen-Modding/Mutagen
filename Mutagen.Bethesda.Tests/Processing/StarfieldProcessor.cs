@@ -54,6 +54,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
         AddDynamicProcessing(RecordTypes.WRLD, ProcessWorldspaces);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
+        AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -535,7 +536,19 @@ public class StarfieldProcessor : Processor
             ProcessZeroFloats(subRec, fileOffset);
         }
     }
-    
+
+    private void ProcessSnapTemplates(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var enam in majorFrame.FindEnumerateSubrecords(RecordTypes.ENAM))
+        {
+            int loc = 8;
+            ProcessZeroFloats(enam, fileOffset, ref loc, 6);
+        }
+    }
+
     private void ProcessPackages(
         IMutagenReadStream stream,
         MajorRecordFrame majorFrame,

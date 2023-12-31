@@ -725,6 +725,7 @@ public partial class RecordTypes
     public static readonly RecordType STND = new(0x444E5453);
     public static readonly RecordType STON = new(0x4E4F5453);
     public static readonly RecordType STOP = new(0x504F5453);
+    public static readonly RecordType STPT = new(0x54505453);
     public static readonly RecordType STRD = new(0x44525453);
     public static readonly RecordType STRV = new(0x56525453);
     public static readonly RecordType STSC = new(0x43535453);

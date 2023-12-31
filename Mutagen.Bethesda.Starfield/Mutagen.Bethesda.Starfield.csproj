@@ -6195,5 +6195,17 @@
     <Compile Include="Records\Major Records\WaterNoiseProperties_Generated.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SnapNodeEntry_Generated.cs">
+      <DependentUpon>SnapTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SnapParentNodeEntry_Generated.cs">
+      <DependentUpon>SnapTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SnapTemplateRnamTraversal_Generated.cs">
+      <DependentUpon>SnapTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\OffsetRotation_Generated.cs">
+      <DependentUpon>OffsetRotation.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

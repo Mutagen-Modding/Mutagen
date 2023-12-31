@@ -723,6 +723,7 @@ public partial class RecordTypeInts
     public const int STND = 0x444E5453;
     public const int STON = 0x4E4F5453;
     public const int STOP = 0x504F5453;
+    public const int STPT = 0x54505453;
     public const int STRD = 0x44525453;
     public const int STRV = 0x56525453;
     public const int STSC = 0x43535453;

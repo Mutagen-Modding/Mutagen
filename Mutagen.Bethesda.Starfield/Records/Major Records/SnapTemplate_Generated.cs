@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +57,101 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ISnapTemplateGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Parent
+        private readonly IFormLinkNullable<ISnapTemplateGetter> _Parent = new FormLinkNullable<ISnapTemplateGetter>();
+        public IFormLinkNullable<ISnapTemplateGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISnapTemplateGetter> ISnapTemplateGetter.Parent => this.Parent;
+        #endregion
+        #region Nodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SnapNodeEntry> _Nodes = new ExtendedList<SnapNodeEntry>();
+        public ExtendedList<SnapNodeEntry> Nodes
+        {
+            get => this._Nodes;
+            init => this._Nodes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISnapNodeEntryGetter> ISnapTemplateGetter.Nodes => _Nodes;
+        #endregion
+
+        #endregion
+        #region ParentNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SnapParentNodeEntry> _ParentNodes = new ExtendedList<SnapParentNodeEntry>();
+        public ExtendedList<SnapParentNodeEntry> ParentNodes
+        {
+            get => this._ParentNodes;
+            init => this._ParentNodes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISnapParentNodeEntryGetter> ISnapTemplateGetter.ParentNodes => _ParentNodes;
+        #endregion
+
+        #endregion
+        #region BNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single[]? _BNAM;
+        public Single[]? BNAM
+        {
+            get => this._BNAM;
+            set => this._BNAM = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Single>? ISnapTemplateGetter.BNAM => _BNAM;
+        #endregion
+
+        #endregion
+        #region NextNodeID
+        public UInt32? NextNodeID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ISnapTemplateGetter.NextNodeID => this.NextNodeID;
+        #endregion
+        #region STPT
+        public UInt32? STPT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ISnapTemplateGetter.STPT => this.STPT;
+        #endregion
+        #region CNAM
+        public String? CNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ISnapTemplateGetter.CNAM => this.CNAM;
+        #endregion
+        #region SnapTemplateRnamTraversal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SnapTemplateRnamTraversal> _SnapTemplateRnamTraversal = new ExtendedList<SnapTemplateRnamTraversal>();
+        public ExtendedList<SnapTemplateRnamTraversal> SnapTemplateRnamTraversal
+        {
+            get => this._SnapTemplateRnamTraversal;
+            init => this._SnapTemplateRnamTraversal = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISnapTemplateRnamTraversalGetter> ISnapTemplateGetter.SnapTemplateRnamTraversal => _SnapTemplateRnamTraversal;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +177,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Parent = initialValue;
+                this.Nodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>());
+                this.ParentNodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>());
+                this.BNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NextNodeID = initialValue;
+                this.STPT = initialValue;
+                this.CNAM = initialValue;
+                this.SnapTemplateRnamTraversal = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +195,16 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem Parent,
+                TItem Nodes,
+                TItem ParentNodes,
+                TItem BNAM,
+                TItem NextNodeID,
+                TItem STPT,
+                TItem CNAM,
+                TItem SnapTemplateRnamTraversal)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +214,15 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Parent = Parent;
+                this.Nodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>?>(Nodes, Enumerable.Empty<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>());
+                this.ParentNodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>?>(ParentNodes, Enumerable.Empty<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>());
+                this.BNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BNAM, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NextNodeID = NextNodeID;
+                this.STPT = STPT;
+                this.CNAM = CNAM;
+                this.SnapTemplateRnamTraversal = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>?>(SnapTemplateRnamTraversal, Enumerable.Empty<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +231,18 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Parent;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>?>? Nodes;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>?>? ParentNodes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? BNAM;
+            public TItem NextNodeID;
+            public TItem STPT;
+            public TItem CNAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>?>? SnapTemplateRnamTraversal;
             #endregion
 
             #region Equals
@@ -119,11 +256,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.Nodes, rhs.Nodes)) return false;
+                if (!object.Equals(this.ParentNodes, rhs.ParentNodes)) return false;
+                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(this.NextNodeID, rhs.NextNodeID)) return false;
+                if (!object.Equals(this.STPT, rhs.STPT)) return false;
+                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(this.SnapTemplateRnamTraversal, rhs.SnapTemplateRnamTraversal)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.Parent);
+                hash.Add(this.Nodes);
+                hash.Add(this.ParentNodes);
+                hash.Add(this.BNAM);
+                hash.Add(this.NextNodeID);
+                hash.Add(this.STPT);
+                hash.Add(this.CNAM);
+                hash.Add(this.SnapTemplateRnamTraversal);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +289,69 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Parent)) return false;
+                if (this.Nodes != null)
+                {
+                    if (!eval(this.Nodes.Overall)) return false;
+                    if (this.Nodes.Specific != null)
+                    {
+                        foreach (var item in this.Nodes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ParentNodes != null)
+                {
+                    if (!eval(this.ParentNodes.Overall)) return false;
+                    if (this.ParentNodes.Specific != null)
+                    {
+                        foreach (var item in this.ParentNodes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.BNAM != null)
+                {
+                    if (!eval(this.BNAM.Overall)) return false;
+                    if (this.BNAM.Specific != null)
+                    {
+                        foreach (var item in this.BNAM.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.NextNodeID)) return false;
+                if (!eval(this.STPT)) return false;
+                if (!eval(this.CNAM)) return false;
+                if (this.SnapTemplateRnamTraversal != null)
+                {
+                    if (!eval(this.SnapTemplateRnamTraversal.Overall)) return false;
+                    if (this.SnapTemplateRnamTraversal.Specific != null)
+                    {
+                        foreach (var item in this.SnapTemplateRnamTraversal.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +360,69 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Parent)) return true;
+                if (this.Nodes != null)
+                {
+                    if (eval(this.Nodes.Overall)) return true;
+                    if (this.Nodes.Specific != null)
+                    {
+                        foreach (var item in this.Nodes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ParentNodes != null)
+                {
+                    if (eval(this.ParentNodes.Overall)) return true;
+                    if (this.ParentNodes.Specific != null)
+                    {
+                        foreach (var item in this.ParentNodes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.BNAM != null)
+                {
+                    if (eval(this.BNAM.Overall)) return true;
+                    if (this.BNAM.Specific != null)
+                    {
+                        foreach (var item in this.BNAM.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.NextNodeID)) return true;
+                if (eval(this.STPT)) return true;
+                if (eval(this.CNAM)) return true;
+                if (this.SnapTemplateRnamTraversal != null)
+                {
+                    if (eval(this.SnapTemplateRnamTraversal.Overall)) return true;
+                    if (this.SnapTemplateRnamTraversal.Specific != null)
+                    {
+                        foreach (var item in this.SnapTemplateRnamTraversal.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +438,84 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Parent = eval(this.Parent);
+                if (Nodes != null)
+                {
+                    obj.Nodes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>>?>(eval(this.Nodes.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>>());
+                    if (Nodes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>>();
+                        obj.Nodes.Specific = l;
+                        foreach (var item in Nodes.Specific)
+                        {
+                            MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ParentNodes != null)
+                {
+                    obj.ParentNodes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>>?>(eval(this.ParentNodes.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>>());
+                    if (ParentNodes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>>();
+                        obj.ParentNodes.Specific = l;
+                        foreach (var item in ParentNodes.Specific)
+                        {
+                            MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (BNAM != null)
+                {
+                    obj.BNAM = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BNAM.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (BNAM.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.BNAM.Specific = l;
+                        foreach (var item in BNAM.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.NextNodeID = eval(this.NextNodeID);
+                obj.STPT = eval(this.STPT);
+                obj.CNAM = eval(this.CNAM);
+                if (SnapTemplateRnamTraversal != null)
+                {
+                    obj.SnapTemplateRnamTraversal = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>>?>(eval(this.SnapTemplateRnamTraversal.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>>());
+                    if (SnapTemplateRnamTraversal.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>>();
+                        obj.SnapTemplateRnamTraversal.Specific = l;
+                        foreach (var item in SnapTemplateRnamTraversal.Specific)
+                        {
+                            MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +534,119 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SnapTemplate.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Parent ?? true)
+                    {
+                        sb.AppendItem(Parent, "Parent");
+                    }
+                    if ((printMask?.Nodes?.Overall ?? true)
+                        && Nodes is {} NodesItem)
+                    {
+                        sb.AppendLine("Nodes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(NodesItem.Overall);
+                            if (NodesItem.Specific != null)
+                            {
+                                foreach (var subItem in NodesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ParentNodes?.Overall ?? true)
+                        && ParentNodes is {} ParentNodesItem)
+                    {
+                        sb.AppendLine("ParentNodes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ParentNodesItem.Overall);
+                            if (ParentNodesItem.Specific != null)
+                            {
+                                foreach (var subItem in ParentNodesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.BNAM?.Overall ?? true)
+                        && BNAM is {} BNAMItem)
+                    {
+                        sb.AppendLine("BNAM =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(BNAMItem.Overall);
+                            if (BNAMItem.Specific != null)
+                            {
+                                foreach (var subItem in BNAMItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.NextNodeID ?? true)
+                    {
+                        sb.AppendItem(NextNodeID, "NextNodeID");
+                    }
+                    if (printMask?.STPT ?? true)
+                    {
+                        sb.AppendItem(STPT, "STPT");
+                    }
+                    if (printMask?.CNAM ?? true)
+                    {
+                        sb.AppendItem(CNAM, "CNAM");
+                    }
+                    if ((printMask?.SnapTemplateRnamTraversal?.Overall ?? true)
+                        && SnapTemplateRnamTraversal is {} SnapTemplateRnamTraversalItem)
+                    {
+                        sb.AppendLine("SnapTemplateRnamTraversal =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SnapTemplateRnamTraversalItem.Overall);
+                            if (SnapTemplateRnamTraversalItem.Specific != null)
+                            {
+                                foreach (var subItem in SnapTemplateRnamTraversalItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +657,42 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Parent;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapNodeEntry.ErrorMask?>>?>? Nodes;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapParentNodeEntry.ErrorMask?>>?>? ParentNodes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? BNAM;
+            public Exception? NextNodeID;
+            public Exception? STPT;
+            public Exception? CNAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapTemplateRnamTraversal.ErrorMask?>>?>? SnapTemplateRnamTraversal;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SnapTemplate_FieldIndex enu = (SnapTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case SnapTemplate_FieldIndex.Components:
+                        return Components;
+                    case SnapTemplate_FieldIndex.Parent:
+                        return Parent;
+                    case SnapTemplate_FieldIndex.Nodes:
+                        return Nodes;
+                    case SnapTemplate_FieldIndex.ParentNodes:
+                        return ParentNodes;
+                    case SnapTemplate_FieldIndex.BNAM:
+                        return BNAM;
+                    case SnapTemplate_FieldIndex.NextNodeID:
+                        return NextNodeID;
+                    case SnapTemplate_FieldIndex.STPT:
+                        return STPT;
+                    case SnapTemplate_FieldIndex.CNAM:
+                        return CNAM;
+                    case SnapTemplate_FieldIndex.SnapTemplateRnamTraversal:
+                        return SnapTemplateRnamTraversal;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +703,33 @@ namespace Mutagen.Bethesda.Starfield
                 SnapTemplate_FieldIndex enu = (SnapTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case SnapTemplate_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SnapTemplate_FieldIndex.Parent:
+                        this.Parent = ex;
+                        break;
+                    case SnapTemplate_FieldIndex.Nodes:
+                        this.Nodes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapNodeEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SnapTemplate_FieldIndex.ParentNodes:
+                        this.ParentNodes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapParentNodeEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SnapTemplate_FieldIndex.BNAM:
+                        this.BNAM = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SnapTemplate_FieldIndex.NextNodeID:
+                        this.NextNodeID = ex;
+                        break;
+                    case SnapTemplate_FieldIndex.STPT:
+                        this.STPT = ex;
+                        break;
+                    case SnapTemplate_FieldIndex.CNAM:
+                        this.CNAM = ex;
+                        break;
+                    case SnapTemplate_FieldIndex.SnapTemplateRnamTraversal:
+                        this.SnapTemplateRnamTraversal = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapTemplateRnamTraversal.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +741,33 @@ namespace Mutagen.Bethesda.Starfield
                 SnapTemplate_FieldIndex enu = (SnapTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case SnapTemplate_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.Nodes:
+                        this.Nodes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapNodeEntry.ErrorMask?>>?>)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.ParentNodes:
+                        this.ParentNodes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapParentNodeEntry.ErrorMask?>>?>)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.BNAM:
+                        this.BNAM = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.NextNodeID:
+                        this.NextNodeID = (Exception?)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.STPT:
+                        this.STPT = (Exception?)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.CNAM:
+                        this.CNAM = (Exception?)obj;
+                        break;
+                    case SnapTemplate_FieldIndex.SnapTemplateRnamTraversal:
+                        this.SnapTemplateRnamTraversal = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapTemplateRnamTraversal.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +777,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (Parent != null) return true;
+                if (Nodes != null) return true;
+                if (ParentNodes != null) return true;
+                if (BNAM != null) return true;
+                if (NextNodeID != null) return true;
+                if (STPT != null) return true;
+                if (CNAM != null) return true;
+                if (SnapTemplateRnamTraversal != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +812,110 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                if (Nodes is {} NodesItem)
+                {
+                    sb.AppendLine("Nodes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(NodesItem.Overall);
+                        if (NodesItem.Specific != null)
+                        {
+                            foreach (var subItem in NodesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ParentNodes is {} ParentNodesItem)
+                {
+                    sb.AppendLine("ParentNodes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ParentNodesItem.Overall);
+                        if (ParentNodesItem.Specific != null)
+                        {
+                            foreach (var subItem in ParentNodesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (BNAM is {} BNAMItem)
+                {
+                    sb.AppendLine("BNAM =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(BNAMItem.Overall);
+                        if (BNAMItem.Specific != null)
+                        {
+                            foreach (var subItem in BNAMItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(NextNodeID, "NextNodeID");
+                }
+                {
+                    sb.AppendItem(STPT, "STPT");
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                if (SnapTemplateRnamTraversal is {} SnapTemplateRnamTraversalItem)
+                {
+                    sb.AppendLine("SnapTemplateRnamTraversal =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SnapTemplateRnamTraversalItem.Overall);
+                        if (SnapTemplateRnamTraversalItem.Specific != null)
+                        {
+                            foreach (var subItem in SnapTemplateRnamTraversalItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +924,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.Nodes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapNodeEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Nodes?.Overall, rhs.Nodes?.Overall), Noggog.ExceptionExt.Combine(this.Nodes?.Specific, rhs.Nodes?.Specific));
+                ret.ParentNodes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapParentNodeEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ParentNodes?.Overall, rhs.ParentNodes?.Overall), Noggog.ExceptionExt.Combine(this.ParentNodes?.Specific, rhs.ParentNodes?.Specific));
+                ret.BNAM = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.BNAM?.Overall, rhs.BNAM?.Overall), Noggog.ExceptionExt.Combine(this.BNAM?.Specific, rhs.BNAM?.Specific));
+                ret.NextNodeID = this.NextNodeID.Combine(rhs.NextNodeID);
+                ret.STPT = this.STPT.Combine(rhs.STPT);
+                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
+                ret.SnapTemplateRnamTraversal = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SnapTemplateRnamTraversal.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SnapTemplateRnamTraversal?.Overall, rhs.SnapTemplateRnamTraversal?.Overall), Noggog.ExceptionExt.Combine(this.SnapTemplateRnamTraversal?.Specific, rhs.SnapTemplateRnamTraversal?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +954,46 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool Parent;
+            public SnapNodeEntry.TranslationMask? Nodes;
+            public SnapParentNodeEntry.TranslationMask? ParentNodes;
+            public bool BNAM;
+            public bool NextNodeID;
+            public bool STPT;
+            public bool CNAM;
+            public SnapTemplateRnamTraversal.TranslationMask? SnapTemplateRnamTraversal;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Parent = defaultOn;
+                this.BNAM = defaultOn;
+                this.NextNodeID = defaultOn;
+                this.STPT = defaultOn;
+                this.CNAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Parent, null));
+                ret.Add((Nodes == null ? DefaultOn : !Nodes.GetCrystal().CopyNothing, Nodes?.GetCrystal()));
+                ret.Add((ParentNodes == null ? DefaultOn : !ParentNodes.GetCrystal().CopyNothing, ParentNodes?.GetCrystal()));
+                ret.Add((BNAM, null));
+                ret.Add((NextNodeID, null));
+                ret.Add((STPT, null));
+                ret.Add((CNAM, null));
+                ret.Add((SnapTemplateRnamTraversal == null ? DefaultOn : !SnapTemplateRnamTraversal.GetCrystal().CopyNothing, SnapTemplateRnamTraversal?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1005,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SnapTemplate_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SnapTemplateCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SnapTemplateSetterCommon.Instance.RemapLinks(this, mapping);
         public SnapTemplate(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1056,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ISnapTemplate);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SnapTemplateCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SnapTemplateSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SnapTemplateSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SnapTemplateSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1139,21 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISnapTemplate :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISnapTemplateInternal>,
         ISnapTemplateGetter,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<AComponent> Components { get; }
+        new IFormLinkNullable<ISnapTemplateGetter> Parent { get; set; }
+        new ExtendedList<SnapNodeEntry> Nodes { get; }
+        new ExtendedList<SnapParentNodeEntry> ParentNodes { get; }
+        new Single[]? BNAM { get; set; }
+        new UInt32? NextNodeID { get; set; }
+        new UInt32? STPT { get; set; }
+        new String? CNAM { get; set; }
+        new ExtendedList<SnapTemplateRnamTraversal> SnapTemplateRnamTraversal { get; }
     }
 
     public partial interface ISnapTemplateInternal :
@@ -440,11 +1166,22 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.STMP)]
     public partial interface ISnapTemplateGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISnapTemplateGetter>,
         IMapsToGetter<ISnapTemplateGetter>
     {
         static new ILoquiRegistration StaticRegistration => SnapTemplate_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IFormLinkNullableGetter<ISnapTemplateGetter> Parent { get; }
+        IReadOnlyList<ISnapNodeEntryGetter> Nodes { get; }
+        IReadOnlyList<ISnapParentNodeEntryGetter> ParentNodes { get; }
+        ReadOnlyMemorySlice<Single>? BNAM { get; }
+        UInt32? NextNodeID { get; }
+        UInt32? STPT { get; }
+        String? CNAM { get; }
+        IReadOnlyList<ISnapTemplateRnamTraversalGetter> SnapTemplateRnamTraversal { get; }
 
     }
 
@@ -621,6 +1358,15 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        Parent = 8,
+        Nodes = 9,
+        ParentNodes = 10,
+        BNAM = 11,
+        NextNodeID = 12,
+        STPT = 13,
+        CNAM = 14,
+        SnapTemplateRnamTraversal = 15,
     }
     #endregion
 
@@ -631,9 +1377,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(SnapTemplate.Mask<>);
 
@@ -663,8 +1409,24 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.STMP);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.STMP);
+            var all = RecordCollection.Factory(
+                RecordTypes.STMP,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.PNAM,
+                RecordTypes.ENAM,
+                RecordTypes.ONAM,
+                RecordTypes.TNAM,
+                RecordTypes.BNAM,
+                RecordTypes.INAM,
+                RecordTypes.STPT,
+                RecordTypes.CNAM,
+                RecordTypes.RNAM,
+                RecordTypes.SNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SnapTemplateBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1468,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISnapTemplateInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.Parent.Clear();
+            item.Nodes.Clear();
+            item.ParentNodes.Clear();
+            item.BNAM = null;
+            item.NextNodeID = default;
+            item.STPT = default;
+            item.CNAM = default;
+            item.SnapTemplateRnamTraversal.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1494,34 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISnapTemplate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Parent.Relink(mapping);
+            obj.Nodes.RemapLinks(mapping);
+            obj.SnapTemplateRnamTraversal.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISnapTemplate obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ISnapTemplate obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +1589,31 @@ namespace Mutagen.Bethesda.Starfield
             SnapTemplate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.Nodes = item.Nodes.CollectionEqualsHelper(
+                rhs.Nodes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ParentNodes = item.ParentNodes.CollectionEqualsHelper(
+                rhs.ParentNodes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.BNAM = EqualsMaskHelper.SpanEqualsHelper<Single>(
+                item.BNAM,
+                rhs.BNAM,
+                (l, r) => l.EqualsWithin(r),
+                include);
+            ret.NextNodeID = item.NextNodeID == rhs.NextNodeID;
+            ret.STPT = item.STPT == rhs.STPT;
+            ret.CNAM = string.Equals(item.CNAM, rhs.CNAM);
+            ret.SnapTemplateRnamTraversal = item.SnapTemplateRnamTraversal.CollectionEqualsHelper(
+                rhs.SnapTemplateRnamTraversal,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1663,96 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Parent ?? true)
+            {
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
+            }
+            if (printMask?.Nodes?.Overall ?? true)
+            {
+                sb.AppendLine("Nodes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Nodes)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.ParentNodes?.Overall ?? true)
+            {
+                sb.AppendLine("ParentNodes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.ParentNodes)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.BNAM?.Overall ?? true)
+                && item.BNAM is {} BNAMItem)
+            {
+                sb.AppendLine("BNAM =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in BNAMItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.NextNodeID ?? true)
+                && item.NextNodeID is {} NextNodeIDItem)
+            {
+                sb.AppendItem(NextNodeIDItem, "NextNodeID");
+            }
+            if ((printMask?.STPT ?? true)
+                && item.STPT is {} STPTItem)
+            {
+                sb.AppendItem(STPTItem, "STPT");
+            }
+            if ((printMask?.CNAM ?? true)
+                && item.CNAM is {} CNAMItem)
+            {
+                sb.AppendItem(CNAMItem, "CNAM");
+            }
+            if (printMask?.SnapTemplateRnamTraversal?.Overall ?? true)
+            {
+                sb.AppendLine("SnapTemplateRnamTraversal =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SnapTemplateRnamTraversal)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static SnapTemplate_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1803,43 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SnapTemplate_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.Nodes) ?? true))
+            {
+                if (!lhs.Nodes.SequenceEqual(rhs.Nodes, (l, r) => ((SnapNodeEntryCommon)((ISnapNodeEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SnapTemplate_FieldIndex.Nodes)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.ParentNodes) ?? true))
+            {
+                if (!lhs.ParentNodes.SequenceEqual(rhs.ParentNodes, (l, r) => ((SnapParentNodeEntryCommon)((ISnapParentNodeEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SnapTemplate_FieldIndex.ParentNodes)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.BNAM) ?? true))
+            {
+                if (!ObjectExt.NullSame(lhs.BNAM, rhs.BNAM)) return false;
+                if (!MemoryExtensions.SequenceEqual<Single>(lhs.BNAM!.Value.Span!, rhs.BNAM!.Value.Span!)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.NextNodeID) ?? true))
+            {
+                if (lhs.NextNodeID != rhs.NextNodeID) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.STPT) ?? true))
+            {
+                if (lhs.STPT != rhs.STPT) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.CNAM) ?? true))
+            {
+                if (!string.Equals(lhs.CNAM, rhs.CNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.SnapTemplateRnamTraversal) ?? true))
+            {
+                if (!lhs.SnapTemplateRnamTraversal.SequenceEqual(rhs.SnapTemplateRnamTraversal, (l, r) => ((SnapTemplateRnamTraversalCommon)((ISnapTemplateRnamTraversalGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SnapTemplate_FieldIndex.SnapTemplateRnamTraversal)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1868,24 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISnapTemplateGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            hash.Add(item.Parent);
+            hash.Add(item.Nodes);
+            hash.Add(item.ParentNodes);
+            hash.Add(item.BNAM);
+            if (item.NextNodeID is {} NextNodeIDitem)
+            {
+                hash.Add(NextNodeIDitem);
+            }
+            if (item.STPT is {} STPTitem)
+            {
+                hash.Add(STPTitem);
+            }
+            if (item.CNAM is {} CNAMitem)
+            {
+                hash.Add(CNAMitem);
+            }
+            hash.Add(item.SnapTemplateRnamTraversal);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1914,40 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
+            {
+                yield return ParentInfo;
+            }
+            foreach (var item in obj.Nodes.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.SnapTemplateRnamTraversal.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISnapTemplateGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +2023,122 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplate_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.Parent) ?? true))
+            {
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.Nodes) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplate_FieldIndex.Nodes);
+                try
+                {
+                    item.Nodes.SetTo(
+                        rhs.Nodes
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.ParentNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplate_FieldIndex.ParentNodes);
+                try
+                {
+                    item.ParentNodes.SetTo(
+                        rhs.ParentNodes
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.BNAM) ?? true))
+            {
+                item.BNAM = rhs.BNAM?.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.NextNodeID) ?? true))
+            {
+                item.NextNodeID = rhs.NextNodeID;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.STPT) ?? true))
+            {
+                item.STPT = rhs.STPT;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.CNAM) ?? true))
+            {
+                item.CNAM = rhs.CNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplate_FieldIndex.SnapTemplateRnamTraversal) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplate_FieldIndex.SnapTemplateRnamTraversal);
+                try
+                {
+                    item.SnapTemplateRnamTraversal.SetTo(
+                        rhs.SnapTemplateRnamTraversal
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2287,83 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SnapTemplateBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISnapTemplateGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Parent,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISnapNodeEntryGetter>.Instance.Write(
+                writer: writer,
+                items: item.Nodes,
+                transl: (MutagenWriter subWriter, ISnapNodeEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SnapNodeEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISnapParentNodeEntryGetter>.Instance.Write(
+                writer: writer,
+                items: item.ParentNodes,
+                transl: (MutagenWriter subWriter, ISnapParentNodeEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SnapParentNodeEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
+                writer: writer,
+                items: item.BNAM,
+                recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.NextNodeID,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.STPT,
+                header: translationParams.ConvertToCustom(RecordTypes.STPT));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISnapTemplateRnamTraversalGetter>.Instance.Write(
+                writer: writer,
+                items: item.SnapTemplateRnamTraversal,
+                transl: (MutagenWriter subWriter, ISnapTemplateRnamTraversalGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SnapTemplateRnamTraversalBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ISnapTemplateGetter item,
@@ -1184,10 +2380,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2435,104 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SnapTemplateBinaryCreateTranslation Instance = new SnapTemplateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.STMP;
+        public static ParseResult FillBinaryRecordTypes(
+            ISnapTemplateInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)SnapTemplate_FieldIndex.Components;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SnapTemplate_FieldIndex.Parent;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    item.Nodes.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SnapNodeEntry>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: SnapNodeEntry_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SnapNodeEntry.TryCreateFromBinary));
+                    return (int)SnapTemplate_FieldIndex.Nodes;
+                }
+                case RecordTypeInts.ONAM:
+                case RecordTypeInts.TNAM:
+                {
+                    item.ParentNodes.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SnapParentNodeEntry>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: SnapParentNodeEntry_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SnapParentNodeEntry.TryCreateFromBinary));
+                    return (int)SnapTemplate_FieldIndex.ParentNodes;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BNAM = BinaryOverlayArrayHelper.FloatSliceFromFixedSize(frame.ReadBytes(4 * 6), 6).ToArray();
+                    return (int)SnapTemplate_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NextNodeID = frame.ReadUInt32();
+                    return (int)SnapTemplate_FieldIndex.NextNodeID;
+                }
+                case RecordTypeInts.STPT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.STPT = frame.ReadUInt32();
+                    return (int)SnapTemplate_FieldIndex.STPT;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CNAM = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)SnapTemplate_FieldIndex.CNAM;
+                }
+                case RecordTypeInts.RNAM:
+                case RecordTypeInts.SNAM:
+                {
+                    item.SnapTemplateRnamTraversal.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SnapTemplateRnamTraversal>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: SnapTemplateRnamTraversal_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SnapTemplateRnamTraversal.TryCreateFromBinary));
+                    return (int)SnapTemplate_FieldIndex.SnapTemplateRnamTraversal;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2565,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SnapTemplateCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SnapTemplateCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SnapTemplateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2581,30 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISnapTemplate);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Parent
+        private int? _ParentLocation;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        #endregion
+        public IReadOnlyList<ISnapNodeEntryGetter> Nodes { get; private set; } = Array.Empty<ISnapNodeEntryGetter>();
+        public IReadOnlyList<ISnapParentNodeEntryGetter> ParentNodes { get; private set; } = Array.Empty<ISnapParentNodeEntryGetter>();
+        #region BNAM
+        private int? _BNAMLocation;
+        public ReadOnlyMemorySlice<Single>? BNAM => _BNAMLocation.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants), amount: 6) : default(ReadOnlyMemorySlice<Single>?);
+        #endregion
+        #region NextNodeID
+        private int? _NextNodeIDLocation;
+        public UInt32? NextNodeID => _NextNodeIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextNodeIDLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region STPT
+        private int? _STPTLocation;
+        public UInt32? STPT => _STPTLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _STPTLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region CNAM
+        private int? _CNAMLocation;
+        public String? CNAM => _CNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        public IReadOnlyList<ISnapTemplateRnamTraversalGetter> SnapTemplateRnamTraversal { get; private set; } = Array.Empty<ISnapTemplateRnamTraversalGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2662,98 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)SnapTemplate_FieldIndex.Components;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _ParentLocation = (stream.Position - offset);
+                    return (int)SnapTemplate_FieldIndex.Parent;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    this.Nodes = BinaryOverlayList.FactoryByArray<ISnapNodeEntryGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => SnapNodeEntryBinaryOverlay.SnapNodeEntryFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: SnapNodeEntry_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)SnapTemplate_FieldIndex.Nodes;
+                }
+                case RecordTypeInts.ONAM:
+                case RecordTypeInts.TNAM:
+                {
+                    this.ParentNodes = this.ParseRepeatedTypelessSubrecord<ISnapParentNodeEntryGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: SnapParentNodeEntry_Registration.TriggerSpecs,
+                        factory: SnapParentNodeEntryBinaryOverlay.SnapParentNodeEntryFactory);
+                    return (int)SnapTemplate_FieldIndex.ParentNodes;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BNAMLocation = (stream.Position - offset);
+                    return (int)SnapTemplate_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _NextNodeIDLocation = (stream.Position - offset);
+                    return (int)SnapTemplate_FieldIndex.NextNodeID;
+                }
+                case RecordTypeInts.STPT:
+                {
+                    _STPTLocation = (stream.Position - offset);
+                    return (int)SnapTemplate_FieldIndex.STPT;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CNAMLocation = (stream.Position - offset);
+                    return (int)SnapTemplate_FieldIndex.CNAM;
+                }
+                case RecordTypeInts.RNAM:
+                case RecordTypeInts.SNAM:
+                {
+                    this.SnapTemplateRnamTraversal = this.ParseRepeatedTypelessSubrecord<ISnapTemplateRnamTraversalGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: SnapTemplateRnamTraversal_Registration.TriggerSpecs,
+                        factory: SnapTemplateRnamTraversalBinaryOverlay.SnapTemplateRnamTraversalFactory);
+                    return (int)SnapTemplate_FieldIndex.SnapTemplateRnamTraversal;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -69,6 +69,7 @@
       <Group name="AttractionRules" refName="AttractionRule" />
       <Group name="Resources" refName="Resource" />
       <Group name="BiomeSwaps" refName="BiomeSwap" />
+      <Group name="SnapTemplates" refName="SnapTemplate" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
