@@ -2,6 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Layer" recordType="LAYR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <FormLink name="Parent" recordType="PNAM" refName="Layer" />
+      <Color name="SurfaceColor" recordType="XCLP" />
+      <UInt32 name="LODB" recordType="LODB" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

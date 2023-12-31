@@ -415,6 +415,7 @@ public partial class RecordTypes
     public static readonly RecordType LLKC = new(0x434B4C4C);
     public static readonly RecordType LMSW = new(0x57534D4C);
     public static readonly RecordType LNAM = new(0x4D414E4C);
+    public static readonly RecordType LODB = new(0x42444F4C);
     public static readonly RecordType LRNM = new(0x4D4E524C);
     public static readonly RecordType LSCR = new(0x5243534C);
     public static readonly RecordType LTEX = new(0x5845544C);
@@ -903,6 +904,7 @@ public partial class RecordTypes
     public static readonly RecordType XCLC = new(0x434C4358);
     public static readonly RecordType XCLD = new(0x444C4358);
     public static readonly RecordType XCLL = new(0x4C4C4358);
+    public static readonly RecordType XCLP = new(0x504C4358);
     public static readonly RecordType XCLW = new(0x574C4358);
     public static readonly RecordType XCMO = new(0x4F4D4358);
     public static readonly RecordType XCNT = new(0x544E4358);

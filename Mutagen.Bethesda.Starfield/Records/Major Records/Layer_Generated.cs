@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -32,6 +33,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -54,6 +56,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Parent
+        private readonly IFormLinkNullable<ILayerGetter> _Parent = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayerGetter> ILayerGetter.Parent => this.Parent;
+        #endregion
+        #region SurfaceColor
+        public Color? SurfaceColor { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? ILayerGetter.SurfaceColor => this.SurfaceColor;
+        #endregion
+        #region LODB
+        public UInt32? LODB { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ILayerGetter.LODB => this.LODB;
+        #endregion
 
         #region To String
 
@@ -79,6 +101,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Parent = initialValue;
+                this.SurfaceColor = initialValue;
+                this.LODB = initialValue;
             }
 
             public Mask(
@@ -88,7 +113,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Parent,
+                TItem SurfaceColor,
+                TItem LODB)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +126,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Parent = Parent;
+                this.SurfaceColor = SurfaceColor;
+                this.LODB = LODB;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +137,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Parent;
+            public TItem SurfaceColor;
+            public TItem LODB;
             #endregion
 
             #region Equals
@@ -119,11 +156,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.SurfaceColor, rhs.SurfaceColor)) return false;
+                if (!object.Equals(this.LODB, rhs.LODB)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Parent);
+                hash.Add(this.SurfaceColor);
+                hash.Add(this.LODB);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +177,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Parent)) return false;
+                if (!eval(this.SurfaceColor)) return false;
+                if (!eval(this.LODB)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +188,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Parent)) return true;
+                if (eval(this.SurfaceColor)) return true;
+                if (eval(this.LODB)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +206,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Parent = eval(this.Parent);
+                obj.SurfaceColor = eval(this.SurfaceColor);
+                obj.LODB = eval(this.LODB);
             }
             #endregion
 
@@ -175,6 +227,18 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Layer.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Parent ?? true)
+                    {
+                        sb.AppendItem(Parent, "Parent");
+                    }
+                    if (printMask?.SurfaceColor ?? true)
+                    {
+                        sb.AppendItem(SurfaceColor, "SurfaceColor");
+                    }
+                    if (printMask?.LODB ?? true)
+                    {
+                        sb.AppendItem(LODB, "LODB");
+                    }
                 }
             }
             #endregion
@@ -185,12 +249,24 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Parent;
+            public Exception? SurfaceColor;
+            public Exception? LODB;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Layer_FieldIndex enu = (Layer_FieldIndex)index;
                 switch (enu)
                 {
+                    case Layer_FieldIndex.Parent:
+                        return Parent;
+                    case Layer_FieldIndex.SurfaceColor:
+                        return SurfaceColor;
+                    case Layer_FieldIndex.LODB:
+                        return LODB;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +277,15 @@ namespace Mutagen.Bethesda.Starfield
                 Layer_FieldIndex enu = (Layer_FieldIndex)index;
                 switch (enu)
                 {
+                    case Layer_FieldIndex.Parent:
+                        this.Parent = ex;
+                        break;
+                    case Layer_FieldIndex.SurfaceColor:
+                        this.SurfaceColor = ex;
+                        break;
+                    case Layer_FieldIndex.LODB:
+                        this.LODB = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +297,15 @@ namespace Mutagen.Bethesda.Starfield
                 Layer_FieldIndex enu = (Layer_FieldIndex)index;
                 switch (enu)
                 {
+                    case Layer_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
+                        break;
+                    case Layer_FieldIndex.SurfaceColor:
+                        this.SurfaceColor = (Exception?)obj;
+                        break;
+                    case Layer_FieldIndex.LODB:
+                        this.LODB = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +315,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Parent != null) return true;
+                if (SurfaceColor != null) return true;
+                if (LODB != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +344,15 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(SurfaceColor, "SurfaceColor");
+                }
+                {
+                    sb.AppendItem(LODB, "LODB");
+                }
             }
             #endregion
 
@@ -255,6 +361,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.SurfaceColor = this.SurfaceColor.Combine(rhs.SurfaceColor);
+                ret.LODB = this.LODB.Combine(rhs.LODB);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +385,32 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Parent;
+            public bool SurfaceColor;
+            public bool LODB;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Parent = defaultOn;
+                this.SurfaceColor = defaultOn;
+                this.LODB = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Parent, null));
+                ret.Add((SurfaceColor, null));
+                ret.Add((LODB, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +422,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Layer_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerSetterCommon.Instance.RemapLinks(this, mapping);
         public Layer(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +552,14 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILayer :
+        IFormLinkContainer,
         ILayerGetter,
         ILoquiObjectSetter<ILayerInternal>,
         IStarfieldMajorRecordInternal
     {
+        new IFormLinkNullable<ILayerGetter> Parent { get; set; }
+        new Color? SurfaceColor { get; set; }
+        new UInt32? LODB { get; set; }
     }
 
     public partial interface ILayerInternal :
@@ -441,10 +573,14 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILayerGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ILayerGetter>,
         IMapsToGetter<ILayerGetter>
     {
         static new ILoquiRegistration StaticRegistration => Layer_Registration.Instance;
+        IFormLinkNullableGetter<ILayerGetter> Parent { get; }
+        Color? SurfaceColor { get; }
+        UInt32? LODB { get; }
 
     }
 
@@ -621,6 +757,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Parent = 7,
+        SurfaceColor = 8,
+        LODB = 9,
     }
     #endregion
 
@@ -631,9 +770,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Layer.Mask<>);
 
@@ -663,8 +802,15 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LAYR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LAYR);
+            var all = RecordCollection.Factory(
+                RecordTypes.LAYR,
+                RecordTypes.PNAM,
+                RecordTypes.XCLP,
+                RecordTypes.LODB);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LayerBinaryWriteTranslation);
         #region Interface
@@ -706,6 +852,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILayerInternal item)
         {
             ClearPartial();
+            item.Parent.Clear();
+            item.SurfaceColor = default;
+            item.LODB = default;
             base.Clear(item);
         }
         
@@ -723,6 +872,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Parent.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +940,9 @@ namespace Mutagen.Bethesda.Starfield
             Layer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.SurfaceColor = item.SurfaceColor.ColorOnlyEquals(rhs.SurfaceColor);
+            ret.LODB = item.LODB == rhs.LODB;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +992,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Parent ?? true)
+            {
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
+            }
+            if ((printMask?.SurfaceColor ?? true)
+                && item.SurfaceColor is {} SurfaceColorItem)
+            {
+                sb.AppendItem(SurfaceColorItem, "SurfaceColor");
+            }
+            if ((printMask?.LODB ?? true)
+                && item.LODB is {} LODBItem)
+            {
+                sb.AppendItem(LODBItem, "LODB");
+            }
         }
         
         public static Layer_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1056,18 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Layer_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Layer_FieldIndex.SurfaceColor) ?? true))
+            {
+                if (!lhs.SurfaceColor.ColorOnlyEquals(rhs.SurfaceColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Layer_FieldIndex.LODB) ?? true))
+            {
+                if (lhs.LODB != rhs.LODB) return false;
+            }
             return true;
         }
         
@@ -917,6 +1096,15 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILayerGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Parent);
+            if (item.SurfaceColor is {} SurfaceColoritem)
+            {
+                hash.Add(SurfaceColoritem);
+            }
+            if (item.LODB is {} LODBitem)
+            {
+                hash.Add(LODBitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1133,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
+            {
+                yield return ParentInfo;
             }
             yield break;
         }
@@ -1020,6 +1212,18 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Layer_FieldIndex.Parent) ?? true))
+            {
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Layer_FieldIndex.SurfaceColor) ?? true))
+            {
+                item.SurfaceColor = rhs.SurfaceColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Layer_FieldIndex.LODB) ?? true))
+            {
+                item.LODB = rhs.LODB;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1372,29 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly LayerBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ILayerGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Parent,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SurfaceColor,
+                header: translationParams.ConvertToCustom(RecordTypes.XCLP));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LODB,
+                header: translationParams.ConvertToCustom(RecordTypes.LODB));
+        }
+
         public void Write(
             MutagenWriter writer,
             ILayerGetter item,
@@ -1184,10 +1411,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1466,48 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly LayerBinaryCreateTranslation Instance = new LayerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LAYR;
+        public static ParseResult FillBinaryRecordTypes(
+            ILayerInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Layer_FieldIndex.Parent;
+                }
+                case RecordTypeInts.XCLP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SurfaceColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Layer_FieldIndex.SurfaceColor;
+                }
+                case RecordTypeInts.LODB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LODB = frame.ReadUInt32();
+                    return (int)Layer_FieldIndex.LODB;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1540,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1555,18 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILayer);
 
 
+        #region Parent
+        private int? _ParentLocation;
+        public IFormLinkNullableGetter<ILayerGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        #endregion
+        #region SurfaceColor
+        private int? _SurfaceColorLocation;
+        public Color? SurfaceColor => _SurfaceColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
+        #region LODB
+        private int? _LODBLocation;
+        public UInt32? LODB => _LODBLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LODBLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1624,44 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    _ParentLocation = (stream.Position - offset);
+                    return (int)Layer_FieldIndex.Parent;
+                }
+                case RecordTypeInts.XCLP:
+                {
+                    _SurfaceColorLocation = (stream.Position - offset);
+                    return (int)Layer_FieldIndex.SurfaceColor;
+                }
+                case RecordTypeInts.LODB:
+                {
+                    _LODBLocation = (stream.Position - offset);
+                    return (int)Layer_FieldIndex.LODB;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

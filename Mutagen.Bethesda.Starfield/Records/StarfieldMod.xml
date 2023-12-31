@@ -63,6 +63,7 @@
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />
       <Group name="AimAssistModels" refName="AimAssistModel" />
+      <Group name="Layers" refName="Layer" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="ObjectModifications" refName="AObjectModification" />
       <Group name="AttractionRules" refName="AttractionRule" />

@@ -413,6 +413,7 @@ public partial class RecordTypeInts
     public const int LLKC = 0x434B4C4C;
     public const int LMSW = 0x57534D4C;
     public const int LNAM = 0x4D414E4C;
+    public const int LODB = 0x42444F4C;
     public const int LRNM = 0x4D4E524C;
     public const int LSCR = 0x5243534C;
     public const int LTEX = 0x5845544C;
@@ -901,6 +902,7 @@ public partial class RecordTypeInts
     public const int XCLC = 0x434C4358;
     public const int XCLD = 0x444C4358;
     public const int XCLL = 0x4C4C4358;
+    public const int XCLP = 0x504C4358;
     public const int XCLW = 0x574C4358;
     public const int XCMO = 0x4F4D4358;
     public const int XCNT = 0x544E4358;
