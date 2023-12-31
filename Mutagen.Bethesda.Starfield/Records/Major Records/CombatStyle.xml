@@ -1,7 +1,110 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
+      <Data recordType="CSGD">
+        <Fields>
+          <Float name="OffensiveMult" />
+          <Float name="DefensiveMult" />
+          <Float name="GroupOffensiveMult" />
+          <Float name="EquipmentScoreMultMelee" />
+          <Float name="EquipmentScoreMultMagic" />
+          <Float name="EquipmentScoreMultRanged" />
+          <Float name="EquipmentScoreMultShout" />
+          <Float name="EquipmentScoreMultUnarmed" />
+          <Float name="EquipmentScoreMultStaff" />
+          <Float name="AvoidThreatChance" />
+          <Float name="DodgeThreadChance" />
+          <Float name="EvadeThreatChance" />
+          <Float name="CSGDUnknownFloat1" unknown="true" />
+          <Float name="CSGDUnknownFloat2" unknown="true" />
+          <Float name="CSGDUnknownFloat3" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="CSME">
+        <Fields>
+          <Float name="MeleeAttackStaggeredMult" />
+          <Float name="MeleePowerAttackStaggeredMult" />
+          <Float name="MeleePowerAttackBlockingMult" />
+          <Float name="MeleeBashMult" />
+          <Float name="MeleeBashRecoilMult" />
+          <Float name="MeleeBashAttackMult" />
+          <Float name="MeleeBashPowerAttackMult" />
+          <Float name="MeleeSpecialAttackMult" />
+          <Float name="MeleeBlockWhenStaggeredMult" />
+          <Float name="MeleeAttackWhenStaggeredMult" />
+        </Fields>
+      </Data>
+      <Data recordType="CSRA">
+        <Fields>
+          <Float name="RangedAccuracyMult" />
+          <Float name="CSRAUnknownFloat1" unknown="true" />
+          <Float name="CSRAUnknownFloat2" unknown="true" />
+          <Float name="CSRAUnknownFloat3" unknown="true" />
+          <Float name="CSRAUnknownFloat4" unknown="true" />
+          <Float name="CSRAUnknownFloat5" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="CSCR">
+        <Fields>
+          <Float name="CloseRangeDuelingCircleMult" />
+          <Float name="CloseRangeDuelingFallbackMult" />
+          <Float name="CloseRangeFlankDistance" />
+          <Float name="CloseRangeFlankingStalkTime" />
+          <Float name="CloseRangeChargeDistance" />
+          <Float name="CloseRangeChargingThrowProbability" />
+          <Float name="CloseRangeChargingSprintFastProbability" />
+          <Float name="CloseRangeChargingSideswipeProbability" />
+          <Float name="CloseRangeChargingDisengageProbability" />
+          <UInt32 name="CloseRangeChargingThrowMaxTargets" />
+          <Float name="CloseRangeFlankingVariance" />
+          <Float name="CSCRUnknownFloat1" unknown="true" />
+          <Float name="CSCRUnknownFloat2" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="CSLR">
+        <Fields>
+          <Float name="LongRangeStrafeMult" />
+          <Float name="LongRangeAdjustRangeMult" />
+          <Float name="LongRangeCrouchMult" />
+          <Float name="LongRangeWaitMult" />
+          <Float name="LongRangeRangeMult" />
+          <Float name="CSLRUnknownFloat1" unknown="true" />
+          <Float name="CSLRUnknownFloat2" unknown="true" />
+          <Float name="CSLRUnknownFloat3" unknown="true" />
+          <Float name="CSLRUnknownFloat4" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="CSCV">
+        <Fields>
+          <Float name="CoverSearchDistanceMult" />
+          <Float name="CSCVUnknownFloat1" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="CSFL">
+        <Fields>
+          <Float name="HoverChance" />
+          <Float name="DiveBombChance" />
+          <Float name="GroundAttackChance" />
+          <Float name="HoverTime" />
+          <Float name="GroundAttackTime" />
+          <Float name="PerchAttackChance" />
+          <Float name="PerchAttackTime" />
+          <Float name="FlyingAttackChance" />
+        </Fields>
+      </Data>
+      <ByteArray name="CSTN" recordType="CSTN" unknown="true" />
+      <ByteArray name="CSSG" recordType="CSSG" unknown="true" />
+      <ByteArray name="CSSM" recordType="CSSM" unknown="true" />
+      <ByteArray name="CSSR" recordType="CSSR" unknown="true" />
+      <ByteArray name="CSSA" recordType="CSSA" unknown="true" />
+      <ByteArray name="CSSD" recordType="CSSD" unknown="true" />
+      <Enum name="Flags" enumName="CombatStyle.Flag" recordType="DATA" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <FormLink name="TNAM" refName="CombatStyle" recordType="TNAM" unknown="true" />
+      <List name="UNAM" recordType="UNAM" unknown="true" >
+        <FormLink refName="CombatStyle" />
+      </List>
     </Fields>
   </Object>
 </Loqui>
