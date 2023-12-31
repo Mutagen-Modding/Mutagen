@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region FogDepthAmount
         public Single FogDepthAmount { get; set; } = default;
         #endregion
-        #region FogShallowCo_rlor
-        public Color FogShallowCo_rlor { get; set; } = default;
+        #region FogShallowColor
+        public Color FogShallowColor { get; set; } = default;
         #endregion
         #region FogDeepColor
         public Color FogDeepColor { get; set; } = default;
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ImageSpace = initialValue;
                 this.DATA = initialValue;
                 this.FogDepthAmount = initialValue;
-                this.FogShallowCo_rlor = initialValue;
+                this.FogShallowColor = initialValue;
                 this.FogDeepColor = initialValue;
                 this.FogColorShallowRange = initialValue;
                 this.FogColorDeepRange = initialValue;
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ImageSpace,
                 TItem DATA,
                 TItem FogDepthAmount,
-                TItem FogShallowCo_rlor,
+                TItem FogShallowColor,
                 TItem FogDeepColor,
                 TItem FogColorShallowRange,
                 TItem FogColorDeepRange,
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ImageSpace = ImageSpace;
                 this.DATA = DATA;
                 this.FogDepthAmount = FogDepthAmount;
-                this.FogShallowCo_rlor = FogShallowCo_rlor;
+                this.FogShallowColor = FogShallowColor;
                 this.FogDeepColor = FogDeepColor;
                 this.FogColorShallowRange = FogColorShallowRange;
                 this.FogColorDeepRange = FogColorDeepRange;
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ImageSpace;
             public TItem DATA;
             public TItem FogDepthAmount;
-            public TItem FogShallowCo_rlor;
+            public TItem FogShallowColor;
             public TItem FogDeepColor;
             public TItem FogColorShallowRange;
             public TItem FogColorDeepRange;
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
                 if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 if (!object.Equals(this.FogDepthAmount, rhs.FogDepthAmount)) return false;
-                if (!object.Equals(this.FogShallowCo_rlor, rhs.FogShallowCo_rlor)) return false;
+                if (!object.Equals(this.FogShallowColor, rhs.FogShallowColor)) return false;
                 if (!object.Equals(this.FogDeepColor, rhs.FogDeepColor)) return false;
                 if (!object.Equals(this.FogColorShallowRange, rhs.FogColorShallowRange)) return false;
                 if (!object.Equals(this.FogColorDeepRange, rhs.FogColorDeepRange)) return false;
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ImageSpace);
                 hash.Add(this.DATA);
                 hash.Add(this.FogDepthAmount);
-                hash.Add(this.FogShallowCo_rlor);
+                hash.Add(this.FogShallowColor);
                 hash.Add(this.FogDeepColor);
                 hash.Add(this.FogColorShallowRange);
                 hash.Add(this.FogColorDeepRange);
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.ImageSpace)) return false;
                 if (!eval(this.DATA)) return false;
                 if (!eval(this.FogDepthAmount)) return false;
-                if (!eval(this.FogShallowCo_rlor)) return false;
+                if (!eval(this.FogShallowColor)) return false;
                 if (!eval(this.FogDeepColor)) return false;
                 if (!eval(this.FogColorShallowRange)) return false;
                 if (!eval(this.FogColorDeepRange)) return false;
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.ImageSpace)) return true;
                 if (eval(this.DATA)) return true;
                 if (eval(this.FogDepthAmount)) return true;
-                if (eval(this.FogShallowCo_rlor)) return true;
+                if (eval(this.FogShallowColor)) return true;
                 if (eval(this.FogDeepColor)) return true;
                 if (eval(this.FogColorShallowRange)) return true;
                 if (eval(this.FogColorDeepRange)) return true;
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ImageSpace = eval(this.ImageSpace);
                 obj.DATA = eval(this.DATA);
                 obj.FogDepthAmount = eval(this.FogDepthAmount);
-                obj.FogShallowCo_rlor = eval(this.FogShallowCo_rlor);
+                obj.FogShallowColor = eval(this.FogShallowColor);
                 obj.FogDeepColor = eval(this.FogDeepColor);
                 obj.FogColorShallowRange = eval(this.FogColorShallowRange);
                 obj.FogColorDeepRange = eval(this.FogColorDeepRange);
@@ -1004,9 +1004,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(FogDepthAmount, "FogDepthAmount");
                     }
-                    if (printMask?.FogShallowCo_rlor ?? true)
+                    if (printMask?.FogShallowColor ?? true)
                     {
-                        sb.AppendItem(FogShallowCo_rlor, "FogShallowCo_rlor");
+                        sb.AppendItem(FogShallowColor, "FogShallowColor");
                     }
                     if (printMask?.FogDeepColor ?? true)
                     {
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ImageSpace;
             public Exception? DATA;
             public Exception? FogDepthAmount;
-            public Exception? FogShallowCo_rlor;
+            public Exception? FogShallowColor;
             public Exception? FogDeepColor;
             public Exception? FogColorShallowRange;
             public Exception? FogColorDeepRange;
@@ -1263,8 +1263,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return DATA;
                     case Water_FieldIndex.FogDepthAmount:
                         return FogDepthAmount;
-                    case Water_FieldIndex.FogShallowCo_rlor:
-                        return FogShallowCo_rlor;
+                    case Water_FieldIndex.FogShallowColor:
+                        return FogShallowColor;
                     case Water_FieldIndex.FogDeepColor:
                         return FogDeepColor;
                     case Water_FieldIndex.FogColorShallowRange:
@@ -1387,8 +1387,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Water_FieldIndex.FogDepthAmount:
                         this.FogDepthAmount = ex;
                         break;
-                    case Water_FieldIndex.FogShallowCo_rlor:
-                        this.FogShallowCo_rlor = ex;
+                    case Water_FieldIndex.FogShallowColor:
+                        this.FogShallowColor = ex;
                         break;
                     case Water_FieldIndex.FogDeepColor:
                         this.FogDeepColor = ex;
@@ -1554,8 +1554,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Water_FieldIndex.FogDepthAmount:
                         this.FogDepthAmount = (Exception?)obj;
                         break;
-                    case Water_FieldIndex.FogShallowCo_rlor:
-                        this.FogShallowCo_rlor = (Exception?)obj;
+                    case Water_FieldIndex.FogShallowColor:
+                        this.FogShallowColor = (Exception?)obj;
                         break;
                     case Water_FieldIndex.FogDeepColor:
                         this.FogDeepColor = (Exception?)obj;
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ImageSpace != null) return true;
                 if (DATA != null) return true;
                 if (FogDepthAmount != null) return true;
-                if (FogShallowCo_rlor != null) return true;
+                if (FogShallowColor != null) return true;
                 if (FogDeepColor != null) return true;
                 if (FogColorShallowRange != null) return true;
                 if (FogColorDeepRange != null) return true;
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(FogDepthAmount, "FogDepthAmount");
                 }
                 {
-                    sb.AppendItem(FogShallowCo_rlor, "FogShallowCo_rlor");
+                    sb.AppendItem(FogShallowColor, "FogShallowColor");
                 }
                 {
                     sb.AppendItem(FogDeepColor, "FogDeepColor");
@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.DATA = this.DATA.Combine(rhs.DATA);
                 ret.FogDepthAmount = this.FogDepthAmount.Combine(rhs.FogDepthAmount);
-                ret.FogShallowCo_rlor = this.FogShallowCo_rlor.Combine(rhs.FogShallowCo_rlor);
+                ret.FogShallowColor = this.FogShallowColor.Combine(rhs.FogShallowColor);
                 ret.FogDeepColor = this.FogDeepColor.Combine(rhs.FogDeepColor);
                 ret.FogColorShallowRange = this.FogColorShallowRange.Combine(rhs.FogColorShallowRange);
                 ret.FogColorDeepRange = this.FogColorDeepRange.Combine(rhs.FogColorDeepRange);
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ImageSpace;
             public bool DATA;
             public bool FogDepthAmount;
-            public bool FogShallowCo_rlor;
+            public bool FogShallowColor;
             public bool FogDeepColor;
             public bool FogColorShallowRange;
             public bool FogColorDeepRange;
@@ -2069,7 +2069,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ImageSpace = defaultOn;
                 this.DATA = defaultOn;
                 this.FogDepthAmount = defaultOn;
-                this.FogShallowCo_rlor = defaultOn;
+                this.FogShallowColor = defaultOn;
                 this.FogDeepColor = defaultOn;
                 this.FogColorShallowRange = defaultOn;
                 this.FogColorDeepRange = defaultOn;
@@ -2125,7 +2125,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ImageSpace, null));
                 ret.Add((DATA, null));
                 ret.Add((FogDepthAmount, null));
-                ret.Add((FogShallowCo_rlor, null));
+                ret.Add((FogShallowColor, null));
                 ret.Add((FogDeepColor, null));
                 ret.Add((FogColorShallowRange, null));
                 ret.Add((FogColorDeepRange, null));
@@ -2338,7 +2338,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
         new Single FogDepthAmount { get; set; }
-        new Color FogShallowCo_rlor { get; set; }
+        new Color FogShallowColor { get; set; }
         new Color FogDeepColor { get; set; }
         new Single FogColorShallowRange { get; set; }
         new Single FogColorDeepRange { get; set; }
@@ -2419,7 +2419,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         Single FogDepthAmount { get; }
-        Color FogShallowCo_rlor { get; }
+        Color FogShallowColor { get; }
         Color FogDeepColor { get; }
         Single FogColorShallowRange { get; }
         Single FogColorDeepRange { get; }
@@ -2647,7 +2647,7 @@ namespace Mutagen.Bethesda.Fallout4
         ImageSpace = 14,
         DATA = 15,
         FogDepthAmount = 16,
-        FogShallowCo_rlor = 17,
+        FogShallowColor = 17,
         FogDeepColor = 18,
         FogColorShallowRange = 19,
         FogColorDeepRange = 20,
@@ -2804,7 +2804,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.ImageSpace.Clear();
             item.DATA = default;
             item.FogDepthAmount = default;
-            item.FogShallowCo_rlor = default;
+            item.FogShallowColor = default;
             item.FogDeepColor = default;
             item.FogColorShallowRange = default;
             item.FogColorDeepRange = default;
@@ -2945,7 +2945,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
             ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.FogDepthAmount = item.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount);
-            ret.FogShallowCo_rlor = item.FogShallowCo_rlor.ColorOnlyEquals(rhs.FogShallowCo_rlor);
+            ret.FogShallowColor = item.FogShallowColor.ColorOnlyEquals(rhs.FogShallowColor);
             ret.FogDeepColor = item.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor);
             ret.FogColorShallowRange = item.FogColorShallowRange.EqualsWithin(rhs.FogColorShallowRange);
             ret.FogColorDeepRange = item.FogColorDeepRange.EqualsWithin(rhs.FogColorDeepRange);
@@ -3078,9 +3078,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.FogDepthAmount, "FogDepthAmount");
             }
-            if (printMask?.FogShallowCo_rlor ?? true)
+            if (printMask?.FogShallowColor ?? true)
             {
-                sb.AppendItem(item.FogShallowCo_rlor, "FogShallowCo_rlor");
+                sb.AppendItem(item.FogShallowColor, "FogShallowColor");
             }
             if (printMask?.FogDeepColor ?? true)
             {
@@ -3339,9 +3339,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowCo_rlor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowColor) ?? true))
             {
-                if (!lhs.FogShallowCo_rlor.ColorOnlyEquals(rhs.FogShallowCo_rlor)) return false;
+                if (!lhs.FogShallowColor.ColorOnlyEquals(rhs.FogShallowColor)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
             {
@@ -3563,7 +3563,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(DATAItem);
             }
             hash.Add(item.FogDepthAmount);
-            hash.Add(item.FogShallowCo_rlor);
+            hash.Add(item.FogShallowColor);
             hash.Add(item.FogDeepColor);
             hash.Add(item.FogColorShallowRange);
             hash.Add(item.FogColorDeepRange);
@@ -3784,9 +3784,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FogDepthAmount = rhs.FogDepthAmount;
             }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowCo_rlor) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowColor) ?? true))
             {
-                item.FogShallowCo_rlor = rhs.FogShallowCo_rlor;
+                item.FogShallowColor = rhs.FogShallowColor;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
             {
@@ -4225,7 +4225,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item: item.FogDepthAmount);
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.FogShallowCo_rlor);
+                    item: item.FogShallowColor);
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FogDeepColor);
@@ -4534,7 +4534,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (dataFrame.Remaining < 4) return null;
                     item.FogDepthAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.FogShallowCo_rlor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogShallowColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     if (dataFrame.Remaining < 4) return null;
                     item.FogDeepColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     if (dataFrame.Remaining < 4) return null;
@@ -4760,10 +4760,10 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _FogDepthAmount_IsSet => _DNAMLocation.HasValue;
         public Single FogDepthAmount => _FogDepthAmount_IsSet ? _recordData.Slice(_FogDepthAmountLocation, 4).Float() : default;
         #endregion
-        #region FogShallowCo_rlor
-        private int _FogShallowCo_rlorLocation => _DNAMLocation!.Value.Min + 0x4;
-        private bool _FogShallowCo_rlor_IsSet => _DNAMLocation.HasValue;
-        public Color FogShallowCo_rlor => _FogShallowCo_rlor_IsSet ? _recordData.Slice(_FogShallowCo_rlorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #region FogShallowColor
+        private int _FogShallowColorLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _FogShallowColor_IsSet => _DNAMLocation.HasValue;
+        public Color FogShallowColor => _FogShallowColor_IsSet ? _recordData.Slice(_FogShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FogDeepColor
         private int _FogDeepColorLocation => _DNAMLocation!.Value.Min + 0x8;
