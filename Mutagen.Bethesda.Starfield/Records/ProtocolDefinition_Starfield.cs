@@ -24,7 +24,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             AddonNode_Registration.Instance,
             AddToInventoryOnDestroyComponent_Registration.Instance,
             AffinityEvent_Registration.Instance,
-            AimAssistModelData_Registration.Instance,
+            AimAssistModel_Registration.Instance,
             AimAssistPose_Registration.Instance,
             AimModel_Registration.Instance,
             AimOpticalSightMarker_Registration.Instance,

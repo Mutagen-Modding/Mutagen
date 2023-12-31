@@ -43,7 +43,7 @@
           <FormLink name="AimModel" refName="AimModel" />
           <UInt8 name="AccuracyBonus" />
           <Bool name="HasScope" byteLength="1" />
-          <FormLink name="AimAssistTemplate" refName="AimAssistModelData" />
+          <FormLink name="AimAssistTemplate" refName="AimAssistModel" />
           <FormLink name="AimOpticalSightModel" refName="AimOpticalSightMarker" />
           <FormLink name="MeleeAimAssistModel" refName="MeleeAimAssistModel" />
           <UInt8 name="WAIMUnknown1" unknown="true" />

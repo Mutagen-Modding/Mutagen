@@ -375,14 +375,14 @@ namespace Mutagen.Bethesda.Starfield
         public Boolean HasScope { get; set; } = default;
         #endregion
         #region AimAssistTemplate
-        private readonly IFormLink<IAimAssistModelDataGetter> _AimAssistTemplate = new FormLink<IAimAssistModelDataGetter>();
-        public IFormLink<IAimAssistModelDataGetter> AimAssistTemplate
+        private readonly IFormLink<IAimAssistModelGetter> _AimAssistTemplate = new FormLink<IAimAssistModelGetter>();
+        public IFormLink<IAimAssistModelGetter> AimAssistTemplate
         {
             get => _AimAssistTemplate;
             set => _AimAssistTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IAimAssistModelDataGetter> IWeaponGetter.AimAssistTemplate => this.AimAssistTemplate;
+        IFormLinkGetter<IAimAssistModelGetter> IWeaponGetter.AimAssistTemplate => this.AimAssistTemplate;
         #endregion
         #region AimOpticalSightModel
         private readonly IFormLink<IAimOpticalSightMarkerGetter> _AimOpticalSightModel = new FormLink<IAimOpticalSightMarkerGetter>();
@@ -6561,7 +6561,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLink<IAimModelGetter> AimModel { get; set; }
         new Byte AccuracyBonus { get; set; }
         new Boolean HasScope { get; set; }
-        new IFormLink<IAimAssistModelDataGetter> AimAssistTemplate { get; set; }
+        new IFormLink<IAimAssistModelGetter> AimAssistTemplate { get; set; }
         new IFormLink<IAimOpticalSightMarkerGetter> AimOpticalSightModel { get; set; }
         new IFormLink<IMeleeAimAssistModelGetter> MeleeAimAssistModel { get; set; }
         new Byte WAIMUnknown1 { get; set; }
@@ -6781,7 +6781,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IAimModelGetter> AimModel { get; }
         Byte AccuracyBonus { get; }
         Boolean HasScope { get; }
-        IFormLinkGetter<IAimAssistModelDataGetter> AimAssistTemplate { get; }
+        IFormLinkGetter<IAimAssistModelGetter> AimAssistTemplate { get; }
         IFormLinkGetter<IAimOpticalSightMarkerGetter> AimOpticalSightModel { get; }
         IFormLinkGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModel { get; }
         Byte WAIMUnknown1 { get; }
@@ -12540,7 +12540,7 @@ namespace Mutagen.Bethesda.Starfield
         #region AimAssistTemplate
         private int _AimAssistTemplateLocation => _WAIMLocation!.Value.Min + 0xE;
         private bool _AimAssistTemplate_IsSet => _WAIMLocation.HasValue;
-        public IFormLinkGetter<IAimAssistModelDataGetter> AimAssistTemplate => _AimAssistTemplate_IsSet ? new FormLink<IAimAssistModelDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AimAssistTemplateLocation, 0x4)))) : FormLink<IAimAssistModelDataGetter>.Null;
+        public IFormLinkGetter<IAimAssistModelGetter> AimAssistTemplate => _AimAssistTemplate_IsSet ? new FormLink<IAimAssistModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AimAssistTemplateLocation, 0x4)))) : FormLink<IAimAssistModelGetter>.Null;
         #endregion
         #region AimOpticalSightModel
         private int _AimOpticalSightModelLocation => _WAIMLocation!.Value.Min + 0x12;

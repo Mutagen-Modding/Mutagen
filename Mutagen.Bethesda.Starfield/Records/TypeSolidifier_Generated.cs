@@ -176,27 +176,27 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
-        /// Scope a load order query to AimAssistModelData
+        /// Scope a load order query to AimAssistModel
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on AimAssistModelData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModelData, IAimAssistModelDataGetter> AimAssistModelData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        /// <returns>A typed object to do further queries on AimAssistModel</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModel, IAimAssistModelGetter> AimAssistModel(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModelData, IAimAssistModelDataGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IAimAssistModelDataGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimAssistModelData, IAimAssistModelDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModel, IAimAssistModelGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IAimAssistModelGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimAssistModel, IAimAssistModelGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to AimAssistModelData
+        /// Scope a load order query to AimAssistModel
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on AimAssistModelData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModelData, IAimAssistModelDataGetter> AimAssistModelData(this IEnumerable<IStarfieldModGetter> mods)
+        /// <returns>A typed object to do further queries on AimAssistModel</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModel, IAimAssistModelGetter> AimAssistModel(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModelData, IAimAssistModelDataGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IAimAssistModelDataGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimAssistModelData, IAimAssistModelDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistModel, IAimAssistModelGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IAimAssistModelGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimAssistModel, IAimAssistModelGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

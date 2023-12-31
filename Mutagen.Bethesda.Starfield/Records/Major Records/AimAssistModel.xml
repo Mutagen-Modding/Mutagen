@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimAssistModel" recordType="AAMD" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <Data recordType="SNAM">
+        <Fields>
+          <Float name="InnerConeAngleDegrees" />
+          <Float name="OuterConeAngleDegrees" />
+          <Float name="SteeringDegreesPerSec" />
+          <Float name="PitchScale" />
+          <Float name="InnerSteeringRing" />
+          <Float name="OuterSteeringRing" />
+          <Float name="Friction" />
+          <Float name="MoveFollowDegreesPerSec" />
+          <Float name="AdsSnapSteeringMult" />
+          <Float name="AdsSnapSeconds" />
+          <Float name="AdsSnapConeAngleDegrees" />
+          <Float name="NoSteering" />
+          <Float name="BulletBendingConeAngleDegrees" />
+          <Float name="AdsSnapSteeringMultiplierInnerRing" />
+          <Float name="AdsSnapSteeringMultiplierOuterRing" />
+          <Float name="AdsMultiplierInnerConeAngleDegrees" />
+          <Float name="AdsMultiplierOuterConeAngleDegrees" />
+          <Float name="AdsMultiplierInnerSteeringRing" />
+          <Float name="AdsMultiplierOuterSteeringRing" />
+          <Float name="AdsMultiplierFriction" />
+          <Float name="AdsMultiplierSteeringDegreesPerSec" />
+          <Bool name="AimAssistEnabled" byteLength="1" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AimAssistModelData" recordType="AAMD" objType="Record" baseClass="StarfieldMajorRecord">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

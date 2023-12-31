@@ -4727,8 +4727,8 @@
     <Compile Include="Records\Major Records\ActorReaction_Generated.cs">
       <DependentUpon>AffinityEvent.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AimAssistModelData_Generated.cs">
-      <DependentUpon>AimAssistModelData.xml</DependentUpon>
+    <Compile Include="Records\Major Records\AimAssistModel_Generated.cs">
+      <DependentUpon>AimAssistModel.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AimAssistPose_Generated.cs">
       <DependentUpon>AimAssistPose.xml</DependentUpon>
