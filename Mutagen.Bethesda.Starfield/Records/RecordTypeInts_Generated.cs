@@ -780,6 +780,7 @@ public partial class RecordTypeInts
     public const int WAMB = 0x424D4157;
     public const int WAOC = 0x434F4157;
     public const int WAOS = 0x534F4157;
+    public const int WASH = 0x48534157;
     public const int WATR = 0x52544157;
     public const int WATS = 0x53544157;
     public const int WAUD = 0x44554157;

@@ -782,6 +782,7 @@ public partial class RecordTypes
     public static readonly RecordType WAMB = new(0x424D4157);
     public static readonly RecordType WAOC = new(0x434F4157);
     public static readonly RecordType WAOS = new(0x534F4157);
+    public static readonly RecordType WASH = new(0x48534157);
     public static readonly RecordType WATR = new(0x52544157);
     public static readonly RecordType WATS = new(0x53544157);
     public static readonly RecordType WAUD = new(0x44554157);

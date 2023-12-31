@@ -2381,6 +2381,12 @@
     <Compile Include="Records\Major Records\Transform.cs">
       <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Water.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WaterNoiseProperties.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Weapon.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
@@ -6182,6 +6188,9 @@
     </Compile>
     <Compile Include="Records\Major Records\PackageEvent_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WaterNoiseProperties_Generated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

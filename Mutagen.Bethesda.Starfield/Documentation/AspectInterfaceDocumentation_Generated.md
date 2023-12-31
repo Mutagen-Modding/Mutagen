@@ -165,6 +165,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TimelineSceneAction
 - TimerSceneAction
 - UnknownObjectModification
+- Water
 - Weapon
 - WeaponModification
 - Worldspace
@@ -566,6 +567,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IPositionRotation
 ### UnknownObjectModification
 - IModeled
+- INamed
+### Water
 - INamed
 ### Weapon
 - IHaveVirtualMachineAdapter
