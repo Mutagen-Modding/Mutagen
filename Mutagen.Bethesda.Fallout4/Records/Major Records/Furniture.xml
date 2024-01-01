@@ -14,7 +14,7 @@
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
       <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
-      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
       <FormLink name="DrinkingWater" refName="Water" recordType="WNAM" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" binary="Custom" />

@@ -14,6 +14,7 @@ public partial class Furniture
     [Flags]
     public enum MajorFlag
     {
+        HasContainer = 0x0000_0004,
         IsPerch = 0x0000_0080,
         HasDistantLod = 0x0000_8000,
         RandomAnimStart = 0x0001_0000,
