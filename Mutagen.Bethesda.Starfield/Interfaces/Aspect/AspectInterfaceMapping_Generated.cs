@@ -59,6 +59,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
@@ -83,6 +84,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 AnimatedObject_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 ArmorModification_Registration.Instance,
@@ -112,6 +114,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
+                Ammunition_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 APackageData_Registration.Instance,
                 Armor_Registration.Instance,
@@ -172,6 +175,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 ActorValueModulation_Registration.Instance,
+                Ammunition_Registration.Instance,
                 AnimationSceneAction_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 APackageData_Registration.Instance,
@@ -265,6 +269,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
+                Ammunition_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 Armor_Registration.Instance,
                 ArmorModification_Registration.Instance,
@@ -311,6 +316,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
+                Ammunition_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 Armor_Registration.Instance,
                 ArmorModification_Registration.Instance,
@@ -358,6 +364,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 AcousticSpace_Registration.Instance,
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 AudioOcclusionPrimitive_Registration.Instance,
                 Book_Registration.Instance,
@@ -431,6 +438,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
             dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Ammunition_Registration.Instance,
                 Book_Registration.Instance,
                 Ingestible_Registration.Instance,
             });

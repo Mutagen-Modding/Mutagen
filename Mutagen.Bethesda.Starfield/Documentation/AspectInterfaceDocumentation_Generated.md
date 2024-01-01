@@ -36,6 +36,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Keyword
 ### IKeyworded
 - Activator
+- Ammunition
 - Armor
 - Book
 - Container
@@ -57,6 +58,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weather
 ### IModeled
 - Activator
+- Ammunition
 - AnimatedObject
 - AObjectModification
 - ArmorModification
@@ -84,6 +86,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - Activity
 - ActorValueModulation
+- Ammunition
 - AnimationSceneAction
 - AObjectModification
 - APackageData
@@ -174,6 +177,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IObjectBounded
 - AcousticSpace
 - Activator
+- Ammunition
 - Armor
 - AudioOcclusionPrimitive
 - BendableSpline
@@ -234,6 +238,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlacedTrap
 - Weapon
 ### IWeightValue
+- Ammunition
 - Book
 - Ingestible
 ## Concrete Classes to Interfaces
@@ -250,6 +255,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### ActorValueModulation
 - INamed
+### Ammunition
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IWeightValue
 ### AnimatedObject
 - IModeled
 ### AnimationSceneAction
