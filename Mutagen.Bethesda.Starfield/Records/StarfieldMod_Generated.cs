@@ -119,6 +119,7 @@ namespace Mutagen.Bethesda.Starfield
             _Layers_Object = new StarfieldGroup<Layer>(this);
             _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
+            _InstanceNamingRules_Object = new StarfieldGroup<InstanceNamingRules>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
@@ -554,6 +555,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAObjectModificationGetter> IStarfieldModGetter.ObjectModifications => _ObjectModifications_Object;
         #endregion
+        #region InstanceNamingRules
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<InstanceNamingRules> _InstanceNamingRules_Object;
+        public StarfieldGroup<InstanceNamingRules> InstanceNamingRules => _InstanceNamingRules_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IInstanceNamingRulesGetter> IStarfieldModGetter.InstanceNamingRules => _InstanceNamingRules_Object;
+        #endregion
         #region AttractionRules
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AttractionRule> _AttractionRules_Object;
@@ -723,6 +731,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.InstanceNamingRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -796,6 +805,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Layers,
                 TItem ConstructibleObjects,
                 TItem ObjectModifications,
+                TItem InstanceNamingRules,
                 TItem AttractionRules,
                 TItem Resources,
                 TItem BiomeSwaps,
@@ -867,6 +877,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Layers, new StarfieldGroup.Mask<TItem>(Layers));
                 this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ObjectModifications, new StarfieldGroup.Mask<TItem>(ObjectModifications));
+                this.InstanceNamingRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(InstanceNamingRules, new StarfieldGroup.Mask<TItem>(InstanceNamingRules));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AttractionRules, new StarfieldGroup.Mask<TItem>(AttractionRules));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeSwaps, new StarfieldGroup.Mask<TItem>(BiomeSwaps));
@@ -948,6 +959,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Layers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ObjectModifications { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? InstanceNamingRules { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AttractionRules { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeSwaps { get; set; }
@@ -1030,6 +1042,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Layers, rhs.Layers)) return false;
                 if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
+                if (!object.Equals(this.InstanceNamingRules, rhs.InstanceNamingRules)) return false;
                 if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
                 if (!object.Equals(this.BiomeSwaps, rhs.BiomeSwaps)) return false;
@@ -1105,6 +1118,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Layers);
                 hash.Add(this.ConstructibleObjects);
                 hash.Add(this.ObjectModifications);
+                hash.Add(this.InstanceNamingRules);
                 hash.Add(this.AttractionRules);
                 hash.Add(this.Resources);
                 hash.Add(this.BiomeSwaps);
@@ -1422,6 +1436,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ObjectModifications.Overall)) return false;
                     if (this.ObjectModifications.Specific != null && !this.ObjectModifications.Specific.All(eval)) return false;
+                }
+                if (InstanceNamingRules != null)
+                {
+                    if (!eval(this.InstanceNamingRules.Overall)) return false;
+                    if (this.InstanceNamingRules.Specific != null && !this.InstanceNamingRules.Specific.All(eval)) return false;
                 }
                 if (AttractionRules != null)
                 {
@@ -1780,6 +1799,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectModifications.Overall)) return true;
                     if (this.ObjectModifications.Specific != null && this.ObjectModifications.Specific.Any(eval)) return true;
                 }
+                if (InstanceNamingRules != null)
+                {
+                    if (eval(this.InstanceNamingRules.Overall)) return true;
+                    if (this.InstanceNamingRules.Specific != null && this.InstanceNamingRules.Specific.Any(eval)) return true;
+                }
                 if (AttractionRules != null)
                 {
                     if (eval(this.AttractionRules.Overall)) return true;
@@ -1904,6 +1928,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Layers = this.Layers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Layers.Overall), this.Layers.Specific?.Translate(eval));
                 obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
                 obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
+                obj.InstanceNamingRules = this.InstanceNamingRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.InstanceNamingRules.Overall), this.InstanceNamingRules.Specific?.Translate(eval));
                 obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
                 obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
                 obj.BiomeSwaps = this.BiomeSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeSwaps.Overall), this.BiomeSwaps.Specific?.Translate(eval));
@@ -2172,6 +2197,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ObjectModifications?.Print(sb);
                     }
+                    if (printMask?.InstanceNamingRules?.Overall ?? true)
+                    {
+                        InstanceNamingRules?.Print(sb);
+                    }
                     if (printMask?.AttractionRules?.Overall ?? true)
                     {
                         AttractionRules?.Print(sb);
@@ -2296,6 +2325,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Layer.ErrorMask>?>? Layers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<InstanceNamingRules.ErrorMask>?>? InstanceNamingRules;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>? BiomeSwaps;
@@ -2434,6 +2464,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ConstructibleObjects;
                     case StarfieldMod_FieldIndex.ObjectModifications:
                         return ObjectModifications;
+                    case StarfieldMod_FieldIndex.InstanceNamingRules:
+                        return InstanceNamingRules;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         return AttractionRules;
                     case StarfieldMod_FieldIndex.Resources:
@@ -2643,6 +2675,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ObjectModifications:
                         this.ObjectModifications = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.InstanceNamingRules:
+                        this.InstanceNamingRules = new MaskItem<Exception?, StarfieldGroup.ErrorMask<InstanceNamingRules.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>(ex, null);
@@ -2864,6 +2899,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ObjectModifications:
                         this.ObjectModifications = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.InstanceNamingRules:
+                        this.InstanceNamingRules = (MaskItem<Exception?, StarfieldGroup.ErrorMask<InstanceNamingRules.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>?)obj;
                         break;
@@ -2962,6 +3000,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Layers != null) return true;
                 if (ConstructibleObjects != null) return true;
                 if (ObjectModifications != null) return true;
+                if (InstanceNamingRules != null) return true;
                 if (AttractionRules != null) return true;
                 if (Resources != null) return true;
                 if (BiomeSwaps != null) return true;
@@ -3057,6 +3096,7 @@ namespace Mutagen.Bethesda.Starfield
                 Layers?.Print(sb);
                 ConstructibleObjects?.Print(sb);
                 ObjectModifications?.Print(sb);
+                InstanceNamingRules?.Print(sb);
                 AttractionRules?.Print(sb);
                 Resources?.Print(sb);
                 BiomeSwaps?.Print(sb);
@@ -3135,6 +3175,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Layers = this.Layers.Combine(rhs.Layers, (l, r) => l.Combine(r));
                 ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
+                ret.InstanceNamingRules = this.InstanceNamingRules.Combine(rhs.InstanceNamingRules, (l, r) => l.Combine(r));
                 ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
                 ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
                 ret.BiomeSwaps = this.BiomeSwaps.Combine(rhs.BiomeSwaps, (l, r) => l.Combine(r));
@@ -3228,6 +3269,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Layer.TranslationMask>? Layers;
             public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
             public StarfieldGroup.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
+            public StarfieldGroup.TranslationMask<InstanceNamingRules.TranslationMask>? InstanceNamingRules;
             public StarfieldGroup.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
             public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
             public StarfieldGroup.TranslationMask<BiomeSwap.TranslationMask>? BiomeSwaps;
@@ -3322,6 +3364,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Layers != null ? Layers.OnOverall : DefaultOn, Layers?.GetCrystal()));
                 ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
                 ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
+                ret.Add((InstanceNamingRules != null ? InstanceNamingRules.OnOverall : DefaultOn, InstanceNamingRules?.GetCrystal()));
                 ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
                 ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
                 ret.Add((BiomeSwaps != null ? BiomeSwaps.OnOverall : DefaultOn, BiomeSwaps?.GetCrystal()));
@@ -3437,6 +3480,7 @@ namespace Mutagen.Bethesda.Starfield
             _Layers_Object = new StarfieldGroup<Layer>(this);
             _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
+            _InstanceNamingRules_Object = new StarfieldGroup<InstanceNamingRules>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
@@ -3692,6 +3736,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectModifications.RecordCache.Set(rhsMod.ObjectModifications.RecordCache.Items);
             }
+            if (mask?.InstanceNamingRules ?? true)
+            {
+                this.InstanceNamingRules.RecordCache.Set(rhsMod.InstanceNamingRules.RecordCache.Items);
+            }
             if (mask?.AttractionRules ?? true)
             {
                 this.AttractionRules.RecordCache.Set(rhsMod.AttractionRules.RecordCache.Items);
@@ -3801,6 +3849,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
+            count += InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
             count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
             count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
@@ -4144,6 +4193,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Layer> Layers { get; }
         new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
         new StarfieldGroup<AObjectModification> ObjectModifications { get; }
+        new StarfieldGroup<InstanceNamingRules> InstanceNamingRules { get; }
         new StarfieldGroup<AttractionRule> AttractionRules { get; }
         new StarfieldGroup<Resource> Resources { get; }
         new StarfieldGroup<BiomeSwap> BiomeSwaps { get; }
@@ -4233,6 +4283,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ILayerGetter> Layers { get; }
         IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
         IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
+        IStarfieldGroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules { get; }
         IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules { get; }
         IStarfieldGroupGetter<IResourceGetter> Resources { get; }
         IStarfieldGroupGetter<IBiomeSwapGetter> BiomeSwaps { get; }
@@ -4885,16 +4936,17 @@ namespace Mutagen.Bethesda.Starfield
         Layers = 57,
         ConstructibleObjects = 58,
         ObjectModifications = 59,
-        AttractionRules = 60,
-        Resources = 61,
-        BiomeSwaps = 62,
-        SnapTemplates = 63,
-        Planets = 64,
-        ConditionRecords = 65,
-        SurfacePatternStyles = 66,
-        TerminalMenus = 67,
-        LegendaryItems = 68,
-        ActorValueModulations = 69,
+        InstanceNamingRules = 60,
+        AttractionRules = 61,
+        Resources = 62,
+        BiomeSwaps = 63,
+        SnapTemplates = 64,
+        Planets = 65,
+        ConditionRecords = 66,
+        SurfacePatternStyles = 67,
+        TerminalMenus = 68,
+        LegendaryItems = 69,
+        ActorValueModulations = 70,
     }
     #endregion
 
@@ -4905,9 +4957,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 70;
+        public const ushort AdditionalFieldCount = 71;
 
-        public const ushort FieldCount = 70;
+        public const ushort FieldCount = 71;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -5032,6 +5084,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Layers.Clear();
             item.ConstructibleObjects.Clear();
             item.ObjectModifications.Clear();
+            item.InstanceNamingRules.Clear();
             item.AttractionRules.Clear();
             item.Resources.Clear();
             item.BiomeSwaps.Clear();
@@ -5095,6 +5148,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Layers.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
             obj.ObjectModifications.RemapLinks(mapping);
+            obj.InstanceNamingRules.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
@@ -5195,6 +5249,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Layers.Remove(keys);
             obj.ConstructibleObjects.Remove(keys);
             obj.ObjectModifications.Remove(keys);
+            obj.InstanceNamingRules.Remove(keys);
             obj.AttractionRules.Remove(keys);
             obj.Resources.Remove(keys);
             obj.BiomeSwaps.Remove(keys);
@@ -5733,6 +5788,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IUnknownObjectModification":
                 case "IUnknownObjectModificationInternal":
                     obj.ObjectModifications.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    obj.InstanceNamingRules.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6518,6 +6581,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Layers = MaskItemExt.Factory(item.Layers.GetEqualsMask(rhs.Layers, include), include);
             ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
             ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
+            ret.InstanceNamingRules = MaskItemExt.Factory(item.InstanceNamingRules.GetEqualsMask(rhs.InstanceNamingRules, include), include);
             ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
             ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
             ret.BiomeSwaps = MaskItemExt.Factory(item.BiomeSwaps.GetEqualsMask(rhs.BiomeSwaps, include), include);
@@ -6811,6 +6875,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.ObjectModifications?.Overall ?? true)
             {
                 item.ObjectModifications?.Print(sb, "ObjectModifications");
+            }
+            if (printMask?.InstanceNamingRules?.Overall ?? true)
+            {
+                item.InstanceNamingRules?.Print(sb, "InstanceNamingRules");
             }
             if (printMask?.AttractionRules?.Overall ?? true)
             {
@@ -7341,6 +7409,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectModificationsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.InstanceNamingRules) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.InstanceNamingRules, rhs.InstanceNamingRules, out var lhsInstanceNamingRules, out var rhsInstanceNamingRules, out var isInstanceNamingRulesEqual))
+                {
+                    if (!object.Equals(lhsInstanceNamingRules, rhsInstanceNamingRules)) return false;
+                }
+                else if (!isInstanceNamingRulesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AttractionRules) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AttractionRules, rhs.AttractionRules, out var lhsAttractionRules, out var rhsAttractionRules, out var isAttractionRulesEqual))
@@ -7487,6 +7563,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Layers);
             hash.Add(item.ConstructibleObjects);
             hash.Add(item.ObjectModifications);
+            hash.Add(item.InstanceNamingRules);
             hash.Add(item.AttractionRules);
             hash.Add(item.Resources);
             hash.Add(item.BiomeSwaps);
@@ -7809,6 +7886,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAObjectModification":
                 case "IAObjectModificationInternal":
                     return obj.ObjectModifications;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    return obj.InstanceNamingRules;
                 case "AttractionRule":
                 case "IAttractionRuleGetter":
                 case "IAttractionRule":
@@ -7885,7 +7967,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[69];
+            Stream[] outputStreams = new Stream[70];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7946,16 +8028,17 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Layers, 56, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 57, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 58, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 59, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 60, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 61, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 62, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 63, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 64, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 65, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 66, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 67, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 68, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 59, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 60, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 61, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 62, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 63, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 64, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 65, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 66, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 67, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 68, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 69, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8198,6 +8281,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ObjectModifications.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.InstanceNamingRules.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -8473,6 +8560,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ObjectModifications.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.InstanceNamingRules.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9069,6 +9160,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAObjectModification":
                 case "IAObjectModificationInternal":
                     foreach (var item in obj.ObjectModifications.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    foreach (var item in obj.InstanceNamingRules.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9840,6 +9940,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.ObjectModifications,
                 groupGetter: (m) => m.ObjectModifications))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, InstanceNamingRules, IInstanceNamingRulesGetter>(
+                srcGroup: obj.InstanceNamingRules,
+                type: typeof(IInstanceNamingRulesGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.InstanceNamingRules,
+                groupGetter: (m) => m.InstanceNamingRules))
             {
                 yield return item;
             }
@@ -10772,6 +10881,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.ObjectModifications,
                         groupGetter: (m) => m.ObjectModifications))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "InstanceNamingRules":
+                case "IInstanceNamingRulesGetter":
+                case "IInstanceNamingRules":
+                case "IInstanceNamingRulesInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, InstanceNamingRules, IInstanceNamingRulesGetter>(
+                        srcGroup: obj.InstanceNamingRules,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.InstanceNamingRules,
+                        groupGetter: (m) => m.InstanceNamingRules))
                     {
                         yield return item;
                     }
@@ -12624,6 +12747,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.InstanceNamingRules) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.InstanceNamingRules);
+                try
+                {
+                    item.InstanceNamingRules.DeepCopyIn(
+                        rhs: rhs.InstanceNamingRules,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.InstanceNamingRules));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AttractionRules) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AttractionRules);
@@ -12973,6 +13116,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Layers;
         public bool ConstructibleObjects;
         public bool ObjectModifications;
+        public bool InstanceNamingRules;
         public bool AttractionRules;
         public bool Resources;
         public bool BiomeSwaps;
@@ -13047,6 +13191,7 @@ namespace Mutagen.Bethesda.Starfield
             Layers = defaultValue;
             ConstructibleObjects = defaultValue;
             ObjectModifications = defaultValue;
+            InstanceNamingRules = defaultValue;
             AttractionRules = defaultValue;
             Resources = defaultValue;
             BiomeSwaps = defaultValue;
@@ -13761,6 +13906,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ObjectModificationsItem).BinaryWriteTranslator).Write<IAObjectModificationGetter>(
                         item: ObjectModificationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.InstanceNamingRules ?? true)
+            {
+                var InstanceNamingRulesItem = item.InstanceNamingRules;
+                if (InstanceNamingRulesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)InstanceNamingRulesItem).BinaryWriteTranslator).Write<IInstanceNamingRulesGetter>(
+                        item: InstanceNamingRulesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -14761,6 +14917,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.ObjectModifications;
                 }
+                case RecordTypeInts.INNR:
+                {
+                    if (importMask?.InstanceNamingRules ?? true)
+                    {
+                        item.InstanceNamingRules.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.InstanceNamingRules;
+                }
                 case RecordTypeInts.AORU:
                 {
                     if (importMask?.AttractionRules ?? true)
@@ -15367,6 +15537,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? StarfieldGroupBinaryOverlay<IAObjectModificationGetter>.StarfieldGroupFactory(_stream, _ObjectModificationsLocations, _package) : default;
         public IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications => _ObjectModifications ?? new StarfieldGroup<AObjectModification>(this);
         #endregion
+        #region InstanceNamingRules
+        private List<RangeInt64>? _InstanceNamingRulesLocations;
+        private IStarfieldGroupGetter<IInstanceNamingRulesGetter>? _InstanceNamingRules => _InstanceNamingRulesLocations != null ? StarfieldGroupBinaryOverlay<IInstanceNamingRulesGetter>.StarfieldGroupFactory(_stream, _InstanceNamingRulesLocations, _package) : default;
+        public IStarfieldGroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules => _InstanceNamingRules ?? new StarfieldGroup<InstanceNamingRules>(this);
+        #endregion
         #region AttractionRules
         private List<RangeInt64>? _AttractionRulesLocations;
         private IStarfieldGroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? StarfieldGroupBinaryOverlay<IAttractionRuleGetter>.StarfieldGroupFactory(_stream, _AttractionRulesLocations, _package) : default;
@@ -15863,6 +16038,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ObjectModificationsLocations ??= new();
                     _ObjectModificationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ObjectModifications;
+                }
+                case RecordTypeInts.INNR:
+                {
+                    _InstanceNamingRulesLocations ??= new();
+                    _InstanceNamingRulesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.InstanceNamingRules;
                 }
                 case RecordTypeInts.AORU:
                 {

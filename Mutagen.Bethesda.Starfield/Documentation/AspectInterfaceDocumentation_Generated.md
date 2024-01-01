@@ -40,6 +40,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - Ingestible
+- InstanceNamingRule
 - KeywordFormComponent
 - Location
 - MagicEffect
@@ -110,6 +111,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FxSceneAction
 - HeadPart
 - Ingestible
+- InstanceNamingRule
 - Keyword
 - Location
 - MagicEffect
@@ -348,6 +350,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IWeightValue
+### InstanceNamingRule
+- IKeyworded
+- INamed
 ### Keyword
 - IKeywordCommon
 - INamed

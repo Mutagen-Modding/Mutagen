@@ -2147,6 +2147,10 @@
     <Compile Include="Records\Major Records\Ingestible.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRule.cs" />
+    <Compile Include="Records\Major Records\InstanceNamingRules.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
@@ -6206,6 +6210,15 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\OffsetRotation_Generated.cs">
       <DependentUpon>OffsetRotation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleSet_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRule_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleProperties_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
