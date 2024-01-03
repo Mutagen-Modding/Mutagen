@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Level
         public Int16 Level { get; set; } = default;
         #endregion
-        #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        #region Unused
+        public Int16 Unused { get; set; } = default;
         #endregion
         #region Reference
         private readonly IFormLink<IItemGetter> _Reference = new FormLink<IItemGetter>();
@@ -67,11 +67,11 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> ILeveledItemEntryDataGetter.Reference => this.Reference;
         #endregion
-        #region Count
-        public Int16 Count { get; set; } = default;
+        #region ChanceNone
+        public Percent ChanceNone { get; set; } = default;
         #endregion
-        #region Unknown2
-        public Int16 Unknown2 { get; set; } = default;
+        #region Unused2
+        public SByte Unused2 { get; set; } = default;
         #endregion
 
         #region To String
@@ -113,24 +113,24 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Level = initialValue;
-                this.Unknown = initialValue;
+                this.Unused = initialValue;
                 this.Reference = initialValue;
-                this.Count = initialValue;
-                this.Unknown2 = initialValue;
+                this.ChanceNone = initialValue;
+                this.Unused2 = initialValue;
             }
 
             public Mask(
                 TItem Level,
-                TItem Unknown,
+                TItem Unused,
                 TItem Reference,
-                TItem Count,
-                TItem Unknown2)
+                TItem ChanceNone,
+                TItem Unused2)
             {
                 this.Level = Level;
-                this.Unknown = Unknown;
+                this.Unused = Unused;
                 this.Reference = Reference;
-                this.Count = Count;
-                this.Unknown2 = Unknown2;
+                this.ChanceNone = ChanceNone;
+                this.Unused2 = Unused2;
             }
 
             #pragma warning disable CS8618
@@ -143,10 +143,10 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Level;
-            public TItem Unknown;
+            public TItem Unused;
             public TItem Reference;
-            public TItem Count;
-            public TItem Unknown2;
+            public TItem ChanceNone;
+            public TItem Unused2;
             #endregion
 
             #region Equals
@@ -160,20 +160,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Level, rhs.Level)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.Reference, rhs.Reference)) return false;
-                if (!object.Equals(this.Count, rhs.Count)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Level);
-                hash.Add(this.Unknown);
+                hash.Add(this.Unused);
                 hash.Add(this.Reference);
-                hash.Add(this.Count);
-                hash.Add(this.Unknown2);
+                hash.Add(this.ChanceNone);
+                hash.Add(this.Unused2);
                 return hash.ToHashCode();
             }
 
@@ -183,10 +183,10 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Level)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unused)) return false;
                 if (!eval(this.Reference)) return false;
-                if (!eval(this.Count)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.ChanceNone)) return false;
+                if (!eval(this.Unused2)) return false;
                 return true;
             }
             #endregion
@@ -195,10 +195,10 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Level)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Unused)) return true;
                 if (eval(this.Reference)) return true;
-                if (eval(this.Count)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.ChanceNone)) return true;
+                if (eval(this.Unused2)) return true;
                 return false;
             }
             #endregion
@@ -214,10 +214,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Level = eval(this.Level);
-                obj.Unknown = eval(this.Unknown);
+                obj.Unused = eval(this.Unused);
                 obj.Reference = eval(this.Reference);
-                obj.Count = eval(this.Count);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.ChanceNone = eval(this.ChanceNone);
+                obj.Unused2 = eval(this.Unused2);
             }
             #endregion
 
@@ -240,21 +240,21 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Level, "Level");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Reference ?? true)
                     {
                         sb.AppendItem(Reference, "Reference");
                     }
-                    if (printMask?.Count ?? true)
+                    if (printMask?.ChanceNone ?? true)
                     {
-                        sb.AppendItem(Count, "Count");
+                        sb.AppendItem(ChanceNone, "ChanceNone");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.Unused2 ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unused2, "Unused2");
                     }
                 }
             }
@@ -281,10 +281,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? Level;
-            public Exception? Unknown;
+            public Exception? Unused;
             public Exception? Reference;
-            public Exception? Count;
-            public Exception? Unknown2;
+            public Exception? ChanceNone;
+            public Exception? Unused2;
             #endregion
 
             #region IErrorMask
@@ -295,14 +295,14 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case LeveledItemEntryData_FieldIndex.Level:
                         return Level;
-                    case LeveledItemEntryData_FieldIndex.Unknown:
-                        return Unknown;
+                    case LeveledItemEntryData_FieldIndex.Unused:
+                        return Unused;
                     case LeveledItemEntryData_FieldIndex.Reference:
                         return Reference;
-                    case LeveledItemEntryData_FieldIndex.Count:
-                        return Count;
-                    case LeveledItemEntryData_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case LeveledItemEntryData_FieldIndex.ChanceNone:
+                        return ChanceNone;
+                    case LeveledItemEntryData_FieldIndex.Unused2:
+                        return Unused2;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -316,17 +316,17 @@ namespace Mutagen.Bethesda.Fallout4
                     case LeveledItemEntryData_FieldIndex.Level:
                         this.Level = ex;
                         break;
-                    case LeveledItemEntryData_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case LeveledItemEntryData_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case LeveledItemEntryData_FieldIndex.Reference:
                         this.Reference = ex;
                         break;
-                    case LeveledItemEntryData_FieldIndex.Count:
-                        this.Count = ex;
+                    case LeveledItemEntryData_FieldIndex.ChanceNone:
+                        this.ChanceNone = ex;
                         break;
-                    case LeveledItemEntryData_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case LeveledItemEntryData_FieldIndex.Unused2:
+                        this.Unused2 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -341,17 +341,17 @@ namespace Mutagen.Bethesda.Fallout4
                     case LeveledItemEntryData_FieldIndex.Level:
                         this.Level = (Exception?)obj;
                         break;
-                    case LeveledItemEntryData_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case LeveledItemEntryData_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     case LeveledItemEntryData_FieldIndex.Reference:
                         this.Reference = (Exception?)obj;
                         break;
-                    case LeveledItemEntryData_FieldIndex.Count:
-                        this.Count = (Exception?)obj;
+                    case LeveledItemEntryData_FieldIndex.ChanceNone:
+                        this.ChanceNone = (Exception?)obj;
                         break;
-                    case LeveledItemEntryData_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case LeveledItemEntryData_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -362,10 +362,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Level != null) return true;
-                if (Unknown != null) return true;
+                if (Unused != null) return true;
                 if (Reference != null) return true;
-                if (Count != null) return true;
-                if (Unknown2 != null) return true;
+                if (ChanceNone != null) return true;
+                if (Unused2 != null) return true;
                 return false;
             }
             #endregion
@@ -395,16 +395,16 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Level, "Level");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Unused, "Unused");
                 }
                 {
                     sb.AppendItem(Reference, "Reference");
                 }
                 {
-                    sb.AppendItem(Count, "Count");
+                    sb.AppendItem(ChanceNone, "ChanceNone");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(Unused2, "Unused2");
                 }
             }
             #endregion
@@ -415,10 +415,10 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Level = this.Level.Combine(rhs.Level);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.Reference = this.Reference.Combine(rhs.Reference);
-                ret.Count = this.Count.Combine(rhs.Count);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -443,10 +443,10 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Level;
-            public bool Unknown;
+            public bool Unused;
             public bool Reference;
-            public bool Count;
-            public bool Unknown2;
+            public bool ChanceNone;
+            public bool Unused2;
             #endregion
 
             #region Ctors
@@ -457,10 +457,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Level = defaultOn;
-                this.Unknown = defaultOn;
+                this.Unused = defaultOn;
                 this.Reference = defaultOn;
-                this.Count = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.ChanceNone = defaultOn;
+                this.Unused2 = defaultOn;
             }
 
             #endregion
@@ -477,10 +477,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Level, null));
-                ret.Add((Unknown, null));
+                ret.Add((Unused, null));
                 ret.Add((Reference, null));
-                ret.Add((Count, null));
-                ret.Add((Unknown2, null));
+                ret.Add((ChanceNone, null));
+                ret.Add((Unused2, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -560,10 +560,10 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ILeveledItemEntryData>
     {
         new Int16 Level { get; set; }
-        new Int16 Unknown { get; set; }
+        new Int16 Unused { get; set; }
         new IFormLink<IItemGetter> Reference { get; set; }
-        new Int16 Count { get; set; }
-        new Int16 Unknown2 { get; set; }
+        new Percent ChanceNone { get; set; }
+        new SByte Unused2 { get; set; }
     }
 
     public partial interface ILeveledItemEntryDataGetter :
@@ -580,10 +580,10 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LeveledItemEntryData_Registration.Instance;
         Int16 Level { get; }
-        Int16 Unknown { get; }
+        Int16 Unused { get; }
         IFormLinkGetter<IItemGetter> Reference { get; }
-        Int16 Count { get; }
-        Int16 Unknown2 { get; }
+        Percent ChanceNone { get; }
+        SByte Unused2 { get; }
 
     }
 
@@ -754,10 +754,10 @@ namespace Mutagen.Bethesda.Fallout4
     internal enum LeveledItemEntryData_FieldIndex
     {
         Level = 0,
-        Unknown = 1,
+        Unused = 1,
         Reference = 2,
-        Count = 3,
-        Unknown2 = 4,
+        ChanceNone = 3,
+        Unused2 = 4,
     }
     #endregion
 
@@ -844,10 +844,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Level = default;
-            item.Unknown = default;
+            item.Unused = default;
             item.Reference.Clear();
-            item.Count = default;
-            item.Unknown2 = default;
+            item.ChanceNone = default;
+            item.Unused2 = default;
         }
         
         #region Mutagen
@@ -903,10 +903,10 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Level = item.Level == rhs.Level;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unused = item.Unused == rhs.Unused;
             ret.Reference = item.Reference.Equals(rhs.Reference);
-            ret.Count = item.Count == rhs.Count;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
+            ret.Unused2 = item.Unused2 == rhs.Unused2;
         }
         
         public string Print(
@@ -955,21 +955,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Level, "Level");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.Reference ?? true)
             {
                 sb.AppendItem(item.Reference.FormKey, "Reference");
             }
-            if (printMask?.Count ?? true)
+            if (printMask?.ChanceNone ?? true)
             {
-                sb.AppendItem(item.Count, "Count");
+                sb.AppendItem(item.ChanceNone, "ChanceNone");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.Unused2 ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unused2, "Unused2");
             }
         }
         
@@ -984,21 +984,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Level != rhs.Level) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unused) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Count) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.ChanceNone) ?? true))
             {
-                if (lhs.Count != rhs.Count) return false;
+                if (!lhs.ChanceNone.Equals(rhs.ChanceNone)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unused2) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (lhs.Unused2 != rhs.Unused2) return false;
             }
             return true;
         }
@@ -1007,10 +1007,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.Level);
-            hash.Add(item.Unknown);
+            hash.Add(item.Unused);
             hash.Add(item.Reference);
-            hash.Add(item.Count);
-            hash.Add(item.Unknown2);
+            hash.Add(item.ChanceNone);
+            hash.Add(item.Unused2);
             return hash.ToHashCode();
         }
         
@@ -1048,21 +1048,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Level = rhs.Level;
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unused) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Reference) ?? true))
             {
                 item.Reference.SetTo(rhs.Reference.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Count) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.ChanceNone) ?? true))
             {
-                item.Count = rhs.Count;
+                item.ChanceNone = rhs.ChanceNone;
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Unused2) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.Unused2 = rhs.Unused2;
             }
         }
         
@@ -1161,12 +1161,15 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer)
         {
             writer.Write(item.Level);
-            writer.Write(item.Unknown);
+            writer.Write(item.Unused);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
-            writer.Write(item.Count);
-            writer.Write(item.Unknown2);
+            PercentBinaryTranslation.Write(
+                writer: writer,
+                item: item.ChanceNone,
+                integerType: FloatIntegerType.Byte);
+            writer.Write(item.Unused2);
         }
 
         public void Write(
@@ -1208,10 +1211,12 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame)
         {
             item.Level = frame.ReadInt16();
-            item.Unknown = frame.ReadInt16();
+            item.Unused = frame.ReadInt16();
             item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Count = frame.ReadInt16();
-            item.Unknown2 = frame.ReadInt16();
+            item.ChanceNone = PercentBinaryTranslation.Parse(
+                reader: frame,
+                integerType: FloatIntegerType.Byte);
+            item.Unused2 = frame.ReadInt8();
         }
 
     }
@@ -1279,10 +1284,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x0, 0x2));
-        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
         public IFormLinkGetter<IItemGetter> Reference => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
-        public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public Percent ChanceNone => PercentBinaryTranslation.GetPercent(_structData.Slice(0x8, 0x1), FloatIntegerType.Byte);
+        public SByte Unused2 => (sbyte)_structData.Slice(0x9, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1308,13 +1313,13 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0xC,
+                length: 0xA,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
             var ret = new LeveledItemEntryDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
+            stream.Position += 0xA + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
