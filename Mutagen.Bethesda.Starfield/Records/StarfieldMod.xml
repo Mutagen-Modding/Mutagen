@@ -35,6 +35,7 @@
       <Group name="Doors" refName="Door" />
       <Group name="MiscItems" refName="MiscItem" />
       <Group name="StaticCollections" refName="StaticCollection" />
+      <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammunitions" refName="Ammunition" />
       <Group name="Npcs" refName="Npc" />

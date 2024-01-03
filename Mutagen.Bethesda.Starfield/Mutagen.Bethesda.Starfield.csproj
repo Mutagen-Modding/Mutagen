@@ -141,6 +141,7 @@
     <Compile Include="Enums\Perspective.cs" />
     <Compile Include="Enums\Pronoun.cs" />
     <Compile Include="Enums\Size.cs" />
+    <Compile Include="Enums\Skill.cs" />
     <Compile Include="Enums\SoundLevel.cs" />
     <Compile Include="Enums\Stagger.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
@@ -2122,6 +2123,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Flora.cs">
       <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Furniture.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -6224,6 +6228,18 @@
     </Compile>
     <Compile Include="Records\Major Records\InstanceNamingRuleProperties_Generated.cs">
       <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureMarkerEntryPoints_Generated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureMarkerFile_Generated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ImageSpaceModifiableFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureMarkerParameters_Generated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

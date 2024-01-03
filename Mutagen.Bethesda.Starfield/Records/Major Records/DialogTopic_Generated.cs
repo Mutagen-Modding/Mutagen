@@ -2022,6 +2022,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "ReflectionProbesComponent":
                 case "IReflectionProbesComponentGetter":
                 case "IReflectionProbesComponent":
+                case "ImageSpaceModifiableFormComponent":
+                case "IImageSpaceModifiableFormComponentGetter":
+                case "IImageSpaceModifiableFormComponent":
                     break;
                 case "DialogResponses":
                 case "IDialogResponsesGetter":

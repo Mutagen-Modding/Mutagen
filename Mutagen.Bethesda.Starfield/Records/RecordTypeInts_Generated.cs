@@ -324,12 +324,14 @@ public partial class RecordTypeInts
     public const int FMSI = 0x49534D46;
     public const int FMSR = 0x52534D46;
     public const int FNAM = 0x4D414E46;
+    public const int FNPR = 0x52504E46;
     public const int FOGV = 0x56474F46;
     public const int FORC = 0x43524F46;
     public const int FORF = 0x46524F46;
     public const int FREP = 0x50455246;
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
+    public const int FTMP = 0x504D5446;
     public const int FTSM = 0x4D535446;
     public const int FTYP = 0x50595446;
     public const int FULL = 0x4C4C5546;
@@ -799,6 +801,7 @@ public partial class RecordTypeInts
     public const int WATS = 0x53544157;
     public const int WAUD = 0x44554157;
     public const int WBAR = 0x52414257;
+    public const int WBDT = 0x54444257;
     public const int WBMT = 0x544D4257;
     public const int WBOL = 0x4C4F4257;
     public const int WBSH = 0x48534257;

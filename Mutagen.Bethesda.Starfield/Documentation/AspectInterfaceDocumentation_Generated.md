@@ -10,6 +10,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - DialogResponses
+- Furniture
 - GenericBaseForm
 - LeveledItem
 - MagicEffect
@@ -40,6 +41,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- Furniture
 - Ingestible
 - InstanceNamingRule
 - KeywordFormComponent
@@ -68,6 +70,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ContainerModification
 - DestructionStage
 - FloraModification
+- Furniture
 - HeadPart
 - Ingestible
 - LegendaryItem
@@ -111,6 +114,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FloraModification
 - FormList
 - FullNameComponent
+- Furniture
+- FurnitureMarkerFile
 - FxSceneAction
 - HeadPart
 - Ingestible
@@ -183,6 +188,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BendableSpline
 - Book
 - Container
+- Furniture
 - GenericBaseForm
 - Ingestible
 - LegendaryItem
@@ -220,6 +226,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- Furniture
 - GenericBaseForm
 - LeveledItem
 - MagicEffect
@@ -345,6 +352,15 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### FormList
 - INamed
 ### FullNameComponent
+- INamed
+### Furniture
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
+### FurnitureMarkerFile
 - INamed
 ### FxSceneAction
 - INamed

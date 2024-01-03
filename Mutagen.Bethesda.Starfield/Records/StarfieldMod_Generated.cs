@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             _Doors_Object = new StarfieldGroup<Door>(this);
             _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
+            _Furniture_Object = new StarfieldGroup<Furniture>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
             _Ammunitions_Object = new StarfieldGroup<Ammunition>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
@@ -366,6 +367,13 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<StaticCollection> StaticCollections => _StaticCollections_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IStaticCollectionGetter> IStarfieldModGetter.StaticCollections => _StaticCollections_Object;
+        #endregion
+        #region Furniture
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Furniture> _Furniture_Object;
+        public StarfieldGroup<Furniture> Furniture => _Furniture_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IFurnitureGetter> IStarfieldModGetter.Furniture => _Furniture_Object;
         #endregion
         #region Weapons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -712,6 +720,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Doors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Furniture = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Ammunitions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -787,6 +796,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Doors,
                 TItem MiscItems,
                 TItem StaticCollections,
+                TItem Furniture,
                 TItem Weapons,
                 TItem Ammunitions,
                 TItem Npcs,
@@ -860,6 +870,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Doors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Doors, new StarfieldGroup.Mask<TItem>(Doors));
                 this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MiscItems, new StarfieldGroup.Mask<TItem>(MiscItems));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollections, new StarfieldGroup.Mask<TItem>(StaticCollections));
+                this.Furniture = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Furniture, new StarfieldGroup.Mask<TItem>(Furniture));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weapons, new StarfieldGroup.Mask<TItem>(Weapons));
                 this.Ammunitions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Ammunitions, new StarfieldGroup.Mask<TItem>(Ammunitions));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Npcs, new StarfieldGroup.Mask<TItem>(Npcs));
@@ -943,6 +954,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Doors { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MiscItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollections { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Furniture { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weapons { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Ammunitions { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Npcs { get; set; }
@@ -1027,6 +1039,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Doors, rhs.Doors)) return false;
                 if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
+                if (!object.Equals(this.Furniture, rhs.Furniture)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
                 if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
@@ -1104,6 +1117,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Doors);
                 hash.Add(this.MiscItems);
                 hash.Add(this.StaticCollections);
+                hash.Add(this.Furniture);
                 hash.Add(this.Weapons);
                 hash.Add(this.Ammunitions);
                 hash.Add(this.Npcs);
@@ -1315,6 +1329,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.StaticCollections.Overall)) return false;
                     if (this.StaticCollections.Specific != null && !this.StaticCollections.Specific.All(eval)) return false;
+                }
+                if (Furniture != null)
+                {
+                    if (!eval(this.Furniture.Overall)) return false;
+                    if (this.Furniture.Specific != null && !this.Furniture.Specific.All(eval)) return false;
                 }
                 if (Weapons != null)
                 {
@@ -1683,6 +1702,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.StaticCollections.Overall)) return true;
                     if (this.StaticCollections.Specific != null && this.StaticCollections.Specific.Any(eval)) return true;
                 }
+                if (Furniture != null)
+                {
+                    if (eval(this.Furniture.Overall)) return true;
+                    if (this.Furniture.Specific != null && this.Furniture.Specific.Any(eval)) return true;
+                }
                 if (Weapons != null)
                 {
                     if (eval(this.Weapons.Overall)) return true;
@@ -1925,6 +1949,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Doors = this.Doors == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
                 obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
+                obj.Furniture = this.Furniture == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
                 obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
@@ -2113,6 +2138,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.StaticCollections?.Overall ?? true)
                     {
                         StaticCollections?.Print(sb);
+                    }
+                    if (printMask?.Furniture?.Overall ?? true)
+                    {
+                        Furniture?.Print(sb);
                     }
                     if (printMask?.Weapons?.Overall ?? true)
                     {
@@ -2327,6 +2356,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Door.ErrorMask>?>? Doors;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Furniture.ErrorMask>?>? Furniture;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>? Npcs;
@@ -2440,6 +2470,8 @@ namespace Mutagen.Bethesda.Starfield
                         return MiscItems;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         return StaticCollections;
+                    case StarfieldMod_FieldIndex.Furniture:
+                        return Furniture;
                     case StarfieldMod_FieldIndex.Weapons:
                         return Weapons;
                     case StarfieldMod_FieldIndex.Ammunitions:
@@ -2626,6 +2658,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = new MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Furniture:
+                        this.Furniture = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Furniture.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Weapons:
                         this.Weapons = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>(ex, null);
@@ -2853,6 +2888,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = (MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Furniture:
+                        this.Furniture = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Furniture.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Weapons:
                         this.Weapons = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>?)obj;
                         break;
@@ -3011,6 +3049,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Doors != null) return true;
                 if (MiscItems != null) return true;
                 if (StaticCollections != null) return true;
+                if (Furniture != null) return true;
                 if (Weapons != null) return true;
                 if (Ammunitions != null) return true;
                 if (Npcs != null) return true;
@@ -3108,6 +3147,7 @@ namespace Mutagen.Bethesda.Starfield
                 Doors?.Print(sb);
                 MiscItems?.Print(sb);
                 StaticCollections?.Print(sb);
+                Furniture?.Print(sb);
                 Weapons?.Print(sb);
                 Ammunitions?.Print(sb);
                 Npcs?.Print(sb);
@@ -3188,6 +3228,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Doors = this.Doors.Combine(rhs.Doors, (l, r) => l.Combine(r));
                 ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
+                ret.Furniture = this.Furniture.Combine(rhs.Furniture, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
                 ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
@@ -3283,6 +3324,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Door.TranslationMask>? Doors;
             public StarfieldGroup.TranslationMask<MiscItem.TranslationMask>? MiscItems;
             public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
+            public StarfieldGroup.TranslationMask<Furniture.TranslationMask>? Furniture;
             public StarfieldGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
             public StarfieldGroup.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
             public StarfieldGroup.TranslationMask<Npc.TranslationMask>? Npcs;
@@ -3379,6 +3421,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Doors != null ? Doors.OnOverall : DefaultOn, Doors?.GetCrystal()));
                 ret.Add((MiscItems != null ? MiscItems.OnOverall : DefaultOn, MiscItems?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
+                ret.Add((Furniture != null ? Furniture.OnOverall : DefaultOn, Furniture?.GetCrystal()));
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
                 ret.Add((Ammunitions != null ? Ammunitions.OnOverall : DefaultOn, Ammunitions?.GetCrystal()));
                 ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
@@ -3497,6 +3540,7 @@ namespace Mutagen.Bethesda.Starfield
             _Doors_Object = new StarfieldGroup<Door>(this);
             _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
+            _Furniture_Object = new StarfieldGroup<Furniture>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
             _Ammunitions_Object = new StarfieldGroup<Ammunition>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
@@ -3668,6 +3712,10 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.StaticCollections ?? true)
             {
                 this.StaticCollections.RecordCache.Set(rhsMod.StaticCollections.RecordCache.Items);
+            }
+            if (mask?.Furniture ?? true)
+            {
+                this.Furniture.RecordCache.Set(rhsMod.Furniture.RecordCache.Items);
             }
             if (mask?.Weapons ?? true)
             {
@@ -3870,6 +3918,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Doors.RecordCache.Count > 0 ? 1 : default(uint);
             count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
             count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
             count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
@@ -4215,6 +4264,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Door> Doors { get; }
         new StarfieldGroup<MiscItem> MiscItems { get; }
         new StarfieldGroup<StaticCollection> StaticCollections { get; }
+        new StarfieldGroup<Furniture> Furniture { get; }
         new StarfieldGroup<Weapon> Weapons { get; }
         new StarfieldGroup<Ammunition> Ammunitions { get; }
         new StarfieldGroup<Npc> Npcs { get; }
@@ -4306,6 +4356,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IDoorGetter> Doors { get; }
         IStarfieldGroupGetter<IMiscItemGetter> MiscItems { get; }
         IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections { get; }
+        IStarfieldGroupGetter<IFurnitureGetter> Furniture { get; }
         IStarfieldGroupGetter<IWeaponGetter> Weapons { get; }
         IStarfieldGroupGetter<IAmmunitionGetter> Ammunitions { get; }
         IStarfieldGroupGetter<INpcGetter> Npcs { get; }
@@ -4960,45 +5011,46 @@ namespace Mutagen.Bethesda.Starfield
         Doors = 30,
         MiscItems = 31,
         StaticCollections = 32,
-        Weapons = 33,
-        Ammunitions = 34,
-        Npcs = 35,
-        Ingestibles = 36,
-        BendableSplines = 37,
-        LeveledItems = 38,
-        GenericBaseForms = 39,
-        Weathers = 40,
-        Cells = 41,
-        Worldspaces = 42,
-        Quests = 43,
-        Packages = 44,
-        CombatStyles = 45,
-        LoadScreens = 46,
-        AnimatedObjects = 47,
-        Waters = 48,
-        Debris = 49,
-        FormLists = 50,
-        Perks = 51,
-        ArmorAddons = 52,
-        Locations = 53,
-        DefaultObjects = 54,
-        Outfits = 55,
-        AimModels = 56,
-        AimAssistModels = 57,
-        Layers = 58,
-        ConstructibleObjects = 59,
-        ObjectModifications = 60,
-        InstanceNamingRules = 61,
-        AttractionRules = 62,
-        Resources = 63,
-        BiomeSwaps = 64,
-        SnapTemplates = 65,
-        Planets = 66,
-        ConditionRecords = 67,
-        SurfacePatternStyles = 68,
-        TerminalMenus = 69,
-        LegendaryItems = 70,
-        ActorValueModulations = 71,
+        Furniture = 33,
+        Weapons = 34,
+        Ammunitions = 35,
+        Npcs = 36,
+        Ingestibles = 37,
+        BendableSplines = 38,
+        LeveledItems = 39,
+        GenericBaseForms = 40,
+        Weathers = 41,
+        Cells = 42,
+        Worldspaces = 43,
+        Quests = 44,
+        Packages = 45,
+        CombatStyles = 46,
+        LoadScreens = 47,
+        AnimatedObjects = 48,
+        Waters = 49,
+        Debris = 50,
+        FormLists = 51,
+        Perks = 52,
+        ArmorAddons = 53,
+        Locations = 54,
+        DefaultObjects = 55,
+        Outfits = 56,
+        AimModels = 57,
+        AimAssistModels = 58,
+        Layers = 59,
+        ConstructibleObjects = 60,
+        ObjectModifications = 61,
+        InstanceNamingRules = 62,
+        AttractionRules = 63,
+        Resources = 64,
+        BiomeSwaps = 65,
+        SnapTemplates = 66,
+        Planets = 67,
+        ConditionRecords = 68,
+        SurfacePatternStyles = 69,
+        TerminalMenus = 70,
+        LegendaryItems = 71,
+        ActorValueModulations = 72,
     }
     #endregion
 
@@ -5009,9 +5061,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 72;
+        public const ushort AdditionalFieldCount = 73;
 
-        public const ushort FieldCount = 72;
+        public const ushort FieldCount = 73;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -5110,6 +5162,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Doors.Clear();
             item.MiscItems.Clear();
             item.StaticCollections.Clear();
+            item.Furniture.Clear();
             item.Weapons.Clear();
             item.Ammunitions.Clear();
             item.Npcs.Clear();
@@ -5177,6 +5230,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Containers.RemapLinks(mapping);
             obj.MiscItems.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
+            obj.Furniture.RemapLinks(mapping);
             obj.Weapons.RemapLinks(mapping);
             obj.Ammunitions.RemapLinks(mapping);
             obj.Npcs.RemapLinks(mapping);
@@ -5276,6 +5330,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Doors.Remove(keys);
             obj.MiscItems.Remove(keys);
             obj.StaticCollections.Remove(keys);
+            obj.Furniture.Remove(keys);
             obj.Weapons.Remove(keys);
             obj.Ammunitions.Remove(keys);
             obj.Npcs.Remove(keys);
@@ -5607,6 +5662,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStaticCollection":
                 case "IStaticCollectionInternal":
                     obj.StaticCollections.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    obj.Furniture.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6074,6 +6137,7 @@ namespace Mutagen.Bethesda.Starfield
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IGenericBaseFormGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
@@ -6088,6 +6152,7 @@ namespace Mutagen.Bethesda.Starfield
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
@@ -6349,6 +6414,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Furniture is IAssetLinkContainer FurniturelinkCont)
+            {
+                foreach (var item in FurniturelinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Weapons is IAssetLinkContainer WeaponslinkCont)
             {
                 foreach (var item in WeaponslinkCont.EnumerateListedAssetLinks())
@@ -6527,6 +6599,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Containers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.MiscItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.StaticCollections.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Furniture.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Weapons.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Ammunitions.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Npcs.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -6627,6 +6700,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Doors = MaskItemExt.Factory(item.Doors.GetEqualsMask(rhs.Doors, include), include);
             ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
+            ret.Furniture = MaskItemExt.Factory(item.Furniture.GetEqualsMask(rhs.Furniture, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
             ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
@@ -6841,6 +6915,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.StaticCollections?.Overall ?? true)
             {
                 item.StaticCollections?.Print(sb, "StaticCollections");
+            }
+            if (printMask?.Furniture?.Overall ?? true)
+            {
+                item.Furniture?.Print(sb, "Furniture");
             }
             if (printMask?.Weapons?.Overall ?? true)
             {
@@ -7271,6 +7349,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isStaticCollectionsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Furniture) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Furniture, rhs.Furniture, out var lhsFurniture, out var rhsFurniture, out var isFurnitureEqual))
+                {
+                    if (!object.Equals(lhsFurniture, rhsFurniture)) return false;
+                }
+                else if (!isFurnitureEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weapons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
@@ -7622,6 +7708,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Doors);
             hash.Add(item.MiscItems);
             hash.Add(item.StaticCollections);
+            hash.Add(item.Furniture);
             hash.Add(item.Weapons);
             hash.Add(item.Ammunitions);
             hash.Add(item.Npcs);
@@ -7839,6 +7926,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStaticCollection":
                 case "IStaticCollectionInternal":
                     return obj.StaticCollections;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    return obj.Furniture;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
@@ -8059,7 +8151,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[71];
+            Stream[] outputStreams = new Stream[72];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -8093,45 +8185,46 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Doors, 29, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MiscItems, 30, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.StaticCollections, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 33, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 34, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ingestibles, 35, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 36, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 37, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.GenericBaseForms, 38, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 39, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteCellsParallel(item.Cells, 40, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 41, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteQuestsParallel(item.Quests, 42, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Packages, 43, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 44, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 45, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 46, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Waters, 47, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 48, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 49, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 50, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 51, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 52, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 53, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 54, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 55, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 56, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 57, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 58, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 59, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 60, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 61, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 62, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 63, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 64, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 65, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 66, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 67, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 68, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 69, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 70, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 34, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 35, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, 36, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 38, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.GenericBaseForms, 39, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 42, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteQuestsParallel(item.Quests, 43, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 44, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 45, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 46, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 47, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 48, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 49, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 51, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 52, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 53, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 54, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 55, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 56, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 57, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 58, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 59, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 60, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 61, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 62, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 63, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 64, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 65, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 66, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 67, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 68, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 69, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 70, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 71, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8275,6 +8368,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.StaticCollections.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Furniture.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -8549,6 +8646,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.StaticCollections.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Furniture.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9027,6 +9128,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStaticCollection":
                 case "IStaticCollectionInternal":
                     foreach (var item in obj.StaticCollections.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9783,6 +9893,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.StaticCollections,
                 groupGetter: (m) => m.StaticCollections))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Furniture, IFurnitureGetter>(
+                srcGroup: obj.Furniture,
+                type: typeof(IFurnitureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Furniture,
+                groupGetter: (m) => m.Furniture))
             {
                 yield return item;
             }
@@ -10636,6 +10755,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.StaticCollections,
                         groupGetter: (m) => m.StaticCollections))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Furniture, IFurnitureGetter>(
+                        srcGroup: obj.Furniture,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Furniture,
+                        groupGetter: (m) => m.Furniture))
                     {
                         yield return item;
                     }
@@ -11526,6 +11659,13 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                 }
+                if (obj.Furniture is IAssetLinkContainerGetter FurniturelinkCont)
+                {
+                    foreach (var item in FurniturelinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
                 if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
                 {
                     foreach (var item in WeaponslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
@@ -12333,6 +12473,26 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.StaticCollections,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.StaticCollections));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Furniture) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Furniture);
+                try
+                {
+                    item.Furniture.DeepCopyIn(
+                        rhs: rhs.Furniture,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Furniture));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -13246,6 +13406,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Doors;
         public bool MiscItems;
         public bool StaticCollections;
+        public bool Furniture;
         public bool Weapons;
         public bool Ammunitions;
         public bool Npcs;
@@ -13322,6 +13483,7 @@ namespace Mutagen.Bethesda.Starfield
             Doors = defaultValue;
             MiscItems = defaultValue;
             StaticCollections = defaultValue;
+            Furniture = defaultValue;
             Weapons = defaultValue;
             Ammunitions = defaultValue;
             Npcs = defaultValue;
@@ -13768,6 +13930,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)StaticCollectionsItem).BinaryWriteTranslator).Write<IStaticCollectionGetter>(
                         item: StaticCollectionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Furniture ?? true)
+            {
+                var FurnitureItem = item.Furniture;
+                if (FurnitureItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
+                        item: FurnitureItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -14709,6 +14882,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.StaticCollections;
                 }
+                case RecordTypeInts.FURN:
+                {
+                    if (importMask?.Furniture ?? true)
+                    {
+                        item.Furniture.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Furniture;
+                }
                 case RecordTypeInts.WEAP:
                 {
                     if (importMask?.Weapons ?? true)
@@ -15586,6 +15773,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? StarfieldGroupBinaryOverlay<IStaticCollectionGetter>.StarfieldGroupFactory(_stream, _StaticCollectionsLocations, _package) : default;
         public IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections => _StaticCollections ?? new StarfieldGroup<StaticCollection>(this);
         #endregion
+        #region Furniture
+        private List<RangeInt64>? _FurnitureLocations;
+        private IStarfieldGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? StarfieldGroupBinaryOverlay<IFurnitureGetter>.StarfieldGroupFactory(_stream, _FurnitureLocations, _package) : default;
+        public IStarfieldGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new StarfieldGroup<Furniture>(this);
+        #endregion
         #region Weapons
         private List<RangeInt64>? _WeaponsLocations;
         private IStarfieldGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? StarfieldGroupBinaryOverlay<IWeaponGetter>.StarfieldGroupFactory(_stream, _WeaponsLocations, _package) : default;
@@ -16066,6 +16258,12 @@ namespace Mutagen.Bethesda.Starfield
                     _StaticCollectionsLocations ??= new();
                     _StaticCollectionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.StaticCollections;
+                }
+                case RecordTypeInts.FURN:
+                {
+                    _FurnitureLocations ??= new();
+                    _FurnitureLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {

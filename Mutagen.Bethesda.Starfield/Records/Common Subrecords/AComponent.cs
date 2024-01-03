@@ -58,6 +58,7 @@ public partial class AComponent
         BGSSpawnOnDestroy_Component,
         BGSWorldSpaceOverlay_Component,
         ReflectionProbes_Component,
+        TESImageSpaceModifiableForm_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -172,6 +173,8 @@ public partial class AComponent
                 return WorldSpaceOverlayComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.ReflectionProbes_Component:
                 return ReflectionProbesComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.TESImageSpaceModifiableForm_Component:
+                return ImageSpaceModifiableFormComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -261,6 +264,7 @@ partial class AComponentBinaryWriteTranslation
             ISpawnOnDestroyComponentGetter _ => AComponent.ComponentType.BGSSpawnOnDestroy_Component,
             IWorldSpaceOverlayComponentGetter _ => AComponent.ComponentType.BGSWorldSpaceOverlay_Component,
             IReflectionProbesComponentGetter _ => AComponent.ComponentType.ReflectionProbes_Component,
+            IImageSpaceModifiableFormComponentGetter _ => AComponent.ComponentType.TESImageSpaceModifiableForm_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -373,6 +377,8 @@ partial class AComponentBinaryOverlay
                 return WorldSpaceOverlayComponentBinaryOverlay.WorldSpaceOverlayComponentFactory(stream, package);
             case AComponent.ComponentType.ReflectionProbes_Component:
                 return ReflectionProbesComponentBinaryOverlay.ReflectionProbesComponentFactory(stream, package);
+            case AComponent.ComponentType.TESImageSpaceModifiableForm_Component:
+                return ImageSpaceModifiableFormComponentBinaryOverlay.ImageSpaceModifiableFormComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

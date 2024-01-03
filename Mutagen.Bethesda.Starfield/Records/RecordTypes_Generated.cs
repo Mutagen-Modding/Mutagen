@@ -326,12 +326,14 @@ public partial class RecordTypes
     public static readonly RecordType FMSI = new(0x49534D46);
     public static readonly RecordType FMSR = new(0x52534D46);
     public static readonly RecordType FNAM = new(0x4D414E46);
+    public static readonly RecordType FNPR = new(0x52504E46);
     public static readonly RecordType FOGV = new(0x56474F46);
     public static readonly RecordType FORC = new(0x43524F46);
     public static readonly RecordType FORF = new(0x46524F46);
     public static readonly RecordType FREP = new(0x50455246);
     public static readonly RecordType FSTP = new(0x50545346);
     public static readonly RecordType FSTS = new(0x53545346);
+    public static readonly RecordType FTMP = new(0x504D5446);
     public static readonly RecordType FTSM = new(0x4D535446);
     public static readonly RecordType FTYP = new(0x50595446);
     public static readonly RecordType FULL = new(0x4C4C5546);
@@ -801,6 +803,7 @@ public partial class RecordTypes
     public static readonly RecordType WATS = new(0x53544157);
     public static readonly RecordType WAUD = new(0x44554157);
     public static readonly RecordType WBAR = new(0x52414257);
+    public static readonly RecordType WBDT = new(0x54444257);
     public static readonly RecordType WBMT = new(0x544D4257);
     public static readonly RecordType WBOL = new(0x4C4F4257);
     public static readonly RecordType WBSH = new(0x48534257);

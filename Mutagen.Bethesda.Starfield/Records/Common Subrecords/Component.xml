@@ -415,4 +415,9 @@
       <ByteArray name="REFL" recordType="REFL" unknown="true" />
     </Fields>
   </Object>
+  <Object name="ImageSpaceModifiableFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="ImageSpaceAdapter" recordType="MNAM" refName="ImageSpaceAdapter" />
+    </Fields>
+  </Object>
 </Loqui>

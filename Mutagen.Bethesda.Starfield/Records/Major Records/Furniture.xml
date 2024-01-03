@@ -1,9 +1,70 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Furniture" recordType="FURN" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Furniture" recordType="FURN" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" endMarkerType="STOP">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
+      <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <List name="ForcedLocRefTypes" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <RefDirect name="LoopingSound" refName="SoundReference" recordType="ALSH" />
+      <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" binary="Custom" />
+      <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
+      <Bool name="INAM" boolAsMarker="INAM" />
+      <CustomLogic name="Flags2" recordType="MNAM" />
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
+      <Data recordType="WBDT">
+        <Fields>
+          <Enum name="BenchType" enumName="Furniture.BenchTypes" byteLength="1" />
+          <Break />
+          <Enum name="UsesSkill" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
+        </Fields>
+      </Data>
+      <FormLink name="FurnitureTemplate" refName="Furniture" recordType="FTMP" />
+      <RefList name="MarkerEntryPoints" refName="FurnitureMarkerEntryPoints" />
+      <String name="MarkerModel" recordType="XMRK" />
+      <RefList name="MarkerParameters" refName="FurnitureMarkerParameters" recordType="SNAM" />
+      <RefList name="MarkerFiles" refName="FurnitureMarkerFile" recordType="NNAM" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+  </Object>
+  <Object name="FurnitureMarkerEntryPoints" objType="Subrecord" recordType="FNPR">
+    <Fields>
+      <Enum name="Type" enumName="Furniture.AnimationType" byteLength="2" />
+      <Enum name="Points" enumName="Furniture.EntryPointType" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="FurnitureMarkerParameters" objType="Subrecord">
+    <Fields>
+      <P3Float name="Offset" />
+      <Float name="RotationZ" isRotation="true" />
+      <FormLink name="Keyword" refName="Keyword" />
+      <Enum name="EntryTypes" byteLength="1" enumName="Furniture.EntryParameterType" />
+      <ByteArray name="Unknown" byteLength="7" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="FurnitureMarkerFile" objType="Subrecord">
+    <Fields>
+      <String name="Name" />
+      <String name="ModelFilename" />
+    </Fields>
   </Object>
 </Loqui>

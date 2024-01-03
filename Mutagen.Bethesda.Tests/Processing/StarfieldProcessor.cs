@@ -55,6 +55,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.WRLD, ProcessWorldspaces);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
+        AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -177,6 +178,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "WATR", "FULL" },
                     new RecordType[] { "INNR", "WNAM" },
                     new RecordType[] { "AMMO", "FULL", "ONAM" },
+                    new RecordType[] { "FURN", "FULL", "ATTX" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -189,6 +191,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "OMOD", "DESC" },
                     new RecordType[] { "QUST", "CNAM" },
                     new RecordType[] { "AMMO", "DESC" },
+                    new RecordType[] { "FURN", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]
@@ -1167,6 +1170,24 @@ public class StarfieldProcessor : Processor
                 break;
             default:
                 throw new NotImplementedException();
+        }
+    }
+
+    private void ProcessFurniture(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.SNAM, out var frame))
+        {
+            int offset = 0;
+            int i = 0;
+            while (i * 0x1C < frame.ContentLength)
+            {
+                ProcessZeroFloats(frame, fileOffset, ref offset, 3);
+                ProcessRotationFloat(frame, fileOffset, ref offset, 57.2958f);
+                i++;
+                offset = i * 0x1C;
+            }
         }
     }
 }
