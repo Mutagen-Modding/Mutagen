@@ -807,6 +807,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             LeveledItem_Registration.Instance,
             LeveledItemEntry_Registration.Instance,
             LeveledNpc_Registration.Instance,
+            LeveledNpcEntry_Registration.Instance,
             LeveledPackIn_Registration.Instance,
             LeveledSpaceCell_Registration.Instance,
             LevelMinusPCLevelConditionData_Registration.Instance,

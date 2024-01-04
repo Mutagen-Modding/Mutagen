@@ -13,6 +13,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - GenericBaseForm
 - LeveledItem
+- LeveledNpc
 - MagicEffect
 - MiscItem
 - NavigationMesh
@@ -75,6 +76,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingestible
 - LegendaryItem
 - LeveledItem
+- LeveledNpc
 - MiscItem
 - ModelComponent
 - NpcModification
@@ -193,6 +195,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingestible
 - LegendaryItem
 - LeveledItem
+- LeveledNpc
 - MiscItem
 - Npc
 - ObjectEffect
@@ -229,6 +232,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - GenericBaseForm
 - LeveledItem
+- LeveledNpc
 - MagicEffect
 - MiscItem
 - NavigationMesh
@@ -389,6 +393,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - IObjectBounded
 ### LeveledItem
+- IHaveVirtualMachineAdapter
+- IModeled
+- IObjectBounded
+- IScripted
+### LeveledNpc
 - IHaveVirtualMachineAdapter
 - IModeled
 - IObjectBounded

@@ -2169,6 +2169,9 @@
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledNpc.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LoadScreen.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
     </Compile>
@@ -6241,5 +6244,9 @@
     <Compile Include="Records\Major Records\FurnitureMarkerParameters_Generated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledNpcEntry_Generated.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
   </ItemGroup>
 </Project>

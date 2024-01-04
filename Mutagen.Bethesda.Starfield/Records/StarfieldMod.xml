@@ -38,6 +38,7 @@
       <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammunitions" refName="Ammunition" />
+      <Group name="LeveledNpcs" refName="LeveledNpc" />
       <Group name="Npcs" refName="Npc" />
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="BendableSplines" refName="BendableSpline" />

@@ -128,6 +128,7 @@
       <!-- Finish parsing ONA2 -->
 <!--      <RefDirect name="RaceOverrides" refName="NpcRaceOverride" />-->
     </Fields>
+    <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>INpcTemplateTarget</LinkInterface>

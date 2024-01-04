@@ -151,6 +151,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "PNDT", "FULL" },
                     new RecordType[] { "BOOK", "FULL", "CNAM", "ENAM", "FNAM" },
                     new RecordType[] { "LVLI", "ONAM" },
+                    new RecordType[] { "LVLN", "ONAM" },
                     new RecordType[] { "ENCH", "FULL" },
                     new RecordType[] { "SPEL", "FULL" },
                     new RecordType[] { "ACTI", "FULL", "ATTX" },
