@@ -803,6 +803,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             LegendaryItem_Registration.Instance,
             LegendaryMod_Registration.Instance,
             LensFlare_Registration.Instance,
+            LensFlareAttachmentFormComponent_Registration.Instance,
             LeveledBaseForm_Registration.Instance,
             LeveledBaseFormEntry_Registration.Instance,
             LeveledItem_Registration.Instance,

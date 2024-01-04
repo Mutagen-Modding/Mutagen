@@ -3499,6 +3499,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "ImageSpaceModifiableFormComponent":
                 case "IImageSpaceModifiableFormComponentGetter":
                 case "IImageSpaceModifiableFormComponent":
+                case "LensFlareAttachmentFormComponent":
+                case "ILensFlareAttachmentFormComponentGetter":
+                case "ILensFlareAttachmentFormComponent":
                     break;
                 case "Condition":
                 case "IConditionGetter":

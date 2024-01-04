@@ -420,4 +420,9 @@
       <FormLink name="ImageSpaceAdapter" recordType="MNAM" refName="ImageSpaceAdapter" />
     </Fields>
   </Object>
+  <Object name="LensFlareAttachmentFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>

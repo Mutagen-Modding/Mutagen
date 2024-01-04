@@ -16,6 +16,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
+- Light
 - MagicEffect
 - MiscItem
 - NavigationMesh
@@ -48,6 +49,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingestible
 - InstanceNamingRule
 - KeywordFormComponent
+- Light
 - Location
 - MagicEffect
 - MiscItem
@@ -81,6 +83,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
+- Light
 - MiscItem
 - ModelComponent
 - NpcModification
@@ -202,6 +205,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
+- Light
 - MiscItem
 - Npc
 - ObjectEffect
@@ -241,6 +245,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
+- Light
 - MagicEffect
 - MiscItem
 - NavigationMesh
@@ -417,6 +422,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### LeveledPackIn
 - IHaveVirtualMachineAdapter
+- IModeled
+- IObjectBounded
+- IScripted
+### Light
+- IHaveVirtualMachineAdapter
+- IKeyworded
 - IModeled
 - IObjectBounded
 - IScripted

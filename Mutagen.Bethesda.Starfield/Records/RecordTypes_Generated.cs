@@ -223,6 +223,7 @@ public partial class RecordTypes
     public static readonly RecordType DALC = new(0x434C4144);
     public static readonly RecordType DAMA = new(0x414D4144);
     public static readonly RecordType DAMC = new(0x434D4144);
+    public static readonly RecordType DAT2 = new(0x32544144);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DCED = new(0x44454344);
     public static readonly RecordType DCSD = new(0x44534344);
@@ -305,16 +306,20 @@ public partial class RecordTypes
     public static readonly RecordType FHST = new(0x54534846);
     public static readonly RecordType FIMD = new(0x444D4946);
     public static readonly RecordType FKEY = new(0x59454B46);
+    public static readonly RecordType FLAD = new(0x44414C46);
     public static readonly RecordType FLAG = new(0x47414C46);
     public static readonly RecordType FLAV = new(0x56414C46);
+    public static readonly RecordType FLBD = new(0x44424C46);
     public static readonly RecordType FLCS = new(0x53434C46);
     public static readonly RecordType FLEE = new(0x45454C46);
     public static readonly RecordType FLFM = new(0x4D464C46);
+    public static readonly RecordType FLGD = new(0x44474C46);
     public static readonly RecordType FLKW = new(0x574B4C46);
     public static readonly RecordType FLLD = new(0x444C4C46);
     public static readonly RecordType FLMS = new(0x534D4C46);
     public static readonly RecordType FLMV = new(0x564D4C46);
     public static readonly RecordType FLOR = new(0x524F4C46);
+    public static readonly RecordType FLRD = new(0x44524C46);
     public static readonly RecordType FLST = new(0x54534C46);
     public static readonly RecordType FLTR = new(0x52544C46);
     public static readonly RecordType FLTV = new(0x56544C46);
@@ -338,6 +343,7 @@ public partial class RecordTypes
     public static readonly RecordType FTYP = new(0x50595446);
     public static readonly RecordType FULL = new(0x4C4C5546);
     public static readonly RecordType FURN = new(0x4E525546);
+    public static readonly RecordType FVLD = new(0x444C5646);
     public static readonly RecordType FVPA = new(0x41505646);
     public static readonly RecordType GBFM = new(0x4D464247);
     public static readonly RecordType GBFT = new(0x54464247);
@@ -415,6 +421,7 @@ public partial class RecordTypes
     public static readonly RecordType LIMC = new(0x434D494C);
     public static readonly RecordType LLCT = new(0x54434C4C);
     public static readonly RecordType LLKC = new(0x434B4C4C);
+    public static readonly RecordType LLLD = new(0x444C4C4C);
     public static readonly RecordType LMSW = new(0x57534D4C);
     public static readonly RecordType LNAM = new(0x4D414E4C);
     public static readonly RecordType LODB = new(0x42444F4C);

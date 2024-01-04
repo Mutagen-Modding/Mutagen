@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +58,189 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ILightGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ILightGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILightGetter.ODTY => this.ODTY;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ILightGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ILightGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ILightGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region DAT2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _DAT2;
+        public MemorySlice<Byte>? DAT2
+        {
+            get => this._DAT2;
+            set => this._DAT2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILightGetter.DAT2 => this.DAT2;
+        #endregion
+        #region Gobo
+        public String? Gobo { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ILightGetter.Gobo => this.Gobo;
+        #endregion
+        #region Lens
+        private readonly IFormLinkNullable<ILensFlareGetter> _Lens = new FormLinkNullable<ILensFlareGetter>();
+        public IFormLinkNullable<ILensFlareGetter> Lens
+        {
+            get => _Lens;
+            set => _Lens.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILensFlareGetter> ILightGetter.Lens => this.Lens;
+        #endregion
+        #region FLBD
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FLBD;
+        public MemorySlice<Byte>? FLBD
+        {
+            get => this._FLBD;
+            set => this._FLBD = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILightGetter.FLBD => this.FLBD;
+        #endregion
+        #region FLRD
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FLRD;
+        public MemorySlice<Byte>? FLRD
+        {
+            get => this._FLRD;
+            set => this._FLRD = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILightGetter.FLRD => this.FLRD;
+        #endregion
+        #region FLGD
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FLGD;
+        public MemorySlice<Byte>? FLGD
+        {
+            get => this._FLGD;
+            set => this._FLGD = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILightGetter.FLGD => this.FLGD;
+        #endregion
+        #region LLLD
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _LLLD;
+        public MemorySlice<Byte>? LLLD
+        {
+            get => this._LLLD;
+            set => this._LLLD = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILightGetter.LLLD => this.LLLD;
+        #endregion
+        #region FLAD
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FLAD;
+        public MemorySlice<Byte>? FLAD
+        {
+            get => this._FLAD;
+            set => this._FLAD = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILightGetter.FLAD => this.FLAD;
+        #endregion
+        #region FVLD
+        public Single? FVLD { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILightGetter.FVLD => this.FVLD;
+        #endregion
 
         #region To String
 
@@ -79,6 +266,21 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DAT2 = initialValue;
+                this.Gobo = initialValue;
+                this.Lens = initialValue;
+                this.FLBD = initialValue;
+                this.FLRD = initialValue;
+                this.FLGD = initialValue;
+                this.LLLD = initialValue;
+                this.FLAD = initialValue;
+                this.FVLD = initialValue;
             }
 
             public Mask(
@@ -88,7 +290,22 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem Components,
+                TItem Model,
+                TItem Keywords,
+                TItem DAT2,
+                TItem Gobo,
+                TItem Lens,
+                TItem FLBD,
+                TItem FLRD,
+                TItem FLGD,
+                TItem LLLD,
+                TItem FLAD,
+                TItem FVLD)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +315,21 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DAT2 = DAT2;
+                this.Gobo = Gobo;
+                this.Lens = Lens;
+                this.FLBD = FLBD;
+                this.FLRD = FLRD;
+                this.FLGD = FLGD;
+                this.LLLD = LLLD;
+                this.FLAD = FLAD;
+                this.FVLD = FVLD;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +338,24 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem DAT2;
+            public TItem Gobo;
+            public TItem Lens;
+            public TItem FLBD;
+            public TItem FLRD;
+            public TItem FLGD;
+            public TItem LLLD;
+            public TItem FLAD;
+            public TItem FVLD;
             #endregion
 
             #region Equals
@@ -119,11 +369,41 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.DAT2, rhs.DAT2)) return false;
+                if (!object.Equals(this.Gobo, rhs.Gobo)) return false;
+                if (!object.Equals(this.Lens, rhs.Lens)) return false;
+                if (!object.Equals(this.FLBD, rhs.FLBD)) return false;
+                if (!object.Equals(this.FLRD, rhs.FLRD)) return false;
+                if (!object.Equals(this.FLGD, rhs.FLGD)) return false;
+                if (!object.Equals(this.LLLD, rhs.LLLD)) return false;
+                if (!object.Equals(this.FLAD, rhs.FLAD)) return false;
+                if (!object.Equals(this.FVLD, rhs.FVLD)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.Components);
+                hash.Add(this.Model);
+                hash.Add(this.Keywords);
+                hash.Add(this.DAT2);
+                hash.Add(this.Gobo);
+                hash.Add(this.Lens);
+                hash.Add(this.FLBD);
+                hash.Add(this.FLRD);
+                hash.Add(this.FLGD);
+                hash.Add(this.LLLD);
+                hash.Add(this.FLAD);
+                hash.Add(this.FVLD);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +414,54 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DAT2)) return false;
+                if (!eval(this.Gobo)) return false;
+                if (!eval(this.Lens)) return false;
+                if (!eval(this.FLBD)) return false;
+                if (!eval(this.FLRD)) return false;
+                if (!eval(this.FLGD)) return false;
+                if (!eval(this.LLLD)) return false;
+                if (!eval(this.FLAD)) return false;
+                if (!eval(this.FVLD)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +470,54 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DAT2)) return true;
+                if (eval(this.Gobo)) return true;
+                if (eval(this.Lens)) return true;
+                if (eval(this.FLBD)) return true;
+                if (eval(this.FLRD)) return true;
+                if (eval(this.FLGD)) return true;
+                if (eval(this.LLLD)) return true;
+                if (eval(this.FLAD)) return true;
+                if (eval(this.FVLD)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +533,48 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.DAT2 = eval(this.DAT2);
+                obj.Gobo = eval(this.Gobo);
+                obj.Lens = eval(this.Lens);
+                obj.FLBD = eval(this.FLBD);
+                obj.FLRD = eval(this.FLRD);
+                obj.FLGD = eval(this.FLGD);
+                obj.LLLD = eval(this.LLLD);
+                obj.FLAD = eval(this.FLAD);
+                obj.FVLD = eval(this.FVLD);
             }
             #endregion
 
@@ -175,6 +593,98 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Light.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.DAT2 ?? true)
+                    {
+                        sb.AppendItem(DAT2, "DAT2");
+                    }
+                    if (printMask?.Gobo ?? true)
+                    {
+                        sb.AppendItem(Gobo, "Gobo");
+                    }
+                    if (printMask?.Lens ?? true)
+                    {
+                        sb.AppendItem(Lens, "Lens");
+                    }
+                    if (printMask?.FLBD ?? true)
+                    {
+                        sb.AppendItem(FLBD, "FLBD");
+                    }
+                    if (printMask?.FLRD ?? true)
+                    {
+                        sb.AppendItem(FLRD, "FLRD");
+                    }
+                    if (printMask?.FLGD ?? true)
+                    {
+                        sb.AppendItem(FLGD, "FLGD");
+                    }
+                    if (printMask?.LLLD ?? true)
+                    {
+                        sb.AppendItem(LLLD, "LLLD");
+                    }
+                    if (printMask?.FLAD ?? true)
+                    {
+                        sb.AppendItem(FLAD, "FLAD");
+                    }
+                    if (printMask?.FVLD ?? true)
+                    {
+                        sb.AppendItem(FVLD, "FVLD");
+                    }
                 }
             }
             #endregion
@@ -185,12 +695,60 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? DAT2;
+            public Exception? Gobo;
+            public Exception? Lens;
+            public Exception? FLBD;
+            public Exception? FLRD;
+            public Exception? FLGD;
+            public Exception? LLLD;
+            public Exception? FLAD;
+            public Exception? FVLD;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Light_FieldIndex enu = (Light_FieldIndex)index;
                 switch (enu)
                 {
+                    case Light_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Light_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Light_FieldIndex.ODTY:
+                        return ODTY;
+                    case Light_FieldIndex.Components:
+                        return Components;
+                    case Light_FieldIndex.Model:
+                        return Model;
+                    case Light_FieldIndex.Keywords:
+                        return Keywords;
+                    case Light_FieldIndex.DAT2:
+                        return DAT2;
+                    case Light_FieldIndex.Gobo:
+                        return Gobo;
+                    case Light_FieldIndex.Lens:
+                        return Lens;
+                    case Light_FieldIndex.FLBD:
+                        return FLBD;
+                    case Light_FieldIndex.FLRD:
+                        return FLRD;
+                    case Light_FieldIndex.FLGD:
+                        return FLGD;
+                    case Light_FieldIndex.LLLD:
+                        return LLLD;
+                    case Light_FieldIndex.FLAD:
+                        return FLAD;
+                    case Light_FieldIndex.FVLD:
+                        return FVLD;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +759,51 @@ namespace Mutagen.Bethesda.Starfield
                 Light_FieldIndex enu = (Light_FieldIndex)index;
                 switch (enu)
                 {
+                    case Light_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Light_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Light_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case Light_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Light_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Light_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Light_FieldIndex.DAT2:
+                        this.DAT2 = ex;
+                        break;
+                    case Light_FieldIndex.Gobo:
+                        this.Gobo = ex;
+                        break;
+                    case Light_FieldIndex.Lens:
+                        this.Lens = ex;
+                        break;
+                    case Light_FieldIndex.FLBD:
+                        this.FLBD = ex;
+                        break;
+                    case Light_FieldIndex.FLRD:
+                        this.FLRD = ex;
+                        break;
+                    case Light_FieldIndex.FLGD:
+                        this.FLGD = ex;
+                        break;
+                    case Light_FieldIndex.LLLD:
+                        this.LLLD = ex;
+                        break;
+                    case Light_FieldIndex.FLAD:
+                        this.FLAD = ex;
+                        break;
+                    case Light_FieldIndex.FVLD:
+                        this.FVLD = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +815,51 @@ namespace Mutagen.Bethesda.Starfield
                 Light_FieldIndex enu = (Light_FieldIndex)index;
                 switch (enu)
                 {
+                    case Light_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Light_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Light_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Light_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Light_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Light_FieldIndex.DAT2:
+                        this.DAT2 = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Gobo:
+                        this.Gobo = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Lens:
+                        this.Lens = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FLBD:
+                        this.FLBD = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FLRD:
+                        this.FLRD = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FLGD:
+                        this.FLGD = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.LLLD:
+                        this.LLLD = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FLAD:
+                        this.FLAD = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FVLD:
+                        this.FVLD = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +869,21 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (Components != null) return true;
+                if (Model != null) return true;
+                if (Keywords != null) return true;
+                if (DAT2 != null) return true;
+                if (Gobo != null) return true;
+                if (Lens != null) return true;
+                if (FLBD != null) return true;
+                if (FLRD != null) return true;
+                if (FLGD != null) return true;
+                if (LLLD != null) return true;
+                if (FLAD != null) return true;
+                if (FVLD != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +910,77 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Model?.Print(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(DAT2, "DAT2");
+                }
+                {
+                    sb.AppendItem(Gobo, "Gobo");
+                }
+                {
+                    sb.AppendItem(Lens, "Lens");
+                }
+                {
+                    sb.AppendItem(FLBD, "FLBD");
+                }
+                {
+                    sb.AppendItem(FLRD, "FLRD");
+                }
+                {
+                    sb.AppendItem(FLGD, "FLGD");
+                }
+                {
+                    sb.AppendItem(LLLD, "LLLD");
+                }
+                {
+                    sb.AppendItem(FLAD, "FLAD");
+                }
+                {
+                    sb.AppendItem(FVLD, "FVLD");
+                }
             }
             #endregion
 
@@ -255,6 +989,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.DAT2 = this.DAT2.Combine(rhs.DAT2);
+                ret.Gobo = this.Gobo.Combine(rhs.Gobo);
+                ret.Lens = this.Lens.Combine(rhs.Lens);
+                ret.FLBD = this.FLBD.Combine(rhs.FLBD);
+                ret.FLRD = this.FLRD.Combine(rhs.FLRD);
+                ret.FLGD = this.FLGD.Combine(rhs.FLGD);
+                ret.LLLD = this.LLLD.Combine(rhs.LLLD);
+                ret.FLAD = this.FLAD.Combine(rhs.FLAD);
+                ret.FVLD = this.FVLD.Combine(rhs.FVLD);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1025,64 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public AComponent.TranslationMask? Components;
+            public Model.TranslationMask? Model;
+            public bool Keywords;
+            public bool DAT2;
+            public bool Gobo;
+            public bool Lens;
+            public bool FLBD;
+            public bool FLRD;
+            public bool FLGD;
+            public bool LLLD;
+            public bool FLAD;
+            public bool FVLD;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.Keywords = defaultOn;
+                this.DAT2 = defaultOn;
+                this.Gobo = defaultOn;
+                this.Lens = defaultOn;
+                this.FLBD = defaultOn;
+                this.FLRD = defaultOn;
+                this.FLGD = defaultOn;
+                this.LLLD = defaultOn;
+                this.FLAD = defaultOn;
+                this.FVLD = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((DAT2, null));
+                ret.Add((Gobo, null));
+                ret.Add((Lens, null));
+                ret.Add((FLBD, null));
+                ret.Add((FLRD, null));
+                ret.Add((FLGD, null));
+                ret.Add((LLLD, null));
+                ret.Add((FLAD, null));
+                ret.Add((FVLD, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1094,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Light_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LightCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LightSetterCommon.Instance.RemapLinks(this, mapping);
         public Light(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1145,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILight);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LightCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LightSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LightSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LightSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,11 +1233,48 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILight :
+        IAssetLinkContainer,
         IEmittance,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
+        IModeled,
+        IObjectBounded,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new MemorySlice<Byte>? DAT2 { get; set; }
+        new String? Gobo { get; set; }
+        new IFormLinkNullable<ILensFlareGetter> Lens { get; set; }
+        new MemorySlice<Byte>? FLBD { get; set; }
+        new MemorySlice<Byte>? FLRD { get; set; }
+        new MemorySlice<Byte>? FLGD { get; set; }
+        new MemorySlice<Byte>? LLLD { get; set; }
+        new MemorySlice<Byte>? FLAD { get; set; }
+        new Single? FVLD { get; set; }
+        #region Mutagen
+        new Light.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ILightInternal :
@@ -441,12 +1287,58 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.LIGH)]
     public partial interface ILightGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IEmittanceGetter,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ILightGetter>,
-        IMapsToGetter<ILightGetter>
+        IMapsToGetter<ILightGetter>,
+        IModeledGetter,
+        IObjectBoundedGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        ReadOnlyMemorySlice<Byte>? DAT2 { get; }
+        String? Gobo { get; }
+        IFormLinkNullableGetter<ILensFlareGetter> Lens { get; }
+        ReadOnlyMemorySlice<Byte>? FLBD { get; }
+        ReadOnlyMemorySlice<Byte>? FLRD { get; }
+        ReadOnlyMemorySlice<Byte>? FLGD { get; }
+        ReadOnlyMemorySlice<Byte>? LLLD { get; }
+        ReadOnlyMemorySlice<Byte>? FLAD { get; }
+        Single? FVLD { get; }
+
+        #region Mutagen
+        Light.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -623,6 +1515,21 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        ODTY = 9,
+        Components = 10,
+        Model = 11,
+        Keywords = 12,
+        DAT2 = 13,
+        Gobo = 14,
+        Lens = 15,
+        FLBD = 16,
+        FLRD = 17,
+        FLGD = 18,
+        LLLD = 19,
+        FLAD = 20,
+        FVLD = 21,
     }
     #endregion
 
@@ -633,9 +1540,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -665,8 +1572,36 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LIGH);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LIGH);
+            var all = RecordCollection.Factory(
+                RecordTypes.LIGH,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DAT2,
+                RecordTypes.NAM0,
+                RecordTypes.LNAM,
+                RecordTypes.FLBD,
+                RecordTypes.FLRD,
+                RecordTypes.FLGD,
+                RecordTypes.LLLD,
+                RecordTypes.FLAD,
+                RecordTypes.FVLD);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LightBinaryWriteTranslation);
         #region Interface
@@ -708,6 +1643,21 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILightInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.Components.Clear();
+            item.Model = null;
+            item.Keywords = null;
+            item.DAT2 = default;
+            item.Gobo = default;
+            item.Lens.Clear();
+            item.FLBD = default;
+            item.FLRD = default;
+            item.FLGD = default;
+            item.LLLD = default;
+            item.FLAD = default;
+            item.FVLD = default;
             base.Clear(item);
         }
         
@@ -725,6 +1675,43 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILight obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Lens.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILight obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILight obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -792,6 +1779,35 @@ namespace Mutagen.Bethesda.Starfield
             Light.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.DAT2 = MemorySliceExt.SequenceEqual(item.DAT2, rhs.DAT2);
+            ret.Gobo = string.Equals(item.Gobo, rhs.Gobo);
+            ret.Lens = item.Lens.Equals(rhs.Lens);
+            ret.FLBD = MemorySliceExt.SequenceEqual(item.FLBD, rhs.FLBD);
+            ret.FLRD = MemorySliceExt.SequenceEqual(item.FLRD, rhs.FLRD);
+            ret.FLGD = MemorySliceExt.SequenceEqual(item.FLGD, rhs.FLGD);
+            ret.LLLD = MemorySliceExt.SequenceEqual(item.LLLD, rhs.LLLD);
+            ret.FLAD = MemorySliceExt.SequenceEqual(item.FLAD, rhs.FLAD);
+            ret.FVLD = item.FVLD.EqualsWithin(rhs.FVLD);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -841,6 +1857,98 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.DAT2 ?? true)
+                && item.DAT2 is {} DAT2Item)
+            {
+                sb.AppendLine($"DAT2 => {SpanExt.ToHexString(DAT2Item)}");
+            }
+            if ((printMask?.Gobo ?? true)
+                && item.Gobo is {} GoboItem)
+            {
+                sb.AppendItem(GoboItem, "Gobo");
+            }
+            if (printMask?.Lens ?? true)
+            {
+                sb.AppendItem(item.Lens.FormKeyNullable, "Lens");
+            }
+            if ((printMask?.FLBD ?? true)
+                && item.FLBD is {} FLBDItem)
+            {
+                sb.AppendLine($"FLBD => {SpanExt.ToHexString(FLBDItem)}");
+            }
+            if ((printMask?.FLRD ?? true)
+                && item.FLRD is {} FLRDItem)
+            {
+                sb.AppendLine($"FLRD => {SpanExt.ToHexString(FLRDItem)}");
+            }
+            if ((printMask?.FLGD ?? true)
+                && item.FLGD is {} FLGDItem)
+            {
+                sb.AppendLine($"FLGD => {SpanExt.ToHexString(FLGDItem)}");
+            }
+            if ((printMask?.LLLD ?? true)
+                && item.LLLD is {} LLLDItem)
+            {
+                sb.AppendLine($"LLLD => {SpanExt.ToHexString(LLLDItem)}");
+            }
+            if ((printMask?.FLAD ?? true)
+                && item.FLAD is {} FLADItem)
+            {
+                sb.AppendLine($"FLAD => {SpanExt.ToHexString(FLADItem)}");
+            }
+            if ((printMask?.FVLD ?? true)
+                && item.FVLD is {} FVLDItem)
+            {
+                sb.AppendItem(FVLDItem, "FVLD");
+            }
         }
         
         public static Light_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -891,6 +1999,78 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Light_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Light_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.DAT2) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.DAT2, rhs.DAT2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
+            {
+                if (!string.Equals(lhs.Gobo, rhs.Gobo)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
+            {
+                if (!lhs.Lens.Equals(rhs.Lens)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLBD) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FLBD, rhs.FLBD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLRD) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FLRD, rhs.FLRD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLGD) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FLGD, rhs.FLGD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.LLLD) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.LLLD, rhs.LLLD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FLAD) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FLAD, rhs.FLAD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FVLD) ?? true))
+            {
+                if (!lhs.FVLD.EqualsWithin(rhs.FVLD)) return false;
+            }
             return true;
         }
         
@@ -919,6 +2099,54 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILightGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            hash.Add(item.Components);
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.DAT2 is {} DAT2Item)
+            {
+                hash.Add(DAT2Item);
+            }
+            if (item.Gobo is {} Goboitem)
+            {
+                hash.Add(Goboitem);
+            }
+            hash.Add(item.Lens);
+            if (item.FLBD is {} FLBDItem)
+            {
+                hash.Add(FLBDItem);
+            }
+            if (item.FLRD is {} FLRDItem)
+            {
+                hash.Add(FLRDItem);
+            }
+            if (item.FLGD is {} FLGDItem)
+            {
+                hash.Add(FLGDItem);
+            }
+            if (item.LLLD is {} LLLDItem)
+            {
+                hash.Add(LLLDItem);
+            }
+            if (item.FLAD is {} FLADItem)
+            {
+                hash.Add(FLADItem);
+            }
+            if (item.FVLD is {} FVLDitem)
+            {
+                hash.Add(FVLDitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -947,6 +2175,60 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Lens, out var LensInfo))
+            {
+                yield return LensInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILightGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1022,6 +2304,213 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Light_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Light_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.DAT2) ?? true))
+            {
+                if(rhs.DAT2 is {} DAT2rhs)
+                {
+                    item.DAT2 = DAT2rhs.ToArray();
+                }
+                else
+                {
+                    item.DAT2 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
+            {
+                item.Gobo = rhs.Gobo;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
+            {
+                item.Lens.SetTo(rhs.Lens.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLBD) ?? true))
+            {
+                if(rhs.FLBD is {} FLBDrhs)
+                {
+                    item.FLBD = FLBDrhs.ToArray();
+                }
+                else
+                {
+                    item.FLBD = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLRD) ?? true))
+            {
+                if(rhs.FLRD is {} FLRDrhs)
+                {
+                    item.FLRD = FLRDrhs.ToArray();
+                }
+                else
+                {
+                    item.FLRD = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLGD) ?? true))
+            {
+                if(rhs.FLGD is {} FLGDrhs)
+                {
+                    item.FLGD = FLGDrhs.ToArray();
+                }
+                else
+                {
+                    item.FLGD = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.LLLD) ?? true))
+            {
+                if(rhs.LLLD is {} LLLDrhs)
+                {
+                    item.LLLD = LLLDrhs.ToArray();
+                }
+                else
+                {
+                    item.LLLD = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FLAD) ?? true))
+            {
+                if(rhs.FLAD is {} FLADrhs)
+                {
+                    item.FLAD = FLADrhs.ToArray();
+                }
+                else
+                {
+                    item.FLAD = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FVLD) ?? true))
+            {
+                item.FVLD = rhs.FVLD;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1170,6 +2659,100 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly LightBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ILightGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DAT2,
+                header: translationParams.ConvertToCustom(RecordTypes.DAT2));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Gobo,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Lens,
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FLBD,
+                header: translationParams.ConvertToCustom(RecordTypes.FLBD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FLRD,
+                header: translationParams.ConvertToCustom(RecordTypes.FLRD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FLGD,
+                header: translationParams.ConvertToCustom(RecordTypes.FLGD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.LLLD,
+                header: translationParams.ConvertToCustom(RecordTypes.LLLD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FLAD,
+                header: translationParams.ConvertToCustom(RecordTypes.FLAD));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FVLD,
+                header: translationParams.ConvertToCustom(RecordTypes.FVLD));
+        }
+
         public void Write(
             MutagenWriter writer,
             ILightGetter item,
@@ -1186,10 +2769,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1239,6 +2824,145 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly LightBinaryCreateTranslation Instance = new LightBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LIGH;
+        public static ParseResult FillBinaryRecordTypes(
+            ILightInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Light_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Light_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Light_FieldIndex.Components;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.Model;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Light_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.DAT2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DAT2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.DAT2;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Gobo = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Light_FieldIndex.Gobo;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Lens.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Light_FieldIndex.Lens;
+                }
+                case RecordTypeInts.FLBD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FLBD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.FLBD;
+                }
+                case RecordTypeInts.FLRD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FLRD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.FLRD;
+                }
+                case RecordTypeInts.FLGD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FLGD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.FLGD;
+                }
+                case RecordTypeInts.LLLD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.LLLD;
+                }
+                case RecordTypeInts.FLAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FLAD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.FLAD;
+                }
+                case RecordTypeInts.FVLD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FVLD = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Light_FieldIndex.FVLD;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1271,6 +2995,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LightCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LightCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1284,7 +3010,65 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(ILight);
 
+        public Light.MajorFlag MajorFlags => (Light.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IModelGetter? Model { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region DAT2
+        private int? _DAT2Location;
+        public ReadOnlyMemorySlice<Byte>? DAT2 => _DAT2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DAT2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Gobo
+        private int? _GoboLocation;
+        public String? Gobo => _GoboLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoboLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Lens
+        private int? _LensLocation;
+        public IFormLinkNullableGetter<ILensFlareGetter> Lens => _LensLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LensLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        #endregion
+        #region FLBD
+        private int? _FLBDLocation;
+        public ReadOnlyMemorySlice<Byte>? FLBD => _FLBDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLBDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region FLRD
+        private int? _FLRDLocation;
+        public ReadOnlyMemorySlice<Byte>? FLRD => _FLRDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLRDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region FLGD
+        private int? _FLGDLocation;
+        public ReadOnlyMemorySlice<Byte>? FLGD => _FLGDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLGDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region LLLD
+        private int? _LLLDLocation;
+        public ReadOnlyMemorySlice<Byte>? LLLD => _LLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region FLAD
+        private int? _FLADLocation;
+        public ReadOnlyMemorySlice<Byte>? FLAD => _FLADLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLADLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region FVLD
+        private int? _FVLDLocation;
+        public Single? FVLD => _FVLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FVLDLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1342,6 +3126,135 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Light_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Light_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Light_FieldIndex.Components;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Light_FieldIndex.Model;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Light_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.DAT2:
+                {
+                    _DAT2Location = (stream.Position - offset);
+                    return (int)Light_FieldIndex.DAT2;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _GoboLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.Gobo;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _LensLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.Lens;
+                }
+                case RecordTypeInts.FLBD:
+                {
+                    _FLBDLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.FLBD;
+                }
+                case RecordTypeInts.FLRD:
+                {
+                    _FLRDLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.FLRD;
+                }
+                case RecordTypeInts.FLGD:
+                {
+                    _FLGDLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.FLGD;
+                }
+                case RecordTypeInts.LLLD:
+                {
+                    _LLLDLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.LLLD;
+                }
+                case RecordTypeInts.FLAD:
+                {
+                    _FLADLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.FLAD;
+                }
+                case RecordTypeInts.FVLD:
+                {
+                    _FVLDLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.FVLD;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

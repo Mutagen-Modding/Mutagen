@@ -2172,6 +2172,9 @@
     <Compile Include="Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Light.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LoadScreen.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
     </Compile>
@@ -6256,5 +6259,8 @@
       <DependentUpon>LeveledBaseForm.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\ILeveledBaseFormTarget_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\LensFlareAttachmentFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

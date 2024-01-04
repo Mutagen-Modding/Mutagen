@@ -33,6 +33,7 @@
       <Group name="Books" refName="Book" />
       <Group name="Containers" refName="Container" />
       <Group name="Doors" refName="Door" />
+      <Group name="Lights" refName="Light" />
       <Group name="MiscItems" refName="MiscItem" />
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="Furniture" refName="Furniture" />

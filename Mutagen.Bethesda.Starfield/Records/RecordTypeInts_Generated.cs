@@ -221,6 +221,7 @@ public partial class RecordTypeInts
     public const int DALC = 0x434C4144;
     public const int DAMA = 0x414D4144;
     public const int DAMC = 0x434D4144;
+    public const int DAT2 = 0x32544144;
     public const int DATA = 0x41544144;
     public const int DCED = 0x44454344;
     public const int DCSD = 0x44534344;
@@ -303,16 +304,20 @@ public partial class RecordTypeInts
     public const int FHST = 0x54534846;
     public const int FIMD = 0x444D4946;
     public const int FKEY = 0x59454B46;
+    public const int FLAD = 0x44414C46;
     public const int FLAG = 0x47414C46;
     public const int FLAV = 0x56414C46;
+    public const int FLBD = 0x44424C46;
     public const int FLCS = 0x53434C46;
     public const int FLEE = 0x45454C46;
     public const int FLFM = 0x4D464C46;
+    public const int FLGD = 0x44474C46;
     public const int FLKW = 0x574B4C46;
     public const int FLLD = 0x444C4C46;
     public const int FLMS = 0x534D4C46;
     public const int FLMV = 0x564D4C46;
     public const int FLOR = 0x524F4C46;
+    public const int FLRD = 0x44524C46;
     public const int FLST = 0x54534C46;
     public const int FLTR = 0x52544C46;
     public const int FLTV = 0x56544C46;
@@ -336,6 +341,7 @@ public partial class RecordTypeInts
     public const int FTYP = 0x50595446;
     public const int FULL = 0x4C4C5546;
     public const int FURN = 0x4E525546;
+    public const int FVLD = 0x444C5646;
     public const int FVPA = 0x41505646;
     public const int GBFM = 0x4D464247;
     public const int GBFT = 0x54464247;
@@ -413,6 +419,7 @@ public partial class RecordTypeInts
     public const int LIMC = 0x434D494C;
     public const int LLCT = 0x54434C4C;
     public const int LLKC = 0x434B4C4C;
+    public const int LLLD = 0x444C4C4C;
     public const int LMSW = 0x57534D4C;
     public const int LNAM = 0x4D414E4C;
     public const int LODB = 0x42444F4C;

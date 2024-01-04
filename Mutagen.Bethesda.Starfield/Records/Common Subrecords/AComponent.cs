@@ -59,6 +59,7 @@ public partial class AComponent
         BGSWorldSpaceOverlay_Component,
         ReflectionProbes_Component,
         TESImageSpaceModifiableForm_Component,
+        LensFlareAttachmentFormComponent,
     }
 
     public static bool TryCreateFromBinary(
@@ -175,6 +176,8 @@ public partial class AComponent
                 return ReflectionProbesComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.TESImageSpaceModifiableForm_Component:
                 return ImageSpaceModifiableFormComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.LensFlareAttachmentFormComponent:
+                return LensFlareAttachmentFormComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -265,6 +268,7 @@ partial class AComponentBinaryWriteTranslation
             IWorldSpaceOverlayComponentGetter _ => AComponent.ComponentType.BGSWorldSpaceOverlay_Component,
             IReflectionProbesComponentGetter _ => AComponent.ComponentType.ReflectionProbes_Component,
             IImageSpaceModifiableFormComponentGetter _ => AComponent.ComponentType.TESImageSpaceModifiableForm_Component,
+            ILensFlareAttachmentFormComponentGetter _ => AComponent.ComponentType.LensFlareAttachmentFormComponent,
             _ => throw new NotImplementedException()
         };
 
@@ -379,9 +383,10 @@ partial class AComponentBinaryOverlay
                 return ReflectionProbesComponentBinaryOverlay.ReflectionProbesComponentFactory(stream, package);
             case AComponent.ComponentType.TESImageSpaceModifiableForm_Component:
                 return ImageSpaceModifiableFormComponentBinaryOverlay.ImageSpaceModifiableFormComponentFactory(stream, package);
+            case AComponent.ComponentType.LensFlareAttachmentFormComponent:
+                return LensFlareAttachmentFormComponentBinaryOverlay.LensFlareAttachmentFormComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }
-        
     }
 }
