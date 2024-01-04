@@ -12,7 +12,6 @@ public partial class Static
     {
         HeadingMarker = 0x0000_0004,
         NonOccluder = 0x0000_0010,
-        Deleted = 0x0000_0020,
         HasTreeLod = 0x0000_0040,
         AddOnLodObject = 0x0000_0080,
         HiddenFromLocalMap = 0x0000_0200,

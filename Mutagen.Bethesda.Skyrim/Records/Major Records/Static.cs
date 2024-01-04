@@ -6,7 +6,6 @@ public partial class Static
     public enum MajorFlag
     {
         NeverFades = 0x0000_0004,
-        Deleted = 0x0000_0020,
         HasTreeLOD = 0x0000_0040,
         AddOnLODObject = 0x0000_0080,
         HiddenFromLocalMap = 0x0000_0200,
