@@ -6252,5 +6252,9 @@
       <DependentUpon>LeveledPackIn.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\ILeveledPackInTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\LeveledBaseFormEntry_Generated.cs">
+      <DependentUpon>LeveledBaseForm.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ILeveledBaseFormTarget_Generated.cs" />
   </ItemGroup>
 </Project>

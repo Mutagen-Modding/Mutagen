@@ -804,6 +804,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             LegendaryMod_Registration.Instance,
             LensFlare_Registration.Instance,
             LeveledBaseForm_Registration.Instance,
+            LeveledBaseFormEntry_Registration.Instance,
             LeveledItem_Registration.Instance,
             LeveledItemEntry_Registration.Instance,
             LeveledNpc_Registration.Instance,

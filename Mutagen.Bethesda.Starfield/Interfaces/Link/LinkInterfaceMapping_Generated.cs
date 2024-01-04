@@ -149,6 +149,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             LeveledBaseForm_Registration.Instance,
         });
         dict[typeof(IExternalBaseTemplateGetter)] = dict[typeof(IExternalBaseTemplate)] with { Setter = false };
+        dict[typeof(ILeveledBaseFormTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            GenericBaseForm_Registration.Instance,
+            LeveledBaseForm_Registration.Instance,
+        });
+        dict[typeof(ILeveledBaseFormTargetGetter)] = dict[typeof(ILeveledBaseFormTarget)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,

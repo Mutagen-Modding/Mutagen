@@ -12,6 +12,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DialogResponses
 - Furniture
 - GenericBaseForm
+- LeveledBaseForm
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
@@ -76,6 +77,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Ingestible
 - LegendaryItem
+- LeveledBaseForm
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
@@ -196,6 +198,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - GenericBaseForm
 - Ingestible
 - LegendaryItem
+- LeveledBaseForm
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
@@ -234,6 +237,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - Furniture
 - GenericBaseForm
+- LeveledBaseForm
 - LeveledItem
 - LeveledNpc
 - LeveledPackIn
@@ -396,6 +400,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### LegendaryItem
 - IModeled
 - IObjectBounded
+### LeveledBaseForm
+- IHaveVirtualMachineAdapter
+- IModeled
+- IObjectBounded
+- IScripted
 ### LeveledItem
 - IHaveVirtualMachineAdapter
 - IModeled
