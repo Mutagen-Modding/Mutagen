@@ -6248,5 +6248,9 @@
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
+    <Compile Include="Records\Major Records\LeveledPackInEntry_Generated.cs">
+      <DependentUpon>LeveledPackIn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ILeveledPackInTarget_Generated.cs" />
   </ItemGroup>
 </Project>

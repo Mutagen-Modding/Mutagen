@@ -43,6 +43,7 @@
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="LeveledPackIns" refName="LeveledPackIn" />
       <Group name="GenericBaseForms" refName="GenericBaseForm" />
       <Group name="Weathers" refName="Weather" />
       <Ref name="Cells" singleton="true">

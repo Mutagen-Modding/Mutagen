@@ -163,6 +163,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Npc_Registration.Instance,
         });
         dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
+        dict[typeof(ILeveledPackInTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            LeveledPackIn_Registration.Instance,
+            PackIn_Registration.Instance,
+        });
+        dict[typeof(ILeveledPackInTargetGetter)] = dict[typeof(ILeveledPackInTarget)] with { Setter = false };
         dict[typeof(IEmittance)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Light_Registration.Instance,

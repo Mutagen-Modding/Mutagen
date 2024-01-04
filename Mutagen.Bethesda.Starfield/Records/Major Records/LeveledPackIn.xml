@@ -2,6 +2,40 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledPackIn" recordType="LVLP" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefList name="Components" refName="AComponent" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <Float name="ChanceNone" recordType="LVLD" nullable="False" />
+      <UInt8 name="MaxCount" recordType="LVLM" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="2" />
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="UseGlobal" refName="Global" recordType="LVLG" />
+      <RefList name="Entries" counterRecType="LLCT" refName="LeveledPackInEntry" counterLength="1" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+    </Fields>
+    <LinkInterface>ILeveledPackInTarget</LinkInterface>
+  </Object>
+  <Object name="LeveledPackInEntry" objType="Subrecord">
+    <Fields>
+      <Data recordType="LVLO">
+        <Fields>
+          <Int16 name="Level" />
+          <Int16 name="Unused" />
+          <FormLink name="Reference">
+            <Interface>ILeveledPackInTarget</Interface>
+          </FormLink>
+          <Int16 name="Count" />
+          <Percent name="ChanceNone" integerType="Byte" />
+          <Int8 name="Unused2" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>

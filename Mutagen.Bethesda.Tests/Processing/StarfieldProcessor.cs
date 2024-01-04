@@ -56,6 +56,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
+        AddDynamicProcessing(RecordTypes.LVLP, ProcessLeveledPackIns);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -120,6 +121,13 @@ public class StarfieldProcessor : Processor
     }
 
     private void ProcessMisc(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+    }
+
+    private void ProcessLeveledPackIns(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {

@@ -4,5 +4,6 @@
     <Fields>
     </Fields>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>ILeveledPackInTarget</LinkInterface>
   </Object>
 </Loqui>

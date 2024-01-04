@@ -67,6 +67,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Keyword
 - PlacedNpc
 - PlacedObject
+### ILeveledPackInTarget
+- LeveledPackIn
+- PackIn
 ### ILinkedReference
 - APlacedTrap
 - PlacedNpc
@@ -206,6 +209,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### LeveledNpc
 - INpcSpawn
 - INpcTemplateTarget
+### LeveledPackIn
+- ILeveledPackInTarget
 ### Light
 - IEmittance
 ### LocationReferenceType
@@ -225,6 +230,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IOwner
 ### PackIn
 - IConstructible
+- ILeveledPackInTarget
 ### PlacedNpc
 - IKeywordLinkedReference
 - ILinkedReference
