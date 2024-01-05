@@ -425,4 +425,13 @@
       <ByteArray name="REFL" recordType="REFL" unknown="true" />
     </Fields>
   </Object>
+  <Object name="MaterialPropertyComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="WorkshopItemColorComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+    </Fields>
+  </Object>
 </Loqui>

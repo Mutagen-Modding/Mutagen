@@ -23,7 +23,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <List name="ForcedLocRefTypes" recordType="FTYP" >
+      <List name="ForcedLocations" recordType="FTYP" >
         <FormLink refName="LocationReferenceType" />
       </List>
       <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />

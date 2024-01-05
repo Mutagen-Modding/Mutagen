@@ -19,7 +19,7 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <List name="ForcedLocRefTypes" recordType="FTYP" >
+      <List name="ForcedLocations" recordType="FTYP" >
         <FormLink refName="LocationReferenceType" />
       </List>
       <ByteArray name="PNAM" recordType="PNAM" unknown="true" />

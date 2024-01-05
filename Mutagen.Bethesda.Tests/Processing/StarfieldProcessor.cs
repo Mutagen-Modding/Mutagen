@@ -57,6 +57,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
         AddDynamicProcessing(RecordTypes.LVLP, ProcessLeveledPackIns);
+        AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -134,6 +135,13 @@ public class StarfieldProcessor : Processor
         ProcessObjectPlacementDefaults(majorFrame, fileOffset);
     }
 
+    private void ProcessStatics(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+    }
+
     protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
     {
         return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
@@ -188,6 +196,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "INNR", "WNAM" },
                     new RecordType[] { "AMMO", "FULL", "ONAM" },
                     new RecordType[] { "FURN", "FULL", "ATTX" },
+                    new RecordType[] { "STAT", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

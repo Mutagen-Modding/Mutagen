@@ -228,6 +228,7 @@ public partial class RecordTypes
     public static readonly RecordType DCED = new(0x44454344);
     public static readonly RecordType DCSD = new(0x44534344);
     public static readonly RecordType DEBR = new(0x52424544);
+    public static readonly RecordType DEFL = new(0x4C464544);
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DENS = new(0x534E4544);
     public static readonly RecordType DESC = new(0x43534544);
@@ -730,6 +731,7 @@ public partial class RecordTypes
     public static readonly RecordType STCP = new(0x50435453);
     public static readonly RecordType STDT = new(0x54445453);
     public static readonly RecordType STKD = new(0x444B5453);
+    public static readonly RecordType STLS = new(0x534C5453);
     public static readonly RecordType STMP = new(0x504D5453);
     public static readonly RecordType STND = new(0x444E5453);
     public static readonly RecordType STON = new(0x4E4F5453);

@@ -273,17 +273,17 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
-        #region ForcedLocRefTypes
+        #region ForcedLocations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _ForcedLocRefTypes;
-        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _ForcedLocations;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations
         {
-            get => this._ForcedLocRefTypes;
-            set => this._ForcedLocRefTypes = value;
+            get => this._ForcedLocations;
+            set => this._ForcedLocations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IContainerGetter.ForcedLocRefTypes => _ForcedLocRefTypes;
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IContainerGetter.ForcedLocations => _ForcedLocations;
         #endregion
 
         #endregion
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ForcedLocRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.NativeTerminal = initialValue;
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Destructible,
                 TItem Flags,
                 TItem Keywords,
-                TItem ForcedLocRefTypes,
+                TItem ForcedLocations,
                 TItem NativeTerminal,
                 TItem Properties,
                 TItem AttachParentSlots,
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Flags = Flags;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ForcedLocRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
                 this.NativeTerminal = NativeTerminal;
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public TItem Flags;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocRefTypes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocations;
             public TItem NativeTerminal;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.ForcedLocRefTypes, rhs.ForcedLocRefTypes)) return false;
+                if (!object.Equals(this.ForcedLocations, rhs.ForcedLocations)) return false;
                 if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Destructible);
                 hash.Add(this.Flags);
                 hash.Add(this.Keywords);
-                hash.Add(this.ForcedLocRefTypes);
+                hash.Add(this.ForcedLocations);
                 hash.Add(this.NativeTerminal);
                 hash.Add(this.Properties);
                 hash.Add(this.AttachParentSlots);
@@ -643,12 +643,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.ForcedLocRefTypes != null)
+                if (this.ForcedLocations != null)
                 {
-                    if (!eval(this.ForcedLocRefTypes.Overall)) return false;
-                    if (this.ForcedLocRefTypes.Specific != null)
+                    if (!eval(this.ForcedLocations.Overall)) return false;
+                    if (this.ForcedLocations.Specific != null)
                     {
-                        foreach (var item in this.ForcedLocRefTypes.Specific)
+                        foreach (var item in this.ForcedLocations.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -768,12 +768,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.ForcedLocRefTypes != null)
+                if (this.ForcedLocations != null)
                 {
-                    if (eval(this.ForcedLocRefTypes.Overall)) return true;
-                    if (this.ForcedLocRefTypes.Specific != null)
+                    if (eval(this.ForcedLocations.Overall)) return true;
+                    if (this.ForcedLocations.Specific != null)
                     {
-                        foreach (var item in this.ForcedLocRefTypes.Specific)
+                        foreach (var item in this.ForcedLocations.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -885,14 +885,14 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (ForcedLocRefTypes != null)
+                if (ForcedLocations != null)
                 {
-                    obj.ForcedLocRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (ForcedLocRefTypes.Specific != null)
+                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ForcedLocations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.ForcedLocRefTypes.Specific = l;
-                        foreach (var item in ForcedLocRefTypes.Specific)
+                        obj.ForcedLocations.Specific = l;
+                        foreach (var item in ForcedLocations.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
@@ -1057,16 +1057,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.ForcedLocRefTypes?.Overall ?? true)
-                        && ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+                    if ((printMask?.ForcedLocations?.Overall ?? true)
+                        && ForcedLocations is {} ForcedLocationsItem)
                     {
-                        sb.AppendLine("ForcedLocRefTypes =>");
+                        sb.AppendLine("ForcedLocations =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ForcedLocRefTypesItem.Overall);
-                            if (ForcedLocRefTypesItem.Specific != null)
+                            sb.AppendItem(ForcedLocationsItem.Overall);
+                            if (ForcedLocationsItem.Specific != null)
                             {
-                                foreach (var subItem in ForcedLocRefTypesItem.Specific)
+                                foreach (var subItem in ForcedLocationsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public Exception? Flags;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocRefTypes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocations;
             public Exception? NativeTerminal;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
@@ -1205,8 +1205,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Flags;
                     case Container_FieldIndex.Keywords:
                         return Keywords;
-                    case Container_FieldIndex.ForcedLocRefTypes:
-                        return ForcedLocRefTypes;
+                    case Container_FieldIndex.ForcedLocations:
+                        return ForcedLocations;
                     case Container_FieldIndex.NativeTerminal:
                         return NativeTerminal;
                     case Container_FieldIndex.Properties:
@@ -1274,8 +1274,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Container_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Container_FieldIndex.ForcedLocRefTypes:
-                        this.ForcedLocRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Container_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Container_FieldIndex.NativeTerminal:
                         this.NativeTerminal = ex;
@@ -1351,8 +1351,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Container_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Container_FieldIndex.ForcedLocRefTypes:
-                        this.ForcedLocRefTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Container_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Container_FieldIndex.NativeTerminal:
                         this.NativeTerminal = (Exception?)obj;
@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Destructible != null) return true;
                 if (Flags != null) return true;
                 if (Keywords != null) return true;
-                if (ForcedLocRefTypes != null) return true;
+                if (ForcedLocations != null) return true;
                 if (NativeTerminal != null) return true;
                 if (Properties != null) return true;
                 if (AttachParentSlots != null) return true;
@@ -1509,15 +1509,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+                if (ForcedLocations is {} ForcedLocationsItem)
                 {
-                    sb.AppendLine("ForcedLocRefTypes =>");
+                    sb.AppendLine("ForcedLocations =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ForcedLocRefTypesItem.Overall);
-                        if (ForcedLocRefTypesItem.Specific != null)
+                        sb.AppendItem(ForcedLocationsItem.Overall);
+                        if (ForcedLocationsItem.Specific != null)
                         {
-                            foreach (var subItem in ForcedLocRefTypesItem.Specific)
+                            foreach (var subItem in ForcedLocationsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.ForcedLocRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocRefTypes?.Overall, rhs.ForcedLocRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocRefTypes?.Specific, rhs.ForcedLocRefTypes?.Specific));
+                ret.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocations?.Overall, rhs.ForcedLocations?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocations?.Specific, rhs.ForcedLocations?.Specific));
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
@@ -1642,7 +1642,7 @@ namespace Mutagen.Bethesda.Starfield
             public Destructible.TranslationMask? Destructible;
             public bool Flags;
             public bool Keywords;
-            public bool ForcedLocRefTypes;
+            public bool ForcedLocations;
             public bool NativeTerminal;
             public ObjectProperty.TranslationMask? Properties;
             public bool AttachParentSlots;
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
                 this.Keywords = defaultOn;
-                this.ForcedLocRefTypes = defaultOn;
+                this.ForcedLocations = defaultOn;
                 this.NativeTerminal = defaultOn;
                 this.AttachParentSlots = defaultOn;
                 this.DisplayFilter = defaultOn;
@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((Keywords, null));
-                ret.Add((ForcedLocRefTypes, null));
+                ret.Add((ForcedLocations, null));
                 ret.Add((NativeTerminal, null));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((AttachParentSlots, null));
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
         new IFormLinkNullable<ITerminalGetter> NativeTerminal { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
-        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
         IFormLinkNullableGetter<ITerminalGetter> NativeTerminal { get; }
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Starfield
         Destructible = 19,
         Flags = 20,
         Keywords = 21,
-        ForcedLocRefTypes = 22,
+        ForcedLocations = 22,
         NativeTerminal = 23,
         Properties = 24,
         AttachParentSlots = 25,
@@ -2327,7 +2327,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Destructible = null;
             item.Flags = default;
             item.Keywords = null;
-            item.ForcedLocRefTypes = null;
+            item.ForcedLocations = null;
             item.NativeTerminal.Clear();
             item.Properties = null;
             item.AttachParentSlots = null;
@@ -2360,7 +2360,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Items?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.ForcedLocRefTypes?.RemapLinks(mapping);
+            obj.ForcedLocations?.RemapLinks(mapping);
             obj.NativeTerminal.Relink(mapping);
             obj.Properties?.RemapLinks(mapping);
             obj.AttachParentSlots?.RemapLinks(mapping);
@@ -2518,8 +2518,8 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ForcedLocRefTypes = item.ForcedLocRefTypes.CollectionEqualsHelper(
-                rhs.ForcedLocRefTypes,
+            ret.ForcedLocations = item.ForcedLocations.CollectionEqualsHelper(
+                rhs.ForcedLocations,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
@@ -2691,13 +2691,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.ForcedLocRefTypes?.Overall ?? true)
-                && item.ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+            if ((printMask?.ForcedLocations?.Overall ?? true)
+                && item.ForcedLocations is {} ForcedLocationsItem)
             {
-                sb.AppendLine("ForcedLocRefTypes =>");
+                sb.AppendLine("ForcedLocations =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ForcedLocRefTypesItem)
+                    foreach (var subItem in ForcedLocationsItem)
                     {
                         using (sb.Brace())
                         {
@@ -2888,9 +2888,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.ForcedLocRefTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.ForcedLocations) ?? true))
             {
-                if (!lhs.ForcedLocRefTypes.SequenceEqualNullable(rhs.ForcedLocRefTypes)) return false;
+                if (!lhs.ForcedLocations.SequenceEqualNullable(rhs.ForcedLocations)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.NativeTerminal) ?? true))
             {
@@ -2991,7 +2991,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Flags);
             hash.Add(item.Keywords);
-            hash.Add(item.ForcedLocRefTypes);
+            hash.Add(item.ForcedLocations);
             hash.Add(item.NativeTerminal);
             hash.Add(item.Properties);
             hash.Add(item.AttachParentSlots);
@@ -3089,9 +3089,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+            if (obj.ForcedLocations is {} ForcedLocationsItem)
             {
-                foreach (var item in ForcedLocRefTypesItem)
+                foreach (var item in ForcedLocationsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3503,21 +3503,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.ForcedLocRefTypes) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.ForcedLocations) ?? true))
             {
-                errorMask?.PushIndex((int)Container_FieldIndex.ForcedLocRefTypes);
+                errorMask?.PushIndex((int)Container_FieldIndex.ForcedLocations);
                 try
                 {
-                    if ((rhs.ForcedLocRefTypes != null))
+                    if ((rhs.ForcedLocations != null))
                     {
-                        item.ForcedLocRefTypes = 
-                            rhs.ForcedLocRefTypes
+                        item.ForcedLocations = 
+                            rhs.ForcedLocations
                             .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
                     {
-                        item.ForcedLocRefTypes = null;
+                        item.ForcedLocations = null;
                     }
                 }
                 catch (Exception ex)
@@ -3913,7 +3913,7 @@ namespace Mutagen.Bethesda.Starfield
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
                 writer: writer,
-                items: item.ForcedLocRefTypes,
+                items: item.ForcedLocations,
                 recordType: translationParams.ConvertToCustom(RecordTypes.FTYP),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -4185,12 +4185,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FTYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedLocRefTypes = 
+                    item.ForcedLocations = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
-                    return (int)Container_FieldIndex.ForcedLocRefTypes;
+                    return (int)Container_FieldIndex.ForcedLocations;
                 }
                 case RecordTypeInts.NTRM:
                 {
@@ -4368,7 +4368,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         #region NativeTerminal
         private int? _NativeTerminalLocation;
         public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
@@ -4570,13 +4570,13 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.ForcedLocRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return (int)Container_FieldIndex.ForcedLocRefTypes;
+                    return (int)Container_FieldIndex.ForcedLocations;
                 }
                 case RecordTypeInts.NTRM:
                 {

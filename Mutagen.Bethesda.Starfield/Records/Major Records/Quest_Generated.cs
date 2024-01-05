@@ -3502,6 +3502,12 @@ namespace Mutagen.Bethesda.Starfield
                 case "LensFlareAttachmentFormComponent":
                 case "ILensFlareAttachmentFormComponentGetter":
                 case "ILensFlareAttachmentFormComponent":
+                case "MaterialPropertyComponent":
+                case "IMaterialPropertyComponentGetter":
+                case "IMaterialPropertyComponent":
+                case "WorkshopItemColorComponent":
+                case "IWorkshopItemColorComponentGetter":
+                case "IWorkshopItemColorComponent":
                     break;
                 case "Condition":
                 case "IConditionGetter":

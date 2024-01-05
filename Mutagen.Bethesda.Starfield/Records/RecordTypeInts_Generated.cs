@@ -226,6 +226,7 @@ public partial class RecordTypeInts
     public const int DCED = 0x44454344;
     public const int DCSD = 0x44534344;
     public const int DEBR = 0x52424544;
+    public const int DEFL = 0x4C464544;
     public const int DELE = 0x454C4544;
     public const int DENS = 0x534E4544;
     public const int DESC = 0x43534544;
@@ -728,6 +729,7 @@ public partial class RecordTypeInts
     public const int STCP = 0x50435453;
     public const int STDT = 0x54445453;
     public const int STKD = 0x444B5453;
+    public const int STLS = 0x534C5453;
     public const int STMP = 0x504D5453;
     public const int STND = 0x444E5453;
     public const int STON = 0x4E4F5453;

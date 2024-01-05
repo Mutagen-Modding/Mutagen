@@ -44,7 +44,9 @@
       <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
       <RefList name="Perks" counterRecType="PRKZ" refName="PerkPlacement" />
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
       <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <Data recordType="AIDT">

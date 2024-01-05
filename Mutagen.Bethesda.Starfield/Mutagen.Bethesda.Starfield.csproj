@@ -2388,6 +2388,9 @@
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Static.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\StaticCollection.cs">
       <DependentUpon>StaticCollection.xml</DependentUpon>
     </Compile>
@@ -6260,6 +6263,12 @@
     </Compile>
     <Compile Include="Interfaces\Link\ILeveledBaseFormTarget_Generated.cs" />
     <Compile Include="Records\Common Subrecords\LensFlareAttachmentFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\MaterialPropertyComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WorkshopItemColorComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>

@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Static" recordType="STAT" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Static" recordType="STAT" objType="Record" baseClass="StarfieldMajorRecord" majorFlags="true">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
+      <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
+      <RefList name="Components" refName="AComponent" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Float name="MaxAngle" min="30" max="120" />
+          <Float name="UnknownDNAMFloat" />
+          <Break />
+          <Float name="LeafAmplitude" />
+          <Float name="LeafFrequency" />
+        </Fields>
+      </Data>
+      <RefDirect name="AmbientSound" recordType="STLS" refName="SoundReference" />
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

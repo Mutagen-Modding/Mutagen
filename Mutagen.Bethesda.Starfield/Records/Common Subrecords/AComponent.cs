@@ -60,6 +60,8 @@ public partial class AComponent
         ReflectionProbes_Component,
         TESImageSpaceModifiableForm_Component,
         LensFlareAttachmentFormComponent,
+        BGSMaterialPropertyComponent,
+        BGSWorkshopItemColor,
     }
 
     public static bool TryCreateFromBinary(
@@ -178,6 +180,10 @@ public partial class AComponent
                 return ImageSpaceModifiableFormComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.LensFlareAttachmentFormComponent:
                 return LensFlareAttachmentFormComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSMaterialPropertyComponent:
+                return MaterialPropertyComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSWorkshopItemColor:
+                return WorkshopItemColorComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -269,6 +275,8 @@ partial class AComponentBinaryWriteTranslation
             IReflectionProbesComponentGetter _ => AComponent.ComponentType.ReflectionProbes_Component,
             IImageSpaceModifiableFormComponentGetter _ => AComponent.ComponentType.TESImageSpaceModifiableForm_Component,
             ILensFlareAttachmentFormComponentGetter _ => AComponent.ComponentType.LensFlareAttachmentFormComponent,
+            IMaterialPropertyComponentGetter _ => AComponent.ComponentType.BGSMaterialPropertyComponent,
+            IWorkshopItemColorComponentGetter _ => AComponent.ComponentType.BGSWorkshopItemColor,
             _ => throw new NotImplementedException()
         };
 
@@ -385,6 +393,10 @@ partial class AComponentBinaryOverlay
                 return ImageSpaceModifiableFormComponentBinaryOverlay.ImageSpaceModifiableFormComponentFactory(stream, package);
             case AComponent.ComponentType.LensFlareAttachmentFormComponent:
                 return LensFlareAttachmentFormComponentBinaryOverlay.LensFlareAttachmentFormComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSMaterialPropertyComponent:
+                return MaterialPropertyComponentBinaryOverlay.MaterialPropertyComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSWorkshopItemColor:
+                return WorkshopItemColorComponentBinaryOverlay.WorkshopItemColorComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

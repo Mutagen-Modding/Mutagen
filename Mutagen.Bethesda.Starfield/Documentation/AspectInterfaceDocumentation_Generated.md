@@ -90,6 +90,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ObjectModification
 - PlanetModelComponent
 - SkeletalModel
+- Static
 - StaticCollection
 - UnknownObjectModification
 - Weapon
@@ -179,6 +180,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptVariableProperty
 - Spell
 - StartSceneAction
+- Static
 - StaticCollection
 - TerminalMenu
 - TimelineSceneAction
@@ -213,6 +215,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoundEchoMarker
 - SoundMarker
 - Spell
+- Static
 - StaticCollection
 - TextureSet
 - Weapon
@@ -616,6 +619,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### StartSceneAction
 - INamed
+### Static
+- IModeled
+- INamed
+- IObjectBounded
 ### StaticCollection
 - IModeled
 - INamed

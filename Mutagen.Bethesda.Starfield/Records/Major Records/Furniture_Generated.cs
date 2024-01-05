@@ -275,17 +275,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region ForcedLocRefTypes
+        #region ForcedLocations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _ForcedLocRefTypes;
-        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _ForcedLocations;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations
         {
-            get => this._ForcedLocRefTypes;
-            set => this._ForcedLocRefTypes = value;
+            get => this._ForcedLocations;
+            set => this._ForcedLocations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IFurnitureGetter.ForcedLocRefTypes => _ForcedLocRefTypes;
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IFurnitureGetter.ForcedLocations => _ForcedLocations;
         #endregion
 
         #endregion
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Description = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.ForcedLocRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.PNAM = initialValue;
                 this.ActivateTextOverride = initialValue;
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Description,
                 TItem Keywords,
                 TItem Properties,
-                TItem ForcedLocRefTypes,
+                TItem ForcedLocations,
                 TItem PNAM,
                 TItem ActivateTextOverride,
                 TItem LoopingSound,
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Description = Description;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.ForcedLocRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
                 this.PNAM = PNAM;
                 this.ActivateTextOverride = ActivateTextOverride;
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(LoopingSound, new SoundReference.Mask<TItem>(LoopingSound));
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Description;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocRefTypes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocations;
             public TItem PNAM;
             public TItem ActivateTextOverride;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? LoopingSound { get; set; }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
-                if (!object.Equals(this.ForcedLocRefTypes, rhs.ForcedLocRefTypes)) return false;
+                if (!object.Equals(this.ForcedLocations, rhs.ForcedLocations)) return false;
                 if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
                 if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
                 if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Description);
                 hash.Add(this.Keywords);
                 hash.Add(this.Properties);
-                hash.Add(this.ForcedLocRefTypes);
+                hash.Add(this.ForcedLocations);
                 hash.Add(this.PNAM);
                 hash.Add(this.ActivateTextOverride);
                 hash.Add(this.LoopingSound);
@@ -754,12 +754,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.ForcedLocRefTypes != null)
+                if (this.ForcedLocations != null)
                 {
-                    if (!eval(this.ForcedLocRefTypes.Overall)) return false;
-                    if (this.ForcedLocRefTypes.Specific != null)
+                    if (!eval(this.ForcedLocations.Overall)) return false;
+                    if (this.ForcedLocations.Specific != null)
                     {
-                        foreach (var item in this.ForcedLocRefTypes.Specific)
+                        foreach (var item in this.ForcedLocations.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -896,12 +896,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.ForcedLocRefTypes != null)
+                if (this.ForcedLocations != null)
                 {
-                    if (eval(this.ForcedLocRefTypes.Overall)) return true;
-                    if (this.ForcedLocRefTypes.Specific != null)
+                    if (eval(this.ForcedLocations.Overall)) return true;
+                    if (this.ForcedLocations.Specific != null)
                     {
-                        foreach (var item in this.ForcedLocRefTypes.Specific)
+                        foreach (var item in this.ForcedLocations.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -1030,14 +1030,14 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (ForcedLocRefTypes != null)
+                if (ForcedLocations != null)
                 {
-                    obj.ForcedLocRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (ForcedLocRefTypes.Specific != null)
+                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ForcedLocations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.ForcedLocRefTypes.Specific = l;
-                        foreach (var item in ForcedLocRefTypes.Specific)
+                        obj.ForcedLocations.Specific = l;
+                        foreach (var item in ForcedLocations.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
@@ -1226,16 +1226,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.ForcedLocRefTypes?.Overall ?? true)
-                        && ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+                    if ((printMask?.ForcedLocations?.Overall ?? true)
+                        && ForcedLocations is {} ForcedLocationsItem)
                     {
-                        sb.AppendLine("ForcedLocRefTypes =>");
+                        sb.AppendLine("ForcedLocations =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ForcedLocRefTypesItem.Overall);
-                            if (ForcedLocRefTypesItem.Specific != null)
+                            sb.AppendItem(ForcedLocationsItem.Overall);
+                            if (ForcedLocationsItem.Specific != null)
                             {
-                                foreach (var subItem in ForcedLocRefTypesItem.Specific)
+                                foreach (var subItem in ForcedLocationsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocRefTypes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocations;
             public Exception? PNAM;
             public Exception? ActivateTextOverride;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? LoopingSound;
@@ -1432,8 +1432,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Keywords;
                     case Furniture_FieldIndex.Properties:
                         return Properties;
-                    case Furniture_FieldIndex.ForcedLocRefTypes:
-                        return ForcedLocRefTypes;
+                    case Furniture_FieldIndex.ForcedLocations:
+                        return ForcedLocations;
                     case Furniture_FieldIndex.PNAM:
                         return PNAM;
                     case Furniture_FieldIndex.ActivateTextOverride:
@@ -1519,8 +1519,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
-                    case Furniture_FieldIndex.ForcedLocRefTypes:
-                        this.ForcedLocRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Furniture_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Furniture_FieldIndex.PNAM:
                         this.PNAM = ex;
@@ -1623,8 +1623,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
-                    case Furniture_FieldIndex.ForcedLocRefTypes:
-                        this.ForcedLocRefTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Furniture_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Furniture_FieldIndex.PNAM:
                         this.PNAM = (Exception?)obj;
@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Description != null) return true;
                 if (Keywords != null) return true;
                 if (Properties != null) return true;
-                if (ForcedLocRefTypes != null) return true;
+                if (ForcedLocations != null) return true;
                 if (PNAM != null) return true;
                 if (ActivateTextOverride != null) return true;
                 if (LoopingSound != null) return true;
@@ -1817,15 +1817,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+                if (ForcedLocations is {} ForcedLocationsItem)
                 {
-                    sb.AppendLine("ForcedLocRefTypes =>");
+                    sb.AppendLine("ForcedLocations =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ForcedLocRefTypesItem.Overall);
-                        if (ForcedLocRefTypesItem.Specific != null)
+                        sb.AppendItem(ForcedLocationsItem.Overall);
+                        if (ForcedLocationsItem.Specific != null)
                         {
-                            foreach (var subItem in ForcedLocRefTypesItem.Specific)
+                            foreach (var subItem in ForcedLocationsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
-                ret.ForcedLocRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocRefTypes?.Overall, rhs.ForcedLocRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocRefTypes?.Specific, rhs.ForcedLocRefTypes?.Specific));
+                ret.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocations?.Overall, rhs.ForcedLocations?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocations?.Specific, rhs.ForcedLocations?.Specific));
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound, (l, r) => l.Combine(r));
@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Description;
             public bool Keywords;
             public ObjectProperty.TranslationMask? Properties;
-            public bool ForcedLocRefTypes;
+            public bool ForcedLocations;
             public bool PNAM;
             public bool ActivateTextOverride;
             public SoundReference.TranslationMask? LoopingSound;
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Keywords = defaultOn;
-                this.ForcedLocRefTypes = defaultOn;
+                this.ForcedLocations = defaultOn;
                 this.PNAM = defaultOn;
                 this.ActivateTextOverride = defaultOn;
                 this.Flags = defaultOn;
@@ -2066,7 +2066,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Description, null));
                 ret.Add((Keywords, null));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
-                ret.Add((ForcedLocRefTypes, null));
+                ret.Add((ForcedLocations, null));
                 ret.Add((PNAM, null));
                 ret.Add((ActivateTextOverride, null));
                 ret.Add((LoopingSound != null ? LoopingSound.OnOverall : DefaultOn, LoopingSound?.GetCrystal()));
@@ -2284,7 +2284,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
-        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new SoundReference? LoopingSound { get; set; }
@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
-        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
         ITranslatedStringGetter? ActivateTextOverride { get; }
         ISoundReferenceGetter? LoopingSound { get; }
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Starfield
         Description = 19,
         Keywords = 20,
         Properties = 21,
-        ForcedLocRefTypes = 22,
+        ForcedLocations = 22,
         PNAM = 23,
         ActivateTextOverride = 24,
         LoopingSound = 25,
@@ -2750,7 +2750,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Description = default;
             item.Keywords = null;
             item.Properties = null;
-            item.ForcedLocRefTypes = null;
+            item.ForcedLocations = null;
             item.PNAM = default;
             item.ActivateTextOverride = default;
             item.LoopingSound = null;
@@ -2792,7 +2792,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Properties?.RemapLinks(mapping);
-            obj.ForcedLocRefTypes?.RemapLinks(mapping);
+            obj.ForcedLocations?.RemapLinks(mapping);
             obj.LoopingSound?.RemapLinks(mapping);
             obj.FurnitureTemplate.Relink(mapping);
             obj.MarkerParameters?.RemapLinks(mapping);
@@ -2947,8 +2947,8 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ForcedLocRefTypes = item.ForcedLocRefTypes.CollectionEqualsHelper(
-                rhs.ForcedLocRefTypes,
+            ret.ForcedLocations = item.ForcedLocations.CollectionEqualsHelper(
+                rhs.ForcedLocations,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
@@ -3129,13 +3129,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.ForcedLocRefTypes?.Overall ?? true)
-                && item.ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+            if ((printMask?.ForcedLocations?.Overall ?? true)
+                && item.ForcedLocations is {} ForcedLocationsItem)
             {
-                sb.AppendLine("ForcedLocRefTypes =>");
+                sb.AppendLine("ForcedLocations =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ForcedLocRefTypesItem)
+                    foreach (var subItem in ForcedLocationsItem)
                     {
                         using (sb.Brace())
                         {
@@ -3378,9 +3378,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.Properties)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ForcedLocRefTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ForcedLocations) ?? true))
             {
-                if (!lhs.ForcedLocRefTypes.SequenceEqualNullable(rhs.ForcedLocRefTypes)) return false;
+                if (!lhs.ForcedLocations.SequenceEqualNullable(rhs.ForcedLocations)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
             {
@@ -3516,7 +3516,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Keywords);
             hash.Add(item.Properties);
-            hash.Add(item.ForcedLocRefTypes);
+            hash.Add(item.ForcedLocations);
             if (item.PNAM is {} PNAMItem)
             {
                 hash.Add(PNAMItem);
@@ -3640,9 +3640,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ForcedLocRefTypes is {} ForcedLocRefTypesItem)
+            if (obj.ForcedLocations is {} ForcedLocationsItem)
             {
-                foreach (var item in ForcedLocRefTypesItem)
+                foreach (var item in ForcedLocationsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4036,21 +4036,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ForcedLocRefTypes) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ForcedLocations) ?? true))
             {
-                errorMask?.PushIndex((int)Furniture_FieldIndex.ForcedLocRefTypes);
+                errorMask?.PushIndex((int)Furniture_FieldIndex.ForcedLocations);
                 try
                 {
-                    if ((rhs.ForcedLocRefTypes != null))
+                    if ((rhs.ForcedLocations != null))
                     {
-                        item.ForcedLocRefTypes = 
-                            rhs.ForcedLocRefTypes
+                        item.ForcedLocations = 
+                            rhs.ForcedLocations
                             .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
                     {
-                        item.ForcedLocRefTypes = null;
+                        item.ForcedLocations = null;
                     }
                 }
                 catch (Exception ex)
@@ -4513,7 +4513,7 @@ namespace Mutagen.Bethesda.Starfield
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
                 writer: writer,
-                items: item.ForcedLocRefTypes,
+                items: item.ForcedLocations,
                 recordType: translationParams.ConvertToCustom(RecordTypes.FTYP),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -4861,12 +4861,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FTYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedLocRefTypes = 
+                    item.ForcedLocations = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
-                    return (int)Furniture_FieldIndex.ForcedLocRefTypes;
+                    return (int)Furniture_FieldIndex.ForcedLocations;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -5124,7 +5124,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocRefTypes { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         #region PNAM
         private int? _PNAMLocation;
         public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -5378,13 +5378,13 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.ForcedLocRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return (int)Furniture_FieldIndex.ForcedLocRefTypes;
+                    return (int)Furniture_FieldIndex.ForcedLocations;
                 }
                 case RecordTypeInts.PNAM:
                 {
