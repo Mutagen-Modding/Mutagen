@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,268 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IPackInGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IPackInGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPackInGetter.ODTY => this.ODTY;
+        #endregion
+        #region ObjectPlacementDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        {
+            get => _ObjectPlacementDefaults;
+            set => _ObjectPlacementDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? IPackInGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? IPackInGetter.Transforms => this.Transforms;
+        #endregion
+        #region SnapTemplate
+        private readonly IFormLinkNullable<ISnapTemplateGetter> _SnapTemplate = new FormLinkNullable<ISnapTemplateGetter>();
+        public IFormLinkNullable<ISnapTemplateGetter> SnapTemplate
+        {
+            get => _SnapTemplate;
+            set => _SnapTemplate.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISnapTemplateGetter> IPackInGetter.SnapTemplate => this.SnapTemplate;
+        #endregion
+        #region SnapBehavior
+        private readonly IFormLinkNullable<ISnapTemplateGetter> _SnapBehavior = new FormLinkNullable<ISnapTemplateGetter>();
+        public IFormLinkNullable<ISnapTemplateGetter> SnapBehavior
+        {
+            get => _SnapBehavior;
+            set => _SnapBehavior.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISnapTemplateGetter> IPackInGetter.SnapBehavior => this.SnapBehavior;
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPackInGetter.XALG => this.XALG;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IPackInGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Filter
+        public String? Filter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPackInGetter.Filter => this.Filter;
+        #endregion
+        #region ObjectPlacementDefaults2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults2;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults2
+        {
+            get => _ObjectPlacementDefaults2;
+            set => _ObjectPlacementDefaults2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? IPackInGetter.ObjectPlacementDefaults2 => this.ObjectPlacementDefaults2;
+        #endregion
+        #region Cell
+        private readonly IFormLinkNullable<ICellGetter> _Cell = new FormLinkNullable<ICellGetter>();
+        public IFormLinkNullable<ICellGetter> Cell
+        {
+            get => _Cell;
+            set => _Cell.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICellGetter> IPackInGetter.Cell => this.Cell;
+        #endregion
+        #region Version
+        public UInt32? Version { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IPackInGetter.Version => this.Version;
+        #endregion
+        #region FNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FNAM;
+        public MemorySlice<Byte>? FNAM
+        {
+            get => this._FNAM;
+            set => this._FNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPackInGetter.FNAM => this.FNAM;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IPackInGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region NativeTerminal
+        private readonly IFormLinkNullable<ITerminalMenuGetter> _NativeTerminal = new FormLinkNullable<ITerminalMenuGetter>();
+        public IFormLinkNullable<ITerminalMenuGetter> NativeTerminal
+        {
+            get => _NativeTerminal;
+            set => _NativeTerminal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITerminalMenuGetter> IPackInGetter.NativeTerminal => this.NativeTerminal;
+        #endregion
+        #region ForcedLocations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _ForcedLocations;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations
+        {
+            get => this._ForcedLocations;
+            set => this._ForcedLocations = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IPackInGetter.ForcedLocations => _ForcedLocations;
+        #endregion
+
+        #endregion
+        #region Properties
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectProperty>? _Properties;
+        public ExtendedList<ObjectProperty>? Properties
+        {
+            get => this._Properties;
+            set => this._Properties = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectPropertyGetter>? IPackInGetter.Properties => _Properties;
+        #endregion
+
+        #endregion
+        #region MaterialSwaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? _MaterialSwaps;
+        public ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps
+        {
+            get => this._MaterialSwaps;
+            set => this._MaterialSwaps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? IPackInGetter.MaterialSwaps => _MaterialSwaps;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IPackInGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
 
         #region To String
 
@@ -79,6 +346,26 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.SnapTemplate = initialValue;
+                this.SnapBehavior = initialValue;
+                this.XALG = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Filter = initialValue;
+                this.ObjectPlacementDefaults2 = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.Cell = initialValue;
+                this.Version = initialValue;
+                this.FNAM = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NativeTerminal = initialValue;
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Name = initialValue;
             }
 
             public Mask(
@@ -88,7 +375,27 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem ObjectPlacementDefaults,
+                TItem Transforms,
+                TItem SnapTemplate,
+                TItem SnapBehavior,
+                TItem XALG,
+                TItem Components,
+                TItem Filter,
+                TItem ObjectPlacementDefaults2,
+                TItem Cell,
+                TItem Version,
+                TItem FNAM,
+                TItem Keywords,
+                TItem NativeTerminal,
+                TItem ForcedLocations,
+                TItem Properties,
+                TItem MaterialSwaps,
+                TItem Name)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +405,26 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.SnapTemplate = SnapTemplate;
+                this.SnapBehavior = SnapBehavior;
+                this.XALG = XALG;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Filter = Filter;
+                this.ObjectPlacementDefaults2 = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults2, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults2));
+                this.Cell = Cell;
+                this.Version = Version;
+                this.FNAM = FNAM;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NativeTerminal = NativeTerminal;
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Name = Name;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +433,29 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem SnapTemplate;
+            public TItem SnapBehavior;
+            public TItem XALG;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Filter;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults2 { get; set; }
+            public TItem Cell;
+            public TItem Version;
+            public TItem FNAM;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem NativeTerminal;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocations;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MaterialSwaps;
+            public TItem Name;
             #endregion
 
             #region Equals
@@ -119,11 +469,51 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.SnapTemplate, rhs.SnapTemplate)) return false;
+                if (!object.Equals(this.SnapBehavior, rhs.SnapBehavior)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Filter, rhs.Filter)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults2, rhs.ObjectPlacementDefaults2)) return false;
+                if (!object.Equals(this.Cell, rhs.Cell)) return false;
+                if (!object.Equals(this.Version, rhs.Version)) return false;
+                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
+                if (!object.Equals(this.ForcedLocations, rhs.ForcedLocations)) return false;
+                if (!object.Equals(this.Properties, rhs.Properties)) return false;
+                if (!object.Equals(this.MaterialSwaps, rhs.MaterialSwaps)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.Transforms);
+                hash.Add(this.SnapTemplate);
+                hash.Add(this.SnapBehavior);
+                hash.Add(this.XALG);
+                hash.Add(this.Components);
+                hash.Add(this.Filter);
+                hash.Add(this.ObjectPlacementDefaults2);
+                hash.Add(this.Cell);
+                hash.Add(this.Version);
+                hash.Add(this.FNAM);
+                hash.Add(this.Keywords);
+                hash.Add(this.NativeTerminal);
+                hash.Add(this.ForcedLocations);
+                hash.Add(this.Properties);
+                hash.Add(this.MaterialSwaps);
+                hash.Add(this.Name);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +524,98 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
+                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SnapTemplate)) return false;
+                if (!eval(this.SnapBehavior)) return false;
+                if (!eval(this.XALG)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Filter)) return false;
+                if (ObjectPlacementDefaults2 != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults2.Overall)) return false;
+                    if (this.ObjectPlacementDefaults2.Specific != null && !this.ObjectPlacementDefaults2.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Cell)) return false;
+                if (!eval(this.Version)) return false;
+                if (!eval(this.FNAM)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.NativeTerminal)) return false;
+                if (this.ForcedLocations != null)
+                {
+                    if (!eval(this.ForcedLocations.Overall)) return false;
+                    if (this.ForcedLocations.Specific != null)
+                    {
+                        foreach (var item in this.ForcedLocations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Properties != null)
+                {
+                    if (!eval(this.Properties.Overall)) return false;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.MaterialSwaps != null)
+                {
+                    if (!eval(this.MaterialSwaps.Overall)) return false;
+                    if (this.MaterialSwaps.Specific != null)
+                    {
+                        foreach (var item in this.MaterialSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +624,98 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
+                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SnapTemplate)) return true;
+                if (eval(this.SnapBehavior)) return true;
+                if (eval(this.XALG)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Filter)) return true;
+                if (ObjectPlacementDefaults2 != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults2.Overall)) return true;
+                    if (this.ObjectPlacementDefaults2.Specific != null && this.ObjectPlacementDefaults2.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Cell)) return true;
+                if (eval(this.Version)) return true;
+                if (eval(this.FNAM)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.NativeTerminal)) return true;
+                if (this.ForcedLocations != null)
+                {
+                    if (eval(this.ForcedLocations.Overall)) return true;
+                    if (this.ForcedLocations.Specific != null)
+                    {
+                        foreach (var item in this.ForcedLocations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Properties != null)
+                {
+                    if (eval(this.Properties.Overall)) return true;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.MaterialSwaps != null)
+                {
+                    if (eval(this.MaterialSwaps.Overall)) return true;
+                    if (this.MaterialSwaps.Specific != null)
+                    {
+                        foreach (var item in this.MaterialSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +731,93 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.SnapTemplate = eval(this.SnapTemplate);
+                obj.SnapBehavior = eval(this.SnapBehavior);
+                obj.XALG = eval(this.XALG);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Filter = eval(this.Filter);
+                obj.ObjectPlacementDefaults2 = this.ObjectPlacementDefaults2 == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults2.Overall), this.ObjectPlacementDefaults2.Specific?.Translate(eval));
+                obj.Cell = eval(this.Cell);
+                obj.Version = eval(this.Version);
+                obj.FNAM = eval(this.FNAM);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.NativeTerminal = eval(this.NativeTerminal);
+                if (ForcedLocations != null)
+                {
+                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ForcedLocations.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ForcedLocations.Specific = l;
+                        foreach (var item in ForcedLocations.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Properties != null)
+                {
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    if (Properties.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
+                        obj.Properties.Specific = l;
+                        foreach (var item in Properties.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (MaterialSwaps != null)
+                {
+                    obj.MaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MaterialSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (MaterialSwaps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.MaterialSwaps.Specific = l;
+                        foreach (var item in MaterialSwaps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
             }
             #endregion
 
@@ -175,6 +836,167 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PackIn.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                    {
+                        ObjectPlacementDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if (printMask?.SnapTemplate ?? true)
+                    {
+                        sb.AppendItem(SnapTemplate, "SnapTemplate");
+                    }
+                    if (printMask?.SnapBehavior ?? true)
+                    {
+                        sb.AppendItem(SnapBehavior, "SnapBehavior");
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Filter ?? true)
+                    {
+                        sb.AppendItem(Filter, "Filter");
+                    }
+                    if (printMask?.ObjectPlacementDefaults2?.Overall ?? true)
+                    {
+                        ObjectPlacementDefaults2?.Print(sb);
+                    }
+                    if (printMask?.Cell ?? true)
+                    {
+                        sb.AppendItem(Cell, "Cell");
+                    }
+                    if (printMask?.Version ?? true)
+                    {
+                        sb.AppendItem(Version, "Version");
+                    }
+                    if (printMask?.FNAM ?? true)
+                    {
+                        sb.AppendItem(FNAM, "FNAM");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.NativeTerminal ?? true)
+                    {
+                        sb.AppendItem(NativeTerminal, "NativeTerminal");
+                    }
+                    if ((printMask?.ForcedLocations?.Overall ?? true)
+                        && ForcedLocations is {} ForcedLocationsItem)
+                    {
+                        sb.AppendLine("ForcedLocations =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ForcedLocationsItem.Overall);
+                            if (ForcedLocationsItem.Specific != null)
+                            {
+                                foreach (var subItem in ForcedLocationsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Properties?.Overall ?? true)
+                        && Properties is {} PropertiesItem)
+                    {
+                        sb.AppendLine("Properties =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PropertiesItem.Overall);
+                            if (PropertiesItem.Specific != null)
+                            {
+                                foreach (var subItem in PropertiesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.MaterialSwaps?.Overall ?? true)
+                        && MaterialSwaps is {} MaterialSwapsItem)
+                    {
+                        sb.AppendLine("MaterialSwaps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MaterialSwapsItem.Overall);
+                            if (MaterialSwapsItem.Specific != null)
+                            {
+                                foreach (var subItem in MaterialSwapsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
                 }
             }
             #endregion
@@ -185,12 +1007,75 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? SnapTemplate;
+            public Exception? SnapBehavior;
+            public Exception? XALG;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Filter;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults2;
+            public Exception? Cell;
+            public Exception? Version;
+            public Exception? FNAM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? NativeTerminal;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocations;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MaterialSwaps;
+            public Exception? Name;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 PackIn_FieldIndex enu = (PackIn_FieldIndex)index;
                 switch (enu)
                 {
+                    case PackIn_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case PackIn_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case PackIn_FieldIndex.ODTY:
+                        return ODTY;
+                    case PackIn_FieldIndex.ObjectPlacementDefaults:
+                        return ObjectPlacementDefaults;
+                    case PackIn_FieldIndex.Transforms:
+                        return Transforms;
+                    case PackIn_FieldIndex.SnapTemplate:
+                        return SnapTemplate;
+                    case PackIn_FieldIndex.SnapBehavior:
+                        return SnapBehavior;
+                    case PackIn_FieldIndex.XALG:
+                        return XALG;
+                    case PackIn_FieldIndex.Components:
+                        return Components;
+                    case PackIn_FieldIndex.Filter:
+                        return Filter;
+                    case PackIn_FieldIndex.ObjectPlacementDefaults2:
+                        return ObjectPlacementDefaults2;
+                    case PackIn_FieldIndex.Cell:
+                        return Cell;
+                    case PackIn_FieldIndex.Version:
+                        return Version;
+                    case PackIn_FieldIndex.FNAM:
+                        return FNAM;
+                    case PackIn_FieldIndex.Keywords:
+                        return Keywords;
+                    case PackIn_FieldIndex.NativeTerminal:
+                        return NativeTerminal;
+                    case PackIn_FieldIndex.ForcedLocations:
+                        return ForcedLocations;
+                    case PackIn_FieldIndex.Properties:
+                        return Properties;
+                    case PackIn_FieldIndex.MaterialSwaps:
+                        return MaterialSwaps;
+                    case PackIn_FieldIndex.Name:
+                        return Name;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +1086,66 @@ namespace Mutagen.Bethesda.Starfield
                 PackIn_FieldIndex enu = (PackIn_FieldIndex)index;
                 switch (enu)
                 {
+                    case PackIn_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case PackIn_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.SnapTemplate:
+                        this.SnapTemplate = ex;
+                        break;
+                    case PackIn_FieldIndex.SnapBehavior:
+                        this.SnapBehavior = ex;
+                        break;
+                    case PackIn_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case PackIn_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.Filter:
+                        this.Filter = ex;
+                        break;
+                    case PackIn_FieldIndex.ObjectPlacementDefaults2:
+                        this.ObjectPlacementDefaults2 = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.Cell:
+                        this.Cell = ex;
+                        break;
+                    case PackIn_FieldIndex.Version:
+                        this.Version = ex;
+                        break;
+                    case PackIn_FieldIndex.FNAM:
+                        this.FNAM = ex;
+                        break;
+                    case PackIn_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = ex;
+                        break;
+                    case PackIn_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.Properties:
+                        this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.MaterialSwaps:
+                        this.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PackIn_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1157,66 @@ namespace Mutagen.Bethesda.Starfield
                 PackIn_FieldIndex enu = (PackIn_FieldIndex)index;
                 switch (enu)
                 {
+                    case PackIn_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case PackIn_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case PackIn_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case PackIn_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case PackIn_FieldIndex.SnapTemplate:
+                        this.SnapTemplate = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.SnapBehavior:
+                        this.SnapBehavior = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case PackIn_FieldIndex.Filter:
+                        this.Filter = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.ObjectPlacementDefaults2:
+                        this.ObjectPlacementDefaults2 = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case PackIn_FieldIndex.Cell:
+                        this.Cell = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.Version:
+                        this.Version = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.FNAM:
+                        this.FNAM = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PackIn_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = (Exception?)obj;
+                        break;
+                    case PackIn_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PackIn_FieldIndex.Properties:
+                        this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
+                        break;
+                    case PackIn_FieldIndex.MaterialSwaps:
+                        this.MaterialSwaps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PackIn_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1226,26 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (ObjectPlacementDefaults != null) return true;
+                if (Transforms != null) return true;
+                if (SnapTemplate != null) return true;
+                if (SnapBehavior != null) return true;
+                if (XALG != null) return true;
+                if (Components != null) return true;
+                if (Filter != null) return true;
+                if (ObjectPlacementDefaults2 != null) return true;
+                if (Cell != null) return true;
+                if (Version != null) return true;
+                if (FNAM != null) return true;
+                if (Keywords != null) return true;
+                if (NativeTerminal != null) return true;
+                if (ForcedLocations != null) return true;
+                if (Properties != null) return true;
+                if (MaterialSwaps != null) return true;
+                if (Name != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1272,137 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                ObjectPlacementDefaults?.Print(sb);
+                Transforms?.Print(sb);
+                {
+                    sb.AppendItem(SnapTemplate, "SnapTemplate");
+                }
+                {
+                    sb.AppendItem(SnapBehavior, "SnapBehavior");
+                }
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Filter, "Filter");
+                }
+                ObjectPlacementDefaults2?.Print(sb);
+                {
+                    sb.AppendItem(Cell, "Cell");
+                }
+                {
+                    sb.AppendItem(Version, "Version");
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(NativeTerminal, "NativeTerminal");
+                }
+                if (ForcedLocations is {} ForcedLocationsItem)
+                {
+                    sb.AppendLine("ForcedLocations =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ForcedLocationsItem.Overall);
+                        if (ForcedLocationsItem.Specific != null)
+                        {
+                            foreach (var subItem in ForcedLocationsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Properties is {} PropertiesItem)
+                {
+                    sb.AppendLine("Properties =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PropertiesItem.Overall);
+                        if (PropertiesItem.Specific != null)
+                        {
+                            foreach (var subItem in PropertiesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (MaterialSwaps is {} MaterialSwapsItem)
+                {
+                    sb.AppendLine("MaterialSwaps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MaterialSwapsItem.Overall);
+                        if (MaterialSwapsItem.Specific != null)
+                        {
+                            foreach (var subItem in MaterialSwapsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
             }
             #endregion
 
@@ -255,6 +1411,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.SnapTemplate = this.SnapTemplate.Combine(rhs.SnapTemplate);
+                ret.SnapBehavior = this.SnapBehavior.Combine(rhs.SnapBehavior);
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Filter = this.Filter.Combine(rhs.Filter);
+                ret.ObjectPlacementDefaults2 = this.ObjectPlacementDefaults2.Combine(rhs.ObjectPlacementDefaults2, (l, r) => l.Combine(r));
+                ret.Cell = this.Cell.Combine(rhs.Cell);
+                ret.Version = this.Version.Combine(rhs.Version);
+                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
+                ret.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocations?.Overall, rhs.ForcedLocations?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocations?.Specific, rhs.ForcedLocations?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Overall, rhs.MaterialSwaps?.Overall), Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Specific, rhs.MaterialSwaps?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1452,76 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public Transforms.TranslationMask? Transforms;
+            public bool SnapTemplate;
+            public bool SnapBehavior;
+            public bool XALG;
+            public AComponent.TranslationMask? Components;
+            public bool Filter;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults2;
+            public bool Cell;
+            public bool Version;
+            public bool FNAM;
+            public bool Keywords;
+            public bool NativeTerminal;
+            public bool ForcedLocations;
+            public ObjectProperty.TranslationMask? Properties;
+            public bool MaterialSwaps;
+            public bool Name;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.SnapTemplate = defaultOn;
+                this.SnapBehavior = defaultOn;
+                this.XALG = defaultOn;
+                this.Filter = defaultOn;
+                this.Cell = defaultOn;
+                this.Version = defaultOn;
+                this.FNAM = defaultOn;
+                this.Keywords = defaultOn;
+                this.NativeTerminal = defaultOn;
+                this.ForcedLocations = defaultOn;
+                this.MaterialSwaps = defaultOn;
+                this.Name = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((SnapTemplate, null));
+                ret.Add((SnapBehavior, null));
+                ret.Add((XALG, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Filter, null));
+                ret.Add((ObjectPlacementDefaults2 != null ? ObjectPlacementDefaults2.OnOverall : DefaultOn, ObjectPlacementDefaults2?.GetCrystal()));
+                ret.Add((Cell, null));
+                ret.Add((Version, null));
+                ret.Add((FNAM, null));
+                ret.Add((Keywords, null));
+                ret.Add((NativeTerminal, null));
+                ret.Add((ForcedLocations, null));
+                ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
+                ret.Add((MaterialSwaps, null));
+                ret.Add((Name, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1533,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PackIn_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackInCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackInSetterCommon.Instance.RemapLinks(this, mapping);
         public PackIn(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1584,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IPackIn);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PackInCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => PackInSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => PackInSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => PackInSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,12 +1672,57 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPackIn :
+        IAssetLinkContainer,
         IConstructible,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILeveledPackInTarget,
         ILoquiObjectSetter<IPackInInternal>,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
         IPackInGetter,
-        IStarfieldMajorRecordInternal
+        IScripted,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
+        new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
+        new IFormLinkNullable<ISnapTemplateGetter> SnapBehavior { get; set; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new String? Filter { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults2 { get; set; }
+        new IFormLinkNullable<ICellGetter> Cell { get; set; }
+        new UInt32? Version { get; set; }
+        new MemorySlice<Byte>? FNAM { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<ITerminalMenuGetter> NativeTerminal { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
+        new ExtendedList<ObjectProperty>? Properties { get; set; }
+        new ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        #region Mutagen
+        new PackIn.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IPackInInternal :
@@ -442,13 +1735,67 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.PKIN)]
     public partial interface IPackInGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILeveledPackInTargetGetter,
         ILoquiObject<IPackInGetter>,
-        IMapsToGetter<IPackInGetter>
+        IMapsToGetter<IPackInGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IScriptedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => PackIn_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        ITransformsGetter? Transforms { get; }
+        IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
+        IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        String? Filter { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults2 { get; }
+        IFormLinkNullableGetter<ICellGetter> Cell { get; }
+        UInt32? Version { get; }
+        ReadOnlyMemorySlice<Byte>? FNAM { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
+        IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
+        IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+
+        #region Mutagen
+        PackIn.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -625,6 +1972,26 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        ODTY = 9,
+        ObjectPlacementDefaults = 10,
+        Transforms = 11,
+        SnapTemplate = 12,
+        SnapBehavior = 13,
+        XALG = 14,
+        Components = 15,
+        Filter = 16,
+        ObjectPlacementDefaults2 = 17,
+        Cell = 18,
+        Version = 19,
+        FNAM = 20,
+        Keywords = 21,
+        NativeTerminal = 22,
+        ForcedLocations = 23,
+        Properties = 24,
+        MaterialSwaps = 25,
+        Name = 26,
     }
     #endregion
 
@@ -635,9 +2002,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(PackIn.Mask<>);
 
@@ -667,8 +2034,34 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PKIN);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PKIN);
+            var all = RecordCollection.Factory(
+                RecordTypes.PKIN,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.PTT2,
+                RecordTypes.SNTP,
+                RecordTypes.SNBH,
+                RecordTypes.XALG,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FLTR,
+                RecordTypes.CNAM,
+                RecordTypes.VNAM,
+                RecordTypes.FNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.NTRM,
+                RecordTypes.FTYP,
+                RecordTypes.PRPS,
+                RecordTypes.MOLM,
+                RecordTypes.FULL);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackInBinaryWriteTranslation);
         #region Interface
@@ -710,6 +2103,26 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPackInInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.ObjectPlacementDefaults = null;
+            item.Transforms = null;
+            item.SnapTemplate.Clear();
+            item.SnapBehavior.Clear();
+            item.XALG = default;
+            item.Components.Clear();
+            item.Filter = default;
+            item.ObjectPlacementDefaults2 = null;
+            item.Cell.Clear();
+            item.Version = default;
+            item.FNAM = default;
+            item.Keywords = null;
+            item.NativeTerminal.Clear();
+            item.ForcedLocations = null;
+            item.Properties = null;
+            item.MaterialSwaps = null;
+            item.Name = default;
             base.Clear(item);
         }
         
@@ -727,6 +2140,41 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IPackIn obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.SnapTemplate.Relink(mapping);
+            obj.SnapBehavior.Relink(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Cell.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.NativeTerminal.Relink(mapping);
+            obj.ForcedLocations?.RemapLinks(mapping);
+            obj.Properties?.RemapLinks(mapping);
+            obj.MaterialSwaps?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPackIn obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IPackIn obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -794,6 +2242,57 @@ namespace Mutagen.Bethesda.Starfield
             PackIn.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults,
+                rhs.ObjectPlacementDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SnapTemplate = item.SnapTemplate.Equals(rhs.SnapTemplate);
+            ret.SnapBehavior = item.SnapBehavior.Equals(rhs.SnapBehavior);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Filter = string.Equals(item.Filter, rhs.Filter);
+            ret.ObjectPlacementDefaults2 = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults2,
+                rhs.ObjectPlacementDefaults2,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Cell = item.Cell.Equals(rhs.Cell);
+            ret.Version = item.Version == rhs.Version;
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
+            ret.ForcedLocations = item.ForcedLocations.CollectionEqualsHelper(
+                rhs.ForcedLocations,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Properties = item.Properties.CollectionEqualsHelper(
+                rhs.Properties,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.MaterialSwaps = item.MaterialSwaps.CollectionEqualsHelper(
+                rhs.MaterialSwaps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -843,6 +2342,150 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if (printMask?.SnapTemplate ?? true)
+            {
+                sb.AppendItem(item.SnapTemplate.FormKeyNullable, "SnapTemplate");
+            }
+            if (printMask?.SnapBehavior ?? true)
+            {
+                sb.AppendItem(item.SnapBehavior.FormKeyNullable, "SnapBehavior");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Filter ?? true)
+                && item.Filter is {} FilterItem)
+            {
+                sb.AppendItem(FilterItem, "Filter");
+            }
+            if ((printMask?.ObjectPlacementDefaults2?.Overall ?? true)
+                && item.ObjectPlacementDefaults2 is {} ObjectPlacementDefaults2Item)
+            {
+                ObjectPlacementDefaults2Item?.Print(sb, "ObjectPlacementDefaults2");
+            }
+            if (printMask?.Cell ?? true)
+            {
+                sb.AppendItem(item.Cell.FormKeyNullable, "Cell");
+            }
+            if ((printMask?.Version ?? true)
+                && item.Version is {} VersionItem)
+            {
+                sb.AppendItem(VersionItem, "Version");
+            }
+            if ((printMask?.FNAM ?? true)
+                && item.FNAM is {} FNAMItem)
+            {
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.NativeTerminal ?? true)
+            {
+                sb.AppendItem(item.NativeTerminal.FormKeyNullable, "NativeTerminal");
+            }
+            if ((printMask?.ForcedLocations?.Overall ?? true)
+                && item.ForcedLocations is {} ForcedLocationsItem)
+            {
+                sb.AppendLine("ForcedLocations =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ForcedLocationsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Properties?.Overall ?? true)
+                && item.Properties is {} PropertiesItem)
+            {
+                sb.AppendLine("Properties =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PropertiesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.MaterialSwaps?.Overall ?? true)
+                && item.MaterialSwaps is {} MaterialSwapsItem)
+            {
+                sb.AppendLine("MaterialSwaps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in MaterialSwapsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
         }
         
         public static PackIn_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -893,6 +2536,106 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults))) return false;
+                }
+                else if (!isObjectPlacementDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.SnapTemplate) ?? true))
+            {
+                if (!lhs.SnapTemplate.Equals(rhs.SnapTemplate)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.SnapBehavior) ?? true))
+            {
+                if (!lhs.SnapBehavior.Equals(rhs.SnapBehavior)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Filter) ?? true))
+            {
+                if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectPlacementDefaults2) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults2, rhs.ObjectPlacementDefaults2, out var lhsObjectPlacementDefaults2, out var rhsObjectPlacementDefaults2, out var isObjectPlacementDefaults2Equal))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults2).CommonInstance()!).Equals(lhsObjectPlacementDefaults2, rhsObjectPlacementDefaults2, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults2))) return false;
+                }
+                else if (!isObjectPlacementDefaults2Equal) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Cell) ?? true))
+            {
+                if (!lhs.Cell.Equals(rhs.Cell)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Version) ?? true))
+            {
+                if (lhs.Version != rhs.Version) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.NativeTerminal) ?? true))
+            {
+                if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.ForcedLocations) ?? true))
+            {
+                if (!lhs.ForcedLocations.SequenceEqualNullable(rhs.ForcedLocations)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Properties) ?? true))
+            {
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.Properties)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.MaterialSwaps) ?? true))
+            {
+                if (!lhs.MaterialSwaps.SequenceEqualNullable(rhs.MaterialSwaps)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
             return true;
         }
         
@@ -921,6 +2664,56 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPackInGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
+            {
+                hash.Add(ObjectPlacementDefaultsitem);
+            }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
+            hash.Add(item.SnapTemplate);
+            hash.Add(item.SnapBehavior);
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            hash.Add(item.Components);
+            if (item.Filter is {} Filteritem)
+            {
+                hash.Add(Filteritem);
+            }
+            if (item.ObjectPlacementDefaults2 is {} ObjectPlacementDefaults2item)
+            {
+                hash.Add(ObjectPlacementDefaults2item);
+            }
+            hash.Add(item.Cell);
+            if (item.Version is {} Versionitem)
+            {
+                hash.Add(Versionitem);
+            }
+            if (item.FNAM is {} FNAMItem)
+            {
+                hash.Add(FNAMItem);
+            }
+            hash.Add(item.Keywords);
+            hash.Add(item.NativeTerminal);
+            hash.Add(item.ForcedLocations);
+            hash.Add(item.Properties);
+            hash.Add(item.MaterialSwaps);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -949,6 +2742,86 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.SnapTemplate, out var SnapTemplateInfo))
+            {
+                yield return SnapTemplateInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.SnapBehavior, out var SnapBehaviorInfo))
+            {
+                yield return SnapBehaviorInfo;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Cell, out var CellInfo))
+            {
+                yield return CellInfo;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.NativeTerminal, out var NativeTerminalInfo))
+            {
+                yield return NativeTerminalInfo;
+            }
+            if (obj.ForcedLocations is {} ForcedLocationsItem)
+            {
+                foreach (var item in ForcedLocationsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Properties is {} PropertiesItem)
+            {
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.MaterialSwaps is {} MaterialSwapsItem)
+            {
+                foreach (var item in MaterialSwapsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPackInGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1024,6 +2897,323 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackIn_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.ObjectPlacementDefaults);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    {
+                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackIn_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.SnapTemplate) ?? true))
+            {
+                item.SnapTemplate.SetTo(rhs.SnapTemplate.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.SnapBehavior) ?? true))
+            {
+                item.SnapBehavior.SetTo(rhs.SnapBehavior.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Filter) ?? true))
+            {
+                item.Filter = rhs.Filter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectPlacementDefaults2) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.ObjectPlacementDefaults2);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults2 is {} rhsObjectPlacementDefaults2)
+                    {
+                        item.ObjectPlacementDefaults2 = rhsObjectPlacementDefaults2.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults2));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults2 = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Cell) ?? true))
+            {
+                item.Cell.SetTo(rhs.Cell.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Version) ?? true))
+            {
+                item.Version = rhs.Version;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.FNAM) ?? true))
+            {
+                if(rhs.FNAM is {} FNAMrhs)
+                {
+                    item.FNAM = FNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.FNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.NativeTerminal) ?? true))
+            {
+                item.NativeTerminal.SetTo(rhs.NativeTerminal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.ForcedLocations) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.ForcedLocations);
+                try
+                {
+                    if ((rhs.ForcedLocations != null))
+                    {
+                        item.ForcedLocations = 
+                            rhs.ForcedLocations
+                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    }
+                    else
+                    {
+                        item.ForcedLocations = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Properties) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.Properties);
+                try
+                {
+                    if ((rhs.Properties != null))
+                    {
+                        item.Properties = 
+                            rhs.Properties
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectProperty>();
+                    }
+                    else
+                    {
+                        item.Properties = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.MaterialSwaps) ?? true))
+            {
+                errorMask?.PushIndex((int)PackIn_FieldIndex.MaterialSwaps);
+                try
+                {
+                    if ((rhs.MaterialSwaps != null))
+                    {
+                        item.MaterialSwaps = 
+                            rhs.MaterialSwaps
+                            .Select(r => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
+                    }
+                    else
+                    {
+                        item.MaterialSwaps = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackIn_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
         }
         
         public override void DeepCopyIn(
@@ -1172,6 +3362,149 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly PackInBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IPackInGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SnapTemplate,
+                header: translationParams.ConvertToCustom(RecordTypes.SNTP));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SnapBehavior,
+                header: translationParams.ConvertToCustom(RecordTypes.SNBH));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Filter,
+                header: translationParams.ConvertToCustom(RecordTypes.FLTR),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.ObjectPlacementDefaults2 is {} ObjectPlacementDefaults2Item)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaults2Item).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaults2Item,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Cell,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Version,
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NativeTerminal,
+                header: translationParams.ConvertToCustom(RecordTypes.NTRM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ForcedLocations,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FTYP),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
+                writer: writer,
+                items: item.Properties,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILayeredMaterialSwapGetter>>.Instance.Write(
+                writer: writer,
+                items: item.MaterialSwaps,
+                recordType: translationParams.ConvertToCustom(RecordTypes.MOLM),
+                countLengthLength: 2,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILayeredMaterialSwapGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+        }
+
         public void Write(
             MutagenWriter writer,
             IPackInGetter item,
@@ -1188,10 +3521,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1241,6 +3576,199 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly PackInBinaryCreateTranslation Instance = new PackInBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PKIN;
+        public static ParseResult FillBinaryRecordTypes(
+            IPackInInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)PackIn_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)PackIn_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PackIn_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)PackIn_FieldIndex.ODTY)
+                    {
+                        item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                        return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)PackIn_FieldIndex.Filter)
+                    {
+                        item.ObjectPlacementDefaults2 = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                        return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults2, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                                return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults, nextRecordType);
+                            case 1:
+                                item.ObjectPlacementDefaults2 = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                                return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults2, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)PackIn_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.SNTP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SnapTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PackIn_FieldIndex.SnapTemplate;
+                }
+                case RecordTypeInts.SNBH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SnapBehavior.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PackIn_FieldIndex.SnapBehavior;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PackIn_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)PackIn_FieldIndex.Components;
+                }
+                case RecordTypeInts.FLTR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Filter = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)PackIn_FieldIndex.Filter;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Cell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PackIn_FieldIndex.Cell;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Version = frame.ReadUInt32();
+                    return (int)PackIn_FieldIndex.Version;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PackIn_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)PackIn_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.NTRM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PackIn_FieldIndex.NativeTerminal;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ForcedLocations = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    return (int)PackIn_FieldIndex.ForcedLocations;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Properties = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectProperty>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ObjectProperty.TryCreateFromBinary)
+                        .CastExtendedList<ObjectProperty>();
+                    return (int)PackIn_FieldIndex.Properties;
+                }
+                case RecordTypeInts.MOLM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaterialSwaps = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILayeredMaterialSwapGetter>>.Instance.Parse(
+                            amount: frame.ReadUInt16(),
+                            reader: frame,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
+                    return (int)PackIn_FieldIndex.MaterialSwaps;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)PackIn_FieldIndex.Name;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1273,6 +3801,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackInCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PackInCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackInBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1286,7 +3816,87 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IPackIn);
 
+        public PackIn.MajorFlag MajorFlags => (PackIn.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ObjectPlacementDefaults
+        private RangeInt32? _ObjectPlacementDefaultsLocation;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region SnapTemplate
+        private int? _SnapTemplateLocation;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => _SnapTemplateLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        #endregion
+        #region SnapBehavior
+        private int? _SnapBehaviorLocation;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => _SnapBehaviorLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapBehaviorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Filter
+        private int? _FilterLocation;
+        public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ObjectPlacementDefaults2
+        private RangeInt32? _ObjectPlacementDefaults2Location;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults2 => _ObjectPlacementDefaults2Location.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaults2Location!.Value.Min), _package) : default;
+        #endregion
+        #region Cell
+        private int? _CellLocation;
+        public IFormLinkNullableGetter<ICellGetter> Cell => _CellLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        #endregion
+        #region Version
+        private int? _VersionLocation;
+        public UInt32? Version => _VersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region FNAM
+        private int? _FNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region NativeTerminal
+        private int? _NativeTerminalLocation;
+        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalMenuGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalMenuGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
+        public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; private set; }
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1344,6 +3954,194 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)PackIn_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PackIn_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)PackIn_FieldIndex.ODTY)
+                    {
+                        _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)PackIn_FieldIndex.Filter)
+                    {
+                        _ObjectPlacementDefaults2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults2, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults, type);
+                            }
+                            case 1:
+                            {
+                                _ObjectPlacementDefaults2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults2, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PackIn_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.SNTP:
+                {
+                    _SnapTemplateLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.SnapTemplate;
+                }
+                case RecordTypeInts.SNBH:
+                {
+                    _SnapBehaviorLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.SnapBehavior;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)PackIn_FieldIndex.Components;
+                }
+                case RecordTypeInts.FLTR:
+                {
+                    _FilterLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.Filter;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CellLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.Cell;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    _VersionLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.Version;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FNAMLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)PackIn_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.NTRM:
+                {
+                    _NativeTerminalLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.NativeTerminal;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)PackIn_FieldIndex.ForcedLocations;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)PackIn_FieldIndex.Properties;
+                }
+                case RecordTypeInts.MOLM:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    var count = stream.ReadUInt16();
+                    this.MaterialSwaps = BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 4,
+                        count: count,
+                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)PackIn_FieldIndex.MaterialSwaps;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)PackIn_FieldIndex.Name;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

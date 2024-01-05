@@ -2283,6 +2283,9 @@
     <Compile Include="Records\Major Records\PackageScriptFragments.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PackIn.cs">
+      <DependentUpon>PackIn.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PcLevelMult.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
@@ -6269,6 +6272,9 @@
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\WorkshopItemColorComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SpacePhysicsComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>

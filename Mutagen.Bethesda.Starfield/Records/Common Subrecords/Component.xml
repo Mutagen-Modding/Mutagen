@@ -434,4 +434,9 @@
     <Fields>
     </Fields>
   </Object>
+  <Object name="SpacePhysicsComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>

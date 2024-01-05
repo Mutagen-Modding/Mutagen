@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PackIn" recordType="PKIN" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="PackIn" recordType="PKIN" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
+      <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Filter" recordType="FLTR" />
+      <RefDirect name="ObjectPlacementDefaults2" refName="ObjectPlacementDefaults" />
+      <FormLink name="Cell" refName="Cell" recordType="CNAM" />
+      <UInt32 name="Version" recordType="VNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="NativeTerminal" refName="TerminalMenu" recordType="NTRM" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <List name="MaterialSwaps" recordType="MOLM" counterLength="2"  >
+        <FormLink refName="LayeredMaterialSwap" />
+      </List>
+      <String name="Name" recordType="FULL" translated="Normal" />
     </Fields>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>ILeveledPackInTarget</LinkInterface>

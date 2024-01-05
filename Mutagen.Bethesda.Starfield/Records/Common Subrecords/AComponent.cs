@@ -62,6 +62,7 @@ public partial class AComponent
         LensFlareAttachmentFormComponent,
         BGSMaterialPropertyComponent,
         BGSWorkshopItemColor,
+        BGSSpacePhysicsComponent,
     }
 
     public static bool TryCreateFromBinary(
@@ -184,6 +185,8 @@ public partial class AComponent
                 return MaterialPropertyComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSWorkshopItemColor:
                 return WorkshopItemColorComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSpacePhysicsComponent:
+                return SpacePhysicsComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -277,6 +280,7 @@ partial class AComponentBinaryWriteTranslation
             ILensFlareAttachmentFormComponentGetter _ => AComponent.ComponentType.LensFlareAttachmentFormComponent,
             IMaterialPropertyComponentGetter _ => AComponent.ComponentType.BGSMaterialPropertyComponent,
             IWorkshopItemColorComponentGetter _ => AComponent.ComponentType.BGSWorkshopItemColor,
+            ISpacePhysicsComponentGetter _ => AComponent.ComponentType.BGSSpacePhysicsComponent,
             _ => throw new NotImplementedException()
         };
 
@@ -397,6 +401,8 @@ partial class AComponentBinaryOverlay
                 return MaterialPropertyComponentBinaryOverlay.MaterialPropertyComponentFactory(stream, package);
             case AComponent.ComponentType.BGSWorkshopItemColor:
                 return WorkshopItemColorComponentBinaryOverlay.WorkshopItemColorComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSpacePhysicsComponent:
+                return SpacePhysicsComponentBinaryOverlay.SpacePhysicsComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

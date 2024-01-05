@@ -37,6 +37,7 @@
       <Group name="MiscItems" refName="MiscItem" />
       <Group name="Statics" refName="Static" />
       <Group name="StaticCollections" refName="StaticCollection" />
+      <Group name="PackIns" refName="PackIn" />
       <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammunitions" refName="Ammunition" />

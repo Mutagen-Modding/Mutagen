@@ -1142,6 +1142,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             SoundMarker_Registration.Instance,
             SoundReference_Registration.Instance,
             SoundTagComponent_Registration.Instance,
+            SpacePhysicsComponent_Registration.Instance,
             SpaceshipAIActorComponent_Registration.Instance,
             SpaceshipEquipmentComponent_Registration.Instance,
             SpaceshipHullCodeComponent_Registration.Instance,

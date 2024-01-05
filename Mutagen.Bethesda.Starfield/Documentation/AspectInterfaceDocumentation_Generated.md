@@ -22,6 +22,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - NavigationMesh
 - Npc
 - Package
+- PackIn
 - Perk
 - PlacedArrow
 - PlacedBarrier
@@ -55,6 +56,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - Npc
 - ObjectTemplate
+- PackIn
 - Quest
 - QuestReferenceAlias
 - Race
@@ -150,6 +152,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PackageDataTarget
 - PackageDataTopic
 - PackageSceneAction
+- PackIn
 - Perk
 - PlacedObjectMapMarker
 - Planet
@@ -211,6 +214,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - Npc
 - ObjectEffect
+- PackIn
 - ProjectedDecal
 - SoundEchoMarker
 - SoundMarker
@@ -253,6 +257,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - NavigationMesh
 - Npc
+- PackIn
 - PlacedArrow
 - PlacedBarrier
 - PlacedBeam
@@ -496,6 +501,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### PackageSceneAction
 - INamed
+### PackIn
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- INamed
+- IObjectBounded
+- IScripted
 ### Perk
 - IHaveVirtualMachineAdapter
 - INamed

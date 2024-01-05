@@ -2916,9 +2916,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PackIn</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter> PackIn(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter> PackIn(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPackInGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2928,9 +2928,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on PackIn</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter> PackIn(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter> PackIn(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPackInGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IPackIn, IPackInGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

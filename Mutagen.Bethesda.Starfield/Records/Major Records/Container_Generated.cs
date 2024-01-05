@@ -288,14 +288,14 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region NativeTerminal
-        private readonly IFormLinkNullable<ITerminalGetter> _NativeTerminal = new FormLinkNullable<ITerminalGetter>();
-        public IFormLinkNullable<ITerminalGetter> NativeTerminal
+        private readonly IFormLinkNullable<ITerminalMenuGetter> _NativeTerminal = new FormLinkNullable<ITerminalMenuGetter>();
+        public IFormLinkNullable<ITerminalMenuGetter> NativeTerminal
         {
             get => _NativeTerminal;
             set => _NativeTerminal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITerminalGetter> IContainerGetter.NativeTerminal => this.NativeTerminal;
+        IFormLinkNullableGetter<ITerminalMenuGetter> IContainerGetter.NativeTerminal => this.NativeTerminal;
         #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1896,7 +1896,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
-        new IFormLinkNullable<ITerminalGetter> NativeTerminal { get; set; }
+        new IFormLinkNullable<ITerminalMenuGetter> NativeTerminal { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new SoundReference? OpenSound { get; set; }
@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
-        IFormLinkNullableGetter<ITerminalGetter> NativeTerminal { get; }
+        IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal { get; }
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         ISoundReferenceGetter? OpenSound { get; }
@@ -4371,7 +4371,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
+        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalMenuGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalMenuGetter>.Null;
         #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }

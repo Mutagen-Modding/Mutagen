@@ -58,6 +58,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
         AddDynamicProcessing(RecordTypes.LVLP, ProcessLeveledPackIns);
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
+        AddDynamicProcessing(RecordTypes.PKIN, ProcessPackIns);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -104,7 +105,7 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryFindSubrecord(RecordTypes.OPDS, out var frame))
+        foreach (var frame in majorFrame.FindEnumerateSubrecords(RecordTypes.OPDS))
         {
             int offset = 0;
             for (int i = 0; i < 20; i++)
@@ -112,6 +113,13 @@ public class StarfieldProcessor : Processor
                 ProcessZeroFloat(frame, fileOffset, ref offset);
             }
         }
+    }
+
+    private void ProcessPackIns(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
     }
 
     private void ProcessProjectedDecals(
@@ -197,6 +205,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "AMMO", "FULL", "ONAM" },
                     new RecordType[] { "FURN", "FULL", "ATTX" },
                     new RecordType[] { "STAT", "FULL" },
+                    new RecordType[] { "PKIN", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

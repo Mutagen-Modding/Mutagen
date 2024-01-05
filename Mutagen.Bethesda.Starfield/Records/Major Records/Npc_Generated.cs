@@ -360,14 +360,14 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region NativeTerminal
-        private readonly IFormLinkNullable<ITerminalGetter> _NativeTerminal = new FormLinkNullable<ITerminalGetter>();
-        public IFormLinkNullable<ITerminalGetter> NativeTerminal
+        private readonly IFormLinkNullable<ITerminalMenuGetter> _NativeTerminal = new FormLinkNullable<ITerminalMenuGetter>();
+        public IFormLinkNullable<ITerminalMenuGetter> NativeTerminal
         {
             get => _NativeTerminal;
             set => _NativeTerminal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITerminalGetter> INpcGetter.NativeTerminal => this.NativeTerminal;
+        IFormLinkNullableGetter<ITerminalMenuGetter> INpcGetter.NativeTerminal => this.NativeTerminal;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5058,7 +5058,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<PerkPlacement>? Perks { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
-        new IFormLinkNullable<ITerminalGetter> NativeTerminal { get; set; }
+        new IFormLinkNullable<ITerminalMenuGetter> NativeTerminal { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new Npc.AggressionType Aggression { get; set; }
         new Npc.ConfidenceType Confidence { get; set; }
@@ -5194,7 +5194,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IPerkPlacementGetter>? Perks { get; }
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
-        IFormLinkNullableGetter<ITerminalGetter> NativeTerminal { get; }
+        IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         Npc.AggressionType Aggression { get; }
         Npc.ConfidenceType Confidence { get; }
@@ -10129,7 +10129,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
+        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalMenuGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalMenuGetter>.Null;
         #endregion
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         private RangeInt32? _AIDTLocation;

@@ -3508,6 +3508,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "WorkshopItemColorComponent":
                 case "IWorkshopItemColorComponentGetter":
                 case "IWorkshopItemColorComponent":
+                case "SpacePhysicsComponent":
+                case "ISpacePhysicsComponentGetter":
+                case "ISpacePhysicsComponent":
                     break;
                 case "Condition":
                 case "IConditionGetter":
