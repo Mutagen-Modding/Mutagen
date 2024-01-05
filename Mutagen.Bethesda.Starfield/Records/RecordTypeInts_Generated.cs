@@ -494,6 +494,8 @@ public partial class RecordTypeInts
     public const int MPGN = 0x4E47504D;
     public const int MRPH = 0x4850524D;
     public const int MRSV = 0x5653524D;
+    public const int MSLS = 0x534C534D;
+    public const int MSMO = 0x4F4D534D;
     public const int MSSA = 0x4153534D;
     public const int MSSI = 0x4953534D;
     public const int MSTT = 0x5454534D;

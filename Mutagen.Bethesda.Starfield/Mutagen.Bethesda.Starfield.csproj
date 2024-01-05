@@ -2223,6 +2223,9 @@
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MoveableStatic.cs">
+      <DependentUpon>MoveableStatic.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\NavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>

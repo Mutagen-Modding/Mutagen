@@ -496,6 +496,8 @@ public partial class RecordTypes
     public static readonly RecordType MPGN = new(0x4E47504D);
     public static readonly RecordType MRPH = new(0x4850524D);
     public static readonly RecordType MRSV = new(0x5653524D);
+    public static readonly RecordType MSLS = new(0x534C534D);
+    public static readonly RecordType MSMO = new(0x4F4D534D);
     public static readonly RecordType MSSA = new(0x4153534D);
     public static readonly RecordType MSSI = new(0x4953534D);
     public static readonly RecordType MSTT = new(0x5454534D);

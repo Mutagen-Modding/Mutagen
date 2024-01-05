@@ -59,6 +59,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.LVLP, ProcessLeveledPackIns);
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
         AddDynamicProcessing(RecordTypes.PKIN, ProcessPackIns);
+        AddDynamicProcessing(RecordTypes.MSTT, ProcessMoveableStatics);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -116,6 +117,13 @@ public class StarfieldProcessor : Processor
     }
 
     private void ProcessPackIns(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+    }
+    
+    private void ProcessMoveableStatics(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
@@ -206,6 +214,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "FURN", "FULL", "ATTX" },
                     new RecordType[] { "STAT", "FULL" },
                     new RecordType[] { "PKIN", "FULL" },
+                    new RecordType[] { "MSTT", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

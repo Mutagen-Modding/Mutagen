@@ -19,6 +19,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MagicEffect
 - MiscItem
+- MoveableStatic
 - NavigationMesh
 - Npc
 - Package
@@ -54,6 +55,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Location
 - MagicEffect
 - MiscItem
+- MoveableStatic
 - Npc
 - ObjectTemplate
 - PackIn
@@ -88,6 +90,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MiscItem
 - ModelComponent
+- MoveableStatic
 - NpcModification
 - ObjectModification
 - PlanetModelComponent
@@ -137,6 +140,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - MorphGroup
+- MoveableStatic
 - MoveSceneAction
 - Npc
 - NpcModification
@@ -212,6 +216,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledPackIn
 - Light
 - MiscItem
+- MoveableStatic
 - Npc
 - ObjectEffect
 - PackIn
@@ -255,6 +260,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MagicEffect
 - MiscItem
+- MoveableStatic
 - NavigationMesh
 - Npc
 - PackIn
@@ -458,6 +464,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### MorphGroup
 - INamed
+### MoveableStatic
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
 ### MoveSceneAction
 - INamed
 ### NavigationMesh
