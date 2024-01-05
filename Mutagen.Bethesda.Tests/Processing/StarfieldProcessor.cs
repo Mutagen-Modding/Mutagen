@@ -36,13 +36,11 @@ public class StarfieldProcessor : Processor
     protected override void AddDynamicProcessorInstructions()
     {
         base.AddDynamicProcessorInstructions();
-        AddDynamicProcessing(RecordType.Null, ProcessComponents);
+        AddDynamicProcessing(RecordType.Null, ProcessAll);
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
-        AddDynamicProcessing(RecordTypes.PDCL, ProcessProjectedDecals);
-        AddDynamicProcessing(RecordTypes.MISC, ProcessMisc);
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(RecordTypes.DIAL, ProcessDialog);
         AddDynamicProcessing(RecordTypes.REFR, ProcessPlacedObject);
@@ -56,10 +54,6 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
-        AddDynamicProcessing(RecordTypes.LVLP, ProcessLeveledPackIns);
-        AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
-        AddDynamicProcessing(RecordTypes.PKIN, ProcessPackIns);
-        AddDynamicProcessing(RecordTypes.MSTT, ProcessMoveableStatics);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -114,48 +108,6 @@ public class StarfieldProcessor : Processor
                 ProcessZeroFloat(frame, fileOffset, ref offset);
             }
         }
-    }
-
-    private void ProcessPackIns(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
-    }
-    
-    private void ProcessMoveableStatics(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
-    }
-
-    private void ProcessProjectedDecals(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
-    }
-
-    private void ProcessMisc(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
-    }
-
-    private void ProcessLeveledPackIns(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
-    }
-
-    private void ProcessStatics(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
     }
 
     protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
@@ -288,6 +240,14 @@ public class StarfieldProcessor : Processor
         }
     }
 
+    private void ProcessAll(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessComponents(majorFrame, fileOffset);
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+    }
+
     private void ProcessComponents(
         MajorRecordFrame majorFrame,
         long fileOffset)
@@ -407,8 +367,6 @@ public class StarfieldProcessor : Processor
 
         ProcessRagdollData(majorFrame, fileOffset);
 
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
-
         foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
         {
             int loc = 0;
@@ -431,7 +389,6 @@ public class StarfieldProcessor : Processor
         }
 
         ZeroXOWNBool(stream, majorFrame, fileOffset);
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
         ProcessXTV2(majorFrame, fileOffset);
     }
 
@@ -983,8 +940,6 @@ public class StarfieldProcessor : Processor
 
             SwapSubrecordContent(fileOffset, majorFrame, rec, b);
         }
-        
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
     }
 
     private void ProcessQuests(

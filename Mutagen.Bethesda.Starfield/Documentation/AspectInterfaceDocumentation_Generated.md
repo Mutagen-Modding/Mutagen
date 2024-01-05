@@ -80,6 +80,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DestructionStage
 - FloraModification
 - Furniture
+- Grass
 - HeadPart
 - Ingestible
 - LegendaryItem
@@ -208,6 +209,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - Furniture
 - GenericBaseForm
+- Grass
 - Ingestible
 - LegendaryItem
 - LeveledBaseForm
@@ -399,6 +401,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHaveVirtualMachineAdapter
 - IObjectBounded
 - IScripted
+### Grass
+- IModeled
+- IObjectBounded
 ### HeadPart
 - IModeled
 - INamed

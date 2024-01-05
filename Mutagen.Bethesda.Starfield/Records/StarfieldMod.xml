@@ -39,6 +39,7 @@
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="PackIns" refName="PackIn" />
       <Group name="MoveableStatics" refName="MoveableStatic" />
+      <Group name="Grasses" refName="Grass" />
       <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammunitions" refName="Ammunition" />
