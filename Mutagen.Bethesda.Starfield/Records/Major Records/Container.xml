@@ -26,7 +26,7 @@
       <List name="ForcedLocations" recordType="FTYP" >
         <FormLink refName="LocationReferenceType" />
       </List>
-      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
+      <FormLink name="NativeTerminal" refName="TerminalMenu" recordType="NTRM" />
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
