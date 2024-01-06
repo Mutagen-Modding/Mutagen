@@ -2151,6 +2151,9 @@
     <Compile Include="Records\Major Records\HeadPart.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\IdleMarker.cs">
+      <DependentUpon>IdleMarker.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Ingestible.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>

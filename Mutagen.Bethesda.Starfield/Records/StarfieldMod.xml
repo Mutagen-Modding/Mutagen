@@ -46,11 +46,12 @@
       <Group name="Ammunitions" refName="Ammunition" />
       <Group name="LeveledNpcs" refName="LeveledNpc" />
       <Group name="Npcs" refName="Npc" />
-      <Group name="Ingestibles" refName="Ingestible" />
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />
       <Group name="LeveledPackIns" refName="LeveledPackIn" />
       <Group name="Keys" refName="Key" />
+      <Group name="Ingestibles" refName="Ingestible" />
+      <Group name="IdleMarkers" refName="IdleMarker" />
       <Group name="GenericBaseForms" refName="GenericBaseForm" />
       <Group name="LeveledBaseForms" refName="LeveledBaseForm" />
       <Group name="Weathers" refName="Weather" />

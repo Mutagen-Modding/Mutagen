@@ -51,6 +51,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - Flora
 - Furniture
+- IdleMarker
 - Ingestible
 - InstanceNamingRule
 - Key
@@ -87,6 +88,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - Grass
 - HeadPart
+- IdleMarker
 - Ingestible
 - Key
 - LegendaryItem
@@ -219,6 +221,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - GenericBaseForm
 - Grass
+- IdleMarker
 - Ingestible
 - Key
 - LegendaryItem
@@ -427,6 +430,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPart
 - IModeled
 - INamed
+### IdleMarker
+- IKeyworded
+- IModeled
+- IObjectBounded
 ### Ingestible
 - IKeyworded
 - IModeled
