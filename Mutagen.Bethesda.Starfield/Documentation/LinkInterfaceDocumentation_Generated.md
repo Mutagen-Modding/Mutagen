@@ -44,6 +44,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IExternalBaseTemplate
 - GenericBaseForm
 - LeveledBaseForm
+### IHarvestTarget
+- LeveledItem
+- MiscItem
 ### IIdleRelation
 - ActionRecord
 ### IItem
@@ -208,6 +211,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - ILeveledBaseFormTarget
 ### LeveledItem
 - IConstructible
+- IHarvestTarget
 - IItem
 - IOutfitTarget
 - IResourceTarget
@@ -222,6 +226,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - ILocationRecord
 ### MiscItem
 - IConstructible
+- IHarvestTarget
 - IItem
 - IStaticTarget
 ### MoveableStatic

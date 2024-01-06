@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,339 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IFloraGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IFloraGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IFloraGetter.ODTY => this.ODTY;
+        #endregion
+        #region ObjectPlacementDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        {
+            get => _ObjectPlacementDefaults;
+            set => _ObjectPlacementDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? IFloraGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IFloraGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IFloraGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IFloraGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IFloraGetter.Destructible => this.Destructible;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IFloraGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Properties
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectProperty>? _Properties;
+        public ExtendedList<ObjectProperty>? Properties
+        {
+            get => this._Properties;
+            set => this._Properties = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectPropertyGetter>? IFloraGetter.Properties => _Properties;
+        #endregion
+
+        #endregion
+        #region PNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _PNAM;
+        public MemorySlice<Byte>? PNAM
+        {
+            get => this._PNAM;
+            set => this._PNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IFloraGetter.PNAM => this.PNAM;
+        #endregion
+        #region ActivateTextOverride
+        public TranslatedString? ActivateTextOverride { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
+        #endregion
+        #region FNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FNAM;
+        public MemorySlice<Byte>? FNAM
+        {
+            get => this._FNAM;
+            set => this._FNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IFloraGetter.FNAM => this.FNAM;
+        #endregion
+        #region JNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _JNAM;
+        public MemorySlice<Byte>? JNAM
+        {
+            get => this._JNAM;
+            set => this._JNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IFloraGetter.JNAM => this.JNAM;
+        #endregion
+        #region Ingredient
+        private readonly IFormLinkNullable<IHarvestTargetGetter> _Ingredient = new FormLinkNullable<IHarvestTargetGetter>();
+        public IFormLinkNullable<IHarvestTargetGetter> Ingredient
+        {
+            get => _Ingredient;
+            set => _Ingredient.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IHarvestTargetGetter> IFloraGetter.Ingredient => this.Ingredient;
+        #endregion
+        #region PFHS
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _PFHS;
+        public SoundReference? PFHS
+        {
+            get => _PFHS;
+            set => _PFHS = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IFloraGetter.PFHS => this.PFHS;
+        #endregion
+        #region Production
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SeasonalIngredientProduction? _Production;
+        public SeasonalIngredientProduction? Production
+        {
+            get => _Production;
+            set => _Production = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISeasonalIngredientProductionGetter? IFloraGetter.Production => this.Production;
+        #endregion
+        #region AttachParentSlots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _AttachParentSlots;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots
+        {
+            get => this._AttachParentSlots;
+            set => this._AttachParentSlots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IFloraGetter.AttachParentSlots => _AttachParentSlots;
+        #endregion
+
+        #endregion
+        #region ObjectTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>? _ObjectTemplates;
+        public ExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>? ObjectTemplates
+        {
+            get => this._ObjectTemplates;
+            set => this._ObjectTemplates = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? IFloraGetter.ObjectTemplates => _ObjectTemplates;
+        #endregion
+
+        #endregion
+        #region ActionKeyword
+        private readonly IFormLinkNullable<IKeywordGetter> _ActionKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> ActionKeyword
+        {
+            get => _ActionKeyword;
+            set => _ActionKeyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IFloraGetter.ActionKeyword => this.ActionKeyword;
+        #endregion
+        #region BNAM
+        public Single? BNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IFloraGetter.BNAM => this.BNAM;
+        #endregion
+        #region FMAH
+        public Single? FMAH { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IFloraGetter.FMAH => this.FMAH;
+        #endregion
+        #region FMIH
+        public Single? FMIH { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IFloraGetter.FMIH => this.FMIH;
+        #endregion
+        #region MaxGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _MaxGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> MaxGlobal
+        {
+            get => _MaxGlobal;
+            set => _MaxGlobal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IFloraGetter.MaxGlobal => this.MaxGlobal;
+        #endregion
+        #region MinGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _MinGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> MinGlobal
+        {
+            get => _MinGlobal;
+            set => _MinGlobal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IFloraGetter.MinGlobal => this.MinGlobal;
+        #endregion
+        #region Explosion
+        private readonly IFormLinkNullable<IExplosionGetter> _Explosion = new FormLinkNullable<IExplosionGetter>();
+        public IFormLinkNullable<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IExplosionGetter> IFloraGetter.Explosion => this.Explosion;
+        #endregion
+        #region FHLS
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _FHLS;
+        public SoundReference? FHLS
+        {
+            get => _FHLS;
+            set => _FHLS = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IFloraGetter.FHLS => this.FHLS;
+        #endregion
 
         #region To String
 
@@ -79,6 +417,33 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.PNAM = initialValue;
+                this.ActivateTextOverride = initialValue;
+                this.FNAM = initialValue;
+                this.JNAM = initialValue;
+                this.Ingredient = initialValue;
+                this.PFHS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(initialValue, new SeasonalIngredientProduction.Mask<TItem>(initialValue));
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.ActionKeyword = initialValue;
+                this.BNAM = initialValue;
+                this.FMAH = initialValue;
+                this.FMIH = initialValue;
+                this.MaxGlobal = initialValue;
+                this.MinGlobal = initialValue;
+                this.Explosion = initialValue;
+                this.FHLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -88,7 +453,34 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem ObjectPlacementDefaults,
+                TItem Components,
+                TItem Name,
+                TItem Model,
+                TItem Destructible,
+                TItem Keywords,
+                TItem Properties,
+                TItem PNAM,
+                TItem ActivateTextOverride,
+                TItem FNAM,
+                TItem JNAM,
+                TItem Ingredient,
+                TItem PFHS,
+                TItem Production,
+                TItem AttachParentSlots,
+                TItem ObjectTemplates,
+                TItem ActionKeyword,
+                TItem BNAM,
+                TItem FMAH,
+                TItem FMIH,
+                TItem MaxGlobal,
+                TItem MinGlobal,
+                TItem Explosion,
+                TItem FHLS)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +490,33 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.PNAM = PNAM;
+                this.ActivateTextOverride = ActivateTextOverride;
+                this.FNAM = FNAM;
+                this.JNAM = JNAM;
+                this.Ingredient = Ingredient;
+                this.PFHS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PFHS, new SoundReference.Mask<TItem>(PFHS));
+                this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(Production, new SeasonalIngredientProduction.Mask<TItem>(Production));
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.ActionKeyword = ActionKeyword;
+                this.BNAM = BNAM;
+                this.FMAH = FMAH;
+                this.FMIH = FMIH;
+                this.MaxGlobal = MaxGlobal;
+                this.MinGlobal = MinGlobal;
+                this.Explosion = Explosion;
+                this.FHLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(FHLS, new SoundReference.Mask<TItem>(FHLS));
             }
 
             #pragma warning disable CS8618
@@ -106,6 +525,36 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
+            public TItem PNAM;
+            public TItem ActivateTextOverride;
+            public TItem FNAM;
+            public TItem JNAM;
+            public TItem Ingredient;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PFHS { get; set; }
+            public MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>? Production { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
+            public TItem ActionKeyword;
+            public TItem BNAM;
+            public TItem FMAH;
+            public TItem FMIH;
+            public TItem MaxGlobal;
+            public TItem MinGlobal;
+            public TItem Explosion;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? FHLS { get; set; }
             #endregion
 
             #region Equals
@@ -119,11 +568,65 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Properties, rhs.Properties)) return false;
+                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.JNAM, rhs.JNAM)) return false;
+                if (!object.Equals(this.Ingredient, rhs.Ingredient)) return false;
+                if (!object.Equals(this.PFHS, rhs.PFHS)) return false;
+                if (!object.Equals(this.Production, rhs.Production)) return false;
+                if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
+                if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
+                if (!object.Equals(this.ActionKeyword, rhs.ActionKeyword)) return false;
+                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(this.FMAH, rhs.FMAH)) return false;
+                if (!object.Equals(this.FMIH, rhs.FMIH)) return false;
+                if (!object.Equals(this.MaxGlobal, rhs.MaxGlobal)) return false;
+                if (!object.Equals(this.MinGlobal, rhs.MinGlobal)) return false;
+                if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
+                if (!object.Equals(this.FHLS, rhs.FHLS)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Destructible);
+                hash.Add(this.Keywords);
+                hash.Add(this.Properties);
+                hash.Add(this.PNAM);
+                hash.Add(this.ActivateTextOverride);
+                hash.Add(this.FNAM);
+                hash.Add(this.JNAM);
+                hash.Add(this.Ingredient);
+                hash.Add(this.PFHS);
+                hash.Add(this.Production);
+                hash.Add(this.AttachParentSlots);
+                hash.Add(this.ObjectTemplates);
+                hash.Add(this.ActionKeyword);
+                hash.Add(this.BNAM);
+                hash.Add(this.FMAH);
+                hash.Add(this.FMIH);
+                hash.Add(this.MaxGlobal);
+                hash.Add(this.MinGlobal);
+                hash.Add(this.Explosion);
+                hash.Add(this.FHLS);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +637,118 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
+                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Properties != null)
+                {
+                    if (!eval(this.Properties.Overall)) return false;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.PNAM)) return false;
+                if (!eval(this.ActivateTextOverride)) return false;
+                if (!eval(this.FNAM)) return false;
+                if (!eval(this.JNAM)) return false;
+                if (!eval(this.Ingredient)) return false;
+                if (PFHS != null)
+                {
+                    if (!eval(this.PFHS.Overall)) return false;
+                    if (this.PFHS.Specific != null && !this.PFHS.Specific.All(eval)) return false;
+                }
+                if (Production != null)
+                {
+                    if (!eval(this.Production.Overall)) return false;
+                    if (this.Production.Specific != null && !this.Production.Specific.All(eval)) return false;
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (!eval(this.AttachParentSlots.Overall)) return false;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (!eval(this.ObjectTemplates.Overall)) return false;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ActionKeyword)) return false;
+                if (!eval(this.BNAM)) return false;
+                if (!eval(this.FMAH)) return false;
+                if (!eval(this.FMIH)) return false;
+                if (!eval(this.MaxGlobal)) return false;
+                if (!eval(this.MinGlobal)) return false;
+                if (!eval(this.Explosion)) return false;
+                if (FHLS != null)
+                {
+                    if (!eval(this.FHLS.Overall)) return false;
+                    if (this.FHLS.Specific != null && !this.FHLS.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -142,6 +757,118 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
+                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Properties != null)
+                {
+                    if (eval(this.Properties.Overall)) return true;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.PNAM)) return true;
+                if (eval(this.ActivateTextOverride)) return true;
+                if (eval(this.FNAM)) return true;
+                if (eval(this.JNAM)) return true;
+                if (eval(this.Ingredient)) return true;
+                if (PFHS != null)
+                {
+                    if (eval(this.PFHS.Overall)) return true;
+                    if (this.PFHS.Specific != null && this.PFHS.Specific.Any(eval)) return true;
+                }
+                if (Production != null)
+                {
+                    if (eval(this.Production.Overall)) return true;
+                    if (this.Production.Specific != null && this.Production.Specific.Any(eval)) return true;
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (eval(this.AttachParentSlots.Overall)) return true;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (eval(this.ObjectTemplates.Overall)) return true;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ActionKeyword)) return true;
+                if (eval(this.BNAM)) return true;
+                if (eval(this.FMAH)) return true;
+                if (eval(this.FMIH)) return true;
+                if (eval(this.MaxGlobal)) return true;
+                if (eval(this.MinGlobal)) return true;
+                if (eval(this.Explosion)) return true;
+                if (FHLS != null)
+                {
+                    if (eval(this.FHLS.Overall)) return true;
+                    if (this.FHLS.Specific != null && this.FHLS.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -157,6 +884,101 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Properties != null)
+                {
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    if (Properties.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
+                        obj.Properties.Specific = l;
+                        foreach (var item in Properties.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.PNAM = eval(this.PNAM);
+                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
+                obj.FNAM = eval(this.FNAM);
+                obj.JNAM = eval(this.JNAM);
+                obj.Ingredient = eval(this.Ingredient);
+                obj.PFHS = this.PFHS == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PFHS.Overall), this.PFHS.Specific?.Translate(eval));
+                obj.Production = this.Production == null ? null : new MaskItem<R, SeasonalIngredientProduction.Mask<R>?>(eval(this.Production.Overall), this.Production.Specific?.Translate(eval));
+                if (AttachParentSlots != null)
+                {
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AttachParentSlots.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AttachParentSlots.Specific = l;
+                        foreach (var item in AttachParentSlots.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ObjectTemplates != null)
+                {
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    if (ObjectTemplates.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();
+                        obj.ObjectTemplates.Specific = l;
+                        foreach (var item in ObjectTemplates.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectTemplate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectTemplate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ActionKeyword = eval(this.ActionKeyword);
+                obj.BNAM = eval(this.BNAM);
+                obj.FMAH = eval(this.FMAH);
+                obj.FMIH = eval(this.FMIH);
+                obj.MaxGlobal = eval(this.MaxGlobal);
+                obj.MinGlobal = eval(this.MinGlobal);
+                obj.Explosion = eval(this.Explosion);
+                obj.FHLS = this.FHLS == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.FHLS.Overall), this.FHLS.Specific?.Translate(eval));
             }
             #endregion
 
@@ -175,6 +997,193 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Flora.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                    {
+                        ObjectPlacementDefaults?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Properties?.Overall ?? true)
+                        && Properties is {} PropertiesItem)
+                    {
+                        sb.AppendLine("Properties =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PropertiesItem.Overall);
+                            if (PropertiesItem.Specific != null)
+                            {
+                                foreach (var subItem in PropertiesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.PNAM ?? true)
+                    {
+                        sb.AppendItem(PNAM, "PNAM");
+                    }
+                    if (printMask?.ActivateTextOverride ?? true)
+                    {
+                        sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                    }
+                    if (printMask?.FNAM ?? true)
+                    {
+                        sb.AppendItem(FNAM, "FNAM");
+                    }
+                    if (printMask?.JNAM ?? true)
+                    {
+                        sb.AppendItem(JNAM, "JNAM");
+                    }
+                    if (printMask?.Ingredient ?? true)
+                    {
+                        sb.AppendItem(Ingredient, "Ingredient");
+                    }
+                    if (printMask?.PFHS?.Overall ?? true)
+                    {
+                        PFHS?.Print(sb);
+                    }
+                    if (printMask?.Production?.Overall ?? true)
+                    {
+                        Production?.Print(sb);
+                    }
+                    if ((printMask?.AttachParentSlots?.Overall ?? true)
+                        && AttachParentSlots is {} AttachParentSlotsItem)
+                    {
+                        sb.AppendLine("AttachParentSlots =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AttachParentSlotsItem.Overall);
+                            if (AttachParentSlotsItem.Specific != null)
+                            {
+                                foreach (var subItem in AttachParentSlotsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ObjectTemplates?.Overall ?? true)
+                        && ObjectTemplates is {} ObjectTemplatesItem)
+                    {
+                        sb.AppendLine("ObjectTemplates =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ObjectTemplatesItem.Overall);
+                            if (ObjectTemplatesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectTemplatesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.ActionKeyword ?? true)
+                    {
+                        sb.AppendItem(ActionKeyword, "ActionKeyword");
+                    }
+                    if (printMask?.BNAM ?? true)
+                    {
+                        sb.AppendItem(BNAM, "BNAM");
+                    }
+                    if (printMask?.FMAH ?? true)
+                    {
+                        sb.AppendItem(FMAH, "FMAH");
+                    }
+                    if (printMask?.FMIH ?? true)
+                    {
+                        sb.AppendItem(FMIH, "FMIH");
+                    }
+                    if (printMask?.MaxGlobal ?? true)
+                    {
+                        sb.AppendItem(MaxGlobal, "MaxGlobal");
+                    }
+                    if (printMask?.MinGlobal ?? true)
+                    {
+                        sb.AppendItem(MinGlobal, "MinGlobal");
+                    }
+                    if (printMask?.Explosion ?? true)
+                    {
+                        sb.AppendItem(Explosion, "Explosion");
+                    }
+                    if (printMask?.FHLS?.Overall ?? true)
+                    {
+                        FHLS?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -185,12 +1194,96 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
+            public Exception? PNAM;
+            public Exception? ActivateTextOverride;
+            public Exception? FNAM;
+            public Exception? JNAM;
+            public Exception? Ingredient;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? PFHS;
+            public MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>? Production;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
+            public Exception? ActionKeyword;
+            public Exception? BNAM;
+            public Exception? FMAH;
+            public Exception? FMIH;
+            public Exception? MaxGlobal;
+            public Exception? MinGlobal;
+            public Exception? Explosion;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? FHLS;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Flora_FieldIndex enu = (Flora_FieldIndex)index;
                 switch (enu)
                 {
+                    case Flora_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Flora_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Flora_FieldIndex.ODTY:
+                        return ODTY;
+                    case Flora_FieldIndex.ObjectPlacementDefaults:
+                        return ObjectPlacementDefaults;
+                    case Flora_FieldIndex.Components:
+                        return Components;
+                    case Flora_FieldIndex.Name:
+                        return Name;
+                    case Flora_FieldIndex.Model:
+                        return Model;
+                    case Flora_FieldIndex.Destructible:
+                        return Destructible;
+                    case Flora_FieldIndex.Keywords:
+                        return Keywords;
+                    case Flora_FieldIndex.Properties:
+                        return Properties;
+                    case Flora_FieldIndex.PNAM:
+                        return PNAM;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        return ActivateTextOverride;
+                    case Flora_FieldIndex.FNAM:
+                        return FNAM;
+                    case Flora_FieldIndex.JNAM:
+                        return JNAM;
+                    case Flora_FieldIndex.Ingredient:
+                        return Ingredient;
+                    case Flora_FieldIndex.PFHS:
+                        return PFHS;
+                    case Flora_FieldIndex.Production:
+                        return Production;
+                    case Flora_FieldIndex.AttachParentSlots:
+                        return AttachParentSlots;
+                    case Flora_FieldIndex.ObjectTemplates:
+                        return ObjectTemplates;
+                    case Flora_FieldIndex.ActionKeyword:
+                        return ActionKeyword;
+                    case Flora_FieldIndex.BNAM:
+                        return BNAM;
+                    case Flora_FieldIndex.FMAH:
+                        return FMAH;
+                    case Flora_FieldIndex.FMIH:
+                        return FMIH;
+                    case Flora_FieldIndex.MaxGlobal:
+                        return MaxGlobal;
+                    case Flora_FieldIndex.MinGlobal:
+                        return MinGlobal;
+                    case Flora_FieldIndex.Explosion:
+                        return Explosion;
+                    case Flora_FieldIndex.FHLS:
+                        return FHLS;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +1294,87 @@ namespace Mutagen.Bethesda.Starfield
                 Flora_FieldIndex enu = (Flora_FieldIndex)index;
                 switch (enu)
                 {
+                    case Flora_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case Flora_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Flora_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.Properties:
+                        this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.PNAM:
+                        this.PNAM = ex;
+                        break;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = ex;
+                        break;
+                    case Flora_FieldIndex.FNAM:
+                        this.FNAM = ex;
+                        break;
+                    case Flora_FieldIndex.JNAM:
+                        this.JNAM = ex;
+                        break;
+                    case Flora_FieldIndex.Ingredient:
+                        this.Ingredient = ex;
+                        break;
+                    case Flora_FieldIndex.PFHS:
+                        this.PFHS = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.Production:
+                        this.Production = new MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.ActionKeyword:
+                        this.ActionKeyword = ex;
+                        break;
+                    case Flora_FieldIndex.BNAM:
+                        this.BNAM = ex;
+                        break;
+                    case Flora_FieldIndex.FMAH:
+                        this.FMAH = ex;
+                        break;
+                    case Flora_FieldIndex.FMIH:
+                        this.FMIH = ex;
+                        break;
+                    case Flora_FieldIndex.MaxGlobal:
+                        this.MaxGlobal = ex;
+                        break;
+                    case Flora_FieldIndex.MinGlobal:
+                        this.MinGlobal = ex;
+                        break;
+                    case Flora_FieldIndex.Explosion:
+                        this.Explosion = ex;
+                        break;
+                    case Flora_FieldIndex.FHLS:
+                        this.FHLS = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1386,87 @@ namespace Mutagen.Bethesda.Starfield
                 Flora_FieldIndex enu = (Flora_FieldIndex)index;
                 switch (enu)
                 {
+                    case Flora_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Flora_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Flora_FieldIndex.Properties:
+                        this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
+                        break;
+                    case Flora_FieldIndex.PNAM:
+                        this.PNAM = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.FNAM:
+                        this.FNAM = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.JNAM:
+                        this.JNAM = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.Ingredient:
+                        this.Ingredient = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.PFHS:
+                        this.PFHS = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.Production:
+                        this.Production = (MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Flora_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>)obj;
+                        break;
+                    case Flora_FieldIndex.ActionKeyword:
+                        this.ActionKeyword = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.BNAM:
+                        this.BNAM = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.FMAH:
+                        this.FMAH = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.FMIH:
+                        this.FMIH = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.MaxGlobal:
+                        this.MaxGlobal = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.MinGlobal:
+                        this.MinGlobal = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.Explosion:
+                        this.Explosion = (Exception?)obj;
+                        break;
+                    case Flora_FieldIndex.FHLS:
+                        this.FHLS = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1476,33 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (ObjectPlacementDefaults != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Destructible != null) return true;
+                if (Keywords != null) return true;
+                if (Properties != null) return true;
+                if (PNAM != null) return true;
+                if (ActivateTextOverride != null) return true;
+                if (FNAM != null) return true;
+                if (JNAM != null) return true;
+                if (Ingredient != null) return true;
+                if (PFHS != null) return true;
+                if (Production != null) return true;
+                if (AttachParentSlots != null) return true;
+                if (ObjectTemplates != null) return true;
+                if (ActionKeyword != null) return true;
+                if (BNAM != null) return true;
+                if (FMAH != null) return true;
+                if (FMIH != null) return true;
+                if (MaxGlobal != null) return true;
+                if (MinGlobal != null) return true;
+                if (Explosion != null) return true;
+                if (FHLS != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1529,150 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                ObjectPlacementDefaults?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                Destructible?.Print(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Properties is {} PropertiesItem)
+                {
+                    sb.AppendLine("Properties =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PropertiesItem.Overall);
+                        if (PropertiesItem.Specific != null)
+                        {
+                            foreach (var subItem in PropertiesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(PNAM, "PNAM");
+                }
+                {
+                    sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(JNAM, "JNAM");
+                }
+                {
+                    sb.AppendItem(Ingredient, "Ingredient");
+                }
+                PFHS?.Print(sb);
+                Production?.Print(sb);
+                if (AttachParentSlots is {} AttachParentSlotsItem)
+                {
+                    sb.AppendLine("AttachParentSlots =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AttachParentSlotsItem.Overall);
+                        if (AttachParentSlotsItem.Specific != null)
+                        {
+                            foreach (var subItem in AttachParentSlotsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ObjectTemplates is {} ObjectTemplatesItem)
+                {
+                    sb.AppendLine("ObjectTemplates =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ObjectTemplatesItem.Overall);
+                        if (ObjectTemplatesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectTemplatesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(ActionKeyword, "ActionKeyword");
+                }
+                {
+                    sb.AppendItem(BNAM, "BNAM");
+                }
+                {
+                    sb.AppendItem(FMAH, "FMAH");
+                }
+                {
+                    sb.AppendItem(FMIH, "FMIH");
+                }
+                {
+                    sb.AppendItem(MaxGlobal, "MaxGlobal");
+                }
+                {
+                    sb.AppendItem(MinGlobal, "MinGlobal");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                FHLS?.Print(sb);
             }
             #endregion
 
@@ -255,6 +1681,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
+                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
+                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.JNAM = this.JNAM.Combine(rhs.JNAM);
+                ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
+                ret.PFHS = this.PFHS.Combine(rhs.PFHS, (l, r) => l.Combine(r));
+                ret.Production = this.Production.Combine(rhs.Production, (l, r) => l.Combine(r));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.ActionKeyword = this.ActionKeyword.Combine(rhs.ActionKeyword);
+                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
+                ret.FMAH = this.FMAH.Combine(rhs.FMAH);
+                ret.FMIH = this.FMIH.Combine(rhs.FMIH);
+                ret.MaxGlobal = this.MaxGlobal.Combine(rhs.MaxGlobal);
+                ret.MinGlobal = this.MinGlobal.Combine(rhs.MinGlobal);
+                ret.Explosion = this.Explosion.Combine(rhs.Explosion);
+                ret.FHLS = this.FHLS.Combine(rhs.FHLS, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1729,93 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
+            public bool Keywords;
+            public ObjectProperty.TranslationMask? Properties;
+            public bool PNAM;
+            public bool ActivateTextOverride;
+            public bool FNAM;
+            public bool JNAM;
+            public bool Ingredient;
+            public SoundReference.TranslationMask? PFHS;
+            public SeasonalIngredientProduction.TranslationMask? Production;
+            public bool AttachParentSlots;
+            public ObjectTemplate.TranslationMask? ObjectTemplates;
+            public bool ActionKeyword;
+            public bool BNAM;
+            public bool FMAH;
+            public bool FMIH;
+            public bool MaxGlobal;
+            public bool MinGlobal;
+            public bool Explosion;
+            public SoundReference.TranslationMask? FHLS;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.Name = defaultOn;
+                this.Keywords = defaultOn;
+                this.PNAM = defaultOn;
+                this.ActivateTextOverride = defaultOn;
+                this.FNAM = defaultOn;
+                this.JNAM = defaultOn;
+                this.Ingredient = defaultOn;
+                this.AttachParentSlots = defaultOn;
+                this.ActionKeyword = defaultOn;
+                this.BNAM = defaultOn;
+                this.FMAH = defaultOn;
+                this.FMIH = defaultOn;
+                this.MaxGlobal = defaultOn;
+                this.MinGlobal = defaultOn;
+                this.Explosion = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
+                ret.Add((PNAM, null));
+                ret.Add((ActivateTextOverride, null));
+                ret.Add((FNAM, null));
+                ret.Add((JNAM, null));
+                ret.Add((Ingredient, null));
+                ret.Add((PFHS != null ? PFHS.OnOverall : DefaultOn, PFHS?.GetCrystal()));
+                ret.Add((Production != null ? Production.OnOverall : DefaultOn, Production?.GetCrystal()));
+                ret.Add((AttachParentSlots, null));
+                ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
+                ret.Add((ActionKeyword, null));
+                ret.Add((BNAM, null));
+                ret.Add((FMAH, null));
+                ret.Add((FMIH, null));
+                ret.Add((MaxGlobal, null));
+                ret.Add((MinGlobal, null));
+                ret.Add((Explosion, null));
+                ret.Add((FHLS != null ? FHLS.OnOverall : DefaultOn, FHLS?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1827,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Flora_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FloraCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraSetterCommon.Instance.RemapLinks(this, mapping);
         public Flora(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1878,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IFlora);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => FloraCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => FloraSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => FloraSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => FloraSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,12 +1961,64 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IFlora :
+        IAssetLinkContainer,
         IFloraGetter,
+        IFormLinkContainer,
         IItem,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IFloraInternal>,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IScripted,
         IStarfieldMajorRecordInternal,
-        IStaticTarget
+        IStaticTarget,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new Destructible? Destructible { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<ObjectProperty>? Properties { get; set; }
+        new MemorySlice<Byte>? PNAM { get; set; }
+        new TranslatedString? ActivateTextOverride { get; set; }
+        new MemorySlice<Byte>? FNAM { get; set; }
+        new MemorySlice<Byte>? JNAM { get; set; }
+        new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
+        new SoundReference? PFHS { get; set; }
+        new SeasonalIngredientProduction? Production { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
+        new ExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>? ObjectTemplates { get; set; }
+        new IFormLinkNullable<IKeywordGetter> ActionKeyword { get; set; }
+        new Single? BNAM { get; set; }
+        new Single? FMAH { get; set; }
+        new Single? FMIH { get; set; }
+        new IFormLinkNullable<IGlobalGetter> MaxGlobal { get; set; }
+        new IFormLinkNullable<IGlobalGetter> MinGlobal { get; set; }
+        new IFormLinkNullable<IExplosionGetter> Explosion { get; set; }
+        new SoundReference? FHLS { get; set; }
     }
 
     public partial interface IFloraInternal :
@@ -442,13 +2031,76 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.FLOR)]
     public partial interface IFloraGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFloraGetter>,
         IMapsToGetter<IFloraGetter>,
-        IStaticTargetGetter
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IScriptedGetter,
+        IStaticTargetGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Flora_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IDestructibleGetter? Destructible { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
+        ReadOnlyMemorySlice<Byte>? PNAM { get; }
+        ITranslatedStringGetter? ActivateTextOverride { get; }
+        ReadOnlyMemorySlice<Byte>? FNAM { get; }
+        ReadOnlyMemorySlice<Byte>? JNAM { get; }
+        IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient { get; }
+        ISoundReferenceGetter? PFHS { get; }
+        ISeasonalIngredientProductionGetter? Production { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
+        IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? ObjectTemplates { get; }
+        IFormLinkNullableGetter<IKeywordGetter> ActionKeyword { get; }
+        Single? BNAM { get; }
+        Single? FMAH { get; }
+        Single? FMIH { get; }
+        IFormLinkNullableGetter<IGlobalGetter> MaxGlobal { get; }
+        IFormLinkNullableGetter<IGlobalGetter> MinGlobal { get; }
+        IFormLinkNullableGetter<IExplosionGetter> Explosion { get; }
+        ISoundReferenceGetter? FHLS { get; }
 
     }
 
@@ -625,6 +2277,33 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        ODTY = 9,
+        ObjectPlacementDefaults = 10,
+        Components = 11,
+        Name = 12,
+        Model = 13,
+        Destructible = 14,
+        Keywords = 15,
+        Properties = 16,
+        PNAM = 17,
+        ActivateTextOverride = 18,
+        FNAM = 19,
+        JNAM = 20,
+        Ingredient = 21,
+        PFHS = 22,
+        Production = 23,
+        AttachParentSlots = 24,
+        ObjectTemplates = 25,
+        ActionKeyword = 26,
+        BNAM = 27,
+        FMAH = 28,
+        FMIH = 29,
+        MaxGlobal = 30,
+        MinGlobal = 31,
+        Explosion = 32,
+        FHLS = 33,
     }
     #endregion
 
@@ -635,9 +2314,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(Flora.Mask<>);
 
@@ -667,8 +2346,54 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.FLOR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.FLOR);
+            var all = RecordCollection.Factory(
+                RecordTypes.FLOR,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSDL,
+                RecordTypes.DSTD,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.PRPS,
+                RecordTypes.PNAM,
+                RecordTypes.ATTX,
+                RecordTypes.FNAM,
+                RecordTypes.JNAM,
+                RecordTypes.PFIG,
+                RecordTypes.PFHS,
+                RecordTypes.PFPC,
+                RecordTypes.APPR,
+                RecordTypes.OBTE,
+                RecordTypes.OBTF,
+                RecordTypes.OBTS,
+                RecordTypes.STOP,
+                RecordTypes.ANAM,
+                RecordTypes.BNAM,
+                RecordTypes.FMAH,
+                RecordTypes.FMIH,
+                RecordTypes.FMAG,
+                RecordTypes.FMIG,
+                RecordTypes.FLXP,
+                RecordTypes.FHLS);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FloraBinaryWriteTranslation);
         #region Interface
@@ -710,6 +2435,33 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFloraInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.ObjectPlacementDefaults = null;
+            item.Components.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.Destructible = null;
+            item.Keywords = null;
+            item.Properties = null;
+            item.PNAM = default;
+            item.ActivateTextOverride = default;
+            item.FNAM = default;
+            item.JNAM = default;
+            item.Ingredient.Clear();
+            item.PFHS = null;
+            item.Production = null;
+            item.AttachParentSlots = null;
+            item.ObjectTemplates = null;
+            item.ActionKeyword.Clear();
+            item.BNAM = default;
+            item.FMAH = default;
+            item.FMIH = default;
+            item.MaxGlobal.Clear();
+            item.MinGlobal.Clear();
+            item.Explosion.Clear();
+            item.FHLS = null;
             base.Clear(item);
         }
         
@@ -727,6 +2479,61 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IFlora obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Properties?.RemapLinks(mapping);
+            obj.Ingredient.Relink(mapping);
+            obj.PFHS?.RemapLinks(mapping);
+            obj.AttachParentSlots?.RemapLinks(mapping);
+            obj.ObjectTemplates?.RemapLinks(mapping);
+            obj.ActionKeyword.Relink(mapping);
+            obj.MaxGlobal.Relink(mapping);
+            obj.MinGlobal.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.FHLS?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFlora obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IFlora obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -794,6 +2601,76 @@ namespace Mutagen.Bethesda.Starfield
             Flora.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults,
+                rhs.ObjectPlacementDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Properties = item.Properties.CollectionEqualsHelper(
+                rhs.Properties,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
+            ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
+            ret.JNAM = MemorySliceExt.SequenceEqual(item.JNAM, rhs.JNAM);
+            ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
+            ret.PFHS = EqualsMaskHelper.EqualsHelper(
+                item.PFHS,
+                rhs.PFHS,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Production = EqualsMaskHelper.EqualsHelper(
+                item.Production,
+                rhs.Production,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.AttachParentSlots = item.AttachParentSlots.CollectionEqualsHelper(
+                rhs.AttachParentSlots,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ObjectTemplates = item.ObjectTemplates.CollectionEqualsHelper(
+                rhs.ObjectTemplates,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ActionKeyword = item.ActionKeyword.Equals(rhs.ActionKeyword);
+            ret.BNAM = item.BNAM.EqualsWithin(rhs.BNAM);
+            ret.FMAH = item.FMAH.EqualsWithin(rhs.FMAH);
+            ret.FMIH = item.FMIH.EqualsWithin(rhs.FMIH);
+            ret.MaxGlobal = item.MaxGlobal.Equals(rhs.MaxGlobal);
+            ret.MinGlobal = item.MinGlobal.Equals(rhs.MinGlobal);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
+            ret.FHLS = EqualsMaskHelper.EqualsHelper(
+                item.FHLS,
+                rhs.FHLS,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -843,6 +2720,184 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Properties?.Overall ?? true)
+                && item.Properties is {} PropertiesItem)
+            {
+                sb.AppendLine("Properties =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PropertiesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.PNAM ?? true)
+                && item.PNAM is {} PNAMItem)
+            {
+                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
+            }
+            if ((printMask?.ActivateTextOverride ?? true)
+                && item.ActivateTextOverride is {} ActivateTextOverrideItem)
+            {
+                sb.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
+            }
+            if ((printMask?.FNAM ?? true)
+                && item.FNAM is {} FNAMItem)
+            {
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+            }
+            if ((printMask?.JNAM ?? true)
+                && item.JNAM is {} JNAMItem)
+            {
+                sb.AppendLine($"JNAM => {SpanExt.ToHexString(JNAMItem)}");
+            }
+            if (printMask?.Ingredient ?? true)
+            {
+                sb.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
+            }
+            if ((printMask?.PFHS?.Overall ?? true)
+                && item.PFHS is {} PFHSItem)
+            {
+                PFHSItem?.Print(sb, "PFHS");
+            }
+            if ((printMask?.Production?.Overall ?? true)
+                && item.Production is {} ProductionItem)
+            {
+                ProductionItem?.Print(sb, "Production");
+            }
+            if ((printMask?.AttachParentSlots?.Overall ?? true)
+                && item.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                sb.AppendLine("AttachParentSlots =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in AttachParentSlotsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ObjectTemplates?.Overall ?? true)
+                && item.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                sb.AppendLine("ObjectTemplates =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ObjectTemplatesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.ActionKeyword ?? true)
+            {
+                sb.AppendItem(item.ActionKeyword.FormKeyNullable, "ActionKeyword");
+            }
+            if ((printMask?.BNAM ?? true)
+                && item.BNAM is {} BNAMItem)
+            {
+                sb.AppendItem(BNAMItem, "BNAM");
+            }
+            if ((printMask?.FMAH ?? true)
+                && item.FMAH is {} FMAHItem)
+            {
+                sb.AppendItem(FMAHItem, "FMAH");
+            }
+            if ((printMask?.FMIH ?? true)
+                && item.FMIH is {} FMIHItem)
+            {
+                sb.AppendItem(FMIHItem, "FMIH");
+            }
+            if (printMask?.MaxGlobal ?? true)
+            {
+                sb.AppendItem(item.MaxGlobal.FormKeyNullable, "MaxGlobal");
+            }
+            if (printMask?.MinGlobal ?? true)
+            {
+                sb.AppendItem(item.MinGlobal.FormKeyNullable, "MinGlobal");
+            }
+            if (printMask?.Explosion ?? true)
+            {
+                sb.AppendItem(item.Explosion.FormKeyNullable, "Explosion");
+            }
+            if ((printMask?.FHLS?.Overall ?? true)
+                && item.FHLS is {} FHLSItem)
+            {
+                FHLSItem?.Print(sb, "FHLS");
+            }
         }
         
         public static Flora_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -893,6 +2948,146 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.ObjectPlacementDefaults))) return false;
+                }
+                else if (!isObjectPlacementDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Properties) ?? true))
+            {
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Properties)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.PNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.JNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.JNAM, rhs.JNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
+            {
+                if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.PFHS) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PFHS, rhs.PFHS, out var lhsPFHS, out var rhsPFHS, out var isPFHSEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPFHS).CommonInstance()!).Equals(lhsPFHS, rhsPFHS, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.PFHS))) return false;
+                }
+                else if (!isPFHSEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Production) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Production, rhs.Production, out var lhsProduction, out var rhsProduction, out var isProductionEqual))
+                {
+                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsProduction).CommonInstance()!).Equals(lhsProduction, rhsProduction, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Production))) return false;
+                }
+                else if (!isProductionEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.AttachParentSlots) ?? true))
+            {
+                if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.ObjectTemplates) ?? true))
+            {
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<AObjectModification.NoneProperty>)((IObjectTemplateGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.ObjectTemplates)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.ActionKeyword) ?? true))
+            {
+                if (!lhs.ActionKeyword.Equals(rhs.ActionKeyword)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.BNAM) ?? true))
+            {
+                if (!lhs.BNAM.EqualsWithin(rhs.BNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.FMAH) ?? true))
+            {
+                if (!lhs.FMAH.EqualsWithin(rhs.FMAH)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.FMIH) ?? true))
+            {
+                if (!lhs.FMIH.EqualsWithin(rhs.FMIH)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.MaxGlobal) ?? true))
+            {
+                if (!lhs.MaxGlobal.Equals(rhs.MaxGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.MinGlobal) ?? true))
+            {
+                if (!lhs.MinGlobal.Equals(rhs.MinGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Explosion) ?? true))
+            {
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.FHLS) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FHLS, rhs.FHLS, out var lhsFHLS, out var rhsFHLS, out var isFHLSEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsFHLS).CommonInstance()!).Equals(lhsFHLS, rhsFHLS, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.FHLS))) return false;
+                }
+                else if (!isFHLSEqual) return false;
+            }
             return true;
         }
         
@@ -921,6 +3116,81 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IFloraGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
+            {
+                hash.Add(ObjectPlacementDefaultsitem);
+            }
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            hash.Add(item.Keywords);
+            hash.Add(item.Properties);
+            if (item.PNAM is {} PNAMItem)
+            {
+                hash.Add(PNAMItem);
+            }
+            if (item.ActivateTextOverride is {} ActivateTextOverrideitem)
+            {
+                hash.Add(ActivateTextOverrideitem);
+            }
+            if (item.FNAM is {} FNAMItem)
+            {
+                hash.Add(FNAMItem);
+            }
+            if (item.JNAM is {} JNAMItem)
+            {
+                hash.Add(JNAMItem);
+            }
+            hash.Add(item.Ingredient);
+            if (item.PFHS is {} PFHSitem)
+            {
+                hash.Add(PFHSitem);
+            }
+            if (item.Production is {} Productionitem)
+            {
+                hash.Add(Productionitem);
+            }
+            hash.Add(item.AttachParentSlots);
+            hash.Add(item.ObjectTemplates);
+            hash.Add(item.ActionKeyword);
+            if (item.BNAM is {} BNAMitem)
+            {
+                hash.Add(BNAMitem);
+            }
+            if (item.FMAH is {} FMAHitem)
+            {
+                hash.Add(FMAHitem);
+            }
+            if (item.FMIH is {} FMIHitem)
+            {
+                hash.Add(FMIHitem);
+            }
+            hash.Add(item.MaxGlobal);
+            hash.Add(item.MinGlobal);
+            hash.Add(item.Explosion);
+            if (item.FHLS is {} FHLSitem)
+            {
+                hash.Add(FHLSitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -949,6 +3219,125 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Properties is {} PropertiesItem)
+            {
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Ingredient, out var IngredientInfo))
+            {
+                yield return IngredientInfo;
+            }
+            if (obj.PFHS is {} PFHSItems)
+            {
+                foreach (var item in PFHSItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                foreach (var item in AttachParentSlotsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ActionKeyword, out var ActionKeywordInfo))
+            {
+                yield return ActionKeywordInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.MaxGlobal, out var MaxGlobalInfo))
+            {
+                yield return MaxGlobalInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.MinGlobal, out var MinGlobalInfo))
+            {
+                yield return MinGlobalInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Explosion, out var ExplosionInfo))
+            {
+                yield return ExplosionInfo;
+            }
+            if (obj.FHLS is {} FHLSItems)
+            {
+                foreach (var item in FHLSItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFloraGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Destructible is {} DestructibleItems)
+                {
+                    foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1024,6 +3413,429 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Flora_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.ObjectPlacementDefaults);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    {
+                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.ObjectPlacementDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Properties) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.Properties);
+                try
+                {
+                    if ((rhs.Properties != null))
+                    {
+                        item.Properties = 
+                            rhs.Properties
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectProperty>();
+                    }
+                    else
+                    {
+                        item.Properties = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.PNAM) ?? true))
+            {
+                if(rhs.PNAM is {} PNAMrhs)
+                {
+                    item.PNAM = PNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.PNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FNAM) ?? true))
+            {
+                if(rhs.FNAM is {} FNAMrhs)
+                {
+                    item.FNAM = FNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.FNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.JNAM) ?? true))
+            {
+                if(rhs.JNAM is {} JNAMrhs)
+                {
+                    item.JNAM = JNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.JNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
+            {
+                item.Ingredient.SetTo(rhs.Ingredient.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.PFHS) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.PFHS);
+                try
+                {
+                    if(rhs.PFHS is {} rhsPFHS)
+                    {
+                        item.PFHS = rhsPFHS.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.PFHS));
+                    }
+                    else
+                    {
+                        item.PFHS = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Production) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.Production);
+                try
+                {
+                    if(rhs.Production is {} rhsProduction)
+                    {
+                        item.Production = rhsProduction.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.Production));
+                    }
+                    else
+                    {
+                        item.Production = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.AttachParentSlots) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.AttachParentSlots);
+                try
+                {
+                    if ((rhs.AttachParentSlots != null))
+                    {
+                        item.AttachParentSlots = 
+                            rhs.AttachParentSlots
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.AttachParentSlots = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ObjectTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.ObjectTemplates);
+                try
+                {
+                    if ((rhs.ObjectTemplates != null))
+                    {
+                        item.ObjectTemplates = 
+                            rhs.ObjectTemplates
+                            .Select(r =>
+                            {
+                                return r.DeepCopy<AObjectModification.NoneProperty>(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>();
+                    }
+                    else
+                    {
+                        item.ObjectTemplates = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ActionKeyword) ?? true))
+            {
+                item.ActionKeyword.SetTo(rhs.ActionKeyword.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.BNAM) ?? true))
+            {
+                item.BNAM = rhs.BNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FMAH) ?? true))
+            {
+                item.FMAH = rhs.FMAH;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FMIH) ?? true))
+            {
+                item.FMIH = rhs.FMIH;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.MaxGlobal) ?? true))
+            {
+                item.MaxGlobal.SetTo(rhs.MaxGlobal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.MinGlobal) ?? true))
+            {
+                item.MinGlobal.SetTo(rhs.MinGlobal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Explosion) ?? true))
+            {
+                item.Explosion.SetTo(rhs.Explosion.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FHLS) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.FHLS);
+                try
+                {
+                    if(rhs.FHLS is {} rhsFHLS)
+                    {
+                        item.FHLS = rhsFHLS.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.FHLS));
+                    }
+                    else
+                    {
+                        item.FHLS = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1172,6 +3984,197 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly FloraBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IFloraGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
+                writer: writer,
+                items: item.Properties,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.PNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActivateTextOverride,
+                header: translationParams.ConvertToCustom(RecordTypes.ATTX),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.JNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.JNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Ingredient,
+                header: translationParams.ConvertToCustom(RecordTypes.PFIG));
+            if (item.PFHS is {} PFHSItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PFHS))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PFHSItem).BinaryWriteTranslator).Write(
+                        item: PFHSItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.Production is {} ProductionItem)
+            {
+                ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)ProductionItem).BinaryWriteTranslator).Write(
+                    item: ProductionItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AttachParentSlots,
+                recordType: translationParams.ConvertToCustom(RecordTypes.APPR),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectTemplateGetter<AObjectModification.NoneProperty>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.ObjectTemplates,
+                counterType: RecordTypes.OBTE,
+                counterLength: 4,
+                endMarker: RecordTypes.STOP,
+                alwaysWriteEndMarker: true,
+                transl: (MutagenWriter subWriter, IObjectTemplateGetter<AObjectModification.NoneProperty> subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectTemplateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<AObjectModification.NoneProperty>(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActionKeyword,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.BNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FMAH,
+                header: translationParams.ConvertToCustom(RecordTypes.FMAH));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FMIH,
+                header: translationParams.ConvertToCustom(RecordTypes.FMIH));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaxGlobal,
+                header: translationParams.ConvertToCustom(RecordTypes.FMAG));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MinGlobal,
+                header: translationParams.ConvertToCustom(RecordTypes.FMIG));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Explosion,
+                header: translationParams.ConvertToCustom(RecordTypes.FLXP));
+            if (item.FHLS is {} FHLSItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.FHLS))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)FHLSItem).BinaryWriteTranslator).Write(
+                        item: FHLSItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IFloraGetter item,
@@ -1188,10 +4191,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1241,6 +4246,238 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly FloraBinaryCreateTranslation Instance = new FloraBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLOR;
+        public static ParseResult FillBinaryRecordTypes(
+            IFloraInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Flora_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Flora_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Flora_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Flora_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Starfield.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Flora_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Flora_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Properties = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectProperty>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ObjectProperty.TryCreateFromBinary)
+                        .CastExtendedList<ObjectProperty>();
+                    return (int)Flora_FieldIndex.Properties;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.PNAM;
+                }
+                case RecordTypeInts.ATTX:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActivateTextOverride = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Flora_FieldIndex.ActivateTextOverride;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.JNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.JNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.JNAM;
+                }
+                case RecordTypeInts.PFIG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Flora_FieldIndex.Ingredient;
+                }
+                case RecordTypeInts.PFHS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.PFHS = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.PFHS;
+                }
+                case RecordTypeInts.PFPC:
+                {
+                    item.Production = Mutagen.Bethesda.Starfield.SeasonalIngredientProduction.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.Production;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachParentSlots = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Flora_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    item.ObjectTemplates = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectTemplate<AObjectModification.NoneProperty>>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.OBTE,
+                            triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ObjectTemplate<AObjectModification.NoneProperty>.TryCreateFromBinary)
+                        .CastExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>();
+                    return (int)Flora_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActionKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Flora_FieldIndex.ActionKeyword;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.FMAH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FMAH = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.FMAH;
+                }
+                case RecordTypeInts.FMIH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FMIH = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.FMIH;
+                }
+                case RecordTypeInts.FMAG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaxGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Flora_FieldIndex.MaxGlobal;
+                }
+                case RecordTypeInts.FMIG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MinGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Flora_FieldIndex.MinGlobal;
+                }
+                case RecordTypeInts.FLXP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Flora_FieldIndex.Explosion;
+                }
+                case RecordTypeInts.FHLS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.FHLS = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.FHLS;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1273,6 +4510,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FloraCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => FloraCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FloraBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1287,6 +4526,101 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFlora);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ObjectPlacementDefaults
+        private RangeInt32? _ObjectPlacementDefaultsLocation;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
+        #region PNAM
+        private int? _PNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region ActivateTextOverride
+        private int? _ActivateTextOverrideLocation;
+        public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region FNAM
+        private int? _FNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region JNAM
+        private int? _JNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? JNAM => _JNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _JNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Ingredient
+        private int? _IngredientLocation;
+        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        #endregion
+        public ISoundReferenceGetter? PFHS { get; private set; }
+        #region Production
+        private RangeInt32? _ProductionLocation;
+        public ISeasonalIngredientProductionGetter? Production => _ProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(_recordData.Slice(_ProductionLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
+        public IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? ObjectTemplates { get; private set; }
+        #region ActionKeyword
+        private int? _ActionKeywordLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> ActionKeyword => _ActionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region BNAM
+        private int? _BNAMLocation;
+        public Single? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region FMAH
+        private int? _FMAHLocation;
+        public Single? FMAH => _FMAHLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMAHLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region FMIH
+        private int? _FMIHLocation;
+        public Single? FMIH => _FMIHLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMIHLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region MaxGlobal
+        private int? _MaxGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> MaxGlobal => _MaxGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        #region MinGlobal
+        private int? _MinGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> MinGlobal => _MinGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MinGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        #region Explosion
+        private int? _ExplosionLocation;
+        public IFormLinkNullableGetter<IExplosionGetter> Explosion => _ExplosionLocation.HasValue ? new FormLinkNullable<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExplosionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IExplosionGetter>.Null;
+        #endregion
+        public ISoundReferenceGetter? FHLS { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1344,6 +4678,231 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Flora_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Flora_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Flora_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Flora_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Flora_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Flora_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Flora_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Flora_FieldIndex.Properties;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _PNAMLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.PNAM;
+                }
+                case RecordTypeInts.ATTX:
+                {
+                    _ActivateTextOverrideLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.ActivateTextOverride;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FNAMLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.JNAM:
+                {
+                    _JNAMLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.JNAM;
+                }
+                case RecordTypeInts.PFIG:
+                {
+                    _IngredientLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.Ingredient;
+                }
+                case RecordTypeInts.PFHS:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.PFHS = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Flora_FieldIndex.PFHS;
+                }
+                case RecordTypeInts.PFPC:
+                {
+                    _ProductionLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Flora_FieldIndex.Production;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)Flora_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<IObjectTemplateGetter<AObjectModification.NoneProperty>>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: ObjectTemplate_Registration.TriggerSpecs,
+                        countType: RecordTypes.OBTE,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<AObjectModification.NoneProperty>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Flora_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _ActionKeywordLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.ActionKeyword;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BNAMLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.FMAH:
+                {
+                    _FMAHLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.FMAH;
+                }
+                case RecordTypeInts.FMIH:
+                {
+                    _FMIHLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.FMIH;
+                }
+                case RecordTypeInts.FMAG:
+                {
+                    _MaxGlobalLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.MaxGlobal;
+                }
+                case RecordTypeInts.FMIG:
+                {
+                    _MinGlobalLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.MinGlobal;
+                }
+                case RecordTypeInts.FLXP:
+                {
+                    _ExplosionLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.Explosion;
+                }
+                case RecordTypeInts.FHLS:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.FHLS = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Flora_FieldIndex.FHLS;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

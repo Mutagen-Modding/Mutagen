@@ -304,6 +304,7 @@ public partial class RecordTypes
     public static readonly RecordType FFKW = new(0x574B4646);
     public static readonly RecordType FHCL = new(0x4C434846);
     public static readonly RecordType FHDT = new(0x54444846);
+    public static readonly RecordType FHLS = new(0x534C4846);
     public static readonly RecordType FHST = new(0x54534846);
     public static readonly RecordType FIMD = new(0x444D4946);
     public static readonly RecordType FKEY = new(0x59454B46);
@@ -324,6 +325,11 @@ public partial class RecordTypes
     public static readonly RecordType FLST = new(0x54534C46);
     public static readonly RecordType FLTR = new(0x52544C46);
     public static readonly RecordType FLTV = new(0x56544C46);
+    public static readonly RecordType FLXP = new(0x50584C46);
+    public static readonly RecordType FMAG = new(0x47414D46);
+    public static readonly RecordType FMAH = new(0x48414D46);
+    public static readonly RecordType FMIG = new(0x47494D46);
+    public static readonly RecordType FMIH = new(0x48494D46);
     public static readonly RecordType FMRG = new(0x47524D46);
     public static readonly RecordType FMRI = new(0x49524D46);
     public static readonly RecordType FMRN = new(0x4E524D46);
@@ -588,6 +594,8 @@ public partial class RecordTypes
     public static readonly RecordType PDTO = new(0x4F544450);
     public static readonly RecordType PERK = new(0x4B524550);
     public static readonly RecordType PFCT = new(0x54434650);
+    public static readonly RecordType PFHS = new(0x53484650);
+    public static readonly RecordType PFIG = new(0x47494650);
     public static readonly RecordType PFLA = new(0x414C4650);
     public static readonly RecordType PFO2 = new(0x324F4650);
     public static readonly RecordType PFPC = new(0x43504650);

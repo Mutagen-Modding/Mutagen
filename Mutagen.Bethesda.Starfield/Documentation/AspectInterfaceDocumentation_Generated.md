@@ -10,6 +10,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - DialogResponses
+- Flora
 - Furniture
 - GenericBaseForm
 - LeveledBaseForm
@@ -47,6 +48,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- Flora
 - Furniture
 - Ingestible
 - InstanceNamingRule
@@ -78,6 +80,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - ContainerModification
 - DestructionStage
+- Flora
 - FloraModification
 - Furniture
 - Grass
@@ -127,6 +130,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FaceMorphPhenotype
 - FaceMorphPhenotypeItem
 - Faction
+- Flora
 - FloraModification
 - FormList
 - FullNameComponent
@@ -207,6 +211,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BendableSpline
 - Book
 - Container
+- Flora
 - Furniture
 - GenericBaseForm
 - Grass
@@ -253,6 +258,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- Flora
 - Furniture
 - GenericBaseForm
 - LeveledBaseForm
@@ -379,6 +385,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Faction
 - INamed
+### Flora
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
 ### FloraModification
 - IModeled
 - INamed

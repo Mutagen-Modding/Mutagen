@@ -2,6 +2,45 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Flora" recordType="FLOR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
+      <FormLink name="Ingredient" recordType="PFIG">
+        <Interface>IHarvestTarget</Interface>
+      </FormLink>
+      <RefDirect name="PFHS" recordType="PFHS" refName="SoundReference" />
+      <RefDirect name="Production" refName="SeasonalIngredientProduction" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" alwaysWriteEndMarker="true" >
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <FormLink name="ActionKeyword" refName="Keyword" recordType="ANAM" />
+      <Float name="BNAM" recordType="BNAM" unknown="true" />
+      <Float name="FMAH" recordType="FMAH" unknown="true" />
+      <Float name="FMIH" recordType="FMIH" unknown="true" />
+      <FormLink name="MaxGlobal" refName="Global" recordType="FMAG" />
+      <FormLink name="MinGlobal" refName="Global" recordType="FMIG" />
+      <FormLink name="Explosion" refName="Explosion" recordType="FLXP" />
+      <RefDirect name="FHLS" recordType="FHLS" refName="SoundReference" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

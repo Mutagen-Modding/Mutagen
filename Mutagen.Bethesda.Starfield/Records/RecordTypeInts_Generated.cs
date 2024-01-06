@@ -302,6 +302,7 @@ public partial class RecordTypeInts
     public const int FFKW = 0x574B4646;
     public const int FHCL = 0x4C434846;
     public const int FHDT = 0x54444846;
+    public const int FHLS = 0x534C4846;
     public const int FHST = 0x54534846;
     public const int FIMD = 0x444D4946;
     public const int FKEY = 0x59454B46;
@@ -322,6 +323,11 @@ public partial class RecordTypeInts
     public const int FLST = 0x54534C46;
     public const int FLTR = 0x52544C46;
     public const int FLTV = 0x56544C46;
+    public const int FLXP = 0x50584C46;
+    public const int FMAG = 0x47414D46;
+    public const int FMAH = 0x48414D46;
+    public const int FMIG = 0x47494D46;
+    public const int FMIH = 0x48494D46;
     public const int FMRG = 0x47524D46;
     public const int FMRI = 0x49524D46;
     public const int FMRN = 0x4E524D46;
@@ -586,6 +592,8 @@ public partial class RecordTypeInts
     public const int PDTO = 0x4F544450;
     public const int PERK = 0x4B524550;
     public const int PFCT = 0x54434650;
+    public const int PFHS = 0x53484650;
+    public const int PFIG = 0x47494650;
     public const int PFLA = 0x414C4650;
     public const int PFO2 = 0x324F4650;
     public const int PFPC = 0x43504650;

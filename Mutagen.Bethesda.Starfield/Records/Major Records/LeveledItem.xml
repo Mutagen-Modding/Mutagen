@@ -27,6 +27,7 @@
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IResourceTarget</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
   <Object name="LeveledItemEntry" objType="Subrecord">
     <Fields>

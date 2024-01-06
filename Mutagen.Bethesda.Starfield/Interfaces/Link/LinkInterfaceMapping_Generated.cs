@@ -163,6 +163,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
+        dict[typeof(IHarvestTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            LeveledItem_Registration.Instance,
+            MiscItem_Registration.Instance,
+        });
+        dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
         dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             LeveledNpc_Registration.Instance,

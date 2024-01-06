@@ -12,9 +12,9 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
-      <ByteArray name="FNAM" recordType="FNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
       <FormLink name="Ingredient" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
       </FormLink>

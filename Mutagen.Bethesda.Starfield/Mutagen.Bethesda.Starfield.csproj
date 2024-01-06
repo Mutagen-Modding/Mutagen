@@ -6280,5 +6280,6 @@
     <Compile Include="Records\Common Subrecords\SpacePhysicsComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IHarvestTarget_Generated.cs" />
   </ItemGroup>
 </Project>
