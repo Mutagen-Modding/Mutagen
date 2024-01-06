@@ -7,6 +7,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - APlacedTrap
 - Armor
+- BiomeMarker
 - Book
 - Container
 - DialogResponses
@@ -47,6 +48,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - Ammunition
 - Armor
+- BiomeMarker
 - Book
 - Container
 - Flora
@@ -78,6 +80,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - AnimatedObject
 - AObjectModification
 - ArmorModification
+- BiomeMarker
 - BodyData
 - Book
 - Container
@@ -215,6 +218,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - AudioOcclusionPrimitive
 - BendableSpline
+- BiomeMarker
 - Book
 - Container
 - Flora
@@ -264,6 +268,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - APlacedTrap
 - Armor
+- BiomeMarker
 - Book
 - Container
 - Flora
@@ -345,6 +350,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### BendableSpline
 - IObjectBounded
+### BiomeMarker
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- IObjectBounded
+- IScripted
 ### BipedObjectData
 - INamed
 ### BlueprintComponentBODSItem

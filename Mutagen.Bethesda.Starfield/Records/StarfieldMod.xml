@@ -52,6 +52,7 @@
       <Group name="Keys" refName="Key" />
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="IdleMarkers" refName="IdleMarker" />
+      <Group name="BiomeMarkers" refName="BiomeMarker" />
       <Group name="GenericBaseForms" refName="GenericBaseForm" />
       <Group name="LeveledBaseForms" refName="LeveledBaseForm" />
       <Group name="Weathers" refName="Weather" />

@@ -2,6 +2,18 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="BiomeMarker" recordType="BMMO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="MarkerType" refName="Keyword" recordType="KNAM" nullable="false" />
+      <FormLink name="FloraList" refName="LeveledItem" recordType="LNAM" nullable="false" />
+      <FormLink name="LNA2" refName="StarfieldMajorRecord" recordType="LNA2" nullable="false" />
     </Fields>
     <LinkInterface>INpcTemplateTarget</LinkInterface>
   </Object>
