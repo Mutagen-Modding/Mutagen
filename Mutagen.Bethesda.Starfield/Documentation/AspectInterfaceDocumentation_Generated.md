@@ -13,6 +13,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Flora
 - Furniture
 - GenericBaseForm
+- Key
 - LeveledBaseForm
 - LeveledItem
 - LeveledNpc
@@ -52,6 +53,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - Ingestible
 - InstanceNamingRule
+- Key
 - KeywordFormComponent
 - Light
 - Location
@@ -86,6 +88,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Grass
 - HeadPart
 - Ingestible
+- Key
 - LegendaryItem
 - LeveledBaseForm
 - LeveledItem
@@ -140,6 +143,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Ingestible
 - InstanceNamingRule
+- Key
 - Keyword
 - Location
 - MagicEffect
@@ -216,6 +220,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - GenericBaseForm
 - Grass
 - Ingestible
+- Key
 - LegendaryItem
 - LeveledBaseForm
 - LeveledItem
@@ -261,6 +266,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Flora
 - Furniture
 - GenericBaseForm
+- Key
 - LeveledBaseForm
 - LeveledItem
 - LeveledNpc
@@ -287,6 +293,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ammunition
 - Book
 - Ingestible
+- Key
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -429,6 +436,14 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### InstanceNamingRule
 - IKeyworded
 - INamed
+### Key
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
+- IWeightValue
 ### Keyword
 - IKeywordCommon
 - INamed
