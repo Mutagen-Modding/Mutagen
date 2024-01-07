@@ -106,6 +106,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - NpcModification
 - ObjectModification
 - PlanetModelComponent
+- Projectile
 - SkeletalModel
 - Static
 - StaticCollection
@@ -176,6 +177,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Planet
 - PlayerDialogueSceneAction
 - ProgressionEvaluatorArgument
+- Projectile
 - Quest
 - QuestLocationAlias
 - QuestReferenceAlias
@@ -240,6 +242,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ObjectEffect
 - PackIn
 - ProjectedDecal
+- Projectile
 - SoundEchoMarker
 - SoundMarker
 - Spell
@@ -625,6 +628,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ProgressionEvaluatorArgument
 - INamed
 ### ProjectedDecal
+- IObjectBounded
+### Projectile
+- IModeled
+- INamed
 - IObjectBounded
 ### Quest
 - IHaveVirtualMachineAdapter

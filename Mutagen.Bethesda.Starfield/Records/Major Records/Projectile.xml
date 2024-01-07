@@ -2,6 +2,57 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <ByteArray name="Unused" recordType="DATA" />
+      <Data recordType="PROD">
+        <Fields>
+          <Enum name="Flags" enumName="Projectile.Flag" byteLength="2" />
+          <Enum name="Type" enumName="Projectile.TypeEnum" byteLength="2" />
+          <Float name="Gravity" />
+          <Float name="Speed" />
+          <Float name="Range" />
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="MuzzleFlash" refName="Light" />
+          <Float name="ExplosionAltTriggerProximity" />
+          <Float name="ExplosionAltTriggerTimer" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <Float name="MuzzleFlashDuration" />
+          <Float name="FadeDuration" />
+          <Float name="ImpactForce" />
+          <FormLink name="DefaultWeaponSource" refName="Weapon" />
+          <Float name="ConeSpread" />
+          <Float name="CollisionRadius" />
+          <Float name="Lifetime" />
+          <Float name="RelaunchInterval" />
+          <FormLink name="DecalData" refName="TextureSet" />
+          <FormLink name="CollisionLayer" refName="CollisionLayer" />
+          <UInt8 name="TracerFrequency" />
+          <UInt32 name="UnknownPROD1" />
+          <String name="UnknownPRODString1" binaryType="PrependLengthWithNullIfContent" />
+          <Float name="UnknownPROD2" />
+          <UInt32 name="UnknownPROD3" />
+          <UInt8 name="UnknownPROD4" />
+          <String name="UnknownPRODString2" binaryType="PrependLengthWithNullIfContent" />
+          <Float name="UnknownPROD5" />
+          <Float name="UnknownPROD6" />
+          <Float name="UnknownPROD7" />
+          <Float name="UnknownPROD8" />
+        </Fields>
+      </Data>
+      <String name="MuzzleFlashModel" recordType="NAM1" nullable="False" />
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <RefDirect name="ActiveSound" refName="SoundReference" recordType="PRAS" />
+      <RefDirect name="CountdownEndSound" refName="SoundReference" recordType="PRCS" />
+      <RefDirect name="DisableSound" refName="SoundReference" recordType="PRDS" />
+      <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" recordType="VNAM" />
+      <FormLink name="CurveTable" refName="CurveTable" recordType="NAM3" />
     </Fields>
   </Object>
 </Loqui>

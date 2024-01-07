@@ -280,6 +280,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         var lengths = await this.Module.IteratePassedLengths(
                 objGen,
                 dataType.SubFields,
+                passedLenPrefix: "ret.",
                 forOverlay: true)
             .ToListAsync();
         foreach (var field in dataType.IterateFieldsWithMeta())
@@ -311,13 +312,21 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         throw new ArgumentException();
                     }
+
+                    var passedLenForField = length.PassedAccessor;
+                    if (length.PassedType == BinaryTranslationModule.PassedType.Direct)
+                    {
+                        passedLenForField =
+                            $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {passedLenForField}";
+                    }
+                    
                     await subTypeGen.GenerateWrapperUnknownLengthParse(
                         sb,
                         objGen,
                         field.Field,
                         dataAccessor,
                         length.PassedLength,
-                        $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {length.PassedAccessor}",
+                        passedLenForField,
                         data: dataType);
                     break;
             }

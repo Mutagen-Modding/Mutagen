@@ -111,6 +111,7 @@ namespace Mutagen.Bethesda.Starfield
             _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _IdleMarkers_Object = new StarfieldGroup<IdleMarker>(this);
             _BiomeMarkers_Object = new StarfieldGroup<BiomeMarker>(this);
+            _Projectiles_Object = new StarfieldGroup<Projectile>(this);
             _GenericBaseForms_Object = new StarfieldGroup<GenericBaseForm>(this);
             _LeveledBaseForms_Object = new StarfieldGroup<LeveledBaseForm>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
@@ -506,6 +507,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IBiomeMarkerGetter> IStarfieldModGetter.BiomeMarkers => _BiomeMarkers_Object;
         #endregion
+        #region Projectiles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Projectile> _Projectiles_Object;
+        public StarfieldGroup<Projectile> Projectiles => _Projectiles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IProjectileGetter> IStarfieldModGetter.Projectiles => _Projectiles_Object;
+        #endregion
         #region GenericBaseForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<GenericBaseForm> _GenericBaseForms_Object;
@@ -834,6 +842,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.IdleMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Projectiles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.GenericBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LeveledBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -922,6 +931,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Ingestibles,
                 TItem IdleMarkers,
                 TItem BiomeMarkers,
+                TItem Projectiles,
                 TItem GenericBaseForms,
                 TItem LeveledBaseForms,
                 TItem Weathers,
@@ -1008,6 +1018,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Ingestibles, new StarfieldGroup.Mask<TItem>(Ingestibles));
                 this.IdleMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(IdleMarkers, new StarfieldGroup.Mask<TItem>(IdleMarkers));
                 this.BiomeMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeMarkers, new StarfieldGroup.Mask<TItem>(BiomeMarkers));
+                this.Projectiles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Projectiles, new StarfieldGroup.Mask<TItem>(Projectiles));
                 this.GenericBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GenericBaseForms, new StarfieldGroup.Mask<TItem>(GenericBaseForms));
                 this.LeveledBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledBaseForms, new StarfieldGroup.Mask<TItem>(LeveledBaseForms));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weathers, new StarfieldGroup.Mask<TItem>(Weathers));
@@ -1104,6 +1115,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Ingestibles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? IdleMarkers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeMarkers { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Projectiles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GenericBaseForms { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledBaseForms { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weathers { get; set; }
@@ -1201,6 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
                 if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
                 if (!object.Equals(this.BiomeMarkers, rhs.BiomeMarkers)) return false;
+                if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
                 if (!object.Equals(this.GenericBaseForms, rhs.GenericBaseForms)) return false;
                 if (!object.Equals(this.LeveledBaseForms, rhs.LeveledBaseForms)) return false;
                 if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
@@ -1291,6 +1304,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Ingestibles);
                 hash.Add(this.IdleMarkers);
                 hash.Add(this.BiomeMarkers);
+                hash.Add(this.Projectiles);
                 hash.Add(this.GenericBaseForms);
                 hash.Add(this.LeveledBaseForms);
                 hash.Add(this.Weathers);
@@ -1587,6 +1601,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.BiomeMarkers.Overall)) return false;
                     if (this.BiomeMarkers.Specific != null && !this.BiomeMarkers.Specific.All(eval)) return false;
+                }
+                if (Projectiles != null)
+                {
+                    if (!eval(this.Projectiles.Overall)) return false;
+                    if (this.Projectiles.Specific != null && !this.Projectiles.Specific.All(eval)) return false;
                 }
                 if (GenericBaseForms != null)
                 {
@@ -2020,6 +2039,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.BiomeMarkers.Overall)) return true;
                     if (this.BiomeMarkers.Specific != null && this.BiomeMarkers.Specific.Any(eval)) return true;
                 }
+                if (Projectiles != null)
+                {
+                    if (eval(this.Projectiles.Overall)) return true;
+                    if (this.Projectiles.Specific != null && this.Projectiles.Specific.Any(eval)) return true;
+                }
                 if (GenericBaseForms != null)
                 {
                     if (eval(this.GenericBaseForms.Overall)) return true;
@@ -2255,6 +2279,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
                 obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
                 obj.BiomeMarkers = this.BiomeMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeMarkers.Overall), this.BiomeMarkers.Specific?.Translate(eval));
+                obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
                 obj.GenericBaseForms = this.GenericBaseForms == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GenericBaseForms.Overall), this.GenericBaseForms.Specific?.Translate(eval));
                 obj.LeveledBaseForms = this.LeveledBaseForms == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledBaseForms.Overall), this.LeveledBaseForms.Specific?.Translate(eval));
                 obj.Weathers = this.Weathers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
@@ -2511,6 +2536,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         BiomeMarkers?.Print(sb);
                     }
+                    if (printMask?.Projectiles?.Overall ?? true)
+                    {
+                        Projectiles?.Print(sb);
+                    }
                     if (printMask?.GenericBaseForms?.Overall ?? true)
                     {
                         GenericBaseForms?.Print(sb);
@@ -2722,6 +2751,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeMarker.ErrorMask>?>? BiomeMarkers;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<GenericBaseForm.ErrorMask>?>? GenericBaseForms;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledBaseForm.ErrorMask>?>? LeveledBaseForms;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
@@ -2866,6 +2896,8 @@ namespace Mutagen.Bethesda.Starfield
                         return IdleMarkers;
                     case StarfieldMod_FieldIndex.BiomeMarkers:
                         return BiomeMarkers;
+                    case StarfieldMod_FieldIndex.Projectiles:
+                        return Projectiles;
                     case StarfieldMod_FieldIndex.GenericBaseForms:
                         return GenericBaseForms;
                     case StarfieldMod_FieldIndex.LeveledBaseForms:
@@ -3096,6 +3128,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.BiomeMarkers:
                         this.BiomeMarkers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeMarker.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Projectiles:
+                        this.Projectiles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Projectile.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.GenericBaseForms:
                         this.GenericBaseForms = new MaskItem<Exception?, StarfieldGroup.ErrorMask<GenericBaseForm.ErrorMask>?>(ex, null);
@@ -3362,6 +3397,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.BiomeMarkers:
                         this.BiomeMarkers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeMarker.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Projectiles:
+                        this.Projectiles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Projectile.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.GenericBaseForms:
                         this.GenericBaseForms = (MaskItem<Exception?, StarfieldGroup.ErrorMask<GenericBaseForm.ErrorMask>?>?)obj;
                         break;
@@ -3523,6 +3561,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Ingestibles != null) return true;
                 if (IdleMarkers != null) return true;
                 if (BiomeMarkers != null) return true;
+                if (Projectiles != null) return true;
                 if (GenericBaseForms != null) return true;
                 if (LeveledBaseForms != null) return true;
                 if (Weathers != null) return true;
@@ -3633,6 +3672,7 @@ namespace Mutagen.Bethesda.Starfield
                 Ingestibles?.Print(sb);
                 IdleMarkers?.Print(sb);
                 BiomeMarkers?.Print(sb);
+                Projectiles?.Print(sb);
                 GenericBaseForms?.Print(sb);
                 LeveledBaseForms?.Print(sb);
                 Weathers?.Print(sb);
@@ -3726,6 +3766,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
                 ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
                 ret.BiomeMarkers = this.BiomeMarkers.Combine(rhs.BiomeMarkers, (l, r) => l.Combine(r));
+                ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
                 ret.GenericBaseForms = this.GenericBaseForms.Combine(rhs.GenericBaseForms, (l, r) => l.Combine(r));
                 ret.LeveledBaseForms = this.LeveledBaseForms.Combine(rhs.LeveledBaseForms, (l, r) => l.Combine(r));
                 ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
@@ -3834,6 +3875,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
             public StarfieldGroup.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
             public StarfieldGroup.TranslationMask<BiomeMarker.TranslationMask>? BiomeMarkers;
+            public StarfieldGroup.TranslationMask<Projectile.TranslationMask>? Projectiles;
             public StarfieldGroup.TranslationMask<GenericBaseForm.TranslationMask>? GenericBaseForms;
             public StarfieldGroup.TranslationMask<LeveledBaseForm.TranslationMask>? LeveledBaseForms;
             public StarfieldGroup.TranslationMask<Weather.TranslationMask>? Weathers;
@@ -3943,6 +3985,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
                 ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
                 ret.Add((BiomeMarkers != null ? BiomeMarkers.OnOverall : DefaultOn, BiomeMarkers?.GetCrystal()));
+                ret.Add((Projectiles != null ? Projectiles.OnOverall : DefaultOn, Projectiles?.GetCrystal()));
                 ret.Add((GenericBaseForms != null ? GenericBaseForms.OnOverall : DefaultOn, GenericBaseForms?.GetCrystal()));
                 ret.Add((LeveledBaseForms != null ? LeveledBaseForms.OnOverall : DefaultOn, LeveledBaseForms?.GetCrystal()));
                 ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
@@ -4074,6 +4117,7 @@ namespace Mutagen.Bethesda.Starfield
             _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _IdleMarkers_Object = new StarfieldGroup<IdleMarker>(this);
             _BiomeMarkers_Object = new StarfieldGroup<BiomeMarker>(this);
+            _Projectiles_Object = new StarfieldGroup<Projectile>(this);
             _GenericBaseForms_Object = new StarfieldGroup<GenericBaseForm>(this);
             _LeveledBaseForms_Object = new StarfieldGroup<LeveledBaseForm>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
@@ -4313,6 +4357,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BiomeMarkers.RecordCache.Set(rhsMod.BiomeMarkers.RecordCache.Items);
             }
+            if (mask?.Projectiles ?? true)
+            {
+                this.Projectiles.RecordCache.Set(rhsMod.Projectiles.RecordCache.Items);
+            }
             if (mask?.GenericBaseForms ?? true)
             {
                 this.GenericBaseForms.RecordCache.Set(rhsMod.GenericBaseForms.RecordCache.Items);
@@ -4512,6 +4560,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
             count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
             count += GenericBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
             count += LeveledBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
@@ -4870,6 +4919,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Ingestible> Ingestibles { get; }
         new StarfieldGroup<IdleMarker> IdleMarkers { get; }
         new StarfieldGroup<BiomeMarker> BiomeMarkers { get; }
+        new StarfieldGroup<Projectile> Projectiles { get; }
         new StarfieldGroup<GenericBaseForm> GenericBaseForms { get; }
         new StarfieldGroup<LeveledBaseForm> LeveledBaseForms { get; }
         new StarfieldGroup<Weather> Weathers { get; }
@@ -4974,6 +5024,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IIngestibleGetter> Ingestibles { get; }
         IStarfieldGroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
         IStarfieldGroupGetter<IBiomeMarkerGetter> BiomeMarkers { get; }
+        IStarfieldGroupGetter<IProjectileGetter> Projectiles { get; }
         IStarfieldGroupGetter<IGenericBaseFormGetter> GenericBaseForms { get; }
         IStarfieldGroupGetter<ILeveledBaseFormGetter> LeveledBaseForms { get; }
         IStarfieldGroupGetter<IWeatherGetter> Weathers { get; }
@@ -5641,40 +5692,41 @@ namespace Mutagen.Bethesda.Starfield
         Ingestibles = 48,
         IdleMarkers = 49,
         BiomeMarkers = 50,
-        GenericBaseForms = 51,
-        LeveledBaseForms = 52,
-        Weathers = 53,
-        Cells = 54,
-        Worldspaces = 55,
-        Quests = 56,
-        Packages = 57,
-        CombatStyles = 58,
-        LoadScreens = 59,
-        AnimatedObjects = 60,
-        Waters = 61,
-        Debris = 62,
-        FormLists = 63,
-        Perks = 64,
-        ArmorAddons = 65,
-        Locations = 66,
-        DefaultObjects = 67,
-        Outfits = 68,
-        AimModels = 69,
-        AimAssistModels = 70,
-        Layers = 71,
-        ConstructibleObjects = 72,
-        ObjectModifications = 73,
-        InstanceNamingRules = 74,
-        AttractionRules = 75,
-        Resources = 76,
-        BiomeSwaps = 77,
-        SnapTemplates = 78,
-        Planets = 79,
-        ConditionRecords = 80,
-        SurfacePatternStyles = 81,
-        TerminalMenus = 82,
-        LegendaryItems = 83,
-        ActorValueModulations = 84,
+        Projectiles = 51,
+        GenericBaseForms = 52,
+        LeveledBaseForms = 53,
+        Weathers = 54,
+        Cells = 55,
+        Worldspaces = 56,
+        Quests = 57,
+        Packages = 58,
+        CombatStyles = 59,
+        LoadScreens = 60,
+        AnimatedObjects = 61,
+        Waters = 62,
+        Debris = 63,
+        FormLists = 64,
+        Perks = 65,
+        ArmorAddons = 66,
+        Locations = 67,
+        DefaultObjects = 68,
+        Outfits = 69,
+        AimModels = 70,
+        AimAssistModels = 71,
+        Layers = 72,
+        ConstructibleObjects = 73,
+        ObjectModifications = 74,
+        InstanceNamingRules = 75,
+        AttractionRules = 76,
+        Resources = 77,
+        BiomeSwaps = 78,
+        SnapTemplates = 79,
+        Planets = 80,
+        ConditionRecords = 81,
+        SurfacePatternStyles = 82,
+        TerminalMenus = 83,
+        LegendaryItems = 84,
+        ActorValueModulations = 85,
     }
     #endregion
 
@@ -5685,9 +5737,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 85;
+        public const ushort AdditionalFieldCount = 86;
 
-        public const ushort FieldCount = 85;
+        public const ushort FieldCount = 86;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -5804,6 +5856,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Ingestibles.Clear();
             item.IdleMarkers.Clear();
             item.BiomeMarkers.Clear();
+            item.Projectiles.Clear();
             item.GenericBaseForms.Clear();
             item.LeveledBaseForms.Clear();
             item.Weathers.Clear();
@@ -5884,6 +5937,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ingestibles.RemapLinks(mapping);
             obj.IdleMarkers.RemapLinks(mapping);
             obj.BiomeMarkers.RemapLinks(mapping);
+            obj.Projectiles.RemapLinks(mapping);
             obj.GenericBaseForms.RemapLinks(mapping);
             obj.LeveledBaseForms.RemapLinks(mapping);
             obj.Weathers.RemapLinks(mapping);
@@ -5996,6 +6050,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ingestibles.Remove(keys);
             obj.IdleMarkers.Remove(keys);
             obj.BiomeMarkers.Remove(keys);
+            obj.Projectiles.Remove(keys);
             obj.GenericBaseForms.Remove(keys);
             obj.LeveledBaseForms.Remove(keys);
             obj.Weathers.Remove(keys);
@@ -6466,6 +6521,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBiomeMarker":
                 case "IBiomeMarkerInternal":
                     obj.BiomeMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    obj.Projectiles.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -7329,6 +7392,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Projectiles is IAssetLinkContainer ProjectileslinkCont)
+            {
+                foreach (var item in ProjectileslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.GenericBaseForms is IAssetLinkContainer GenericBaseFormslinkCont)
             {
                 foreach (var item in GenericBaseFormslinkCont.EnumerateListedAssetLinks())
@@ -7490,6 +7560,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ingestibles.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.IdleMarkers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BiomeMarkers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Projectiles.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.GenericBaseForms.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LeveledBaseForms.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -7603,6 +7674,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
             ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
             ret.BiomeMarkers = MaskItemExt.Factory(item.BiomeMarkers.GetEqualsMask(rhs.BiomeMarkers, include), include);
+            ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
             ret.GenericBaseForms = MaskItemExt.Factory(item.GenericBaseForms.GetEqualsMask(rhs.GenericBaseForms, include), include);
             ret.LeveledBaseForms = MaskItemExt.Factory(item.LeveledBaseForms.GetEqualsMask(rhs.LeveledBaseForms, include), include);
             ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
@@ -7884,6 +7956,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.BiomeMarkers?.Overall ?? true)
             {
                 item.BiomeMarkers?.Print(sb, "BiomeMarkers");
+            }
+            if (printMask?.Projectiles?.Overall ?? true)
+            {
+                item.Projectiles?.Print(sb, "Projectiles");
             }
             if (printMask?.GenericBaseForms?.Overall ?? true)
             {
@@ -8438,6 +8514,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isBiomeMarkersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Projectiles) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Projectiles, rhs.Projectiles, out var lhsProjectiles, out var rhsProjectiles, out var isProjectilesEqual))
+                {
+                    if (!object.Equals(lhsProjectiles, rhsProjectiles)) return false;
+                }
+                else if (!isProjectilesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GenericBaseForms) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.GenericBaseForms, rhs.GenericBaseForms, out var lhsGenericBaseForms, out var rhsGenericBaseForms, out var isGenericBaseFormsEqual))
@@ -8767,6 +8851,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Ingestibles);
             hash.Add(item.IdleMarkers);
             hash.Add(item.BiomeMarkers);
+            hash.Add(item.Projectiles);
             hash.Add(item.GenericBaseForms);
             hash.Add(item.LeveledBaseForms);
             hash.Add(item.Weathers);
@@ -9069,6 +9154,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBiomeMarker":
                 case "IBiomeMarkerInternal":
                     return obj.BiomeMarkers;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    return obj.Projectiles;
                 case "GenericBaseForm":
                 case "IGenericBaseFormGetter":
                 case "IGenericBaseForm":
@@ -9264,7 +9354,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[84];
+            Stream[] outputStreams = new Stream[85];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -9316,40 +9406,41 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Ingestibles, 47, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 48, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BiomeMarkers, 49, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.GenericBaseForms, 50, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledBaseForms, 51, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 52, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteCellsParallel(item.Cells, 53, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 54, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteQuestsParallel(item.Quests, 55, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Packages, 56, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 57, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 58, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 59, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Waters, 60, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 61, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 62, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 63, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 64, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 65, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 66, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 67, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 68, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 69, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 70, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 71, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 72, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 73, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 74, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 75, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 76, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 77, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 78, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 79, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 80, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 81, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.GenericBaseForms, 51, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledBaseForms, 52, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 53, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 54, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 55, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteQuestsParallel(item.Quests, 56, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 57, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 58, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 59, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 60, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 61, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 62, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 63, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 64, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 65, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 66, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 67, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 68, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 69, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 70, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 71, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 72, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 73, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 74, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 75, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 76, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 77, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 78, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 79, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 80, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 81, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 82, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 84, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -9568,6 +9659,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.BiomeMarkers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Projectiles.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -9894,6 +9989,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.BiomeMarkers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Projectiles.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10514,6 +10613,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBiomeMarker":
                 case "IBiomeMarkerInternal":
                     foreach (var item in obj.BiomeMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11387,6 +11495,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.BiomeMarkers,
                 groupGetter: (m) => m.BiomeMarkers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Projectile, IProjectileGetter>(
+                srcGroup: obj.Projectiles,
+                type: typeof(IProjectileGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Projectiles,
+                groupGetter: (m) => m.Projectiles))
             {
                 yield return item;
             }
@@ -12451,6 +12568,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Projectile, IProjectileGetter>(
+                        srcGroup: obj.Projectiles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Projectiles,
+                        groupGetter: (m) => m.Projectiles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "GenericBaseForm":
                 case "IGenericBaseFormGetter":
                 case "IGenericBaseForm":
@@ -13380,6 +13511,13 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in obj.BiomeMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
+                }
+                if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
+                {
+                    foreach (var item in ProjectileslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
                 if (obj.GenericBaseForms is IAssetLinkContainerGetter GenericBaseFormslinkCont)
                 {
@@ -14524,6 +14662,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Projectiles) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Projectiles);
+                try
+                {
+                    item.Projectiles.DeepCopyIn(
+                        rhs: rhs.Projectiles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Projectiles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GenericBaseForms) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.GenericBaseForms);
@@ -15344,6 +15502,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Ingestibles;
         public bool IdleMarkers;
         public bool BiomeMarkers;
+        public bool Projectiles;
         public bool GenericBaseForms;
         public bool LeveledBaseForms;
         public bool Weathers;
@@ -15433,6 +15592,7 @@ namespace Mutagen.Bethesda.Starfield
             Ingestibles = defaultValue;
             IdleMarkers = defaultValue;
             BiomeMarkers = defaultValue;
+            Projectiles = defaultValue;
             GenericBaseForms = defaultValue;
             LeveledBaseForms = defaultValue;
             Weathers = defaultValue;
@@ -16072,6 +16232,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)BiomeMarkersItem).BinaryWriteTranslator).Write<IBiomeMarkerGetter>(
                         item: BiomeMarkersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Projectiles ?? true)
+            {
+                var ProjectilesItem = item.Projectiles;
+                if (ProjectilesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ProjectilesItem).BinaryWriteTranslator).Write<IProjectileGetter>(
+                        item: ProjectilesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -17210,6 +17381,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.BiomeMarkers;
                 }
+                case RecordTypeInts.PROJ:
+                {
+                    if (importMask?.Projectiles ?? true)
+                    {
+                        item.Projectiles.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Projectiles;
+                }
                 case RecordTypeInts.GBFM:
                 {
                     if (importMask?.GenericBaseForms ?? true)
@@ -18107,6 +18292,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IBiomeMarkerGetter>? _BiomeMarkers => _BiomeMarkersLocations != null ? StarfieldGroupBinaryOverlay<IBiomeMarkerGetter>.StarfieldGroupFactory(_stream, _BiomeMarkersLocations, _package) : default;
         public IStarfieldGroupGetter<IBiomeMarkerGetter> BiomeMarkers => _BiomeMarkers ?? new StarfieldGroup<BiomeMarker>(this);
         #endregion
+        #region Projectiles
+        private List<RangeInt64>? _ProjectilesLocations;
+        private IStarfieldGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? StarfieldGroupBinaryOverlay<IProjectileGetter>.StarfieldGroupFactory(_stream, _ProjectilesLocations, _package) : default;
+        public IStarfieldGroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new StarfieldGroup<Projectile>(this);
+        #endregion
         #region GenericBaseForms
         private List<RangeInt64>? _GenericBaseFormsLocations;
         private IStarfieldGroupGetter<IGenericBaseFormGetter>? _GenericBaseForms => _GenericBaseFormsLocations != null ? StarfieldGroupBinaryOverlay<IGenericBaseFormGetter>.StarfieldGroupFactory(_stream, _GenericBaseFormsLocations, _package) : default;
@@ -18670,6 +18860,12 @@ namespace Mutagen.Bethesda.Starfield
                     _BiomeMarkersLocations ??= new();
                     _BiomeMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.BiomeMarkers;
+                }
+                case RecordTypeInts.PROJ:
+                {
+                    _ProjectilesLocations ??= new();
+                    _ProjectilesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.GBFM:
                 {

@@ -2358,6 +2358,9 @@
     <Compile Include="Records\Major Records\Planet.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Projectile.cs">
+      <DependentUpon>Projectile.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Quest.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
