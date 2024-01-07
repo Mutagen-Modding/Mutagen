@@ -54,6 +54,7 @@
       <Group name="IdleMarkers" refName="IdleMarker" />
       <Group name="BiomeMarkers" refName="BiomeMarker" />
       <Group name="Projectiles" refName="Projectile" />
+      <Group name="Hazards" refName="Hazard" />
       <Group name="GenericBaseForms" refName="GenericBaseForm" />
       <Group name="LeveledBaseForms" refName="LeveledBaseForm" />
       <Group name="Weathers" refName="Weather" />

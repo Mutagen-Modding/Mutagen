@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,199 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IHazardGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IHazardGetter.ODTY => this.ODTY;
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IHazardGetter.XALG => this.XALG;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IHazardGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IHazardGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IHazardGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region ImageSpaceModifier
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        #endregion
+        #region Sound
+        public SoundReference Sound { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IHazardGetter.Sound => Sound;
+        #endregion
+        #region Effect
+        private readonly IFormLink<IEffectRecordGetter> _Effect = new FormLink<IEffectRecordGetter>();
+        public IFormLink<IEffectRecordGetter> Effect
+        {
+            get => _Effect;
+            set => _Effect.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectRecordGetter> IHazardGetter.Effect => this.Effect;
+        #endregion
+        #region Light
+        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightGetter> IHazardGetter.Light => this.Light;
+        #endregion
+        #region ImpactDataSet
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IHazardGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region Radius
+        public Single Radius { get; set; } = default;
+        #endregion
+        #region Lifetime
+        public Single Lifetime { get; set; } = default;
+        #endregion
+        #region ImageSpaceRadius
+        public Single ImageSpaceRadius { get; set; } = default;
+        #endregion
+        #region TargetInterval
+        public Single TargetInterval { get; set; } = default;
+        #endregion
+        #region TaperFullEffectRadius
+        public Single TaperFullEffectRadius { get; set; } = default;
+        #endregion
+        #region TaperWeight
+        public Single TaperWeight { get; set; } = default;
+        #endregion
+        #region TaperCurse
+        public Single TaperCurse { get; set; } = default;
+        #endregion
+        #region Gravity
+        public Single Gravity { get; set; } = default;
+        #endregion
+        #region Limit
+        public UInt32 Limit { get; set; } = default;
+        #endregion
+        #region Flags
+        public Hazard.Flag Flags { get; set; } = default;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IHazardGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +277,28 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.XALG = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.ImageSpaceModifier = initialValue;
+                this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Effect = initialValue;
+                this.Light = initialValue;
+                this.ImpactDataSet = initialValue;
+                this.Radius = initialValue;
+                this.Lifetime = initialValue;
+                this.ImageSpaceRadius = initialValue;
+                this.TargetInterval = initialValue;
+                this.TaperFullEffectRadius = initialValue;
+                this.TaperWeight = initialValue;
+                this.TaperCurse = initialValue;
+                this.Gravity = initialValue;
+                this.Limit = initialValue;
+                this.Flags = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +308,29 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem XALG,
+                TItem Components,
+                TItem Name,
+                TItem Model,
+                TItem ImageSpaceModifier,
+                TItem Sound,
+                TItem Effect,
+                TItem Light,
+                TItem ImpactDataSet,
+                TItem Radius,
+                TItem Lifetime,
+                TItem ImageSpaceRadius,
+                TItem TargetInterval,
+                TItem TaperFullEffectRadius,
+                TItem TaperWeight,
+                TItem TaperCurse,
+                TItem Gravity,
+                TItem Limit,
+                TItem Flags,
+                TItem Conditions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +340,28 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.XALG = XALG;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.ImageSpaceModifier = ImageSpaceModifier;
+                this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sound, new SoundReference.Mask<TItem>(Sound));
+                this.Effect = Effect;
+                this.Light = Light;
+                this.ImpactDataSet = ImpactDataSet;
+                this.Radius = Radius;
+                this.Lifetime = Lifetime;
+                this.ImageSpaceRadius = ImageSpaceRadius;
+                this.TargetInterval = TargetInterval;
+                this.TaperFullEffectRadius = TaperFullEffectRadius;
+                this.TaperWeight = TaperWeight;
+                this.TaperCurse = TaperCurse;
+                this.Gravity = Gravity;
+                this.Limit = Limit;
+                this.Flags = Flags;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +370,31 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public TItem XALG;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem ImageSpaceModifier;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Sound { get; set; }
+            public TItem Effect;
+            public TItem Light;
+            public TItem ImpactDataSet;
+            public TItem Radius;
+            public TItem Lifetime;
+            public TItem ImageSpaceRadius;
+            public TItem TargetInterval;
+            public TItem TaperFullEffectRadius;
+            public TItem TaperWeight;
+            public TItem TaperCurse;
+            public TItem Gravity;
+            public TItem Limit;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
             #region Equals
@@ -119,11 +408,55 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.Effect, rhs.Effect)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Lifetime, rhs.Lifetime)) return false;
+                if (!object.Equals(this.ImageSpaceRadius, rhs.ImageSpaceRadius)) return false;
+                if (!object.Equals(this.TargetInterval, rhs.TargetInterval)) return false;
+                if (!object.Equals(this.TaperFullEffectRadius, rhs.TaperFullEffectRadius)) return false;
+                if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
+                if (!object.Equals(this.TaperCurse, rhs.TaperCurse)) return false;
+                if (!object.Equals(this.Gravity, rhs.Gravity)) return false;
+                if (!object.Equals(this.Limit, rhs.Limit)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.XALG);
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.ImageSpaceModifier);
+                hash.Add(this.Sound);
+                hash.Add(this.Effect);
+                hash.Add(this.Light);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.Radius);
+                hash.Add(this.Lifetime);
+                hash.Add(this.ImageSpaceRadius);
+                hash.Add(this.TargetInterval);
+                hash.Add(this.TaperFullEffectRadius);
+                hash.Add(this.TaperWeight);
+                hash.Add(this.TaperCurse);
+                hash.Add(this.Gravity);
+                hash.Add(this.Limit);
+                hash.Add(this.Flags);
+                hash.Add(this.Conditions);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +467,62 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (!eval(this.XALG)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ImageSpaceModifier)) return false;
+                if (Sound != null)
+                {
+                    if (!eval(this.Sound.Overall)) return false;
+                    if (this.Sound.Specific != null && !this.Sound.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Effect)) return false;
+                if (!eval(this.Light)) return false;
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Lifetime)) return false;
+                if (!eval(this.ImageSpaceRadius)) return false;
+                if (!eval(this.TargetInterval)) return false;
+                if (!eval(this.TaperFullEffectRadius)) return false;
+                if (!eval(this.TaperWeight)) return false;
+                if (!eval(this.TaperCurse)) return false;
+                if (!eval(this.Gravity)) return false;
+                if (!eval(this.Limit)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +531,62 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (eval(this.XALG)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ImageSpaceModifier)) return true;
+                if (Sound != null)
+                {
+                    if (eval(this.Sound.Overall)) return true;
+                    if (this.Sound.Specific != null && this.Sound.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Effect)) return true;
+                if (eval(this.Light)) return true;
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.Lifetime)) return true;
+                if (eval(this.ImageSpaceRadius)) return true;
+                if (eval(this.TargetInterval)) return true;
+                if (eval(this.TaperFullEffectRadius)) return true;
+                if (eval(this.TaperWeight)) return true;
+                if (eval(this.TaperCurse)) return true;
+                if (eval(this.Gravity)) return true;
+                if (eval(this.Limit)) return true;
+                if (eval(this.Flags)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +602,56 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.XALG = eval(this.XALG);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
+                obj.Sound = this.Sound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sound.Overall), this.Sound.Specific?.Translate(eval));
+                obj.Effect = eval(this.Effect);
+                obj.Light = eval(this.Light);
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.Radius = eval(this.Radius);
+                obj.Lifetime = eval(this.Lifetime);
+                obj.ImageSpaceRadius = eval(this.ImageSpaceRadius);
+                obj.TargetInterval = eval(this.TargetInterval);
+                obj.TaperFullEffectRadius = eval(this.TaperFullEffectRadius);
+                obj.TaperWeight = eval(this.TaperWeight);
+                obj.TaperCurse = eval(this.TaperCurse);
+                obj.Gravity = eval(this.Gravity);
+                obj.Limit = eval(this.Limit);
+                obj.Flags = eval(this.Flags);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +670,124 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Hazard.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.ImageSpaceModifier ?? true)
+                    {
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                    }
+                    if (printMask?.Sound?.Overall ?? true)
+                    {
+                        Sound?.Print(sb);
+                    }
+                    if (printMask?.Effect ?? true)
+                    {
+                        sb.AppendItem(Effect, "Effect");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        sb.AppendItem(Light, "Light");
+                    }
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        sb.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.Lifetime ?? true)
+                    {
+                        sb.AppendItem(Lifetime, "Lifetime");
+                    }
+                    if (printMask?.ImageSpaceRadius ?? true)
+                    {
+                        sb.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
+                    }
+                    if (printMask?.TargetInterval ?? true)
+                    {
+                        sb.AppendItem(TargetInterval, "TargetInterval");
+                    }
+                    if (printMask?.TaperFullEffectRadius ?? true)
+                    {
+                        sb.AppendItem(TaperFullEffectRadius, "TaperFullEffectRadius");
+                    }
+                    if (printMask?.TaperWeight ?? true)
+                    {
+                        sb.AppendItem(TaperWeight, "TaperWeight");
+                    }
+                    if (printMask?.TaperCurse ?? true)
+                    {
+                        sb.AppendItem(TaperCurse, "TaperCurse");
+                    }
+                    if (printMask?.Gravity ?? true)
+                    {
+                        sb.AppendItem(Gravity, "Gravity");
+                    }
+                    if (printMask?.Limit ?? true)
+                    {
+                        sb.AppendItem(Limit, "Limit");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +798,81 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public Exception? XALG;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? ImageSpaceModifier;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Sound;
+            public Exception? Effect;
+            public Exception? Light;
+            public Exception? ImpactDataSet;
+            public Exception? Radius;
+            public Exception? Lifetime;
+            public Exception? ImageSpaceRadius;
+            public Exception? TargetInterval;
+            public Exception? TaperFullEffectRadius;
+            public Exception? TaperWeight;
+            public Exception? TaperCurse;
+            public Exception? Gravity;
+            public Exception? Limit;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
                 switch (enu)
                 {
+                    case Hazard_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Hazard_FieldIndex.ODTY:
+                        return ODTY;
+                    case Hazard_FieldIndex.XALG:
+                        return XALG;
+                    case Hazard_FieldIndex.Components:
+                        return Components;
+                    case Hazard_FieldIndex.Name:
+                        return Name;
+                    case Hazard_FieldIndex.Model:
+                        return Model;
+                    case Hazard_FieldIndex.ImageSpaceModifier:
+                        return ImageSpaceModifier;
+                    case Hazard_FieldIndex.Sound:
+                        return Sound;
+                    case Hazard_FieldIndex.Effect:
+                        return Effect;
+                    case Hazard_FieldIndex.Light:
+                        return Light;
+                    case Hazard_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case Hazard_FieldIndex.Radius:
+                        return Radius;
+                    case Hazard_FieldIndex.Lifetime:
+                        return Lifetime;
+                    case Hazard_FieldIndex.ImageSpaceRadius:
+                        return ImageSpaceRadius;
+                    case Hazard_FieldIndex.TargetInterval:
+                        return TargetInterval;
+                    case Hazard_FieldIndex.TaperFullEffectRadius:
+                        return TaperFullEffectRadius;
+                    case Hazard_FieldIndex.TaperWeight:
+                        return TaperWeight;
+                    case Hazard_FieldIndex.TaperCurse:
+                        return TaperCurse;
+                    case Hazard_FieldIndex.Gravity:
+                        return Gravity;
+                    case Hazard_FieldIndex.Limit:
+                        return Limit;
+                    case Hazard_FieldIndex.Flags:
+                        return Flags;
+                    case Hazard_FieldIndex.Conditions:
+                        return Conditions;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +883,72 @@ namespace Mutagen.Bethesda.Starfield
                 Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
                 switch (enu)
                 {
+                    case Hazard_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Hazard_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case Hazard_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case Hazard_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Hazard_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Hazard_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = ex;
+                        break;
+                    case Hazard_FieldIndex.Sound:
+                        this.Sound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Hazard_FieldIndex.Effect:
+                        this.Effect = ex;
+                        break;
+                    case Hazard_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case Hazard_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case Hazard_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case Hazard_FieldIndex.Lifetime:
+                        this.Lifetime = ex;
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceRadius:
+                        this.ImageSpaceRadius = ex;
+                        break;
+                    case Hazard_FieldIndex.TargetInterval:
+                        this.TargetInterval = ex;
+                        break;
+                    case Hazard_FieldIndex.TaperFullEffectRadius:
+                        this.TaperFullEffectRadius = ex;
+                        break;
+                    case Hazard_FieldIndex.TaperWeight:
+                        this.TaperWeight = ex;
+                        break;
+                    case Hazard_FieldIndex.TaperCurse:
+                        this.TaperCurse = ex;
+                        break;
+                    case Hazard_FieldIndex.Gravity:
+                        this.Gravity = ex;
+                        break;
+                    case Hazard_FieldIndex.Limit:
+                        this.Limit = ex;
+                        break;
+                    case Hazard_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Hazard_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +960,72 @@ namespace Mutagen.Bethesda.Starfield
                 Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
                 switch (enu)
                 {
+                    case Hazard_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Hazard_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Hazard_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Sound:
+                        this.Sound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Hazard_FieldIndex.Effect:
+                        this.Effect = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Light:
+                        this.Light = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Lifetime:
+                        this.Lifetime = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceRadius:
+                        this.ImageSpaceRadius = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.TargetInterval:
+                        this.TargetInterval = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.TaperFullEffectRadius:
+                        this.TaperFullEffectRadius = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.TaperWeight:
+                        this.TaperWeight = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.TaperCurse:
+                        this.TaperCurse = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Gravity:
+                        this.Gravity = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Limit:
+                        this.Limit = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1035,28 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (XALG != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (ImageSpaceModifier != null) return true;
+                if (Sound != null) return true;
+                if (Effect != null) return true;
+                if (Light != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (Radius != null) return true;
+                if (Lifetime != null) return true;
+                if (ImageSpaceRadius != null) return true;
+                if (TargetInterval != null) return true;
+                if (TaperFullEffectRadius != null) return true;
+                if (TaperWeight != null) return true;
+                if (TaperCurse != null) return true;
+                if (Gravity != null) return true;
+                if (Limit != null) return true;
+                if (Flags != null) return true;
+                if (Conditions != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1083,96 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                Sound?.Print(sb);
+                {
+                    sb.AppendItem(Effect, "Effect");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Lifetime, "Lifetime");
+                }
+                {
+                    sb.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
+                }
+                {
+                    sb.AppendItem(TargetInterval, "TargetInterval");
+                }
+                {
+                    sb.AppendItem(TaperFullEffectRadius, "TaperFullEffectRadius");
+                }
+                {
+                    sb.AppendItem(TaperWeight, "TaperWeight");
+                }
+                {
+                    sb.AppendItem(TaperCurse, "TaperCurse");
+                }
+                {
+                    sb.AppendItem(Gravity, "Gravity");
+                }
+                {
+                    sb.AppendItem(Limit, "Limit");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +1181,28 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
+                ret.Sound = this.Sound.Combine(rhs.Sound, (l, r) => l.Combine(r));
+                ret.Effect = this.Effect.Combine(rhs.Effect);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Lifetime = this.Lifetime.Combine(rhs.Lifetime);
+                ret.ImageSpaceRadius = this.ImageSpaceRadius.Combine(rhs.ImageSpaceRadius);
+                ret.TargetInterval = this.TargetInterval.Combine(rhs.TargetInterval);
+                ret.TaperFullEffectRadius = this.TaperFullEffectRadius.Combine(rhs.TaperFullEffectRadius);
+                ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
+                ret.TaperCurse = this.TaperCurse.Combine(rhs.TaperCurse);
+                ret.Gravity = this.Gravity.Combine(rhs.Gravity);
+                ret.Limit = this.Limit.Combine(rhs.Limit);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1224,84 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public bool XALG;
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public bool ImageSpaceModifier;
+            public SoundReference.TranslationMask? Sound;
+            public bool Effect;
+            public bool Light;
+            public bool ImpactDataSet;
+            public bool Radius;
+            public bool Lifetime;
+            public bool ImageSpaceRadius;
+            public bool TargetInterval;
+            public bool TaperFullEffectRadius;
+            public bool TaperWeight;
+            public bool TaperCurse;
+            public bool Gravity;
+            public bool Limit;
+            public bool Flags;
+            public Condition.TranslationMask? Conditions;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.XALG = defaultOn;
+                this.Name = defaultOn;
+                this.ImageSpaceModifier = defaultOn;
+                this.Effect = defaultOn;
+                this.Light = defaultOn;
+                this.ImpactDataSet = defaultOn;
+                this.Radius = defaultOn;
+                this.Lifetime = defaultOn;
+                this.ImageSpaceRadius = defaultOn;
+                this.TargetInterval = defaultOn;
+                this.TaperFullEffectRadius = defaultOn;
+                this.TaperWeight = defaultOn;
+                this.TaperCurse = defaultOn;
+                this.Gravity = defaultOn;
+                this.Limit = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((XALG, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((ImageSpaceModifier, null));
+                ret.Add((Sound != null ? Sound.OnOverall : DefaultOn, Sound?.GetCrystal()));
+                ret.Add((Effect, null));
+                ret.Add((Light, null));
+                ret.Add((ImpactDataSet, null));
+                ret.Add((Radius, null));
+                ret.Add((Lifetime, null));
+                ret.Add((ImageSpaceRadius, null));
+                ret.Add((TargetInterval, null));
+                ret.Add((TaperFullEffectRadius, null));
+                ret.Add((TaperWeight, null));
+                ret.Add((TaperCurse, null));
+                ret.Add((Gravity, null));
+                ret.Add((Limit, null));
+                ret.Add((Flags, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1313,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Hazard_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HazardCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardSetterCommon.Instance.RemapLinks(this, mapping);
         public Hazard(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1364,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IHazard);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HazardCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => HazardSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => HazardSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => HazardSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1447,49 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IHazard :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         IHazardGetter,
         ILoquiObjectSetter<IHazardInternal>,
-        IStarfieldMajorRecordInternal
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new SoundReference Sound { get; set; }
+        new IFormLink<IEffectRecordGetter> Effect { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new Single Radius { get; set; }
+        new Single Lifetime { get; set; }
+        new Single ImageSpaceRadius { get; set; }
+        new Single TargetInterval { get; set; }
+        new Single TaperFullEffectRadius { get; set; }
+        new Single TaperWeight { get; set; }
+        new Single TaperCurse { get; set; }
+        new Single Gravity { get; set; }
+        new UInt32 Limit { get; set; }
+        new Hazard.Flag Flags { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface IHazardInternal :
@@ -440,11 +1502,56 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.HAZD)]
     public partial interface IHazardGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IHazardGetter>,
-        IMapsToGetter<IHazardGetter>
+        IMapsToGetter<IHazardGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Hazard_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        ISoundReferenceGetter Sound { get; }
+        IFormLinkGetter<IEffectRecordGetter> Effect { get; }
+        IFormLinkGetter<ILightGetter> Light { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
+        Single Radius { get; }
+        Single Lifetime { get; }
+        Single ImageSpaceRadius { get; }
+        Single TargetInterval { get; }
+        Single TaperFullEffectRadius { get; }
+        Single TaperWeight { get; }
+        Single TaperCurse { get; }
+        Single Gravity { get; }
+        UInt32 Limit { get; }
+        Hazard.Flag Flags { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
 
@@ -621,6 +1728,28 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ODTY = 8,
+        XALG = 9,
+        Components = 10,
+        Name = 11,
+        Model = 12,
+        ImageSpaceModifier = 13,
+        Sound = 14,
+        Effect = 15,
+        Light = 16,
+        ImpactDataSet = 17,
+        Radius = 18,
+        Lifetime = 19,
+        ImageSpaceRadius = 20,
+        TargetInterval = 21,
+        TaperFullEffectRadius = 22,
+        TaperWeight = 23,
+        TaperCurse = 24,
+        Gravity = 25,
+        Limit = 26,
+        Flags = 27,
+        Conditions = 28,
     }
     #endregion
 
@@ -631,9 +1760,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 22;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(Hazard.Mask<>);
 
@@ -663,8 +1792,31 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.HAZD);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.HAZD);
+            var all = RecordCollection.Factory(
+                RecordTypes.HAZD,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.XALG,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.MNAM,
+                RecordTypes.DNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HazardBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1858,28 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IHazardInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.XALG = default;
+            item.Components.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.ImageSpaceModifier.Clear();
+            item.Sound.Clear();
+            item.Effect.Clear();
+            item.Light.Clear();
+            item.ImpactDataSet.Clear();
+            item.Radius = default;
+            item.Lifetime = default;
+            item.ImageSpaceRadius = default;
+            item.TargetInterval = default;
+            item.TaperFullEffectRadius = default;
+            item.TaperWeight = default;
+            item.TaperCurse = default;
+            item.Gravity = default;
+            item.Limit = default;
+            item.Flags = default;
+            item.Conditions.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1897,46 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IHazard obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
+            obj.Sound.RemapLinks(mapping);
+            obj.Effect.Relink(mapping);
+            obj.Light.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IHazard obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IHazard obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -790,6 +2004,38 @@ namespace Mutagen.Bethesda.Starfield
             Hazard.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.Sound = MaskItemExt.Factory(item.Sound.GetEqualsMask(rhs.Sound, include), include);
+            ret.Effect = item.Effect.Equals(rhs.Effect);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Lifetime = item.Lifetime.EqualsWithin(rhs.Lifetime);
+            ret.ImageSpaceRadius = item.ImageSpaceRadius.EqualsWithin(rhs.ImageSpaceRadius);
+            ret.TargetInterval = item.TargetInterval.EqualsWithin(rhs.TargetInterval);
+            ret.TaperFullEffectRadius = item.TaperFullEffectRadius.EqualsWithin(rhs.TaperFullEffectRadius);
+            ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
+            ret.TaperCurse = item.TaperCurse.EqualsWithin(rhs.TaperCurse);
+            ret.Gravity = item.Gravity.EqualsWithin(rhs.Gravity);
+            ret.Limit = item.Limit == rhs.Limit;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +2085,118 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.ImageSpaceModifier ?? true)
+            {
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+            }
+            if (printMask?.Sound?.Overall ?? true)
+            {
+                item.Sound?.Print(sb, "Sound");
+            }
+            if (printMask?.Effect ?? true)
+            {
+                sb.AppendItem(item.Effect.FormKey, "Effect");
+            }
+            if (printMask?.Light ?? true)
+            {
+                sb.AppendItem(item.Light.FormKey, "Light");
+            }
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                sb.AppendItem(item.Radius, "Radius");
+            }
+            if (printMask?.Lifetime ?? true)
+            {
+                sb.AppendItem(item.Lifetime, "Lifetime");
+            }
+            if (printMask?.ImageSpaceRadius ?? true)
+            {
+                sb.AppendItem(item.ImageSpaceRadius, "ImageSpaceRadius");
+            }
+            if (printMask?.TargetInterval ?? true)
+            {
+                sb.AppendItem(item.TargetInterval, "TargetInterval");
+            }
+            if (printMask?.TaperFullEffectRadius ?? true)
+            {
+                sb.AppendItem(item.TaperFullEffectRadius, "TaperFullEffectRadius");
+            }
+            if (printMask?.TaperWeight ?? true)
+            {
+                sb.AppendItem(item.TaperWeight, "TaperWeight");
+            }
+            if (printMask?.TaperCurse ?? true)
+            {
+                sb.AppendItem(item.TaperCurse, "TaperCurse");
+            }
+            if (printMask?.Gravity ?? true)
+            {
+                sb.AppendItem(item.Gravity, "Gravity");
+            }
+            if (printMask?.Limit ?? true)
+            {
+                sb.AppendItem(item.Limit, "Limit");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Hazard_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +2247,106 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sound, rhs.Sound, out var lhsSound, out var rhsSound, out var isSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsSound).CommonInstance()!).Equals(lhsSound, rhsSound, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.Sound))) return false;
+                }
+                else if (!isSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Effect) ?? true))
+            {
+                if (!lhs.Effect.Equals(rhs.Effect)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
+            {
+                if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
+            {
+                if (!lhs.ImageSpaceRadius.EqualsWithin(rhs.ImageSpaceRadius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
+            {
+                if (!lhs.TargetInterval.EqualsWithin(rhs.TargetInterval)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperFullEffectRadius) ?? true))
+            {
+                if (!lhs.TaperFullEffectRadius.EqualsWithin(rhs.TaperFullEffectRadius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperWeight) ?? true))
+            {
+                if (!lhs.TaperWeight.EqualsWithin(rhs.TaperWeight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperCurse) ?? true))
+            {
+                if (!lhs.TaperCurse.EqualsWithin(rhs.TaperCurse)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Gravity) ?? true))
+            {
+                if (!lhs.Gravity.EqualsWithin(rhs.Gravity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
+            {
+                if (lhs.Limit != rhs.Limit) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.Conditions)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +2375,40 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IHazardGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.ImageSpaceModifier);
+            hash.Add(item.Sound);
+            hash.Add(item.Effect);
+            hash.Add(item.Light);
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.Radius);
+            hash.Add(item.Lifetime);
+            hash.Add(item.ImageSpaceRadius);
+            hash.Add(item.TargetInterval);
+            hash.Add(item.TaperFullEffectRadius);
+            hash.Add(item.TaperWeight);
+            hash.Add(item.TaperCurse);
+            hash.Add(item.Gravity);
+            hash.Add(item.Limit);
+            hash.Add(item.Flags);
+            hash.Add(item.Conditions);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +2437,57 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
+            {
+                yield return ImageSpaceModifierInfo;
+            }
+            foreach (var item in obj.Sound.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            yield return FormLinkInformation.Factory(obj.Effect);
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IHazardGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1020,6 +2563,199 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Hazard_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Hazard_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Hazard_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Hazard_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
+            {
+                errorMask?.PushIndex((int)Hazard_FieldIndex.Sound);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
+                    {
+                        item.Sound = rhs.Sound.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Hazard_FieldIndex.Sound),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Effect) ?? true))
+            {
+                item.Effect.SetTo(rhs.Effect.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
+            {
+                item.Light.SetTo(rhs.Light.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
+            {
+                item.Lifetime = rhs.Lifetime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
+            {
+                item.ImageSpaceRadius = rhs.ImageSpaceRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
+            {
+                item.TargetInterval = rhs.TargetInterval;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperFullEffectRadius) ?? true))
+            {
+                item.TaperFullEffectRadius = rhs.TaperFullEffectRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperWeight) ?? true))
+            {
+                item.TaperWeight = rhs.TaperWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperCurse) ?? true))
+            {
+                item.TaperCurse = rhs.TaperCurse;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Gravity) ?? true))
+            {
+                item.Gravity = rhs.Gravity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
+            {
+                item.Limit = rhs.Limit;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Hazard_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2904,115 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly HazardBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IHazardGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpaceModifier,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                var SoundItem = item.Sound;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)SoundItem).BinaryWriteTranslator).Write(
+                    item: SoundItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Effect);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Light);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactDataSet);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Radius);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Lifetime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ImageSpaceRadius);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TargetInterval);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TaperFullEffectRadius);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TaperWeight);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TaperCurse);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Gravity);
+                writer.Write(item.Limit);
+                EnumBinaryTranslation<Hazard.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IHazardGetter item,
@@ -1184,10 +3029,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +3084,131 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HAZD;
+        public static ParseResult FillBinaryRecordTypes(
+            IHazardInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Hazard_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Hazard_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Hazard_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Hazard_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Hazard_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Hazard_FieldIndex.Model;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Hazard_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Complete) return null;
+                    item.Sound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Effect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Lifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ImageSpaceRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TargetInterval = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TaperFullEffectRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TaperWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TaperCurse = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Gravity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Limit = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<Hazard.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    return (int)Hazard_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)Hazard_FieldIndex.Conditions;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +3241,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HazardCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HazardCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +3257,110 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IHazard);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region ImageSpaceModifier
+        private int? _ImageSpaceModifierLocation;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        #endregion
+        private RangeInt32? _DNAMLocation;
+        #region Sound
+        private int _SoundLocation => _DNAMLocation!.Value.Min;
+        private bool _Sound_IsSet => _DNAMLocation.HasValue;
+        private ISoundReferenceGetter? _Sound => _Sound_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_SoundLocation), _package) : default;
+        public ISoundReferenceGetter Sound => _Sound ?? new SoundReference();
+        #endregion
+        #region Effect
+        private int _EffectLocation => _DNAMLocation!.Value.Min + 0x28;
+        private bool _Effect_IsSet => _DNAMLocation.HasValue;
+        public IFormLinkGetter<IEffectRecordGetter> Effect => _Effect_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EffectLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
+        #endregion
+        #region Light
+        private int _LightLocation => _DNAMLocation!.Value.Min + 0x2C;
+        private bool _Light_IsSet => _DNAMLocation.HasValue;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region ImpactDataSet
+        private int _ImpactDataSetLocation => _DNAMLocation!.Value.Min + 0x30;
+        private bool _ImpactDataSet_IsSet => _DNAMLocation.HasValue;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region Radius
+        private int _RadiusLocation => _DNAMLocation!.Value.Min + 0x34;
+        private bool _Radius_IsSet => _DNAMLocation.HasValue;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
+        #endregion
+        #region Lifetime
+        private int _LifetimeLocation => _DNAMLocation!.Value.Min + 0x38;
+        private bool _Lifetime_IsSet => _DNAMLocation.HasValue;
+        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default;
+        #endregion
+        #region ImageSpaceRadius
+        private int _ImageSpaceRadiusLocation => _DNAMLocation!.Value.Min + 0x3C;
+        private bool _ImageSpaceRadius_IsSet => _DNAMLocation.HasValue;
+        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _recordData.Slice(_ImageSpaceRadiusLocation, 4).Float() : default;
+        #endregion
+        #region TargetInterval
+        private int _TargetIntervalLocation => _DNAMLocation!.Value.Min + 0x40;
+        private bool _TargetInterval_IsSet => _DNAMLocation.HasValue;
+        public Single TargetInterval => _TargetInterval_IsSet ? _recordData.Slice(_TargetIntervalLocation, 4).Float() : default;
+        #endregion
+        #region TaperFullEffectRadius
+        private int _TaperFullEffectRadiusLocation => _DNAMLocation!.Value.Min + 0x44;
+        private bool _TaperFullEffectRadius_IsSet => _DNAMLocation.HasValue;
+        public Single TaperFullEffectRadius => _TaperFullEffectRadius_IsSet ? _recordData.Slice(_TaperFullEffectRadiusLocation, 4).Float() : default;
+        #endregion
+        #region TaperWeight
+        private int _TaperWeightLocation => _DNAMLocation!.Value.Min + 0x48;
+        private bool _TaperWeight_IsSet => _DNAMLocation.HasValue;
+        public Single TaperWeight => _TaperWeight_IsSet ? _recordData.Slice(_TaperWeightLocation, 4).Float() : default;
+        #endregion
+        #region TaperCurse
+        private int _TaperCurseLocation => _DNAMLocation!.Value.Min + 0x4C;
+        private bool _TaperCurse_IsSet => _DNAMLocation.HasValue;
+        public Single TaperCurse => _TaperCurse_IsSet ? _recordData.Slice(_TaperCurseLocation, 4).Float() : default;
+        #endregion
+        #region Gravity
+        private int _GravityLocation => _DNAMLocation!.Value.Min + 0x50;
+        private bool _Gravity_IsSet => _DNAMLocation.HasValue;
+        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default;
+        #endregion
+        #region Limit
+        private int _LimitLocation => _DNAMLocation!.Value.Min + 0x54;
+        private bool _Limit_IsSet => _DNAMLocation.HasValue;
+        public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_LimitLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x58;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +3418,97 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Hazard_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)Hazard_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)Hazard_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Hazard_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Hazard_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Hazard_FieldIndex.Model;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _ImageSpaceModifierLocation = (stream.Position - offset);
+                    return (int)Hazard_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Hazard_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Hazard_FieldIndex.Conditions;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

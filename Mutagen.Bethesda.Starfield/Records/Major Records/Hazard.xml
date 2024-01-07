@@ -2,6 +2,34 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+      <Data recordType="DNAM">
+        <Fields>
+          <RefDirect name="Sound" refName="SoundReference" />
+          <FormLink name="Effect">
+            <Interface>IEffectRecord</Interface>
+          </FormLink>
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <Float name="Radius" />
+          <Float name="Lifetime" />
+          <Float name="ImageSpaceRadius" />
+          <Float name="TargetInterval" />
+          <Float name="TaperFullEffectRadius" />
+          <Float name="TaperWeight" />
+          <Float name="TaperCurse" />
+          <Float name="Gravity" />
+          <UInt32 name="Limit" />
+          <Enum name="Flags" enumName="Hazard.Flag" byteLength="4" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>

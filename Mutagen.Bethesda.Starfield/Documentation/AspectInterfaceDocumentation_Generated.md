@@ -90,6 +90,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FloraModification
 - Furniture
 - Grass
+- Hazard
 - HeadPart
 - IdleMarker
 - Ingestible
@@ -146,6 +147,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - FurnitureMarkerFile
 - FxSceneAction
+- Hazard
 - HeadPart
 - Ingestible
 - InstanceNamingRule
@@ -227,6 +229,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - GenericBaseForm
 - Grass
+- Hazard
 - IdleMarker
 - Ingestible
 - Key
@@ -440,6 +443,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### Grass
 - IModeled
+- IObjectBounded
+### Hazard
+- IModeled
+- INamed
 - IObjectBounded
 ### HeadPart
 - IModeled
