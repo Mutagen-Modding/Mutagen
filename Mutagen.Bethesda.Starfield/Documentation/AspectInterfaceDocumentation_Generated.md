@@ -40,6 +40,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlacedTrap
 - Quest
 - Scene
+- Terminal
 - TerminalMenu
 - Weapon
 ### IKeywordCommon
@@ -72,6 +73,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Resource
 - SoundMarker
 - Spell
+- Terminal
 - Weapon
 - Weather
 ### IModeled
@@ -111,6 +113,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SkeletalModel
 - Static
 - StaticCollection
+- Terminal
 - UnknownObjectModification
 - Weapon
 - WeaponModification
@@ -207,6 +210,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StartSceneAction
 - Static
 - StaticCollection
+- Terminal
 - TerminalMenu
 - TimelineSceneAction
 - TimerSceneAction
@@ -251,6 +255,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Spell
 - Static
 - StaticCollection
+- Terminal
 - TextureSet
 - Weapon
 ### IPositionRotation
@@ -720,6 +725,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IPositionRotation
 ### TeleportDestination
 - IPositionRotation
+### Terminal
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
 ### TerminalMenu
 - IHaveVirtualMachineAdapter
 - INamed

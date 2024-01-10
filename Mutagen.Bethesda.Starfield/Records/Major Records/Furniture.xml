@@ -25,10 +25,10 @@
       <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <RefDirect name="LoopingSound" refName="SoundReference" recordType="ALSH" />
-      <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" binary="Custom" />
+      <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" byteLength="2" />
       <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
       <Bool name="INAM" boolAsMarker="INAM" />
-      <CustomLogic name="Flags2" recordType="MNAM" />
+      <Enum name="MarkerFlags" enumName="FurnitureMarkerFlags" recordType="MNAM" />
       <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
       <Data recordType="WBDT">
         <Fields>

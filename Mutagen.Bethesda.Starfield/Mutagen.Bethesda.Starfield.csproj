@@ -132,6 +132,7 @@
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\EquipType.cs" />
     <Compile Include="Enums\FirstPersonFlag.cs" />
+    <Compile Include="Enums\FurnitureMarkerFlags.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\HitBehavior.cs" />
     <Compile Include="Enums\Level.cs" />
@@ -2148,7 +2149,9 @@
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Hazard.cs" />
+    <Compile Include="Records\Major Records\Hazard.cs">
+      <DependentUpon>Hazard.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\HeadPart.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
@@ -2415,6 +2418,9 @@
     </Compile>
     <Compile Include="Records\Major Records\TeleportDestination.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Terminal.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>

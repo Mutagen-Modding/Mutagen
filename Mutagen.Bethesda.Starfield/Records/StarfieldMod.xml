@@ -44,10 +44,8 @@
       <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammunitions" refName="Ammunition" />
-      <Group name="LeveledNpcs" refName="LeveledNpc" />
       <Group name="Npcs" refName="Npc" />
-      <Group name="BendableSplines" refName="BendableSpline" />
-      <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="LeveledNpcs" refName="LeveledNpc" />
       <Group name="LeveledPackIns" refName="LeveledPackIn" />
       <Group name="Keys" refName="Key" />
       <Group name="Ingestibles" refName="Ingestible" />
@@ -55,6 +53,9 @@
       <Group name="BiomeMarkers" refName="BiomeMarker" />
       <Group name="Projectiles" refName="Projectile" />
       <Group name="Hazards" refName="Hazard" />
+      <Group name="BendableSplines" refName="BendableSpline" />
+      <Group name="Terminals" refName="Terminal" />
+      <Group name="LeveledItems" refName="LeveledItem" />
       <Group name="GenericBaseForms" refName="GenericBaseForm" />
       <Group name="LeveledBaseForms" refName="LeveledBaseForm" />
       <Group name="Weathers" refName="Weather" />

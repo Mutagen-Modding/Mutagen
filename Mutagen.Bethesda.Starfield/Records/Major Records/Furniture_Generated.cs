@@ -335,6 +335,11 @@ namespace Mutagen.Bethesda.Starfield
         #region INAM
         public Boolean INAM { get; set; } = default;
         #endregion
+        #region MarkerFlags
+        public FurnitureMarkerFlags? MarkerFlags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        FurnitureMarkerFlags? IFurnitureGetter.MarkerFlags => this.MarkerFlags;
+        #endregion
         #region GNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected MemorySlice<Byte>? _GNAM;
@@ -461,6 +466,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = initialValue;
                 this.JNAM = initialValue;
                 this.INAM = initialValue;
+                this.MarkerFlags = initialValue;
                 this.GNAM = initialValue;
                 this.BenchType = initialValue;
                 this.UsesSkill = initialValue;
@@ -502,6 +508,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Flags,
                 TItem JNAM,
                 TItem INAM,
+                TItem MarkerFlags,
                 TItem GNAM,
                 TItem BenchType,
                 TItem UsesSkill,
@@ -542,6 +549,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = Flags;
                 this.JNAM = JNAM;
                 this.INAM = INAM;
+                this.MarkerFlags = MarkerFlags;
                 this.GNAM = GNAM;
                 this.BenchType = BenchType;
                 this.UsesSkill = UsesSkill;
@@ -584,6 +592,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Flags;
             public TItem JNAM;
             public TItem INAM;
+            public TItem MarkerFlags;
             public TItem GNAM;
             public TItem BenchType;
             public TItem UsesSkill;
@@ -628,6 +637,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.JNAM, rhs.JNAM)) return false;
                 if (!object.Equals(this.INAM, rhs.INAM)) return false;
+                if (!object.Equals(this.MarkerFlags, rhs.MarkerFlags)) return false;
                 if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
                 if (!object.Equals(this.BenchType, rhs.BenchType)) return false;
                 if (!object.Equals(this.UsesSkill, rhs.UsesSkill)) return false;
@@ -664,6 +674,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Flags);
                 hash.Add(this.JNAM);
                 hash.Add(this.INAM);
+                hash.Add(this.MarkerFlags);
                 hash.Add(this.GNAM);
                 hash.Add(this.BenchType);
                 hash.Add(this.UsesSkill);
@@ -775,6 +786,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.JNAM)) return false;
                 if (!eval(this.INAM)) return false;
+                if (!eval(this.MarkerFlags)) return false;
                 if (!eval(this.GNAM)) return false;
                 if (!eval(this.BenchType)) return false;
                 if (!eval(this.UsesSkill)) return false;
@@ -917,6 +929,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Flags)) return true;
                 if (eval(this.JNAM)) return true;
                 if (eval(this.INAM)) return true;
+                if (eval(this.MarkerFlags)) return true;
                 if (eval(this.GNAM)) return true;
                 if (eval(this.BenchType)) return true;
                 if (eval(this.UsesSkill)) return true;
@@ -1050,6 +1063,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Flags = eval(this.Flags);
                 obj.JNAM = eval(this.JNAM);
                 obj.INAM = eval(this.INAM);
+                obj.MarkerFlags = eval(this.MarkerFlags);
                 obj.GNAM = eval(this.GNAM);
                 obj.BenchType = eval(this.BenchType);
                 obj.UsesSkill = eval(this.UsesSkill);
@@ -1271,6 +1285,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(INAM, "INAM");
                     }
+                    if (printMask?.MarkerFlags ?? true)
+                    {
+                        sb.AppendItem(MarkerFlags, "MarkerFlags");
+                    }
                     if (printMask?.GNAM ?? true)
                     {
                         sb.AppendItem(GNAM, "GNAM");
@@ -1385,6 +1403,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Flags;
             public Exception? JNAM;
             public Exception? INAM;
+            public Exception? MarkerFlags;
             public Exception? GNAM;
             public Exception? BenchType;
             public Exception? UsesSkill;
@@ -1446,6 +1465,8 @@ namespace Mutagen.Bethesda.Starfield
                         return JNAM;
                     case Furniture_FieldIndex.INAM:
                         return INAM;
+                    case Furniture_FieldIndex.MarkerFlags:
+                        return MarkerFlags;
                     case Furniture_FieldIndex.GNAM:
                         return GNAM;
                     case Furniture_FieldIndex.BenchType:
@@ -1539,6 +1560,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Furniture_FieldIndex.INAM:
                         this.INAM = ex;
+                        break;
+                    case Furniture_FieldIndex.MarkerFlags:
+                        this.MarkerFlags = ex;
                         break;
                     case Furniture_FieldIndex.GNAM:
                         this.GNAM = ex;
@@ -1644,6 +1668,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.INAM:
                         this.INAM = (Exception?)obj;
                         break;
+                    case Furniture_FieldIndex.MarkerFlags:
+                        this.MarkerFlags = (Exception?)obj;
+                        break;
                     case Furniture_FieldIndex.GNAM:
                         this.GNAM = (Exception?)obj;
                         break;
@@ -1702,6 +1729,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Flags != null) return true;
                 if (JNAM != null) return true;
                 if (INAM != null) return true;
+                if (MarkerFlags != null) return true;
                 if (GNAM != null) return true;
                 if (BenchType != null) return true;
                 if (UsesSkill != null) return true;
@@ -1854,6 +1882,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(INAM, "INAM");
                 }
                 {
+                    sb.AppendItem(MarkerFlags, "MarkerFlags");
+                }
+                {
                     sb.AppendItem(GNAM, "GNAM");
                 }
                 {
@@ -1955,6 +1986,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.JNAM = this.JNAM.Combine(rhs.JNAM);
                 ret.INAM = this.INAM.Combine(rhs.INAM);
+                ret.MarkerFlags = this.MarkerFlags.Combine(rhs.MarkerFlags);
                 ret.GNAM = this.GNAM.Combine(rhs.GNAM);
                 ret.BenchType = this.BenchType.Combine(rhs.BenchType);
                 ret.UsesSkill = this.UsesSkill.Combine(rhs.UsesSkill);
@@ -2008,6 +2040,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Flags;
             public bool JNAM;
             public bool INAM;
+            public bool MarkerFlags;
             public bool GNAM;
             public bool BenchType;
             public bool UsesSkill;
@@ -2038,6 +2071,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = defaultOn;
                 this.JNAM = defaultOn;
                 this.INAM = defaultOn;
+                this.MarkerFlags = defaultOn;
                 this.GNAM = defaultOn;
                 this.BenchType = defaultOn;
                 this.UsesSkill = defaultOn;
@@ -2073,6 +2107,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Flags, null));
                 ret.Add((JNAM, null));
                 ret.Add((INAM, null));
+                ret.Add((MarkerFlags, null));
                 ret.Add((GNAM, null));
                 ret.Add((BenchType, null));
                 ret.Add((UsesSkill, null));
@@ -2291,6 +2326,7 @@ namespace Mutagen.Bethesda.Starfield
         new Furniture.Flag? Flags { get; set; }
         new MemorySlice<Byte>? JNAM { get; set; }
         new Boolean INAM { get; set; }
+        new FurnitureMarkerFlags? MarkerFlags { get; set; }
         new MemorySlice<Byte>? GNAM { get; set; }
         new Furniture.BenchTypes BenchType { get; set; }
         new Skill? UsesSkill { get; set; }
@@ -2381,6 +2417,7 @@ namespace Mutagen.Bethesda.Starfield
         Furniture.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? JNAM { get; }
         Boolean INAM { get; }
+        FurnitureMarkerFlags? MarkerFlags { get; }
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
         Furniture.BenchTypes BenchType { get; }
         Skill? UsesSkill { get; }
@@ -2592,15 +2629,16 @@ namespace Mutagen.Bethesda.Starfield
         Flags = 26,
         JNAM = 27,
         INAM = 28,
-        GNAM = 29,
-        BenchType = 30,
-        UsesSkill = 31,
-        FurnitureTemplate = 32,
-        MarkerEntryPoints = 33,
-        MarkerModel = 34,
-        MarkerParameters = 35,
-        MarkerFiles = 36,
-        WBDTDataTypeState = 37,
+        MarkerFlags = 29,
+        GNAM = 30,
+        BenchType = 31,
+        UsesSkill = 32,
+        FurnitureTemplate = 33,
+        MarkerEntryPoints = 34,
+        MarkerModel = 35,
+        MarkerParameters = 36,
+        MarkerFiles = 37,
+        WBDTDataTypeState = 38,
     }
     #endregion
 
@@ -2611,9 +2649,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(Furniture.Mask<>);
 
@@ -2757,6 +2795,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Flags = default;
             item.JNAM = default;
             item.INAM = default;
+            item.MarkerFlags = default;
             item.GNAM = default;
             item.BenchType = default;
             item.UsesSkill = default;
@@ -2961,6 +3000,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Flags = item.Flags == rhs.Flags;
             ret.JNAM = MemorySliceExt.SequenceEqual(item.JNAM, rhs.JNAM);
             ret.INAM = item.INAM == rhs.INAM;
+            ret.MarkerFlags = item.MarkerFlags == rhs.MarkerFlags;
             ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
             ret.BenchType = item.BenchType == rhs.BenchType;
             ret.UsesSkill = item.UsesSkill == rhs.UsesSkill;
@@ -3172,6 +3212,11 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.INAM ?? true)
             {
                 sb.AppendItem(item.INAM, "INAM");
+            }
+            if ((printMask?.MarkerFlags ?? true)
+                && item.MarkerFlags is {} MarkerFlagsItem)
+            {
+                sb.AppendItem(MarkerFlagsItem, "MarkerFlags");
             }
             if ((printMask?.GNAM ?? true)
                 && item.GNAM is {} GNAMItem)
@@ -3410,6 +3455,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.INAM != rhs.INAM) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
+            {
+                if (lhs.MarkerFlags != rhs.MarkerFlags) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.GNAM) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
@@ -3538,6 +3587,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(JNAMItem);
             }
             hash.Add(item.INAM);
+            if (item.MarkerFlags is {} MarkerFlagsitem)
+            {
+                hash.Add(MarkerFlagsitem);
+            }
             if (item.GNAM is {} GNAMItem)
             {
                 hash.Add(GNAMItem);
@@ -4123,6 +4176,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.INAM = rhs.INAM;
             }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
+            {
+                item.MarkerFlags = rhs.MarkerFlags;
+            }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.GNAM) ?? true))
             {
                 if(rhs.GNAM is {} GNAMrhs)
@@ -4541,9 +4598,11 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
-            FurnitureBinaryWriteTranslation.WriteBinaryFlags(
-                writer: writer,
-                item: item);
+            EnumBinaryTranslation<Furniture.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 2,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.JNAM,
@@ -4552,9 +4611,11 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.INAM,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
-            FurnitureBinaryWriteTranslation.WriteBinaryFlags2(
-                writer: writer,
-                item: item);
+            EnumBinaryTranslation<FurnitureMarkerFlags, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.MarkerFlags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GNAM,
@@ -4617,32 +4678,6 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-        }
-
-        public static partial void WriteBinaryFlagsCustom(
-            MutagenWriter writer,
-            IFurnitureGetter item);
-
-        public static void WriteBinaryFlags(
-            MutagenWriter writer,
-            IFurnitureGetter item)
-        {
-            WriteBinaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryFlags2Custom(
-            MutagenWriter writer,
-            IFurnitureGetter item);
-
-        public static void WriteBinaryFlags2(
-            MutagenWriter writer,
-            IFurnitureGetter item)
-        {
-            WriteBinaryFlags2Custom(
-                writer: writer,
-                item: item);
         }
 
         public void Write(
@@ -4891,10 +4926,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryFlagsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Furniture.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)Furniture_FieldIndex.Flags;
                 }
                 case RecordTypeInts.JNAM:
@@ -4910,10 +4945,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    return FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MarkerFlags = EnumBinaryTranslation<FurnitureMarkerFlags, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Furniture_FieldIndex.MarkerFlags;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -5005,16 +5041,6 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.WithNoConverter());
             }
         }
-
-        public static partial void FillBinaryFlagsCustom(
-            MutagenFrame frame,
-            IFurnitureInternal item,
-            PreviousParse lastParsed);
-
-        public static partial ParseResult FillBinaryFlags2Custom(
-            MutagenFrame frame,
-            IFurnitureInternal item,
-            PreviousParse lastParsed);
 
     }
 
@@ -5135,12 +5161,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public ISoundReferenceGetter? LoopingSound { get; private set; }
         #region Flags
-        partial void FlagsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset);
-        public partial Furniture.Flag? GetFlagsCustom();
-        public Furniture.Flag? Flags => GetFlagsCustom();
+        private int? _FlagsLocation;
+        public Furniture.Flag? Flags => _FlagsLocation.HasValue ? (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Furniture.Flag?);
         #endregion
         #region JNAM
         private int? _JNAMLocation;
@@ -5150,11 +5172,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _INAMLocation;
         public Boolean INAM => _INAMLocation.HasValue ? true : default;
         #endregion
-        #region Flags2
-        public partial ParseResult Flags2CustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
+        #region MarkerFlags
+        private int? _MarkerFlagsLocation;
+        public FurnitureMarkerFlags? MarkerFlags => _MarkerFlagsLocation.HasValue ? (FurnitureMarkerFlags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerFlagsLocation!.Value, _package.MetaData.Constants)) : default(FurnitureMarkerFlags?);
         #endregion
         #region GNAM
         private int? _GNAMLocation;
@@ -5407,10 +5427,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    FlagsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return (int)Furniture_FieldIndex.Flags;
                 }
                 case RecordTypeInts.JNAM:
@@ -5425,10 +5442,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    return Flags2CustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    _MarkerFlagsLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.MarkerFlags;
                 }
                 case RecordTypeInts.GNAM:
                 {

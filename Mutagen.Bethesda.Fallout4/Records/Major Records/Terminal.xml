@@ -13,10 +13,10 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
       <FormLink name="LoopingSound" refName="SoundDescriptor" nullable="True" binary="NoGeneration" />
       <CustomLogic name="LoopingSoundExport" />
-      <ByteArray name="FNAM" recordType="FNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
       <RefList name="Holotapes" refName="TerminalHolotapeEntry" counterRecType="COCT" />
       <Enum name="Flags" enumName="Terminal.Flag" recordType="MNAM" binary="Custom" />
       <ByteArray name="WorkbenchData" recordType="WBDT" />
