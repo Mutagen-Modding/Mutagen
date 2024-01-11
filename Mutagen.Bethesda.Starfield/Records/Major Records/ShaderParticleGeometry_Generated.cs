@@ -54,6 +54,83 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region GravityVelocity
+        public Single GravityVelocity { get; set; } = default;
+        #endregion
+        #region Unknown1
+        public Single Unknown1 { get; set; } = default;
+        #endregion
+        #region RotationVelocity
+        public Single RotationVelocity { get; set; } = default;
+        #endregion
+        #region Unknown2
+        public Single Unknown2 { get; set; } = default;
+        #endregion
+        #region ParticleSizeX
+        public Single ParticleSizeX { get; set; } = default;
+        #endregion
+        #region Unknown3
+        public Single Unknown3 { get; set; } = default;
+        #endregion
+        #region ParticleSizeY
+        public Single ParticleSizeY { get; set; } = default;
+        #endregion
+        #region Unknown4
+        public Single Unknown4 { get; set; } = default;
+        #endregion
+        #region CenterOffsetMin
+        public Single CenterOffsetMin { get; set; } = default;
+        #endregion
+        #region Unknown5
+        public Single Unknown5 { get; set; } = default;
+        #endregion
+        #region CenterOffsetMax
+        public Single CenterOffsetMax { get; set; } = default;
+        #endregion
+        #region Unknown6
+        public Single Unknown6 { get; set; } = default;
+        #endregion
+        #region InitialRotation
+        public Single InitialRotation { get; set; } = default;
+        #endregion
+        #region Unknown7
+        public Single Unknown7 { get; set; } = default;
+        #endregion
+        #region NumSubtexturesX
+        public Single NumSubtexturesX { get; set; } = default;
+        #endregion
+        #region Unknown8
+        public Single Unknown8 { get; set; } = default;
+        #endregion
+        #region NumSubtexturesY
+        public Single NumSubtexturesY { get; set; } = default;
+        #endregion
+        #region Unknown9
+        public Single Unknown9 { get; set; } = default;
+        #endregion
+        #region Type
+        public ShaderParticleGeometry.ShaderParticleType Type { get; set; } = default;
+        #endregion
+        #region Unknown10
+        public Single Unknown10 { get; set; } = default;
+        #endregion
+        #region BoxSize
+        public UInt32 BoxSize { get; set; } = default;
+        #endregion
+        #region Unknown11
+        public Single Unknown11 { get; set; } = default;
+        #endregion
+        #region ParticleDensity
+        public Single ParticleDensity { get; set; } = default;
+        #endregion
+        #region Unknown12
+        public Single Unknown12 { get; set; } = default;
+        #endregion
+        #region ParticleTexture
+        public String? ParticleTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IShaderParticleGeometryGetter.ParticleTexture => this.ParticleTexture;
+        #endregion
 
         #region To String
 
@@ -79,6 +156,31 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.GravityVelocity = initialValue;
+                this.Unknown1 = initialValue;
+                this.RotationVelocity = initialValue;
+                this.Unknown2 = initialValue;
+                this.ParticleSizeX = initialValue;
+                this.Unknown3 = initialValue;
+                this.ParticleSizeY = initialValue;
+                this.Unknown4 = initialValue;
+                this.CenterOffsetMin = initialValue;
+                this.Unknown5 = initialValue;
+                this.CenterOffsetMax = initialValue;
+                this.Unknown6 = initialValue;
+                this.InitialRotation = initialValue;
+                this.Unknown7 = initialValue;
+                this.NumSubtexturesX = initialValue;
+                this.Unknown8 = initialValue;
+                this.NumSubtexturesY = initialValue;
+                this.Unknown9 = initialValue;
+                this.Type = initialValue;
+                this.Unknown10 = initialValue;
+                this.BoxSize = initialValue;
+                this.Unknown11 = initialValue;
+                this.ParticleDensity = initialValue;
+                this.Unknown12 = initialValue;
+                this.ParticleTexture = initialValue;
             }
 
             public Mask(
@@ -88,7 +190,32 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem GravityVelocity,
+                TItem Unknown1,
+                TItem RotationVelocity,
+                TItem Unknown2,
+                TItem ParticleSizeX,
+                TItem Unknown3,
+                TItem ParticleSizeY,
+                TItem Unknown4,
+                TItem CenterOffsetMin,
+                TItem Unknown5,
+                TItem CenterOffsetMax,
+                TItem Unknown6,
+                TItem InitialRotation,
+                TItem Unknown7,
+                TItem NumSubtexturesX,
+                TItem Unknown8,
+                TItem NumSubtexturesY,
+                TItem Unknown9,
+                TItem Type,
+                TItem Unknown10,
+                TItem BoxSize,
+                TItem Unknown11,
+                TItem ParticleDensity,
+                TItem Unknown12,
+                TItem ParticleTexture)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +225,31 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.GravityVelocity = GravityVelocity;
+                this.Unknown1 = Unknown1;
+                this.RotationVelocity = RotationVelocity;
+                this.Unknown2 = Unknown2;
+                this.ParticleSizeX = ParticleSizeX;
+                this.Unknown3 = Unknown3;
+                this.ParticleSizeY = ParticleSizeY;
+                this.Unknown4 = Unknown4;
+                this.CenterOffsetMin = CenterOffsetMin;
+                this.Unknown5 = Unknown5;
+                this.CenterOffsetMax = CenterOffsetMax;
+                this.Unknown6 = Unknown6;
+                this.InitialRotation = InitialRotation;
+                this.Unknown7 = Unknown7;
+                this.NumSubtexturesX = NumSubtexturesX;
+                this.Unknown8 = Unknown8;
+                this.NumSubtexturesY = NumSubtexturesY;
+                this.Unknown9 = Unknown9;
+                this.Type = Type;
+                this.Unknown10 = Unknown10;
+                this.BoxSize = BoxSize;
+                this.Unknown11 = Unknown11;
+                this.ParticleDensity = ParticleDensity;
+                this.Unknown12 = Unknown12;
+                this.ParticleTexture = ParticleTexture;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +258,34 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem GravityVelocity;
+            public TItem Unknown1;
+            public TItem RotationVelocity;
+            public TItem Unknown2;
+            public TItem ParticleSizeX;
+            public TItem Unknown3;
+            public TItem ParticleSizeY;
+            public TItem Unknown4;
+            public TItem CenterOffsetMin;
+            public TItem Unknown5;
+            public TItem CenterOffsetMax;
+            public TItem Unknown6;
+            public TItem InitialRotation;
+            public TItem Unknown7;
+            public TItem NumSubtexturesX;
+            public TItem Unknown8;
+            public TItem NumSubtexturesY;
+            public TItem Unknown9;
+            public TItem Type;
+            public TItem Unknown10;
+            public TItem BoxSize;
+            public TItem Unknown11;
+            public TItem ParticleDensity;
+            public TItem Unknown12;
+            public TItem ParticleTexture;
             #endregion
 
             #region Equals
@@ -119,11 +299,61 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.GravityVelocity, rhs.GravityVelocity)) return false;
+                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.RotationVelocity, rhs.RotationVelocity)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.ParticleSizeX, rhs.ParticleSizeX)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.ParticleSizeY, rhs.ParticleSizeY)) return false;
+                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.CenterOffsetMin, rhs.CenterOffsetMin)) return false;
+                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
+                if (!object.Equals(this.CenterOffsetMax, rhs.CenterOffsetMax)) return false;
+                if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
+                if (!object.Equals(this.InitialRotation, rhs.InitialRotation)) return false;
+                if (!object.Equals(this.Unknown7, rhs.Unknown7)) return false;
+                if (!object.Equals(this.NumSubtexturesX, rhs.NumSubtexturesX)) return false;
+                if (!object.Equals(this.Unknown8, rhs.Unknown8)) return false;
+                if (!object.Equals(this.NumSubtexturesY, rhs.NumSubtexturesY)) return false;
+                if (!object.Equals(this.Unknown9, rhs.Unknown9)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Unknown10, rhs.Unknown10)) return false;
+                if (!object.Equals(this.BoxSize, rhs.BoxSize)) return false;
+                if (!object.Equals(this.Unknown11, rhs.Unknown11)) return false;
+                if (!object.Equals(this.ParticleDensity, rhs.ParticleDensity)) return false;
+                if (!object.Equals(this.Unknown12, rhs.Unknown12)) return false;
+                if (!object.Equals(this.ParticleTexture, rhs.ParticleTexture)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.GravityVelocity);
+                hash.Add(this.Unknown1);
+                hash.Add(this.RotationVelocity);
+                hash.Add(this.Unknown2);
+                hash.Add(this.ParticleSizeX);
+                hash.Add(this.Unknown3);
+                hash.Add(this.ParticleSizeY);
+                hash.Add(this.Unknown4);
+                hash.Add(this.CenterOffsetMin);
+                hash.Add(this.Unknown5);
+                hash.Add(this.CenterOffsetMax);
+                hash.Add(this.Unknown6);
+                hash.Add(this.InitialRotation);
+                hash.Add(this.Unknown7);
+                hash.Add(this.NumSubtexturesX);
+                hash.Add(this.Unknown8);
+                hash.Add(this.NumSubtexturesY);
+                hash.Add(this.Unknown9);
+                hash.Add(this.Type);
+                hash.Add(this.Unknown10);
+                hash.Add(this.BoxSize);
+                hash.Add(this.Unknown11);
+                hash.Add(this.ParticleDensity);
+                hash.Add(this.Unknown12);
+                hash.Add(this.ParticleTexture);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +364,31 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.GravityVelocity)) return false;
+                if (!eval(this.Unknown1)) return false;
+                if (!eval(this.RotationVelocity)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.ParticleSizeX)) return false;
+                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.ParticleSizeY)) return false;
+                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.CenterOffsetMin)) return false;
+                if (!eval(this.Unknown5)) return false;
+                if (!eval(this.CenterOffsetMax)) return false;
+                if (!eval(this.Unknown6)) return false;
+                if (!eval(this.InitialRotation)) return false;
+                if (!eval(this.Unknown7)) return false;
+                if (!eval(this.NumSubtexturesX)) return false;
+                if (!eval(this.Unknown8)) return false;
+                if (!eval(this.NumSubtexturesY)) return false;
+                if (!eval(this.Unknown9)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Unknown10)) return false;
+                if (!eval(this.BoxSize)) return false;
+                if (!eval(this.Unknown11)) return false;
+                if (!eval(this.ParticleDensity)) return false;
+                if (!eval(this.Unknown12)) return false;
+                if (!eval(this.ParticleTexture)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +397,31 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.GravityVelocity)) return true;
+                if (eval(this.Unknown1)) return true;
+                if (eval(this.RotationVelocity)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.ParticleSizeX)) return true;
+                if (eval(this.Unknown3)) return true;
+                if (eval(this.ParticleSizeY)) return true;
+                if (eval(this.Unknown4)) return true;
+                if (eval(this.CenterOffsetMin)) return true;
+                if (eval(this.Unknown5)) return true;
+                if (eval(this.CenterOffsetMax)) return true;
+                if (eval(this.Unknown6)) return true;
+                if (eval(this.InitialRotation)) return true;
+                if (eval(this.Unknown7)) return true;
+                if (eval(this.NumSubtexturesX)) return true;
+                if (eval(this.Unknown8)) return true;
+                if (eval(this.NumSubtexturesY)) return true;
+                if (eval(this.Unknown9)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Unknown10)) return true;
+                if (eval(this.BoxSize)) return true;
+                if (eval(this.Unknown11)) return true;
+                if (eval(this.ParticleDensity)) return true;
+                if (eval(this.Unknown12)) return true;
+                if (eval(this.ParticleTexture)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +437,31 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.GravityVelocity = eval(this.GravityVelocity);
+                obj.Unknown1 = eval(this.Unknown1);
+                obj.RotationVelocity = eval(this.RotationVelocity);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.ParticleSizeX = eval(this.ParticleSizeX);
+                obj.Unknown3 = eval(this.Unknown3);
+                obj.ParticleSizeY = eval(this.ParticleSizeY);
+                obj.Unknown4 = eval(this.Unknown4);
+                obj.CenterOffsetMin = eval(this.CenterOffsetMin);
+                obj.Unknown5 = eval(this.Unknown5);
+                obj.CenterOffsetMax = eval(this.CenterOffsetMax);
+                obj.Unknown6 = eval(this.Unknown6);
+                obj.InitialRotation = eval(this.InitialRotation);
+                obj.Unknown7 = eval(this.Unknown7);
+                obj.NumSubtexturesX = eval(this.NumSubtexturesX);
+                obj.Unknown8 = eval(this.Unknown8);
+                obj.NumSubtexturesY = eval(this.NumSubtexturesY);
+                obj.Unknown9 = eval(this.Unknown9);
+                obj.Type = eval(this.Type);
+                obj.Unknown10 = eval(this.Unknown10);
+                obj.BoxSize = eval(this.BoxSize);
+                obj.Unknown11 = eval(this.Unknown11);
+                obj.ParticleDensity = eval(this.ParticleDensity);
+                obj.Unknown12 = eval(this.Unknown12);
+                obj.ParticleTexture = eval(this.ParticleTexture);
             }
             #endregion
 
@@ -175,6 +480,106 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ShaderParticleGeometry.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.GravityVelocity ?? true)
+                    {
+                        sb.AppendItem(GravityVelocity, "GravityVelocity");
+                    }
+                    if (printMask?.Unknown1 ?? true)
+                    {
+                        sb.AppendItem(Unknown1, "Unknown1");
+                    }
+                    if (printMask?.RotationVelocity ?? true)
+                    {
+                        sb.AppendItem(RotationVelocity, "RotationVelocity");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        sb.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.ParticleSizeX ?? true)
+                    {
+                        sb.AppendItem(ParticleSizeX, "ParticleSizeX");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        sb.AppendItem(Unknown3, "Unknown3");
+                    }
+                    if (printMask?.ParticleSizeY ?? true)
+                    {
+                        sb.AppendItem(ParticleSizeY, "ParticleSizeY");
+                    }
+                    if (printMask?.Unknown4 ?? true)
+                    {
+                        sb.AppendItem(Unknown4, "Unknown4");
+                    }
+                    if (printMask?.CenterOffsetMin ?? true)
+                    {
+                        sb.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                    }
+                    if (printMask?.Unknown5 ?? true)
+                    {
+                        sb.AppendItem(Unknown5, "Unknown5");
+                    }
+                    if (printMask?.CenterOffsetMax ?? true)
+                    {
+                        sb.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                    }
+                    if (printMask?.Unknown6 ?? true)
+                    {
+                        sb.AppendItem(Unknown6, "Unknown6");
+                    }
+                    if (printMask?.InitialRotation ?? true)
+                    {
+                        sb.AppendItem(InitialRotation, "InitialRotation");
+                    }
+                    if (printMask?.Unknown7 ?? true)
+                    {
+                        sb.AppendItem(Unknown7, "Unknown7");
+                    }
+                    if (printMask?.NumSubtexturesX ?? true)
+                    {
+                        sb.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                    }
+                    if (printMask?.Unknown8 ?? true)
+                    {
+                        sb.AppendItem(Unknown8, "Unknown8");
+                    }
+                    if (printMask?.NumSubtexturesY ?? true)
+                    {
+                        sb.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                    }
+                    if (printMask?.Unknown9 ?? true)
+                    {
+                        sb.AppendItem(Unknown9, "Unknown9");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Unknown10 ?? true)
+                    {
+                        sb.AppendItem(Unknown10, "Unknown10");
+                    }
+                    if (printMask?.BoxSize ?? true)
+                    {
+                        sb.AppendItem(BoxSize, "BoxSize");
+                    }
+                    if (printMask?.Unknown11 ?? true)
+                    {
+                        sb.AppendItem(Unknown11, "Unknown11");
+                    }
+                    if (printMask?.ParticleDensity ?? true)
+                    {
+                        sb.AppendItem(ParticleDensity, "ParticleDensity");
+                    }
+                    if (printMask?.Unknown12 ?? true)
+                    {
+                        sb.AppendItem(Unknown12, "Unknown12");
+                    }
+                    if (printMask?.ParticleTexture ?? true)
+                    {
+                        sb.AppendItem(ParticleTexture, "ParticleTexture");
+                    }
                 }
             }
             #endregion
@@ -185,12 +590,90 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? GravityVelocity;
+            public Exception? Unknown1;
+            public Exception? RotationVelocity;
+            public Exception? Unknown2;
+            public Exception? ParticleSizeX;
+            public Exception? Unknown3;
+            public Exception? ParticleSizeY;
+            public Exception? Unknown4;
+            public Exception? CenterOffsetMin;
+            public Exception? Unknown5;
+            public Exception? CenterOffsetMax;
+            public Exception? Unknown6;
+            public Exception? InitialRotation;
+            public Exception? Unknown7;
+            public Exception? NumSubtexturesX;
+            public Exception? Unknown8;
+            public Exception? NumSubtexturesY;
+            public Exception? Unknown9;
+            public Exception? Type;
+            public Exception? Unknown10;
+            public Exception? BoxSize;
+            public Exception? Unknown11;
+            public Exception? ParticleDensity;
+            public Exception? Unknown12;
+            public Exception? ParticleTexture;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                        return GravityVelocity;
+                    case ShaderParticleGeometry_FieldIndex.Unknown1:
+                        return Unknown1;
+                    case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                        return RotationVelocity;
+                    case ShaderParticleGeometry_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                        return ParticleSizeX;
+                    case ShaderParticleGeometry_FieldIndex.Unknown3:
+                        return Unknown3;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                        return ParticleSizeY;
+                    case ShaderParticleGeometry_FieldIndex.Unknown4:
+                        return Unknown4;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                        return CenterOffsetMin;
+                    case ShaderParticleGeometry_FieldIndex.Unknown5:
+                        return Unknown5;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                        return CenterOffsetMax;
+                    case ShaderParticleGeometry_FieldIndex.Unknown6:
+                        return Unknown6;
+                    case ShaderParticleGeometry_FieldIndex.InitialRotation:
+                        return InitialRotation;
+                    case ShaderParticleGeometry_FieldIndex.Unknown7:
+                        return Unknown7;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                        return NumSubtexturesX;
+                    case ShaderParticleGeometry_FieldIndex.Unknown8:
+                        return Unknown8;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                        return NumSubtexturesY;
+                    case ShaderParticleGeometry_FieldIndex.Unknown9:
+                        return Unknown9;
+                    case ShaderParticleGeometry_FieldIndex.Type:
+                        return Type;
+                    case ShaderParticleGeometry_FieldIndex.Unknown10:
+                        return Unknown10;
+                    case ShaderParticleGeometry_FieldIndex.BoxSize:
+                        return BoxSize;
+                    case ShaderParticleGeometry_FieldIndex.Unknown11:
+                        return Unknown11;
+                    case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                        return ParticleDensity;
+                    case ShaderParticleGeometry_FieldIndex.Unknown12:
+                        return Unknown12;
+                    case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                        return ParticleTexture;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +684,81 @@ namespace Mutagen.Bethesda.Starfield
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                        this.GravityVelocity = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown1:
+                        this.Unknown1 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                        this.RotationVelocity = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                        this.ParticleSizeX = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                        this.ParticleSizeY = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown4:
+                        this.Unknown4 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                        this.CenterOffsetMin = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown5:
+                        this.Unknown5 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                        this.CenterOffsetMax = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown6:
+                        this.Unknown6 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.InitialRotation:
+                        this.InitialRotation = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown7:
+                        this.Unknown7 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                        this.NumSubtexturesX = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown8:
+                        this.Unknown8 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                        this.NumSubtexturesY = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown9:
+                        this.Unknown9 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown10:
+                        this.Unknown10 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.BoxSize:
+                        this.BoxSize = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown11:
+                        this.Unknown11 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                        this.ParticleDensity = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown12:
+                        this.Unknown12 = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                        this.ParticleTexture = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +770,81 @@ namespace Mutagen.Bethesda.Starfield
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                        this.GravityVelocity = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown1:
+                        this.Unknown1 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                        this.RotationVelocity = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                        this.ParticleSizeX = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                        this.ParticleSizeY = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown4:
+                        this.Unknown4 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                        this.CenterOffsetMin = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown5:
+                        this.Unknown5 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                        this.CenterOffsetMax = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown6:
+                        this.Unknown6 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.InitialRotation:
+                        this.InitialRotation = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown7:
+                        this.Unknown7 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                        this.NumSubtexturesX = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown8:
+                        this.Unknown8 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                        this.NumSubtexturesY = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown9:
+                        this.Unknown9 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown10:
+                        this.Unknown10 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.BoxSize:
+                        this.BoxSize = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown11:
+                        this.Unknown11 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                        this.ParticleDensity = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Unknown12:
+                        this.Unknown12 = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                        this.ParticleTexture = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +854,31 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (GravityVelocity != null) return true;
+                if (Unknown1 != null) return true;
+                if (RotationVelocity != null) return true;
+                if (Unknown2 != null) return true;
+                if (ParticleSizeX != null) return true;
+                if (Unknown3 != null) return true;
+                if (ParticleSizeY != null) return true;
+                if (Unknown4 != null) return true;
+                if (CenterOffsetMin != null) return true;
+                if (Unknown5 != null) return true;
+                if (CenterOffsetMax != null) return true;
+                if (Unknown6 != null) return true;
+                if (InitialRotation != null) return true;
+                if (Unknown7 != null) return true;
+                if (NumSubtexturesX != null) return true;
+                if (Unknown8 != null) return true;
+                if (NumSubtexturesY != null) return true;
+                if (Unknown9 != null) return true;
+                if (Type != null) return true;
+                if (Unknown10 != null) return true;
+                if (BoxSize != null) return true;
+                if (Unknown11 != null) return true;
+                if (ParticleDensity != null) return true;
+                if (Unknown12 != null) return true;
+                if (ParticleTexture != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +905,81 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(GravityVelocity, "GravityVelocity");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(RotationVelocity, "RotationVelocity");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(ParticleSizeX, "ParticleSizeX");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(ParticleSizeY, "ParticleSizeY");
+                }
+                {
+                    sb.AppendItem(Unknown4, "Unknown4");
+                }
+                {
+                    sb.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                }
+                {
+                    sb.AppendItem(Unknown5, "Unknown5");
+                }
+                {
+                    sb.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                }
+                {
+                    sb.AppendItem(Unknown6, "Unknown6");
+                }
+                {
+                    sb.AppendItem(InitialRotation, "InitialRotation");
+                }
+                {
+                    sb.AppendItem(Unknown7, "Unknown7");
+                }
+                {
+                    sb.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                }
+                {
+                    sb.AppendItem(Unknown8, "Unknown8");
+                }
+                {
+                    sb.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                }
+                {
+                    sb.AppendItem(Unknown9, "Unknown9");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Unknown10, "Unknown10");
+                }
+                {
+                    sb.AppendItem(BoxSize, "BoxSize");
+                }
+                {
+                    sb.AppendItem(Unknown11, "Unknown11");
+                }
+                {
+                    sb.AppendItem(ParticleDensity, "ParticleDensity");
+                }
+                {
+                    sb.AppendItem(Unknown12, "Unknown12");
+                }
+                {
+                    sb.AppendItem(ParticleTexture, "ParticleTexture");
+                }
             }
             #endregion
 
@@ -255,6 +988,31 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.GravityVelocity = this.GravityVelocity.Combine(rhs.GravityVelocity);
+                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.RotationVelocity = this.RotationVelocity.Combine(rhs.RotationVelocity);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.ParticleSizeX = this.ParticleSizeX.Combine(rhs.ParticleSizeX);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.ParticleSizeY = this.ParticleSizeY.Combine(rhs.ParticleSizeY);
+                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.CenterOffsetMin = this.CenterOffsetMin.Combine(rhs.CenterOffsetMin);
+                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
+                ret.CenterOffsetMax = this.CenterOffsetMax.Combine(rhs.CenterOffsetMax);
+                ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
+                ret.InitialRotation = this.InitialRotation.Combine(rhs.InitialRotation);
+                ret.Unknown7 = this.Unknown7.Combine(rhs.Unknown7);
+                ret.NumSubtexturesX = this.NumSubtexturesX.Combine(rhs.NumSubtexturesX);
+                ret.Unknown8 = this.Unknown8.Combine(rhs.Unknown8);
+                ret.NumSubtexturesY = this.NumSubtexturesY.Combine(rhs.NumSubtexturesY);
+                ret.Unknown9 = this.Unknown9.Combine(rhs.Unknown9);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Unknown10 = this.Unknown10.Combine(rhs.Unknown10);
+                ret.BoxSize = this.BoxSize.Combine(rhs.BoxSize);
+                ret.Unknown11 = this.Unknown11.Combine(rhs.Unknown11);
+                ret.ParticleDensity = this.ParticleDensity.Combine(rhs.ParticleDensity);
+                ret.Unknown12 = this.Unknown12.Combine(rhs.Unknown12);
+                ret.ParticleTexture = this.ParticleTexture.Combine(rhs.ParticleTexture);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1034,98 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool GravityVelocity;
+            public bool Unknown1;
+            public bool RotationVelocity;
+            public bool Unknown2;
+            public bool ParticleSizeX;
+            public bool Unknown3;
+            public bool ParticleSizeY;
+            public bool Unknown4;
+            public bool CenterOffsetMin;
+            public bool Unknown5;
+            public bool CenterOffsetMax;
+            public bool Unknown6;
+            public bool InitialRotation;
+            public bool Unknown7;
+            public bool NumSubtexturesX;
+            public bool Unknown8;
+            public bool NumSubtexturesY;
+            public bool Unknown9;
+            public bool Type;
+            public bool Unknown10;
+            public bool BoxSize;
+            public bool Unknown11;
+            public bool ParticleDensity;
+            public bool Unknown12;
+            public bool ParticleTexture;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.GravityVelocity = defaultOn;
+                this.Unknown1 = defaultOn;
+                this.RotationVelocity = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.ParticleSizeX = defaultOn;
+                this.Unknown3 = defaultOn;
+                this.ParticleSizeY = defaultOn;
+                this.Unknown4 = defaultOn;
+                this.CenterOffsetMin = defaultOn;
+                this.Unknown5 = defaultOn;
+                this.CenterOffsetMax = defaultOn;
+                this.Unknown6 = defaultOn;
+                this.InitialRotation = defaultOn;
+                this.Unknown7 = defaultOn;
+                this.NumSubtexturesX = defaultOn;
+                this.Unknown8 = defaultOn;
+                this.NumSubtexturesY = defaultOn;
+                this.Unknown9 = defaultOn;
+                this.Type = defaultOn;
+                this.Unknown10 = defaultOn;
+                this.BoxSize = defaultOn;
+                this.Unknown11 = defaultOn;
+                this.ParticleDensity = defaultOn;
+                this.Unknown12 = defaultOn;
+                this.ParticleTexture = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((GravityVelocity, null));
+                ret.Add((Unknown1, null));
+                ret.Add((RotationVelocity, null));
+                ret.Add((Unknown2, null));
+                ret.Add((ParticleSizeX, null));
+                ret.Add((Unknown3, null));
+                ret.Add((ParticleSizeY, null));
+                ret.Add((Unknown4, null));
+                ret.Add((CenterOffsetMin, null));
+                ret.Add((Unknown5, null));
+                ret.Add((CenterOffsetMax, null));
+                ret.Add((Unknown6, null));
+                ret.Add((InitialRotation, null));
+                ret.Add((Unknown7, null));
+                ret.Add((NumSubtexturesX, null));
+                ret.Add((Unknown8, null));
+                ret.Add((NumSubtexturesY, null));
+                ret.Add((Unknown9, null));
+                ret.Add((Type, null));
+                ret.Add((Unknown10, null));
+                ret.Add((BoxSize, null));
+                ret.Add((Unknown11, null));
+                ret.Add((ParticleDensity, null));
+                ret.Add((Unknown12, null));
+                ret.Add((ParticleTexture, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -428,6 +1269,31 @@ namespace Mutagen.Bethesda.Starfield
         IShaderParticleGeometryGetter,
         IStarfieldMajorRecordInternal
     {
+        new Single GravityVelocity { get; set; }
+        new Single Unknown1 { get; set; }
+        new Single RotationVelocity { get; set; }
+        new Single Unknown2 { get; set; }
+        new Single ParticleSizeX { get; set; }
+        new Single Unknown3 { get; set; }
+        new Single ParticleSizeY { get; set; }
+        new Single Unknown4 { get; set; }
+        new Single CenterOffsetMin { get; set; }
+        new Single Unknown5 { get; set; }
+        new Single CenterOffsetMax { get; set; }
+        new Single Unknown6 { get; set; }
+        new Single InitialRotation { get; set; }
+        new Single Unknown7 { get; set; }
+        new Single NumSubtexturesX { get; set; }
+        new Single Unknown8 { get; set; }
+        new Single NumSubtexturesY { get; set; }
+        new Single Unknown9 { get; set; }
+        new ShaderParticleGeometry.ShaderParticleType Type { get; set; }
+        new Single Unknown10 { get; set; }
+        new UInt32 BoxSize { get; set; }
+        new Single Unknown11 { get; set; }
+        new Single ParticleDensity { get; set; }
+        new Single Unknown12 { get; set; }
+        new String? ParticleTexture { get; set; }
     }
 
     public partial interface IShaderParticleGeometryInternal :
@@ -445,6 +1311,31 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IShaderParticleGeometryGetter>
     {
         static new ILoquiRegistration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
+        Single GravityVelocity { get; }
+        Single Unknown1 { get; }
+        Single RotationVelocity { get; }
+        Single Unknown2 { get; }
+        Single ParticleSizeX { get; }
+        Single Unknown3 { get; }
+        Single ParticleSizeY { get; }
+        Single Unknown4 { get; }
+        Single CenterOffsetMin { get; }
+        Single Unknown5 { get; }
+        Single CenterOffsetMax { get; }
+        Single Unknown6 { get; }
+        Single InitialRotation { get; }
+        Single Unknown7 { get; }
+        Single NumSubtexturesX { get; }
+        Single Unknown8 { get; }
+        Single NumSubtexturesY { get; }
+        Single Unknown9 { get; }
+        ShaderParticleGeometry.ShaderParticleType Type { get; }
+        Single Unknown10 { get; }
+        UInt32 BoxSize { get; }
+        Single Unknown11 { get; }
+        Single ParticleDensity { get; }
+        Single Unknown12 { get; }
+        String? ParticleTexture { get; }
 
     }
 
@@ -621,6 +1512,31 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        GravityVelocity = 7,
+        Unknown1 = 8,
+        RotationVelocity = 9,
+        Unknown2 = 10,
+        ParticleSizeX = 11,
+        Unknown3 = 12,
+        ParticleSizeY = 13,
+        Unknown4 = 14,
+        CenterOffsetMin = 15,
+        Unknown5 = 16,
+        CenterOffsetMax = 17,
+        Unknown6 = 18,
+        InitialRotation = 19,
+        Unknown7 = 20,
+        NumSubtexturesX = 21,
+        Unknown8 = 22,
+        NumSubtexturesY = 23,
+        Unknown9 = 24,
+        Type = 25,
+        Unknown10 = 26,
+        BoxSize = 27,
+        Unknown11 = 28,
+        ParticleDensity = 29,
+        Unknown12 = 30,
+        ParticleTexture = 31,
     }
     #endregion
 
@@ -631,9 +1547,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(ShaderParticleGeometry.Mask<>);
 
@@ -663,8 +1579,14 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SPGD);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SPGD);
+            var all = RecordCollection.Factory(
+                RecordTypes.SPGD,
+                RecordTypes.DATA,
+                RecordTypes.MNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ShaderParticleGeometryBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1628,31 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IShaderParticleGeometryInternal item)
         {
             ClearPartial();
+            item.GravityVelocity = default;
+            item.Unknown1 = default;
+            item.RotationVelocity = default;
+            item.Unknown2 = default;
+            item.ParticleSizeX = default;
+            item.Unknown3 = default;
+            item.ParticleSizeY = default;
+            item.Unknown4 = default;
+            item.CenterOffsetMin = default;
+            item.Unknown5 = default;
+            item.CenterOffsetMax = default;
+            item.Unknown6 = default;
+            item.InitialRotation = default;
+            item.Unknown7 = default;
+            item.NumSubtexturesX = default;
+            item.Unknown8 = default;
+            item.NumSubtexturesY = default;
+            item.Unknown9 = default;
+            item.Type = default;
+            item.Unknown10 = default;
+            item.BoxSize = default;
+            item.Unknown11 = default;
+            item.ParticleDensity = default;
+            item.Unknown12 = default;
+            item.ParticleTexture = default;
             base.Clear(item);
         }
         
@@ -790,6 +1737,31 @@ namespace Mutagen.Bethesda.Starfield
             ShaderParticleGeometry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.GravityVelocity = item.GravityVelocity.EqualsWithin(rhs.GravityVelocity);
+            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
+            ret.RotationVelocity = item.RotationVelocity.EqualsWithin(rhs.RotationVelocity);
+            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
+            ret.ParticleSizeX = item.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX);
+            ret.Unknown3 = item.Unknown3.EqualsWithin(rhs.Unknown3);
+            ret.ParticleSizeY = item.ParticleSizeY.EqualsWithin(rhs.ParticleSizeY);
+            ret.Unknown4 = item.Unknown4.EqualsWithin(rhs.Unknown4);
+            ret.CenterOffsetMin = item.CenterOffsetMin.EqualsWithin(rhs.CenterOffsetMin);
+            ret.Unknown5 = item.Unknown5.EqualsWithin(rhs.Unknown5);
+            ret.CenterOffsetMax = item.CenterOffsetMax.EqualsWithin(rhs.CenterOffsetMax);
+            ret.Unknown6 = item.Unknown6.EqualsWithin(rhs.Unknown6);
+            ret.InitialRotation = item.InitialRotation.EqualsWithin(rhs.InitialRotation);
+            ret.Unknown7 = item.Unknown7.EqualsWithin(rhs.Unknown7);
+            ret.NumSubtexturesX = item.NumSubtexturesX.EqualsWithin(rhs.NumSubtexturesX);
+            ret.Unknown8 = item.Unknown8.EqualsWithin(rhs.Unknown8);
+            ret.NumSubtexturesY = item.NumSubtexturesY.EqualsWithin(rhs.NumSubtexturesY);
+            ret.Unknown9 = item.Unknown9.EqualsWithin(rhs.Unknown9);
+            ret.Type = item.Type == rhs.Type;
+            ret.Unknown10 = item.Unknown10.EqualsWithin(rhs.Unknown10);
+            ret.BoxSize = item.BoxSize == rhs.BoxSize;
+            ret.Unknown11 = item.Unknown11.EqualsWithin(rhs.Unknown11);
+            ret.ParticleDensity = item.ParticleDensity.EqualsWithin(rhs.ParticleDensity);
+            ret.Unknown12 = item.Unknown12.EqualsWithin(rhs.Unknown12);
+            ret.ParticleTexture = string.Equals(item.ParticleTexture, rhs.ParticleTexture);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1811,107 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.GravityVelocity ?? true)
+            {
+                sb.AppendItem(item.GravityVelocity, "GravityVelocity");
+            }
+            if (printMask?.Unknown1 ?? true)
+            {
+                sb.AppendItem(item.Unknown1, "Unknown1");
+            }
+            if (printMask?.RotationVelocity ?? true)
+            {
+                sb.AppendItem(item.RotationVelocity, "RotationVelocity");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                sb.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.ParticleSizeX ?? true)
+            {
+                sb.AppendItem(item.ParticleSizeX, "ParticleSizeX");
+            }
+            if (printMask?.Unknown3 ?? true)
+            {
+                sb.AppendItem(item.Unknown3, "Unknown3");
+            }
+            if (printMask?.ParticleSizeY ?? true)
+            {
+                sb.AppendItem(item.ParticleSizeY, "ParticleSizeY");
+            }
+            if (printMask?.Unknown4 ?? true)
+            {
+                sb.AppendItem(item.Unknown4, "Unknown4");
+            }
+            if (printMask?.CenterOffsetMin ?? true)
+            {
+                sb.AppendItem(item.CenterOffsetMin, "CenterOffsetMin");
+            }
+            if (printMask?.Unknown5 ?? true)
+            {
+                sb.AppendItem(item.Unknown5, "Unknown5");
+            }
+            if (printMask?.CenterOffsetMax ?? true)
+            {
+                sb.AppendItem(item.CenterOffsetMax, "CenterOffsetMax");
+            }
+            if (printMask?.Unknown6 ?? true)
+            {
+                sb.AppendItem(item.Unknown6, "Unknown6");
+            }
+            if (printMask?.InitialRotation ?? true)
+            {
+                sb.AppendItem(item.InitialRotation, "InitialRotation");
+            }
+            if (printMask?.Unknown7 ?? true)
+            {
+                sb.AppendItem(item.Unknown7, "Unknown7");
+            }
+            if (printMask?.NumSubtexturesX ?? true)
+            {
+                sb.AppendItem(item.NumSubtexturesX, "NumSubtexturesX");
+            }
+            if (printMask?.Unknown8 ?? true)
+            {
+                sb.AppendItem(item.Unknown8, "Unknown8");
+            }
+            if (printMask?.NumSubtexturesY ?? true)
+            {
+                sb.AppendItem(item.NumSubtexturesY, "NumSubtexturesY");
+            }
+            if (printMask?.Unknown9 ?? true)
+            {
+                sb.AppendItem(item.Unknown9, "Unknown9");
+            }
+            if (printMask?.Type ?? true)
+            {
+                sb.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.Unknown10 ?? true)
+            {
+                sb.AppendItem(item.Unknown10, "Unknown10");
+            }
+            if (printMask?.BoxSize ?? true)
+            {
+                sb.AppendItem(item.BoxSize, "BoxSize");
+            }
+            if (printMask?.Unknown11 ?? true)
+            {
+                sb.AppendItem(item.Unknown11, "Unknown11");
+            }
+            if (printMask?.ParticleDensity ?? true)
+            {
+                sb.AppendItem(item.ParticleDensity, "ParticleDensity");
+            }
+            if (printMask?.Unknown12 ?? true)
+            {
+                sb.AppendItem(item.Unknown12, "Unknown12");
+            }
+            if ((printMask?.ParticleTexture ?? true)
+                && item.ParticleTexture is {} ParticleTextureItem)
+            {
+                sb.AppendItem(ParticleTextureItem, "ParticleTexture");
+            }
         }
         
         public static ShaderParticleGeometry_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1962,106 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
+            {
+                if (!lhs.GravityVelocity.EqualsWithin(rhs.GravityVelocity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown1) ?? true))
+            {
+                if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
+            {
+                if (!lhs.RotationVelocity.EqualsWithin(rhs.RotationVelocity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown2) ?? true))
+            {
+                if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
+            {
+                if (!lhs.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown3) ?? true))
+            {
+                if (!lhs.Unknown3.EqualsWithin(rhs.Unknown3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
+            {
+                if (!lhs.ParticleSizeY.EqualsWithin(rhs.ParticleSizeY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown4) ?? true))
+            {
+                if (!lhs.Unknown4.EqualsWithin(rhs.Unknown4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
+            {
+                if (!lhs.CenterOffsetMin.EqualsWithin(rhs.CenterOffsetMin)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown5) ?? true))
+            {
+                if (!lhs.Unknown5.EqualsWithin(rhs.Unknown5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
+            {
+                if (!lhs.CenterOffsetMax.EqualsWithin(rhs.CenterOffsetMax)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown6) ?? true))
+            {
+                if (!lhs.Unknown6.EqualsWithin(rhs.Unknown6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotation) ?? true))
+            {
+                if (!lhs.InitialRotation.EqualsWithin(rhs.InitialRotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown7) ?? true))
+            {
+                if (!lhs.Unknown7.EqualsWithin(rhs.Unknown7)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
+            {
+                if (!lhs.NumSubtexturesX.EqualsWithin(rhs.NumSubtexturesX)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown8) ?? true))
+            {
+                if (!lhs.Unknown8.EqualsWithin(rhs.Unknown8)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
+            {
+                if (!lhs.NumSubtexturesY.EqualsWithin(rhs.NumSubtexturesY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown9) ?? true))
+            {
+                if (!lhs.Unknown9.EqualsWithin(rhs.Unknown9)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown10) ?? true))
+            {
+                if (!lhs.Unknown10.EqualsWithin(rhs.Unknown10)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
+            {
+                if (lhs.BoxSize != rhs.BoxSize) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown11) ?? true))
+            {
+                if (!lhs.Unknown11.EqualsWithin(rhs.Unknown11)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
+            {
+                if (!lhs.ParticleDensity.EqualsWithin(rhs.ParticleDensity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown12) ?? true))
+            {
+                if (!lhs.Unknown12.EqualsWithin(rhs.Unknown12)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
+            {
+                if (!string.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
+            }
             return true;
         }
         
@@ -917,6 +2090,34 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IShaderParticleGeometryGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.GravityVelocity);
+            hash.Add(item.Unknown1);
+            hash.Add(item.RotationVelocity);
+            hash.Add(item.Unknown2);
+            hash.Add(item.ParticleSizeX);
+            hash.Add(item.Unknown3);
+            hash.Add(item.ParticleSizeY);
+            hash.Add(item.Unknown4);
+            hash.Add(item.CenterOffsetMin);
+            hash.Add(item.Unknown5);
+            hash.Add(item.CenterOffsetMax);
+            hash.Add(item.Unknown6);
+            hash.Add(item.InitialRotation);
+            hash.Add(item.Unknown7);
+            hash.Add(item.NumSubtexturesX);
+            hash.Add(item.Unknown8);
+            hash.Add(item.NumSubtexturesY);
+            hash.Add(item.Unknown9);
+            hash.Add(item.Type);
+            hash.Add(item.Unknown10);
+            hash.Add(item.BoxSize);
+            hash.Add(item.Unknown11);
+            hash.Add(item.ParticleDensity);
+            hash.Add(item.Unknown12);
+            if (item.ParticleTexture is {} ParticleTextureitem)
+            {
+                hash.Add(ParticleTextureitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,6 +2221,106 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
+            {
+                item.GravityVelocity = rhs.GravityVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown1) ?? true))
+            {
+                item.Unknown1 = rhs.Unknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
+            {
+                item.RotationVelocity = rhs.RotationVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
+            {
+                item.ParticleSizeX = rhs.ParticleSizeX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
+            {
+                item.ParticleSizeY = rhs.ParticleSizeY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown4) ?? true))
+            {
+                item.Unknown4 = rhs.Unknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
+            {
+                item.CenterOffsetMin = rhs.CenterOffsetMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown5) ?? true))
+            {
+                item.Unknown5 = rhs.Unknown5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
+            {
+                item.CenterOffsetMax = rhs.CenterOffsetMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown6) ?? true))
+            {
+                item.Unknown6 = rhs.Unknown6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotation) ?? true))
+            {
+                item.InitialRotation = rhs.InitialRotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown7) ?? true))
+            {
+                item.Unknown7 = rhs.Unknown7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
+            {
+                item.NumSubtexturesX = rhs.NumSubtexturesX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown8) ?? true))
+            {
+                item.Unknown8 = rhs.Unknown8;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
+            {
+                item.NumSubtexturesY = rhs.NumSubtexturesY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown9) ?? true))
+            {
+                item.Unknown9 = rhs.Unknown9;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown10) ?? true))
+            {
+                item.Unknown10 = rhs.Unknown10;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
+            {
+                item.BoxSize = rhs.BoxSize;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown11) ?? true))
+            {
+                item.Unknown11 = rhs.Unknown11;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
+            {
+                item.ParticleDensity = rhs.ParticleDensity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown12) ?? true))
+            {
+                item.Unknown12 = rhs.Unknown12;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
+            {
+                item.ParticleTexture = rhs.ParticleTexture;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2469,96 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ShaderParticleGeometryBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IShaderParticleGeometryGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.GravityVelocity);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RotationVelocity);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleSizeX);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleSizeY);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.CenterOffsetMin);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown5);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.CenterOffsetMax);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown6);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.InitialRotation);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown7);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NumSubtexturesX);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown8);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NumSubtexturesY);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown9);
+                EnumBinaryTranslation<ShaderParticleGeometry.ShaderParticleType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown10);
+                writer.Write(item.BoxSize);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown11);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleDensity);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown12);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParticleTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             IShaderParticleGeometryGetter item,
@@ -1184,10 +2575,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2630,94 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ShaderParticleGeometryBinaryCreateTranslation Instance = new ShaderParticleGeometryBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SPGD;
+        public static ParseResult FillBinaryRecordTypes(
+            IShaderParticleGeometryInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.GravityVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RotationVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ParticleSizeX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ParticleSizeY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CenterOffsetMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CenterOffsetMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.InitialRotation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.NumSubtexturesX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown8 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.NumSubtexturesY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Type = EnumBinaryTranslation<ShaderParticleGeometry.ShaderParticleType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.BoxSize = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ParticleDensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown12 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)ShaderParticleGeometry_FieldIndex.Unknown12;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParticleTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1283,6 +2764,131 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IShaderParticleGeometry);
 
 
+        private RangeInt32? _DATALocation;
+        #region GravityVelocity
+        private int _GravityVelocityLocation => _DATALocation!.Value.Min;
+        private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
+        public Single GravityVelocity => _GravityVelocity_IsSet ? _recordData.Slice(_GravityVelocityLocation, 4).Float() : default;
+        #endregion
+        #region Unknown1
+        private int _Unknown1Location => _DATALocation!.Value.Min + 0x4;
+        private bool _Unknown1_IsSet => _DATALocation.HasValue;
+        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default;
+        #endregion
+        #region RotationVelocity
+        private int _RotationVelocityLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _RotationVelocity_IsSet => _DATALocation.HasValue;
+        public Single RotationVelocity => _RotationVelocity_IsSet ? _recordData.Slice(_RotationVelocityLocation, 4).Float() : default;
+        #endregion
+        #region Unknown2
+        private int _Unknown2Location => _DATALocation!.Value.Min + 0xC;
+        private bool _Unknown2_IsSet => _DATALocation.HasValue;
+        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default;
+        #endregion
+        #region ParticleSizeX
+        private int _ParticleSizeXLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _ParticleSizeX_IsSet => _DATALocation.HasValue;
+        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _recordData.Slice(_ParticleSizeXLocation, 4).Float() : default;
+        #endregion
+        #region Unknown3
+        private int _Unknown3Location => _DATALocation!.Value.Min + 0x14;
+        private bool _Unknown3_IsSet => _DATALocation.HasValue;
+        public Single Unknown3 => _Unknown3_IsSet ? _recordData.Slice(_Unknown3Location, 4).Float() : default;
+        #endregion
+        #region ParticleSizeY
+        private int _ParticleSizeYLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _ParticleSizeY_IsSet => _DATALocation.HasValue;
+        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _recordData.Slice(_ParticleSizeYLocation, 4).Float() : default;
+        #endregion
+        #region Unknown4
+        private int _Unknown4Location => _DATALocation!.Value.Min + 0x1C;
+        private bool _Unknown4_IsSet => _DATALocation.HasValue;
+        public Single Unknown4 => _Unknown4_IsSet ? _recordData.Slice(_Unknown4Location, 4).Float() : default;
+        #endregion
+        #region CenterOffsetMin
+        private int _CenterOffsetMinLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _CenterOffsetMin_IsSet => _DATALocation.HasValue;
+        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _recordData.Slice(_CenterOffsetMinLocation, 4).Float() : default;
+        #endregion
+        #region Unknown5
+        private int _Unknown5Location => _DATALocation!.Value.Min + 0x24;
+        private bool _Unknown5_IsSet => _DATALocation.HasValue;
+        public Single Unknown5 => _Unknown5_IsSet ? _recordData.Slice(_Unknown5Location, 4).Float() : default;
+        #endregion
+        #region CenterOffsetMax
+        private int _CenterOffsetMaxLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _CenterOffsetMax_IsSet => _DATALocation.HasValue;
+        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _recordData.Slice(_CenterOffsetMaxLocation, 4).Float() : default;
+        #endregion
+        #region Unknown6
+        private int _Unknown6Location => _DATALocation!.Value.Min + 0x2C;
+        private bool _Unknown6_IsSet => _DATALocation.HasValue;
+        public Single Unknown6 => _Unknown6_IsSet ? _recordData.Slice(_Unknown6Location, 4).Float() : default;
+        #endregion
+        #region InitialRotation
+        private int _InitialRotationLocation => _DATALocation!.Value.Min + 0x30;
+        private bool _InitialRotation_IsSet => _DATALocation.HasValue;
+        public Single InitialRotation => _InitialRotation_IsSet ? _recordData.Slice(_InitialRotationLocation, 4).Float() : default;
+        #endregion
+        #region Unknown7
+        private int _Unknown7Location => _DATALocation!.Value.Min + 0x34;
+        private bool _Unknown7_IsSet => _DATALocation.HasValue;
+        public Single Unknown7 => _Unknown7_IsSet ? _recordData.Slice(_Unknown7Location, 4).Float() : default;
+        #endregion
+        #region NumSubtexturesX
+        private int _NumSubtexturesXLocation => _DATALocation!.Value.Min + 0x38;
+        private bool _NumSubtexturesX_IsSet => _DATALocation.HasValue;
+        public Single NumSubtexturesX => _NumSubtexturesX_IsSet ? _recordData.Slice(_NumSubtexturesXLocation, 4).Float() : default;
+        #endregion
+        #region Unknown8
+        private int _Unknown8Location => _DATALocation!.Value.Min + 0x3C;
+        private bool _Unknown8_IsSet => _DATALocation.HasValue;
+        public Single Unknown8 => _Unknown8_IsSet ? _recordData.Slice(_Unknown8Location, 4).Float() : default;
+        #endregion
+        #region NumSubtexturesY
+        private int _NumSubtexturesYLocation => _DATALocation!.Value.Min + 0x40;
+        private bool _NumSubtexturesY_IsSet => _DATALocation.HasValue;
+        public Single NumSubtexturesY => _NumSubtexturesY_IsSet ? _recordData.Slice(_NumSubtexturesYLocation, 4).Float() : default;
+        #endregion
+        #region Unknown9
+        private int _Unknown9Location => _DATALocation!.Value.Min + 0x44;
+        private bool _Unknown9_IsSet => _DATALocation.HasValue;
+        public Single Unknown9 => _Unknown9_IsSet ? _recordData.Slice(_Unknown9Location, 4).Float() : default;
+        #endregion
+        #region Type
+        private int _TypeLocation => _DATALocation!.Value.Min + 0x48;
+        private bool _Type_IsSet => _DATALocation.HasValue;
+        public ShaderParticleGeometry.ShaderParticleType Type => _Type_IsSet ? (ShaderParticleGeometry.ShaderParticleType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        #endregion
+        #region Unknown10
+        private int _Unknown10Location => _DATALocation!.Value.Min + 0x4C;
+        private bool _Unknown10_IsSet => _DATALocation.HasValue;
+        public Single Unknown10 => _Unknown10_IsSet ? _recordData.Slice(_Unknown10Location, 4).Float() : default;
+        #endregion
+        #region BoxSize
+        private int _BoxSizeLocation => _DATALocation!.Value.Min + 0x50;
+        private bool _BoxSize_IsSet => _DATALocation.HasValue;
+        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BoxSizeLocation, 4)) : default;
+        #endregion
+        #region Unknown11
+        private int _Unknown11Location => _DATALocation!.Value.Min + 0x54;
+        private bool _Unknown11_IsSet => _DATALocation.HasValue;
+        public Single Unknown11 => _Unknown11_IsSet ? _recordData.Slice(_Unknown11Location, 4).Float() : default;
+        #endregion
+        #region ParticleDensity
+        private int _ParticleDensityLocation => _DATALocation!.Value.Min + 0x58;
+        private bool _ParticleDensity_IsSet => _DATALocation.HasValue;
+        public Single ParticleDensity => _ParticleDensity_IsSet ? _recordData.Slice(_ParticleDensityLocation, 4).Float() : default;
+        #endregion
+        #region Unknown12
+        private int _Unknown12Location => _DATALocation!.Value.Min + 0x5C;
+        private bool _Unknown12_IsSet => _DATALocation.HasValue;
+        public Single Unknown12 => _Unknown12_IsSet ? _recordData.Slice(_Unknown12Location, 4).Float() : default;
+        #endregion
+        #region ParticleTexture
+        private int? _ParticleTextureLocation;
+        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2946,39 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)ShaderParticleGeometry_FieldIndex.Unknown12;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _ParticleTextureLocation = (stream.Position - offset);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

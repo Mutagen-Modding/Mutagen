@@ -2086,7 +2086,9 @@
     <Compile Include="Records\Major Records\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Climate.cs" />
+    <Compile Include="Records\Major Records\Climate.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -2404,6 +2406,9 @@
     </Compile>
     <Compile Include="Records\Major Records\SceneScriptFragments.cs">
       <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ShaderParticleGeometry.cs">
+      <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
