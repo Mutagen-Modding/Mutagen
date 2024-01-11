@@ -117,6 +117,7 @@ namespace Mutagen.Bethesda.Starfield
             _GenericBaseForms_Object = new StarfieldGroup<GenericBaseForm>(this);
             _LeveledBaseForms_Object = new StarfieldGroup<LeveledBaseForm>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
+            _WeatherSettings_Object = new StarfieldGroup<WeatherSetting>(this);
             _Worldspaces_Object = new StarfieldGroup<Worldspace>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
             _Packages_Object = new StarfieldGroup<Package>(this);
@@ -551,6 +552,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IWeatherGetter> IStarfieldModGetter.Weathers => _Weathers_Object;
         #endregion
+        #region WeatherSettings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<WeatherSetting> _WeatherSettings_Object;
+        public StarfieldGroup<WeatherSetting> WeatherSettings => _WeatherSettings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IWeatherSettingGetter> IStarfieldModGetter.WeatherSettings => _WeatherSettings_Object;
+        #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly StarfieldListGroup<CellBlock> _Cells_Object = new StarfieldListGroup<CellBlock>();
@@ -864,6 +872,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GenericBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LeveledBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.WeatherSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Cells = new MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>(initialValue, new StarfieldListGroup.Mask<TItem>(initialValue));
                 this.Worldspaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -955,6 +964,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem GenericBaseForms,
                 TItem LeveledBaseForms,
                 TItem Weathers,
+                TItem WeatherSettings,
                 TItem Cells,
                 TItem Worldspaces,
                 TItem Quests,
@@ -1044,6 +1054,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GenericBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GenericBaseForms, new StarfieldGroup.Mask<TItem>(GenericBaseForms));
                 this.LeveledBaseForms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledBaseForms, new StarfieldGroup.Mask<TItem>(LeveledBaseForms));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weathers, new StarfieldGroup.Mask<TItem>(Weathers));
+                this.WeatherSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(WeatherSettings, new StarfieldGroup.Mask<TItem>(WeatherSettings));
                 this.Cells = new MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>(Cells, new StarfieldListGroup.Mask<TItem>(Cells));
                 this.Worldspaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Worldspaces, new StarfieldGroup.Mask<TItem>(Worldspaces));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Quests, new StarfieldGroup.Mask<TItem>(Quests));
@@ -1143,6 +1154,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GenericBaseForms { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledBaseForms { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weathers { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? WeatherSettings { get; set; }
             public MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>? Cells { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Worldspaces { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Quests { get; set; }
@@ -1243,6 +1255,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.GenericBaseForms, rhs.GenericBaseForms)) return false;
                 if (!object.Equals(this.LeveledBaseForms, rhs.LeveledBaseForms)) return false;
                 if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+                if (!object.Equals(this.WeatherSettings, rhs.WeatherSettings)) return false;
                 if (!object.Equals(this.Cells, rhs.Cells)) return false;
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
@@ -1336,6 +1349,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.GenericBaseForms);
                 hash.Add(this.LeveledBaseForms);
                 hash.Add(this.Weathers);
+                hash.Add(this.WeatherSettings);
                 hash.Add(this.Cells);
                 hash.Add(this.Worldspaces);
                 hash.Add(this.Quests);
@@ -1659,6 +1673,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Weathers.Overall)) return false;
                     if (this.Weathers.Specific != null && !this.Weathers.Specific.All(eval)) return false;
+                }
+                if (WeatherSettings != null)
+                {
+                    if (!eval(this.WeatherSettings.Overall)) return false;
+                    if (this.WeatherSettings.Specific != null && !this.WeatherSettings.Specific.All(eval)) return false;
                 }
                 if (Cells != null)
                 {
@@ -2107,6 +2126,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Weathers.Overall)) return true;
                     if (this.Weathers.Specific != null && this.Weathers.Specific.Any(eval)) return true;
                 }
+                if (WeatherSettings != null)
+                {
+                    if (eval(this.WeatherSettings.Overall)) return true;
+                    if (this.WeatherSettings.Specific != null && this.WeatherSettings.Specific.Any(eval)) return true;
+                }
                 if (Cells != null)
                 {
                     if (eval(this.Cells.Overall)) return true;
@@ -2333,6 +2357,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GenericBaseForms = this.GenericBaseForms == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GenericBaseForms.Overall), this.GenericBaseForms.Specific?.Translate(eval));
                 obj.LeveledBaseForms = this.LeveledBaseForms == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledBaseForms.Overall), this.LeveledBaseForms.Specific?.Translate(eval));
                 obj.Weathers = this.Weathers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
+                obj.WeatherSettings = this.WeatherSettings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.WeatherSettings.Overall), this.WeatherSettings.Specific?.Translate(eval));
                 obj.Cells = this.Cells == null ? null : new MaskItem<R, StarfieldListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
                 obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
@@ -2610,6 +2635,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Weathers?.Print(sb);
                     }
+                    if (printMask?.WeatherSettings?.Overall ?? true)
+                    {
+                        WeatherSettings?.Print(sb);
+                    }
                     if (printMask?.Cells?.Overall ?? true)
                     {
                         Cells?.Print(sb);
@@ -2815,6 +2844,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<GenericBaseForm.ErrorMask>?>? GenericBaseForms;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledBaseForm.ErrorMask>?>? LeveledBaseForms;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<WeatherSetting.ErrorMask>?>? WeatherSettings;
             public MaskItem<Exception?, StarfieldListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>? Quests;
@@ -2968,6 +2998,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LeveledBaseForms;
                     case StarfieldMod_FieldIndex.Weathers:
                         return Weathers;
+                    case StarfieldMod_FieldIndex.WeatherSettings:
+                        return WeatherSettings;
                     case StarfieldMod_FieldIndex.Cells:
                         return Cells;
                     case StarfieldMod_FieldIndex.Worldspaces:
@@ -3210,6 +3242,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.WeatherSettings:
+                        this.WeatherSettings = new MaskItem<Exception?, StarfieldGroup.ErrorMask<WeatherSetting.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Cells:
                         this.Cells = new MaskItem<Exception?, StarfieldListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
@@ -3485,6 +3520,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.WeatherSettings:
+                        this.WeatherSettings = (MaskItem<Exception?, StarfieldGroup.ErrorMask<WeatherSetting.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Cells:
                         this.Cells = (MaskItem<Exception?, StarfieldListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
                         break;
@@ -3643,6 +3681,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (GenericBaseForms != null) return true;
                 if (LeveledBaseForms != null) return true;
                 if (Weathers != null) return true;
+                if (WeatherSettings != null) return true;
                 if (Cells != null) return true;
                 if (Worldspaces != null) return true;
                 if (Quests != null) return true;
@@ -3756,6 +3795,7 @@ namespace Mutagen.Bethesda.Starfield
                 GenericBaseForms?.Print(sb);
                 LeveledBaseForms?.Print(sb);
                 Weathers?.Print(sb);
+                WeatherSettings?.Print(sb);
                 Cells?.Print(sb);
                 Worldspaces?.Print(sb);
                 Quests?.Print(sb);
@@ -3852,6 +3892,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.GenericBaseForms = this.GenericBaseForms.Combine(rhs.GenericBaseForms, (l, r) => l.Combine(r));
                 ret.LeveledBaseForms = this.LeveledBaseForms.Combine(rhs.LeveledBaseForms, (l, r) => l.Combine(r));
                 ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
+                ret.WeatherSettings = this.WeatherSettings.Combine(rhs.WeatherSettings, (l, r) => l.Combine(r));
                 ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
                 ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
@@ -3963,6 +4004,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<GenericBaseForm.TranslationMask>? GenericBaseForms;
             public StarfieldGroup.TranslationMask<LeveledBaseForm.TranslationMask>? LeveledBaseForms;
             public StarfieldGroup.TranslationMask<Weather.TranslationMask>? Weathers;
+            public StarfieldGroup.TranslationMask<WeatherSetting.TranslationMask>? WeatherSettings;
             public StarfieldListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
             public StarfieldGroup.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
             public StarfieldGroup.TranslationMask<Quest.TranslationMask>? Quests;
@@ -4075,6 +4117,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((GenericBaseForms != null ? GenericBaseForms.OnOverall : DefaultOn, GenericBaseForms?.GetCrystal()));
                 ret.Add((LeveledBaseForms != null ? LeveledBaseForms.OnOverall : DefaultOn, LeveledBaseForms?.GetCrystal()));
                 ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
+                ret.Add((WeatherSettings != null ? WeatherSettings.OnOverall : DefaultOn, WeatherSettings?.GetCrystal()));
                 ret.Add((Cells != null ? Cells.OnOverall : DefaultOn, Cells?.GetCrystal()));
                 ret.Add((Worldspaces != null ? Worldspaces.OnOverall : DefaultOn, Worldspaces?.GetCrystal()));
                 ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
@@ -4209,6 +4252,7 @@ namespace Mutagen.Bethesda.Starfield
             _GenericBaseForms_Object = new StarfieldGroup<GenericBaseForm>(this);
             _LeveledBaseForms_Object = new StarfieldGroup<LeveledBaseForm>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
+            _WeatherSettings_Object = new StarfieldGroup<WeatherSetting>(this);
             _Worldspaces_Object = new StarfieldGroup<Worldspace>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
             _Packages_Object = new StarfieldGroup<Package>(this);
@@ -4469,6 +4513,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
             }
+            if (mask?.WeatherSettings ?? true)
+            {
+                this.WeatherSettings.RecordCache.Set(rhsMod.WeatherSettings.RecordCache.Items);
+            }
             if (mask?.Cells ?? true)
             {
                 if (rhsMod.Cells.Records.Count > 0)
@@ -4662,6 +4710,7 @@ namespace Mutagen.Bethesda.Starfield
             count += GenericBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
             count += LeveledBaseForms.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += WeatherSettings.RecordCache.Count > 0 ? 1 : default(uint);
             count += Cells.Records.Count > 0 ? 1 : default(uint);
             count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
             count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
@@ -5023,6 +5072,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<GenericBaseForm> GenericBaseForms { get; }
         new StarfieldGroup<LeveledBaseForm> LeveledBaseForms { get; }
         new StarfieldGroup<Weather> Weathers { get; }
+        new StarfieldGroup<WeatherSetting> WeatherSettings { get; }
         new StarfieldListGroup<CellBlock> Cells { get; }
         new StarfieldGroup<Worldspace> Worldspaces { get; }
         new StarfieldGroup<Quest> Quests { get; }
@@ -5130,6 +5180,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IGenericBaseFormGetter> GenericBaseForms { get; }
         IStarfieldGroupGetter<ILeveledBaseFormGetter> LeveledBaseForms { get; }
         IStarfieldGroupGetter<IWeatherGetter> Weathers { get; }
+        IStarfieldGroupGetter<IWeatherSettingGetter> WeatherSettings { get; }
         IStarfieldListGroupGetter<ICellBlockGetter> Cells { get; }
         IStarfieldGroupGetter<IWorldspaceGetter> Worldspaces { get; }
         IStarfieldGroupGetter<IQuestGetter> Quests { get; }
@@ -5800,37 +5851,38 @@ namespace Mutagen.Bethesda.Starfield
         GenericBaseForms = 54,
         LeveledBaseForms = 55,
         Weathers = 56,
-        Cells = 57,
-        Worldspaces = 58,
-        Quests = 59,
-        Packages = 60,
-        CombatStyles = 61,
-        LoadScreens = 62,
-        AnimatedObjects = 63,
-        Waters = 64,
-        Debris = 65,
-        FormLists = 66,
-        Perks = 67,
-        ArmorAddons = 68,
-        Locations = 69,
-        DefaultObjects = 70,
-        Outfits = 71,
-        AimModels = 72,
-        AimAssistModels = 73,
-        Layers = 74,
-        ConstructibleObjects = 75,
-        ObjectModifications = 76,
-        InstanceNamingRules = 77,
-        AttractionRules = 78,
-        Resources = 79,
-        BiomeSwaps = 80,
-        SnapTemplates = 81,
-        Planets = 82,
-        ConditionRecords = 83,
-        SurfacePatternStyles = 84,
-        TerminalMenus = 85,
-        LegendaryItems = 86,
-        ActorValueModulations = 87,
+        WeatherSettings = 57,
+        Cells = 58,
+        Worldspaces = 59,
+        Quests = 60,
+        Packages = 61,
+        CombatStyles = 62,
+        LoadScreens = 63,
+        AnimatedObjects = 64,
+        Waters = 65,
+        Debris = 66,
+        FormLists = 67,
+        Perks = 68,
+        ArmorAddons = 69,
+        Locations = 70,
+        DefaultObjects = 71,
+        Outfits = 72,
+        AimModels = 73,
+        AimAssistModels = 74,
+        Layers = 75,
+        ConstructibleObjects = 76,
+        ObjectModifications = 77,
+        InstanceNamingRules = 78,
+        AttractionRules = 79,
+        Resources = 80,
+        BiomeSwaps = 81,
+        SnapTemplates = 82,
+        Planets = 83,
+        ConditionRecords = 84,
+        SurfacePatternStyles = 85,
+        TerminalMenus = 86,
+        LegendaryItems = 87,
+        ActorValueModulations = 88,
     }
     #endregion
 
@@ -5841,9 +5893,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 88;
+        public const ushort AdditionalFieldCount = 89;
 
-        public const ushort FieldCount = 88;
+        public const ushort FieldCount = 89;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -5966,6 +6018,7 @@ namespace Mutagen.Bethesda.Starfield
             item.GenericBaseForms.Clear();
             item.LeveledBaseForms.Clear();
             item.Weathers.Clear();
+            item.WeatherSettings.Clear();
             item.Worldspaces.Clear();
             item.Quests.Clear();
             item.Packages.Clear();
@@ -6049,6 +6102,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.GenericBaseForms.RemapLinks(mapping);
             obj.LeveledBaseForms.RemapLinks(mapping);
             obj.Weathers.RemapLinks(mapping);
+            obj.WeatherSettings.RemapLinks(mapping);
             obj.Cells.RemapLinks(mapping);
             obj.Worldspaces.RemapLinks(mapping);
             obj.Quests.RemapLinks(mapping);
@@ -6164,6 +6218,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.GenericBaseForms.Remove(keys);
             obj.LeveledBaseForms.Remove(keys);
             obj.Weathers.Remove(keys);
+            obj.WeatherSettings.Remove(keys);
             obj.Cells.Remove(keys);
             obj.Worldspaces.Remove(keys);
             obj.Quests.Remove(keys);
@@ -6679,6 +6734,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     obj.Weathers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "WeatherSetting":
+                case "IWeatherSettingGetter":
+                case "IWeatherSetting":
+                case "IWeatherSettingInternal":
+                    obj.WeatherSettings.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -7824,6 +7887,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.GenericBaseForms = MaskItemExt.Factory(item.GenericBaseForms.GetEqualsMask(rhs.GenericBaseForms, include), include);
             ret.LeveledBaseForms = MaskItemExt.Factory(item.LeveledBaseForms.GetEqualsMask(rhs.LeveledBaseForms, include), include);
             ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
+            ret.WeatherSettings = MaskItemExt.Factory(item.WeatherSettings.GetEqualsMask(rhs.WeatherSettings, include), include);
             ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
             ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
@@ -8126,6 +8190,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Weathers?.Overall ?? true)
             {
                 item.Weathers?.Print(sb, "Weathers");
+            }
+            if (printMask?.WeatherSettings?.Overall ?? true)
+            {
+                item.WeatherSettings?.Print(sb, "WeatherSettings");
             }
             if (printMask?.Cells?.Overall ?? true)
             {
@@ -8716,6 +8784,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isWeathersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WeatherSettings) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WeatherSettings, rhs.WeatherSettings, out var lhsWeatherSettings, out var rhsWeatherSettings, out var isWeatherSettingsEqual))
+                {
+                    if (!object.Equals(lhsWeatherSettings, rhsWeatherSettings)) return false;
+                }
+                else if (!isWeatherSettingsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Cells) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Cells, rhs.Cells, out var lhsCells, out var rhsCells, out var isCellsEqual))
@@ -9027,6 +9103,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.GenericBaseForms);
             hash.Add(item.LeveledBaseForms);
             hash.Add(item.Weathers);
+            hash.Add(item.WeatherSettings);
             hash.Add(item.Cells);
             hash.Add(item.Worldspaces);
             hash.Add(item.Quests);
@@ -9356,6 +9433,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     return obj.Weathers;
+                case "WeatherSetting":
+                case "IWeatherSettingGetter":
+                case "IWeatherSetting":
+                case "IWeatherSettingInternal":
+                    return obj.WeatherSettings;
                 case "CellBlock":
                 case "ICellBlockGetter":
                 case "ICellBlock":
@@ -9536,7 +9618,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[87];
+            Stream[] outputStreams = new Stream[88];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -9594,37 +9676,38 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.GenericBaseForms, 53, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LeveledBaseForms, 54, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Weathers, 55, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteCellsParallel(item.Cells, 56, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 57, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteQuestsParallel(item.Quests, 58, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Packages, 59, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 60, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 61, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 62, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Waters, 63, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 64, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 65, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 66, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 67, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 68, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 69, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 70, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 71, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 72, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 73, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 74, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 75, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 76, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 77, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 78, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 79, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 80, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 81, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 83, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 84, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 85, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.WeatherSettings, 56, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 57, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 58, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteQuestsParallel(item.Quests, 59, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 60, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 61, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 62, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 63, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 64, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 65, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 66, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 67, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 68, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 69, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 70, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 71, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 72, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 73, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 74, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 75, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 76, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 77, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 78, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 79, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 80, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 81, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 82, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 84, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 85, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 87, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -9867,6 +9950,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Weathers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WeatherSettings.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -10205,6 +10292,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Weathers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WeatherSettings.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10867,6 +10958,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WeatherSetting":
+                case "IWeatherSettingGetter":
+                case "IWeatherSetting":
+                case "IWeatherSettingInternal":
+                    foreach (var item in obj.WeatherSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11767,6 +11867,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Weathers,
                 groupGetter: (m) => m.Weathers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WeatherSetting, IWeatherSettingGetter>(
+                srcGroup: obj.WeatherSettings,
+                type: typeof(IWeatherSettingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.WeatherSettings,
+                groupGetter: (m) => m.WeatherSettings))
             {
                 yield return item;
             }
@@ -12884,6 +12993,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Weathers,
                         groupGetter: (m) => m.Weathers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WeatherSetting":
+                case "IWeatherSettingGetter":
+                case "IWeatherSetting":
+                case "IWeatherSettingInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WeatherSetting, IWeatherSettingGetter>(
+                        srcGroup: obj.WeatherSettings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.WeatherSettings,
+                        groupGetter: (m) => m.WeatherSettings))
                     {
                         yield return item;
                     }
@@ -15060,6 +15183,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WeatherSettings) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.WeatherSettings);
+                try
+                {
+                    item.WeatherSettings.DeepCopyIn(
+                        rhs: rhs.WeatherSettings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.WeatherSettings));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Cells) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Cells);
@@ -15826,6 +15969,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool GenericBaseForms;
         public bool LeveledBaseForms;
         public bool Weathers;
+        public bool WeatherSettings;
         public bool Cells;
         public bool Worldspaces;
         public bool Quests;
@@ -15918,6 +16062,7 @@ namespace Mutagen.Bethesda.Starfield
             GenericBaseForms = defaultValue;
             LeveledBaseForms = defaultValue;
             Weathers = defaultValue;
+            WeatherSettings = defaultValue;
             Cells = defaultValue;
             Worldspaces = defaultValue;
             Quests = defaultValue;
@@ -16620,6 +16765,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
                         item: WeathersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.WeatherSettings ?? true)
+            {
+                var WeatherSettingsItem = item.WeatherSettings;
+                if (WeatherSettingsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeatherSettingsItem).BinaryWriteTranslator).Write<IWeatherSettingGetter>(
+                        item: WeatherSettingsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -17809,6 +17965,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Weathers;
                 }
+                case RecordTypeInts.WTHS:
+                {
+                    if (importMask?.WeatherSettings ?? true)
+                    {
+                        item.WeatherSettings.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.WeatherSettings;
+                }
                 case RecordTypeInts.CELL:
                 {
                     if (importMask?.Cells ?? true)
@@ -18694,6 +18864,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package) : default;
         public IStarfieldGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new StarfieldGroup<Weather>(this);
         #endregion
+        #region WeatherSettings
+        private List<RangeInt64>? _WeatherSettingsLocations;
+        private IStarfieldGroupGetter<IWeatherSettingGetter>? _WeatherSettings => _WeatherSettingsLocations != null ? StarfieldGroupBinaryOverlay<IWeatherSettingGetter>.StarfieldGroupFactory(_stream, _WeatherSettingsLocations, _package) : default;
+        public IStarfieldGroupGetter<IWeatherSettingGetter> WeatherSettings => _WeatherSettings ?? new StarfieldGroup<WeatherSetting>(this);
+        #endregion
         #region Cells
         private RangeInt64? _CellsLocation;
         private IStarfieldListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? StarfieldListGroupBinaryOverlay<ICellBlockGetter>.StarfieldListGroupFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package) : default;
@@ -19278,6 +19453,12 @@ namespace Mutagen.Bethesda.Starfield
                     _WeathersLocations ??= new();
                     _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Weathers;
+                }
+                case RecordTypeInts.WTHS:
+                {
+                    _WeatherSettingsLocations ??= new();
+                    _WeatherSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.WeatherSettings;
                 }
                 case RecordTypeInts.CELL:
                 {

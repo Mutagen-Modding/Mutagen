@@ -1219,7 +1219,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             WeatherAmbientColorSet_Registration.Instance,
             WeatherColor_Registration.Instance,
             WeatherMagic_Registration.Instance,
-            WeatherSettings_Registration.Instance,
+            WeatherSetting_Registration.Instance,
             Weight_Registration.Instance,
             WorkshopItemColorComponent_Registration.Instance,
             Worldspace_Registration.Instance,

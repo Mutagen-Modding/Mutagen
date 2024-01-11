@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="WeatherSetting" recordType="WTHS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+      <FormLink name="ReflectionParent" refName="WeatherSetting" recordType="RFDP" />
+      <ByteArray name="ReflectionDiff" recordType="RDIF" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

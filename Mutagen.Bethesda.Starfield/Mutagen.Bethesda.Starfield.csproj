@@ -5347,9 +5347,6 @@
     <Compile Include="Records\Major Records\WeatherMagic_Generated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherSettings_Generated.cs">
-      <DependentUpon>WeatherSettings.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Worldspace_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
@@ -6297,5 +6294,8 @@
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IHarvestTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\WeatherSetting_Generated.cs">
+      <DependentUpon>WeatherSetting.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

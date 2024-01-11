@@ -4136,27 +4136,27 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
-        /// Scope a load order query to WeatherSettings
+        /// Scope a load order query to WeatherSetting
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on WeatherSettings</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSettings, IWeatherSettingsGetter> WeatherSettings(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        /// <returns>A typed object to do further queries on WeatherSetting</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSetting, IWeatherSettingGetter> WeatherSetting(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSettings, IWeatherSettingsGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IWeatherSettingsGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWeatherSettings, IWeatherSettingsGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSetting, IWeatherSettingGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IWeatherSettingGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWeatherSetting, IWeatherSettingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to WeatherSettings
+        /// Scope a load order query to WeatherSetting
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on WeatherSettings</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSettings, IWeatherSettingsGetter> WeatherSettings(this IEnumerable<IStarfieldModGetter> mods)
+        /// <returns>A typed object to do further queries on WeatherSetting</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSetting, IWeatherSettingGetter> WeatherSetting(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSettings, IWeatherSettingsGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IWeatherSettingsGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWeatherSettings, IWeatherSettingsGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeatherSetting, IWeatherSettingGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IWeatherSettingGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWeatherSetting, IWeatherSettingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
