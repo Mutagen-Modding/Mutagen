@@ -869,6 +869,7 @@ public partial class RecordTypes
     public static readonly RecordType WKEY = new(0x59454B57);
     public static readonly RecordType WKMF = new(0x464D4B57);
     public static readonly RecordType WKMV = new(0x564D4B57);
+    public static readonly RecordType WLST = new(0x54534C57);
     public static readonly RecordType WMAT = new(0x54414D57);
     public static readonly RecordType WMCR = new(0x52434D57);
     public static readonly RecordType WMEL = new(0x4C454D57);
@@ -901,6 +902,7 @@ public partial class RecordTypes
     public static readonly RecordType WSCP = new(0x50435357);
     public static readonly RecordType WSDM = new(0x4D445357);
     public static readonly RecordType WSLM = new(0x4D4C5357);
+    public static readonly RecordType WSLT = new(0x544C5357);
     public static readonly RecordType WSLV = new(0x564C5357);
     public static readonly RecordType WSPD = new(0x44505357);
     public static readonly RecordType WSPS = new(0x53505357);

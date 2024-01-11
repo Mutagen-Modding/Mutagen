@@ -60,6 +60,7 @@
       <Group name="LeveledBaseForms" refName="LeveledBaseForm" />
       <Group name="Weathers" refName="Weather" />
       <Group name="WeatherSettings" refName="WeatherSetting" />
+      <Group name="Climates" refName="Climate" />
       <Ref name="Cells" singleton="true">
         <Direct refName="StarfieldListGroup">
           <GenericSpecification Definition="Starfield.CellBlock" TypeToSpecify="T" />

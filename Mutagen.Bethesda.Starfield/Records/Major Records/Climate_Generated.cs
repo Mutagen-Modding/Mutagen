@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,49 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Weathers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<WeatherType>? _Weathers;
+        public ExtendedList<WeatherType>? Weathers
+        {
+            get => this._Weathers;
+            set => this._Weathers = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IWeatherTypeGetter>? IClimateGetter.Weathers => _Weathers;
+        #endregion
+
+        #endregion
+        #region WeatherSettings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ClimateWeatherSettings>? _WeatherSettings;
+        public ExtendedList<ClimateWeatherSettings>? WeatherSettings
+        {
+            get => this._WeatherSettings;
+            set => this._WeatherSettings = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IClimateWeatherSettingsGetter>? IClimateGetter.WeatherSettings => _WeatherSettings;
+        #endregion
+
+        #endregion
+        #region SunriseBegin
+        public TimeOnly SunriseBegin { get; set; } = default;
+        #endregion
+        #region SunriseEnd
+        public TimeOnly SunriseEnd { get; set; } = default;
+        #endregion
+        #region SunsetBegin
+        public TimeOnly SunsetBegin { get; set; } = default;
+        #endregion
+        #region SunsetEnd
+        public TimeOnly SunsetEnd { get; set; } = default;
+        #endregion
+        #region Volatility
+        public Byte Volatility { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -79,6 +123,13 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>());
+                this.SunriseBegin = initialValue;
+                this.SunriseEnd = initialValue;
+                this.SunsetBegin = initialValue;
+                this.SunsetEnd = initialValue;
+                this.Volatility = initialValue;
             }
 
             public Mask(
@@ -88,7 +139,14 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Weathers,
+                TItem WeatherSettings,
+                TItem SunriseBegin,
+                TItem SunriseEnd,
+                TItem SunsetBegin,
+                TItem SunsetEnd,
+                TItem Volatility)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +156,13 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(WeatherSettings, Enumerable.Empty<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>());
+                this.SunriseBegin = SunriseBegin;
+                this.SunriseEnd = SunriseEnd;
+                this.SunsetBegin = SunsetBegin;
+                this.SunsetEnd = SunsetEnd;
+                this.Volatility = Volatility;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +171,16 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>? Weathers;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>? WeatherSettings;
+            public TItem SunriseBegin;
+            public TItem SunriseEnd;
+            public TItem SunsetBegin;
+            public TItem SunsetEnd;
+            public TItem Volatility;
             #endregion
 
             #region Equals
@@ -119,11 +194,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+                if (!object.Equals(this.WeatherSettings, rhs.WeatherSettings)) return false;
+                if (!object.Equals(this.SunriseBegin, rhs.SunriseBegin)) return false;
+                if (!object.Equals(this.SunriseEnd, rhs.SunriseEnd)) return false;
+                if (!object.Equals(this.SunsetBegin, rhs.SunsetBegin)) return false;
+                if (!object.Equals(this.SunsetEnd, rhs.SunsetEnd)) return false;
+                if (!object.Equals(this.Volatility, rhs.Volatility)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Weathers);
+                hash.Add(this.WeatherSettings);
+                hash.Add(this.SunriseBegin);
+                hash.Add(this.SunriseEnd);
+                hash.Add(this.SunsetBegin);
+                hash.Add(this.SunsetEnd);
+                hash.Add(this.Volatility);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +223,35 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Weathers != null)
+                {
+                    if (!eval(this.Weathers.Overall)) return false;
+                    if (this.Weathers.Specific != null)
+                    {
+                        foreach (var item in this.Weathers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.WeatherSettings != null)
+                {
+                    if (!eval(this.WeatherSettings.Overall)) return false;
+                    if (this.WeatherSettings.Specific != null)
+                    {
+                        foreach (var item in this.WeatherSettings.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.SunriseBegin)) return false;
+                if (!eval(this.SunriseEnd)) return false;
+                if (!eval(this.SunsetBegin)) return false;
+                if (!eval(this.SunsetEnd)) return false;
+                if (!eval(this.Volatility)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +260,35 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Weathers != null)
+                {
+                    if (eval(this.Weathers.Overall)) return true;
+                    if (this.Weathers.Specific != null)
+                    {
+                        foreach (var item in this.Weathers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.WeatherSettings != null)
+                {
+                    if (eval(this.WeatherSettings.Overall)) return true;
+                    if (this.WeatherSettings.Specific != null)
+                    {
+                        foreach (var item in this.WeatherSettings.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.SunriseBegin)) return true;
+                if (eval(this.SunriseEnd)) return true;
+                if (eval(this.SunsetBegin)) return true;
+                if (eval(this.SunsetEnd)) return true;
+                if (eval(this.Volatility)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +304,41 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Weathers != null)
+                {
+                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
+                    if (Weathers.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();
+                        obj.Weathers.Specific = l;
+                        foreach (var item in Weathers.Specific)
+                        {
+                            MaskItemIndexed<R, WeatherType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (WeatherSettings != null)
+                {
+                    obj.WeatherSettings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>>?>(eval(this.WeatherSettings.Overall), Enumerable.Empty<MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>>());
+                    if (WeatherSettings.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>>();
+                        obj.WeatherSettings.Specific = l;
+                        foreach (var item in WeatherSettings.Specific)
+                        {
+                            MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.SunriseBegin = eval(this.SunriseBegin);
+                obj.SunriseEnd = eval(this.SunriseEnd);
+                obj.SunsetBegin = eval(this.SunsetBegin);
+                obj.SunsetEnd = eval(this.SunsetEnd);
+                obj.Volatility = eval(this.Volatility);
             }
             #endregion
 
@@ -175,6 +357,64 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Weathers?.Overall ?? true)
+                        && Weathers is {} WeathersItem)
+                    {
+                        sb.AppendLine("Weathers =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(WeathersItem.Overall);
+                            if (WeathersItem.Specific != null)
+                            {
+                                foreach (var subItem in WeathersItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.WeatherSettings?.Overall ?? true)
+                        && WeatherSettings is {} WeatherSettingsItem)
+                    {
+                        sb.AppendLine("WeatherSettings =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(WeatherSettingsItem.Overall);
+                            if (WeatherSettingsItem.Specific != null)
+                            {
+                                foreach (var subItem in WeatherSettingsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.SunriseBegin ?? true)
+                    {
+                        sb.AppendItem(SunriseBegin, "SunriseBegin");
+                    }
+                    if (printMask?.SunriseEnd ?? true)
+                    {
+                        sb.AppendItem(SunriseEnd, "SunriseEnd");
+                    }
+                    if (printMask?.SunsetBegin ?? true)
+                    {
+                        sb.AppendItem(SunsetBegin, "SunsetBegin");
+                    }
+                    if (printMask?.SunsetEnd ?? true)
+                    {
+                        sb.AppendItem(SunsetEnd, "SunsetEnd");
+                    }
+                    if (printMask?.Volatility ?? true)
+                    {
+                        sb.AppendItem(Volatility, "Volatility");
+                    }
                 }
             }
             #endregion
@@ -185,12 +425,36 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>? Weathers;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ClimateWeatherSettings.ErrorMask?>>?>? WeatherSettings;
+            public Exception? SunriseBegin;
+            public Exception? SunriseEnd;
+            public Exception? SunsetBegin;
+            public Exception? SunsetEnd;
+            public Exception? Volatility;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Climate_FieldIndex enu = (Climate_FieldIndex)index;
                 switch (enu)
                 {
+                    case Climate_FieldIndex.Weathers:
+                        return Weathers;
+                    case Climate_FieldIndex.WeatherSettings:
+                        return WeatherSettings;
+                    case Climate_FieldIndex.SunriseBegin:
+                        return SunriseBegin;
+                    case Climate_FieldIndex.SunriseEnd:
+                        return SunriseEnd;
+                    case Climate_FieldIndex.SunsetBegin:
+                        return SunsetBegin;
+                    case Climate_FieldIndex.SunsetEnd:
+                        return SunsetEnd;
+                    case Climate_FieldIndex.Volatility:
+                        return Volatility;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +465,27 @@ namespace Mutagen.Bethesda.Starfield
                 Climate_FieldIndex enu = (Climate_FieldIndex)index;
                 switch (enu)
                 {
+                    case Climate_FieldIndex.Weathers:
+                        this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Climate_FieldIndex.WeatherSettings:
+                        this.WeatherSettings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ClimateWeatherSettings.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Climate_FieldIndex.SunriseBegin:
+                        this.SunriseBegin = ex;
+                        break;
+                    case Climate_FieldIndex.SunriseEnd:
+                        this.SunriseEnd = ex;
+                        break;
+                    case Climate_FieldIndex.SunsetBegin:
+                        this.SunsetBegin = ex;
+                        break;
+                    case Climate_FieldIndex.SunsetEnd:
+                        this.SunsetEnd = ex;
+                        break;
+                    case Climate_FieldIndex.Volatility:
+                        this.Volatility = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +497,27 @@ namespace Mutagen.Bethesda.Starfield
                 Climate_FieldIndex enu = (Climate_FieldIndex)index;
                 switch (enu)
                 {
+                    case Climate_FieldIndex.Weathers:
+                        this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>)obj;
+                        break;
+                    case Climate_FieldIndex.WeatherSettings:
+                        this.WeatherSettings = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ClimateWeatherSettings.ErrorMask?>>?>)obj;
+                        break;
+                    case Climate_FieldIndex.SunriseBegin:
+                        this.SunriseBegin = (Exception?)obj;
+                        break;
+                    case Climate_FieldIndex.SunriseEnd:
+                        this.SunriseEnd = (Exception?)obj;
+                        break;
+                    case Climate_FieldIndex.SunsetBegin:
+                        this.SunsetBegin = (Exception?)obj;
+                        break;
+                    case Climate_FieldIndex.SunsetEnd:
+                        this.SunsetEnd = (Exception?)obj;
+                        break;
+                    case Climate_FieldIndex.Volatility:
+                        this.Volatility = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +527,13 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Weathers != null) return true;
+                if (WeatherSettings != null) return true;
+                if (SunriseBegin != null) return true;
+                if (SunriseEnd != null) return true;
+                if (SunsetBegin != null) return true;
+                if (SunsetEnd != null) return true;
+                if (Volatility != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +560,57 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Weathers is {} WeathersItem)
+                {
+                    sb.AppendLine("Weathers =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(WeathersItem.Overall);
+                        if (WeathersItem.Specific != null)
+                        {
+                            foreach (var subItem in WeathersItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (WeatherSettings is {} WeatherSettingsItem)
+                {
+                    sb.AppendLine("WeatherSettings =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(WeatherSettingsItem.Overall);
+                        if (WeatherSettingsItem.Specific != null)
+                        {
+                            foreach (var subItem in WeatherSettingsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(SunriseBegin, "SunriseBegin");
+                }
+                {
+                    sb.AppendItem(SunriseEnd, "SunriseEnd");
+                }
+                {
+                    sb.AppendItem(SunsetBegin, "SunsetBegin");
+                }
+                {
+                    sb.AppendItem(SunsetEnd, "SunsetEnd");
+                }
+                {
+                    sb.AppendItem(Volatility, "Volatility");
+                }
             }
             #endregion
 
@@ -255,6 +619,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), Noggog.ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
+                ret.WeatherSettings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ClimateWeatherSettings.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WeatherSettings?.Overall, rhs.WeatherSettings?.Overall), Noggog.ExceptionExt.Combine(this.WeatherSettings?.Specific, rhs.WeatherSettings?.Specific));
+                ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
+                ret.SunriseEnd = this.SunriseEnd.Combine(rhs.SunriseEnd);
+                ret.SunsetBegin = this.SunsetBegin.Combine(rhs.SunsetBegin);
+                ret.SunsetEnd = this.SunsetEnd.Combine(rhs.SunsetEnd);
+                ret.Volatility = this.Volatility.Combine(rhs.Volatility);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +647,42 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public WeatherType.TranslationMask? Weathers;
+            public ClimateWeatherSettings.TranslationMask? WeatherSettings;
+            public bool SunriseBegin;
+            public bool SunriseEnd;
+            public bool SunsetBegin;
+            public bool SunsetEnd;
+            public bool Volatility;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.SunriseBegin = defaultOn;
+                this.SunriseEnd = defaultOn;
+                this.SunsetBegin = defaultOn;
+                this.SunsetEnd = defaultOn;
+                this.Volatility = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Weathers == null ? DefaultOn : !Weathers.GetCrystal().CopyNothing, Weathers?.GetCrystal()));
+                ret.Add((WeatherSettings == null ? DefaultOn : !WeatherSettings.GetCrystal().CopyNothing, WeatherSettings?.GetCrystal()));
+                ret.Add((SunriseBegin, null));
+                ret.Add((SunriseEnd, null));
+                ret.Add((SunsetBegin, null));
+                ret.Add((SunsetEnd, null));
+                ret.Add((Volatility, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +694,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Climate_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClimateCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateSetterCommon.Instance.RemapLinks(this, mapping);
         public Climate(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -425,9 +825,17 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IClimate :
         IClimateGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IClimateInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<WeatherType>? Weathers { get; set; }
+        new ExtendedList<ClimateWeatherSettings>? WeatherSettings { get; set; }
+        new TimeOnly SunriseBegin { get; set; }
+        new TimeOnly SunriseEnd { get; set; }
+        new TimeOnly SunsetBegin { get; set; }
+        new TimeOnly SunsetEnd { get; set; }
+        new Byte Volatility { get; set; }
     }
 
     public partial interface IClimateInternal :
@@ -441,10 +849,18 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IClimateGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IClimateGetter>,
         IMapsToGetter<IClimateGetter>
     {
         static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
+        IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
+        IReadOnlyList<IClimateWeatherSettingsGetter>? WeatherSettings { get; }
+        TimeOnly SunriseBegin { get; }
+        TimeOnly SunriseEnd { get; }
+        TimeOnly SunsetBegin { get; }
+        TimeOnly SunsetEnd { get; }
+        Byte Volatility { get; }
 
     }
 
@@ -621,6 +1037,13 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Weathers = 7,
+        WeatherSettings = 8,
+        SunriseBegin = 9,
+        SunriseEnd = 10,
+        SunsetBegin = 11,
+        SunsetEnd = 12,
+        Volatility = 13,
     }
     #endregion
 
@@ -631,9 +1054,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Climate.Mask<>);
 
@@ -663,8 +1086,15 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.CLMT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.CLMT);
+            var all = RecordCollection.Factory(
+                RecordTypes.CLMT,
+                RecordTypes.WLST,
+                RecordTypes.WSLT,
+                RecordTypes.TNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ClimateBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1136,13 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IClimateInternal item)
         {
             ClearPartial();
+            item.Weathers = null;
+            item.WeatherSettings = null;
+            item.SunriseBegin = default;
+            item.SunriseEnd = default;
+            item.SunsetBegin = default;
+            item.SunsetEnd = default;
+            item.Volatility = default;
             base.Clear(item);
         }
         
@@ -723,6 +1160,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IClimate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Weathers?.RemapLinks(mapping);
+            obj.WeatherSettings?.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1229,19 @@ namespace Mutagen.Bethesda.Starfield
             Climate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Weathers = item.Weathers.CollectionEqualsHelper(
+                rhs.Weathers,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.WeatherSettings = item.WeatherSettings.CollectionEqualsHelper(
+                rhs.WeatherSettings,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.SunriseBegin = item.SunriseBegin == rhs.SunriseBegin;
+            ret.SunriseEnd = item.SunriseEnd == rhs.SunriseEnd;
+            ret.SunsetBegin = item.SunsetBegin == rhs.SunsetBegin;
+            ret.SunsetEnd = item.SunsetEnd == rhs.SunsetEnd;
+            ret.Volatility = item.Volatility == rhs.Volatility;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1291,56 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Weathers?.Overall ?? true)
+                && item.Weathers is {} WeathersItem)
+            {
+                sb.AppendLine("Weathers =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in WeathersItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.WeatherSettings?.Overall ?? true)
+                && item.WeatherSettings is {} WeatherSettingsItem)
+            {
+                sb.AppendLine("WeatherSettings =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in WeatherSettingsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.SunriseBegin ?? true)
+            {
+                sb.AppendItem(item.SunriseBegin, "SunriseBegin");
+            }
+            if (printMask?.SunriseEnd ?? true)
+            {
+                sb.AppendItem(item.SunriseEnd, "SunriseEnd");
+            }
+            if (printMask?.SunsetBegin ?? true)
+            {
+                sb.AppendItem(item.SunsetBegin, "SunsetBegin");
+            }
+            if (printMask?.SunsetEnd ?? true)
+            {
+                sb.AppendItem(item.SunsetEnd, "SunsetEnd");
+            }
+            if (printMask?.Volatility ?? true)
+            {
+                sb.AppendItem(item.Volatility, "Volatility");
+            }
         }
         
         public static Climate_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1391,34 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
+            {
+                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.Weathers)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.WeatherSettings) ?? true))
+            {
+                if (!lhs.WeatherSettings.SequenceEqualNullable(rhs.WeatherSettings, (l, r) => ((ClimateWeatherSettingsCommon)((IClimateWeatherSettingsGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.WeatherSettings)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
+            {
+                if (lhs.SunriseBegin != rhs.SunriseBegin) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
+            {
+                if (lhs.SunriseEnd != rhs.SunriseEnd) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
+            {
+                if (lhs.SunsetBegin != rhs.SunsetBegin) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
+            {
+                if (lhs.SunsetEnd != rhs.SunsetEnd) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
+            {
+                if (lhs.Volatility != rhs.Volatility) return false;
+            }
             return true;
         }
         
@@ -917,6 +1447,13 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IClimateGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Weathers);
+            hash.Add(item.WeatherSettings);
+            hash.Add(item.SunriseBegin);
+            hash.Add(item.SunriseEnd);
+            hash.Add(item.SunsetBegin);
+            hash.Add(item.SunsetEnd);
+            hash.Add(item.Volatility);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1482,20 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Weathers is {} WeathersItem)
+            {
+                foreach (var item in WeathersItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.WeatherSettings is {} WeatherSettingsItem)
+            {
+                foreach (var item in WeatherSettingsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1020,6 +1571,90 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
+            {
+                errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
+                try
+                {
+                    if ((rhs.Weathers != null))
+                    {
+                        item.Weathers = 
+                            rhs.Weathers
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<WeatherType>();
+                    }
+                    else
+                    {
+                        item.Weathers = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.WeatherSettings) ?? true))
+            {
+                errorMask?.PushIndex((int)Climate_FieldIndex.WeatherSettings);
+                try
+                {
+                    if ((rhs.WeatherSettings != null))
+                    {
+                        item.WeatherSettings = 
+                            rhs.WeatherSettings
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ClimateWeatherSettings>();
+                    }
+                    else
+                    {
+                        item.WeatherSettings = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
+            {
+                item.SunriseBegin = rhs.SunriseBegin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
+            {
+                item.SunriseEnd = rhs.SunriseEnd;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
+            {
+                item.SunsetBegin = rhs.SunsetBegin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
+            {
+                item.SunsetEnd = rhs.SunsetEnd;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
+            {
+                item.Volatility = rhs.Volatility;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1803,109 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ClimateBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IClimateGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
+                writer: writer,
+                items: item.Weathers,
+                recordType: translationParams.ConvertToCustom(RecordTypes.WLST),
+                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IClimateWeatherSettingsGetter>.Instance.Write(
+                writer: writer,
+                items: item.WeatherSettings,
+                recordType: translationParams.ConvertToCustom(RecordTypes.WSLT),
+                transl: (MutagenWriter subWriter, IClimateWeatherSettingsGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ClimateWeatherSettingsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TNAM)))
+            {
+                ClimateBinaryWriteTranslation.WriteBinarySunriseBegin(
+                    writer: writer,
+                    item: item);
+                ClimateBinaryWriteTranslation.WriteBinarySunriseEnd(
+                    writer: writer,
+                    item: item);
+                ClimateBinaryWriteTranslation.WriteBinarySunsetBegin(
+                    writer: writer,
+                    item: item);
+                ClimateBinaryWriteTranslation.WriteBinarySunsetEnd(
+                    writer: writer,
+                    item: item);
+                writer.Write(item.Volatility);
+            }
+        }
+
+        public static partial void WriteBinarySunriseBeginCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunriseBegin(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunriseBeginCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySunriseEndCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunriseEnd(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunriseEndCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySunsetBeginCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunsetBegin(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunsetBeginCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySunsetEndCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunsetEnd(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunsetEndCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IClimateGetter item,
@@ -1184,10 +1922,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1977,86 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLMT;
+        public static ParseResult FillBinaryRecordTypes(
+            IClimateInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.WLST:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Weathers = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WeatherType>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: WeatherType.TryCreateFromBinary)
+                        .CastExtendedList<WeatherType>();
+                    return (int)Climate_FieldIndex.Weathers;
+                }
+                case RecordTypeInts.WSLT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WeatherSettings = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ClimateWeatherSettings>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ClimateWeatherSettings.TryCreateFromBinary)
+                        .CastExtendedList<ClimateWeatherSettings>();
+                    return (int)Climate_FieldIndex.WeatherSettings;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    ClimateBinaryCreateTranslation.FillBinarySunriseBeginCustom(
+                        frame: dataFrame,
+                        item: item);
+                    ClimateBinaryCreateTranslation.FillBinarySunriseEndCustom(
+                        frame: dataFrame,
+                        item: item);
+                    ClimateBinaryCreateTranslation.FillBinarySunsetBeginCustom(
+                        frame: dataFrame,
+                        item: item);
+                    ClimateBinaryCreateTranslation.FillBinarySunsetEndCustom(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Volatility = dataFrame.ReadUInt8();
+                    return (int)Climate_FieldIndex.Volatility;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial void FillBinarySunriseBeginCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
+
+        public static partial void FillBinarySunriseEndCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
+
+        public static partial void FillBinarySunsetBeginCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
+
+        public static partial void FillBinarySunsetEndCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
+
     }
 
 }
@@ -1269,6 +2089,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClimateCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2104,34 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IClimate);
 
 
+        public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }
+        public IReadOnlyList<IClimateWeatherSettingsGetter>? WeatherSettings { get; private set; }
+        private RangeInt32? _TNAMLocation;
+        #region SunriseBegin
+        private int _SunriseBeginLocation => _TNAMLocation!.Value.Min;
+        public partial TimeOnly GetSunriseBeginCustom();
+        public TimeOnly SunriseBegin => GetSunriseBeginCustom();
+        #endregion
+        #region SunriseEnd
+        private int _SunriseEndLocation => _TNAMLocation!.Value.Min + 0x1;
+        public partial TimeOnly GetSunriseEndCustom();
+        public TimeOnly SunriseEnd => GetSunriseEndCustom();
+        #endregion
+        #region SunsetBegin
+        private int _SunsetBeginLocation => _TNAMLocation!.Value.Min + 0x2;
+        public partial TimeOnly GetSunsetBeginCustom();
+        public TimeOnly SunsetBegin => GetSunsetBeginCustom();
+        #endregion
+        #region SunsetEnd
+        private int _SunsetEndLocation => _TNAMLocation!.Value.Min + 0x3;
+        public partial TimeOnly GetSunsetEndCustom();
+        public TimeOnly SunsetEnd => GetSunsetEndCustom();
+        #endregion
+        #region Volatility
+        private int _VolatilityLocation => _TNAMLocation!.Value.Min + 0x4;
+        private bool _Volatility_IsSet => _TNAMLocation.HasValue;
+        public Byte Volatility => _Volatility_IsSet ? _recordData.Span[_VolatilityLocation] : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2189,58 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.WLST:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Weathers = BinaryOverlayList.FactoryByStartIndex<IWeatherTypeGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Climate_FieldIndex.Weathers;
+                }
+                case RecordTypeInts.WSLT:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.WeatherSettings = BinaryOverlayList.FactoryByStartIndex<IClimateWeatherSettingsGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ClimateWeatherSettingsBinaryOverlay.ClimateWeatherSettingsFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Climate_FieldIndex.WeatherSettings;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _TNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Climate_FieldIndex.Volatility;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

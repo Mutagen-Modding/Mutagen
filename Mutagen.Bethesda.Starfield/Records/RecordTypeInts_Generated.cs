@@ -867,6 +867,7 @@ public partial class RecordTypeInts
     public const int WKEY = 0x59454B57;
     public const int WKMF = 0x464D4B57;
     public const int WKMV = 0x564D4B57;
+    public const int WLST = 0x54534C57;
     public const int WMAT = 0x54414D57;
     public const int WMCR = 0x52434D57;
     public const int WMEL = 0x4C454D57;
@@ -899,6 +900,7 @@ public partial class RecordTypeInts
     public const int WSCP = 0x50435357;
     public const int WSDM = 0x4D445357;
     public const int WSLM = 0x4D4C5357;
+    public const int WSLT = 0x544C5357;
     public const int WSLV = 0x564C5357;
     public const int WSPD = 0x44505357;
     public const int WSPS = 0x53505357;

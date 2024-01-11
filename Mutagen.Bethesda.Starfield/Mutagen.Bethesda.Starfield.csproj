@@ -2086,6 +2086,7 @@
     <Compile Include="Records\Major Records\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Climate.cs" />
     <Compile Include="Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -6296,6 +6297,12 @@
     <Compile Include="Interfaces\Link\IHarvestTarget_Generated.cs" />
     <Compile Include="Records\Major Records\WeatherSetting_Generated.cs">
       <DependentUpon>WeatherSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WeatherType_Generated.cs">
+      <DependentUpon>WeatherType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ClimateWeatherSettings_Generated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
