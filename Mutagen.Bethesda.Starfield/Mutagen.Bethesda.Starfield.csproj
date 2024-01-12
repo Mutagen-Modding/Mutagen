@@ -2386,6 +2386,16 @@
     <Compile Include="Records\Major Records\QuestStage.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Region.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionData.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSounds.cs" />
+    <Compile Include="Records\Major Records\RegionWeather.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Resource.cs">
       <DependentUpon>Resource.xml</DependentUpon>
     </Compile>
@@ -6308,6 +6318,21 @@
     </Compile>
     <Compile Include="Records\Major Records\ClimateWeatherSettings_Generated.cs">
       <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionArea_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionData_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionWeather_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSound_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSounds_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

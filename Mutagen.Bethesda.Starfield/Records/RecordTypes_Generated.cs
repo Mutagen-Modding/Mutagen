@@ -669,8 +669,11 @@ public partial class RecordTypes
     public static readonly RecordType QUST = new(0x54535551);
     public static readonly RecordType RACE = new(0x45434152);
     public static readonly RecordType RBPC = new(0x43504252);
+    public static readonly RecordType RCLR = new(0x524C4352);
+    public static readonly RecordType RDAT = new(0x54414452);
     public static readonly RecordType RDIF = new(0x46494452);
     public static readonly RecordType RDSA = new(0x41534452);
+    public static readonly RecordType RDWT = new(0x54574452);
     public static readonly RecordType RECF = new(0x46434552);
     public static readonly RecordType REFL = new(0x4C464552);
     public static readonly RecordType REFR = new(0x52464552);
@@ -680,6 +683,8 @@ public partial class RecordTypes
     public static readonly RecordType RFDP = new(0x50444652);
     public static readonly RecordType RFGP = new(0x50474652);
     public static readonly RecordType RNAM = new(0x4D414E52);
+    public static readonly RecordType RPLD = new(0x444C5052);
+    public static readonly RecordType RPLI = new(0x494C5052);
     public static readonly RecordType RQPK = new(0x4B505152);
     public static readonly RecordType RSCS = new(0x53435352);
     public static readonly RecordType RSGD = new(0x44475352);

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -32,6 +33,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -54,6 +56,45 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region MapColor
+        public Color MapColor { get; set; } = default;
+        #endregion
+        #region RegionAreas
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<RegionArea> _RegionAreas = new ExtendedList<RegionArea>();
+        public ExtendedList<RegionArea> RegionAreas
+        {
+            get => this._RegionAreas;
+            init => this._RegionAreas = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRegionAreaGetter> IRegionGetter.RegionAreas => _RegionAreas;
+        #endregion
+
+        #endregion
+        #region Weather
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionWeather? _Weather;
+        public RegionWeather? Weather
+        {
+            get => _Weather;
+            set => _Weather = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionWeatherGetter? IRegionGetter.Weather => this.Weather;
+        #endregion
+        #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionSounds? _Sounds;
+        public RegionSounds? Sounds
+        {
+            get => _Sounds;
+            set => _Sounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionSoundsGetter? IRegionGetter.Sounds => this.Sounds;
+        #endregion
 
         #region To String
 
@@ -79,6 +120,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.MapColor = initialValue;
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(initialValue, new RegionWeather.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(initialValue, new RegionSounds.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -88,7 +133,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem MapColor,
+                TItem RegionAreas,
+                TItem Weather,
+                TItem Sounds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +147,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.MapColor = MapColor;
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(RegionAreas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(Weather, new RegionWeather.Mask<TItem>(Weather));
+                this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(Sounds, new RegionSounds.Mask<TItem>(Sounds));
             }
 
             #pragma warning disable CS8618
@@ -106,6 +159,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem MapColor;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>? RegionAreas;
+            public MaskItem<TItem, RegionWeather.Mask<TItem>?>? Weather { get; set; }
+            public MaskItem<TItem, RegionSounds.Mask<TItem>?>? Sounds { get; set; }
             #endregion
 
             #region Equals
@@ -119,11 +179,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.MapColor, rhs.MapColor)) return false;
+                if (!object.Equals(this.RegionAreas, rhs.RegionAreas)) return false;
+                if (!object.Equals(this.Weather, rhs.Weather)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.MapColor);
+                hash.Add(this.RegionAreas);
+                hash.Add(this.Weather);
+                hash.Add(this.Sounds);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +202,29 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.MapColor)) return false;
+                if (this.RegionAreas != null)
+                {
+                    if (!eval(this.RegionAreas.Overall)) return false;
+                    if (this.RegionAreas.Specific != null)
+                    {
+                        foreach (var item in this.RegionAreas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Weather != null)
+                {
+                    if (!eval(this.Weather.Overall)) return false;
+                    if (this.Weather.Specific != null && !this.Weather.Specific.All(eval)) return false;
+                }
+                if (Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -142,6 +233,29 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.MapColor)) return true;
+                if (this.RegionAreas != null)
+                {
+                    if (eval(this.RegionAreas.Overall)) return true;
+                    if (this.RegionAreas.Specific != null)
+                    {
+                        foreach (var item in this.RegionAreas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Weather != null)
+                {
+                    if (eval(this.Weather.Overall)) return true;
+                    if (this.Weather.Specific != null && this.Weather.Specific.Any(eval)) return true;
+                }
+                if (Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -157,6 +271,24 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.MapColor = eval(this.MapColor);
+                if (RegionAreas != null)
+                {
+                    obj.RegionAreas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.RegionAreas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
+                    if (RegionAreas.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
+                        obj.RegionAreas.Specific = l;
+                        foreach (var item in RegionAreas.Specific)
+                        {
+                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Weather = this.Weather == null ? null : new MaskItem<R, RegionWeather.Mask<R>?>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, RegionSounds.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
             }
             #endregion
 
@@ -175,6 +307,37 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.MapColor ?? true)
+                    {
+                        sb.AppendItem(MapColor, "MapColor");
+                    }
+                    if ((printMask?.RegionAreas?.Overall ?? true)
+                        && RegionAreas is {} RegionAreasItem)
+                    {
+                        sb.AppendLine("RegionAreas =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RegionAreasItem.Overall);
+                            if (RegionAreasItem.Specific != null)
+                            {
+                                foreach (var subItem in RegionAreasItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Weather?.Overall ?? true)
+                    {
+                        Weather?.Print(sb);
+                    }
+                    if (printMask?.Sounds?.Overall ?? true)
+                    {
+                        Sounds?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -185,12 +348,27 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? MapColor;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>? RegionAreas;
+            public MaskItem<Exception?, RegionWeather.ErrorMask?>? Weather;
+            public MaskItem<Exception?, RegionSounds.ErrorMask?>? Sounds;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        return MapColor;
+                    case Region_FieldIndex.RegionAreas:
+                        return RegionAreas;
+                    case Region_FieldIndex.Weather:
+                        return Weather;
+                    case Region_FieldIndex.Sounds:
+                        return Sounds;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +379,18 @@ namespace Mutagen.Bethesda.Starfield
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = ex;
+                        break;
+                    case Region_FieldIndex.RegionAreas:
+                        this.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = new MaskItem<Exception?, RegionWeather.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, RegionSounds.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +402,18 @@ namespace Mutagen.Bethesda.Starfield
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = (Exception?)obj;
+                        break;
+                    case Region_FieldIndex.RegionAreas:
+                        this.RegionAreas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>)obj;
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = (MaskItem<Exception?, RegionWeather.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, RegionSounds.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +423,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (MapColor != null) return true;
+                if (RegionAreas != null) return true;
+                if (Weather != null) return true;
+                if (Sounds != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +453,29 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(MapColor, "MapColor");
+                }
+                if (RegionAreas is {} RegionAreasItem)
+                {
+                    sb.AppendLine("RegionAreas =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RegionAreasItem.Overall);
+                        if (RegionAreasItem.Specific != null)
+                        {
+                            foreach (var subItem in RegionAreasItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Weather?.Print(sb);
+                Sounds?.Print(sb);
             }
             #endregion
 
@@ -255,6 +484,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.MapColor = this.MapColor.Combine(rhs.MapColor);
+                ret.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RegionAreas?.Overall, rhs.RegionAreas?.Overall), Noggog.ExceptionExt.Combine(this.RegionAreas?.Specific, rhs.RegionAreas?.Specific));
+                ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
+                ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +509,32 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool MapColor;
+            public RegionArea.TranslationMask? RegionAreas;
+            public RegionWeather.TranslationMask? Weather;
+            public RegionSounds.TranslationMask? Sounds;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.MapColor = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((MapColor, null));
+                ret.Add((RegionAreas == null ? DefaultOn : !RegionAreas.GetCrystal().CopyNothing, RegionAreas?.GetCrystal()));
+                ret.Add((Weather != null ? Weather.OnOverall : DefaultOn, Weather?.GetCrystal()));
+                ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +546,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSetterCommon.Instance.RemapLinks(this, mapping);
         public Region(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -425,10 +677,15 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IRegion :
         IEmittance,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionInternal>,
         IRegionGetter,
         IStarfieldMajorRecordInternal
     {
+        new Color MapColor { get; set; }
+        new ExtendedList<RegionArea> RegionAreas { get; }
+        new RegionWeather? Weather { get; set; }
+        new RegionSounds? Sounds { get; set; }
     }
 
     public partial interface IRegionInternal :
@@ -443,10 +700,15 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IEmittanceGetter,
+        IFormLinkContainerGetter,
         ILoquiObject<IRegionGetter>,
         IMapsToGetter<IRegionGetter>
     {
         static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
+        Color MapColor { get; }
+        IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
+        IRegionWeatherGetter? Weather { get; }
+        IRegionSoundsGetter? Sounds { get; }
 
     }
 
@@ -623,6 +885,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        MapColor = 7,
+        RegionAreas = 8,
+        Weather = 9,
+        Sounds = 10,
     }
     #endregion
 
@@ -633,9 +899,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Region.Mask<>);
 
@@ -665,8 +931,16 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.REGN);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.REGN);
+            var all = RecordCollection.Factory(
+                RecordTypes.REGN,
+                RecordTypes.RCLR,
+                RecordTypes.RPLI,
+                RecordTypes.RPLD,
+                RecordTypes.RDAT);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
@@ -708,6 +982,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IRegionInternal item)
         {
             ClearPartial();
+            item.MapColor = default;
+            item.RegionAreas.Clear();
+            item.Weather = null;
+            item.Sounds = null;
             base.Clear(item);
         }
         
@@ -725,6 +1003,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IRegion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Weather?.RemapLinks(mapping);
         }
         
         #endregion
@@ -792,6 +1071,21 @@ namespace Mutagen.Bethesda.Starfield
             Region.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
+            ret.RegionAreas = item.RegionAreas.CollectionEqualsHelper(
+                rhs.RegionAreas,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Weather = EqualsMaskHelper.EqualsHelper(
+                item.Weather,
+                rhs.Weather,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Sounds = EqualsMaskHelper.EqualsHelper(
+                item.Sounds,
+                rhs.Sounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -841,6 +1135,34 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.MapColor ?? true)
+            {
+                sb.AppendItem(item.MapColor, "MapColor");
+            }
+            if (printMask?.RegionAreas?.Overall ?? true)
+            {
+                sb.AppendLine("RegionAreas =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.RegionAreas)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Weather?.Overall ?? true)
+                && item.Weather is {} WeatherItem)
+            {
+                WeatherItem?.Print(sb, "Weather");
+            }
+            if ((printMask?.Sounds?.Overall ?? true)
+                && item.Sounds is {} SoundsItem)
+            {
+                SoundsItem?.Print(sb, "Sounds");
+            }
         }
         
         public static Region_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -891,6 +1213,30 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            {
+                if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Region_FieldIndex.RegionAreas)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Weather, rhs.Weather, out var lhsWeather, out var rhsWeather, out var isWeatherEqual))
+                {
+                    if (!((RegionWeatherCommon)((IRegionWeatherGetter)lhsWeather).CommonInstance()!).Equals(lhsWeather, rhsWeather, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Weather))) return false;
+                }
+                else if (!isWeatherEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
+                {
+                    if (!((RegionSoundsCommon)((IRegionSoundsGetter)lhsSounds).CommonInstance()!).Equals(lhsSounds, rhsSounds, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Sounds))) return false;
+                }
+                else if (!isSoundsEqual) return false;
+            }
             return true;
         }
         
@@ -919,6 +1265,16 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IRegionGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.MapColor);
+            hash.Add(item.RegionAreas);
+            if (item.Weather is {} Weatheritem)
+            {
+                hash.Add(Weatheritem);
+            }
+            if (item.Sounds is {} Soundsitem)
+            {
+                hash.Add(Soundsitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -947,6 +1303,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Weather is {} WeatherItems)
+            {
+                foreach (var item in WeatherItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1022,6 +1385,86 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                item.MapColor = rhs.MapColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.RegionAreas);
+                try
+                {
+                    item.RegionAreas.SetTo(
+                        rhs.RegionAreas
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Weather);
+                try
+                {
+                    if(rhs.Weather is {} rhsWeather)
+                    {
+                        item.Weather = rhsWeather.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
+                    }
+                    else
+                    {
+                        item.Weather = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
+                try
+                {
+                    if(rhs.Sounds is {} rhsSounds)
+                    {
+                        item.Sounds = rhsSounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+                    }
+                    else
+                    {
+                        item.Sounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1170,6 +1613,48 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly RegionBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IRegionGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MapColor,
+                header: translationParams.ConvertToCustom(RecordTypes.RCLR));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
+                writer: writer,
+                items: item.RegionAreas,
+                transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RegionAreaBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            RegionBinaryWriteTranslation.WriteBinaryRegionAreaLogic(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryRegionAreaLogicCustom(
+            MutagenWriter writer,
+            IRegionGetter item);
+
+        public static void WriteBinaryRegionAreaLogic(
+            MutagenWriter writer,
+            IRegionGetter item)
+        {
+            WriteBinaryRegionAreaLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IRegionGetter item,
@@ -1186,10 +1671,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1239,6 +1726,58 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REGN;
+        public static ParseResult FillBinaryRecordTypes(
+            IRegionInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.RCLR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Region_FieldIndex.MapColor;
+                }
+                case RecordTypeInts.RPLI:
+                {
+                    item.RegionAreas.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: RegionArea_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: RegionArea.TryCreateFromBinary));
+                    return (int)Region_FieldIndex.RegionAreas;
+                }
+                case RecordTypeInts.RDAT:
+                {
+                    return RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial ParseResult FillBinaryRegionAreaLogicCustom(
+            MutagenFrame frame,
+            IRegionInternal item,
+            PreviousParse lastParsed);
+
     }
 
 }
@@ -1271,6 +1810,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1285,6 +1825,17 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IRegion);
 
 
+        #region MapColor
+        private int? _MapColorLocation;
+        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = Array.Empty<IRegionAreaGetter>();
+        #region RegionAreaLogic
+        public partial ParseResult RegionAreaLogicCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1342,6 +1893,50 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.RCLR:
+                {
+                    _MapColorLocation = (stream.Position - offset);
+                    return (int)Region_FieldIndex.MapColor;
+                }
+                case RecordTypeInts.RPLI:
+                {
+                    this.RegionAreas = this.ParseRepeatedTypelessSubrecord<IRegionAreaGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: RegionArea_Registration.TriggerSpecs,
+                        factory: RegionAreaBinaryOverlay.RegionAreaFactory);
+                    return (int)Region_FieldIndex.RegionAreas;
+                }
+                case RecordTypeInts.RDAT:
+                {
+                    return RegionAreaLogicCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

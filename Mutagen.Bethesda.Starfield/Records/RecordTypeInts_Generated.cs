@@ -667,8 +667,11 @@ public partial class RecordTypeInts
     public const int QUST = 0x54535551;
     public const int RACE = 0x45434152;
     public const int RBPC = 0x43504252;
+    public const int RCLR = 0x524C4352;
+    public const int RDAT = 0x54414452;
     public const int RDIF = 0x46494452;
     public const int RDSA = 0x41534452;
+    public const int RDWT = 0x54574452;
     public const int RECF = 0x46434552;
     public const int REFL = 0x4C464552;
     public const int REFR = 0x52464552;
@@ -678,6 +681,8 @@ public partial class RecordTypeInts
     public const int RFDP = 0x50444652;
     public const int RFGP = 0x50474652;
     public const int RNAM = 0x4D414E52;
+    public const int RPLD = 0x444C5052;
+    public const int RPLI = 0x494C5052;
     public const int RQPK = 0x4B505152;
     public const int RSCS = 0x53435352;
     public const int RSGD = 0x44475352;

@@ -2,7 +2,36 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Region" recordType="REGN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Color name="MapColor" recordType="RCLR" binaryType="Alpha" nullable="False" />
+      <RefList name="RegionAreas" refName="RegionArea" />
+      <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
+      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" nullable="True" />
     </Fields>
     <LinkInterface>IEmittance</LinkInterface>
+  </Object>
+  <Object name="RegionArea" objType="Subrecord">
+    <Fields>
+      <UInt32 name="EdgeFallOff" recordType="RPLI" nullable="False" />
+      <List name="RegionPointListData" recordType="RPLD">
+        <P2Float />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="RegionData" abstract="true" objType="Subrecord">
+    <Fields>
+      <CustomLogic name="HeaderLogic" byteLength="8" recordType="RDAT" />
+      <Enum name="Flags" enumName="RegionData.RegionDataFlag" binary="NoGeneration" />
+      <UInt8 name="Priority" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="RegionWeather" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+      <RefList name="Weathers" refName="WeatherType" recordType="RDWT" />
+    </Fields>
   </Object>
 </Loqui>

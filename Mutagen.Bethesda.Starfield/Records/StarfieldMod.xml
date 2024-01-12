@@ -62,6 +62,7 @@
       <Group name="WeatherSettings" refName="WeatherSetting" />
       <Group name="Climates" refName="Climate" />
       <Group name="ShaderParticleGeometries" refName="ShaderParticleGeometry" />
+      <Group name="Regions" refName="Region" />
       <Ref name="Cells" singleton="true">
         <Direct refName="StarfieldListGroup">
           <GenericSpecification Definition="Starfield.CellBlock" TypeToSpecify="T" />
