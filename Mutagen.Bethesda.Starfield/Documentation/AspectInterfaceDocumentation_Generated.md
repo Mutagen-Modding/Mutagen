@@ -152,6 +152,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FxSceneAction
 - Hazard
 - HeadPart
+- IdleAnimation
 - Ingestible
 - InstanceNamingRule
 - Key
@@ -455,6 +456,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### HeadPart
 - IModeled
+- INamed
+### IdleAnimation
 - INamed
 ### IdleMarker
 - IKeyworded

@@ -2392,7 +2392,9 @@
     <Compile Include="Records\Major Records\RegionData.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\RegionSounds.cs" />
+    <Compile Include="Records\Major Records\RegionSounds.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>

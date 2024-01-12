@@ -123,6 +123,7 @@ namespace Mutagen.Bethesda.Starfield
             _Regions_Object = new StarfieldGroup<Region>(this);
             _Worldspaces_Object = new StarfieldGroup<Worldspace>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
+            _IdleAnimations_Object = new StarfieldGroup<IdleAnimation>(this);
             _Packages_Object = new StarfieldGroup<Package>(this);
             _CombatStyles_Object = new StarfieldGroup<CombatStyle>(this);
             _LoadScreens_Object = new StarfieldGroup<LoadScreen>(this);
@@ -604,6 +605,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IQuestGetter> IStarfieldModGetter.Quests => _Quests_Object;
         #endregion
+        #region IdleAnimations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<IdleAnimation> _IdleAnimations_Object;
+        public StarfieldGroup<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IIdleAnimationGetter> IStarfieldModGetter.IdleAnimations => _IdleAnimations_Object;
+        #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Package> _Packages_Object;
@@ -903,6 +911,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Cells = new MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>(initialValue, new StarfieldListGroup.Mask<TItem>(initialValue));
                 this.Worldspaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.IdleAnimations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Packages = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.CombatStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LoadScreens = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -998,6 +1007,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Cells,
                 TItem Worldspaces,
                 TItem Quests,
+                TItem IdleAnimations,
                 TItem Packages,
                 TItem CombatStyles,
                 TItem LoadScreens,
@@ -1091,6 +1101,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Cells = new MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>(Cells, new StarfieldListGroup.Mask<TItem>(Cells));
                 this.Worldspaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Worldspaces, new StarfieldGroup.Mask<TItem>(Worldspaces));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Quests, new StarfieldGroup.Mask<TItem>(Quests));
+                this.IdleAnimations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(IdleAnimations, new StarfieldGroup.Mask<TItem>(IdleAnimations));
                 this.Packages = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Packages, new StarfieldGroup.Mask<TItem>(Packages));
                 this.CombatStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CombatStyles, new StarfieldGroup.Mask<TItem>(CombatStyles));
                 this.LoadScreens = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LoadScreens, new StarfieldGroup.Mask<TItem>(LoadScreens));
@@ -1194,6 +1205,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldListGroup.Mask<TItem>?>? Cells { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Worldspaces { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Quests { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? IdleAnimations { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Packages { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CombatStyles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LoadScreens { get; set; }
@@ -1298,6 +1310,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Cells, rhs.Cells)) return false;
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
+                if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
                 if (!object.Equals(this.Packages, rhs.Packages)) return false;
                 if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
                 if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
@@ -1395,6 +1408,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Cells);
                 hash.Add(this.Worldspaces);
                 hash.Add(this.Quests);
+                hash.Add(this.IdleAnimations);
                 hash.Add(this.Packages);
                 hash.Add(this.CombatStyles);
                 hash.Add(this.LoadScreens);
@@ -1750,6 +1764,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Quests.Overall)) return false;
                     if (this.Quests.Specific != null && !this.Quests.Specific.All(eval)) return false;
+                }
+                if (IdleAnimations != null)
+                {
+                    if (!eval(this.IdleAnimations.Overall)) return false;
+                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
                 }
                 if (Packages != null)
                 {
@@ -2218,6 +2237,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Quests.Overall)) return true;
                     if (this.Quests.Specific != null && this.Quests.Specific.Any(eval)) return true;
                 }
+                if (IdleAnimations != null)
+                {
+                    if (eval(this.IdleAnimations.Overall)) return true;
+                    if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
+                }
                 if (Packages != null)
                 {
                     if (eval(this.Packages.Overall)) return true;
@@ -2436,6 +2460,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Cells = this.Cells == null ? null : new MaskItem<R, StarfieldListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
                 obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
                 obj.Packages = this.Packages == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
                 obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
                 obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
@@ -2738,6 +2763,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Quests?.Print(sb);
                     }
+                    if (printMask?.IdleAnimations?.Overall ?? true)
+                    {
+                        IdleAnimations?.Print(sb);
+                    }
                     if (printMask?.Packages?.Overall ?? true)
                     {
                         Packages?.Print(sb);
@@ -2938,6 +2967,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>? Quests;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Package.ErrorMask>?>? Packages;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
@@ -3102,6 +3132,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Worldspaces;
                     case StarfieldMod_FieldIndex.Quests:
                         return Quests;
+                    case StarfieldMod_FieldIndex.IdleAnimations:
+                        return IdleAnimations;
                     case StarfieldMod_FieldIndex.Packages:
                         return Packages;
                     case StarfieldMod_FieldIndex.CombatStyles:
@@ -3359,6 +3391,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Quests:
                         this.Quests = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = new MaskItem<Exception?, StarfieldGroup.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Packages:
                         this.Packages = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Package.ErrorMask>?>(ex, null);
@@ -3646,6 +3681,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Quests:
                         this.Quests = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = (MaskItem<Exception?, StarfieldGroup.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Packages:
                         this.Packages = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Package.ErrorMask>?>?)obj;
                         break;
@@ -3802,6 +3840,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Cells != null) return true;
                 if (Worldspaces != null) return true;
                 if (Quests != null) return true;
+                if (IdleAnimations != null) return true;
                 if (Packages != null) return true;
                 if (CombatStyles != null) return true;
                 if (LoadScreens != null) return true;
@@ -3919,6 +3958,7 @@ namespace Mutagen.Bethesda.Starfield
                 Cells?.Print(sb);
                 Worldspaces?.Print(sb);
                 Quests?.Print(sb);
+                IdleAnimations?.Print(sb);
                 Packages?.Print(sb);
                 CombatStyles?.Print(sb);
                 LoadScreens?.Print(sb);
@@ -4019,6 +4059,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
                 ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
+                ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
                 ret.Packages = this.Packages.Combine(rhs.Packages, (l, r) => l.Combine(r));
                 ret.CombatStyles = this.CombatStyles.Combine(rhs.CombatStyles, (l, r) => l.Combine(r));
                 ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
@@ -4134,6 +4175,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
             public StarfieldGroup.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
             public StarfieldGroup.TranslationMask<Quest.TranslationMask>? Quests;
+            public StarfieldGroup.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
             public StarfieldGroup.TranslationMask<Package.TranslationMask>? Packages;
             public StarfieldGroup.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
             public StarfieldGroup.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
@@ -4250,6 +4292,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Cells != null ? Cells.OnOverall : DefaultOn, Cells?.GetCrystal()));
                 ret.Add((Worldspaces != null ? Worldspaces.OnOverall : DefaultOn, Worldspaces?.GetCrystal()));
                 ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
+                ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
                 ret.Add((Packages != null ? Packages.OnOverall : DefaultOn, Packages?.GetCrystal()));
                 ret.Add((CombatStyles != null ? CombatStyles.OnOverall : DefaultOn, CombatStyles?.GetCrystal()));
                 ret.Add((LoadScreens != null ? LoadScreens.OnOverall : DefaultOn, LoadScreens?.GetCrystal()));
@@ -4387,6 +4430,7 @@ namespace Mutagen.Bethesda.Starfield
             _Regions_Object = new StarfieldGroup<Region>(this);
             _Worldspaces_Object = new StarfieldGroup<Worldspace>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
+            _IdleAnimations_Object = new StarfieldGroup<IdleAnimation>(this);
             _Packages_Object = new StarfieldGroup<Package>(this);
             _CombatStyles_Object = new StarfieldGroup<CombatStyle>(this);
             _LoadScreens_Object = new StarfieldGroup<LoadScreen>(this);
@@ -4676,6 +4720,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Quests.RecordCache.Set(rhsMod.Quests.RecordCache.Items);
             }
+            if (mask?.IdleAnimations ?? true)
+            {
+                this.IdleAnimations.RecordCache.Set(rhsMod.IdleAnimations.RecordCache.Items);
+            }
             if (mask?.Packages ?? true)
             {
                 this.Packages.RecordCache.Set(rhsMod.Packages.RecordCache.Items);
@@ -4861,6 +4909,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Cells.Records.Count > 0 ? 1 : default(uint);
             count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
             count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
             count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
             count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
@@ -5226,6 +5275,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldListGroup<CellBlock> Cells { get; }
         new StarfieldGroup<Worldspace> Worldspaces { get; }
         new StarfieldGroup<Quest> Quests { get; }
+        new StarfieldGroup<IdleAnimation> IdleAnimations { get; }
         new StarfieldGroup<Package> Packages { get; }
         new StarfieldGroup<CombatStyle> CombatStyles { get; }
         new StarfieldGroup<LoadScreen> LoadScreens { get; }
@@ -5337,6 +5387,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldListGroupGetter<ICellBlockGetter> Cells { get; }
         IStarfieldGroupGetter<IWorldspaceGetter> Worldspaces { get; }
         IStarfieldGroupGetter<IQuestGetter> Quests { get; }
+        IStarfieldGroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
         IStarfieldGroupGetter<IPackageGetter> Packages { get; }
         IStarfieldGroupGetter<ICombatStyleGetter> CombatStyles { get; }
         IStarfieldGroupGetter<ILoadScreenGetter> LoadScreens { get; }
@@ -6011,34 +6062,35 @@ namespace Mutagen.Bethesda.Starfield
         Cells = 61,
         Worldspaces = 62,
         Quests = 63,
-        Packages = 64,
-        CombatStyles = 65,
-        LoadScreens = 66,
-        AnimatedObjects = 67,
-        Waters = 68,
-        Debris = 69,
-        FormLists = 70,
-        Perks = 71,
-        ArmorAddons = 72,
-        Locations = 73,
-        DefaultObjects = 74,
-        Outfits = 75,
-        AimModels = 76,
-        AimAssistModels = 77,
-        Layers = 78,
-        ConstructibleObjects = 79,
-        ObjectModifications = 80,
-        InstanceNamingRules = 81,
-        AttractionRules = 82,
-        Resources = 83,
-        BiomeSwaps = 84,
-        SnapTemplates = 85,
-        Planets = 86,
-        ConditionRecords = 87,
-        SurfacePatternStyles = 88,
-        TerminalMenus = 89,
-        LegendaryItems = 90,
-        ActorValueModulations = 91,
+        IdleAnimations = 64,
+        Packages = 65,
+        CombatStyles = 66,
+        LoadScreens = 67,
+        AnimatedObjects = 68,
+        Waters = 69,
+        Debris = 70,
+        FormLists = 71,
+        Perks = 72,
+        ArmorAddons = 73,
+        Locations = 74,
+        DefaultObjects = 75,
+        Outfits = 76,
+        AimModels = 77,
+        AimAssistModels = 78,
+        Layers = 79,
+        ConstructibleObjects = 80,
+        ObjectModifications = 81,
+        InstanceNamingRules = 82,
+        AttractionRules = 83,
+        Resources = 84,
+        BiomeSwaps = 85,
+        SnapTemplates = 86,
+        Planets = 87,
+        ConditionRecords = 88,
+        SurfacePatternStyles = 89,
+        TerminalMenus = 90,
+        LegendaryItems = 91,
+        ActorValueModulations = 92,
     }
     #endregion
 
@@ -6049,9 +6101,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 92;
+        public const ushort AdditionalFieldCount = 93;
 
-        public const ushort FieldCount = 92;
+        public const ushort FieldCount = 93;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -6180,6 +6232,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Regions.Clear();
             item.Worldspaces.Clear();
             item.Quests.Clear();
+            item.IdleAnimations.Clear();
             item.Packages.Clear();
             item.CombatStyles.Clear();
             item.LoadScreens.Clear();
@@ -6267,6 +6320,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Cells.RemapLinks(mapping);
             obj.Worldspaces.RemapLinks(mapping);
             obj.Quests.RemapLinks(mapping);
+            obj.IdleAnimations.RemapLinks(mapping);
             obj.Packages.RemapLinks(mapping);
             obj.CombatStyles.RemapLinks(mapping);
             obj.LoadScreens.RemapLinks(mapping);
@@ -6386,6 +6440,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Cells.Remove(keys);
             obj.Worldspaces.Remove(keys);
             obj.Quests.Remove(keys);
+            obj.IdleAnimations.Remove(keys);
             obj.Packages.Remove(keys);
             obj.CombatStyles.Remove(keys);
             obj.LoadScreens.Remove(keys);
@@ -6946,6 +7001,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IQuest":
                 case "IQuestInternal":
                     obj.Quests.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    obj.IdleAnimations.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -8083,6 +8146,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
             ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
+            ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
             ret.Packages = MaskItemExt.Factory(item.Packages.GetEqualsMask(rhs.Packages, include), include);
             ret.CombatStyles = MaskItemExt.Factory(item.CombatStyles.GetEqualsMask(rhs.CombatStyles, include), include);
             ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
@@ -8410,6 +8474,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Quests?.Overall ?? true)
             {
                 item.Quests?.Print(sb, "Quests");
+            }
+            if (printMask?.IdleAnimations?.Overall ?? true)
+            {
+                item.IdleAnimations?.Print(sb, "IdleAnimations");
             }
             if (printMask?.Packages?.Overall ?? true)
             {
@@ -9044,6 +9112,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isQuestsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.IdleAnimations) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
+                {
+                    if (!object.Equals(lhsIdleAnimations, rhsIdleAnimations)) return false;
+                }
+                else if (!isIdleAnimationsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Packages) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Packages, rhs.Packages, out var lhsPackages, out var rhsPackages, out var isPackagesEqual))
@@ -9338,6 +9414,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Cells);
             hash.Add(item.Worldspaces);
             hash.Add(item.Quests);
+            hash.Add(item.IdleAnimations);
             hash.Add(item.Packages);
             hash.Add(item.CombatStyles);
             hash.Add(item.LoadScreens);
@@ -9698,6 +9775,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IQuest":
                 case "IQuestInternal":
                     return obj.Quests;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    return obj.IdleAnimations;
                 case "Package":
                 case "IPackageGetter":
                 case "IPackage":
@@ -9864,7 +9946,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[91];
+            Stream[] outputStreams = new Stream[92];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -9929,34 +10011,35 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteCellsParallel(item.Cells, 60, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 61, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteQuestsParallel(item.Quests, 62, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Packages, 63, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 64, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 65, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 66, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Waters, 67, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 68, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 69, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 70, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 71, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 72, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 73, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 74, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 75, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 76, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 77, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 78, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 79, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 80, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 81, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 83, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 84, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 85, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 86, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 87, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 88, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 89, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 90, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 63, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 64, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 65, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 66, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 67, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 68, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 69, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 70, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 71, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 72, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 73, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 74, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 75, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 76, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 77, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 78, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 79, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 80, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 81, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 82, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 84, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 85, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 87, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 88, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 89, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 90, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 91, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10223,6 +10306,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Quests.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -10577,6 +10664,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Quests.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11281,6 +11372,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IQuest":
                 case "IQuestInternal":
                     foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12252,6 +12352,15 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, IdleAnimation, IIdleAnimationGetter>(
+                srcGroup: obj.IdleAnimations,
+                type: typeof(IIdleAnimationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleAnimations,
+                groupGetter: (m) => m.IdleAnimations))
+            {
+                yield return item;
             }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Package, IPackageGetter>(
                 srcGroup: obj.Packages,
@@ -13400,6 +13509,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Quests,
                         groupGetter: (m) => m.Quests))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, IdleAnimation, IIdleAnimationGetter>(
+                        srcGroup: obj.IdleAnimations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleAnimations,
+                        groupGetter: (m) => m.IdleAnimations))
                     {
                         yield return item;
                     }
@@ -15688,6 +15811,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.IdleAnimations) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.IdleAnimations);
+                try
+                {
+                    item.IdleAnimations.DeepCopyIn(
+                        rhs: rhs.IdleAnimations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.IdleAnimations));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Packages) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Packages);
@@ -16401,6 +16544,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Cells;
         public bool Worldspaces;
         public bool Quests;
+        public bool IdleAnimations;
         public bool Packages;
         public bool CombatStyles;
         public bool LoadScreens;
@@ -16497,6 +16641,7 @@ namespace Mutagen.Bethesda.Starfield
             Cells = defaultValue;
             Worldspaces = defaultValue;
             Quests = defaultValue;
+            IdleAnimations = defaultValue;
             Packages = defaultValue;
             CombatStyles = defaultValue;
             LoadScreens = defaultValue;
@@ -17273,6 +17418,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
                         item: QuestsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.IdleAnimations ?? true)
+            {
+                var IdleAnimationsItem = item.IdleAnimations;
+                if (IdleAnimationsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
+                        item: IdleAnimationsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -18527,6 +18683,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Quests;
                 }
+                case RecordTypeInts.IDLE:
+                {
+                    if (importMask?.IdleAnimations ?? true)
+                    {
+                        item.IdleAnimations.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.IdleAnimations;
+                }
                 case RecordTypeInts.PACK:
                 {
                     if (importMask?.Packages ?? true)
@@ -19405,6 +19575,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? StarfieldGroupBinaryOverlay<IQuestGetter>.StarfieldGroupFactory(_stream, _QuestsLocations, _package) : default;
         public IStarfieldGroupGetter<IQuestGetter> Quests => _Quests ?? new StarfieldGroup<Quest>(this);
         #endregion
+        #region IdleAnimations
+        private List<RangeInt64>? _IdleAnimationsLocations;
+        private IStarfieldGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? StarfieldGroupBinaryOverlay<IIdleAnimationGetter>.StarfieldGroupFactory(_stream, _IdleAnimationsLocations, _package) : default;
+        public IStarfieldGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new StarfieldGroup<IdleAnimation>(this);
+        #endregion
         #region Packages
         private List<RangeInt64>? _PackagesLocations;
         private IStarfieldGroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? StarfieldGroupBinaryOverlay<IPackageGetter>.StarfieldGroupFactory(_stream, _PackagesLocations, _package) : default;
@@ -20015,6 +20190,12 @@ namespace Mutagen.Bethesda.Starfield
                     _QuestsLocations ??= new();
                     _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Quests;
+                }
+                case RecordTypeInts.IDLE:
+                {
+                    _IdleAnimationsLocations ??= new();
+                    _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {

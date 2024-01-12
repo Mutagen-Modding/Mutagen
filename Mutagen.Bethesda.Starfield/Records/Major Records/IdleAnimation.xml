@@ -2,6 +2,17 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="IdleAnimation" recordType="IDLE" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Conditions" refName="Condition" />
+      <String name="BehaviorGraph" recordType="DNAM" />
+      <String name="AnimationEvent" recordType="ENAM" />
+      <List name="RelatedIdles" recordType="ANAM" nullable="False">
+        <FormLink>
+          <Interface>IIdleRelation</Interface>
+        </FormLink>
+      </List>
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <String name="AnimationFile" recordType="GNAM" />
+      <String name="Name" recordType="FULL" translated="Normal" />
     </Fields>
   </Object>
 </Loqui>

@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +25,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +57,96 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IIdleAnimationGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region BehaviorGraph
+        public String? BehaviorGraph { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIdleAnimationGetter.BehaviorGraph => this.BehaviorGraph;
+        #endregion
+        #region AnimationEvent
+        public String? AnimationEvent { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIdleAnimationGetter.AnimationEvent => this.AnimationEvent;
+        #endregion
+        #region RelatedIdles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLinkGetter<IIdleRelationGetter>>();
+        public ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles
+        {
+            get => this._RelatedIdles;
+            init => this._RelatedIdles = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> IIdleAnimationGetter.RelatedIdles => _RelatedIdles;
+        #endregion
+
+        #endregion
+        #region FNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FNAM;
+        public MemorySlice<Byte>? FNAM
+        {
+            get => this._FNAM;
+            set => this._FNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IIdleAnimationGetter.FNAM => this.FNAM;
+        #endregion
+        #region AnimationFile
+        public String? AnimationFile { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIdleAnimationGetter.AnimationFile => this.AnimationFile;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IIdleAnimationGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
 
         #region To String
 
@@ -79,6 +172,13 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.BehaviorGraph = initialValue;
+                this.AnimationEvent = initialValue;
+                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FNAM = initialValue;
+                this.AnimationFile = initialValue;
+                this.Name = initialValue;
             }
 
             public Mask(
@@ -88,7 +188,14 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Conditions,
+                TItem BehaviorGraph,
+                TItem AnimationEvent,
+                TItem RelatedIdles,
+                TItem FNAM,
+                TItem AnimationFile,
+                TItem Name)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +205,13 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.BehaviorGraph = BehaviorGraph;
+                this.AnimationEvent = AnimationEvent;
+                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedIdles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FNAM = FNAM;
+                this.AnimationFile = AnimationFile;
+                this.Name = Name;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +220,16 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem BehaviorGraph;
+            public TItem AnimationEvent;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RelatedIdles;
+            public TItem FNAM;
+            public TItem AnimationFile;
+            public TItem Name;
             #endregion
 
             #region Equals
@@ -119,11 +243,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.BehaviorGraph, rhs.BehaviorGraph)) return false;
+                if (!object.Equals(this.AnimationEvent, rhs.AnimationEvent)) return false;
+                if (!object.Equals(this.RelatedIdles, rhs.RelatedIdles)) return false;
+                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.AnimationFile, rhs.AnimationFile)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Conditions);
+                hash.Add(this.BehaviorGraph);
+                hash.Add(this.AnimationEvent);
+                hash.Add(this.RelatedIdles);
+                hash.Add(this.FNAM);
+                hash.Add(this.AnimationFile);
+                hash.Add(this.Name);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +272,34 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.BehaviorGraph)) return false;
+                if (!eval(this.AnimationEvent)) return false;
+                if (this.RelatedIdles != null)
+                {
+                    if (!eval(this.RelatedIdles.Overall)) return false;
+                    if (this.RelatedIdles.Specific != null)
+                    {
+                        foreach (var item in this.RelatedIdles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.FNAM)) return false;
+                if (!eval(this.AnimationFile)) return false;
+                if (!eval(this.Name)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +308,34 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.BehaviorGraph)) return true;
+                if (eval(this.AnimationEvent)) return true;
+                if (this.RelatedIdles != null)
+                {
+                    if (eval(this.RelatedIdles.Overall)) return true;
+                    if (this.RelatedIdles.Specific != null)
+                    {
+                        foreach (var item in this.RelatedIdles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.FNAM)) return true;
+                if (eval(this.AnimationFile)) return true;
+                if (eval(this.Name)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +351,40 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.BehaviorGraph = eval(this.BehaviorGraph);
+                obj.AnimationEvent = eval(this.AnimationEvent);
+                if (RelatedIdles != null)
+                {
+                    obj.RelatedIdles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedIdles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RelatedIdles.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RelatedIdles.Specific = l;
+                        foreach (var item in RelatedIdles.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.FNAM = eval(this.FNAM);
+                obj.AnimationFile = eval(this.AnimationFile);
+                obj.Name = eval(this.Name);
             }
             #endregion
 
@@ -175,6 +403,66 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(IdleAnimation.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.BehaviorGraph ?? true)
+                    {
+                        sb.AppendItem(BehaviorGraph, "BehaviorGraph");
+                    }
+                    if (printMask?.AnimationEvent ?? true)
+                    {
+                        sb.AppendItem(AnimationEvent, "AnimationEvent");
+                    }
+                    if ((printMask?.RelatedIdles?.Overall ?? true)
+                        && RelatedIdles is {} RelatedIdlesItem)
+                    {
+                        sb.AppendLine("RelatedIdles =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RelatedIdlesItem.Overall);
+                            if (RelatedIdlesItem.Specific != null)
+                            {
+                                foreach (var subItem in RelatedIdlesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.FNAM ?? true)
+                    {
+                        sb.AppendItem(FNAM, "FNAM");
+                    }
+                    if (printMask?.AnimationFile ?? true)
+                    {
+                        sb.AppendItem(AnimationFile, "AnimationFile");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
                 }
             }
             #endregion
@@ -185,12 +473,36 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? BehaviorGraph;
+            public Exception? AnimationEvent;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RelatedIdles;
+            public Exception? FNAM;
+            public Exception? AnimationFile;
+            public Exception? Name;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Conditions:
+                        return Conditions;
+                    case IdleAnimation_FieldIndex.BehaviorGraph:
+                        return BehaviorGraph;
+                    case IdleAnimation_FieldIndex.AnimationEvent:
+                        return AnimationEvent;
+                    case IdleAnimation_FieldIndex.RelatedIdles:
+                        return RelatedIdles;
+                    case IdleAnimation_FieldIndex.FNAM:
+                        return FNAM;
+                    case IdleAnimation_FieldIndex.AnimationFile:
+                        return AnimationFile;
+                    case IdleAnimation_FieldIndex.Name:
+                        return Name;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +513,27 @@ namespace Mutagen.Bethesda.Starfield
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case IdleAnimation_FieldIndex.BehaviorGraph:
+                        this.BehaviorGraph = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationEvent:
+                        this.AnimationEvent = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.RelatedIdles:
+                        this.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case IdleAnimation_FieldIndex.FNAM:
+                        this.FNAM = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationFile:
+                        this.AnimationFile = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +545,27 @@ namespace Mutagen.Bethesda.Starfield
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.BehaviorGraph:
+                        this.BehaviorGraph = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationEvent:
+                        this.AnimationEvent = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.RelatedIdles:
+                        this.RelatedIdles = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.FNAM:
+                        this.FNAM = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationFile:
+                        this.AnimationFile = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +575,13 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Conditions != null) return true;
+                if (BehaviorGraph != null) return true;
+                if (AnimationEvent != null) return true;
+                if (RelatedIdles != null) return true;
+                if (FNAM != null) return true;
+                if (AnimationFile != null) return true;
+                if (Name != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +608,59 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(BehaviorGraph, "BehaviorGraph");
+                }
+                {
+                    sb.AppendItem(AnimationEvent, "AnimationEvent");
+                }
+                if (RelatedIdles is {} RelatedIdlesItem)
+                {
+                    sb.AppendLine("RelatedIdles =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RelatedIdlesItem.Overall);
+                        if (RelatedIdlesItem.Specific != null)
+                        {
+                            foreach (var subItem in RelatedIdlesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(AnimationFile, "AnimationFile");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
             }
             #endregion
 
@@ -255,6 +669,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.BehaviorGraph = this.BehaviorGraph.Combine(rhs.BehaviorGraph);
+                ret.AnimationEvent = this.AnimationEvent.Combine(rhs.AnimationEvent);
+                ret.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RelatedIdles?.Overall, rhs.RelatedIdles?.Overall), Noggog.ExceptionExt.Combine(this.RelatedIdles?.Specific, rhs.RelatedIdles?.Specific));
+                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.AnimationFile = this.AnimationFile.Combine(rhs.AnimationFile);
+                ret.Name = this.Name.Combine(rhs.Name);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +697,43 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public Condition.TranslationMask? Conditions;
+            public bool BehaviorGraph;
+            public bool AnimationEvent;
+            public bool RelatedIdles;
+            public bool FNAM;
+            public bool AnimationFile;
+            public bool Name;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.BehaviorGraph = defaultOn;
+                this.AnimationEvent = defaultOn;
+                this.RelatedIdles = defaultOn;
+                this.FNAM = defaultOn;
+                this.AnimationFile = defaultOn;
+                this.Name = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((BehaviorGraph, null));
+                ret.Add((AnimationEvent, null));
+                ret.Add((RelatedIdles, null));
+                ret.Add((FNAM, null));
+                ret.Add((AnimationFile, null));
+                ret.Add((Name, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +745,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IdleAnimationCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationSetterCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +875,25 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IIdleAnimation :
+        IFormLinkContainer,
         IIdleAnimationGetter,
         ILoquiObjectSetter<IIdleAnimationInternal>,
-        IStarfieldMajorRecordInternal
+        INamed,
+        INamedRequired,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new ExtendedList<Condition> Conditions { get; }
+        new String? BehaviorGraph { get; set; }
+        new String? AnimationEvent { get; set; }
+        new ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
+        new MemorySlice<Byte>? FNAM { get; set; }
+        new String? AnimationFile { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -441,10 +907,27 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IIdleAnimationGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IIdleAnimationGetter>,
-        IMapsToGetter<IIdleAnimationGetter>
+        IMapsToGetter<IIdleAnimationGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        String? BehaviorGraph { get; }
+        String? AnimationEvent { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
+        ReadOnlyMemorySlice<Byte>? FNAM { get; }
+        String? AnimationFile { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
 
     }
 
@@ -621,6 +1104,13 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Conditions = 7,
+        BehaviorGraph = 8,
+        AnimationEvent = 9,
+        RelatedIdles = 10,
+        FNAM = 11,
+        AnimationFile = 12,
+        Name = 13,
     }
     #endregion
 
@@ -631,9 +1121,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(IdleAnimation.Mask<>);
 
@@ -663,8 +1153,22 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.IDLE);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.IDLE);
+            var all = RecordCollection.Factory(
+                RecordTypes.IDLE,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.DNAM,
+                RecordTypes.ENAM,
+                RecordTypes.ANAM,
+                RecordTypes.FNAM,
+                RecordTypes.GNAM,
+                RecordTypes.FULL);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1210,13 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IIdleAnimationInternal item)
         {
             ClearPartial();
+            item.Conditions.Clear();
+            item.BehaviorGraph = default;
+            item.AnimationEvent = default;
+            item.RelatedIdles.Clear();
+            item.FNAM = default;
+            item.AnimationFile = default;
+            item.Name = default;
             base.Clear(item);
         }
         
@@ -723,6 +1234,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IIdleAnimation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.RelatedIdles.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1303,19 @@ namespace Mutagen.Bethesda.Starfield
             IdleAnimation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.BehaviorGraph = string.Equals(item.BehaviorGraph, rhs.BehaviorGraph);
+            ret.AnimationEvent = string.Equals(item.AnimationEvent, rhs.AnimationEvent);
+            ret.RelatedIdles = item.RelatedIdles.CollectionEqualsHelper(
+                rhs.RelatedIdles,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
+            ret.AnimationFile = string.Equals(item.AnimationFile, rhs.AnimationFile);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1365,59 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.BehaviorGraph ?? true)
+                && item.BehaviorGraph is {} BehaviorGraphItem)
+            {
+                sb.AppendItem(BehaviorGraphItem, "BehaviorGraph");
+            }
+            if ((printMask?.AnimationEvent ?? true)
+                && item.AnimationEvent is {} AnimationEventItem)
+            {
+                sb.AppendItem(AnimationEventItem, "AnimationEvent");
+            }
+            if (printMask?.RelatedIdles?.Overall ?? true)
+            {
+                sb.AppendLine("RelatedIdles =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.RelatedIdles)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.FNAM ?? true)
+                && item.FNAM is {} FNAMItem)
+            {
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+            }
+            if ((printMask?.AnimationFile ?? true)
+                && item.AnimationFile is {} AnimationFileItem)
+            {
+                sb.AppendItem(AnimationFileItem, "AnimationFile");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
         }
         
         public static IdleAnimation_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1468,34 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.BehaviorGraph) ?? true))
+            {
+                if (!string.Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
+            {
+                if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            {
+                if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationFile) ?? true))
+            {
+                if (!string.Equals(lhs.AnimationFile, rhs.AnimationFile)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1524,28 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IIdleAnimationGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Conditions);
+            if (item.BehaviorGraph is {} BehaviorGraphitem)
+            {
+                hash.Add(BehaviorGraphitem);
+            }
+            if (item.AnimationEvent is {} AnimationEventitem)
+            {
+                hash.Add(AnimationEventitem);
+            }
+            hash.Add(item.RelatedIdles);
+            if (item.FNAM is {} FNAMItem)
+            {
+                hash.Add(FNAMItem);
+            }
+            if (item.AnimationFile is {} AnimationFileitem)
+            {
+                hash.Add(AnimationFileitem);
+            }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1574,14 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.RelatedIdles)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1020,6 +1657,76 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.BehaviorGraph) ?? true))
+            {
+                item.BehaviorGraph = rhs.BehaviorGraph;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
+            {
+                item.AnimationEvent = rhs.AnimationEvent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdles);
+                try
+                {
+                    item.RelatedIdles.SetTo(
+                        rhs.RelatedIdles
+                        .Select(r => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.FNAM) ?? true))
+            {
+                if(rhs.FNAM is {} FNAMrhs)
+                {
+                    item.FNAM = FNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.FNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationFile) ?? true))
+            {
+                item.AnimationFile = rhs.AnimationFile;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1875,63 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly IdleAnimationBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IIdleAnimationGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BehaviorGraph,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AnimationEvent,
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IIdleRelationGetter>>.Instance.Write(
+                writer: writer,
+                items: item.RelatedIdles,
+                recordType: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleRelationGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AnimationFile,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+        }
+
         public void Write(
             MutagenWriter writer,
             IIdleAnimationGetter item,
@@ -1184,10 +1948,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2003,88 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLE;
+        public static ParseResult FillBinaryRecordTypes(
+            IIdleAnimationInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)IdleAnimation_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BehaviorGraph = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)IdleAnimation_FieldIndex.BehaviorGraph;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AnimationEvent = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)IdleAnimation_FieldIndex.AnimationEvent;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RelatedIdles.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IIdleRelationGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)IdleAnimation_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AnimationFile = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)IdleAnimation_FieldIndex.AnimationFile;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)IdleAnimation_FieldIndex.Name;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2117,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IdleAnimationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2132,36 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IIdleAnimation);
 
 
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        #region BehaviorGraph
+        private int? _BehaviorGraphLocation;
+        public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region AnimationEvent
+        private int? _AnimationEventLocation;
+        public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = Array.Empty<IFormLinkGetter<IIdleRelationGetter>>();
+        #region FNAM
+        private int? _FNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region AnimationFile
+        private int? _AnimationFileLocation;
+        public String? AnimationFile => _AnimationFileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationFileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2219,81 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)IdleAnimation_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _BehaviorGraphLocation = (stream.Position - offset);
+                    return (int)IdleAnimation_FieldIndex.BehaviorGraph;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _AnimationEventLocation = (stream.Position - offset);
+                    return (int)IdleAnimation_FieldIndex.AnimationEvent;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleRelationGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IIdleRelationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FNAMLocation = (stream.Position - offset);
+                    return (int)IdleAnimation_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _AnimationFileLocation = (stream.Position - offset);
+                    return (int)IdleAnimation_FieldIndex.AnimationFile;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)IdleAnimation_FieldIndex.Name;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
