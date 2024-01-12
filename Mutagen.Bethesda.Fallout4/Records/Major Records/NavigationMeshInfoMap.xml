@@ -13,7 +13,7 @@
       <FormLink name="NavigationMesh" refName="NavigationMesh" />
       <Int32 name="Unknown" />
       <P3Float name="Point" />
-      <UInt32 name="PreferredMergesFlag" />
+      <Float name="UnknownFloat" />
       <List name="MergedTo" counterLength="4">
         <FormLink refName="NavigationMesh" />
       </List>

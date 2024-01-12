@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Point
         public P3Float Point { get; set; } = default;
         #endregion
-        #region PreferredMergesFlag
-        public UInt32 PreferredMergesFlag { get; set; } = default;
+        #region UnknownFloat
+        public Single UnknownFloat { get; set; } = default;
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NavigationMesh = initialValue;
                 this.Unknown = initialValue;
                 this.Point = initialValue;
-                this.PreferredMergesFlag = initialValue;
+                this.UnknownFloat = initialValue;
                 this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem NavigationMesh,
                 TItem Unknown,
                 TItem Point,
-                TItem PreferredMergesFlag,
+                TItem UnknownFloat,
                 TItem MergedTo,
                 TItem PreferredMerges,
                 TItem LinkedDoors,
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NavigationMesh = NavigationMesh;
                 this.Unknown = Unknown;
                 this.Point = Point;
-                this.PreferredMergesFlag = PreferredMergesFlag;
+                this.UnknownFloat = UnknownFloat;
                 this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MergedTo, Enumerable.Empty<(int Index, TItem Value)>());
                 this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PreferredMerges, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(LinkedDoors, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem NavigationMesh;
             public TItem Unknown;
             public TItem Point;
-            public TItem PreferredMergesFlag;
+            public TItem UnknownFloat;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MergedTo;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PreferredMerges;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>? LinkedDoors;
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.NavigationMesh, rhs.NavigationMesh)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Point, rhs.Point)) return false;
-                if (!object.Equals(this.PreferredMergesFlag, rhs.PreferredMergesFlag)) return false;
+                if (!object.Equals(this.UnknownFloat, rhs.UnknownFloat)) return false;
                 if (!object.Equals(this.MergedTo, rhs.MergedTo)) return false;
                 if (!object.Equals(this.PreferredMerges, rhs.PreferredMerges)) return false;
                 if (!object.Equals(this.LinkedDoors, rhs.LinkedDoors)) return false;
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.NavigationMesh);
                 hash.Add(this.Unknown);
                 hash.Add(this.Point);
-                hash.Add(this.PreferredMergesFlag);
+                hash.Add(this.UnknownFloat);
                 hash.Add(this.MergedTo);
                 hash.Add(this.PreferredMerges);
                 hash.Add(this.LinkedDoors);
@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.NavigationMesh)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Point)) return false;
-                if (!eval(this.PreferredMergesFlag)) return false;
+                if (!eval(this.UnknownFloat)) return false;
                 if (this.MergedTo != null)
                 {
                     if (!eval(this.MergedTo.Overall)) return false;
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.NavigationMesh)) return true;
                 if (eval(this.Unknown)) return true;
                 if (eval(this.Point)) return true;
-                if (eval(this.PreferredMergesFlag)) return true;
+                if (eval(this.UnknownFloat)) return true;
                 if (this.MergedTo != null)
                 {
                     if (eval(this.MergedTo.Overall)) return true;
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.NavigationMesh = eval(this.NavigationMesh);
                 obj.Unknown = eval(this.Unknown);
                 obj.Point = eval(this.Point);
-                obj.PreferredMergesFlag = eval(this.PreferredMergesFlag);
+                obj.UnknownFloat = eval(this.UnknownFloat);
                 if (MergedTo != null)
                 {
                     obj.MergedTo = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MergedTo.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -470,9 +470,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Point, "Point");
                     }
-                    if (printMask?.PreferredMergesFlag ?? true)
+                    if (printMask?.UnknownFloat ?? true)
                     {
-                        sb.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                        sb.AppendItem(UnknownFloat, "UnknownFloat");
                     }
                     if ((printMask?.MergedTo?.Overall ?? true)
                         && MergedTo is {} MergedToItem)
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? NavigationMesh;
             public Exception? Unknown;
             public Exception? Point;
-            public Exception? PreferredMergesFlag;
+            public Exception? UnknownFloat;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MergedTo;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PreferredMerges;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>? LinkedDoors;
@@ -595,8 +595,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown;
                     case NavigationMapInfo_FieldIndex.Point:
                         return Point;
-                    case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                        return PreferredMergesFlag;
+                    case NavigationMapInfo_FieldIndex.UnknownFloat:
+                        return UnknownFloat;
                     case NavigationMapInfo_FieldIndex.MergedTo:
                         return MergedTo;
                     case NavigationMapInfo_FieldIndex.PreferredMerges:
@@ -628,8 +628,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavigationMapInfo_FieldIndex.Point:
                         this.Point = ex;
                         break;
-                    case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                        this.PreferredMergesFlag = ex;
+                    case NavigationMapInfo_FieldIndex.UnknownFloat:
+                        this.UnknownFloat = ex;
                         break;
                     case NavigationMapInfo_FieldIndex.MergedTo:
                         this.MergedTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -668,8 +668,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavigationMapInfo_FieldIndex.Point:
                         this.Point = (Exception?)obj;
                         break;
-                    case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                        this.PreferredMergesFlag = (Exception?)obj;
+                    case NavigationMapInfo_FieldIndex.UnknownFloat:
+                        this.UnknownFloat = (Exception?)obj;
                         break;
                     case NavigationMapInfo_FieldIndex.MergedTo:
                         this.MergedTo = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (NavigationMesh != null) return true;
                 if (Unknown != null) return true;
                 if (Point != null) return true;
-                if (PreferredMergesFlag != null) return true;
+                if (UnknownFloat != null) return true;
                 if (MergedTo != null) return true;
                 if (PreferredMerges != null) return true;
                 if (LinkedDoors != null) return true;
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Point, "Point");
                 }
                 {
-                    sb.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                    sb.AppendItem(UnknownFloat, "UnknownFloat");
                 }
                 if (MergedTo is {} MergedToItem)
                 {
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.NavigationMesh = this.NavigationMesh.Combine(rhs.NavigationMesh);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Point = this.Point.Combine(rhs.Point);
-                ret.PreferredMergesFlag = this.PreferredMergesFlag.Combine(rhs.PreferredMergesFlag);
+                ret.UnknownFloat = this.UnknownFloat.Combine(rhs.UnknownFloat);
                 ret.MergedTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MergedTo?.Overall, rhs.MergedTo?.Overall), Noggog.ExceptionExt.Combine(this.MergedTo?.Specific, rhs.MergedTo?.Specific));
                 ret.PreferredMerges = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PreferredMerges?.Overall, rhs.PreferredMerges?.Overall), Noggog.ExceptionExt.Combine(this.PreferredMerges?.Specific, rhs.PreferredMerges?.Specific));
                 ret.LinkedDoors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedDoors?.Overall, rhs.LinkedDoors?.Overall), Noggog.ExceptionExt.Combine(this.LinkedDoors?.Specific, rhs.LinkedDoors?.Specific));
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool NavigationMesh;
             public bool Unknown;
             public bool Point;
-            public bool PreferredMergesFlag;
+            public bool UnknownFloat;
             public bool MergedTo;
             public bool PreferredMerges;
             public LinkedDoor.TranslationMask? LinkedDoors;
@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NavigationMesh = defaultOn;
                 this.Unknown = defaultOn;
                 this.Point = defaultOn;
-                this.PreferredMergesFlag = defaultOn;
+                this.UnknownFloat = defaultOn;
                 this.MergedTo = defaultOn;
                 this.PreferredMerges = defaultOn;
                 this.Unknown2 = defaultOn;
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((NavigationMesh, null));
                 ret.Add((Unknown, null));
                 ret.Add((Point, null));
-                ret.Add((PreferredMergesFlag, null));
+                ret.Add((UnknownFloat, null));
                 ret.Add((MergedTo, null));
                 ret.Add((PreferredMerges, null));
                 ret.Add((LinkedDoors == null ? DefaultOn : !LinkedDoors.GetCrystal().CopyNothing, LinkedDoors?.GetCrystal()));
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLink<INavigationMeshGetter> NavigationMesh { get; set; }
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
-        new UInt32 PreferredMergesFlag { get; set; }
+        new Single UnknownFloat { get; set; }
         new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> MergedTo { get; }
         new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges { get; }
         new ExtendedList<LinkedDoor> LinkedDoors { get; }
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<INavigationMeshGetter> NavigationMesh { get; }
         Int32 Unknown { get; }
         P3Float Point { get; }
-        UInt32 PreferredMergesFlag { get; }
+        Single UnknownFloat { get; }
         IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo { get; }
         IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges { get; }
         IReadOnlyList<ILinkedDoorGetter> LinkedDoors { get; }
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Fallout4
         NavigationMesh = 0,
         Unknown = 1,
         Point = 2,
-        PreferredMergesFlag = 3,
+        UnknownFloat = 3,
         MergedTo = 4,
         PreferredMerges = 5,
         LinkedDoors = 6,
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.NavigationMesh.Clear();
             item.Unknown = default;
             item.Point = default;
-            item.PreferredMergesFlag = default;
+            item.UnknownFloat = default;
             item.MergedTo.Clear();
             item.PreferredMerges.Clear();
             item.LinkedDoors.Clear();
@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.NavigationMesh = item.NavigationMesh.Equals(rhs.NavigationMesh);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Point = item.Point.Equals(rhs.Point);
-            ret.PreferredMergesFlag = item.PreferredMergesFlag == rhs.PreferredMergesFlag;
+            ret.UnknownFloat = item.UnknownFloat.EqualsWithin(rhs.UnknownFloat);
             ret.MergedTo = item.MergedTo.CollectionEqualsHelper(
                 rhs.MergedTo,
                 (l, r) => object.Equals(l, r),
@@ -1423,9 +1423,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Point, "Point");
             }
-            if (printMask?.PreferredMergesFlag ?? true)
+            if (printMask?.UnknownFloat ?? true)
             {
-                sb.AppendItem(item.PreferredMergesFlag, "PreferredMergesFlag");
+                sb.AppendItem(item.UnknownFloat, "UnknownFloat");
             }
             if (printMask?.MergedTo?.Overall ?? true)
             {
@@ -1503,9 +1503,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Point.Equals(rhs.Point)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.UnknownFloat) ?? true))
             {
-                if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
+                if (!lhs.UnknownFloat.EqualsWithin(rhs.UnknownFloat)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.MergedTo) ?? true))
             {
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.NavigationMesh);
             hash.Add(item.Unknown);
             hash.Add(item.Point);
-            hash.Add(item.PreferredMergesFlag);
+            hash.Add(item.UnknownFloat);
             hash.Add(item.MergedTo);
             hash.Add(item.PreferredMerges);
             hash.Add(item.LinkedDoors);
@@ -1622,9 +1622,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Point = rhs.Point;
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.UnknownFloat) ?? true))
             {
-                item.PreferredMergesFlag = rhs.PreferredMergesFlag;
+                item.UnknownFloat = rhs.UnknownFloat;
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.MergedTo) ?? true))
             {
@@ -1843,7 +1843,9 @@ namespace Mutagen.Bethesda.Fallout4
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Point);
-            writer.Write(item.PreferredMergesFlag);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.UnknownFloat);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.MergedTo,
@@ -1952,7 +1954,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.NavigationMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Unknown = frame.ReadInt32();
             item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.PreferredMergesFlag = frame.ReadUInt32();
+            item.UnknownFloat = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.MergedTo.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
@@ -2053,7 +2055,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkGetter<INavigationMeshGetter> NavigationMesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
-        public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public Single UnknownFloat => _structData.Slice(0x14, 0x4).Float();
         #region MergedTo
         public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int MergedToEndingPos;
