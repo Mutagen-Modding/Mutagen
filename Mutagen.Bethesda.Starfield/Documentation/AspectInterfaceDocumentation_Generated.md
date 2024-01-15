@@ -88,6 +88,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - ContainerModification
 - DestructionStage
+- EffectShader
 - Flora
 - FloraModification
 - Furniture
@@ -410,6 +411,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### DialogueSceneAction
 - INamed
+### EffectShader
+- IModeled
 ### ExternalDataSource
 - INamed
 ### FaceMorphPhenotype

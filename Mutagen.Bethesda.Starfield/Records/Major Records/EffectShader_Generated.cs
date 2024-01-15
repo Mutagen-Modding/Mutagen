@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -32,6 +36,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -54,6 +59,98 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IEffectShaderGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region EffectSequence
+        private readonly IFormLinkNullable<IEffectSequenceGetter> _EffectSequence = new FormLinkNullable<IEffectSequenceGetter>();
+        public IFormLinkNullable<IEffectSequenceGetter> EffectSequence
+        {
+            get => _EffectSequence;
+            set => _EffectSequence.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEffectSequenceGetter> IEffectShaderGetter.EffectSequence => this.EffectSequence;
+        #endregion
+        #region DNAMFloat1
+        public Single DNAMFloat1 { get; set; } = default;
+        #endregion
+        #region DNAMColor
+        public Color DNAMColor { get; set; } = default;
+        #endregion
+        #region DNAMFloat2
+        public Single DNAMFloat2 { get; set; } = default;
+        #endregion
+        #region DNAMFloat3
+        public Single DNAMFloat3 { get; set; } = default;
+        #endregion
+        #region DNAMFloat4
+        public Single DNAMFloat4 { get; set; } = default;
+        #endregion
+        #region DNAMFloat5
+        public Single DNAMFloat5 { get; set; } = default;
+        #endregion
+        #region DNAMFloat6
+        public Single DNAMFloat6 { get; set; } = default;
+        #endregion
+        #region DNAMFloat8
+        public Single DNAMFloat8 { get; set; } = default;
+        #endregion
+        #region DNAMFloat9
+        public Single DNAMFloat9 { get; set; } = default;
+        #endregion
+        #region DNAMFloat10
+        public Single DNAMFloat10 { get; set; } = default;
+        #endregion
+        #region DNAMFloat11
+        public Single DNAMFloat11 { get; set; } = default;
+        #endregion
+        #region DNAMFloat12
+        public Single DNAMFloat12 { get; set; } = default;
+        #endregion
+        #region DNAMFloat13
+        public Single DNAMFloat13 { get; set; } = default;
+        #endregion
+        #region DNAMSound
+        public SoundReference DNAMSound { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IEffectShaderGetter.DNAMSound => DNAMSound;
+        #endregion
+        #region DNAMInt1
+        public Int32 DNAMInt1 { get; set; } = default;
+        #endregion
+        #region DNAMInt2
+        public SByte DNAMInt2 { get; set; } = default;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IEffectShaderGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
 
         #region To String
 
@@ -79,6 +176,25 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.EffectSequence = initialValue;
+                this.DNAMFloat1 = initialValue;
+                this.DNAMColor = initialValue;
+                this.DNAMFloat2 = initialValue;
+                this.DNAMFloat3 = initialValue;
+                this.DNAMFloat4 = initialValue;
+                this.DNAMFloat5 = initialValue;
+                this.DNAMFloat6 = initialValue;
+                this.DNAMFloat8 = initialValue;
+                this.DNAMFloat9 = initialValue;
+                this.DNAMFloat10 = initialValue;
+                this.DNAMFloat11 = initialValue;
+                this.DNAMFloat12 = initialValue;
+                this.DNAMFloat13 = initialValue;
+                this.DNAMSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DNAMInt1 = initialValue;
+                this.DNAMInt2 = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -88,7 +204,26 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem EffectSequence,
+                TItem DNAMFloat1,
+                TItem DNAMColor,
+                TItem DNAMFloat2,
+                TItem DNAMFloat3,
+                TItem DNAMFloat4,
+                TItem DNAMFloat5,
+                TItem DNAMFloat6,
+                TItem DNAMFloat8,
+                TItem DNAMFloat9,
+                TItem DNAMFloat10,
+                TItem DNAMFloat11,
+                TItem DNAMFloat12,
+                TItem DNAMFloat13,
+                TItem DNAMSound,
+                TItem DNAMInt1,
+                TItem DNAMInt2,
+                TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +233,25 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.EffectSequence = EffectSequence;
+                this.DNAMFloat1 = DNAMFloat1;
+                this.DNAMColor = DNAMColor;
+                this.DNAMFloat2 = DNAMFloat2;
+                this.DNAMFloat3 = DNAMFloat3;
+                this.DNAMFloat4 = DNAMFloat4;
+                this.DNAMFloat5 = DNAMFloat5;
+                this.DNAMFloat6 = DNAMFloat6;
+                this.DNAMFloat8 = DNAMFloat8;
+                this.DNAMFloat9 = DNAMFloat9;
+                this.DNAMFloat10 = DNAMFloat10;
+                this.DNAMFloat11 = DNAMFloat11;
+                this.DNAMFloat12 = DNAMFloat12;
+                this.DNAMFloat13 = DNAMFloat13;
+                this.DNAMSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DNAMSound, new SoundReference.Mask<TItem>(DNAMSound));
+                this.DNAMInt1 = DNAMInt1;
+                this.DNAMInt2 = DNAMInt2;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
             #pragma warning disable CS8618
@@ -106,6 +260,28 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem EffectSequence;
+            public TItem DNAMFloat1;
+            public TItem DNAMColor;
+            public TItem DNAMFloat2;
+            public TItem DNAMFloat3;
+            public TItem DNAMFloat4;
+            public TItem DNAMFloat5;
+            public TItem DNAMFloat6;
+            public TItem DNAMFloat8;
+            public TItem DNAMFloat9;
+            public TItem DNAMFloat10;
+            public TItem DNAMFloat11;
+            public TItem DNAMFloat12;
+            public TItem DNAMFloat13;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DNAMSound { get; set; }
+            public TItem DNAMInt1;
+            public TItem DNAMInt2;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
             #region Equals
@@ -119,11 +295,49 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.EffectSequence, rhs.EffectSequence)) return false;
+                if (!object.Equals(this.DNAMFloat1, rhs.DNAMFloat1)) return false;
+                if (!object.Equals(this.DNAMColor, rhs.DNAMColor)) return false;
+                if (!object.Equals(this.DNAMFloat2, rhs.DNAMFloat2)) return false;
+                if (!object.Equals(this.DNAMFloat3, rhs.DNAMFloat3)) return false;
+                if (!object.Equals(this.DNAMFloat4, rhs.DNAMFloat4)) return false;
+                if (!object.Equals(this.DNAMFloat5, rhs.DNAMFloat5)) return false;
+                if (!object.Equals(this.DNAMFloat6, rhs.DNAMFloat6)) return false;
+                if (!object.Equals(this.DNAMFloat8, rhs.DNAMFloat8)) return false;
+                if (!object.Equals(this.DNAMFloat9, rhs.DNAMFloat9)) return false;
+                if (!object.Equals(this.DNAMFloat10, rhs.DNAMFloat10)) return false;
+                if (!object.Equals(this.DNAMFloat11, rhs.DNAMFloat11)) return false;
+                if (!object.Equals(this.DNAMFloat12, rhs.DNAMFloat12)) return false;
+                if (!object.Equals(this.DNAMFloat13, rhs.DNAMFloat13)) return false;
+                if (!object.Equals(this.DNAMSound, rhs.DNAMSound)) return false;
+                if (!object.Equals(this.DNAMInt1, rhs.DNAMInt1)) return false;
+                if (!object.Equals(this.DNAMInt2, rhs.DNAMInt2)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.EffectSequence);
+                hash.Add(this.DNAMFloat1);
+                hash.Add(this.DNAMColor);
+                hash.Add(this.DNAMFloat2);
+                hash.Add(this.DNAMFloat3);
+                hash.Add(this.DNAMFloat4);
+                hash.Add(this.DNAMFloat5);
+                hash.Add(this.DNAMFloat6);
+                hash.Add(this.DNAMFloat8);
+                hash.Add(this.DNAMFloat9);
+                hash.Add(this.DNAMFloat10);
+                hash.Add(this.DNAMFloat11);
+                hash.Add(this.DNAMFloat12);
+                hash.Add(this.DNAMFloat13);
+                hash.Add(this.DNAMSound);
+                hash.Add(this.DNAMInt1);
+                hash.Add(this.DNAMInt2);
+                hash.Add(this.Model);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +348,44 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.EffectSequence)) return false;
+                if (!eval(this.DNAMFloat1)) return false;
+                if (!eval(this.DNAMColor)) return false;
+                if (!eval(this.DNAMFloat2)) return false;
+                if (!eval(this.DNAMFloat3)) return false;
+                if (!eval(this.DNAMFloat4)) return false;
+                if (!eval(this.DNAMFloat5)) return false;
+                if (!eval(this.DNAMFloat6)) return false;
+                if (!eval(this.DNAMFloat8)) return false;
+                if (!eval(this.DNAMFloat9)) return false;
+                if (!eval(this.DNAMFloat10)) return false;
+                if (!eval(this.DNAMFloat11)) return false;
+                if (!eval(this.DNAMFloat12)) return false;
+                if (!eval(this.DNAMFloat13)) return false;
+                if (DNAMSound != null)
+                {
+                    if (!eval(this.DNAMSound.Overall)) return false;
+                    if (this.DNAMSound.Specific != null && !this.DNAMSound.Specific.All(eval)) return false;
+                }
+                if (!eval(this.DNAMInt1)) return false;
+                if (!eval(this.DNAMInt2)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -142,6 +394,44 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.EffectSequence)) return true;
+                if (eval(this.DNAMFloat1)) return true;
+                if (eval(this.DNAMColor)) return true;
+                if (eval(this.DNAMFloat2)) return true;
+                if (eval(this.DNAMFloat3)) return true;
+                if (eval(this.DNAMFloat4)) return true;
+                if (eval(this.DNAMFloat5)) return true;
+                if (eval(this.DNAMFloat6)) return true;
+                if (eval(this.DNAMFloat8)) return true;
+                if (eval(this.DNAMFloat9)) return true;
+                if (eval(this.DNAMFloat10)) return true;
+                if (eval(this.DNAMFloat11)) return true;
+                if (eval(this.DNAMFloat12)) return true;
+                if (eval(this.DNAMFloat13)) return true;
+                if (DNAMSound != null)
+                {
+                    if (eval(this.DNAMSound.Overall)) return true;
+                    if (this.DNAMSound.Specific != null && this.DNAMSound.Specific.Any(eval)) return true;
+                }
+                if (eval(this.DNAMInt1)) return true;
+                if (eval(this.DNAMInt2)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -157,6 +447,39 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.EffectSequence = eval(this.EffectSequence);
+                obj.DNAMFloat1 = eval(this.DNAMFloat1);
+                obj.DNAMColor = eval(this.DNAMColor);
+                obj.DNAMFloat2 = eval(this.DNAMFloat2);
+                obj.DNAMFloat3 = eval(this.DNAMFloat3);
+                obj.DNAMFloat4 = eval(this.DNAMFloat4);
+                obj.DNAMFloat5 = eval(this.DNAMFloat5);
+                obj.DNAMFloat6 = eval(this.DNAMFloat6);
+                obj.DNAMFloat8 = eval(this.DNAMFloat8);
+                obj.DNAMFloat9 = eval(this.DNAMFloat9);
+                obj.DNAMFloat10 = eval(this.DNAMFloat10);
+                obj.DNAMFloat11 = eval(this.DNAMFloat11);
+                obj.DNAMFloat12 = eval(this.DNAMFloat12);
+                obj.DNAMFloat13 = eval(this.DNAMFloat13);
+                obj.DNAMSound = this.DNAMSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DNAMSound.Overall), this.DNAMSound.Specific?.Translate(eval));
+                obj.DNAMInt1 = eval(this.DNAMInt1);
+                obj.DNAMInt2 = eval(this.DNAMInt2);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
 
@@ -175,6 +498,97 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(EffectShader.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.EffectSequence ?? true)
+                    {
+                        sb.AppendItem(EffectSequence, "EffectSequence");
+                    }
+                    if (printMask?.DNAMFloat1 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat1, "DNAMFloat1");
+                    }
+                    if (printMask?.DNAMColor ?? true)
+                    {
+                        sb.AppendItem(DNAMColor, "DNAMColor");
+                    }
+                    if (printMask?.DNAMFloat2 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat2, "DNAMFloat2");
+                    }
+                    if (printMask?.DNAMFloat3 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat3, "DNAMFloat3");
+                    }
+                    if (printMask?.DNAMFloat4 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat4, "DNAMFloat4");
+                    }
+                    if (printMask?.DNAMFloat5 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat5, "DNAMFloat5");
+                    }
+                    if (printMask?.DNAMFloat6 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat6, "DNAMFloat6");
+                    }
+                    if (printMask?.DNAMFloat8 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat8, "DNAMFloat8");
+                    }
+                    if (printMask?.DNAMFloat9 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat9, "DNAMFloat9");
+                    }
+                    if (printMask?.DNAMFloat10 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat10, "DNAMFloat10");
+                    }
+                    if (printMask?.DNAMFloat11 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat11, "DNAMFloat11");
+                    }
+                    if (printMask?.DNAMFloat12 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat12, "DNAMFloat12");
+                    }
+                    if (printMask?.DNAMFloat13 ?? true)
+                    {
+                        sb.AppendItem(DNAMFloat13, "DNAMFloat13");
+                    }
+                    if (printMask?.DNAMSound?.Overall ?? true)
+                    {
+                        DNAMSound?.Print(sb);
+                    }
+                    if (printMask?.DNAMInt1 ?? true)
+                    {
+                        sb.AppendItem(DNAMInt1, "DNAMInt1");
+                    }
+                    if (printMask?.DNAMInt2 ?? true)
+                    {
+                        sb.AppendItem(DNAMInt2, "DNAMInt2");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -185,12 +599,72 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? EffectSequence;
+            public Exception? DNAMFloat1;
+            public Exception? DNAMColor;
+            public Exception? DNAMFloat2;
+            public Exception? DNAMFloat3;
+            public Exception? DNAMFloat4;
+            public Exception? DNAMFloat5;
+            public Exception? DNAMFloat6;
+            public Exception? DNAMFloat8;
+            public Exception? DNAMFloat9;
+            public Exception? DNAMFloat10;
+            public Exception? DNAMFloat11;
+            public Exception? DNAMFloat12;
+            public Exception? DNAMFloat13;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? DNAMSound;
+            public Exception? DNAMInt1;
+            public Exception? DNAMInt2;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShader_FieldIndex.Components:
+                        return Components;
+                    case EffectShader_FieldIndex.EffectSequence:
+                        return EffectSequence;
+                    case EffectShader_FieldIndex.DNAMFloat1:
+                        return DNAMFloat1;
+                    case EffectShader_FieldIndex.DNAMColor:
+                        return DNAMColor;
+                    case EffectShader_FieldIndex.DNAMFloat2:
+                        return DNAMFloat2;
+                    case EffectShader_FieldIndex.DNAMFloat3:
+                        return DNAMFloat3;
+                    case EffectShader_FieldIndex.DNAMFloat4:
+                        return DNAMFloat4;
+                    case EffectShader_FieldIndex.DNAMFloat5:
+                        return DNAMFloat5;
+                    case EffectShader_FieldIndex.DNAMFloat6:
+                        return DNAMFloat6;
+                    case EffectShader_FieldIndex.DNAMFloat8:
+                        return DNAMFloat8;
+                    case EffectShader_FieldIndex.DNAMFloat9:
+                        return DNAMFloat9;
+                    case EffectShader_FieldIndex.DNAMFloat10:
+                        return DNAMFloat10;
+                    case EffectShader_FieldIndex.DNAMFloat11:
+                        return DNAMFloat11;
+                    case EffectShader_FieldIndex.DNAMFloat12:
+                        return DNAMFloat12;
+                    case EffectShader_FieldIndex.DNAMFloat13:
+                        return DNAMFloat13;
+                    case EffectShader_FieldIndex.DNAMSound:
+                        return DNAMSound;
+                    case EffectShader_FieldIndex.DNAMInt1:
+                        return DNAMInt1;
+                    case EffectShader_FieldIndex.DNAMInt2:
+                        return DNAMInt2;
+                    case EffectShader_FieldIndex.Model:
+                        return Model;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +675,63 @@ namespace Mutagen.Bethesda.Starfield
                 EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShader_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case EffectShader_FieldIndex.EffectSequence:
+                        this.EffectSequence = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat1:
+                        this.DNAMFloat1 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMColor:
+                        this.DNAMColor = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat2:
+                        this.DNAMFloat2 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat3:
+                        this.DNAMFloat3 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat4:
+                        this.DNAMFloat4 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat5:
+                        this.DNAMFloat5 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat6:
+                        this.DNAMFloat6 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat8:
+                        this.DNAMFloat8 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat9:
+                        this.DNAMFloat9 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat10:
+                        this.DNAMFloat10 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat11:
+                        this.DNAMFloat11 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat12:
+                        this.DNAMFloat12 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat13:
+                        this.DNAMFloat13 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMSound:
+                        this.DNAMSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case EffectShader_FieldIndex.DNAMInt1:
+                        this.DNAMInt1 = ex;
+                        break;
+                    case EffectShader_FieldIndex.DNAMInt2:
+                        this.DNAMInt2 = ex;
+                        break;
+                    case EffectShader_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +743,63 @@ namespace Mutagen.Bethesda.Starfield
                 EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShader_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case EffectShader_FieldIndex.EffectSequence:
+                        this.EffectSequence = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat1:
+                        this.DNAMFloat1 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMColor:
+                        this.DNAMColor = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat2:
+                        this.DNAMFloat2 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat3:
+                        this.DNAMFloat3 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat4:
+                        this.DNAMFloat4 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat5:
+                        this.DNAMFloat5 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat6:
+                        this.DNAMFloat6 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat8:
+                        this.DNAMFloat8 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat9:
+                        this.DNAMFloat9 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat10:
+                        this.DNAMFloat10 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat11:
+                        this.DNAMFloat11 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat12:
+                        this.DNAMFloat12 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMFloat13:
+                        this.DNAMFloat13 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMSound:
+                        this.DNAMSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMInt1:
+                        this.DNAMInt1 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.DNAMInt2:
+                        this.DNAMInt2 = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +809,25 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (EffectSequence != null) return true;
+                if (DNAMFloat1 != null) return true;
+                if (DNAMColor != null) return true;
+                if (DNAMFloat2 != null) return true;
+                if (DNAMFloat3 != null) return true;
+                if (DNAMFloat4 != null) return true;
+                if (DNAMFloat5 != null) return true;
+                if (DNAMFloat6 != null) return true;
+                if (DNAMFloat8 != null) return true;
+                if (DNAMFloat9 != null) return true;
+                if (DNAMFloat10 != null) return true;
+                if (DNAMFloat11 != null) return true;
+                if (DNAMFloat12 != null) return true;
+                if (DNAMFloat13 != null) return true;
+                if (DNAMSound != null) return true;
+                if (DNAMInt1 != null) return true;
+                if (DNAMInt2 != null) return true;
+                if (Model != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +854,74 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(EffectSequence, "EffectSequence");
+                }
+                {
+                    sb.AppendItem(DNAMFloat1, "DNAMFloat1");
+                }
+                {
+                    sb.AppendItem(DNAMColor, "DNAMColor");
+                }
+                {
+                    sb.AppendItem(DNAMFloat2, "DNAMFloat2");
+                }
+                {
+                    sb.AppendItem(DNAMFloat3, "DNAMFloat3");
+                }
+                {
+                    sb.AppendItem(DNAMFloat4, "DNAMFloat4");
+                }
+                {
+                    sb.AppendItem(DNAMFloat5, "DNAMFloat5");
+                }
+                {
+                    sb.AppendItem(DNAMFloat6, "DNAMFloat6");
+                }
+                {
+                    sb.AppendItem(DNAMFloat8, "DNAMFloat8");
+                }
+                {
+                    sb.AppendItem(DNAMFloat9, "DNAMFloat9");
+                }
+                {
+                    sb.AppendItem(DNAMFloat10, "DNAMFloat10");
+                }
+                {
+                    sb.AppendItem(DNAMFloat11, "DNAMFloat11");
+                }
+                {
+                    sb.AppendItem(DNAMFloat12, "DNAMFloat12");
+                }
+                {
+                    sb.AppendItem(DNAMFloat13, "DNAMFloat13");
+                }
+                DNAMSound?.Print(sb);
+                {
+                    sb.AppendItem(DNAMInt1, "DNAMInt1");
+                }
+                {
+                    sb.AppendItem(DNAMInt2, "DNAMInt2");
+                }
+                Model?.Print(sb);
             }
             #endregion
 
@@ -255,6 +930,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.EffectSequence = this.EffectSequence.Combine(rhs.EffectSequence);
+                ret.DNAMFloat1 = this.DNAMFloat1.Combine(rhs.DNAMFloat1);
+                ret.DNAMColor = this.DNAMColor.Combine(rhs.DNAMColor);
+                ret.DNAMFloat2 = this.DNAMFloat2.Combine(rhs.DNAMFloat2);
+                ret.DNAMFloat3 = this.DNAMFloat3.Combine(rhs.DNAMFloat3);
+                ret.DNAMFloat4 = this.DNAMFloat4.Combine(rhs.DNAMFloat4);
+                ret.DNAMFloat5 = this.DNAMFloat5.Combine(rhs.DNAMFloat5);
+                ret.DNAMFloat6 = this.DNAMFloat6.Combine(rhs.DNAMFloat6);
+                ret.DNAMFloat8 = this.DNAMFloat8.Combine(rhs.DNAMFloat8);
+                ret.DNAMFloat9 = this.DNAMFloat9.Combine(rhs.DNAMFloat9);
+                ret.DNAMFloat10 = this.DNAMFloat10.Combine(rhs.DNAMFloat10);
+                ret.DNAMFloat11 = this.DNAMFloat11.Combine(rhs.DNAMFloat11);
+                ret.DNAMFloat12 = this.DNAMFloat12.Combine(rhs.DNAMFloat12);
+                ret.DNAMFloat13 = this.DNAMFloat13.Combine(rhs.DNAMFloat13);
+                ret.DNAMSound = this.DNAMSound.Combine(rhs.DNAMSound, (l, r) => l.Combine(r));
+                ret.DNAMInt1 = this.DNAMInt1.Combine(rhs.DNAMInt1);
+                ret.DNAMInt2 = this.DNAMInt2.Combine(rhs.DNAMInt2);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +970,77 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool EffectSequence;
+            public bool DNAMFloat1;
+            public bool DNAMColor;
+            public bool DNAMFloat2;
+            public bool DNAMFloat3;
+            public bool DNAMFloat4;
+            public bool DNAMFloat5;
+            public bool DNAMFloat6;
+            public bool DNAMFloat8;
+            public bool DNAMFloat9;
+            public bool DNAMFloat10;
+            public bool DNAMFloat11;
+            public bool DNAMFloat12;
+            public bool DNAMFloat13;
+            public SoundReference.TranslationMask? DNAMSound;
+            public bool DNAMInt1;
+            public bool DNAMInt2;
+            public Model.TranslationMask? Model;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.EffectSequence = defaultOn;
+                this.DNAMFloat1 = defaultOn;
+                this.DNAMColor = defaultOn;
+                this.DNAMFloat2 = defaultOn;
+                this.DNAMFloat3 = defaultOn;
+                this.DNAMFloat4 = defaultOn;
+                this.DNAMFloat5 = defaultOn;
+                this.DNAMFloat6 = defaultOn;
+                this.DNAMFloat8 = defaultOn;
+                this.DNAMFloat9 = defaultOn;
+                this.DNAMFloat10 = defaultOn;
+                this.DNAMFloat11 = defaultOn;
+                this.DNAMFloat12 = defaultOn;
+                this.DNAMFloat13 = defaultOn;
+                this.DNAMInt1 = defaultOn;
+                this.DNAMInt2 = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((EffectSequence, null));
+                ret.Add((DNAMFloat1, null));
+                ret.Add((DNAMColor, null));
+                ret.Add((DNAMFloat2, null));
+                ret.Add((DNAMFloat3, null));
+                ret.Add((DNAMFloat4, null));
+                ret.Add((DNAMFloat5, null));
+                ret.Add((DNAMFloat6, null));
+                ret.Add((DNAMFloat8, null));
+                ret.Add((DNAMFloat9, null));
+                ret.Add((DNAMFloat10, null));
+                ret.Add((DNAMFloat11, null));
+                ret.Add((DNAMFloat12, null));
+                ret.Add((DNAMFloat13, null));
+                ret.Add((DNAMSound != null ? DNAMSound.OnOverall : DefaultOn, DNAMSound?.GetCrystal()));
+                ret.Add((DNAMInt1, null));
+                ret.Add((DNAMInt2, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1052,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EffectShaderCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderSetterCommon.Instance.RemapLinks(this, mapping);
         public EffectShader(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1103,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IEffectShader);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => EffectShaderCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => EffectShaderSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => EffectShaderSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => EffectShaderSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1186,35 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IEffectShader :
+        IAssetLinkContainer,
         IEffectShaderGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEffectShaderInternal>,
+        IModeled,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<AComponent> Components { get; }
+        new IFormLinkNullable<IEffectSequenceGetter> EffectSequence { get; set; }
+        new Single DNAMFloat1 { get; set; }
+        new Color DNAMColor { get; set; }
+        new Single DNAMFloat2 { get; set; }
+        new Single DNAMFloat3 { get; set; }
+        new Single DNAMFloat4 { get; set; }
+        new Single DNAMFloat5 { get; set; }
+        new Single DNAMFloat6 { get; set; }
+        new Single DNAMFloat8 { get; set; }
+        new Single DNAMFloat9 { get; set; }
+        new Single DNAMFloat10 { get; set; }
+        new Single DNAMFloat11 { get; set; }
+        new Single DNAMFloat12 { get; set; }
+        new Single DNAMFloat13 { get; set; }
+        new SoundReference DNAMSound { get; set; }
+        new Int32 DNAMInt1 { get; set; }
+        new SByte DNAMInt2 { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
     }
 
     public partial interface IEffectShaderInternal :
@@ -440,11 +1227,38 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.EFSH)]
     public partial interface IEffectShaderGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IEffectShaderGetter>,
-        IMapsToGetter<IEffectShaderGetter>
+        IMapsToGetter<IEffectShaderGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IFormLinkNullableGetter<IEffectSequenceGetter> EffectSequence { get; }
+        Single DNAMFloat1 { get; }
+        Color DNAMColor { get; }
+        Single DNAMFloat2 { get; }
+        Single DNAMFloat3 { get; }
+        Single DNAMFloat4 { get; }
+        Single DNAMFloat5 { get; }
+        Single DNAMFloat6 { get; }
+        Single DNAMFloat8 { get; }
+        Single DNAMFloat9 { get; }
+        Single DNAMFloat10 { get; }
+        Single DNAMFloat11 { get; }
+        Single DNAMFloat12 { get; }
+        Single DNAMFloat13 { get; }
+        ISoundReferenceGetter DNAMSound { get; }
+        Int32 DNAMInt1 { get; }
+        SByte DNAMInt2 { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
 
     }
 
@@ -621,6 +1435,25 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        EffectSequence = 8,
+        DNAMFloat1 = 9,
+        DNAMColor = 10,
+        DNAMFloat2 = 11,
+        DNAMFloat3 = 12,
+        DNAMFloat4 = 13,
+        DNAMFloat5 = 14,
+        DNAMFloat6 = 15,
+        DNAMFloat8 = 16,
+        DNAMFloat9 = 17,
+        DNAMFloat10 = 18,
+        DNAMFloat11 = 19,
+        DNAMFloat12 = 20,
+        DNAMFloat13 = 21,
+        DNAMSound = 22,
+        DNAMInt1 = 23,
+        DNAMInt2 = 24,
+        Model = 25,
     }
     #endregion
 
@@ -631,9 +1464,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(EffectShader.Mask<>);
 
@@ -663,8 +1496,24 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.EFSH);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.EFSH);
+            var all = RecordCollection.Factory(
+                RecordTypes.EFSH,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.ENAM,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1555,25 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IEffectShaderInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.EffectSequence.Clear();
+            item.DNAMFloat1 = default;
+            item.DNAMColor = default;
+            item.DNAMFloat2 = default;
+            item.DNAMFloat3 = default;
+            item.DNAMFloat4 = default;
+            item.DNAMFloat5 = default;
+            item.DNAMFloat6 = default;
+            item.DNAMFloat8 = default;
+            item.DNAMFloat9 = default;
+            item.DNAMFloat10 = default;
+            item.DNAMFloat11 = default;
+            item.DNAMFloat12 = default;
+            item.DNAMFloat13 = default;
+            item.DNAMSound.Clear();
+            item.DNAMInt1 = default;
+            item.DNAMInt2 = default;
+            item.Model = null;
             base.Clear(item);
         }
         
@@ -723,6 +1591,42 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IEffectShader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.EffectSequence.Relink(mapping);
+            obj.DNAMSound.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IEffectShader obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IEffectShader obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -790,6 +1694,32 @@ namespace Mutagen.Bethesda.Starfield
             EffectShader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.EffectSequence = item.EffectSequence.Equals(rhs.EffectSequence);
+            ret.DNAMFloat1 = item.DNAMFloat1.EqualsWithin(rhs.DNAMFloat1);
+            ret.DNAMColor = item.DNAMColor.ColorOnlyEquals(rhs.DNAMColor);
+            ret.DNAMFloat2 = item.DNAMFloat2.EqualsWithin(rhs.DNAMFloat2);
+            ret.DNAMFloat3 = item.DNAMFloat3.EqualsWithin(rhs.DNAMFloat3);
+            ret.DNAMFloat4 = item.DNAMFloat4.EqualsWithin(rhs.DNAMFloat4);
+            ret.DNAMFloat5 = item.DNAMFloat5.EqualsWithin(rhs.DNAMFloat5);
+            ret.DNAMFloat6 = item.DNAMFloat6.EqualsWithin(rhs.DNAMFloat6);
+            ret.DNAMFloat8 = item.DNAMFloat8.EqualsWithin(rhs.DNAMFloat8);
+            ret.DNAMFloat9 = item.DNAMFloat9.EqualsWithin(rhs.DNAMFloat9);
+            ret.DNAMFloat10 = item.DNAMFloat10.EqualsWithin(rhs.DNAMFloat10);
+            ret.DNAMFloat11 = item.DNAMFloat11.EqualsWithin(rhs.DNAMFloat11);
+            ret.DNAMFloat12 = item.DNAMFloat12.EqualsWithin(rhs.DNAMFloat12);
+            ret.DNAMFloat13 = item.DNAMFloat13.EqualsWithin(rhs.DNAMFloat13);
+            ret.DNAMSound = MaskItemExt.Factory(item.DNAMSound.GetEqualsMask(rhs.DNAMSound, include), include);
+            ret.DNAMInt1 = item.DNAMInt1 == rhs.DNAMInt1;
+            ret.DNAMInt2 = item.DNAMInt2 == rhs.DNAMInt2;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1769,93 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.EffectSequence ?? true)
+            {
+                sb.AppendItem(item.EffectSequence.FormKeyNullable, "EffectSequence");
+            }
+            if (printMask?.DNAMFloat1 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat1, "DNAMFloat1");
+            }
+            if (printMask?.DNAMColor ?? true)
+            {
+                sb.AppendItem(item.DNAMColor, "DNAMColor");
+            }
+            if (printMask?.DNAMFloat2 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat2, "DNAMFloat2");
+            }
+            if (printMask?.DNAMFloat3 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat3, "DNAMFloat3");
+            }
+            if (printMask?.DNAMFloat4 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat4, "DNAMFloat4");
+            }
+            if (printMask?.DNAMFloat5 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat5, "DNAMFloat5");
+            }
+            if (printMask?.DNAMFloat6 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat6, "DNAMFloat6");
+            }
+            if (printMask?.DNAMFloat8 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat8, "DNAMFloat8");
+            }
+            if (printMask?.DNAMFloat9 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat9, "DNAMFloat9");
+            }
+            if (printMask?.DNAMFloat10 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat10, "DNAMFloat10");
+            }
+            if (printMask?.DNAMFloat11 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat11, "DNAMFloat11");
+            }
+            if (printMask?.DNAMFloat12 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat12, "DNAMFloat12");
+            }
+            if (printMask?.DNAMFloat13 ?? true)
+            {
+                sb.AppendItem(item.DNAMFloat13, "DNAMFloat13");
+            }
+            if (printMask?.DNAMSound?.Overall ?? true)
+            {
+                item.DNAMSound?.Print(sb, "DNAMSound");
+            }
+            if (printMask?.DNAMInt1 ?? true)
+            {
+                sb.AppendItem(item.DNAMInt1, "DNAMInt1");
+            }
+            if (printMask?.DNAMInt2 ?? true)
+            {
+                sb.AppendItem(item.DNAMInt2, "DNAMInt2");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
         }
         
         public static EffectShader_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1906,90 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)EffectShader_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EffectSequence) ?? true))
+            {
+                if (!lhs.EffectSequence.Equals(rhs.EffectSequence)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat1) ?? true))
+            {
+                if (!lhs.DNAMFloat1.EqualsWithin(rhs.DNAMFloat1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMColor) ?? true))
+            {
+                if (!lhs.DNAMColor.ColorOnlyEquals(rhs.DNAMColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat2) ?? true))
+            {
+                if (!lhs.DNAMFloat2.EqualsWithin(rhs.DNAMFloat2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat3) ?? true))
+            {
+                if (!lhs.DNAMFloat3.EqualsWithin(rhs.DNAMFloat3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat4) ?? true))
+            {
+                if (!lhs.DNAMFloat4.EqualsWithin(rhs.DNAMFloat4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat5) ?? true))
+            {
+                if (!lhs.DNAMFloat5.EqualsWithin(rhs.DNAMFloat5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat6) ?? true))
+            {
+                if (!lhs.DNAMFloat6.EqualsWithin(rhs.DNAMFloat6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat8) ?? true))
+            {
+                if (!lhs.DNAMFloat8.EqualsWithin(rhs.DNAMFloat8)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat9) ?? true))
+            {
+                if (!lhs.DNAMFloat9.EqualsWithin(rhs.DNAMFloat9)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat10) ?? true))
+            {
+                if (!lhs.DNAMFloat10.EqualsWithin(rhs.DNAMFloat10)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat11) ?? true))
+            {
+                if (!lhs.DNAMFloat11.EqualsWithin(rhs.DNAMFloat11)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat12) ?? true))
+            {
+                if (!lhs.DNAMFloat12.EqualsWithin(rhs.DNAMFloat12)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat13) ?? true))
+            {
+                if (!lhs.DNAMFloat13.EqualsWithin(rhs.DNAMFloat13)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DNAMSound, rhs.DNAMSound, out var lhsDNAMSound, out var rhsDNAMSound, out var isDNAMSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDNAMSound).CommonInstance()!).Equals(lhsDNAMSound, rhsDNAMSound, equalsMask?.GetSubCrystal((int)EffectShader_FieldIndex.DNAMSound))) return false;
+                }
+                else if (!isDNAMSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt1) ?? true))
+            {
+                if (lhs.DNAMInt1 != rhs.DNAMInt1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt2) ?? true))
+            {
+                if (lhs.DNAMInt2 != rhs.DNAMInt2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)EffectShader_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
             return true;
         }
         
@@ -917,6 +2018,28 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IEffectShaderGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            hash.Add(item.EffectSequence);
+            hash.Add(item.DNAMFloat1);
+            hash.Add(item.DNAMColor);
+            hash.Add(item.DNAMFloat2);
+            hash.Add(item.DNAMFloat3);
+            hash.Add(item.DNAMFloat4);
+            hash.Add(item.DNAMFloat5);
+            hash.Add(item.DNAMFloat6);
+            hash.Add(item.DNAMFloat8);
+            hash.Add(item.DNAMFloat9);
+            hash.Add(item.DNAMFloat10);
+            hash.Add(item.DNAMFloat11);
+            hash.Add(item.DNAMFloat12);
+            hash.Add(item.DNAMFloat13);
+            hash.Add(item.DNAMSound);
+            hash.Add(item.DNAMInt1);
+            hash.Add(item.DNAMInt2);
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +2068,50 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.EffectSequence, out var EffectSequenceInfo))
+            {
+                yield return EffectSequenceInfo;
+            }
+            foreach (var item in obj.DNAMSound.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IEffectShaderGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1020,6 +2187,142 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)EffectShader_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EffectSequence) ?? true))
+            {
+                item.EffectSequence.SetTo(rhs.EffectSequence.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat1) ?? true))
+            {
+                item.DNAMFloat1 = rhs.DNAMFloat1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMColor) ?? true))
+            {
+                item.DNAMColor = rhs.DNAMColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat2) ?? true))
+            {
+                item.DNAMFloat2 = rhs.DNAMFloat2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat3) ?? true))
+            {
+                item.DNAMFloat3 = rhs.DNAMFloat3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat4) ?? true))
+            {
+                item.DNAMFloat4 = rhs.DNAMFloat4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat5) ?? true))
+            {
+                item.DNAMFloat5 = rhs.DNAMFloat5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat6) ?? true))
+            {
+                item.DNAMFloat6 = rhs.DNAMFloat6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat8) ?? true))
+            {
+                item.DNAMFloat8 = rhs.DNAMFloat8;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat9) ?? true))
+            {
+                item.DNAMFloat9 = rhs.DNAMFloat9;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat10) ?? true))
+            {
+                item.DNAMFloat10 = rhs.DNAMFloat10;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat11) ?? true))
+            {
+                item.DNAMFloat11 = rhs.DNAMFloat11;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat12) ?? true))
+            {
+                item.DNAMFloat12 = rhs.DNAMFloat12;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat13) ?? true))
+            {
+                item.DNAMFloat13 = rhs.DNAMFloat13;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMSound) ?? true))
+            {
+                errorMask?.PushIndex((int)EffectShader_FieldIndex.DNAMSound);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMSound) ?? true))
+                    {
+                        item.DNAMSound = rhs.DNAMSound.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)EffectShader_FieldIndex.DNAMSound),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt1) ?? true))
+            {
+                item.DNAMInt1 = rhs.DNAMInt1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt2) ?? true))
+            {
+                item.DNAMInt2 = rhs.DNAMInt2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)EffectShader_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)EffectShader_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2471,89 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly EffectShaderBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IEffectShaderGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EffectSequence,
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
+            using (HeaderExport.Subrecord(writer, RecordTypes.DATA)) { }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat1);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMColor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat5);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat6);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat8);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat9);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat10);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat11);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat12);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DNAMFloat13);
+                var DNAMSoundItem = item.DNAMSound;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DNAMSoundItem).BinaryWriteTranslator).Write(
+                    item: DNAMSoundItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                writer.Write(item.DNAMInt1);
+                writer.Write(item.DNAMInt2);
+            }
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IEffectShaderGetter item,
@@ -1184,10 +2570,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2625,102 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EFSH;
+        public static ParseResult FillBinaryRecordTypes(
+            IEffectShaderInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)EffectShader_FieldIndex.Components;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EffectSequence.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)EffectShader_FieldIndex.EffectSequence;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.ReadSubrecord();
+                    return default(int?);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat8 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat12 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMFloat13 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.DNAMSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DNAMInt1 = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.DNAMInt2 = dataFrame.ReadInt8();
+                    return (int)EffectShader_FieldIndex.DNAMInt2;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)EffectShader_FieldIndex.Model;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2753,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EffectShaderCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => EffectShaderCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2769,94 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IEffectShader);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region EffectSequence
+        private int? _EffectSequenceLocation;
+        public IFormLinkNullableGetter<IEffectSequenceGetter> EffectSequence => _EffectSequenceLocation.HasValue ? new FormLinkNullable<IEffectSequenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EffectSequenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectSequenceGetter>.Null;
+        #endregion
+        private RangeInt32? _DNAMLocation;
+        #region DNAMFloat1
+        private int _DNAMFloat1Location => _DNAMLocation!.Value.Min;
+        private bool _DNAMFloat1_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat1 => _DNAMFloat1_IsSet ? _recordData.Slice(_DNAMFloat1Location, 4).Float() : default;
+        #endregion
+        #region DNAMColor
+        private int _DNAMColorLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _DNAMColor_IsSet => _DNAMLocation.HasValue;
+        public Color DNAMColor => _DNAMColor_IsSet ? _recordData.Slice(_DNAMColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region DNAMFloat2
+        private int _DNAMFloat2Location => _DNAMLocation!.Value.Min + 0x8;
+        private bool _DNAMFloat2_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat2 => _DNAMFloat2_IsSet ? _recordData.Slice(_DNAMFloat2Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat3
+        private int _DNAMFloat3Location => _DNAMLocation!.Value.Min + 0xC;
+        private bool _DNAMFloat3_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat3 => _DNAMFloat3_IsSet ? _recordData.Slice(_DNAMFloat3Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat4
+        private int _DNAMFloat4Location => _DNAMLocation!.Value.Min + 0x10;
+        private bool _DNAMFloat4_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat4 => _DNAMFloat4_IsSet ? _recordData.Slice(_DNAMFloat4Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat5
+        private int _DNAMFloat5Location => _DNAMLocation!.Value.Min + 0x14;
+        private bool _DNAMFloat5_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat5 => _DNAMFloat5_IsSet ? _recordData.Slice(_DNAMFloat5Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat6
+        private int _DNAMFloat6Location => _DNAMLocation!.Value.Min + 0x18;
+        private bool _DNAMFloat6_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat6 => _DNAMFloat6_IsSet ? _recordData.Slice(_DNAMFloat6Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat8
+        private int _DNAMFloat8Location => _DNAMLocation!.Value.Min + 0x1C;
+        private bool _DNAMFloat8_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat8 => _DNAMFloat8_IsSet ? _recordData.Slice(_DNAMFloat8Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat9
+        private int _DNAMFloat9Location => _DNAMLocation!.Value.Min + 0x20;
+        private bool _DNAMFloat9_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat9 => _DNAMFloat9_IsSet ? _recordData.Slice(_DNAMFloat9Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat10
+        private int _DNAMFloat10Location => _DNAMLocation!.Value.Min + 0x24;
+        private bool _DNAMFloat10_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat10 => _DNAMFloat10_IsSet ? _recordData.Slice(_DNAMFloat10Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat11
+        private int _DNAMFloat11Location => _DNAMLocation!.Value.Min + 0x28;
+        private bool _DNAMFloat11_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat11 => _DNAMFloat11_IsSet ? _recordData.Slice(_DNAMFloat11Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat12
+        private int _DNAMFloat12Location => _DNAMLocation!.Value.Min + 0x2C;
+        private bool _DNAMFloat12_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat12 => _DNAMFloat12_IsSet ? _recordData.Slice(_DNAMFloat12Location, 4).Float() : default;
+        #endregion
+        #region DNAMFloat13
+        private int _DNAMFloat13Location => _DNAMLocation!.Value.Min + 0x30;
+        private bool _DNAMFloat13_IsSet => _DNAMLocation.HasValue;
+        public Single DNAMFloat13 => _DNAMFloat13_IsSet ? _recordData.Slice(_DNAMFloat13Location, 4).Float() : default;
+        #endregion
+        #region DNAMSound
+        private int _DNAMSoundLocation => _DNAMLocation!.Value.Min + 0x34;
+        private bool _DNAMSound_IsSet => _DNAMLocation.HasValue;
+        private ISoundReferenceGetter? _DNAMSound => _DNAMSound_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_DNAMSoundLocation), _package) : default;
+        public ISoundReferenceGetter DNAMSound => _DNAMSound ?? new SoundReference();
+        #endregion
+        #region DNAMInt1
+        private int _DNAMInt1Location => _DNAMLocation!.Value.Min + 0x5C;
+        private bool _DNAMInt1_IsSet => _DNAMLocation.HasValue;
+        public Int32 DNAMInt1 => _DNAMInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DNAMInt1Location, 4)) : default;
+        #endregion
+        #region DNAMInt2
+        private int _DNAMInt2Location => _DNAMLocation!.Value.Min + 0x60;
+        private bool _DNAMInt2_IsSet => _DNAMLocation.HasValue;
+        public SByte DNAMInt2 => _DNAMInt2_IsSet ? (sbyte)_recordData.Slice(_DNAMInt2Location, 1)[0] : default;
+        #endregion
+        public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2914,67 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)EffectShader_FieldIndex.Components;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _EffectSequenceLocation = (stream.Position - offset);
+                    return (int)EffectShader_FieldIndex.EffectSequence;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    stream.ReadSubrecord();
+                    return default(int?);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)EffectShader_FieldIndex.DNAMInt2;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)EffectShader_FieldIndex.Model;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -2,6 +2,30 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <FormLink name="EffectSequence" refName="EffectSequence" recordType="ENAM" />
+      <Marker name="DATA" recordType="DATA" />
+      <Data recordType="DNAM" >
+        <Fields>
+          <Float name="DNAMFloat1" />
+          <Color name="DNAMColor" binaryType="Alpha" />
+          <Float name="DNAMFloat2" />
+          <Float name="DNAMFloat3" />
+          <Float name="DNAMFloat4" />
+          <Float name="DNAMFloat5" />
+          <Float name="DNAMFloat6" />
+          <Float name="DNAMFloat8" />
+          <Float name="DNAMFloat9" />
+          <Float name="DNAMFloat10" />
+          <Float name="DNAMFloat11" />
+          <Float name="DNAMFloat12" />
+          <Float name="DNAMFloat13" />
+          <RefDirect name="DNAMSound" refName="SoundReference" />
+          <Int32 name="DNAMInt1" />
+          <Int8 name="DNAMInt2" />
+        </Fields>
+      </Data>
+      <RefDirect name="Model" refName="Model" />
     </Fields>
   </Object>
 </Loqui>

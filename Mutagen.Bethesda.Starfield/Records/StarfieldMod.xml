@@ -77,6 +77,7 @@
       <Group name="LoadScreens" refName="LoadScreen" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Waters" refName="Water" />
+      <Group name="EffectShaders" refName="EffectShader" />
       <Group name="Debris" refName="Debris" />
       <Group name="FormLists" refName="FormList" />
       <Group name="Perks" refName="Perk" />

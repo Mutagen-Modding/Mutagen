@@ -114,6 +114,7 @@ namespace Mutagen.Bethesda.Starfield
                 Container_Registration.Instance,
                 ContainerModification_Registration.Instance,
                 DestructionStage_Registration.Instance,
+                EffectShader_Registration.Instance,
                 Flora_Registration.Instance,
                 FloraModification_Registration.Instance,
                 Furniture_Registration.Instance,
