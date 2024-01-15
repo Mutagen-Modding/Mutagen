@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +58,38 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IBodyPartDataGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Parts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
+        public ExtendedList<BodyPart> Parts
+        {
+            get => this._Parts;
+            init => this._Parts = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IBodyPartGetter> IBodyPartDataGetter.Parts => _Parts;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +115,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +126,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Model,
+                TItem Parts)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +138,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +148,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>? Parts;
             #endregion
 
             #region Equals
@@ -119,11 +166,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Parts, rhs.Parts)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Parts);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +185,23 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.Parts != null)
+                {
+                    if (!eval(this.Parts.Overall)) return false;
+                    if (this.Parts.Specific != null)
+                    {
+                        foreach (var item in this.Parts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +210,23 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Parts != null)
+                {
+                    if (eval(this.Parts.Overall)) return true;
+                    if (this.Parts.Specific != null)
+                    {
+                        foreach (var item in this.Parts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +242,22 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Parts != null)
+                {
+                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPart.Mask<R>?>>?>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, BodyPart.Mask<R>?>>());
+                    if (Parts.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, BodyPart.Mask<R>?>>();
+                        obj.Parts.Specific = l;
+                        foreach (var item in Parts.Specific)
+                        {
+                            MaskItemIndexed<R, BodyPart.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BodyPart.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +276,29 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(BodyPartData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if ((printMask?.Parts?.Overall ?? true)
+                        && Parts is {} PartsItem)
+                    {
+                        sb.AppendLine("Parts =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PartsItem.Overall);
+                            if (PartsItem.Specific != null)
+                            {
+                                foreach (var subItem in PartsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +309,21 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>? Parts;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
                 switch (enu)
                 {
+                    case BodyPartData_FieldIndex.Model:
+                        return Model;
+                    case BodyPartData_FieldIndex.Parts:
+                        return Parts;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +334,12 @@ namespace Mutagen.Bethesda.Starfield
                 BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
                 switch (enu)
                 {
+                    case BodyPartData_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case BodyPartData_FieldIndex.Parts:
+                        this.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +351,12 @@ namespace Mutagen.Bethesda.Starfield
                 BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
                 switch (enu)
                 {
+                    case BodyPartData_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case BodyPartData_FieldIndex.Parts:
+                        this.Parts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +366,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Model != null) return true;
+                if (Parts != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +394,25 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                Model?.Print(sb);
+                if (Parts is {} PartsItem)
+                {
+                    sb.AppendLine("Parts =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PartsItem.Overall);
+                        if (PartsItem.Specific != null)
+                        {
+                            foreach (var subItem in PartsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +421,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), Noggog.ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,6 +444,11 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public Model.TranslationMask? Model;
+            public BodyPart.TranslationMask? Parts;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -285,6 +458,13 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Parts == null ? DefaultOn : !Parts.GetCrystal().CopyNothing, Parts?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +476,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = BodyPartData_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartDataCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataSetterCommon.Instance.RemapLinks(this, mapping);
         public BodyPartData(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +527,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IBodyPartData);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyPartDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BodyPartDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => BodyPartDataSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BodyPartDataSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +610,18 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IBodyPartData :
+        IAssetLinkContainer,
         IBodyPartDataGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBodyPartDataInternal>,
+        IModeled,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new ExtendedList<BodyPart> Parts { get; }
     }
 
     public partial interface IBodyPartDataInternal :
@@ -440,11 +634,21 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.BPTD)]
     public partial interface IBodyPartDataGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IBodyPartDataGetter>,
-        IMapsToGetter<IBodyPartDataGetter>
+        IMapsToGetter<IBodyPartDataGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => BodyPartData_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IReadOnlyList<IBodyPartGetter> Parts { get; }
 
     }
 
@@ -621,6 +825,8 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Model = 7,
+        Parts = 8,
     }
     #endregion
 
@@ -631,9 +837,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(BodyPartData.Mask<>);
 
@@ -663,8 +869,29 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.BPTD);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.BPTD);
+            var all = RecordCollection.Factory(
+                RecordTypes.BPTD,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.BPTN,
+                RecordTypes.BPNN,
+                RecordTypes.BPNT,
+                RecordTypes.BPD2,
+                RecordTypes.NAM4,
+                RecordTypes.ENAM,
+                RecordTypes.FNAM,
+                RecordTypes.INAM,
+                RecordTypes.JNAM,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartDataBinaryWriteTranslation);
         #region Interface
@@ -706,6 +933,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBodyPartDataInternal item)
         {
             ClearPartial();
+            item.Model = null;
+            item.Parts.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +952,34 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IBodyPartData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Parts.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBodyPartData obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IBodyPartData obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -790,6 +1047,15 @@ namespace Mutagen.Bethesda.Starfield
             BodyPartData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Parts = item.Parts.CollectionEqualsHelper(
+                rhs.Parts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1105,25 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.Parts?.Overall ?? true)
+            {
+                sb.AppendLine("Parts =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Parts)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static BodyPartData_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1174,18 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
+            {
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((BodyPartCommon)((IBodyPartGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Parts)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1214,11 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IBodyPartDataGetter item)
         {
             var hash = new HashCode();
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Parts);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1247,36 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Parts.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyPartDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1020,6 +1352,56 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)BodyPartData_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
+            {
+                errorMask?.PushIndex((int)BodyPartData_FieldIndex.Parts);
+                try
+                {
+                    item.Parts.SetTo(
+                        rhs.Parts
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1550,35 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly BodyPartDataBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IBodyPartDataGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBodyPartGetter>.Instance.Write(
+                writer: writer,
+                items: item.Parts,
+                transl: (MutagenWriter subWriter, IBodyPartGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((BodyPartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IBodyPartDataGetter item,
@@ -1184,10 +1595,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1650,54 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly BodyPartDataBinaryCreateTranslation Instance = new BodyPartDataBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BPTD;
+        public static ParseResult FillBinaryRecordTypes(
+            IBodyPartDataInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)BodyPartData_FieldIndex.Model;
+                }
+                case RecordTypeInts.BPTN:
+                case RecordTypeInts.BPNN:
+                {
+                    item.Parts.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BodyPart>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: BodyPart_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: BodyPart.TryCreateFromBinary));
+                    return (int)BodyPartData_FieldIndex.Parts;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1730,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartDataCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyPartDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BodyPartDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1746,8 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IBodyPartData);
 
 
+        public IModelGetter? Model { get; private set; }
+        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = Array.Empty<IBodyPartGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1805,53 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)BodyPartData_FieldIndex.Model;
+                }
+                case RecordTypeInts.BPTN:
+                case RecordTypeInts.BPNN:
+                {
+                    this.Parts = this.ParseRepeatedTypelessSubrecord<IBodyPartGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: BodyPart_Registration.TriggerSpecs,
+                        factory: BodyPartBinaryOverlay.BodyPartFactory);
+                    return (int)BodyPartData_FieldIndex.Parts;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

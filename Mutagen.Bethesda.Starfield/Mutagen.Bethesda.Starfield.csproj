@@ -2074,6 +2074,7 @@
     <Compile Include="Records\Major Records\BodyData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\BodyPart.cs" />
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
@@ -6355,6 +6356,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\DamageTypeValue_Generated.cs">
       <DependentUpon>DamageTypeValue.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyPart_Generated.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

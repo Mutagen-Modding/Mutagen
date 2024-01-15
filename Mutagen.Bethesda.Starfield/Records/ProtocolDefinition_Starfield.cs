@@ -88,6 +88,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             BodyIsPlanetTraitKnownConditionData_Registration.Instance,
             BodyIsTemperatureTypeConditionData_Registration.Instance,
             BodyIsTypeConditionData_Registration.Instance,
+            BodyPart_Registration.Instance,
             BodyPartData_Registration.Instance,
             BodyPartInfoComponent_Registration.Instance,
             BoneModifier_Registration.Instance,

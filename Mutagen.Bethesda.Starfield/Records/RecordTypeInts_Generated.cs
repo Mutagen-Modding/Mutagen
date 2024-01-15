@@ -159,7 +159,11 @@ public partial class RecordTypeInts
     public const int BOID = 0x44494F42;
     public const int BOLV = 0x564C4F42;
     public const int BOOK = 0x4B4F4F42;
+    public const int BPD2 = 0x32445042;
+    public const int BPNN = 0x4E4E5042;
+    public const int BPNT = 0x544E5042;
     public const int BPTD = 0x44545042;
+    public const int BPTN = 0x4E545042;
     public const int BSIZ = 0x5A495342;
     public const int BSMP = 0x504D5342;
     public const int BTXT = 0x54585442;

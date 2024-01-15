@@ -84,6 +84,7 @@
       <Group name="ImageSpaceAdapters" refName="ImageSpaceAdapter" />
       <Group name="FormLists" refName="FormList" />
       <Group name="Perks" refName="Perk" />
+      <Group name="BodyParts" refName="BodyPartData" />
       <Group name="ArmorAddons" refName="ArmorAddon" />
       <Group name="Locations" refName="Location" />
       <Group name="DefaultObjects" refName="DefaultObject" />

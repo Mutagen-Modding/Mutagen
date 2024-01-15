@@ -84,6 +84,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ArmorModification
 - BiomeMarker
 - BodyData
+- BodyPartData
 - Book
 - Container
 - ContainerModification
@@ -132,6 +133,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ASceneAction
 - BipedObjectData
 - BlueprintComponentBODSItem
+- BodyPart
 - Book
 - CameraSceneAction
 - Cell
@@ -379,6 +381,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### BlueprintComponentItem
 - IPositionRotation
 ### BodyData
+- IModeled
+### BodyPart
+- INamed
+### BodyPartData
 - IModeled
 ### Book
 - IHaveVirtualMachineAdapter
