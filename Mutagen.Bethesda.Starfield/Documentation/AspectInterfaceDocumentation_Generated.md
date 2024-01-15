@@ -124,6 +124,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### INamed
 - Activator
 - Activity
+- ActorValueInformation
 - ActorValueModulation
 - Ammunition
 - AnimationSceneAction
@@ -333,6 +334,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 ### Activity
+- INamed
+### ActorValueInformation
 - INamed
 ### ActorValueModulation
 - INamed

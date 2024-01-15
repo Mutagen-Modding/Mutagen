@@ -2035,7 +2035,12 @@
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AddonNode.cs" />
+    <Compile Include="Records\Major Records\ActorValueInformation.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AddonNode.cs">
+      <DependentUpon>AddonNode.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>

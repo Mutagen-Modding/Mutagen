@@ -131,6 +131,7 @@ public partial class RecordTypeInts
     public const int ATXT = 0x54585441;
     public const int AUSE = 0x45535541;
     public const int AVAL = 0x4C415641;
+    public const int AVFL = 0x4C465641;
     public const int AVIF = 0x46495641;
     public const int AVMD = 0x444D5641;
     public const int AVSG = 0x47535641;

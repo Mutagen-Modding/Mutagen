@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +24,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +56,77 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IActorValueInformationGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Context
+        public String? Context { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IActorValueInformationGetter.Context => this.Context;
+        #endregion
+        #region Abbreviation
+        public TranslatedString? Abbreviation { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IActorValueInformationGetter.Abbreviation => this.Abbreviation;
+        #endregion
+        #region DefaultValue
+        public Single? DefaultValue { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IActorValueInformationGetter.DefaultValue => this.DefaultValue;
+        #endregion
+        #region Flags
+        public ActorValueInformation.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ActorValueInformation.Flag? IActorValueInformationGetter.Flags => this.Flags;
+        #endregion
+        #region Type
+        public ActorValueInformation.Types? Type { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ActorValueInformation.Types? IActorValueInformationGetter.Type => this.Type;
+        #endregion
+        #region Min
+        public Single? Min { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IActorValueInformationGetter.Min => this.Min;
+        #endregion
+        #region Max
+        public Single? Max { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IActorValueInformationGetter.Max => this.Max;
+        #endregion
 
         #region To String
 
@@ -79,6 +152,14 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Context = initialValue;
+                this.Abbreviation = initialValue;
+                this.DefaultValue = initialValue;
+                this.Flags = initialValue;
+                this.Type = initialValue;
+                this.Min = initialValue;
+                this.Max = initialValue;
             }
 
             public Mask(
@@ -88,7 +169,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Name,
+                TItem Context,
+                TItem Abbreviation,
+                TItem DefaultValue,
+                TItem Flags,
+                TItem Type,
+                TItem Min,
+                TItem Max)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +187,14 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Name = Name;
+                this.Context = Context;
+                this.Abbreviation = Abbreviation;
+                this.DefaultValue = DefaultValue;
+                this.Flags = Flags;
+                this.Type = Type;
+                this.Min = Min;
+                this.Max = Max;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +203,17 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Context;
+            public TItem Abbreviation;
+            public TItem DefaultValue;
+            public TItem Flags;
+            public TItem Type;
+            public TItem Min;
+            public TItem Max;
             #endregion
 
             #region Equals
@@ -119,11 +227,27 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Context, rhs.Context)) return false;
+                if (!object.Equals(this.Abbreviation, rhs.Abbreviation)) return false;
+                if (!object.Equals(this.DefaultValue, rhs.DefaultValue)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Min, rhs.Min)) return false;
+                if (!object.Equals(this.Max, rhs.Max)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Context);
+                hash.Add(this.Abbreviation);
+                hash.Add(this.DefaultValue);
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
+                hash.Add(this.Min);
+                hash.Add(this.Max);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +258,14 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Context)) return false;
+                if (!eval(this.Abbreviation)) return false;
+                if (!eval(this.DefaultValue)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Min)) return false;
+                if (!eval(this.Max)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +274,14 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Context)) return true;
+                if (eval(this.Abbreviation)) return true;
+                if (eval(this.DefaultValue)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Min)) return true;
+                if (eval(this.Max)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +297,14 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Context = eval(this.Context);
+                obj.Abbreviation = eval(this.Abbreviation);
+                obj.DefaultValue = eval(this.DefaultValue);
+                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
+                obj.Min = eval(this.Min);
+                obj.Max = eval(this.Max);
             }
             #endregion
 
@@ -175,6 +323,38 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Context ?? true)
+                    {
+                        sb.AppendItem(Context, "Context");
+                    }
+                    if (printMask?.Abbreviation ?? true)
+                    {
+                        sb.AppendItem(Abbreviation, "Abbreviation");
+                    }
+                    if (printMask?.DefaultValue ?? true)
+                    {
+                        sb.AppendItem(DefaultValue, "DefaultValue");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Min ?? true)
+                    {
+                        sb.AppendItem(Min, "Min");
+                    }
+                    if (printMask?.Max ?? true)
+                    {
+                        sb.AppendItem(Max, "Max");
+                    }
                 }
             }
             #endregion
@@ -185,12 +365,39 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Context;
+            public Exception? Abbreviation;
+            public Exception? DefaultValue;
+            public Exception? Flags;
+            public Exception? Type;
+            public Exception? Min;
+            public Exception? Max;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
+                    case ActorValueInformation_FieldIndex.Name:
+                        return Name;
+                    case ActorValueInformation_FieldIndex.Context:
+                        return Context;
+                    case ActorValueInformation_FieldIndex.Abbreviation:
+                        return Abbreviation;
+                    case ActorValueInformation_FieldIndex.DefaultValue:
+                        return DefaultValue;
+                    case ActorValueInformation_FieldIndex.Flags:
+                        return Flags;
+                    case ActorValueInformation_FieldIndex.Type:
+                        return Type;
+                    case ActorValueInformation_FieldIndex.Min:
+                        return Min;
+                    case ActorValueInformation_FieldIndex.Max:
+                        return Max;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +408,30 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
+                    case ActorValueInformation_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Context:
+                        this.Context = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Abbreviation:
+                        this.Abbreviation = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.DefaultValue:
+                        this.DefaultValue = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Min:
+                        this.Min = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Max:
+                        this.Max = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +443,30 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
+                    case ActorValueInformation_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Context:
+                        this.Context = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Abbreviation:
+                        this.Abbreviation = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.DefaultValue:
+                        this.DefaultValue = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Min:
+                        this.Min = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Max:
+                        this.Max = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +476,14 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Context != null) return true;
+                if (Abbreviation != null) return true;
+                if (DefaultValue != null) return true;
+                if (Flags != null) return true;
+                if (Type != null) return true;
+                if (Min != null) return true;
+                if (Max != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +510,30 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Context, "Context");
+                }
+                {
+                    sb.AppendItem(Abbreviation, "Abbreviation");
+                }
+                {
+                    sb.AppendItem(DefaultValue, "DefaultValue");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Min, "Min");
+                }
+                {
+                    sb.AppendItem(Max, "Max");
+                }
             }
             #endregion
 
@@ -255,6 +542,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Context = this.Context.Combine(rhs.Context);
+                ret.Abbreviation = this.Abbreviation.Combine(rhs.Abbreviation);
+                ret.DefaultValue = this.DefaultValue.Combine(rhs.DefaultValue);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Min = this.Min.Combine(rhs.Min);
+                ret.Max = this.Max.Combine(rhs.Max);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +571,47 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Context;
+            public bool Abbreviation;
+            public bool DefaultValue;
+            public bool Flags;
+            public bool Type;
+            public bool Min;
+            public bool Max;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Context = defaultOn;
+                this.Abbreviation = defaultOn;
+                this.DefaultValue = defaultOn;
+                this.Flags = defaultOn;
+                this.Type = defaultOn;
+                this.Min = defaultOn;
+                this.Max = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Context, null));
+                ret.Add((Abbreviation, null));
+                ret.Add((DefaultValue, null));
+                ret.Add((Flags, null));
+                ret.Add((Type, null));
+                ret.Add((Min, null));
+                ret.Add((Max, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -426,8 +753,23 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActorValueInformation :
         IActorValueInformationGetter,
         ILoquiObjectSetter<IActorValueInformationInternal>,
-        IStarfieldMajorRecordInternal
+        INamed,
+        INamedRequired,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new String? Context { get; set; }
+        new TranslatedString? Abbreviation { get; set; }
+        new Single? DefaultValue { get; set; }
+        new ActorValueInformation.Flag? Flags { get; set; }
+        new ActorValueInformation.Types? Type { get; set; }
+        new Single? Min { get; set; }
+        new Single? Max { get; set; }
     }
 
     public partial interface IActorValueInformationInternal :
@@ -442,9 +784,26 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IActorValueInformationGetter>,
-        IMapsToGetter<IActorValueInformationGetter>
+        IMapsToGetter<IActorValueInformationGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        String? Context { get; }
+        ITranslatedStringGetter? Abbreviation { get; }
+        Single? DefaultValue { get; }
+        ActorValueInformation.Flag? Flags { get; }
+        ActorValueInformation.Types? Type { get; }
+        Single? Min { get; }
+        Single? Max { get; }
 
     }
 
@@ -621,6 +980,14 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Name = 7,
+        Context = 8,
+        Abbreviation = 9,
+        DefaultValue = 10,
+        Flags = 11,
+        Type = 12,
+        Min = 13,
+        Max = 14,
     }
     #endregion
 
@@ -631,9 +998,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(ActorValueInformation.Mask<>);
 
@@ -663,8 +1030,20 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.AVIF);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.AVIF);
+            var all = RecordCollection.Factory(
+                RecordTypes.AVIF,
+                RecordTypes.FULL,
+                RecordTypes.NLDT,
+                RecordTypes.ANAM,
+                RecordTypes.NAM0,
+                RecordTypes.AVFL,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActorValueInformationBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1085,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IActorValueInformationInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Context = default;
+            item.Abbreviation = default;
+            item.DefaultValue = default;
+            item.Flags = default;
+            item.Type = default;
+            item.Min = default;
+            item.Max = default;
             base.Clear(item);
         }
         
@@ -790,6 +1177,14 @@ namespace Mutagen.Bethesda.Starfield
             ActorValueInformation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Context = string.Equals(item.Context, rhs.Context);
+            ret.Abbreviation = object.Equals(item.Abbreviation, rhs.Abbreviation);
+            ret.DefaultValue = item.DefaultValue.EqualsWithin(rhs.DefaultValue);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
+            ret.Min = item.Min.EqualsWithin(rhs.Min);
+            ret.Max = item.Max.EqualsWithin(rhs.Max);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1234,46 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Context ?? true)
+                && item.Context is {} ContextItem)
+            {
+                sb.AppendItem(ContextItem, "Context");
+            }
+            if ((printMask?.Abbreviation ?? true)
+                && item.Abbreviation is {} AbbreviationItem)
+            {
+                sb.AppendItem(AbbreviationItem, "Abbreviation");
+            }
+            if ((printMask?.DefaultValue ?? true)
+                && item.DefaultValue is {} DefaultValueItem)
+            {
+                sb.AppendItem(DefaultValueItem, "DefaultValue");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.Type ?? true)
+                && item.Type is {} TypeItem)
+            {
+                sb.AppendItem(TypeItem, "Type");
+            }
+            if ((printMask?.Min ?? true)
+                && item.Min is {} MinItem)
+            {
+                sb.AppendItem(MinItem, "Min");
+            }
+            if ((printMask?.Max ?? true)
+                && item.Max is {} MaxItem)
+            {
+                sb.AppendItem(MaxItem, "Max");
+            }
         }
         
         public static ActorValueInformation_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1324,38 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Context) ?? true))
+            {
+                if (!string.Equals(lhs.Context, rhs.Context)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            {
+                if (!object.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
+            {
+                if (!lhs.DefaultValue.EqualsWithin(rhs.DefaultValue)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Min) ?? true))
+            {
+                if (!lhs.Min.EqualsWithin(rhs.Min)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Max) ?? true))
+            {
+                if (!lhs.Max.EqualsWithin(rhs.Max)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1384,38 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IActorValueInformationGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Context is {} Contextitem)
+            {
+                hash.Add(Contextitem);
+            }
+            if (item.Abbreviation is {} Abbreviationitem)
+            {
+                hash.Add(Abbreviationitem);
+            }
+            if (item.DefaultValue is {} DefaultValueitem)
+            {
+                hash.Add(DefaultValueitem);
+            }
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.Type is {} Typeitem)
+            {
+                hash.Add(Typeitem);
+            }
+            if (item.Min is {} Minitem)
+            {
+                hash.Add(Minitem);
+            }
+            if (item.Max is {} Maxitem)
+            {
+                hash.Add(Maxitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,6 +1519,38 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Context) ?? true))
+            {
+                item.Context = rhs.Context;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            {
+                item.Abbreviation = rhs.Abbreviation?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
+            {
+                item.DefaultValue = rhs.DefaultValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Min) ?? true))
+            {
+                item.Min = rhs.Min;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Max) ?? true))
+            {
+                item.Max = rhs.Max;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1699,56 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ActorValueInformationBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IActorValueInformationGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Context,
+                header: translationParams.ConvertToCustom(RecordTypes.NLDT),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Abbreviation,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultValue,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
+            EnumBinaryTranslation<ActorValueInformation.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.AVFL));
+            EnumBinaryTranslation<ActorValueInformation.Types, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Min,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Max,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3));
+        }
+
         public void Write(
             MutagenWriter writer,
             IActorValueInformationGetter item,
@@ -1184,10 +1765,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1820,90 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AVIF;
+        public static ParseResult FillBinaryRecordTypes(
+            IActorValueInformationInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ActorValueInformation_FieldIndex.Name;
+                }
+                case RecordTypeInts.NLDT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Context = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ActorValueInformation_FieldIndex.Context;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Abbreviation = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ActorValueInformation_FieldIndex.DefaultValue;
+                }
+                case RecordTypeInts.AVFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<ActorValueInformation.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ActorValueInformation_FieldIndex.Flags;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Type = EnumBinaryTranslation<ActorValueInformation.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ActorValueInformation_FieldIndex.Type;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Min = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ActorValueInformation_FieldIndex.Min;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Max = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ActorValueInformation_FieldIndex.Max;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1283,6 +1950,46 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IActorValueInformation);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Context
+        private int? _ContextLocation;
+        public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Abbreviation
+        private int? _AbbreviationLocation;
+        public ITranslatedStringGetter? Abbreviation => _AbbreviationLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AbbreviationLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region DefaultValue
+        private int? _DefaultValueLocation;
+        public Single? DefaultValue => _DefaultValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public ActorValueInformation.Flag? Flags => _FlagsLocation.HasValue ? (ActorValueInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(ActorValueInformation.Flag?);
+        #endregion
+        #region Type
+        private int? _TypeLocation;
+        public ActorValueInformation.Types? Type => _TypeLocation.HasValue ? (ActorValueInformation.Types)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueInformation.Types?);
+        #endregion
+        #region Min
+        private int? _MinLocation;
+        public Single? Min => _MinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Max
+        private int? _MaxLocation;
+        public Single? Max => _MaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2047,69 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Name;
+                }
+                case RecordTypeInts.NLDT:
+                {
+                    _ContextLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Context;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _AbbreviationLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _DefaultValueLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.DefaultValue;
+                }
+                case RecordTypeInts.AVFL:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Flags;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Type;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _MinLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Min;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    _MaxLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Max;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -84,9 +84,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ActorValueInformation</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter> ActorValueInformation(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter> ActorValueInformation(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IActorValueInformationGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -96,9 +96,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on ActorValueInformation</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter> ActorValueInformation(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter> ActorValueInformation(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IActorValueInformationGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IActorValueInformation, IActorValueInformationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

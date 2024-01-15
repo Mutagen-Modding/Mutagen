@@ -153,6 +153,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 APackageData_Registration.Instance,
@@ -225,6 +226,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 ActorValueModulation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 AnimationSceneAction_Registration.Instance,
@@ -333,6 +335,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 Armor_Registration.Instance,
@@ -392,6 +395,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 AObjectModification_Registration.Instance,
                 Armor_Registration.Instance,
