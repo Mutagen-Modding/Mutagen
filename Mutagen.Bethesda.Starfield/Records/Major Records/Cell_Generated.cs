@@ -2600,6 +2600,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ICell :
         IAssetLinkContainer,
         ICellGetter,
+        ICellOrObject,
         IComplexLocation,
         IFormLinkContainer,
         ILoquiObjectSetter<ICellInternal>,
@@ -2671,6 +2672,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        ICellOrObjectGetter,
         IComplexLocationGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ICellGetter>,

@@ -426,7 +426,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ITraversal :
         ILoquiObjectSetter<ITraversalInternal>,
         IStarfieldMajorRecordInternal,
-        ITraversalGetter
+        ITraversalGetter,
+        ITraversalTarget
     {
     }
 
@@ -442,7 +443,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ITraversalGetter>,
-        IMapsToGetter<ITraversalGetter>
+        IMapsToGetter<ITraversalGetter>,
+        ITraversalTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Traversal_Registration.Instance;
 

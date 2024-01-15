@@ -557,7 +557,10 @@ public partial class RecordTypes
     public static readonly RecordType NTOP = new(0x504F544E);
     public static readonly RecordType NTRM = new(0x4D52544E);
     public static readonly RecordType NVCI = new(0x4943564E);
+    public static readonly RecordType NVER = new(0x5245564E);
+    public static readonly RecordType NVMI = new(0x494D564E);
     public static readonly RecordType NVNM = new(0x4D4E564E);
+    public static readonly RecordType NVPP = new(0x5050564E);
     public static readonly RecordType NVTP = new(0x5054564E);
     public static readonly RecordType NXPO = new(0x4F50584E);
     public static readonly RecordType OBND = new(0x444E424F);

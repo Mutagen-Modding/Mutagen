@@ -555,7 +555,10 @@ public partial class RecordTypeInts
     public const int NTOP = 0x504F544E;
     public const int NTRM = 0x4D52544E;
     public const int NVCI = 0x4943564E;
+    public const int NVER = 0x5245564E;
+    public const int NVMI = 0x494D564E;
     public const int NVNM = 0x4D4E564E;
+    public const int NVPP = 0x5050564E;
     public const int NVTP = 0x5054564E;
     public const int NXPO = 0x4F50584E;
     public const int OBND = 0x444E424F;

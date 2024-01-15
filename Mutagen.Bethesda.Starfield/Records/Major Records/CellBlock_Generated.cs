@@ -1326,6 +1326,13 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "ICellOrObject":
+                case "ICellOrObjectGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IOwner":
                 case "IOwnerGetter":
                     foreach (var subItem in obj.SubBlocks)
@@ -1363,6 +1370,13 @@ namespace Mutagen.Bethesda.Starfield
                     break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ITraversalTarget":
+                case "ITraversalTargetGetter":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);

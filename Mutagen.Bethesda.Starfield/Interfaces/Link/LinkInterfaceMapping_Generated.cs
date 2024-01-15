@@ -107,6 +107,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Worldspace_Registration.Instance,
         });
         dict[typeof(IComplexLocationGetter)] = dict[typeof(IComplexLocation)] with { Setter = false };
+        dict[typeof(ICellOrObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Cell_Registration.Instance,
+            PlacedObject_Registration.Instance,
+        });
+        dict[typeof(ICellOrObjectGetter)] = dict[typeof(ICellOrObject)] with { Setter = false };
         dict[typeof(IResourceTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ConstructibleObject_Registration.Instance,
@@ -223,6 +229,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)] with { Setter = false };
+        dict[typeof(ITraversalTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedObject_Registration.Instance,
+            Traversal_Registration.Instance,
+        });
+        dict[typeof(ITraversalTargetGetter)] = dict[typeof(ITraversalTarget)] with { Setter = false };
         dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Spell_Registration.Instance,

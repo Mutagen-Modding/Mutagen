@@ -3,5 +3,6 @@
   <Object name="Traversal" recordType="TRAV" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>ITraversalTarget</LinkInterface>
   </Object>
 </Loqui>

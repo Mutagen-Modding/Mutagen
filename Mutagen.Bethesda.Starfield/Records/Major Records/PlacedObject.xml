@@ -101,6 +101,8 @@
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
+    <LinkInterface>ICellOrObject</LinkInterface>
+    <LinkInterface>ITraversalTarget</LinkInterface>
   </Object>
   <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
     <Fields>

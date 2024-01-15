@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,36 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region NavMeshVersion
+        public UInt32? NavMeshVersion { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? INavigationMeshInfoMapGetter.NavMeshVersion => this.NavMeshVersion;
+        #endregion
+        #region MapInfos
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<NavigationMapInfo> _MapInfos = new ExtendedList<NavigationMapInfo>();
+        public ExtendedList<NavigationMapInfo> MapInfos
+        {
+            get => this._MapInfos;
+            init => this._MapInfos = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INavigationMapInfoGetter> INavigationMeshInfoMapGetter.MapInfos => _MapInfos;
+        #endregion
+
+        #endregion
+        #region PreferredPathing
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PreferredPathing? _PreferredPathing;
+        public PreferredPathing? PreferredPathing
+        {
+            get => _PreferredPathing;
+            set => _PreferredPathing = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPreferredPathingGetter? INavigationMeshInfoMapGetter.PreferredPathing => this.PreferredPathing;
+        #endregion
 
         #region To String
 
@@ -79,6 +110,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.NavMeshVersion = initialValue;
+                this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>());
+                this.PreferredPathing = new MaskItem<TItem, PreferredPathing.Mask<TItem>?>(initialValue, new PreferredPathing.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -88,7 +122,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem NavMeshVersion,
+                TItem MapInfos,
+                TItem PreferredPathing)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +135,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.NavMeshVersion = NavMeshVersion;
+                this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(MapInfos, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>());
+                this.PreferredPathing = new MaskItem<TItem, PreferredPathing.Mask<TItem>?>(PreferredPathing, new PreferredPathing.Mask<TItem>(PreferredPathing));
             }
 
             #pragma warning disable CS8618
@@ -106,6 +146,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem NavMeshVersion;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>? MapInfos;
+            public MaskItem<TItem, PreferredPathing.Mask<TItem>?>? PreferredPathing { get; set; }
             #endregion
 
             #region Equals
@@ -119,11 +165,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.NavMeshVersion, rhs.NavMeshVersion)) return false;
+                if (!object.Equals(this.MapInfos, rhs.MapInfos)) return false;
+                if (!object.Equals(this.PreferredPathing, rhs.PreferredPathing)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.NavMeshVersion);
+                hash.Add(this.MapInfos);
+                hash.Add(this.PreferredPathing);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +186,24 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.NavMeshVersion)) return false;
+                if (this.MapInfos != null)
+                {
+                    if (!eval(this.MapInfos.Overall)) return false;
+                    if (this.MapInfos.Specific != null)
+                    {
+                        foreach (var item in this.MapInfos.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (PreferredPathing != null)
+                {
+                    if (!eval(this.PreferredPathing.Overall)) return false;
+                    if (this.PreferredPathing.Specific != null && !this.PreferredPathing.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -142,6 +212,24 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.NavMeshVersion)) return true;
+                if (this.MapInfos != null)
+                {
+                    if (eval(this.MapInfos.Overall)) return true;
+                    if (this.MapInfos.Specific != null)
+                    {
+                        foreach (var item in this.MapInfos.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (PreferredPathing != null)
+                {
+                    if (eval(this.PreferredPathing.Overall)) return true;
+                    if (this.PreferredPathing.Specific != null && this.PreferredPathing.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -157,6 +245,23 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.NavMeshVersion = eval(this.NavMeshVersion);
+                if (MapInfos != null)
+                {
+                    obj.MapInfos = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>?>(eval(this.MapInfos.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>());
+                    if (MapInfos.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>();
+                        obj.MapInfos.Specific = l;
+                        foreach (var item in MapInfos.Specific)
+                        {
+                            MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.PreferredPathing = this.PreferredPathing == null ? null : new MaskItem<R, PreferredPathing.Mask<R>?>(eval(this.PreferredPathing.Overall), this.PreferredPathing.Specific?.Translate(eval));
             }
             #endregion
 
@@ -175,6 +280,33 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(NavigationMeshInfoMap.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.NavMeshVersion ?? true)
+                    {
+                        sb.AppendItem(NavMeshVersion, "NavMeshVersion");
+                    }
+                    if ((printMask?.MapInfos?.Overall ?? true)
+                        && MapInfos is {} MapInfosItem)
+                    {
+                        sb.AppendLine("MapInfos =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MapInfosItem.Overall);
+                            if (MapInfosItem.Specific != null)
+                            {
+                                foreach (var subItem in MapInfosItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.PreferredPathing?.Overall ?? true)
+                    {
+                        PreferredPathing?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -185,12 +317,24 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? NavMeshVersion;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>? MapInfos;
+            public MaskItem<Exception?, PreferredPathing.ErrorMask?>? PreferredPathing;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 NavigationMeshInfoMap_FieldIndex enu = (NavigationMeshInfoMap_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
+                        return NavMeshVersion;
+                    case NavigationMeshInfoMap_FieldIndex.MapInfos:
+                        return MapInfos;
+                    case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
+                        return PreferredPathing;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +345,15 @@ namespace Mutagen.Bethesda.Starfield
                 NavigationMeshInfoMap_FieldIndex enu = (NavigationMeshInfoMap_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
+                        this.NavMeshVersion = ex;
+                        break;
+                    case NavigationMeshInfoMap_FieldIndex.MapInfos:
+                        this.MapInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>(ex, null);
+                        break;
+                    case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
+                        this.PreferredPathing = new MaskItem<Exception?, PreferredPathing.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +365,15 @@ namespace Mutagen.Bethesda.Starfield
                 NavigationMeshInfoMap_FieldIndex enu = (NavigationMeshInfoMap_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
+                        this.NavMeshVersion = (Exception?)obj;
+                        break;
+                    case NavigationMeshInfoMap_FieldIndex.MapInfos:
+                        this.MapInfos = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>)obj;
+                        break;
+                    case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
+                        this.PreferredPathing = (MaskItem<Exception?, PreferredPathing.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +383,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (NavMeshVersion != null) return true;
+                if (MapInfos != null) return true;
+                if (PreferredPathing != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +412,28 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(NavMeshVersion, "NavMeshVersion");
+                }
+                if (MapInfos is {} MapInfosItem)
+                {
+                    sb.AppendLine("MapInfos =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MapInfosItem.Overall);
+                        if (MapInfosItem.Specific != null)
+                        {
+                            foreach (var subItem in MapInfosItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                PreferredPathing?.Print(sb);
             }
             #endregion
 
@@ -255,6 +442,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.NavMeshVersion = this.NavMeshVersion.Combine(rhs.NavMeshVersion);
+                ret.MapInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MapInfos?.Overall, rhs.MapInfos?.Overall), Noggog.ExceptionExt.Combine(this.MapInfos?.Specific, rhs.MapInfos?.Specific));
+                ret.PreferredPathing = this.PreferredPathing.Combine(rhs.PreferredPathing, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +466,30 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool NavMeshVersion;
+            public NavigationMapInfo.TranslationMask? MapInfos;
+            public PreferredPathing.TranslationMask? PreferredPathing;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.NavMeshVersion = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((NavMeshVersion, null));
+                ret.Add((MapInfos == null ? DefaultOn : !MapInfos.GetCrystal().CopyNothing, MapInfos?.GetCrystal()));
+                ret.Add((PreferredPathing != null ? PreferredPathing.OnOverall : DefaultOn, PreferredPathing?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +501,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshInfoMapCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapSetterCommon.Instance.RemapLinks(this, mapping);
         public NavigationMeshInfoMap(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +631,14 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface INavigationMeshInfoMap :
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationMeshInfoMapInternal>,
         INavigationMeshInfoMapGetter,
         IStarfieldMajorRecordInternal
     {
+        new UInt32? NavMeshVersion { get; set; }
+        new ExtendedList<NavigationMapInfo> MapInfos { get; }
+        new PreferredPathing? PreferredPathing { get; set; }
     }
 
     public partial interface INavigationMeshInfoMapInternal :
@@ -441,10 +652,14 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface INavigationMeshInfoMapGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<INavigationMeshInfoMapGetter>,
         IMapsToGetter<INavigationMeshInfoMapGetter>
     {
         static new ILoquiRegistration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
+        UInt32? NavMeshVersion { get; }
+        IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; }
+        IPreferredPathingGetter? PreferredPathing { get; }
 
     }
 
@@ -621,6 +836,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        NavMeshVersion = 7,
+        MapInfos = 8,
+        PreferredPathing = 9,
     }
     #endregion
 
@@ -631,9 +849,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(NavigationMeshInfoMap.Mask<>);
 
@@ -663,8 +881,15 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.NAVI);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.NAVI);
+            var all = RecordCollection.Factory(
+                RecordTypes.NAVI,
+                RecordTypes.NVER,
+                RecordTypes.NVMI,
+                RecordTypes.NVPP);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshInfoMapBinaryWriteTranslation);
         #region Interface
@@ -706,6 +931,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavigationMeshInfoMapInternal item)
         {
             ClearPartial();
+            item.NavMeshVersion = default;
+            item.MapInfos.Clear();
+            item.PreferredPathing = null;
             base.Clear(item);
         }
         
@@ -723,6 +951,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(INavigationMeshInfoMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.MapInfos.RemapLinks(mapping);
+            obj.PreferredPathing?.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1020,16 @@ namespace Mutagen.Bethesda.Starfield
             NavigationMeshInfoMap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.NavMeshVersion = item.NavMeshVersion == rhs.NavMeshVersion;
+            ret.MapInfos = item.MapInfos.CollectionEqualsHelper(
+                rhs.MapInfos,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.PreferredPathing = EqualsMaskHelper.EqualsHelper(
+                item.PreferredPathing,
+                rhs.PreferredPathing,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1079,30 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.NavMeshVersion ?? true)
+                && item.NavMeshVersion is {} NavMeshVersionItem)
+            {
+                sb.AppendItem(NavMeshVersionItem, "NavMeshVersion");
+            }
+            if (printMask?.MapInfos?.Overall ?? true)
+            {
+                sb.AppendLine("MapInfos =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.MapInfos)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.PreferredPathing?.Overall ?? true)
+                && item.PreferredPathing is {} PreferredPathingItem)
+            {
+                PreferredPathingItem?.Print(sb, "PreferredPathing");
+            }
         }
         
         public static NavigationMeshInfoMap_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1153,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
+            {
+                if (lhs.NavMeshVersion != rhs.NavMeshVersion) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.MapInfos) ?? true))
+            {
+                if (!lhs.MapInfos.SequenceEqual(rhs.MapInfos, (l, r) => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.MapInfos)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PreferredPathing, rhs.PreferredPathing, out var lhsPreferredPathing, out var rhsPreferredPathing, out var isPreferredPathingEqual))
+                {
+                    if (!((PreferredPathingCommon)((IPreferredPathingGetter)lhsPreferredPathing).CommonInstance()!).Equals(lhsPreferredPathing, rhsPreferredPathing, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing))) return false;
+                }
+                else if (!isPreferredPathingEqual) return false;
+            }
             return true;
         }
         
@@ -917,6 +1197,15 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(INavigationMeshInfoMapGetter item)
         {
             var hash = new HashCode();
+            if (item.NavMeshVersion is {} NavMeshVersionitem)
+            {
+                hash.Add(NavMeshVersionitem);
+            }
+            hash.Add(item.MapInfos);
+            if (item.PreferredPathing is {} PreferredPathingitem)
+            {
+                hash.Add(PreferredPathingitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1234,17 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.MapInfos.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.PreferredPathing is {} PreferredPathingItems)
+            {
+                foreach (var item in PreferredPathingItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +1320,60 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
+            {
+                item.NavMeshVersion = rhs.NavMeshVersion;
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.MapInfos) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
+                try
+                {
+                    item.MapInfos.SetTo(
+                        rhs.MapInfos
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
+                try
+                {
+                    if(rhs.PreferredPathing is {} rhsPreferredPathing)
+                    {
+                        item.PreferredPathing = rhsPreferredPathing.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing));
+                    }
+                    else
+                    {
+                        item.PreferredPathing = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1522,39 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly NavigationMeshInfoMapBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            INavigationMeshInfoMapGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.NavMeshVersion,
+                header: translationParams.ConvertToCustom(RecordTypes.NVER));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMapInfoGetter>.Instance.Write(
+                writer: writer,
+                items: item.MapInfos,
+                transl: (MutagenWriter subWriter, INavigationMapInfoGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavigationMapInfoBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.PreferredPathing is {} PreferredPathingItem)
+            {
+                ((PreferredPathingBinaryWriteTranslation)((IBinaryItem)PreferredPathingItem).BinaryWriteTranslator).Write(
+                    item: PreferredPathingItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             INavigationMeshInfoMapGetter item,
@@ -1184,10 +1571,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1626,51 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly NavigationMeshInfoMapBinaryCreateTranslation Instance = new NavigationMeshInfoMapBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NAVI;
+        public static ParseResult FillBinaryRecordTypes(
+            INavigationMeshInfoMapInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.NVER:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NavMeshVersion = frame.ReadUInt32();
+                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
+                }
+                case RecordTypeInts.NVMI:
+                {
+                    item.MapInfos.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: NavigationMapInfo_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: NavigationMapInfo.TryCreateFromBinary));
+                    return (int)NavigationMeshInfoMap_FieldIndex.MapInfos;
+                }
+                case RecordTypeInts.NVPP:
+                {
+                    item.PreferredPathing = Mutagen.Bethesda.Starfield.PreferredPathing.CreateFromBinary(frame: frame);
+                    return (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1703,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshInfoMapCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1718,15 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(INavigationMeshInfoMap);
 
 
+        #region NavMeshVersion
+        private int? _NavMeshVersionLocation;
+        public UInt32? NavMeshVersion => _NavMeshVersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NavMeshVersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = Array.Empty<INavigationMapInfoGetter>();
+        #region PreferredPathing
+        private RangeInt32? _PreferredPathingLocation;
+        public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(_recordData.Slice(_PreferredPathingLocation!.Value.Min), _package) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1784,54 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.NVER:
+                {
+                    _NavMeshVersionLocation = (stream.Position - offset);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
+                }
+                case RecordTypeInts.NVMI:
+                {
+                    this.MapInfos = BinaryOverlayList.FactoryByArray<INavigationMapInfoGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => NavigationMapInfoBinaryOverlay.NavigationMapInfoFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: NavigationMapInfo_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)NavigationMeshInfoMap_FieldIndex.MapInfos;
+                }
+                case RecordTypeInts.NVPP:
+                {
+                    _PreferredPathingLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

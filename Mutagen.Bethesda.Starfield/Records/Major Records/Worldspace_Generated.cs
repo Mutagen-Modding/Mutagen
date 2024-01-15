@@ -3448,6 +3448,19 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "ICellOrObject":
+                case "ICellOrObjectGetter":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    break;
                 case "IOwner":
                 case "IOwnerGetter":
                     {
@@ -3515,6 +3528,19 @@ namespace Mutagen.Bethesda.Starfield
                     break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ITraversalTarget":
+                case "ITraversalTargetGetter":
                     {
                         if (obj.TopCell is {} TopCellitem)
                         {

@@ -4236,6 +4236,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IPlacedObject :
         IAssetLinkContainer,
+        ICellOrObject,
         IFormLinkContainer,
         IKeywordLinkedReference,
         ILinkedReference,
@@ -4246,7 +4247,8 @@ namespace Mutagen.Bethesda.Starfield
         IPlacedThing,
         IPositionRotation,
         IScripted,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        ITraversalTarget
     {
         /// <summary>
         /// Aspects: IScripted
@@ -4340,6 +4342,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        ICellOrObjectGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
@@ -4350,7 +4353,8 @@ namespace Mutagen.Bethesda.Starfield
         IPlacedSimpleGetter,
         IPlacedThingGetter,
         IPositionRotationGetter,
-        IScriptedGetter
+        IScriptedGetter,
+        ITraversalTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         #region VirtualMachineAdapter
