@@ -646,6 +646,7 @@ public partial class RecordTypes
     public static readonly RecordType PRRF = new(0x46525250);
     public static readonly RecordType PRRK = new(0x4B525250);
     public static readonly RecordType PSDC = new(0x43445350);
+    public static readonly RecordType PSDF = new(0x46445350);
     public static readonly RecordType PSDT = new(0x54445350);
     public static readonly RecordType PTCL = new(0x4C435450);
     public static readonly RecordType PTDA = new(0x41445450);

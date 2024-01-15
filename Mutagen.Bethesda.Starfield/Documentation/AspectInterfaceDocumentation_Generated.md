@@ -78,6 +78,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weather
 ### IModeled
 - Activator
+- AddonNode
 - Ammunition
 - AnimatedObject
 - AObjectModification
@@ -228,6 +229,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IObjectBounded
 - AcousticSpace
 - Activator
+- AddonNode
 - Ammunition
 - Armor
 - AudioOcclusionPrimitive
@@ -334,6 +336,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### ActorValueModulation
 - INamed
+### AddonNode
+- IModeled
+- IObjectBounded
 ### Ammunition
 - IKeyworded
 - IModeled

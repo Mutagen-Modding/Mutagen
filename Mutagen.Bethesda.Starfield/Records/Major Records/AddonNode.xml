@@ -2,6 +2,19 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AddonNode" recordType="ADDN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="Model" refName="Model" />
+      <Int32 name="NodeIndex" recordType="DATA" nullable="False" />
+      <FormLink name="Light" refName="Light" recordType="LNAM" />
+      <ByteArray name="PSDF" recordType="PSDF" unknown="true" />
+      <Data recordType="DNAM">
+        <Fields>
+          <UInt16 name="MasterParticleSystemCap" />
+          <Enum name="Flags" enumName="AddonNode.Flag" byteLength="2" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

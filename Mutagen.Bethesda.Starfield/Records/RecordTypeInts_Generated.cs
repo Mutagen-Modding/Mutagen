@@ -644,6 +644,7 @@ public partial class RecordTypeInts
     public const int PRRF = 0x46525250;
     public const int PRRK = 0x4B525250;
     public const int PSDC = 0x43445350;
+    public const int PSDF = 0x46445350;
     public const int PSDT = 0x54445350;
     public const int PTCL = 0x4C435450;
     public const int PTDA = 0x41445450;

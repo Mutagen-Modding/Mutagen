@@ -104,6 +104,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                AddonNode_Registration.Instance,
                 Ammunition_Registration.Instance,
                 AnimatedObject_Registration.Instance,
                 AObjectModification_Registration.Instance,
@@ -451,6 +452,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 AcousticSpace_Registration.Instance,
                 Activator_Registration.Instance,
+                AddonNode_Registration.Instance,
                 Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 AudioOcclusionPrimitive_Registration.Instance,

@@ -138,6 +138,7 @@ namespace Mutagen.Bethesda.Starfield
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
             _BodyParts_Object = new StarfieldGroup<BodyPartData>(this);
+            _AddonNodes_Object = new StarfieldGroup<AddonNode>(this);
             _ArmorAddons_Object = new StarfieldGroup<ArmorAddon>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -716,6 +717,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IBodyPartDataGetter> IStarfieldModGetter.BodyParts => _BodyParts_Object;
         #endregion
+        #region AddonNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<AddonNode> _AddonNodes_Object;
+        public StarfieldGroup<AddonNode> AddonNodes => _AddonNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IAddonNodeGetter> IStarfieldModGetter.AddonNodes => _AddonNodes_Object;
+        #endregion
         #region ArmorAddons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<ArmorAddon> _ArmorAddons_Object;
@@ -974,6 +982,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BodyParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.AddonNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ArmorAddons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1076,6 +1085,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormLists,
                 TItem Perks,
                 TItem BodyParts,
+                TItem AddonNodes,
                 TItem ArmorAddons,
                 TItem Locations,
                 TItem DefaultObjects,
@@ -1176,6 +1186,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FormLists, new StarfieldGroup.Mask<TItem>(FormLists));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Perks, new StarfieldGroup.Mask<TItem>(Perks));
                 this.BodyParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BodyParts, new StarfieldGroup.Mask<TItem>(BodyParts));
+                this.AddonNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AddonNodes, new StarfieldGroup.Mask<TItem>(AddonNodes));
                 this.ArmorAddons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ArmorAddons, new StarfieldGroup.Mask<TItem>(ArmorAddons));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Locations, new StarfieldGroup.Mask<TItem>(Locations));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
@@ -1286,6 +1297,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Perks { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BodyParts { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AddonNodes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ArmorAddons { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Locations { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
@@ -1397,6 +1409,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.Perks, rhs.Perks)) return false;
                 if (!object.Equals(this.BodyParts, rhs.BodyParts)) return false;
+                if (!object.Equals(this.AddonNodes, rhs.AddonNodes)) return false;
                 if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
                 if (!object.Equals(this.Locations, rhs.Locations)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
@@ -1501,6 +1514,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.FormLists);
                 hash.Add(this.Perks);
                 hash.Add(this.BodyParts);
+                hash.Add(this.AddonNodes);
                 hash.Add(this.ArmorAddons);
                 hash.Add(this.Locations);
                 hash.Add(this.DefaultObjects);
@@ -1923,6 +1937,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.BodyParts.Overall)) return false;
                     if (this.BodyParts.Specific != null && !this.BodyParts.Specific.All(eval)) return false;
+                }
+                if (AddonNodes != null)
+                {
+                    if (!eval(this.AddonNodes.Overall)) return false;
+                    if (this.AddonNodes.Specific != null && !this.AddonNodes.Specific.All(eval)) return false;
                 }
                 if (ArmorAddons != null)
                 {
@@ -2426,6 +2445,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.BodyParts.Overall)) return true;
                     if (this.BodyParts.Specific != null && this.BodyParts.Specific.Any(eval)) return true;
                 }
+                if (AddonNodes != null)
+                {
+                    if (eval(this.AddonNodes.Overall)) return true;
+                    if (this.AddonNodes.Specific != null && this.AddonNodes.Specific.Any(eval)) return true;
+                }
                 if (ArmorAddons != null)
                 {
                     if (eval(this.ArmorAddons.Overall)) return true;
@@ -2619,6 +2643,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.Perks = this.Perks == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
                 obj.BodyParts = this.BodyParts == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BodyParts.Overall), this.BodyParts.Specific?.Translate(eval));
+                obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
                 obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
                 obj.Locations = this.Locations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
@@ -2973,6 +2998,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         BodyParts?.Print(sb);
                     }
+                    if (printMask?.AddonNodes?.Overall ?? true)
+                    {
+                        AddonNodes?.Print(sb);
+                    }
                     if (printMask?.ArmorAddons?.Overall ?? true)
                     {
                         ArmorAddons?.Print(sb);
@@ -3156,6 +3185,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>? Perks;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BodyPartData.ErrorMask>?>? BodyParts;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Location.ErrorMask>?>? Locations;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
@@ -3342,6 +3372,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Perks;
                     case StarfieldMod_FieldIndex.BodyParts:
                         return BodyParts;
+                    case StarfieldMod_FieldIndex.AddonNodes:
+                        return AddonNodes;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         return ArmorAddons;
                     case StarfieldMod_FieldIndex.Locations:
@@ -3628,6 +3660,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.BodyParts:
                         this.BodyParts = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BodyPartData.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.AddonNodes:
+                        this.AddonNodes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AddonNode.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
@@ -3936,6 +3971,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.BodyParts:
                         this.BodyParts = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BodyPartData.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.AddonNodes:
+                        this.AddonNodes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AddonNode.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
                         break;
@@ -4083,6 +4121,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (FormLists != null) return true;
                 if (Perks != null) return true;
                 if (BodyParts != null) return true;
+                if (AddonNodes != null) return true;
                 if (ArmorAddons != null) return true;
                 if (Locations != null) return true;
                 if (DefaultObjects != null) return true;
@@ -4207,6 +4246,7 @@ namespace Mutagen.Bethesda.Starfield
                 FormLists?.Print(sb);
                 Perks?.Print(sb);
                 BodyParts?.Print(sb);
+                AddonNodes?.Print(sb);
                 ArmorAddons?.Print(sb);
                 Locations?.Print(sb);
                 DefaultObjects?.Print(sb);
@@ -4314,6 +4354,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
                 ret.BodyParts = this.BodyParts.Combine(rhs.BodyParts, (l, r) => l.Combine(r));
+                ret.AddonNodes = this.AddonNodes.Combine(rhs.AddonNodes, (l, r) => l.Combine(r));
                 ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
                 ret.Locations = this.Locations.Combine(rhs.Locations, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
@@ -4436,6 +4477,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<FormList.TranslationMask>? FormLists;
             public StarfieldGroup.TranslationMask<Perk.TranslationMask>? Perks;
             public StarfieldGroup.TranslationMask<BodyPartData.TranslationMask>? BodyParts;
+            public StarfieldGroup.TranslationMask<AddonNode.TranslationMask>? AddonNodes;
             public StarfieldGroup.TranslationMask<ArmorAddon.TranslationMask>? ArmorAddons;
             public StarfieldGroup.TranslationMask<Location.TranslationMask>? Locations;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
@@ -4559,6 +4601,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
                 ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
                 ret.Add((BodyParts != null ? BodyParts.OnOverall : DefaultOn, BodyParts?.GetCrystal()));
+                ret.Add((AddonNodes != null ? AddonNodes.OnOverall : DefaultOn, AddonNodes?.GetCrystal()));
                 ret.Add((ArmorAddons != null ? ArmorAddons.OnOverall : DefaultOn, ArmorAddons?.GetCrystal()));
                 ret.Add((Locations != null ? Locations.OnOverall : DefaultOn, Locations?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
@@ -4703,6 +4746,7 @@ namespace Mutagen.Bethesda.Starfield
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
             _BodyParts_Object = new StarfieldGroup<BodyPartData>(this);
+            _AddonNodes_Object = new StarfieldGroup<AddonNode>(this);
             _ArmorAddons_Object = new StarfieldGroup<ArmorAddon>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -5044,6 +5088,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BodyParts.RecordCache.Set(rhsMod.BodyParts.RecordCache.Items);
             }
+            if (mask?.AddonNodes ?? true)
+            {
+                this.AddonNodes.RecordCache.Set(rhsMod.AddonNodes.RecordCache.Items);
+            }
             if (mask?.ArmorAddons ?? true)
             {
                 this.ArmorAddons.RecordCache.Set(rhsMod.ArmorAddons.RecordCache.Items);
@@ -5212,6 +5260,7 @@ namespace Mutagen.Bethesda.Starfield
             count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
             count += BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
             count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
@@ -5584,6 +5633,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<FormList> FormLists { get; }
         new StarfieldGroup<Perk> Perks { get; }
         new StarfieldGroup<BodyPartData> BodyParts { get; }
+        new StarfieldGroup<AddonNode> AddonNodes { get; }
         new StarfieldGroup<ArmorAddon> ArmorAddons { get; }
         new StarfieldGroup<Location> Locations { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
@@ -5702,6 +5752,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IFormListGetter> FormLists { get; }
         IStarfieldGroupGetter<IPerkGetter> Perks { get; }
         IStarfieldGroupGetter<IBodyPartDataGetter> BodyParts { get; }
+        IStarfieldGroupGetter<IAddonNodeGetter> AddonNodes { get; }
         IStarfieldGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
         IStarfieldGroupGetter<ILocationGetter> Locations { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
@@ -6383,26 +6434,27 @@ namespace Mutagen.Bethesda.Starfield
         FormLists = 76,
         Perks = 77,
         BodyParts = 78,
-        ArmorAddons = 79,
-        Locations = 80,
-        DefaultObjects = 81,
-        Outfits = 82,
-        AimModels = 83,
-        AimAssistModels = 84,
-        Layers = 85,
-        ConstructibleObjects = 86,
-        ObjectModifications = 87,
-        InstanceNamingRules = 88,
-        AttractionRules = 89,
-        Resources = 90,
-        BiomeSwaps = 91,
-        SnapTemplates = 92,
-        Planets = 93,
-        ConditionRecords = 94,
-        SurfacePatternStyles = 95,
-        TerminalMenus = 96,
-        LegendaryItems = 97,
-        ActorValueModulations = 98,
+        AddonNodes = 79,
+        ArmorAddons = 80,
+        Locations = 81,
+        DefaultObjects = 82,
+        Outfits = 83,
+        AimModels = 84,
+        AimAssistModels = 85,
+        Layers = 86,
+        ConstructibleObjects = 87,
+        ObjectModifications = 88,
+        InstanceNamingRules = 89,
+        AttractionRules = 90,
+        Resources = 91,
+        BiomeSwaps = 92,
+        SnapTemplates = 93,
+        Planets = 94,
+        ConditionRecords = 95,
+        SurfacePatternStyles = 96,
+        TerminalMenus = 97,
+        LegendaryItems = 98,
+        ActorValueModulations = 99,
     }
     #endregion
 
@@ -6413,9 +6465,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 99;
+        public const ushort AdditionalFieldCount = 100;
 
-        public const ushort FieldCount = 99;
+        public const ushort FieldCount = 100;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -6559,6 +6611,7 @@ namespace Mutagen.Bethesda.Starfield
             item.FormLists.Clear();
             item.Perks.Clear();
             item.BodyParts.Clear();
+            item.AddonNodes.Clear();
             item.ArmorAddons.Clear();
             item.Locations.Clear();
             item.DefaultObjects.Clear();
@@ -6651,6 +6704,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.FormLists.RemapLinks(mapping);
             obj.Perks.RemapLinks(mapping);
             obj.BodyParts.RemapLinks(mapping);
+            obj.AddonNodes.RemapLinks(mapping);
             obj.ArmorAddons.RemapLinks(mapping);
             obj.Locations.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
@@ -6778,6 +6832,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.FormLists.Remove(keys);
             obj.Perks.Remove(keys);
             obj.BodyParts.Remove(keys);
+            obj.AddonNodes.Remove(keys);
             obj.ArmorAddons.Remove(keys);
             obj.Locations.Remove(keys);
             obj.DefaultObjects.Remove(keys);
@@ -7450,6 +7505,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
                     obj.BodyParts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    obj.AddonNodes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -8337,6 +8400,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.AddonNodes is IAssetLinkContainer AddonNodeslinkCont)
+            {
+                foreach (var item in AddonNodeslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.ArmorAddons is IAssetLinkContainer ArmorAddonslinkCont)
             {
                 foreach (var item in ArmorAddonslinkCont.EnumerateListedAssetLinks())
@@ -8448,6 +8518,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.FormLists.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BodyParts.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AddonNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ObjectModifications.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -8579,6 +8650,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
             ret.BodyParts = MaskItemExt.Factory(item.BodyParts.GetEqualsMask(rhs.BodyParts, include), include);
+            ret.AddonNodes = MaskItemExt.Factory(item.AddonNodes.GetEqualsMask(rhs.AddonNodes, include), include);
             ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
             ret.Locations = MaskItemExt.Factory(item.Locations.GetEqualsMask(rhs.Locations, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
@@ -8958,6 +9030,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.BodyParts?.Overall ?? true)
             {
                 item.BodyParts?.Print(sb, "BodyParts");
+            }
+            if (printMask?.AddonNodes?.Overall ?? true)
+            {
+                item.AddonNodes?.Print(sb, "AddonNodes");
             }
             if (printMask?.ArmorAddons?.Overall ?? true)
             {
@@ -9680,6 +9756,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isBodyPartsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AddonNodes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AddonNodes, rhs.AddonNodes, out var lhsAddonNodes, out var rhsAddonNodes, out var isAddonNodesEqual))
+                {
+                    if (!object.Equals(lhsAddonNodes, rhsAddonNodes)) return false;
+                }
+                else if (!isAddonNodesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ArmorAddons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ArmorAddons, rhs.ArmorAddons, out var lhsArmorAddons, out var rhsArmorAddons, out var isArmorAddonsEqual))
@@ -9925,6 +10009,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.FormLists);
             hash.Add(item.Perks);
             hash.Add(item.BodyParts);
+            hash.Add(item.AddonNodes);
             hash.Add(item.ArmorAddons);
             hash.Add(item.Locations);
             hash.Add(item.DefaultObjects);
@@ -10352,6 +10437,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
                     return obj.BodyParts;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    return obj.AddonNodes;
                 case "ArmorAddon":
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
@@ -10478,7 +10568,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[98];
+            Stream[] outputStreams = new Stream[99];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10558,26 +10648,27 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.FormLists, 75, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Perks, 76, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BodyParts, 77, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 78, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 79, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 80, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 81, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 83, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 84, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 85, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 86, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 87, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 88, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 89, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 90, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 91, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 92, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 93, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 94, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 95, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 96, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 97, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, 78, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 79, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 80, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 81, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 82, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 84, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 85, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 87, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 88, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 89, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 90, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 91, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 92, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 93, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 94, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 95, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 96, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 97, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 98, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10899,6 +10990,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.BodyParts.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -11282,6 +11377,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.BodyParts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12089,6 +12188,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
                     foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13121,6 +13229,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.BodyParts,
                 groupGetter: (m) => m.BodyParts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AddonNode, IAddonNodeGetter>(
+                srcGroup: obj.AddonNodes,
+                type: typeof(IAddonNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AddonNodes,
+                groupGetter: (m) => m.AddonNodes))
             {
                 yield return item;
             }
@@ -14413,6 +14530,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AddonNode, IAddonNodeGetter>(
+                        srcGroup: obj.AddonNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AddonNodes,
+                        groupGetter: (m) => m.AddonNodes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "ArmorAddon":
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
@@ -15257,6 +15388,13 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
+                }
+                if (obj.AddonNodes is IAssetLinkContainerGetter AddonNodeslinkCont)
+                {
+                    foreach (var item in AddonNodeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
                 if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
                 {
@@ -16903,6 +17041,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AddonNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AddonNodes);
+                try
+                {
+                    item.AddonNodes.DeepCopyIn(
+                        rhs: rhs.AddonNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AddonNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ArmorAddons) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ArmorAddons);
@@ -17471,6 +17629,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool FormLists;
         public bool Perks;
         public bool BodyParts;
+        public bool AddonNodes;
         public bool ArmorAddons;
         public bool Locations;
         public bool DefaultObjects;
@@ -17574,6 +17733,7 @@ namespace Mutagen.Bethesda.Starfield
             FormLists = defaultValue;
             Perks = defaultValue;
             BodyParts = defaultValue;
+            AddonNodes = defaultValue;
             ArmorAddons = defaultValue;
             Locations = defaultValue;
             DefaultObjects = defaultValue;
@@ -18507,6 +18667,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)BodyPartsItem).BinaryWriteTranslator).Write<IBodyPartDataGetter>(
                         item: BodyPartsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AddonNodes ?? true)
+            {
+                var AddonNodesItem = item.AddonNodes;
+                if (AddonNodesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AddonNodesItem).BinaryWriteTranslator).Write<IAddonNodeGetter>(
+                        item: AddonNodesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19883,6 +20054,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.BodyParts;
                 }
+                case RecordTypeInts.ADDN:
+                {
+                    if (importMask?.AddonNodes ?? true)
+                    {
+                        item.AddonNodes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.AddonNodes;
+                }
                 case RecordTypeInts.ARMA:
                 {
                     if (importMask?.ArmorAddons ?? true)
@@ -20724,6 +20909,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? StarfieldGroupBinaryOverlay<IBodyPartDataGetter>.StarfieldGroupFactory(_stream, _BodyPartsLocations, _package) : default;
         public IStarfieldGroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new StarfieldGroup<BodyPartData>(this);
         #endregion
+        #region AddonNodes
+        private List<RangeInt64>? _AddonNodesLocations;
+        private IStarfieldGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? StarfieldGroupBinaryOverlay<IAddonNodeGetter>.StarfieldGroupFactory(_stream, _AddonNodesLocations, _package) : default;
+        public IStarfieldGroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new StarfieldGroup<AddonNode>(this);
+        #endregion
         #region ArmorAddons
         private List<RangeInt64>? _ArmorAddonsLocations;
         private IStarfieldGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? StarfieldGroupBinaryOverlay<IArmorAddonGetter>.StarfieldGroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
@@ -21384,6 +21574,12 @@ namespace Mutagen.Bethesda.Starfield
                     _BodyPartsLocations ??= new();
                     _BodyPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.BodyParts;
+                }
+                case RecordTypeInts.ADDN:
+                {
+                    _AddonNodesLocations ??= new();
+                    _AddonNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.ARMA:
                 {

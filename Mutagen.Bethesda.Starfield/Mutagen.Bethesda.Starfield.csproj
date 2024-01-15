@@ -2035,6 +2035,7 @@
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AddonNode.cs" />
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -2074,7 +2075,9 @@
     <Compile Include="Records\Major Records\BodyData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\BodyPart.cs" />
+    <Compile Include="Records\Major Records\BodyPart.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
