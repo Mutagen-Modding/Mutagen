@@ -131,6 +131,7 @@ namespace Mutagen.Bethesda.Starfield
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Waters_Object = new StarfieldGroup<Water>(this);
             _EffectShaders_Object = new StarfieldGroup<EffectShader>(this);
+            _Explosions_Object = new StarfieldGroup<Explosion>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
@@ -663,6 +664,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IEffectShaderGetter> IStarfieldModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
+        #region Explosions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Explosion> _Explosions_Object;
+        public StarfieldGroup<Explosion> Explosions => _Explosions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IExplosionGetter> IStarfieldModGetter.Explosions => _Explosions_Object;
+        #endregion
         #region Debris
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Debris> _Debris_Object;
@@ -935,6 +943,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Waters = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.EffectShaders = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Explosions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1033,6 +1042,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AnimatedObjects,
                 TItem Waters,
                 TItem EffectShaders,
+                TItem Explosions,
                 TItem Debris,
                 TItem FormLists,
                 TItem Perks,
@@ -1129,6 +1139,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObjects, new StarfieldGroup.Mask<TItem>(AnimatedObjects));
                 this.Waters = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Waters, new StarfieldGroup.Mask<TItem>(Waters));
                 this.EffectShaders = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(EffectShaders, new StarfieldGroup.Mask<TItem>(EffectShaders));
+                this.Explosions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Explosions, new StarfieldGroup.Mask<TItem>(Explosions));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FormLists, new StarfieldGroup.Mask<TItem>(FormLists));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Perks, new StarfieldGroup.Mask<TItem>(Perks));
@@ -1235,6 +1246,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Waters { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? EffectShaders { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Explosions { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Perks { get; set; }
@@ -1342,6 +1354,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 if (!object.Equals(this.Waters, rhs.Waters)) return false;
                 if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
+                if (!object.Equals(this.Explosions, rhs.Explosions)) return false;
                 if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.Perks, rhs.Perks)) return false;
@@ -1442,6 +1455,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.AnimatedObjects);
                 hash.Add(this.Waters);
                 hash.Add(this.EffectShaders);
+                hash.Add(this.Explosions);
                 hash.Add(this.Debris);
                 hash.Add(this.FormLists);
                 hash.Add(this.Perks);
@@ -1832,6 +1846,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.EffectShaders.Overall)) return false;
                     if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.All(eval)) return false;
+                }
+                if (Explosions != null)
+                {
+                    if (!eval(this.Explosions.Overall)) return false;
+                    if (this.Explosions.Specific != null && !this.Explosions.Specific.All(eval)) return false;
                 }
                 if (Debris != null)
                 {
@@ -2315,6 +2334,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.EffectShaders.Overall)) return true;
                     if (this.EffectShaders.Specific != null && this.EffectShaders.Specific.Any(eval)) return true;
                 }
+                if (Explosions != null)
+                {
+                    if (eval(this.Explosions.Overall)) return true;
+                    if (this.Explosions.Specific != null && this.Explosions.Specific.Any(eval)) return true;
+                }
                 if (Debris != null)
                 {
                     if (eval(this.Debris.Overall)) return true;
@@ -2516,6 +2540,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
                 obj.Waters = this.Waters == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
                 obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
+                obj.Explosions = this.Explosions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
                 obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.Perks = this.Perks == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
@@ -2845,6 +2870,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         EffectShaders?.Print(sb);
                     }
+                    if (printMask?.Explosions?.Overall ?? true)
+                    {
+                        Explosions?.Print(sb);
+                    }
                     if (printMask?.Debris?.Overall ?? true)
                     {
                         Debris?.Print(sb);
@@ -3033,6 +3062,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Water.ErrorMask>?>? Waters;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Explosion.ErrorMask>?>? Explosions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>? Perks;
@@ -3208,6 +3238,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Waters;
                     case StarfieldMod_FieldIndex.EffectShaders:
                         return EffectShaders;
+                    case StarfieldMod_FieldIndex.Explosions:
+                        return Explosions;
                     case StarfieldMod_FieldIndex.Debris:
                         return Debris;
                     case StarfieldMod_FieldIndex.FormLists:
@@ -3479,6 +3511,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.EffectShaders:
                         this.EffectShaders = new MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Explosions:
+                        this.Explosions = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Explosion.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Debris:
                         this.Debris = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>(ex, null);
@@ -3775,6 +3810,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.EffectShaders:
                         this.EffectShaders = (MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectShader.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Explosions:
+                        this.Explosions = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Explosion.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Debris:
                         this.Debris = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>?)obj;
                         break;
@@ -3924,6 +3962,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (AnimatedObjects != null) return true;
                 if (Waters != null) return true;
                 if (EffectShaders != null) return true;
+                if (Explosions != null) return true;
                 if (Debris != null) return true;
                 if (FormLists != null) return true;
                 if (Perks != null) return true;
@@ -4044,6 +4083,7 @@ namespace Mutagen.Bethesda.Starfield
                 AnimatedObjects?.Print(sb);
                 Waters?.Print(sb);
                 EffectShaders?.Print(sb);
+                Explosions?.Print(sb);
                 Debris?.Print(sb);
                 FormLists?.Print(sb);
                 Perks?.Print(sb);
@@ -4147,6 +4187,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
                 ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
+                ret.Explosions = this.Explosions.Combine(rhs.Explosions, (l, r) => l.Combine(r));
                 ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
@@ -4265,6 +4306,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             public StarfieldGroup.TranslationMask<Water.TranslationMask>? Waters;
             public StarfieldGroup.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
+            public StarfieldGroup.TranslationMask<Explosion.TranslationMask>? Explosions;
             public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
             public StarfieldGroup.TranslationMask<FormList.TranslationMask>? FormLists;
             public StarfieldGroup.TranslationMask<Perk.TranslationMask>? Perks;
@@ -4384,6 +4426,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
                 ret.Add((Waters != null ? Waters.OnOverall : DefaultOn, Waters?.GetCrystal()));
                 ret.Add((EffectShaders != null ? EffectShaders.OnOverall : DefaultOn, EffectShaders?.GetCrystal()));
+                ret.Add((Explosions != null ? Explosions.OnOverall : DefaultOn, Explosions?.GetCrystal()));
                 ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
                 ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
                 ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
@@ -4524,6 +4567,7 @@ namespace Mutagen.Bethesda.Starfield
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Waters_Object = new StarfieldGroup<Water>(this);
             _EffectShaders_Object = new StarfieldGroup<EffectShader>(this);
+            _Explosions_Object = new StarfieldGroup<Explosion>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
@@ -4840,6 +4884,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.EffectShaders.RecordCache.Set(rhsMod.EffectShaders.RecordCache.Items);
             }
+            if (mask?.Explosions ?? true)
+            {
+                this.Explosions.RecordCache.Set(rhsMod.Explosions.RecordCache.Items);
+            }
             if (mask?.Debris ?? true)
             {
                 this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
@@ -5013,6 +5061,7 @@ namespace Mutagen.Bethesda.Starfield
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
             count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Explosions.RecordCache.Count > 0 ? 1 : default(uint);
             count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
             count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
@@ -5381,6 +5430,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<AnimatedObject> AnimatedObjects { get; }
         new StarfieldGroup<Water> Waters { get; }
         new StarfieldGroup<EffectShader> EffectShaders { get; }
+        new StarfieldGroup<Explosion> Explosions { get; }
         new StarfieldGroup<Debris> Debris { get; }
         new StarfieldGroup<FormList> FormLists { get; }
         new StarfieldGroup<Perk> Perks { get; }
@@ -5495,6 +5545,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IStarfieldGroupGetter<IWaterGetter> Waters { get; }
         IStarfieldGroupGetter<IEffectShaderGetter> EffectShaders { get; }
+        IStarfieldGroupGetter<IExplosionGetter> Explosions { get; }
         IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
         IStarfieldGroupGetter<IFormListGetter> FormLists { get; }
         IStarfieldGroupGetter<IPerkGetter> Perks { get; }
@@ -6172,29 +6223,30 @@ namespace Mutagen.Bethesda.Starfield
         AnimatedObjects = 69,
         Waters = 70,
         EffectShaders = 71,
-        Debris = 72,
-        FormLists = 73,
-        Perks = 74,
-        ArmorAddons = 75,
-        Locations = 76,
-        DefaultObjects = 77,
-        Outfits = 78,
-        AimModels = 79,
-        AimAssistModels = 80,
-        Layers = 81,
-        ConstructibleObjects = 82,
-        ObjectModifications = 83,
-        InstanceNamingRules = 84,
-        AttractionRules = 85,
-        Resources = 86,
-        BiomeSwaps = 87,
-        SnapTemplates = 88,
-        Planets = 89,
-        ConditionRecords = 90,
-        SurfacePatternStyles = 91,
-        TerminalMenus = 92,
-        LegendaryItems = 93,
-        ActorValueModulations = 94,
+        Explosions = 72,
+        Debris = 73,
+        FormLists = 74,
+        Perks = 75,
+        ArmorAddons = 76,
+        Locations = 77,
+        DefaultObjects = 78,
+        Outfits = 79,
+        AimModels = 80,
+        AimAssistModels = 81,
+        Layers = 82,
+        ConstructibleObjects = 83,
+        ObjectModifications = 84,
+        InstanceNamingRules = 85,
+        AttractionRules = 86,
+        Resources = 87,
+        BiomeSwaps = 88,
+        SnapTemplates = 89,
+        Planets = 90,
+        ConditionRecords = 91,
+        SurfacePatternStyles = 92,
+        TerminalMenus = 93,
+        LegendaryItems = 94,
+        ActorValueModulations = 95,
     }
     #endregion
 
@@ -6205,9 +6257,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 95;
+        public const ushort AdditionalFieldCount = 96;
 
-        public const ushort FieldCount = 95;
+        public const ushort FieldCount = 96;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -6344,6 +6396,7 @@ namespace Mutagen.Bethesda.Starfield
             item.AnimatedObjects.Clear();
             item.Waters.Clear();
             item.EffectShaders.Clear();
+            item.Explosions.Clear();
             item.Debris.Clear();
             item.FormLists.Clear();
             item.Perks.Clear();
@@ -6434,6 +6487,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AnimatedObjects.RemapLinks(mapping);
             obj.Waters.RemapLinks(mapping);
             obj.EffectShaders.RemapLinks(mapping);
+            obj.Explosions.RemapLinks(mapping);
             obj.FormLists.RemapLinks(mapping);
             obj.Perks.RemapLinks(mapping);
             obj.ArmorAddons.RemapLinks(mapping);
@@ -6556,6 +6610,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AnimatedObjects.Remove(keys);
             obj.Waters.Remove(keys);
             obj.EffectShaders.Remove(keys);
+            obj.Explosions.Remove(keys);
             obj.Debris.Remove(keys);
             obj.FormLists.Remove(keys);
             obj.Perks.Remove(keys);
@@ -7175,6 +7230,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IEffectShader":
                 case "IEffectShaderInternal":
                     obj.EffectShaders.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    obj.Explosions.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -8054,6 +8117,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Explosions is IAssetLinkContainer ExplosionslinkCont)
+            {
+                foreach (var item in ExplosionslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             {
                 foreach (var item in obj.Debris.EnumerateListedAssetLinks())
                 {
@@ -8179,6 +8249,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.EffectShaders.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Explosions.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.FormLists.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -8306,6 +8377,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
             ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
             ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
+            ret.Explosions = MaskItemExt.Factory(item.Explosions.GetEqualsMask(rhs.Explosions, include), include);
             ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
@@ -8660,6 +8732,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.EffectShaders?.Overall ?? true)
             {
                 item.EffectShaders?.Print(sb, "EffectShaders");
+            }
+            if (printMask?.Explosions?.Overall ?? true)
+            {
+                item.Explosions?.Print(sb, "Explosions");
             }
             if (printMask?.Debris?.Overall ?? true)
             {
@@ -9338,6 +9414,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isEffectShadersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Explosions) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Explosions, rhs.Explosions, out var lhsExplosions, out var rhsExplosions, out var isExplosionsEqual))
+                {
+                    if (!object.Equals(lhsExplosions, rhsExplosions)) return false;
+                }
+                else if (!isExplosionsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Debris, rhs.Debris, out var lhsDebris, out var rhsDebris, out var isDebrisEqual))
@@ -9600,6 +9684,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.AnimatedObjects);
             hash.Add(item.Waters);
             hash.Add(item.EffectShaders);
+            hash.Add(item.Explosions);
             hash.Add(item.Debris);
             hash.Add(item.FormLists);
             hash.Add(item.Perks);
@@ -9995,6 +10080,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IEffectShader":
                 case "IEffectShaderInternal":
                     return obj.EffectShaders;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    return obj.Explosions;
                 case "Debris":
                 case "IDebrisGetter":
                 case "IDebris":
@@ -10136,7 +10226,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[94];
+            Stream[] outputStreams = new Stream[95];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10209,29 +10299,30 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 68, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Waters, 69, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.EffectShaders, 70, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 71, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 72, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 73, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 74, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 75, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 76, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 77, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 78, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 79, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 80, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 81, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 83, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 84, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 85, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 86, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 87, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 88, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 89, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 90, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 91, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 92, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 93, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, 71, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 72, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 73, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 74, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 75, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 76, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 77, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 78, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 79, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 80, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 81, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 82, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 84, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 85, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 87, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 88, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 89, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 90, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 91, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 92, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 93, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 94, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10533,6 +10624,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.EffectShaders.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -10896,6 +10991,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.EffectShaders.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11652,6 +11751,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IEffectShader":
                 case "IEffectShaderInternal":
                     foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in obj.Explosions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12648,6 +12756,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.EffectShaders,
                 groupGetter: (m) => m.EffectShaders))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Explosion, IExplosionGetter>(
+                srcGroup: obj.Explosions,
+                type: typeof(IExplosionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Explosions,
+                groupGetter: (m) => m.Explosions))
             {
                 yield return item;
             }
@@ -13869,6 +13986,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Explosion, IExplosionGetter>(
+                        srcGroup: obj.Explosions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Explosions,
+                        groupGetter: (m) => m.Explosions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Debris":
                 case "IDebrisGetter":
                 case "IDebris":
@@ -14726,6 +14857,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.EffectShaders is IAssetLinkContainerGetter EffectShaderslinkCont)
                 {
                     foreach (var item in EffectShaderslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Explosions is IAssetLinkContainerGetter ExplosionslinkCont)
+                {
+                    foreach (var item in ExplosionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -16250,6 +16388,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Explosions) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Explosions);
+                try
+                {
+                    item.Explosions.DeepCopyIn(
+                        rhs: rhs.Explosions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Explosions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Debris);
@@ -16871,6 +17029,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool AnimatedObjects;
         public bool Waters;
         public bool EffectShaders;
+        public bool Explosions;
         public bool Debris;
         public bool FormLists;
         public bool Perks;
@@ -16970,6 +17129,7 @@ namespace Mutagen.Bethesda.Starfield
             AnimatedObjects = defaultValue;
             Waters = defaultValue;
             EffectShaders = defaultValue;
+            Explosions = defaultValue;
             Debris = defaultValue;
             FormLists = defaultValue;
             Perks = defaultValue;
@@ -17829,6 +17989,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
                         item: EffectShadersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Explosions ?? true)
+            {
+                var ExplosionsItem = item.Explosions;
+                if (ExplosionsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ExplosionsItem).BinaryWriteTranslator).Write<IExplosionGetter>(
+                        item: ExplosionsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19140,6 +19311,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.EffectShaders;
                 }
+                case RecordTypeInts.EXPL:
+                {
+                    if (importMask?.Explosions ?? true)
+                    {
+                        item.Explosions.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Explosions;
+                }
                 case RecordTypeInts.DEBR:
                 {
                     if (importMask?.Debris ?? true)
@@ -19988,6 +20173,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? StarfieldGroupBinaryOverlay<IEffectShaderGetter>.StarfieldGroupFactory(_stream, _EffectShadersLocations, _package) : default;
         public IStarfieldGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new StarfieldGroup<EffectShader>(this);
         #endregion
+        #region Explosions
+        private List<RangeInt64>? _ExplosionsLocations;
+        private IStarfieldGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? StarfieldGroupBinaryOverlay<IExplosionGetter>.StarfieldGroupFactory(_stream, _ExplosionsLocations, _package) : default;
+        public IStarfieldGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new StarfieldGroup<Explosion>(this);
+        #endregion
         #region Debris
         private List<RangeInt64>? _DebrisLocations;
         private IStarfieldGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? StarfieldGroupBinaryOverlay<IDebrisGetter>.StarfieldGroupFactory(_stream, _DebrisLocations, _package) : default;
@@ -20621,6 +20811,12 @@ namespace Mutagen.Bethesda.Starfield
                     _EffectShadersLocations ??= new();
                     _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.EffectShaders;
+                }
+                case RecordTypeInts.EXPL:
+                {
+                    _ExplosionsLocations ??= new();
+                    _ExplosionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {

@@ -306,15 +306,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Resistances
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ArmorResistance>? _Resistances;
-        public ExtendedList<ArmorResistance>? Resistances
+        private ExtendedList<DamageTypeValue>? _Resistances;
+        public ExtendedList<DamageTypeValue>? Resistances
         {
             get => this._Resistances;
             set => this._Resistances = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IArmorResistanceGetter>? IArmorGetter.Resistances => _Resistances;
+        IReadOnlyList<IDamageTypeValueGetter>? IArmorGetter.Resistances => _Resistances;
         #endregion
 
         #endregion
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BaseAddonIndex = initialValue;
                 this.StaggerRating = initialValue;
                 this.Unused = initialValue;
-                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
                 this.Voice = new MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>(initialValue, new ArmorCategoryValue.Mask<TItem>(initialValue));
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BaseAddonIndex = BaseAddonIndex;
                 this.StaggerRating = StaggerRating;
                 this.Unused = Unused;
-                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(Resistances, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(Resistances, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
                 this.Voice = new MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>(Voice, new ArmorCategoryValue.Mask<TItem>(Voice));
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem BaseAddonIndex;
             public TItem StaggerRating;
             public TItem Unused;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>? Resistances;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>? Resistances;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
             public MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>? Voice { get; set; }
@@ -964,14 +964,14 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unused = eval(this.Unused);
                 if (Resistances != null)
                 {
-                    obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>?>(eval(this.Resistances.Overall), Enumerable.Empty<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>());
+                    obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>?>(eval(this.Resistances.Overall), Enumerable.Empty<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>());
                     if (Resistances.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>();
                         obj.Resistances.Specific = l;
                         foreach (var item in Resistances.Specific)
                         {
-                            MaskItemIndexed<R, ArmorResistance.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ArmorResistance.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DamageTypeValue.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DamageTypeValue.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? BaseAddonIndex;
             public Exception? StaggerRating;
             public Exception? Unused;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>? Resistances;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>? Resistances;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
             public MaskItem<Exception?, ArmorCategoryValue.ErrorMask?>? Voice;
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.Unused = ex;
                         break;
                     case Armor_FieldIndex.Resistances:
-                        this.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(ex, null);
+                        this.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>(ex, null);
                         break;
                     case Armor_FieldIndex.AttachParentSlots:
                         this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.Unused = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.Resistances:
-                        this.Resistances = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>)obj;
+                        this.Resistances = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>)obj;
                         break;
                     case Armor_FieldIndex.AttachParentSlots:
                         this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.BaseAddonIndex = this.BaseAddonIndex.Combine(rhs.BaseAddonIndex);
                 ret.StaggerRating = this.StaggerRating.Combine(rhs.StaggerRating);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), Noggog.ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
+                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), Noggog.ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
                 ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.Voice = this.Voice.Combine(rhs.Voice, (l, r) => l.Combine(r));
@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool BaseAddonIndex;
             public bool StaggerRating;
             public bool Unused;
-            public ArmorResistance.TranslationMask? Resistances;
+            public DamageTypeValue.TranslationMask? Resistances;
             public bool AttachParentSlots;
             public ObjectTemplate.TranslationMask? ObjectTemplates;
             public ArmorCategoryValue.TranslationMask? Voice;
@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Starfield
         new UInt16 BaseAddonIndex { get; set; }
         new Byte StaggerRating { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new ExtendedList<ArmorResistance>? Resistances { get; set; }
+        new ExtendedList<DamageTypeValue>? Resistances { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new ExtendedList<ObjectTemplate<Armor.Property>>? ObjectTemplates { get; set; }
         new ArmorCategoryValue? Voice { get; set; }
@@ -2208,7 +2208,7 @@ namespace Mutagen.Bethesda.Starfield
         UInt16 BaseAddonIndex { get; }
         Byte StaggerRating { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        IReadOnlyList<IArmorResistanceGetter>? Resistances { get; }
+        IReadOnlyList<IDamageTypeValueGetter>? Resistances { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IReadOnlyList<IObjectTemplateGetter<Armor.Property>>? ObjectTemplates { get; }
         IArmorCategoryValueGetter? Voice { get; }
@@ -3228,7 +3228,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
             {
-                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ArmorResistanceCommon)((IArmorResistanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
+                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((DamageTypeValueCommon)((IDamageTypeValueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.AttachParentSlots) ?? true))
             {
@@ -3849,7 +3849,7 @@ namespace Mutagen.Bethesda.Starfield
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<ArmorResistance>();
+                            .ToExtendedList<DamageTypeValue>();
                     }
                     else
                     {
@@ -4276,14 +4276,14 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     item: item.Unused);
             }
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IArmorResistanceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDamageTypeValueGetter>.Instance.Write(
                 writer: writer,
                 items: item.Resistances,
                 recordType: translationParams.ConvertToCustom(RecordTypes.DAMA),
-                transl: (MutagenWriter subWriter, IArmorResistanceGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IDamageTypeValueGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((ArmorResistanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((DamageTypeValueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -4586,10 +4586,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Resistances = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ArmorResistance>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DamageTypeValue>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: ArmorResistance.TryCreateFromBinary)
-                        .CastExtendedList<ArmorResistance>();
+                            transl: DamageTypeValue.TryCreateFromBinary)
+                        .CastExtendedList<DamageTypeValue>();
                     return (int)Armor_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.APPR:
@@ -4797,7 +4797,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _Unused_IsSet => _FNAMLocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        public IReadOnlyList<IArmorResistanceGetter>? Resistances { get; private set; }
+        public IReadOnlyList<IDamageTypeValueGetter>? Resistances { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         public IReadOnlyList<IObjectTemplateGetter<Armor.Property>>? ObjectTemplates { get; private set; }
         public IArmorCategoryValueGetter? Voice { get; private set; }
@@ -5017,11 +5017,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IArmorResistanceGetter>(
+                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IDamageTypeValueGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
-                        getter: (s, p) => ArmorResistanceBinaryOverlay.ArmorResistanceFactory(s, p));
+                        getter: (s, p) => DamageTypeValueBinaryOverlay.DamageTypeValueFactory(s, p));
                     stream.Position += subLen;
                     return (int)Armor_FieldIndex.Resistances;
                 }

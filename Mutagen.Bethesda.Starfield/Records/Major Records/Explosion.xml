@@ -2,6 +2,48 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="ObjectEffect" recordType="EITM">
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+      <Data recordType="ENAM">
+        <Fields>
+          <FormLink name="Light" refName="Light" />
+          <RefDirect name="Sound1" refName="SoundReference" />
+          <RefDirect name="Sound2" refName="SoundReference" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <FormLink name="PlacedObject">
+            <Interface>IExplodeSpawn</Interface>
+          </FormLink>
+          <FormLink name="SpawnProjectile" refName="Projectile" />
+          <FormLink name="Condition" refName="ConditionRecord" />
+          <Float name="ENAMFloat1" />
+          <Float name="ENAMFloat2" />
+          <Float name="ENAMFloat3" />
+          <Float name="ENAMFloat4" />
+          <Float name="ENAMFloat5" />
+          <Float name="ENAMFloat6" />
+          <Int32 name="EnamInt1" />
+          <Int32 name="EnamInt2" />
+          <Float name="ENAMFloat7" />
+          <Int32 name="EnamInt3" />
+          <Int32 name="EnamInt4" />
+          <Float name="ENAMFloat8" />
+          <Float name="ENAMFloat9" />
+          <Float name="ENAMFloat10" />
+          <Int32 name="EnamInt5" />
+          <Float name="ENAMFloat11" />
+        </Fields>
+      </Data>
+      <RefList name="DamageType" refName="DamageTypeValue" recordType="DAMA" />
     </Fields>
   </Object>
 </Loqui>

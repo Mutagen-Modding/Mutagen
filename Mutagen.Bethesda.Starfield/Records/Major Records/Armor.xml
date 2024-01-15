@@ -56,7 +56,7 @@
           <ByteArray name="Unused" byteLength="3" nullable="false" />
         </Fields>
       </Data>
-      <RefList name="Resistances" refName="ArmorResistance" recordType="DAMA" />
+      <RefList name="Resistances" refName="DamageTypeValue" recordType="DAMA" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
@@ -85,15 +85,6 @@
     <Fields>
       <UInt16 name="AddonIndex" recordType="INDX" />
       <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
-    </Fields>
-  </Object>
-  <Object name="ArmorResistance" objType="Subrecord">
-    <Fields>
-      <FormLink name="DamageType" refName="DamageType" />
-      <UInt32 name="Value" />
-      <FormLink name="CurveTable" refName="CurveTable" >
-        <Versioning formVersion="112" action="Add" />
-      </FormLink>
     </Fields>
   </Object>
   <Object name="ArmorCategoryValue" objType="Subrecord">

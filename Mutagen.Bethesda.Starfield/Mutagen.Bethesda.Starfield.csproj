@@ -5609,9 +5609,6 @@
     <Compile Include="Records\Major Records\ArmorAddonModel_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorResistance_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MorphableObject_Generated.cs">
       <DependentUpon>MorphableObject.xml</DependentUpon>
     </Compile>
@@ -6355,6 +6352,9 @@
     </Compile>
     <Compile Include="Records\Major Records\NavmeshNode_Generated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DamageTypeValue_Generated.cs">
+      <DependentUpon>DamageTypeValue.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -38,13 +38,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ArmorResistance :
-        IArmorResistance,
-        IEquatable<IArmorResistanceGetter>,
-        ILoquiObjectSetter<ArmorResistance>
+    public partial class DamageTypeValue :
+        IDamageTypeValue,
+        IEquatable<IDamageTypeValueGetter>,
+        ILoquiObjectSetter<DamageTypeValue>
     {
         #region Ctor
-        public ArmorResistance()
+        public DamageTypeValue()
         {
             CustomCtor();
         }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Starfield
             set => _DamageType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IDamageTypeGetter> IArmorResistanceGetter.DamageType => this.DamageType;
+        IFormLinkGetter<IDamageTypeGetter> IDamageTypeValueGetter.DamageType => this.DamageType;
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Starfield
             set => _CurveTable.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ICurveTableGetter> IArmorResistanceGetter.CurveTable => this.CurveTable;
+        IFormLinkGetter<ICurveTableGetter> IDamageTypeValueGetter.CurveTable => this.CurveTable;
         #endregion
 
         #region To String
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorResistanceMixIn.Print(
+            DamageTypeValueMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -92,16 +92,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IArmorResistanceGetter rhs) return false;
-            return ((ArmorResistanceCommon)((IArmorResistanceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IDamageTypeValueGetter rhs) return false;
+            return ((DamageTypeValueCommon)((IDamageTypeValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IArmorResistanceGetter? obj)
+        public bool Equals(IDamageTypeValueGetter? obj)
         {
-            return ((ArmorResistanceCommon)((IArmorResistanceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((DamageTypeValueCommon)((IDamageTypeValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ArmorResistanceCommon)((IArmorResistanceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DamageTypeValueCommon)((IDamageTypeValueGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ArmorResistance.Mask<R>();
+                var ret = new DamageTypeValue.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -207,16 +207,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ArmorResistance.Mask<bool>? printMask = null)
+            public string Print(DamageTypeValue.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ArmorResistance.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DamageTypeValue.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ArmorResistance.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(DamageTypeValue.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.DamageType ?? true)
@@ -263,14 +263,14 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ArmorResistance_FieldIndex enu = (ArmorResistance_FieldIndex)index;
+                DamageTypeValue_FieldIndex enu = (DamageTypeValue_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorResistance_FieldIndex.DamageType:
+                    case DamageTypeValue_FieldIndex.DamageType:
                         return DamageType;
-                    case ArmorResistance_FieldIndex.Value:
+                    case DamageTypeValue_FieldIndex.Value:
                         return Value;
-                    case ArmorResistance_FieldIndex.CurveTable:
+                    case DamageTypeValue_FieldIndex.CurveTable:
                         return CurveTable;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,16 +279,16 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ArmorResistance_FieldIndex enu = (ArmorResistance_FieldIndex)index;
+                DamageTypeValue_FieldIndex enu = (DamageTypeValue_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorResistance_FieldIndex.DamageType:
+                    case DamageTypeValue_FieldIndex.DamageType:
                         this.DamageType = ex;
                         break;
-                    case ArmorResistance_FieldIndex.Value:
+                    case DamageTypeValue_FieldIndex.Value:
                         this.Value = ex;
                         break;
-                    case ArmorResistance_FieldIndex.CurveTable:
+                    case DamageTypeValue_FieldIndex.CurveTable:
                         this.CurveTable = ex;
                         break;
                     default:
@@ -298,16 +298,16 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ArmorResistance_FieldIndex enu = (ArmorResistance_FieldIndex)index;
+                DamageTypeValue_FieldIndex enu = (DamageTypeValue_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorResistance_FieldIndex.DamageType:
+                    case DamageTypeValue_FieldIndex.DamageType:
                         this.DamageType = (Exception?)obj;
                         break;
-                    case ArmorResistance_FieldIndex.Value:
+                    case DamageTypeValue_FieldIndex.Value:
                         this.Value = (Exception?)obj;
                         break;
-                    case ArmorResistance_FieldIndex.CurveTable:
+                    case DamageTypeValue_FieldIndex.CurveTable:
                         this.CurveTable = (Exception?)obj;
                         break;
                     default:
@@ -433,31 +433,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorResistanceCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorResistanceSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DamageTypeValueCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DamageTypeValueSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ArmorResistanceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DamageTypeValueBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorResistanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DamageTypeValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ArmorResistance CreateFromBinary(
+        public static DamageTypeValue CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ArmorResistance();
-            ((ArmorResistanceSetterCommon)((IArmorResistanceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new DamageTypeValue();
+            ((DamageTypeValueSetterCommon)((IDamageTypeValueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ArmorResistance item,
+            out DamageTypeValue item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -483,33 +483,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ArmorResistanceSetterCommon)((IArmorResistanceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((DamageTypeValueSetterCommon)((IDamageTypeValueGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ArmorResistance GetNew()
+        internal static DamageTypeValue GetNew()
         {
-            return new ArmorResistance();
+            return new DamageTypeValue();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IArmorResistance :
-        IArmorResistanceGetter,
+    public partial interface IDamageTypeValue :
+        IDamageTypeValueGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IArmorResistance>
+        ILoquiObjectSetter<IDamageTypeValue>
     {
         new IFormLink<IDamageTypeGetter> DamageType { get; set; }
         new UInt32 Value { get; set; }
         new IFormLink<ICurveTableGetter> CurveTable { get; set; }
     }
 
-    public partial interface IArmorResistanceGetter :
+    public partial interface IDamageTypeValueGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IArmorResistanceGetter>
+        ILoquiObject<IDamageTypeValueGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ArmorResistance_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DamageTypeValue_Registration.Instance;
         IFormLinkGetter<IDamageTypeGetter> DamageType { get; }
         UInt32 Value { get; }
         IFormLinkGetter<ICurveTableGetter> CurveTable { get; }
@@ -527,42 +527,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class ArmorResistanceMixIn
+    public static partial class DamageTypeValueMixIn
     {
-        public static void Clear(this IArmorResistance item)
+        public static void Clear(this IDamageTypeValue item)
         {
-            ((ArmorResistanceSetterCommon)((IArmorResistanceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((DamageTypeValueSetterCommon)((IDamageTypeValueGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ArmorResistance.Mask<bool> GetEqualsMask(
-            this IArmorResistanceGetter item,
-            IArmorResistanceGetter rhs,
+        public static DamageTypeValue.Mask<bool> GetEqualsMask(
+            this IDamageTypeValueGetter item,
+            IDamageTypeValueGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IArmorResistanceGetter item,
+            this IDamageTypeValueGetter item,
             string? name = null,
-            ArmorResistance.Mask<bool>? printMask = null)
+            DamageTypeValue.Mask<bool>? printMask = null)
         {
-            return ((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).Print(
+            return ((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IArmorResistanceGetter item,
+            this IDamageTypeValueGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ArmorResistance.Mask<bool>? printMask = null)
+            DamageTypeValue.Mask<bool>? printMask = null)
         {
-            ((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).Print(
+            ((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -570,21 +570,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IArmorResistanceGetter item,
-            IArmorResistanceGetter rhs,
-            ArmorResistance.TranslationMask? equalsMask = null)
+            this IDamageTypeValueGetter item,
+            IDamageTypeValueGetter rhs,
+            DamageTypeValue.TranslationMask? equalsMask = null)
         {
-            return ((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).Equals(
+            return ((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IArmorResistance lhs,
-            IArmorResistanceGetter rhs)
+            this IDamageTypeValue lhs,
+            IDamageTypeValueGetter rhs)
         {
-            ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -593,11 +593,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IArmorResistance lhs,
-            IArmorResistanceGetter rhs,
-            ArmorResistance.TranslationMask? copyMask = null)
+            this IDamageTypeValue lhs,
+            IDamageTypeValueGetter rhs,
+            DamageTypeValue.TranslationMask? copyMask = null)
         {
-            ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -606,28 +606,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IArmorResistance lhs,
-            IArmorResistanceGetter rhs,
-            out ArmorResistance.ErrorMask errorMask,
-            ArmorResistance.TranslationMask? copyMask = null)
+            this IDamageTypeValue lhs,
+            IDamageTypeValueGetter rhs,
+            out DamageTypeValue.ErrorMask errorMask,
+            DamageTypeValue.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ArmorResistance.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DamageTypeValue.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IArmorResistance lhs,
-            IArmorResistanceGetter rhs,
+            this IDamageTypeValue lhs,
+            IDamageTypeValueGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -635,32 +635,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ArmorResistance DeepCopy(
-            this IArmorResistanceGetter item,
-            ArmorResistance.TranslationMask? copyMask = null)
+        public static DamageTypeValue DeepCopy(
+            this IDamageTypeValueGetter item,
+            DamageTypeValue.TranslationMask? copyMask = null)
         {
-            return ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ArmorResistance DeepCopy(
-            this IArmorResistanceGetter item,
-            out ArmorResistance.ErrorMask errorMask,
-            ArmorResistance.TranslationMask? copyMask = null)
+        public static DamageTypeValue DeepCopy(
+            this IDamageTypeValueGetter item,
+            out DamageTypeValue.ErrorMask errorMask,
+            DamageTypeValue.TranslationMask? copyMask = null)
         {
-            return ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ArmorResistance DeepCopy(
-            this IArmorResistanceGetter item,
+        public static DamageTypeValue DeepCopy(
+            this IDamageTypeValueGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -668,11 +668,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IArmorResistance item,
+            this IDamageTypeValue item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ArmorResistanceSetterCommon)((IArmorResistanceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((DamageTypeValueSetterCommon)((IDamageTypeValueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ArmorResistance_FieldIndex
+    internal enum DamageTypeValue_FieldIndex
     {
         DamageType = 0,
         Value = 1,
@@ -697,9 +697,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class ArmorResistance_Registration : ILoquiRegistration
+    internal partial class DamageTypeValue_Registration : ILoquiRegistration
     {
-        public static readonly ArmorResistance_Registration Instance = new ArmorResistance_Registration();
+        public static readonly DamageTypeValue_Registration Instance = new DamageTypeValue_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -707,23 +707,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ArmorResistance.Mask<>);
+        public static readonly Type MaskType = typeof(DamageTypeValue.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ArmorResistance.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(DamageTypeValue.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ArmorResistance);
+        public static readonly Type ClassType = typeof(DamageTypeValue);
 
-        public static readonly Type GetterType = typeof(IArmorResistanceGetter);
+        public static readonly Type GetterType = typeof(IDamageTypeValueGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IArmorResistance);
+        public static readonly Type SetterType = typeof(IDamageTypeValue);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ArmorResistance";
+        public const string FullName = "Mutagen.Bethesda.Starfield.DamageTypeValue";
 
-        public const string Name = "ArmorResistance";
+        public const string Name = "DamageTypeValue";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(ArmorResistanceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(DamageTypeValueBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -762,13 +762,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ArmorResistanceSetterCommon
+    internal partial class DamageTypeValueSetterCommon
     {
-        public static readonly ArmorResistanceSetterCommon Instance = new ArmorResistanceSetterCommon();
+        public static readonly DamageTypeValueSetterCommon Instance = new DamageTypeValueSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IArmorResistance item)
+        public void Clear(IDamageTypeValue item)
         {
             ClearPartial();
             item.DamageType.Clear();
@@ -777,7 +777,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public void RemapLinks(IArmorResistance obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IDamageTypeValue obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.DamageType.Relink(mapping);
             obj.CurveTable.Relink(mapping);
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IArmorResistance item,
+            IDamageTypeValue item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -795,23 +795,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ArmorResistanceBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: DamageTypeValueBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class ArmorResistanceCommon
+    internal partial class DamageTypeValueCommon
     {
-        public static readonly ArmorResistanceCommon Instance = new ArmorResistanceCommon();
+        public static readonly DamageTypeValueCommon Instance = new DamageTypeValueCommon();
 
-        public ArmorResistance.Mask<bool> GetEqualsMask(
-            IArmorResistanceGetter item,
-            IArmorResistanceGetter rhs,
+        public DamageTypeValue.Mask<bool> GetEqualsMask(
+            IDamageTypeValueGetter item,
+            IDamageTypeValueGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ArmorResistance.Mask<bool>(false);
-            ((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new DamageTypeValue.Mask<bool>(false);
+            ((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -820,9 +820,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IArmorResistanceGetter item,
-            IArmorResistanceGetter rhs,
-            ArmorResistance.Mask<bool> ret,
+            IDamageTypeValueGetter item,
+            IDamageTypeValueGetter rhs,
+            DamageTypeValue.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.DamageType = item.DamageType.Equals(rhs.DamageType);
@@ -831,9 +831,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IArmorResistanceGetter item,
+            IDamageTypeValueGetter item,
             string? name = null,
-            ArmorResistance.Mask<bool>? printMask = null)
+            DamageTypeValue.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -845,18 +845,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IArmorResistanceGetter item,
+            IDamageTypeValueGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ArmorResistance.Mask<bool>? printMask = null)
+            DamageTypeValue.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ArmorResistance =>");
+                sb.AppendLine($"DamageTypeValue =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ArmorResistance) =>");
+                sb.AppendLine($"{name} (DamageTypeValue) =>");
             }
             using (sb.Brace())
             {
@@ -868,9 +868,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IArmorResistanceGetter item,
+            IDamageTypeValueGetter item,
             StructuredStringBuilder sb,
-            ArmorResistance.Mask<bool>? printMask = null)
+            DamageTypeValue.Mask<bool>? printMask = null)
         {
             if (printMask?.DamageType ?? true)
             {
@@ -888,27 +888,27 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IArmorResistanceGetter? lhs,
-            IArmorResistanceGetter? rhs,
+            IDamageTypeValueGetter? lhs,
+            IDamageTypeValueGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ArmorResistance_FieldIndex.DamageType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DamageTypeValue_FieldIndex.DamageType) ?? true))
             {
                 if (!lhs.DamageType.Equals(rhs.DamageType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorResistance_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DamageTypeValue_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorResistance_FieldIndex.CurveTable) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DamageTypeValue_FieldIndex.CurveTable) ?? true))
             {
                 if (!lhs.CurveTable.Equals(rhs.CurveTable)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IArmorResistanceGetter item)
+        public virtual int GetHashCode(IDamageTypeValueGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.DamageType);
@@ -922,11 +922,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ArmorResistance.GetNew();
+            return DamageTypeValue.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorResistanceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDamageTypeValueGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.DamageType);
             yield return FormLinkInformation.Factory(obj.CurveTable);
@@ -936,27 +936,27 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ArmorResistanceSetterTranslationCommon
+    internal partial class DamageTypeValueSetterTranslationCommon
     {
-        public static readonly ArmorResistanceSetterTranslationCommon Instance = new ArmorResistanceSetterTranslationCommon();
+        public static readonly DamageTypeValueSetterTranslationCommon Instance = new DamageTypeValueSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IArmorResistance item,
-            IArmorResistanceGetter rhs,
+            IDamageTypeValue item,
+            IDamageTypeValueGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ArmorResistance_FieldIndex.DamageType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DamageTypeValue_FieldIndex.DamageType) ?? true))
             {
                 item.DamageType.SetTo(rhs.DamageType.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorResistance_FieldIndex.Value) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DamageTypeValue_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorResistance_FieldIndex.CurveTable) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DamageTypeValue_FieldIndex.CurveTable) ?? true))
             {
                 item.CurveTable.SetTo(rhs.CurveTable.FormKey);
             }
@@ -964,12 +964,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public ArmorResistance DeepCopy(
-            IArmorResistanceGetter item,
-            ArmorResistance.TranslationMask? copyMask = null)
+        public DamageTypeValue DeepCopy(
+            IDamageTypeValueGetter item,
+            DamageTypeValue.TranslationMask? copyMask = null)
         {
-            ArmorResistance ret = (ArmorResistance)((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).GetNew();
-            ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DamageTypeValue ret = (DamageTypeValue)((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).GetNew();
+            ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -978,30 +978,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ArmorResistance DeepCopy(
-            IArmorResistanceGetter item,
-            out ArmorResistance.ErrorMask errorMask,
-            ArmorResistance.TranslationMask? copyMask = null)
+        public DamageTypeValue DeepCopy(
+            IDamageTypeValueGetter item,
+            out DamageTypeValue.ErrorMask errorMask,
+            DamageTypeValue.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ArmorResistance ret = (ArmorResistance)((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).GetNew();
-            ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DamageTypeValue ret = (DamageTypeValue)((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).GetNew();
+            ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ArmorResistance.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DamageTypeValue.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ArmorResistance DeepCopy(
-            IArmorResistanceGetter item,
+        public DamageTypeValue DeepCopy(
+            IDamageTypeValueGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ArmorResistance ret = (ArmorResistance)((ArmorResistanceCommon)((IArmorResistanceGetter)item).CommonInstance()!).GetNew();
-            ((ArmorResistanceSetterTranslationCommon)((IArmorResistanceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DamageTypeValue ret = (DamageTypeValue)((DamageTypeValueCommon)((IDamageTypeValueGetter)item).CommonInstance()!).GetNew();
+            ((DamageTypeValueSetterTranslationCommon)((IDamageTypeValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1017,27 +1017,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ArmorResistance
+    public partial class DamageTypeValue
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ArmorResistance_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ArmorResistance_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DamageTypeValue_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DamageTypeValue_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ArmorResistanceCommon.Instance;
+        protected object CommonInstance() => DamageTypeValueCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ArmorResistanceSetterCommon.Instance;
+            return DamageTypeValueSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ArmorResistanceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DamageTypeValueSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IArmorResistanceGetter.CommonInstance() => this.CommonInstance();
+        object IDamageTypeValueGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IArmorResistanceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IDamageTypeValueGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IArmorResistanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDamageTypeValueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1048,12 +1048,12 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ArmorResistanceBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class DamageTypeValueBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ArmorResistanceBinaryWriteTranslation Instance = new();
+        public static readonly DamageTypeValueBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IArmorResistanceGetter item,
+            IDamageTypeValueGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IArmorResistanceGetter item,
+            IDamageTypeValueGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1084,19 +1084,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IArmorResistanceGetter)item,
+                item: (IDamageTypeValueGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ArmorResistanceBinaryCreateTranslation
+    internal partial class DamageTypeValueBinaryCreateTranslation
     {
-        public static readonly ArmorResistanceBinaryCreateTranslation Instance = new ArmorResistanceBinaryCreateTranslation();
+        public static readonly DamageTypeValueBinaryCreateTranslation Instance = new DamageTypeValueBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IArmorResistance item,
+            IDamageTypeValue item,
             MutagenFrame frame)
         {
             item.DamageType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -1113,14 +1113,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ArmorResistanceBinaryTranslationMixIn
+    public static class DamageTypeValueBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IArmorResistanceGetter item,
+            this IDamageTypeValueGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorResistanceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((DamageTypeValueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1133,39 +1133,39 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ArmorResistanceBinaryOverlay :
+    internal partial class DamageTypeValueBinaryOverlay :
         PluginBinaryOverlay,
-        IArmorResistanceGetter
+        IDamageTypeValueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ArmorResistance_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ArmorResistance_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DamageTypeValue_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DamageTypeValue_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ArmorResistanceCommon.Instance;
+        protected object CommonInstance() => DamageTypeValueCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ArmorResistanceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DamageTypeValueSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IArmorResistanceGetter.CommonInstance() => this.CommonInstance();
+        object IDamageTypeValueGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IArmorResistanceGetter.CommonSetterInstance() => null;
+        object? IDamageTypeValueGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IArmorResistanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDamageTypeValueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorResistanceCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DamageTypeValueCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ArmorResistanceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DamageTypeValueBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorResistanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DamageTypeValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected ArmorResistanceBinaryOverlay(
+        protected DamageTypeValueBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IArmorResistanceGetter ArmorResistanceFactory(
+        public static IDamageTypeValueGetter DamageTypeValueFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new ArmorResistanceBinaryOverlay(
+            var ret = new DamageTypeValueBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += ret.CurveTableVersioningOffset + 0xC;
@@ -1216,12 +1216,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IArmorResistanceGetter ArmorResistanceFactory(
+        public static IDamageTypeValueGetter DamageTypeValueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ArmorResistanceFactory(
+            return DamageTypeValueFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorResistanceMixIn.Print(
+            DamageTypeValueMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1244,16 +1244,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IArmorResistanceGetter rhs) return false;
-            return ((ArmorResistanceCommon)((IArmorResistanceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IDamageTypeValueGetter rhs) return false;
+            return ((DamageTypeValueCommon)((IDamageTypeValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IArmorResistanceGetter? obj)
+        public bool Equals(IDamageTypeValueGetter? obj)
         {
-            return ((ArmorResistanceCommon)((IArmorResistanceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((DamageTypeValueCommon)((IDamageTypeValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ArmorResistanceCommon)((IArmorResistanceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DamageTypeValueCommon)((IDamageTypeValueGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

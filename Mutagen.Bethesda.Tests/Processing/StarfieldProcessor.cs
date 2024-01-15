@@ -173,6 +173,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "HAZD", "FULL" },
                     new RecordType[] { "TERM", "FULL" },
                     new RecordType[] { "IDLE", "FULL" },
+                    new RecordType[] { "EXPL", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

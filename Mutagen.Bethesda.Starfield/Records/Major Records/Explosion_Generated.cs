@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,273 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IExplosionGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IExplosionGetter.ODTY => this.ODTY;
+        #endregion
+        #region ObjectPlacementDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        {
+            get => _ObjectPlacementDefaults;
+            set => _ObjectPlacementDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? IExplosionGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IExplosionGetter.XALG => this.XALG;
+        #endregion
+        #region DefaultLayer
+        private readonly IFormLinkNullable<ILayerGetter> _DefaultLayer = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> DefaultLayer
+        {
+            get => _DefaultLayer;
+            set => _DefaultLayer.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayerGetter> IExplosionGetter.DefaultLayer => this.DefaultLayer;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IExplosionGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IExplosionGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IExplosionGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region ObjectEffect
+        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
+        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
+        {
+            get => _ObjectEffect;
+            set => _ObjectEffect.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
+        #endregion
+        #region ImageSpaceModifier
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        #endregion
+        #region Light
+        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightGetter> IExplosionGetter.Light => this.Light;
+        #endregion
+        #region Sound1
+        public SoundReference Sound1 { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IExplosionGetter.Sound1 => Sound1;
+        #endregion
+        #region Sound2
+        public SoundReference Sound2 { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IExplosionGetter.Sound2 => Sound2;
+        #endregion
+        #region ImpactDataSet
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region PlacedObject
+        private readonly IFormLink<IExplodeSpawnGetter> _PlacedObject = new FormLink<IExplodeSpawnGetter>();
+        public IFormLink<IExplodeSpawnGetter> PlacedObject
+        {
+            get => _PlacedObject;
+            set => _PlacedObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplodeSpawnGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
+        #endregion
+        #region SpawnProjectile
+        private readonly IFormLink<IProjectileGetter> _SpawnProjectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> SpawnProjectile
+        {
+            get => _SpawnProjectile;
+            set => _SpawnProjectile.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;
+        #endregion
+        #region Condition
+        private readonly IFormLink<IConditionRecordGetter> _Condition = new FormLink<IConditionRecordGetter>();
+        public IFormLink<IConditionRecordGetter> Condition
+        {
+            get => _Condition;
+            set => _Condition.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IConditionRecordGetter> IExplosionGetter.Condition => this.Condition;
+        #endregion
+        #region ENAMFloat1
+        public Single ENAMFloat1 { get; set; } = default;
+        #endregion
+        #region ENAMFloat2
+        public Single ENAMFloat2 { get; set; } = default;
+        #endregion
+        #region ENAMFloat3
+        public Single ENAMFloat3 { get; set; } = default;
+        #endregion
+        #region ENAMFloat4
+        public Single ENAMFloat4 { get; set; } = default;
+        #endregion
+        #region ENAMFloat5
+        public Single ENAMFloat5 { get; set; } = default;
+        #endregion
+        #region ENAMFloat6
+        public Single ENAMFloat6 { get; set; } = default;
+        #endregion
+        #region EnamInt1
+        public Int32 EnamInt1 { get; set; } = default;
+        #endregion
+        #region EnamInt2
+        public Int32 EnamInt2 { get; set; } = default;
+        #endregion
+        #region ENAMFloat7
+        public Single ENAMFloat7 { get; set; } = default;
+        #endregion
+        #region EnamInt3
+        public Int32 EnamInt3 { get; set; } = default;
+        #endregion
+        #region EnamInt4
+        public Int32 EnamInt4 { get; set; } = default;
+        #endregion
+        #region ENAMFloat8
+        public Single ENAMFloat8 { get; set; } = default;
+        #endregion
+        #region ENAMFloat9
+        public Single ENAMFloat9 { get; set; } = default;
+        #endregion
+        #region ENAMFloat10
+        public Single ENAMFloat10 { get; set; } = default;
+        #endregion
+        #region EnamInt5
+        public Int32 EnamInt5 { get; set; } = default;
+        #endregion
+        #region ENAMFloat11
+        public Single ENAMFloat11 { get; set; } = default;
+        #endregion
+        #region DamageType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DamageTypeValue>? _DamageType;
+        public ExtendedList<DamageTypeValue>? DamageType
+        {
+            get => this._DamageType;
+            set => this._DamageType = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDamageTypeValueGetter>? IExplosionGetter.DamageType => _DamageType;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +351,40 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.XALG = initialValue;
+                this.DefaultLayer = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.ObjectEffect = initialValue;
+                this.ImageSpaceModifier = initialValue;
+                this.Light = initialValue;
+                this.Sound1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Sound2 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.ImpactDataSet = initialValue;
+                this.PlacedObject = initialValue;
+                this.SpawnProjectile = initialValue;
+                this.Condition = initialValue;
+                this.ENAMFloat1 = initialValue;
+                this.ENAMFloat2 = initialValue;
+                this.ENAMFloat3 = initialValue;
+                this.ENAMFloat4 = initialValue;
+                this.ENAMFloat5 = initialValue;
+                this.ENAMFloat6 = initialValue;
+                this.EnamInt1 = initialValue;
+                this.EnamInt2 = initialValue;
+                this.ENAMFloat7 = initialValue;
+                this.EnamInt3 = initialValue;
+                this.EnamInt4 = initialValue;
+                this.ENAMFloat8 = initialValue;
+                this.ENAMFloat9 = initialValue;
+                this.ENAMFloat10 = initialValue;
+                this.EnamInt5 = initialValue;
+                this.ENAMFloat11 = initialValue;
+                this.DamageType = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +394,41 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem ObjectPlacementDefaults,
+                TItem XALG,
+                TItem DefaultLayer,
+                TItem Components,
+                TItem Name,
+                TItem Model,
+                TItem ObjectEffect,
+                TItem ImageSpaceModifier,
+                TItem Light,
+                TItem Sound1,
+                TItem Sound2,
+                TItem ImpactDataSet,
+                TItem PlacedObject,
+                TItem SpawnProjectile,
+                TItem Condition,
+                TItem ENAMFloat1,
+                TItem ENAMFloat2,
+                TItem ENAMFloat3,
+                TItem ENAMFloat4,
+                TItem ENAMFloat5,
+                TItem ENAMFloat6,
+                TItem EnamInt1,
+                TItem EnamInt2,
+                TItem ENAMFloat7,
+                TItem EnamInt3,
+                TItem EnamInt4,
+                TItem ENAMFloat8,
+                TItem ENAMFloat9,
+                TItem ENAMFloat10,
+                TItem EnamInt5,
+                TItem ENAMFloat11,
+                TItem DamageType)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +438,40 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.XALG = XALG;
+                this.DefaultLayer = DefaultLayer;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.ObjectEffect = ObjectEffect;
+                this.ImageSpaceModifier = ImageSpaceModifier;
+                this.Light = Light;
+                this.Sound1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sound1, new SoundReference.Mask<TItem>(Sound1));
+                this.Sound2 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sound2, new SoundReference.Mask<TItem>(Sound2));
+                this.ImpactDataSet = ImpactDataSet;
+                this.PlacedObject = PlacedObject;
+                this.SpawnProjectile = SpawnProjectile;
+                this.Condition = Condition;
+                this.ENAMFloat1 = ENAMFloat1;
+                this.ENAMFloat2 = ENAMFloat2;
+                this.ENAMFloat3 = ENAMFloat3;
+                this.ENAMFloat4 = ENAMFloat4;
+                this.ENAMFloat5 = ENAMFloat5;
+                this.ENAMFloat6 = ENAMFloat6;
+                this.EnamInt1 = EnamInt1;
+                this.EnamInt2 = EnamInt2;
+                this.ENAMFloat7 = ENAMFloat7;
+                this.EnamInt3 = EnamInt3;
+                this.EnamInt4 = EnamInt4;
+                this.ENAMFloat8 = ENAMFloat8;
+                this.ENAMFloat9 = ENAMFloat9;
+                this.ENAMFloat10 = ENAMFloat10;
+                this.EnamInt5 = EnamInt5;
+                this.ENAMFloat11 = ENAMFloat11;
+                this.DamageType = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(DamageType, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +480,43 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public TItem XALG;
+            public TItem DefaultLayer;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem ObjectEffect;
+            public TItem ImageSpaceModifier;
+            public TItem Light;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Sound1 { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Sound2 { get; set; }
+            public TItem ImpactDataSet;
+            public TItem PlacedObject;
+            public TItem SpawnProjectile;
+            public TItem Condition;
+            public TItem ENAMFloat1;
+            public TItem ENAMFloat2;
+            public TItem ENAMFloat3;
+            public TItem ENAMFloat4;
+            public TItem ENAMFloat5;
+            public TItem ENAMFloat6;
+            public TItem EnamInt1;
+            public TItem EnamInt2;
+            public TItem ENAMFloat7;
+            public TItem EnamInt3;
+            public TItem EnamInt4;
+            public TItem ENAMFloat8;
+            public TItem ENAMFloat9;
+            public TItem ENAMFloat10;
+            public TItem EnamInt5;
+            public TItem ENAMFloat11;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>? DamageType;
             #endregion
 
             #region Equals
@@ -119,11 +530,79 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.DefaultLayer, rhs.DefaultLayer)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.ObjectEffect, rhs.ObjectEffect)) return false;
+                if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.Sound1, rhs.Sound1)) return false;
+                if (!object.Equals(this.Sound2, rhs.Sound2)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.PlacedObject, rhs.PlacedObject)) return false;
+                if (!object.Equals(this.SpawnProjectile, rhs.SpawnProjectile)) return false;
+                if (!object.Equals(this.Condition, rhs.Condition)) return false;
+                if (!object.Equals(this.ENAMFloat1, rhs.ENAMFloat1)) return false;
+                if (!object.Equals(this.ENAMFloat2, rhs.ENAMFloat2)) return false;
+                if (!object.Equals(this.ENAMFloat3, rhs.ENAMFloat3)) return false;
+                if (!object.Equals(this.ENAMFloat4, rhs.ENAMFloat4)) return false;
+                if (!object.Equals(this.ENAMFloat5, rhs.ENAMFloat5)) return false;
+                if (!object.Equals(this.ENAMFloat6, rhs.ENAMFloat6)) return false;
+                if (!object.Equals(this.EnamInt1, rhs.EnamInt1)) return false;
+                if (!object.Equals(this.EnamInt2, rhs.EnamInt2)) return false;
+                if (!object.Equals(this.ENAMFloat7, rhs.ENAMFloat7)) return false;
+                if (!object.Equals(this.EnamInt3, rhs.EnamInt3)) return false;
+                if (!object.Equals(this.EnamInt4, rhs.EnamInt4)) return false;
+                if (!object.Equals(this.ENAMFloat8, rhs.ENAMFloat8)) return false;
+                if (!object.Equals(this.ENAMFloat9, rhs.ENAMFloat9)) return false;
+                if (!object.Equals(this.ENAMFloat10, rhs.ENAMFloat10)) return false;
+                if (!object.Equals(this.EnamInt5, rhs.EnamInt5)) return false;
+                if (!object.Equals(this.ENAMFloat11, rhs.ENAMFloat11)) return false;
+                if (!object.Equals(this.DamageType, rhs.DamageType)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.XALG);
+                hash.Add(this.DefaultLayer);
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.ObjectEffect);
+                hash.Add(this.ImageSpaceModifier);
+                hash.Add(this.Light);
+                hash.Add(this.Sound1);
+                hash.Add(this.Sound2);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.PlacedObject);
+                hash.Add(this.SpawnProjectile);
+                hash.Add(this.Condition);
+                hash.Add(this.ENAMFloat1);
+                hash.Add(this.ENAMFloat2);
+                hash.Add(this.ENAMFloat3);
+                hash.Add(this.ENAMFloat4);
+                hash.Add(this.ENAMFloat5);
+                hash.Add(this.ENAMFloat6);
+                hash.Add(this.EnamInt1);
+                hash.Add(this.EnamInt2);
+                hash.Add(this.ENAMFloat7);
+                hash.Add(this.EnamInt3);
+                hash.Add(this.EnamInt4);
+                hash.Add(this.ENAMFloat8);
+                hash.Add(this.ENAMFloat9);
+                hash.Add(this.ENAMFloat10);
+                hash.Add(this.EnamInt5);
+                hash.Add(this.ENAMFloat11);
+                hash.Add(this.DamageType);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +613,82 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
+                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                }
+                if (!eval(this.XALG)) return false;
+                if (!eval(this.DefaultLayer)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ObjectEffect)) return false;
+                if (!eval(this.ImageSpaceModifier)) return false;
+                if (!eval(this.Light)) return false;
+                if (Sound1 != null)
+                {
+                    if (!eval(this.Sound1.Overall)) return false;
+                    if (this.Sound1.Specific != null && !this.Sound1.Specific.All(eval)) return false;
+                }
+                if (Sound2 != null)
+                {
+                    if (!eval(this.Sound2.Overall)) return false;
+                    if (this.Sound2.Specific != null && !this.Sound2.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.PlacedObject)) return false;
+                if (!eval(this.SpawnProjectile)) return false;
+                if (!eval(this.Condition)) return false;
+                if (!eval(this.ENAMFloat1)) return false;
+                if (!eval(this.ENAMFloat2)) return false;
+                if (!eval(this.ENAMFloat3)) return false;
+                if (!eval(this.ENAMFloat4)) return false;
+                if (!eval(this.ENAMFloat5)) return false;
+                if (!eval(this.ENAMFloat6)) return false;
+                if (!eval(this.EnamInt1)) return false;
+                if (!eval(this.EnamInt2)) return false;
+                if (!eval(this.ENAMFloat7)) return false;
+                if (!eval(this.EnamInt3)) return false;
+                if (!eval(this.EnamInt4)) return false;
+                if (!eval(this.ENAMFloat8)) return false;
+                if (!eval(this.ENAMFloat9)) return false;
+                if (!eval(this.ENAMFloat10)) return false;
+                if (!eval(this.EnamInt5)) return false;
+                if (!eval(this.ENAMFloat11)) return false;
+                if (this.DamageType != null)
+                {
+                    if (!eval(this.DamageType.Overall)) return false;
+                    if (this.DamageType.Specific != null)
+                    {
+                        foreach (var item in this.DamageType.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +697,82 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
+                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                }
+                if (eval(this.XALG)) return true;
+                if (eval(this.DefaultLayer)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ObjectEffect)) return true;
+                if (eval(this.ImageSpaceModifier)) return true;
+                if (eval(this.Light)) return true;
+                if (Sound1 != null)
+                {
+                    if (eval(this.Sound1.Overall)) return true;
+                    if (this.Sound1.Specific != null && this.Sound1.Specific.Any(eval)) return true;
+                }
+                if (Sound2 != null)
+                {
+                    if (eval(this.Sound2.Overall)) return true;
+                    if (this.Sound2.Specific != null && this.Sound2.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.PlacedObject)) return true;
+                if (eval(this.SpawnProjectile)) return true;
+                if (eval(this.Condition)) return true;
+                if (eval(this.ENAMFloat1)) return true;
+                if (eval(this.ENAMFloat2)) return true;
+                if (eval(this.ENAMFloat3)) return true;
+                if (eval(this.ENAMFloat4)) return true;
+                if (eval(this.ENAMFloat5)) return true;
+                if (eval(this.ENAMFloat6)) return true;
+                if (eval(this.EnamInt1)) return true;
+                if (eval(this.EnamInt2)) return true;
+                if (eval(this.ENAMFloat7)) return true;
+                if (eval(this.EnamInt3)) return true;
+                if (eval(this.EnamInt4)) return true;
+                if (eval(this.ENAMFloat8)) return true;
+                if (eval(this.ENAMFloat9)) return true;
+                if (eval(this.ENAMFloat10)) return true;
+                if (eval(this.EnamInt5)) return true;
+                if (eval(this.ENAMFloat11)) return true;
+                if (this.DamageType != null)
+                {
+                    if (eval(this.DamageType.Overall)) return true;
+                    if (this.DamageType.Specific != null)
+                    {
+                        foreach (var item in this.DamageType.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +788,68 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.XALG = eval(this.XALG);
+                obj.DefaultLayer = eval(this.DefaultLayer);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.ObjectEffect = eval(this.ObjectEffect);
+                obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
+                obj.Light = eval(this.Light);
+                obj.Sound1 = this.Sound1 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sound1.Overall), this.Sound1.Specific?.Translate(eval));
+                obj.Sound2 = this.Sound2 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sound2.Overall), this.Sound2.Specific?.Translate(eval));
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.PlacedObject = eval(this.PlacedObject);
+                obj.SpawnProjectile = eval(this.SpawnProjectile);
+                obj.Condition = eval(this.Condition);
+                obj.ENAMFloat1 = eval(this.ENAMFloat1);
+                obj.ENAMFloat2 = eval(this.ENAMFloat2);
+                obj.ENAMFloat3 = eval(this.ENAMFloat3);
+                obj.ENAMFloat4 = eval(this.ENAMFloat4);
+                obj.ENAMFloat5 = eval(this.ENAMFloat5);
+                obj.ENAMFloat6 = eval(this.ENAMFloat6);
+                obj.EnamInt1 = eval(this.EnamInt1);
+                obj.EnamInt2 = eval(this.EnamInt2);
+                obj.ENAMFloat7 = eval(this.ENAMFloat7);
+                obj.EnamInt3 = eval(this.EnamInt3);
+                obj.EnamInt4 = eval(this.EnamInt4);
+                obj.ENAMFloat8 = eval(this.ENAMFloat8);
+                obj.ENAMFloat9 = eval(this.ENAMFloat9);
+                obj.ENAMFloat10 = eval(this.ENAMFloat10);
+                obj.EnamInt5 = eval(this.EnamInt5);
+                obj.ENAMFloat11 = eval(this.ENAMFloat11);
+                if (DamageType != null)
+                {
+                    obj.DamageType = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>?>(eval(this.DamageType.Overall), Enumerable.Empty<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>());
+                    if (DamageType.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>();
+                        obj.DamageType.Specific = l;
+                        foreach (var item in DamageType.Specific)
+                        {
+                            MaskItemIndexed<R, DamageTypeValue.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DamageTypeValue.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +868,172 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Explosion.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                    {
+                        ObjectPlacementDefaults?.Print(sb);
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if (printMask?.DefaultLayer ?? true)
+                    {
+                        sb.AppendItem(DefaultLayer, "DefaultLayer");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.ObjectEffect ?? true)
+                    {
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
+                    }
+                    if (printMask?.ImageSpaceModifier ?? true)
+                    {
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        sb.AppendItem(Light, "Light");
+                    }
+                    if (printMask?.Sound1?.Overall ?? true)
+                    {
+                        Sound1?.Print(sb);
+                    }
+                    if (printMask?.Sound2?.Overall ?? true)
+                    {
+                        Sound2?.Print(sb);
+                    }
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.PlacedObject ?? true)
+                    {
+                        sb.AppendItem(PlacedObject, "PlacedObject");
+                    }
+                    if (printMask?.SpawnProjectile ?? true)
+                    {
+                        sb.AppendItem(SpawnProjectile, "SpawnProjectile");
+                    }
+                    if (printMask?.Condition ?? true)
+                    {
+                        sb.AppendItem(Condition, "Condition");
+                    }
+                    if (printMask?.ENAMFloat1 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat1, "ENAMFloat1");
+                    }
+                    if (printMask?.ENAMFloat2 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat2, "ENAMFloat2");
+                    }
+                    if (printMask?.ENAMFloat3 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat3, "ENAMFloat3");
+                    }
+                    if (printMask?.ENAMFloat4 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat4, "ENAMFloat4");
+                    }
+                    if (printMask?.ENAMFloat5 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat5, "ENAMFloat5");
+                    }
+                    if (printMask?.ENAMFloat6 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat6, "ENAMFloat6");
+                    }
+                    if (printMask?.EnamInt1 ?? true)
+                    {
+                        sb.AppendItem(EnamInt1, "EnamInt1");
+                    }
+                    if (printMask?.EnamInt2 ?? true)
+                    {
+                        sb.AppendItem(EnamInt2, "EnamInt2");
+                    }
+                    if (printMask?.ENAMFloat7 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat7, "ENAMFloat7");
+                    }
+                    if (printMask?.EnamInt3 ?? true)
+                    {
+                        sb.AppendItem(EnamInt3, "EnamInt3");
+                    }
+                    if (printMask?.EnamInt4 ?? true)
+                    {
+                        sb.AppendItem(EnamInt4, "EnamInt4");
+                    }
+                    if (printMask?.ENAMFloat8 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat8, "ENAMFloat8");
+                    }
+                    if (printMask?.ENAMFloat9 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat9, "ENAMFloat9");
+                    }
+                    if (printMask?.ENAMFloat10 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat10, "ENAMFloat10");
+                    }
+                    if (printMask?.EnamInt5 ?? true)
+                    {
+                        sb.AppendItem(EnamInt5, "EnamInt5");
+                    }
+                    if (printMask?.ENAMFloat11 ?? true)
+                    {
+                        sb.AppendItem(ENAMFloat11, "ENAMFloat11");
+                    }
+                    if ((printMask?.DamageType?.Overall ?? true)
+                        && DamageType is {} DamageTypeItem)
+                    {
+                        sb.AppendLine("DamageType =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DamageTypeItem.Overall);
+                            if (DamageTypeItem.Specific != null)
+                            {
+                                foreach (var subItem in DamageTypeItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +1044,117 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public Exception? XALG;
+            public Exception? DefaultLayer;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? ObjectEffect;
+            public Exception? ImageSpaceModifier;
+            public Exception? Light;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Sound1;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Sound2;
+            public Exception? ImpactDataSet;
+            public Exception? PlacedObject;
+            public Exception? SpawnProjectile;
+            public Exception? Condition;
+            public Exception? ENAMFloat1;
+            public Exception? ENAMFloat2;
+            public Exception? ENAMFloat3;
+            public Exception? ENAMFloat4;
+            public Exception? ENAMFloat5;
+            public Exception? ENAMFloat6;
+            public Exception? EnamInt1;
+            public Exception? EnamInt2;
+            public Exception? ENAMFloat7;
+            public Exception? EnamInt3;
+            public Exception? EnamInt4;
+            public Exception? ENAMFloat8;
+            public Exception? ENAMFloat9;
+            public Exception? ENAMFloat10;
+            public Exception? EnamInt5;
+            public Exception? ENAMFloat11;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>? DamageType;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
                 switch (enu)
                 {
+                    case Explosion_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Explosion_FieldIndex.ODTY:
+                        return ODTY;
+                    case Explosion_FieldIndex.ObjectPlacementDefaults:
+                        return ObjectPlacementDefaults;
+                    case Explosion_FieldIndex.XALG:
+                        return XALG;
+                    case Explosion_FieldIndex.DefaultLayer:
+                        return DefaultLayer;
+                    case Explosion_FieldIndex.Components:
+                        return Components;
+                    case Explosion_FieldIndex.Name:
+                        return Name;
+                    case Explosion_FieldIndex.Model:
+                        return Model;
+                    case Explosion_FieldIndex.ObjectEffect:
+                        return ObjectEffect;
+                    case Explosion_FieldIndex.ImageSpaceModifier:
+                        return ImageSpaceModifier;
+                    case Explosion_FieldIndex.Light:
+                        return Light;
+                    case Explosion_FieldIndex.Sound1:
+                        return Sound1;
+                    case Explosion_FieldIndex.Sound2:
+                        return Sound2;
+                    case Explosion_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case Explosion_FieldIndex.PlacedObject:
+                        return PlacedObject;
+                    case Explosion_FieldIndex.SpawnProjectile:
+                        return SpawnProjectile;
+                    case Explosion_FieldIndex.Condition:
+                        return Condition;
+                    case Explosion_FieldIndex.ENAMFloat1:
+                        return ENAMFloat1;
+                    case Explosion_FieldIndex.ENAMFloat2:
+                        return ENAMFloat2;
+                    case Explosion_FieldIndex.ENAMFloat3:
+                        return ENAMFloat3;
+                    case Explosion_FieldIndex.ENAMFloat4:
+                        return ENAMFloat4;
+                    case Explosion_FieldIndex.ENAMFloat5:
+                        return ENAMFloat5;
+                    case Explosion_FieldIndex.ENAMFloat6:
+                        return ENAMFloat6;
+                    case Explosion_FieldIndex.EnamInt1:
+                        return EnamInt1;
+                    case Explosion_FieldIndex.EnamInt2:
+                        return EnamInt2;
+                    case Explosion_FieldIndex.ENAMFloat7:
+                        return ENAMFloat7;
+                    case Explosion_FieldIndex.EnamInt3:
+                        return EnamInt3;
+                    case Explosion_FieldIndex.EnamInt4:
+                        return EnamInt4;
+                    case Explosion_FieldIndex.ENAMFloat8:
+                        return ENAMFloat8;
+                    case Explosion_FieldIndex.ENAMFloat9:
+                        return ENAMFloat9;
+                    case Explosion_FieldIndex.ENAMFloat10:
+                        return ENAMFloat10;
+                    case Explosion_FieldIndex.EnamInt5:
+                        return EnamInt5;
+                    case Explosion_FieldIndex.ENAMFloat11:
+                        return ENAMFloat11;
+                    case Explosion_FieldIndex.DamageType:
+                        return DamageType;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +1165,108 @@ namespace Mutagen.Bethesda.Starfield
                 Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
                 switch (enu)
                 {
+                    case Explosion_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case Explosion_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case Explosion_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = ex;
+                        break;
+                    case Explosion_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Explosion_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = ex;
+                        break;
+                    case Explosion_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = ex;
+                        break;
+                    case Explosion_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case Explosion_FieldIndex.Sound1:
+                        this.Sound1 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.Sound2:
+                        this.Sound2 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case Explosion_FieldIndex.PlacedObject:
+                        this.PlacedObject = ex;
+                        break;
+                    case Explosion_FieldIndex.SpawnProjectile:
+                        this.SpawnProjectile = ex;
+                        break;
+                    case Explosion_FieldIndex.Condition:
+                        this.Condition = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat1:
+                        this.ENAMFloat1 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat2:
+                        this.ENAMFloat2 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat3:
+                        this.ENAMFloat3 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat4:
+                        this.ENAMFloat4 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat5:
+                        this.ENAMFloat5 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat6:
+                        this.ENAMFloat6 = ex;
+                        break;
+                    case Explosion_FieldIndex.EnamInt1:
+                        this.EnamInt1 = ex;
+                        break;
+                    case Explosion_FieldIndex.EnamInt2:
+                        this.EnamInt2 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat7:
+                        this.ENAMFloat7 = ex;
+                        break;
+                    case Explosion_FieldIndex.EnamInt3:
+                        this.EnamInt3 = ex;
+                        break;
+                    case Explosion_FieldIndex.EnamInt4:
+                        this.EnamInt4 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat8:
+                        this.ENAMFloat8 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat9:
+                        this.ENAMFloat9 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat10:
+                        this.ENAMFloat10 = ex;
+                        break;
+                    case Explosion_FieldIndex.EnamInt5:
+                        this.EnamInt5 = ex;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat11:
+                        this.ENAMFloat11 = ex;
+                        break;
+                    case Explosion_FieldIndex.DamageType:
+                        this.DamageType = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1278,108 @@ namespace Mutagen.Bethesda.Starfield
                 Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
                 switch (enu)
                 {
+                    case Explosion_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Explosion_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case Explosion_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Explosion_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Explosion_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Light:
+                        this.Light = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Sound1:
+                        this.Sound1 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Explosion_FieldIndex.Sound2:
+                        this.Sound2 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Explosion_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.PlacedObject:
+                        this.PlacedObject = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.SpawnProjectile:
+                        this.SpawnProjectile = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Condition:
+                        this.Condition = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat1:
+                        this.ENAMFloat1 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat2:
+                        this.ENAMFloat2 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat3:
+                        this.ENAMFloat3 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat4:
+                        this.ENAMFloat4 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat5:
+                        this.ENAMFloat5 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat6:
+                        this.ENAMFloat6 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.EnamInt1:
+                        this.EnamInt1 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.EnamInt2:
+                        this.EnamInt2 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat7:
+                        this.ENAMFloat7 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.EnamInt3:
+                        this.EnamInt3 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.EnamInt4:
+                        this.EnamInt4 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat8:
+                        this.ENAMFloat8 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat9:
+                        this.ENAMFloat9 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat10:
+                        this.ENAMFloat10 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.EnamInt5:
+                        this.EnamInt5 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ENAMFloat11:
+                        this.ENAMFloat11 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.DamageType:
+                        this.DamageType = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1389,40 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (ObjectPlacementDefaults != null) return true;
+                if (XALG != null) return true;
+                if (DefaultLayer != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (ObjectEffect != null) return true;
+                if (ImageSpaceModifier != null) return true;
+                if (Light != null) return true;
+                if (Sound1 != null) return true;
+                if (Sound2 != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (PlacedObject != null) return true;
+                if (SpawnProjectile != null) return true;
+                if (Condition != null) return true;
+                if (ENAMFloat1 != null) return true;
+                if (ENAMFloat2 != null) return true;
+                if (ENAMFloat3 != null) return true;
+                if (ENAMFloat4 != null) return true;
+                if (ENAMFloat5 != null) return true;
+                if (ENAMFloat6 != null) return true;
+                if (EnamInt1 != null) return true;
+                if (EnamInt2 != null) return true;
+                if (ENAMFloat7 != null) return true;
+                if (EnamInt3 != null) return true;
+                if (EnamInt4 != null) return true;
+                if (ENAMFloat8 != null) return true;
+                if (ENAMFloat9 != null) return true;
+                if (ENAMFloat10 != null) return true;
+                if (EnamInt5 != null) return true;
+                if (ENAMFloat11 != null) return true;
+                if (DamageType != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1449,128 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                ObjectPlacementDefaults?.Print(sb);
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                {
+                    sb.AppendItem(DefaultLayer, "DefaultLayer");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                Sound1?.Print(sb);
+                Sound2?.Print(sb);
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(PlacedObject, "PlacedObject");
+                }
+                {
+                    sb.AppendItem(SpawnProjectile, "SpawnProjectile");
+                }
+                {
+                    sb.AppendItem(Condition, "Condition");
+                }
+                {
+                    sb.AppendItem(ENAMFloat1, "ENAMFloat1");
+                }
+                {
+                    sb.AppendItem(ENAMFloat2, "ENAMFloat2");
+                }
+                {
+                    sb.AppendItem(ENAMFloat3, "ENAMFloat3");
+                }
+                {
+                    sb.AppendItem(ENAMFloat4, "ENAMFloat4");
+                }
+                {
+                    sb.AppendItem(ENAMFloat5, "ENAMFloat5");
+                }
+                {
+                    sb.AppendItem(ENAMFloat6, "ENAMFloat6");
+                }
+                {
+                    sb.AppendItem(EnamInt1, "EnamInt1");
+                }
+                {
+                    sb.AppendItem(EnamInt2, "EnamInt2");
+                }
+                {
+                    sb.AppendItem(ENAMFloat7, "ENAMFloat7");
+                }
+                {
+                    sb.AppendItem(EnamInt3, "EnamInt3");
+                }
+                {
+                    sb.AppendItem(EnamInt4, "EnamInt4");
+                }
+                {
+                    sb.AppendItem(ENAMFloat8, "ENAMFloat8");
+                }
+                {
+                    sb.AppendItem(ENAMFloat9, "ENAMFloat9");
+                }
+                {
+                    sb.AppendItem(ENAMFloat10, "ENAMFloat10");
+                }
+                {
+                    sb.AppendItem(EnamInt5, "EnamInt5");
+                }
+                {
+                    sb.AppendItem(ENAMFloat11, "ENAMFloat11");
+                }
+                if (DamageType is {} DamageTypeItem)
+                {
+                    sb.AppendLine("DamageType =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DamageTypeItem.Overall);
+                        if (DamageTypeItem.Specific != null)
+                        {
+                            foreach (var subItem in DamageTypeItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +1579,40 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.DefaultLayer = this.DefaultLayer.Combine(rhs.DefaultLayer);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
+                ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.Sound1 = this.Sound1.Combine(rhs.Sound1, (l, r) => l.Combine(r));
+                ret.Sound2 = this.Sound2.Combine(rhs.Sound2, (l, r) => l.Combine(r));
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.PlacedObject = this.PlacedObject.Combine(rhs.PlacedObject);
+                ret.SpawnProjectile = this.SpawnProjectile.Combine(rhs.SpawnProjectile);
+                ret.Condition = this.Condition.Combine(rhs.Condition);
+                ret.ENAMFloat1 = this.ENAMFloat1.Combine(rhs.ENAMFloat1);
+                ret.ENAMFloat2 = this.ENAMFloat2.Combine(rhs.ENAMFloat2);
+                ret.ENAMFloat3 = this.ENAMFloat3.Combine(rhs.ENAMFloat3);
+                ret.ENAMFloat4 = this.ENAMFloat4.Combine(rhs.ENAMFloat4);
+                ret.ENAMFloat5 = this.ENAMFloat5.Combine(rhs.ENAMFloat5);
+                ret.ENAMFloat6 = this.ENAMFloat6.Combine(rhs.ENAMFloat6);
+                ret.EnamInt1 = this.EnamInt1.Combine(rhs.EnamInt1);
+                ret.EnamInt2 = this.EnamInt2.Combine(rhs.EnamInt2);
+                ret.ENAMFloat7 = this.ENAMFloat7.Combine(rhs.ENAMFloat7);
+                ret.EnamInt3 = this.EnamInt3.Combine(rhs.EnamInt3);
+                ret.EnamInt4 = this.EnamInt4.Combine(rhs.EnamInt4);
+                ret.ENAMFloat8 = this.ENAMFloat8.Combine(rhs.ENAMFloat8);
+                ret.ENAMFloat9 = this.ENAMFloat9.Combine(rhs.ENAMFloat9);
+                ret.ENAMFloat10 = this.ENAMFloat10.Combine(rhs.ENAMFloat10);
+                ret.EnamInt5 = this.EnamInt5.Combine(rhs.EnamInt5);
+                ret.ENAMFloat11 = this.ENAMFloat11.Combine(rhs.ENAMFloat11);
+                ret.DamageType = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeValue.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DamageType?.Overall, rhs.DamageType?.Overall), Noggog.ExceptionExt.Combine(this.DamageType?.Specific, rhs.DamageType?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1634,118 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public bool XALG;
+            public bool DefaultLayer;
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public bool ObjectEffect;
+            public bool ImageSpaceModifier;
+            public bool Light;
+            public SoundReference.TranslationMask? Sound1;
+            public SoundReference.TranslationMask? Sound2;
+            public bool ImpactDataSet;
+            public bool PlacedObject;
+            public bool SpawnProjectile;
+            public bool Condition;
+            public bool ENAMFloat1;
+            public bool ENAMFloat2;
+            public bool ENAMFloat3;
+            public bool ENAMFloat4;
+            public bool ENAMFloat5;
+            public bool ENAMFloat6;
+            public bool EnamInt1;
+            public bool EnamInt2;
+            public bool ENAMFloat7;
+            public bool EnamInt3;
+            public bool EnamInt4;
+            public bool ENAMFloat8;
+            public bool ENAMFloat9;
+            public bool ENAMFloat10;
+            public bool EnamInt5;
+            public bool ENAMFloat11;
+            public DamageTypeValue.TranslationMask? DamageType;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.XALG = defaultOn;
+                this.DefaultLayer = defaultOn;
+                this.Name = defaultOn;
+                this.ObjectEffect = defaultOn;
+                this.ImageSpaceModifier = defaultOn;
+                this.Light = defaultOn;
+                this.ImpactDataSet = defaultOn;
+                this.PlacedObject = defaultOn;
+                this.SpawnProjectile = defaultOn;
+                this.Condition = defaultOn;
+                this.ENAMFloat1 = defaultOn;
+                this.ENAMFloat2 = defaultOn;
+                this.ENAMFloat3 = defaultOn;
+                this.ENAMFloat4 = defaultOn;
+                this.ENAMFloat5 = defaultOn;
+                this.ENAMFloat6 = defaultOn;
+                this.EnamInt1 = defaultOn;
+                this.EnamInt2 = defaultOn;
+                this.ENAMFloat7 = defaultOn;
+                this.EnamInt3 = defaultOn;
+                this.EnamInt4 = defaultOn;
+                this.ENAMFloat8 = defaultOn;
+                this.ENAMFloat9 = defaultOn;
+                this.ENAMFloat10 = defaultOn;
+                this.EnamInt5 = defaultOn;
+                this.ENAMFloat11 = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((XALG, null));
+                ret.Add((DefaultLayer, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((ObjectEffect, null));
+                ret.Add((ImageSpaceModifier, null));
+                ret.Add((Light, null));
+                ret.Add((Sound1 != null ? Sound1.OnOverall : DefaultOn, Sound1?.GetCrystal()));
+                ret.Add((Sound2 != null ? Sound2.OnOverall : DefaultOn, Sound2?.GetCrystal()));
+                ret.Add((ImpactDataSet, null));
+                ret.Add((PlacedObject, null));
+                ret.Add((SpawnProjectile, null));
+                ret.Add((Condition, null));
+                ret.Add((ENAMFloat1, null));
+                ret.Add((ENAMFloat2, null));
+                ret.Add((ENAMFloat3, null));
+                ret.Add((ENAMFloat4, null));
+                ret.Add((ENAMFloat5, null));
+                ret.Add((ENAMFloat6, null));
+                ret.Add((EnamInt1, null));
+                ret.Add((EnamInt2, null));
+                ret.Add((ENAMFloat7, null));
+                ret.Add((EnamInt3, null));
+                ret.Add((EnamInt4, null));
+                ret.Add((ENAMFloat8, null));
+                ret.Add((ENAMFloat9, null));
+                ret.Add((ENAMFloat10, null));
+                ret.Add((EnamInt5, null));
+                ret.Add((ENAMFloat11, null));
+                ret.Add((DamageType == null ? DefaultOn : !DamageType.GetCrystal().CopyNothing, DamageType?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1757,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ExplosionCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionSetterCommon.Instance.RemapLinks(this, mapping);
         public Explosion(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1808,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IExplosion);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ExplosionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ExplosionSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ExplosionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ExplosionSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1891,61 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IExplosion :
+        IAssetLinkContainer,
         IExplosionGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IExplosionInternal>,
-        IStarfieldMajorRecordInternal
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new IFormLinkNullable<ILayerGetter> DefaultLayer { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new SoundReference Sound1 { get; set; }
+        new SoundReference Sound2 { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLink<IExplodeSpawnGetter> PlacedObject { get; set; }
+        new IFormLink<IProjectileGetter> SpawnProjectile { get; set; }
+        new IFormLink<IConditionRecordGetter> Condition { get; set; }
+        new Single ENAMFloat1 { get; set; }
+        new Single ENAMFloat2 { get; set; }
+        new Single ENAMFloat3 { get; set; }
+        new Single ENAMFloat4 { get; set; }
+        new Single ENAMFloat5 { get; set; }
+        new Single ENAMFloat6 { get; set; }
+        new Int32 EnamInt1 { get; set; }
+        new Int32 EnamInt2 { get; set; }
+        new Single ENAMFloat7 { get; set; }
+        new Int32 EnamInt3 { get; set; }
+        new Int32 EnamInt4 { get; set; }
+        new Single ENAMFloat8 { get; set; }
+        new Single ENAMFloat9 { get; set; }
+        new Single ENAMFloat10 { get; set; }
+        new Int32 EnamInt5 { get; set; }
+        new Single ENAMFloat11 { get; set; }
+        new ExtendedList<DamageTypeValue>? DamageType { get; set; }
     }
 
     public partial interface IExplosionInternal :
@@ -440,11 +1958,68 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.EXPL)]
     public partial interface IExplosionGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IExplosionGetter>,
-        IMapsToGetter<IExplosionGetter>
+        IMapsToGetter<IExplosionGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Explosion_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        IFormLinkNullableGetter<ILayerGetter> DefaultLayer { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        IFormLinkGetter<ILightGetter> Light { get; }
+        ISoundReferenceGetter Sound1 { get; }
+        ISoundReferenceGetter Sound2 { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
+        IFormLinkGetter<IExplodeSpawnGetter> PlacedObject { get; }
+        IFormLinkGetter<IProjectileGetter> SpawnProjectile { get; }
+        IFormLinkGetter<IConditionRecordGetter> Condition { get; }
+        Single ENAMFloat1 { get; }
+        Single ENAMFloat2 { get; }
+        Single ENAMFloat3 { get; }
+        Single ENAMFloat4 { get; }
+        Single ENAMFloat5 { get; }
+        Single ENAMFloat6 { get; }
+        Int32 EnamInt1 { get; }
+        Int32 EnamInt2 { get; }
+        Single ENAMFloat7 { get; }
+        Int32 EnamInt3 { get; }
+        Int32 EnamInt4 { get; }
+        Single ENAMFloat8 { get; }
+        Single ENAMFloat9 { get; }
+        Single ENAMFloat10 { get; }
+        Int32 EnamInt5 { get; }
+        Single ENAMFloat11 { get; }
+        IReadOnlyList<IDamageTypeValueGetter>? DamageType { get; }
 
     }
 
@@ -621,6 +2196,40 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ODTY = 8,
+        ObjectPlacementDefaults = 9,
+        XALG = 10,
+        DefaultLayer = 11,
+        Components = 12,
+        Name = 13,
+        Model = 14,
+        ObjectEffect = 15,
+        ImageSpaceModifier = 16,
+        Light = 17,
+        Sound1 = 18,
+        Sound2 = 19,
+        ImpactDataSet = 20,
+        PlacedObject = 21,
+        SpawnProjectile = 22,
+        Condition = 23,
+        ENAMFloat1 = 24,
+        ENAMFloat2 = 25,
+        ENAMFloat3 = 26,
+        ENAMFloat4 = 27,
+        ENAMFloat5 = 28,
+        ENAMFloat6 = 29,
+        EnamInt1 = 30,
+        EnamInt2 = 31,
+        ENAMFloat7 = 32,
+        EnamInt3 = 33,
+        EnamInt4 = 34,
+        ENAMFloat8 = 35,
+        ENAMFloat9 = 36,
+        ENAMFloat10 = 37,
+        EnamInt5 = 38,
+        ENAMFloat11 = 39,
+        DamageType = 40,
     }
     #endregion
 
@@ -631,9 +2240,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 34;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 41;
 
         public static readonly Type MaskType = typeof(Explosion.Mask<>);
 
@@ -663,8 +2272,31 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.EXPL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.EXPL);
+            var all = RecordCollection.Factory(
+                RecordTypes.EXPL,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.XALG,
+                RecordTypes.DEFL,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.EITM,
+                RecordTypes.MNAM,
+                RecordTypes.ENAM,
+                RecordTypes.DAMA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ExplosionBinaryWriteTranslation);
         #region Interface
@@ -706,6 +2338,40 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IExplosionInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.ObjectPlacementDefaults = null;
+            item.XALG = default;
+            item.DefaultLayer.Clear();
+            item.Components.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.ObjectEffect.Clear();
+            item.ImageSpaceModifier.Clear();
+            item.Light.Clear();
+            item.Sound1.Clear();
+            item.Sound2.Clear();
+            item.ImpactDataSet.Clear();
+            item.PlacedObject.Clear();
+            item.SpawnProjectile.Clear();
+            item.Condition.Clear();
+            item.ENAMFloat1 = default;
+            item.ENAMFloat2 = default;
+            item.ENAMFloat3 = default;
+            item.ENAMFloat4 = default;
+            item.ENAMFloat5 = default;
+            item.ENAMFloat6 = default;
+            item.EnamInt1 = default;
+            item.EnamInt2 = default;
+            item.ENAMFloat7 = default;
+            item.EnamInt3 = default;
+            item.EnamInt4 = default;
+            item.ENAMFloat8 = default;
+            item.ENAMFloat9 = default;
+            item.ENAMFloat10 = default;
+            item.EnamInt5 = default;
+            item.ENAMFloat11 = default;
+            item.DamageType = null;
             base.Clear(item);
         }
         
@@ -723,6 +2389,51 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IExplosion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.DefaultLayer.Relink(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ObjectEffect.Relink(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
+            obj.Light.Relink(mapping);
+            obj.Sound1.RemapLinks(mapping);
+            obj.Sound2.RemapLinks(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.PlacedObject.Relink(mapping);
+            obj.SpawnProjectile.Relink(mapping);
+            obj.Condition.Relink(mapping);
+            obj.DamageType?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IExplosion obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IExplosion obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -790,6 +2501,54 @@ namespace Mutagen.Bethesda.Starfield
             Explosion.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults,
+                rhs.ObjectPlacementDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.DefaultLayer = item.DefaultLayer.Equals(rhs.DefaultLayer);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.Sound1 = MaskItemExt.Factory(item.Sound1.GetEqualsMask(rhs.Sound1, include), include);
+            ret.Sound2 = MaskItemExt.Factory(item.Sound2.GetEqualsMask(rhs.Sound2, include), include);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.PlacedObject = item.PlacedObject.Equals(rhs.PlacedObject);
+            ret.SpawnProjectile = item.SpawnProjectile.Equals(rhs.SpawnProjectile);
+            ret.Condition = item.Condition.Equals(rhs.Condition);
+            ret.ENAMFloat1 = item.ENAMFloat1.EqualsWithin(rhs.ENAMFloat1);
+            ret.ENAMFloat2 = item.ENAMFloat2.EqualsWithin(rhs.ENAMFloat2);
+            ret.ENAMFloat3 = item.ENAMFloat3.EqualsWithin(rhs.ENAMFloat3);
+            ret.ENAMFloat4 = item.ENAMFloat4.EqualsWithin(rhs.ENAMFloat4);
+            ret.ENAMFloat5 = item.ENAMFloat5.EqualsWithin(rhs.ENAMFloat5);
+            ret.ENAMFloat6 = item.ENAMFloat6.EqualsWithin(rhs.ENAMFloat6);
+            ret.EnamInt1 = item.EnamInt1 == rhs.EnamInt1;
+            ret.EnamInt2 = item.EnamInt2 == rhs.EnamInt2;
+            ret.ENAMFloat7 = item.ENAMFloat7.EqualsWithin(rhs.ENAMFloat7);
+            ret.EnamInt3 = item.EnamInt3 == rhs.EnamInt3;
+            ret.EnamInt4 = item.EnamInt4 == rhs.EnamInt4;
+            ret.ENAMFloat8 = item.ENAMFloat8.EqualsWithin(rhs.ENAMFloat8);
+            ret.ENAMFloat9 = item.ENAMFloat9.EqualsWithin(rhs.ENAMFloat9);
+            ret.ENAMFloat10 = item.ENAMFloat10.EqualsWithin(rhs.ENAMFloat10);
+            ret.EnamInt5 = item.EnamInt5 == rhs.EnamInt5;
+            ret.ENAMFloat11 = item.ENAMFloat11.EqualsWithin(rhs.ENAMFloat11);
+            ret.DamageType = item.DamageType.CollectionEqualsHelper(
+                rhs.DamageType,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +2598,168 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if (printMask?.DefaultLayer ?? true)
+            {
+                sb.AppendItem(item.DefaultLayer.FormKeyNullable, "DefaultLayer");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.ObjectEffect ?? true)
+            {
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+            }
+            if (printMask?.ImageSpaceModifier ?? true)
+            {
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+            }
+            if (printMask?.Light ?? true)
+            {
+                sb.AppendItem(item.Light.FormKey, "Light");
+            }
+            if (printMask?.Sound1?.Overall ?? true)
+            {
+                item.Sound1?.Print(sb, "Sound1");
+            }
+            if (printMask?.Sound2?.Overall ?? true)
+            {
+                item.Sound2?.Print(sb, "Sound2");
+            }
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+            }
+            if (printMask?.PlacedObject ?? true)
+            {
+                sb.AppendItem(item.PlacedObject.FormKey, "PlacedObject");
+            }
+            if (printMask?.SpawnProjectile ?? true)
+            {
+                sb.AppendItem(item.SpawnProjectile.FormKey, "SpawnProjectile");
+            }
+            if (printMask?.Condition ?? true)
+            {
+                sb.AppendItem(item.Condition.FormKey, "Condition");
+            }
+            if (printMask?.ENAMFloat1 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat1, "ENAMFloat1");
+            }
+            if (printMask?.ENAMFloat2 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat2, "ENAMFloat2");
+            }
+            if (printMask?.ENAMFloat3 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat3, "ENAMFloat3");
+            }
+            if (printMask?.ENAMFloat4 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat4, "ENAMFloat4");
+            }
+            if (printMask?.ENAMFloat5 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat5, "ENAMFloat5");
+            }
+            if (printMask?.ENAMFloat6 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat6, "ENAMFloat6");
+            }
+            if (printMask?.EnamInt1 ?? true)
+            {
+                sb.AppendItem(item.EnamInt1, "EnamInt1");
+            }
+            if (printMask?.EnamInt2 ?? true)
+            {
+                sb.AppendItem(item.EnamInt2, "EnamInt2");
+            }
+            if (printMask?.ENAMFloat7 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat7, "ENAMFloat7");
+            }
+            if (printMask?.EnamInt3 ?? true)
+            {
+                sb.AppendItem(item.EnamInt3, "EnamInt3");
+            }
+            if (printMask?.EnamInt4 ?? true)
+            {
+                sb.AppendItem(item.EnamInt4, "EnamInt4");
+            }
+            if (printMask?.ENAMFloat8 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat8, "ENAMFloat8");
+            }
+            if (printMask?.ENAMFloat9 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat9, "ENAMFloat9");
+            }
+            if (printMask?.ENAMFloat10 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat10, "ENAMFloat10");
+            }
+            if (printMask?.EnamInt5 ?? true)
+            {
+                sb.AppendItem(item.EnamInt5, "EnamInt5");
+            }
+            if (printMask?.ENAMFloat11 ?? true)
+            {
+                sb.AppendItem(item.ENAMFloat11, "ENAMFloat11");
+            }
+            if ((printMask?.DamageType?.Overall ?? true)
+                && item.DamageType is {} DamageTypeItem)
+            {
+                sb.AppendLine("DamageType =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in DamageTypeItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Explosion_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +2810,162 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectPlacementDefaults))) return false;
+                }
+                else if (!isObjectPlacementDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.DefaultLayer) ?? true))
+            {
+                if (!lhs.DefaultLayer.Equals(rhs.DefaultLayer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
+            {
+                if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sound1, rhs.Sound1, out var lhsSound1, out var rhsSound1, out var isSound1Equal))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsSound1).CommonInstance()!).Equals(lhsSound1, rhsSound1, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.Sound1))) return false;
+                }
+                else if (!isSound1Equal) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sound2, rhs.Sound2, out var lhsSound2, out var rhsSound2, out var isSound2Equal))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsSound2).CommonInstance()!).Equals(lhsSound2, rhsSound2, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.Sound2))) return false;
+                }
+                else if (!isSound2Equal) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
+            {
+                if (!lhs.PlacedObject.Equals(rhs.PlacedObject)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
+            {
+                if (!lhs.SpawnProjectile.Equals(rhs.SpawnProjectile)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Condition) ?? true))
+            {
+                if (!lhs.Condition.Equals(rhs.Condition)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat1) ?? true))
+            {
+                if (!lhs.ENAMFloat1.EqualsWithin(rhs.ENAMFloat1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat2) ?? true))
+            {
+                if (!lhs.ENAMFloat2.EqualsWithin(rhs.ENAMFloat2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat3) ?? true))
+            {
+                if (!lhs.ENAMFloat3.EqualsWithin(rhs.ENAMFloat3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat4) ?? true))
+            {
+                if (!lhs.ENAMFloat4.EqualsWithin(rhs.ENAMFloat4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat5) ?? true))
+            {
+                if (!lhs.ENAMFloat5.EqualsWithin(rhs.ENAMFloat5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat6) ?? true))
+            {
+                if (!lhs.ENAMFloat6.EqualsWithin(rhs.ENAMFloat6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt1) ?? true))
+            {
+                if (lhs.EnamInt1 != rhs.EnamInt1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt2) ?? true))
+            {
+                if (lhs.EnamInt2 != rhs.EnamInt2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat7) ?? true))
+            {
+                if (!lhs.ENAMFloat7.EqualsWithin(rhs.ENAMFloat7)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt3) ?? true))
+            {
+                if (lhs.EnamInt3 != rhs.EnamInt3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt4) ?? true))
+            {
+                if (lhs.EnamInt4 != rhs.EnamInt4) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat8) ?? true))
+            {
+                if (!lhs.ENAMFloat8.EqualsWithin(rhs.ENAMFloat8)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat9) ?? true))
+            {
+                if (!lhs.ENAMFloat9.EqualsWithin(rhs.ENAMFloat9)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat10) ?? true))
+            {
+                if (!lhs.ENAMFloat10.EqualsWithin(rhs.ENAMFloat10)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt5) ?? true))
+            {
+                if (lhs.EnamInt5 != rhs.EnamInt5) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat11) ?? true))
+            {
+                if (!lhs.ENAMFloat11.EqualsWithin(rhs.ENAMFloat11)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.DamageType) ?? true))
+            {
+                if (!lhs.DamageType.SequenceEqualNullable(rhs.DamageType, (l, r) => ((DamageTypeValueCommon)((IDamageTypeValueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.DamageType)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +2994,55 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IExplosionGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
+            {
+                hash.Add(ObjectPlacementDefaultsitem);
+            }
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            hash.Add(item.DefaultLayer);
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.ObjectEffect);
+            hash.Add(item.ImageSpaceModifier);
+            hash.Add(item.Light);
+            hash.Add(item.Sound1);
+            hash.Add(item.Sound2);
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.PlacedObject);
+            hash.Add(item.SpawnProjectile);
+            hash.Add(item.Condition);
+            hash.Add(item.ENAMFloat1);
+            hash.Add(item.ENAMFloat2);
+            hash.Add(item.ENAMFloat3);
+            hash.Add(item.ENAMFloat4);
+            hash.Add(item.ENAMFloat5);
+            hash.Add(item.ENAMFloat6);
+            hash.Add(item.EnamInt1);
+            hash.Add(item.EnamInt2);
+            hash.Add(item.ENAMFloat7);
+            hash.Add(item.EnamInt3);
+            hash.Add(item.EnamInt4);
+            hash.Add(item.ENAMFloat8);
+            hash.Add(item.ENAMFloat9);
+            hash.Add(item.ENAMFloat10);
+            hash.Add(item.EnamInt5);
+            hash.Add(item.ENAMFloat11);
+            hash.Add(item.DamageType);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +3071,74 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.DefaultLayer, out var DefaultLayerInfo))
+            {
+                yield return DefaultLayerInfo;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
+            {
+                yield return ObjectEffectInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
+            {
+                yield return ImageSpaceModifierInfo;
+            }
+            yield return FormLinkInformation.Factory(obj.Light);
+            foreach (var item in obj.Sound1.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Sound2.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+            yield return FormLinkInformation.Factory(obj.PlacedObject);
+            yield return FormLinkInformation.Factory(obj.SpawnProjectile);
+            yield return FormLinkInformation.Factory(obj.Condition);
+            if (obj.DamageType is {} DamageTypeItem)
+            {
+                foreach (var item in DamageTypeItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IExplosionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1020,6 +3214,295 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.ObjectPlacementDefaults);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    {
+                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectPlacementDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.DefaultLayer) ?? true))
+            {
+                item.DefaultLayer.SetTo(rhs.DefaultLayer.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Explosion_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
+            {
+                item.ObjectEffect.SetTo(rhs.ObjectEffect.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
+            {
+                item.Light.SetTo(rhs.Light.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.Sound1);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
+                    {
+                        item.Sound1 = rhs.Sound1.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Explosion_FieldIndex.Sound1),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.Sound2);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
+                    {
+                        item.Sound2 = rhs.Sound2.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Explosion_FieldIndex.Sound2),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
+            {
+                item.PlacedObject.SetTo(rhs.PlacedObject.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
+            {
+                item.SpawnProjectile.SetTo(rhs.SpawnProjectile.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Condition) ?? true))
+            {
+                item.Condition.SetTo(rhs.Condition.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat1) ?? true))
+            {
+                item.ENAMFloat1 = rhs.ENAMFloat1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat2) ?? true))
+            {
+                item.ENAMFloat2 = rhs.ENAMFloat2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat3) ?? true))
+            {
+                item.ENAMFloat3 = rhs.ENAMFloat3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat4) ?? true))
+            {
+                item.ENAMFloat4 = rhs.ENAMFloat4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat5) ?? true))
+            {
+                item.ENAMFloat5 = rhs.ENAMFloat5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat6) ?? true))
+            {
+                item.ENAMFloat6 = rhs.ENAMFloat6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt1) ?? true))
+            {
+                item.EnamInt1 = rhs.EnamInt1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt2) ?? true))
+            {
+                item.EnamInt2 = rhs.EnamInt2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat7) ?? true))
+            {
+                item.ENAMFloat7 = rhs.ENAMFloat7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt3) ?? true))
+            {
+                item.EnamInt3 = rhs.EnamInt3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt4) ?? true))
+            {
+                item.EnamInt4 = rhs.EnamInt4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat8) ?? true))
+            {
+                item.ENAMFloat8 = rhs.ENAMFloat8;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat9) ?? true))
+            {
+                item.ENAMFloat9 = rhs.ENAMFloat9;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat10) ?? true))
+            {
+                item.ENAMFloat10 = rhs.ENAMFloat10;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.EnamInt5) ?? true))
+            {
+                item.EnamInt5 = rhs.EnamInt5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ENAMFloat11) ?? true))
+            {
+                item.ENAMFloat11 = rhs.ENAMFloat11;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.DamageType) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.DamageType);
+                try
+                {
+                    if ((rhs.DamageType != null))
+                    {
+                        item.DamageType = 
+                            rhs.DamageType
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<DamageTypeValue>();
+                    }
+                    else
+                    {
+                        item.DamageType = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +3651,151 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ExplosionBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IExplosionGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultLayer,
+                header: translationParams.ConvertToCustom(RecordTypes.DEFL));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ObjectEffect,
+                header: translationParams.ConvertToCustom(RecordTypes.EITM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpaceModifier,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ENAM)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Light);
+                var Sound1Item = item.Sound1;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)Sound1Item).BinaryWriteTranslator).Write(
+                    item: Sound1Item,
+                    writer: writer,
+                    translationParams: translationParams);
+                var Sound2Item = item.Sound2;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)Sound2Item).BinaryWriteTranslator).Write(
+                    item: Sound2Item,
+                    writer: writer,
+                    translationParams: translationParams);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactDataSet);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.PlacedObject);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpawnProjectile);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Condition);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat5);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat6);
+                writer.Write(item.EnamInt1);
+                writer.Write(item.EnamInt2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat7);
+                writer.Write(item.EnamInt3);
+                writer.Write(item.EnamInt4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat8);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat9);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat10);
+                writer.Write(item.EnamInt5);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ENAMFloat11);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDamageTypeValueGetter>.Instance.Write(
+                writer: writer,
+                items: item.DamageType,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DAMA),
+                transl: (MutagenWriter subWriter, IDamageTypeValueGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((DamageTypeValueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IExplosionGetter item,
@@ -1184,10 +3812,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +3867,164 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ExplosionBinaryCreateTranslation Instance = new ExplosionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EXPL;
+        public static ParseResult FillBinaryRecordTypes(
+            IExplosionInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Explosion_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    return (int)Explosion_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Explosion_FieldIndex.XALG;
+                }
+                case RecordTypeInts.DEFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Explosion_FieldIndex.DefaultLayer;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Explosion_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Explosion_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Explosion_FieldIndex.Model;
+                }
+                case RecordTypeInts.EITM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Explosion_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Complete) return null;
+                    item.Sound1 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.Sound2 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.PlacedObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpawnProjectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Condition.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EnamInt1 = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EnamInt2 = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EnamInt3 = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EnamInt4 = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat8 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EnamInt5 = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ENAMFloat11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Explosion_FieldIndex.ENAMFloat11;
+                }
+                case RecordTypeInts.DAMA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DamageType = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DamageTypeValue>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: DamageTypeValue.TryCreateFromBinary)
+                        .CastExtendedList<DamageTypeValue>();
+                    return (int)Explosion_FieldIndex.DamageType;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +4057,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ExplosionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ExplosionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +4073,168 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IExplosion);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ObjectPlacementDefaults
+        private RangeInt32? _ObjectPlacementDefaultsLocation;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region DefaultLayer
+        private int? _DefaultLayerLocation;
+        public IFormLinkNullableGetter<ILayerGetter> DefaultLayer => _DefaultLayerLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultLayerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region ObjectEffect
+        private int? _ObjectEffectLocation;
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        #endregion
+        #region ImageSpaceModifier
+        private int? _ImageSpaceModifierLocation;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        #endregion
+        private RangeInt32? _ENAMLocation;
+        #region Light
+        private int _LightLocation => _ENAMLocation!.Value.Min;
+        private bool _Light_IsSet => _ENAMLocation.HasValue;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region Sound1
+        private int _Sound1Location => _ENAMLocation!.Value.Min + 0x4;
+        private bool _Sound1_IsSet => _ENAMLocation.HasValue;
+        private ISoundReferenceGetter? _Sound1 => _Sound1_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_Sound1Location), _package) : default;
+        public ISoundReferenceGetter Sound1 => _Sound1 ?? new SoundReference();
+        #endregion
+        #region Sound2
+        private int _Sound2Location => _ENAMLocation!.Value.Min + 0x2C;
+        private bool _Sound2_IsSet => _ENAMLocation.HasValue;
+        private ISoundReferenceGetter? _Sound2 => _Sound2_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_Sound2Location), _package) : default;
+        public ISoundReferenceGetter Sound2 => _Sound2 ?? new SoundReference();
+        #endregion
+        #region ImpactDataSet
+        private int _ImpactDataSetLocation => _ENAMLocation!.Value.Min + 0x54;
+        private bool _ImpactDataSet_IsSet => _ENAMLocation.HasValue;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region PlacedObject
+        private int _PlacedObjectLocation => _ENAMLocation!.Value.Min + 0x58;
+        private bool _PlacedObject_IsSet => _ENAMLocation.HasValue;
+        public IFormLinkGetter<IExplodeSpawnGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<IExplodeSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<IExplodeSpawnGetter>.Null;
+        #endregion
+        #region SpawnProjectile
+        private int _SpawnProjectileLocation => _ENAMLocation!.Value.Min + 0x5C;
+        private bool _SpawnProjectile_IsSet => _ENAMLocation.HasValue;
+        public IFormLinkGetter<IProjectileGetter> SpawnProjectile => _SpawnProjectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SpawnProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        #endregion
+        #region Condition
+        private int _ConditionLocation => _ENAMLocation!.Value.Min + 0x60;
+        private bool _Condition_IsSet => _ENAMLocation.HasValue;
+        public IFormLinkGetter<IConditionRecordGetter> Condition => _Condition_IsSet ? new FormLink<IConditionRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ConditionLocation, 0x4)))) : FormLink<IConditionRecordGetter>.Null;
+        #endregion
+        #region ENAMFloat1
+        private int _ENAMFloat1Location => _ENAMLocation!.Value.Min + 0x64;
+        private bool _ENAMFloat1_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat1 => _ENAMFloat1_IsSet ? _recordData.Slice(_ENAMFloat1Location, 4).Float() : default;
+        #endregion
+        #region ENAMFloat2
+        private int _ENAMFloat2Location => _ENAMLocation!.Value.Min + 0x68;
+        private bool _ENAMFloat2_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat2 => _ENAMFloat2_IsSet ? _recordData.Slice(_ENAMFloat2Location, 4).Float() : default;
+        #endregion
+        #region ENAMFloat3
+        private int _ENAMFloat3Location => _ENAMLocation!.Value.Min + 0x6C;
+        private bool _ENAMFloat3_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat3 => _ENAMFloat3_IsSet ? _recordData.Slice(_ENAMFloat3Location, 4).Float() : default;
+        #endregion
+        #region ENAMFloat4
+        private int _ENAMFloat4Location => _ENAMLocation!.Value.Min + 0x70;
+        private bool _ENAMFloat4_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat4 => _ENAMFloat4_IsSet ? _recordData.Slice(_ENAMFloat4Location, 4).Float() : default;
+        #endregion
+        #region ENAMFloat5
+        private int _ENAMFloat5Location => _ENAMLocation!.Value.Min + 0x74;
+        private bool _ENAMFloat5_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat5 => _ENAMFloat5_IsSet ? _recordData.Slice(_ENAMFloat5Location, 4).Float() : default;
+        #endregion
+        #region ENAMFloat6
+        private int _ENAMFloat6Location => _ENAMLocation!.Value.Min + 0x78;
+        private bool _ENAMFloat6_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat6 => _ENAMFloat6_IsSet ? _recordData.Slice(_ENAMFloat6Location, 4).Float() : default;
+        #endregion
+        #region EnamInt1
+        private int _EnamInt1Location => _ENAMLocation!.Value.Min + 0x7C;
+        private bool _EnamInt1_IsSet => _ENAMLocation.HasValue;
+        public Int32 EnamInt1 => _EnamInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt1Location, 4)) : default;
+        #endregion
+        #region EnamInt2
+        private int _EnamInt2Location => _ENAMLocation!.Value.Min + 0x80;
+        private bool _EnamInt2_IsSet => _ENAMLocation.HasValue;
+        public Int32 EnamInt2 => _EnamInt2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt2Location, 4)) : default;
+        #endregion
+        #region ENAMFloat7
+        private int _ENAMFloat7Location => _ENAMLocation!.Value.Min + 0x84;
+        private bool _ENAMFloat7_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat7 => _ENAMFloat7_IsSet ? _recordData.Slice(_ENAMFloat7Location, 4).Float() : default;
+        #endregion
+        #region EnamInt3
+        private int _EnamInt3Location => _ENAMLocation!.Value.Min + 0x88;
+        private bool _EnamInt3_IsSet => _ENAMLocation.HasValue;
+        public Int32 EnamInt3 => _EnamInt3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt3Location, 4)) : default;
+        #endregion
+        #region EnamInt4
+        private int _EnamInt4Location => _ENAMLocation!.Value.Min + 0x8C;
+        private bool _EnamInt4_IsSet => _ENAMLocation.HasValue;
+        public Int32 EnamInt4 => _EnamInt4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt4Location, 4)) : default;
+        #endregion
+        #region ENAMFloat8
+        private int _ENAMFloat8Location => _ENAMLocation!.Value.Min + 0x90;
+        private bool _ENAMFloat8_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat8 => _ENAMFloat8_IsSet ? _recordData.Slice(_ENAMFloat8Location, 4).Float() : default;
+        #endregion
+        #region ENAMFloat9
+        private int _ENAMFloat9Location => _ENAMLocation!.Value.Min + 0x94;
+        private bool _ENAMFloat9_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat9 => _ENAMFloat9_IsSet ? _recordData.Slice(_ENAMFloat9Location, 4).Float() : default;
+        #endregion
+        #region ENAMFloat10
+        private int _ENAMFloat10Location => _ENAMLocation!.Value.Min + 0x98;
+        private bool _ENAMFloat10_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat10 => _ENAMFloat10_IsSet ? _recordData.Slice(_ENAMFloat10Location, 4).Float() : default;
+        #endregion
+        #region EnamInt5
+        private int _EnamInt5Location => _ENAMLocation!.Value.Min + 0x9C;
+        private bool _EnamInt5_IsSet => _ENAMLocation.HasValue;
+        public Int32 EnamInt5 => _EnamInt5_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt5Location, 4)) : default;
+        #endregion
+        #region ENAMFloat11
+        private int _ENAMFloat11Location => _ENAMLocation!.Value.Min + 0xA0;
+        private bool _ENAMFloat11_IsSet => _ENAMLocation.HasValue;
+        public Single ENAMFloat11 => _ENAMFloat11_IsSet ? _recordData.Slice(_ENAMFloat11Location, 4).Float() : default;
+        #endregion
+        public IReadOnlyList<IDamageTypeValueGetter>? DamageType { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +4292,109 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Explosion_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.XALG;
+                }
+                case RecordTypeInts.DEFL:
+                {
+                    _DefaultLayerLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.DefaultLayer;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Explosion_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Explosion_FieldIndex.Model;
+                }
+                case RecordTypeInts.EITM:
+                {
+                    _ObjectEffectLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _ImageSpaceModifierLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _ENAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Explosion_FieldIndex.ENAMFloat11;
+                }
+                case RecordTypeInts.DAMA:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DamageType = BinaryOverlayList.FactoryByStartIndex<IDamageTypeValueGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => DamageTypeValueBinaryOverlay.DamageTypeValueFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Explosion_FieldIndex.DamageType;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

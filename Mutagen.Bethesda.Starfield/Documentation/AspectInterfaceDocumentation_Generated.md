@@ -89,6 +89,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ContainerModification
 - DestructionStage
 - EffectShader
+- Explosion
 - Flora
 - FloraModification
 - Furniture
@@ -140,6 +141,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DamageType
 - DialogTopic
 - DialogueSceneAction
+- Explosion
 - ExternalDataSource
 - FaceMorphPhenotype
 - FaceMorphPhenotypeItem
@@ -231,6 +233,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BiomeMarker
 - Book
 - Container
+- Explosion
 - Flora
 - Furniture
 - GenericBaseForm
@@ -413,6 +416,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### EffectShader
 - IModeled
+### Explosion
+- IModeled
+- INamed
+- IObjectBounded
 ### ExternalDataSource
 - INamed
 ### FaceMorphPhenotype
