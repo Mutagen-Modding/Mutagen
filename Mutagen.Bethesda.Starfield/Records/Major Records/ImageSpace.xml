@@ -2,6 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ImageSpace" recordType="IMGS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+      <FormLink name="ReflectionParent" refName="WeatherSetting" recordType="RFDP" />
+      <ByteArray name="ReflectionDiff" recordType="RDIF" unknown="true" />
     </Fields>
   </Object>
 </Loqui>
