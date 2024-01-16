@@ -141,6 +141,7 @@ namespace Mutagen.Bethesda.Starfield
             _AddonNodes_Object = new StarfieldGroup<AddonNode>(this);
             _ActorValueInformation_Object = new StarfieldGroup<ActorValueInformation>(this);
             _CameraShots_Object = new StarfieldGroup<CameraShot>(this);
+            _CameraPaths_Object = new StarfieldGroup<CameraPath>(this);
             _ArmorAddons_Object = new StarfieldGroup<ArmorAddon>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -740,6 +741,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ICameraShotGetter> IStarfieldModGetter.CameraShots => _CameraShots_Object;
         #endregion
+        #region CameraPaths
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<CameraPath> _CameraPaths_Object;
+        public StarfieldGroup<CameraPath> CameraPaths => _CameraPaths_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ICameraPathGetter> IStarfieldModGetter.CameraPaths => _CameraPaths_Object;
+        #endregion
         #region ArmorAddons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<ArmorAddon> _ArmorAddons_Object;
@@ -1001,6 +1009,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AddonNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ActorValueInformation = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.CameraShots = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.CameraPaths = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ArmorAddons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1106,6 +1115,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AddonNodes,
                 TItem ActorValueInformation,
                 TItem CameraShots,
+                TItem CameraPaths,
                 TItem ArmorAddons,
                 TItem Locations,
                 TItem DefaultObjects,
@@ -1209,6 +1219,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AddonNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AddonNodes, new StarfieldGroup.Mask<TItem>(AddonNodes));
                 this.ActorValueInformation = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueInformation, new StarfieldGroup.Mask<TItem>(ActorValueInformation));
                 this.CameraShots = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CameraShots, new StarfieldGroup.Mask<TItem>(CameraShots));
+                this.CameraPaths = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CameraPaths, new StarfieldGroup.Mask<TItem>(CameraPaths));
                 this.ArmorAddons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ArmorAddons, new StarfieldGroup.Mask<TItem>(ArmorAddons));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Locations, new StarfieldGroup.Mask<TItem>(Locations));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
@@ -1322,6 +1333,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AddonNodes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueInformation { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CameraShots { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CameraPaths { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ArmorAddons { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Locations { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
@@ -1436,6 +1448,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.AddonNodes, rhs.AddonNodes)) return false;
                 if (!object.Equals(this.ActorValueInformation, rhs.ActorValueInformation)) return false;
                 if (!object.Equals(this.CameraShots, rhs.CameraShots)) return false;
+                if (!object.Equals(this.CameraPaths, rhs.CameraPaths)) return false;
                 if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
                 if (!object.Equals(this.Locations, rhs.Locations)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
@@ -1543,6 +1556,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.AddonNodes);
                 hash.Add(this.ActorValueInformation);
                 hash.Add(this.CameraShots);
+                hash.Add(this.CameraPaths);
                 hash.Add(this.ArmorAddons);
                 hash.Add(this.Locations);
                 hash.Add(this.DefaultObjects);
@@ -1980,6 +1994,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.CameraShots.Overall)) return false;
                     if (this.CameraShots.Specific != null && !this.CameraShots.Specific.All(eval)) return false;
+                }
+                if (CameraPaths != null)
+                {
+                    if (!eval(this.CameraPaths.Overall)) return false;
+                    if (this.CameraPaths.Specific != null && !this.CameraPaths.Specific.All(eval)) return false;
                 }
                 if (ArmorAddons != null)
                 {
@@ -2498,6 +2517,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.CameraShots.Overall)) return true;
                     if (this.CameraShots.Specific != null && this.CameraShots.Specific.Any(eval)) return true;
                 }
+                if (CameraPaths != null)
+                {
+                    if (eval(this.CameraPaths.Overall)) return true;
+                    if (this.CameraPaths.Specific != null && this.CameraPaths.Specific.Any(eval)) return true;
+                }
                 if (ArmorAddons != null)
                 {
                     if (eval(this.ArmorAddons.Overall)) return true;
@@ -2694,6 +2718,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
                 obj.ActorValueInformation = this.ActorValueInformation == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueInformation.Overall), this.ActorValueInformation.Specific?.Translate(eval));
                 obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
+                obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
                 obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
                 obj.Locations = this.Locations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
@@ -3060,6 +3085,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         CameraShots?.Print(sb);
                     }
+                    if (printMask?.CameraPaths?.Overall ?? true)
+                    {
+                        CameraPaths?.Print(sb);
+                    }
                     if (printMask?.ArmorAddons?.Overall ?? true)
                     {
                         ArmorAddons?.Print(sb);
@@ -3246,6 +3275,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueInformation.ErrorMask>?>? ActorValueInformation;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Location.ErrorMask>?>? Locations;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
@@ -3438,6 +3468,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ActorValueInformation;
                     case StarfieldMod_FieldIndex.CameraShots:
                         return CameraShots;
+                    case StarfieldMod_FieldIndex.CameraPaths:
+                        return CameraPaths;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         return ArmorAddons;
                     case StarfieldMod_FieldIndex.Locations:
@@ -3733,6 +3765,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.CameraShots:
                         this.CameraShots = new MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraShot.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.CameraPaths:
+                        this.CameraPaths = new MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraPath.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
@@ -4050,6 +4085,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.CameraShots:
                         this.CameraShots = (MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraShot.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.CameraPaths:
+                        this.CameraPaths = (MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraPath.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
                         break;
@@ -4200,6 +4238,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (AddonNodes != null) return true;
                 if (ActorValueInformation != null) return true;
                 if (CameraShots != null) return true;
+                if (CameraPaths != null) return true;
                 if (ArmorAddons != null) return true;
                 if (Locations != null) return true;
                 if (DefaultObjects != null) return true;
@@ -4327,6 +4366,7 @@ namespace Mutagen.Bethesda.Starfield
                 AddonNodes?.Print(sb);
                 ActorValueInformation?.Print(sb);
                 CameraShots?.Print(sb);
+                CameraPaths?.Print(sb);
                 ArmorAddons?.Print(sb);
                 Locations?.Print(sb);
                 DefaultObjects?.Print(sb);
@@ -4437,6 +4477,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.AddonNodes = this.AddonNodes.Combine(rhs.AddonNodes, (l, r) => l.Combine(r));
                 ret.ActorValueInformation = this.ActorValueInformation.Combine(rhs.ActorValueInformation, (l, r) => l.Combine(r));
                 ret.CameraShots = this.CameraShots.Combine(rhs.CameraShots, (l, r) => l.Combine(r));
+                ret.CameraPaths = this.CameraPaths.Combine(rhs.CameraPaths, (l, r) => l.Combine(r));
                 ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
                 ret.Locations = this.Locations.Combine(rhs.Locations, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
@@ -4562,6 +4603,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<AddonNode.TranslationMask>? AddonNodes;
             public StarfieldGroup.TranslationMask<ActorValueInformation.TranslationMask>? ActorValueInformation;
             public StarfieldGroup.TranslationMask<CameraShot.TranslationMask>? CameraShots;
+            public StarfieldGroup.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
             public StarfieldGroup.TranslationMask<ArmorAddon.TranslationMask>? ArmorAddons;
             public StarfieldGroup.TranslationMask<Location.TranslationMask>? Locations;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
@@ -4688,6 +4730,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((AddonNodes != null ? AddonNodes.OnOverall : DefaultOn, AddonNodes?.GetCrystal()));
                 ret.Add((ActorValueInformation != null ? ActorValueInformation.OnOverall : DefaultOn, ActorValueInformation?.GetCrystal()));
                 ret.Add((CameraShots != null ? CameraShots.OnOverall : DefaultOn, CameraShots?.GetCrystal()));
+                ret.Add((CameraPaths != null ? CameraPaths.OnOverall : DefaultOn, CameraPaths?.GetCrystal()));
                 ret.Add((ArmorAddons != null ? ArmorAddons.OnOverall : DefaultOn, ArmorAddons?.GetCrystal()));
                 ret.Add((Locations != null ? Locations.OnOverall : DefaultOn, Locations?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
@@ -4835,6 +4878,7 @@ namespace Mutagen.Bethesda.Starfield
             _AddonNodes_Object = new StarfieldGroup<AddonNode>(this);
             _ActorValueInformation_Object = new StarfieldGroup<ActorValueInformation>(this);
             _CameraShots_Object = new StarfieldGroup<CameraShot>(this);
+            _CameraPaths_Object = new StarfieldGroup<CameraPath>(this);
             _ArmorAddons_Object = new StarfieldGroup<ArmorAddon>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -5188,6 +5232,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.CameraShots.RecordCache.Set(rhsMod.CameraShots.RecordCache.Items);
             }
+            if (mask?.CameraPaths ?? true)
+            {
+                this.CameraPaths.RecordCache.Set(rhsMod.CameraPaths.RecordCache.Items);
+            }
             if (mask?.ArmorAddons ?? true)
             {
                 this.ArmorAddons.RecordCache.Set(rhsMod.ArmorAddons.RecordCache.Items);
@@ -5359,6 +5407,7 @@ namespace Mutagen.Bethesda.Starfield
             count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
             count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
             count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
             count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
@@ -5734,6 +5783,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<AddonNode> AddonNodes { get; }
         new StarfieldGroup<ActorValueInformation> ActorValueInformation { get; }
         new StarfieldGroup<CameraShot> CameraShots { get; }
+        new StarfieldGroup<CameraPath> CameraPaths { get; }
         new StarfieldGroup<ArmorAddon> ArmorAddons { get; }
         new StarfieldGroup<Location> Locations { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
@@ -5855,6 +5905,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IAddonNodeGetter> AddonNodes { get; }
         IStarfieldGroupGetter<IActorValueInformationGetter> ActorValueInformation { get; }
         IStarfieldGroupGetter<ICameraShotGetter> CameraShots { get; }
+        IStarfieldGroupGetter<ICameraPathGetter> CameraPaths { get; }
         IStarfieldGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
         IStarfieldGroupGetter<ILocationGetter> Locations { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
@@ -6539,26 +6590,27 @@ namespace Mutagen.Bethesda.Starfield
         AddonNodes = 79,
         ActorValueInformation = 80,
         CameraShots = 81,
-        ArmorAddons = 82,
-        Locations = 83,
-        DefaultObjects = 84,
-        Outfits = 85,
-        AimModels = 86,
-        AimAssistModels = 87,
-        Layers = 88,
-        ConstructibleObjects = 89,
-        ObjectModifications = 90,
-        InstanceNamingRules = 91,
-        AttractionRules = 92,
-        Resources = 93,
-        BiomeSwaps = 94,
-        SnapTemplates = 95,
-        Planets = 96,
-        ConditionRecords = 97,
-        SurfacePatternStyles = 98,
-        TerminalMenus = 99,
-        LegendaryItems = 100,
-        ActorValueModulations = 101,
+        CameraPaths = 82,
+        ArmorAddons = 83,
+        Locations = 84,
+        DefaultObjects = 85,
+        Outfits = 86,
+        AimModels = 87,
+        AimAssistModels = 88,
+        Layers = 89,
+        ConstructibleObjects = 90,
+        ObjectModifications = 91,
+        InstanceNamingRules = 92,
+        AttractionRules = 93,
+        Resources = 94,
+        BiomeSwaps = 95,
+        SnapTemplates = 96,
+        Planets = 97,
+        ConditionRecords = 98,
+        SurfacePatternStyles = 99,
+        TerminalMenus = 100,
+        LegendaryItems = 101,
+        ActorValueModulations = 102,
     }
     #endregion
 
@@ -6569,9 +6621,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 102;
+        public const ushort AdditionalFieldCount = 103;
 
-        public const ushort FieldCount = 102;
+        public const ushort FieldCount = 103;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -6718,6 +6770,7 @@ namespace Mutagen.Bethesda.Starfield
             item.AddonNodes.Clear();
             item.ActorValueInformation.Clear();
             item.CameraShots.Clear();
+            item.CameraPaths.Clear();
             item.ArmorAddons.Clear();
             item.Locations.Clear();
             item.DefaultObjects.Clear();
@@ -6812,6 +6865,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.BodyParts.RemapLinks(mapping);
             obj.AddonNodes.RemapLinks(mapping);
             obj.CameraShots.RemapLinks(mapping);
+            obj.CameraPaths.RemapLinks(mapping);
             obj.ArmorAddons.RemapLinks(mapping);
             obj.Locations.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
@@ -6942,6 +6996,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AddonNodes.Remove(keys);
             obj.ActorValueInformation.Remove(keys);
             obj.CameraShots.Remove(keys);
+            obj.CameraPaths.Remove(keys);
             obj.ArmorAddons.Remove(keys);
             obj.Locations.Remove(keys);
             obj.DefaultObjects.Remove(keys);
@@ -7638,6 +7693,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     obj.CameraShots.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    obj.CameraPaths.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -8785,6 +8848,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.AddonNodes = MaskItemExt.Factory(item.AddonNodes.GetEqualsMask(rhs.AddonNodes, include), include);
             ret.ActorValueInformation = MaskItemExt.Factory(item.ActorValueInformation.GetEqualsMask(rhs.ActorValueInformation, include), include);
             ret.CameraShots = MaskItemExt.Factory(item.CameraShots.GetEqualsMask(rhs.CameraShots, include), include);
+            ret.CameraPaths = MaskItemExt.Factory(item.CameraPaths.GetEqualsMask(rhs.CameraPaths, include), include);
             ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
             ret.Locations = MaskItemExt.Factory(item.Locations.GetEqualsMask(rhs.Locations, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
@@ -9176,6 +9240,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.CameraShots?.Overall ?? true)
             {
                 item.CameraShots?.Print(sb, "CameraShots");
+            }
+            if (printMask?.CameraPaths?.Overall ?? true)
+            {
+                item.CameraPaths?.Print(sb, "CameraPaths");
             }
             if (printMask?.ArmorAddons?.Overall ?? true)
             {
@@ -9922,6 +9990,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isCameraShotsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.CameraPaths) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CameraPaths, rhs.CameraPaths, out var lhsCameraPaths, out var rhsCameraPaths, out var isCameraPathsEqual))
+                {
+                    if (!object.Equals(lhsCameraPaths, rhsCameraPaths)) return false;
+                }
+                else if (!isCameraPathsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ArmorAddons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ArmorAddons, rhs.ArmorAddons, out var lhsArmorAddons, out var rhsArmorAddons, out var isArmorAddonsEqual))
@@ -10170,6 +10246,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.AddonNodes);
             hash.Add(item.ActorValueInformation);
             hash.Add(item.CameraShots);
+            hash.Add(item.CameraPaths);
             hash.Add(item.ArmorAddons);
             hash.Add(item.Locations);
             hash.Add(item.DefaultObjects);
@@ -10612,6 +10689,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     return obj.CameraShots;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    return obj.CameraPaths;
                 case "ArmorAddon":
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
@@ -10738,7 +10820,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[101];
+            Stream[] outputStreams = new Stream[102];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10821,26 +10903,27 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.AddonNodes, 78, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 79, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CameraShots, 80, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 81, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 83, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 84, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 85, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 86, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 87, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 88, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 89, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 90, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 91, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 92, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 93, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 94, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 95, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 96, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 97, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 98, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 99, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 100, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, 81, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 82, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 84, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 85, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 87, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 88, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 89, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 90, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 91, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 92, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 93, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 94, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 95, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 96, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 97, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 98, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 99, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 100, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 101, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11170,6 +11253,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.CameraShots.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraPaths.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -11565,6 +11652,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.CameraShots.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraPaths.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12399,6 +12490,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13458,6 +13558,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.CameraShots,
                 groupGetter: (m) => m.CameraShots))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, CameraPath, ICameraPathGetter>(
+                srcGroup: obj.CameraPaths,
+                type: typeof(ICameraPathGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraPaths,
+                groupGetter: (m) => m.CameraPaths))
             {
                 yield return item;
             }
@@ -14788,6 +14897,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.CameraShots,
                         groupGetter: (m) => m.CameraShots))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, CameraPath, ICameraPathGetter>(
+                        srcGroup: obj.CameraPaths,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CameraPaths,
+                        groupGetter: (m) => m.CameraPaths))
                     {
                         yield return item;
                     }
@@ -17353,6 +17476,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.CameraPaths) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.CameraPaths);
+                try
+                {
+                    item.CameraPaths.DeepCopyIn(
+                        rhs: rhs.CameraPaths,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.CameraPaths));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ArmorAddons) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ArmorAddons);
@@ -17924,6 +18067,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool AddonNodes;
         public bool ActorValueInformation;
         public bool CameraShots;
+        public bool CameraPaths;
         public bool ArmorAddons;
         public bool Locations;
         public bool DefaultObjects;
@@ -18030,6 +18174,7 @@ namespace Mutagen.Bethesda.Starfield
             AddonNodes = defaultValue;
             ActorValueInformation = defaultValue;
             CameraShots = defaultValue;
+            CameraPaths = defaultValue;
             ArmorAddons = defaultValue;
             Locations = defaultValue;
             DefaultObjects = defaultValue;
@@ -18996,6 +19141,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)CameraShotsItem).BinaryWriteTranslator).Write<ICameraShotGetter>(
                         item: CameraShotsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CameraPaths ?? true)
+            {
+                var CameraPathsItem = item.CameraPaths;
+                if (CameraPathsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)CameraPathsItem).BinaryWriteTranslator).Write<ICameraPathGetter>(
+                        item: CameraPathsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -20414,6 +20570,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.CameraShots;
                 }
+                case RecordTypeInts.CPTH:
+                {
+                    if (importMask?.CameraPaths ?? true)
+                    {
+                        item.CameraPaths.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.CameraPaths;
+                }
                 case RecordTypeInts.ARMA:
                 {
                     if (importMask?.ArmorAddons ?? true)
@@ -21270,6 +21440,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? StarfieldGroupBinaryOverlay<ICameraShotGetter>.StarfieldGroupFactory(_stream, _CameraShotsLocations, _package) : default;
         public IStarfieldGroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new StarfieldGroup<CameraShot>(this);
         #endregion
+        #region CameraPaths
+        private List<RangeInt64>? _CameraPathsLocations;
+        private IStarfieldGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? StarfieldGroupBinaryOverlay<ICameraPathGetter>.StarfieldGroupFactory(_stream, _CameraPathsLocations, _package) : default;
+        public IStarfieldGroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new StarfieldGroup<CameraPath>(this);
+        #endregion
         #region ArmorAddons
         private List<RangeInt64>? _ArmorAddonsLocations;
         private IStarfieldGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? StarfieldGroupBinaryOverlay<IArmorAddonGetter>.StarfieldGroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
@@ -21948,6 +22123,12 @@ namespace Mutagen.Bethesda.Starfield
                     _CameraShotsLocations ??= new();
                     _CameraShotsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.CameraShots;
+                }
+                case RecordTypeInts.CPTH:
+                {
+                    _CameraPathsLocations ??= new();
+                    _CameraPathsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.ARMA:
                 {
