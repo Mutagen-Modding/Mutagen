@@ -2,6 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="VoiceType" recordType="VTYP" baseClass="StarfieldMajorRecord" objType="Record">
     <Fields>
+      <Enum name="Flags" enumName="VoiceType.Flag" recordType="DNAM" nullable="False" byteLength="1" />
+      <FormLink name="AnimationFaceArchetype" refName="Keyword" recordType="ANAM" />
+      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>
   </Object>

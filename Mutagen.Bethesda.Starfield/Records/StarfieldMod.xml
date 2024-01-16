@@ -89,6 +89,7 @@
       <Group name="ActorValueInformation" refName="ActorValueInformation" />
       <Group name="CameraShots" refName="CameraShot" />
       <Group name="CameraPaths" refName="CameraPath" />
+      <Group name="VoiceTypes" refName="VoiceType" />
       <Group name="ArmorAddons" refName="ArmorAddon" />
       <Group name="Locations" refName="Location" />
       <Group name="DefaultObjects" refName="DefaultObject" />

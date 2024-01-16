@@ -2464,6 +2464,7 @@
     <Compile Include="Records\Major Records\Transform.cs">
       <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\VoiceType.cs" />
     <Compile Include="Records\Major Records\Water.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>

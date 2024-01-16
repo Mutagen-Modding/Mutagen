@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,30 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Flags
+        public VoiceType.Flag Flags { get; set; } = default;
+        #endregion
+        #region AnimationFaceArchetype
+        private readonly IFormLinkNullable<IKeywordGetter> _AnimationFaceArchetype = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> AnimationFaceArchetype
+        {
+            get => _AnimationFaceArchetype;
+            set => _AnimationFaceArchetype.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IVoiceTypeGetter.AnimationFaceArchetype => this.AnimationFaceArchetype;
+        #endregion
+        #region PNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _PNAM;
+        public MemorySlice<Byte>? PNAM
+        {
+            get => this._PNAM;
+            set => this._PNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IVoiceTypeGetter.PNAM => this.PNAM;
+        #endregion
 
         #region To String
 
@@ -79,6 +104,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Flags = initialValue;
+                this.AnimationFaceArchetype = initialValue;
+                this.PNAM = initialValue;
             }
 
             public Mask(
@@ -88,7 +116,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Flags,
+                TItem AnimationFaceArchetype,
+                TItem PNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +129,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Flags = Flags;
+                this.AnimationFaceArchetype = AnimationFaceArchetype;
+                this.PNAM = PNAM;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +140,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Flags;
+            public TItem AnimationFaceArchetype;
+            public TItem PNAM;
             #endregion
 
             #region Equals
@@ -119,11 +159,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.AnimationFaceArchetype, rhs.AnimationFaceArchetype)) return false;
+                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.AnimationFaceArchetype);
+                hash.Add(this.PNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +180,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.AnimationFaceArchetype)) return false;
+                if (!eval(this.PNAM)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +191,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.AnimationFaceArchetype)) return true;
+                if (eval(this.PNAM)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +209,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Flags = eval(this.Flags);
+                obj.AnimationFaceArchetype = eval(this.AnimationFaceArchetype);
+                obj.PNAM = eval(this.PNAM);
             }
             #endregion
 
@@ -175,6 +230,18 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(VoiceType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.AnimationFaceArchetype ?? true)
+                    {
+                        sb.AppendItem(AnimationFaceArchetype, "AnimationFaceArchetype");
+                    }
+                    if (printMask?.PNAM ?? true)
+                    {
+                        sb.AppendItem(PNAM, "PNAM");
+                    }
                 }
             }
             #endregion
@@ -185,12 +252,24 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Flags;
+            public Exception? AnimationFaceArchetype;
+            public Exception? PNAM;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        return Flags;
+                    case VoiceType_FieldIndex.AnimationFaceArchetype:
+                        return AnimationFaceArchetype;
+                    case VoiceType_FieldIndex.PNAM:
+                        return PNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +280,15 @@ namespace Mutagen.Bethesda.Starfield
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case VoiceType_FieldIndex.AnimationFaceArchetype:
+                        this.AnimationFaceArchetype = ex;
+                        break;
+                    case VoiceType_FieldIndex.PNAM:
+                        this.PNAM = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +300,15 @@ namespace Mutagen.Bethesda.Starfield
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case VoiceType_FieldIndex.AnimationFaceArchetype:
+                        this.AnimationFaceArchetype = (Exception?)obj;
+                        break;
+                    case VoiceType_FieldIndex.PNAM:
+                        this.PNAM = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +318,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Flags != null) return true;
+                if (AnimationFaceArchetype != null) return true;
+                if (PNAM != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +347,15 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AnimationFaceArchetype, "AnimationFaceArchetype");
+                }
+                {
+                    sb.AppendItem(PNAM, "PNAM");
+                }
             }
             #endregion
 
@@ -255,6 +364,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.AnimationFaceArchetype = this.AnimationFaceArchetype.Combine(rhs.AnimationFaceArchetype);
+                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +388,32 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Flags;
+            public bool AnimationFaceArchetype;
+            public bool PNAM;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Flags = defaultOn;
+                this.AnimationFaceArchetype = defaultOn;
+                this.PNAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Flags, null));
+                ret.Add((AnimationFaceArchetype, null));
+                ret.Add((PNAM, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +425,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = VoiceType_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VoiceTypeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VoiceTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public VoiceType(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,11 +555,15 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IVoiceType :
+        IFormLinkContainer,
         ILoquiObjectSetter<IVoiceTypeInternal>,
         IStarfieldMajorRecordInternal,
         IVoiceTypeGetter,
         IVoiceTypeOrList
     {
+        new VoiceType.Flag Flags { get; set; }
+        new IFormLinkNullable<IKeywordGetter> AnimationFaceArchetype { get; set; }
+        new MemorySlice<Byte>? PNAM { get; set; }
     }
 
     public partial interface IVoiceTypeInternal :
@@ -442,11 +577,15 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IVoiceTypeGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IVoiceTypeGetter>,
         IMapsToGetter<IVoiceTypeGetter>,
         IVoiceTypeOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => VoiceType_Registration.Instance;
+        VoiceType.Flag Flags { get; }
+        IFormLinkNullableGetter<IKeywordGetter> AnimationFaceArchetype { get; }
+        ReadOnlyMemorySlice<Byte>? PNAM { get; }
 
     }
 
@@ -623,6 +762,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Flags = 7,
+        AnimationFaceArchetype = 8,
+        PNAM = 9,
     }
     #endregion
 
@@ -633,9 +775,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(VoiceType.Mask<>);
 
@@ -665,8 +807,15 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.VTYP);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.VTYP);
+            var all = RecordCollection.Factory(
+                RecordTypes.VTYP,
+                RecordTypes.DNAM,
+                RecordTypes.ANAM,
+                RecordTypes.PNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(VoiceTypeBinaryWriteTranslation);
         #region Interface
@@ -708,6 +857,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IVoiceTypeInternal item)
         {
             ClearPartial();
+            item.Flags = default;
+            item.AnimationFaceArchetype.Clear();
+            item.PNAM = default;
             base.Clear(item);
         }
         
@@ -725,6 +877,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IVoiceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.AnimationFaceArchetype.Relink(mapping);
         }
         
         #endregion
@@ -792,6 +945,9 @@ namespace Mutagen.Bethesda.Starfield
             VoiceType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.AnimationFaceArchetype = item.AnimationFaceArchetype.Equals(rhs.AnimationFaceArchetype);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -841,6 +997,19 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.AnimationFaceArchetype ?? true)
+            {
+                sb.AppendItem(item.AnimationFaceArchetype.FormKeyNullable, "AnimationFaceArchetype");
+            }
+            if ((printMask?.PNAM ?? true)
+                && item.PNAM is {} PNAMItem)
+            {
+                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
+            }
         }
         
         public static VoiceType_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -891,6 +1060,18 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)VoiceType_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)VoiceType_FieldIndex.AnimationFaceArchetype) ?? true))
+            {
+                if (!lhs.AnimationFaceArchetype.Equals(rhs.AnimationFaceArchetype)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)VoiceType_FieldIndex.PNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
+            }
             return true;
         }
         
@@ -919,6 +1100,12 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IVoiceTypeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Flags);
+            hash.Add(item.AnimationFaceArchetype);
+            if (item.PNAM is {} PNAMItem)
+            {
+                hash.Add(PNAMItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -947,6 +1134,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.AnimationFaceArchetype, out var AnimationFaceArchetypeInfo))
+            {
+                yield return AnimationFaceArchetypeInfo;
             }
             yield break;
         }
@@ -1022,6 +1213,25 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)VoiceType_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VoiceType_FieldIndex.AnimationFaceArchetype) ?? true))
+            {
+                item.AnimationFaceArchetype.SetTo(rhs.AnimationFaceArchetype.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)VoiceType_FieldIndex.PNAM) ?? true))
+            {
+                if(rhs.PNAM is {} PNAMrhs)
+                {
+                    item.PNAM = PNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.PNAM = default;
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1170,6 +1380,30 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly VoiceTypeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IVoiceTypeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            EnumBinaryTranslation<VoiceType.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AnimationFaceArchetype,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.PNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IVoiceTypeGetter item,
@@ -1186,10 +1420,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1239,6 +1475,50 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly VoiceTypeBinaryCreateTranslation Instance = new VoiceTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.VTYP;
+        public static ParseResult FillBinaryRecordTypes(
+            IVoiceTypeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<VoiceType.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)VoiceType_FieldIndex.Flags;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AnimationFaceArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)VoiceType_FieldIndex.AnimationFaceArchetype;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)VoiceType_FieldIndex.PNAM;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1271,6 +1551,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VoiceTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VoiceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1285,6 +1566,18 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IVoiceType);
 
 
+        #region Flags
+        private int? _FlagsLocation;
+        public VoiceType.Flag Flags => _FlagsLocation.HasValue ? (VoiceType.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(VoiceType.Flag);
+        #endregion
+        #region AnimationFaceArchetype
+        private int? _AnimationFaceArchetypeLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> AnimationFaceArchetype => _AnimationFaceArchetypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationFaceArchetypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region PNAM
+        private int? _PNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1342,6 +1635,44 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)VoiceType_FieldIndex.Flags;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _AnimationFaceArchetypeLocation = (stream.Position - offset);
+                    return (int)VoiceType_FieldIndex.AnimationFaceArchetype;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _PNAMLocation = (stream.Position - offset);
+                    return (int)VoiceType_FieldIndex.PNAM;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
