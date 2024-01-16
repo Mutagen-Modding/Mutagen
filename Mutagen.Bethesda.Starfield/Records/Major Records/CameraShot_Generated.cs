@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +58,121 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ICameraShotGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ICameraShotGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Context
+        public String? Context { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICameraShotGetter.Context => this.Context;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> ICameraShotGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region Action
+        public CameraShot.ActionType Action { get; set; } = default;
+        #endregion
+        #region Location
+        public CameraShot.LocationType Location { get; set; } = default;
+        #endregion
+        #region Target
+        public CameraShot.LocationType Target { get; set; } = default;
+        #endregion
+        #region Flags
+        public CameraShot.Flag Flags { get; set; } = default;
+        #endregion
+        #region TimeMultiplierPlayer
+        public Single TimeMultiplierPlayer { get; set; } = default;
+        #endregion
+        #region TimeMultiplierTarget
+        public Single TimeMultiplierTarget { get; set; } = default;
+        #endregion
+        #region TimeMultiplierGlobal
+        public Single TimeMultiplierGlobal { get; set; } = default;
+        #endregion
+        #region MaxTime
+        public Single MaxTime { get; set; } = default;
+        #endregion
+        #region MinTime
+        public Single MinTime { get; set; } = default;
+        #endregion
+        #region TargetPercentBetweenActors
+        public Single TargetPercentBetweenActors { get; set; } = default;
+        #endregion
+        #region NearTargetDistance
+        public Single NearTargetDistance { get; set; } = default;
+        #endregion
+        #region LocationSpring
+        public Single LocationSpring { get; set; } = default;
+        #endregion
+        #region TargetSpring
+        public Single TargetSpring { get; set; } = default;
+        #endregion
+        #region RotationOffset
+        public P3Float RotationOffset { get; set; } = default;
+        #endregion
+        #region ImageSpaceModifier
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        #endregion
+        #region Animation
+        public String? Animation { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICameraShotGetter.Animation => this.Animation;
+        #endregion
 
         #region To String
 
@@ -79,6 +198,26 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Context = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Action = initialValue;
+                this.Location = initialValue;
+                this.Target = initialValue;
+                this.Flags = initialValue;
+                this.TimeMultiplierPlayer = initialValue;
+                this.TimeMultiplierTarget = initialValue;
+                this.TimeMultiplierGlobal = initialValue;
+                this.MaxTime = initialValue;
+                this.MinTime = initialValue;
+                this.TargetPercentBetweenActors = initialValue;
+                this.NearTargetDistance = initialValue;
+                this.LocationSpring = initialValue;
+                this.TargetSpring = initialValue;
+                this.RotationOffset = initialValue;
+                this.ImageSpaceModifier = initialValue;
+                this.Animation = initialValue;
             }
 
             public Mask(
@@ -88,7 +227,27 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Model,
+                TItem Keywords,
+                TItem Context,
+                TItem Conditions,
+                TItem Action,
+                TItem Location,
+                TItem Target,
+                TItem Flags,
+                TItem TimeMultiplierPlayer,
+                TItem TimeMultiplierTarget,
+                TItem TimeMultiplierGlobal,
+                TItem MaxTime,
+                TItem MinTime,
+                TItem TargetPercentBetweenActors,
+                TItem NearTargetDistance,
+                TItem LocationSpring,
+                TItem TargetSpring,
+                TItem RotationOffset,
+                TItem ImageSpaceModifier,
+                TItem Animation)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +257,26 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Context = Context;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Action = Action;
+                this.Location = Location;
+                this.Target = Target;
+                this.Flags = Flags;
+                this.TimeMultiplierPlayer = TimeMultiplierPlayer;
+                this.TimeMultiplierTarget = TimeMultiplierTarget;
+                this.TimeMultiplierGlobal = TimeMultiplierGlobal;
+                this.MaxTime = MaxTime;
+                this.MinTime = MinTime;
+                this.TargetPercentBetweenActors = TargetPercentBetweenActors;
+                this.NearTargetDistance = NearTargetDistance;
+                this.LocationSpring = LocationSpring;
+                this.TargetSpring = TargetSpring;
+                this.RotationOffset = RotationOffset;
+                this.ImageSpaceModifier = ImageSpaceModifier;
+                this.Animation = Animation;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +285,29 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem Context;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem Action;
+            public TItem Location;
+            public TItem Target;
+            public TItem Flags;
+            public TItem TimeMultiplierPlayer;
+            public TItem TimeMultiplierTarget;
+            public TItem TimeMultiplierGlobal;
+            public TItem MaxTime;
+            public TItem MinTime;
+            public TItem TargetPercentBetweenActors;
+            public TItem NearTargetDistance;
+            public TItem LocationSpring;
+            public TItem TargetSpring;
+            public TItem RotationOffset;
+            public TItem ImageSpaceModifier;
+            public TItem Animation;
             #endregion
 
             #region Equals
@@ -119,11 +321,51 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Context, rhs.Context)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Action, rhs.Action)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.TimeMultiplierPlayer, rhs.TimeMultiplierPlayer)) return false;
+                if (!object.Equals(this.TimeMultiplierTarget, rhs.TimeMultiplierTarget)) return false;
+                if (!object.Equals(this.TimeMultiplierGlobal, rhs.TimeMultiplierGlobal)) return false;
+                if (!object.Equals(this.MaxTime, rhs.MaxTime)) return false;
+                if (!object.Equals(this.MinTime, rhs.MinTime)) return false;
+                if (!object.Equals(this.TargetPercentBetweenActors, rhs.TargetPercentBetweenActors)) return false;
+                if (!object.Equals(this.NearTargetDistance, rhs.NearTargetDistance)) return false;
+                if (!object.Equals(this.LocationSpring, rhs.LocationSpring)) return false;
+                if (!object.Equals(this.TargetSpring, rhs.TargetSpring)) return false;
+                if (!object.Equals(this.RotationOffset, rhs.RotationOffset)) return false;
+                if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
+                if (!object.Equals(this.Animation, rhs.Animation)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Keywords);
+                hash.Add(this.Context);
+                hash.Add(this.Conditions);
+                hash.Add(this.Action);
+                hash.Add(this.Location);
+                hash.Add(this.Target);
+                hash.Add(this.Flags);
+                hash.Add(this.TimeMultiplierPlayer);
+                hash.Add(this.TimeMultiplierTarget);
+                hash.Add(this.TimeMultiplierGlobal);
+                hash.Add(this.MaxTime);
+                hash.Add(this.MinTime);
+                hash.Add(this.TargetPercentBetweenActors);
+                hash.Add(this.NearTargetDistance);
+                hash.Add(this.LocationSpring);
+                hash.Add(this.TargetSpring);
+                hash.Add(this.RotationOffset);
+                hash.Add(this.ImageSpaceModifier);
+                hash.Add(this.Animation);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +376,51 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Context)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Action)) return false;
+                if (!eval(this.Location)) return false;
+                if (!eval(this.Target)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.TimeMultiplierPlayer)) return false;
+                if (!eval(this.TimeMultiplierTarget)) return false;
+                if (!eval(this.TimeMultiplierGlobal)) return false;
+                if (!eval(this.MaxTime)) return false;
+                if (!eval(this.MinTime)) return false;
+                if (!eval(this.TargetPercentBetweenActors)) return false;
+                if (!eval(this.NearTargetDistance)) return false;
+                if (!eval(this.LocationSpring)) return false;
+                if (!eval(this.TargetSpring)) return false;
+                if (!eval(this.RotationOffset)) return false;
+                if (!eval(this.ImageSpaceModifier)) return false;
+                if (!eval(this.Animation)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +429,51 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Context)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Action)) return true;
+                if (eval(this.Location)) return true;
+                if (eval(this.Target)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.TimeMultiplierPlayer)) return true;
+                if (eval(this.TimeMultiplierTarget)) return true;
+                if (eval(this.TimeMultiplierGlobal)) return true;
+                if (eval(this.MaxTime)) return true;
+                if (eval(this.MinTime)) return true;
+                if (eval(this.TargetPercentBetweenActors)) return true;
+                if (eval(this.NearTargetDistance)) return true;
+                if (eval(this.LocationSpring)) return true;
+                if (eval(this.TargetSpring)) return true;
+                if (eval(this.RotationOffset)) return true;
+                if (eval(this.ImageSpaceModifier)) return true;
+                if (eval(this.Animation)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +489,53 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Context = eval(this.Context);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Action = eval(this.Action);
+                obj.Location = eval(this.Location);
+                obj.Target = eval(this.Target);
+                obj.Flags = eval(this.Flags);
+                obj.TimeMultiplierPlayer = eval(this.TimeMultiplierPlayer);
+                obj.TimeMultiplierTarget = eval(this.TimeMultiplierTarget);
+                obj.TimeMultiplierGlobal = eval(this.TimeMultiplierGlobal);
+                obj.MaxTime = eval(this.MaxTime);
+                obj.MinTime = eval(this.MinTime);
+                obj.TargetPercentBetweenActors = eval(this.TargetPercentBetweenActors);
+                obj.NearTargetDistance = eval(this.NearTargetDistance);
+                obj.LocationSpring = eval(this.LocationSpring);
+                obj.TargetSpring = eval(this.TargetSpring);
+                obj.RotationOffset = eval(this.RotationOffset);
+                obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
+                obj.Animation = eval(this.Animation);
             }
             #endregion
 
@@ -175,6 +554,118 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(CameraShot.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Context ?? true)
+                    {
+                        sb.AppendItem(Context, "Context");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Action ?? true)
+                    {
+                        sb.AppendItem(Action, "Action");
+                    }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.Target ?? true)
+                    {
+                        sb.AppendItem(Target, "Target");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.TimeMultiplierPlayer ?? true)
+                    {
+                        sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                    }
+                    if (printMask?.TimeMultiplierTarget ?? true)
+                    {
+                        sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                    }
+                    if (printMask?.TimeMultiplierGlobal ?? true)
+                    {
+                        sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                    }
+                    if (printMask?.MaxTime ?? true)
+                    {
+                        sb.AppendItem(MaxTime, "MaxTime");
+                    }
+                    if (printMask?.MinTime ?? true)
+                    {
+                        sb.AppendItem(MinTime, "MinTime");
+                    }
+                    if (printMask?.TargetPercentBetweenActors ?? true)
+                    {
+                        sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                    }
+                    if (printMask?.NearTargetDistance ?? true)
+                    {
+                        sb.AppendItem(NearTargetDistance, "NearTargetDistance");
+                    }
+                    if (printMask?.LocationSpring ?? true)
+                    {
+                        sb.AppendItem(LocationSpring, "LocationSpring");
+                    }
+                    if (printMask?.TargetSpring ?? true)
+                    {
+                        sb.AppendItem(TargetSpring, "TargetSpring");
+                    }
+                    if (printMask?.RotationOffset ?? true)
+                    {
+                        sb.AppendItem(RotationOffset, "RotationOffset");
+                    }
+                    if (printMask?.ImageSpaceModifier ?? true)
+                    {
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                    }
+                    if (printMask?.Animation ?? true)
+                    {
+                        sb.AppendItem(Animation, "Animation");
+                    }
                 }
             }
             #endregion
@@ -185,12 +676,75 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? Context;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? Action;
+            public Exception? Location;
+            public Exception? Target;
+            public Exception? Flags;
+            public Exception? TimeMultiplierPlayer;
+            public Exception? TimeMultiplierTarget;
+            public Exception? TimeMultiplierGlobal;
+            public Exception? MaxTime;
+            public Exception? MinTime;
+            public Exception? TargetPercentBetweenActors;
+            public Exception? NearTargetDistance;
+            public Exception? LocationSpring;
+            public Exception? TargetSpring;
+            public Exception? RotationOffset;
+            public Exception? ImageSpaceModifier;
+            public Exception? Animation;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 CameraShot_FieldIndex enu = (CameraShot_FieldIndex)index;
                 switch (enu)
                 {
+                    case CameraShot_FieldIndex.Model:
+                        return Model;
+                    case CameraShot_FieldIndex.Keywords:
+                        return Keywords;
+                    case CameraShot_FieldIndex.Context:
+                        return Context;
+                    case CameraShot_FieldIndex.Conditions:
+                        return Conditions;
+                    case CameraShot_FieldIndex.Action:
+                        return Action;
+                    case CameraShot_FieldIndex.Location:
+                        return Location;
+                    case CameraShot_FieldIndex.Target:
+                        return Target;
+                    case CameraShot_FieldIndex.Flags:
+                        return Flags;
+                    case CameraShot_FieldIndex.TimeMultiplierPlayer:
+                        return TimeMultiplierPlayer;
+                    case CameraShot_FieldIndex.TimeMultiplierTarget:
+                        return TimeMultiplierTarget;
+                    case CameraShot_FieldIndex.TimeMultiplierGlobal:
+                        return TimeMultiplierGlobal;
+                    case CameraShot_FieldIndex.MaxTime:
+                        return MaxTime;
+                    case CameraShot_FieldIndex.MinTime:
+                        return MinTime;
+                    case CameraShot_FieldIndex.TargetPercentBetweenActors:
+                        return TargetPercentBetweenActors;
+                    case CameraShot_FieldIndex.NearTargetDistance:
+                        return NearTargetDistance;
+                    case CameraShot_FieldIndex.LocationSpring:
+                        return LocationSpring;
+                    case CameraShot_FieldIndex.TargetSpring:
+                        return TargetSpring;
+                    case CameraShot_FieldIndex.RotationOffset:
+                        return RotationOffset;
+                    case CameraShot_FieldIndex.ImageSpaceModifier:
+                        return ImageSpaceModifier;
+                    case CameraShot_FieldIndex.Animation:
+                        return Animation;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +755,66 @@ namespace Mutagen.Bethesda.Starfield
                 CameraShot_FieldIndex enu = (CameraShot_FieldIndex)index;
                 switch (enu)
                 {
+                    case CameraShot_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case CameraShot_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case CameraShot_FieldIndex.Context:
+                        this.Context = ex;
+                        break;
+                    case CameraShot_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case CameraShot_FieldIndex.Action:
+                        this.Action = ex;
+                        break;
+                    case CameraShot_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case CameraShot_FieldIndex.Target:
+                        this.Target = ex;
+                        break;
+                    case CameraShot_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierPlayer:
+                        this.TimeMultiplierPlayer = ex;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierTarget:
+                        this.TimeMultiplierTarget = ex;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierGlobal:
+                        this.TimeMultiplierGlobal = ex;
+                        break;
+                    case CameraShot_FieldIndex.MaxTime:
+                        this.MaxTime = ex;
+                        break;
+                    case CameraShot_FieldIndex.MinTime:
+                        this.MinTime = ex;
+                        break;
+                    case CameraShot_FieldIndex.TargetPercentBetweenActors:
+                        this.TargetPercentBetweenActors = ex;
+                        break;
+                    case CameraShot_FieldIndex.NearTargetDistance:
+                        this.NearTargetDistance = ex;
+                        break;
+                    case CameraShot_FieldIndex.LocationSpring:
+                        this.LocationSpring = ex;
+                        break;
+                    case CameraShot_FieldIndex.TargetSpring:
+                        this.TargetSpring = ex;
+                        break;
+                    case CameraShot_FieldIndex.RotationOffset:
+                        this.RotationOffset = ex;
+                        break;
+                    case CameraShot_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = ex;
+                        break;
+                    case CameraShot_FieldIndex.Animation:
+                        this.Animation = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +826,66 @@ namespace Mutagen.Bethesda.Starfield
                 CameraShot_FieldIndex enu = (CameraShot_FieldIndex)index;
                 switch (enu)
                 {
+                    case CameraShot_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case CameraShot_FieldIndex.Context:
+                        this.Context = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case CameraShot_FieldIndex.Action:
+                        this.Action = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Target:
+                        this.Target = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierPlayer:
+                        this.TimeMultiplierPlayer = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierTarget:
+                        this.TimeMultiplierTarget = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierGlobal:
+                        this.TimeMultiplierGlobal = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.MaxTime:
+                        this.MaxTime = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.MinTime:
+                        this.MinTime = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TargetPercentBetweenActors:
+                        this.TargetPercentBetweenActors = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.NearTargetDistance:
+                        this.NearTargetDistance = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.LocationSpring:
+                        this.LocationSpring = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TargetSpring:
+                        this.TargetSpring = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.RotationOffset:
+                        this.RotationOffset = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Animation:
+                        this.Animation = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +895,26 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Model != null) return true;
+                if (Keywords != null) return true;
+                if (Context != null) return true;
+                if (Conditions != null) return true;
+                if (Action != null) return true;
+                if (Location != null) return true;
+                if (Target != null) return true;
+                if (Flags != null) return true;
+                if (TimeMultiplierPlayer != null) return true;
+                if (TimeMultiplierTarget != null) return true;
+                if (TimeMultiplierGlobal != null) return true;
+                if (MaxTime != null) return true;
+                if (MinTime != null) return true;
+                if (TargetPercentBetweenActors != null) return true;
+                if (NearTargetDistance != null) return true;
+                if (LocationSpring != null) return true;
+                if (TargetSpring != null) return true;
+                if (RotationOffset != null) return true;
+                if (ImageSpaceModifier != null) return true;
+                if (Animation != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +941,96 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                Model?.Print(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Context, "Context");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Action, "Action");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                }
+                {
+                    sb.AppendItem(MaxTime, "MaxTime");
+                }
+                {
+                    sb.AppendItem(MinTime, "MinTime");
+                }
+                {
+                    sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                }
+                {
+                    sb.AppendItem(NearTargetDistance, "NearTargetDistance");
+                }
+                {
+                    sb.AppendItem(LocationSpring, "LocationSpring");
+                }
+                {
+                    sb.AppendItem(TargetSpring, "TargetSpring");
+                }
+                {
+                    sb.AppendItem(RotationOffset, "RotationOffset");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(Animation, "Animation");
+                }
             }
             #endregion
 
@@ -255,6 +1039,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Context = this.Context.Combine(rhs.Context);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Action = this.Action.Combine(rhs.Action);
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.Target = this.Target.Combine(rhs.Target);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.TimeMultiplierPlayer = this.TimeMultiplierPlayer.Combine(rhs.TimeMultiplierPlayer);
+                ret.TimeMultiplierTarget = this.TimeMultiplierTarget.Combine(rhs.TimeMultiplierTarget);
+                ret.TimeMultiplierGlobal = this.TimeMultiplierGlobal.Combine(rhs.TimeMultiplierGlobal);
+                ret.MaxTime = this.MaxTime.Combine(rhs.MaxTime);
+                ret.MinTime = this.MinTime.Combine(rhs.MinTime);
+                ret.TargetPercentBetweenActors = this.TargetPercentBetweenActors.Combine(rhs.TargetPercentBetweenActors);
+                ret.NearTargetDistance = this.NearTargetDistance.Combine(rhs.NearTargetDistance);
+                ret.LocationSpring = this.LocationSpring.Combine(rhs.LocationSpring);
+                ret.TargetSpring = this.TargetSpring.Combine(rhs.TargetSpring);
+                ret.RotationOffset = this.RotationOffset.Combine(rhs.RotationOffset);
+                ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
+                ret.Animation = this.Animation.Combine(rhs.Animation);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1080,81 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public Model.TranslationMask? Model;
+            public bool Keywords;
+            public bool Context;
+            public Condition.TranslationMask? Conditions;
+            public bool Action;
+            public bool Location;
+            public bool Target;
+            public bool Flags;
+            public bool TimeMultiplierPlayer;
+            public bool TimeMultiplierTarget;
+            public bool TimeMultiplierGlobal;
+            public bool MaxTime;
+            public bool MinTime;
+            public bool TargetPercentBetweenActors;
+            public bool NearTargetDistance;
+            public bool LocationSpring;
+            public bool TargetSpring;
+            public bool RotationOffset;
+            public bool ImageSpaceModifier;
+            public bool Animation;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Keywords = defaultOn;
+                this.Context = defaultOn;
+                this.Action = defaultOn;
+                this.Location = defaultOn;
+                this.Target = defaultOn;
+                this.Flags = defaultOn;
+                this.TimeMultiplierPlayer = defaultOn;
+                this.TimeMultiplierTarget = defaultOn;
+                this.TimeMultiplierGlobal = defaultOn;
+                this.MaxTime = defaultOn;
+                this.MinTime = defaultOn;
+                this.TargetPercentBetweenActors = defaultOn;
+                this.NearTargetDistance = defaultOn;
+                this.LocationSpring = defaultOn;
+                this.TargetSpring = defaultOn;
+                this.RotationOffset = defaultOn;
+                this.ImageSpaceModifier = defaultOn;
+                this.Animation = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((Context, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((Action, null));
+                ret.Add((Location, null));
+                ret.Add((Target, null));
+                ret.Add((Flags, null));
+                ret.Add((TimeMultiplierPlayer, null));
+                ret.Add((TimeMultiplierTarget, null));
+                ret.Add((TimeMultiplierGlobal, null));
+                ret.Add((MaxTime, null));
+                ret.Add((MinTime, null));
+                ret.Add((TargetPercentBetweenActors, null));
+                ret.Add((NearTargetDistance, null));
+                ret.Add((LocationSpring, null));
+                ret.Add((TargetSpring, null));
+                ret.Add((RotationOffset, null));
+                ret.Add((ImageSpaceModifier, null));
+                ret.Add((Animation, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1166,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CameraShot_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraShotCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraShotSetterCommon.Instance.RemapLinks(this, mapping);
         public CameraShot(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1217,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ICameraShot);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CameraShotCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CameraShotSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => CameraShotSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CameraShotSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1300,40 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ICameraShot :
+        IAssetLinkContainer,
         ICameraShotGetter,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ICameraShotInternal>,
+        IModeled,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new String? Context { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new CameraShot.ActionType Action { get; set; }
+        new CameraShot.LocationType Location { get; set; }
+        new CameraShot.LocationType Target { get; set; }
+        new CameraShot.Flag Flags { get; set; }
+        new Single TimeMultiplierPlayer { get; set; }
+        new Single TimeMultiplierTarget { get; set; }
+        new Single TimeMultiplierGlobal { get; set; }
+        new Single MaxTime { get; set; }
+        new Single MinTime { get; set; }
+        new Single TargetPercentBetweenActors { get; set; }
+        new Single NearTargetDistance { get; set; }
+        new Single LocationSpring { get; set; }
+        new Single TargetSpring { get; set; }
+        new P3Float RotationOffset { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new String? Animation { get; set; }
     }
 
     public partial interface ICameraShotInternal :
@@ -440,11 +1346,45 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.CAMS)]
     public partial interface ICameraShotGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ICameraShotGetter>,
-        IMapsToGetter<ICameraShotGetter>
+        IMapsToGetter<ICameraShotGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => CameraShot_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        String? Context { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        CameraShot.ActionType Action { get; }
+        CameraShot.LocationType Location { get; }
+        CameraShot.LocationType Target { get; }
+        CameraShot.Flag Flags { get; }
+        Single TimeMultiplierPlayer { get; }
+        Single TimeMultiplierTarget { get; }
+        Single TimeMultiplierGlobal { get; }
+        Single MaxTime { get; }
+        Single MinTime { get; }
+        Single TargetPercentBetweenActors { get; }
+        Single NearTargetDistance { get; }
+        Single LocationSpring { get; }
+        Single TargetSpring { get; }
+        P3Float RotationOffset { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        String? Animation { get; }
 
     }
 
@@ -621,6 +1561,26 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Model = 7,
+        Keywords = 8,
+        Context = 9,
+        Conditions = 10,
+        Action = 11,
+        Location = 12,
+        Target = 13,
+        Flags = 14,
+        TimeMultiplierPlayer = 15,
+        TimeMultiplierTarget = 16,
+        TimeMultiplierGlobal = 17,
+        MaxTime = 18,
+        MinTime = 19,
+        TargetPercentBetweenActors = 20,
+        NearTargetDistance = 21,
+        LocationSpring = 22,
+        TargetSpring = 23,
+        RotationOffset = 24,
+        ImageSpaceModifier = 25,
+        Animation = 26,
     }
     #endregion
 
@@ -631,9 +1591,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(CameraShot.Mask<>);
 
@@ -663,8 +1623,29 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.CAMS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.CAMS);
+            var all = RecordCollection.Factory(
+                RecordTypes.CAMS,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.NLDT,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.DATA,
+                RecordTypes.MNAM,
+                RecordTypes.GNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CameraShotBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1687,26 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICameraShotInternal item)
         {
             ClearPartial();
+            item.Model = null;
+            item.Keywords = null;
+            item.Context = default;
+            item.Conditions.Clear();
+            item.Action = default;
+            item.Location = default;
+            item.Target = default;
+            item.Flags = default;
+            item.TimeMultiplierPlayer = default;
+            item.TimeMultiplierTarget = default;
+            item.TimeMultiplierGlobal = default;
+            item.MaxTime = default;
+            item.MinTime = default;
+            item.TargetPercentBetweenActors = default;
+            item.NearTargetDistance = default;
+            item.LocationSpring = default;
+            item.TargetSpring = default;
+            item.RotationOffset = default;
+            item.ImageSpaceModifier.Clear();
+            item.Animation = default;
             base.Clear(item);
         }
         
@@ -723,6 +1724,36 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ICameraShot obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICameraShot obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ICameraShot obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -790,6 +1821,36 @@ namespace Mutagen.Bethesda.Starfield
             CameraShot.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Context = string.Equals(item.Context, rhs.Context);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Action = item.Action == rhs.Action;
+            ret.Location = item.Location == rhs.Location;
+            ret.Target = item.Target == rhs.Target;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.TimeMultiplierPlayer = item.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer);
+            ret.TimeMultiplierTarget = item.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget);
+            ret.TimeMultiplierGlobal = item.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal);
+            ret.MaxTime = item.MaxTime.EqualsWithin(rhs.MaxTime);
+            ret.MinTime = item.MinTime.EqualsWithin(rhs.MinTime);
+            ret.TargetPercentBetweenActors = item.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors);
+            ret.NearTargetDistance = item.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance);
+            ret.LocationSpring = item.LocationSpring.EqualsWithin(rhs.LocationSpring);
+            ret.TargetSpring = item.TargetSpring.EqualsWithin(rhs.TargetSpring);
+            ret.RotationOffset = item.RotationOffset.Equals(rhs.RotationOffset);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.Animation = string.Equals(item.Animation, rhs.Animation);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1900,110 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Context ?? true)
+                && item.Context is {} ContextItem)
+            {
+                sb.AppendItem(ContextItem, "Context");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Action ?? true)
+            {
+                sb.AppendItem(item.Action, "Action");
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location, "Location");
+            }
+            if (printMask?.Target ?? true)
+            {
+                sb.AppendItem(item.Target, "Target");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.TimeMultiplierPlayer ?? true)
+            {
+                sb.AppendItem(item.TimeMultiplierPlayer, "TimeMultiplierPlayer");
+            }
+            if (printMask?.TimeMultiplierTarget ?? true)
+            {
+                sb.AppendItem(item.TimeMultiplierTarget, "TimeMultiplierTarget");
+            }
+            if (printMask?.TimeMultiplierGlobal ?? true)
+            {
+                sb.AppendItem(item.TimeMultiplierGlobal, "TimeMultiplierGlobal");
+            }
+            if (printMask?.MaxTime ?? true)
+            {
+                sb.AppendItem(item.MaxTime, "MaxTime");
+            }
+            if (printMask?.MinTime ?? true)
+            {
+                sb.AppendItem(item.MinTime, "MinTime");
+            }
+            if (printMask?.TargetPercentBetweenActors ?? true)
+            {
+                sb.AppendItem(item.TargetPercentBetweenActors, "TargetPercentBetweenActors");
+            }
+            if (printMask?.NearTargetDistance ?? true)
+            {
+                sb.AppendItem(item.NearTargetDistance, "NearTargetDistance");
+            }
+            if (printMask?.LocationSpring ?? true)
+            {
+                sb.AppendItem(item.LocationSpring, "LocationSpring");
+            }
+            if (printMask?.TargetSpring ?? true)
+            {
+                sb.AppendItem(item.TargetSpring, "TargetSpring");
+            }
+            if (printMask?.RotationOffset ?? true)
+            {
+                sb.AppendItem(item.RotationOffset, "RotationOffset");
+            }
+            if (printMask?.ImageSpaceModifier ?? true)
+            {
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+            }
+            if ((printMask?.Animation ?? true)
+                && item.Animation is {} AnimationItem)
+            {
+                sb.AppendItem(AnimationItem, "Animation");
+            }
         }
         
         public static CameraShot_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +2054,90 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)CameraShot_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Context) ?? true))
+            {
+                if (!string.Equals(lhs.Context, rhs.Context)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CameraShot_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
+            {
+                if (lhs.Action != rhs.Action) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
+            {
+                if (lhs.Location != rhs.Location) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
+            {
+                if (lhs.Target != rhs.Target) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
+            {
+                if (!lhs.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
+            {
+                if (!lhs.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
+            {
+                if (!lhs.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
+            {
+                if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
+            {
+                if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
+            {
+                if (!lhs.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.NearTargetDistance) ?? true))
+            {
+                if (!lhs.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.LocationSpring) ?? true))
+            {
+                if (!lhs.LocationSpring.EqualsWithin(rhs.LocationSpring)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetSpring) ?? true))
+            {
+                if (!lhs.TargetSpring.EqualsWithin(rhs.TargetSpring)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.RotationOffset) ?? true))
+            {
+                if (!lhs.RotationOffset.Equals(rhs.RotationOffset)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Animation) ?? true))
+            {
+                if (!string.Equals(lhs.Animation, rhs.Animation)) return false;
+            }
             return true;
         }
         
@@ -917,6 +2166,35 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ICameraShotGetter item)
         {
             var hash = new HashCode();
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.Context is {} Contextitem)
+            {
+                hash.Add(Contextitem);
+            }
+            hash.Add(item.Conditions);
+            hash.Add(item.Action);
+            hash.Add(item.Location);
+            hash.Add(item.Target);
+            hash.Add(item.Flags);
+            hash.Add(item.TimeMultiplierPlayer);
+            hash.Add(item.TimeMultiplierTarget);
+            hash.Add(item.TimeMultiplierGlobal);
+            hash.Add(item.MaxTime);
+            hash.Add(item.MinTime);
+            hash.Add(item.TargetPercentBetweenActors);
+            hash.Add(item.NearTargetDistance);
+            hash.Add(item.LocationSpring);
+            hash.Add(item.TargetSpring);
+            hash.Add(item.RotationOffset);
+            hash.Add(item.ImageSpaceModifier);
+            if (item.Animation is {} Animationitem)
+            {
+                hash.Add(Animationitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +2223,47 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
+            {
+                yield return ImageSpaceModifierInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICameraShotGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1020,6 +2339,151 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)CameraShot_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CameraShot_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)CameraShot_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Context) ?? true))
+            {
+                item.Context = rhs.Context;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)CameraShot_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
+            {
+                item.Action = rhs.Action;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
+            {
+                item.Location = rhs.Location;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
+            {
+                item.Target = rhs.Target;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
+            {
+                item.TimeMultiplierPlayer = rhs.TimeMultiplierPlayer;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
+            {
+                item.TimeMultiplierTarget = rhs.TimeMultiplierTarget;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
+            {
+                item.TimeMultiplierGlobal = rhs.TimeMultiplierGlobal;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
+            {
+                item.MaxTime = rhs.MaxTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
+            {
+                item.MinTime = rhs.MinTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
+            {
+                item.TargetPercentBetweenActors = rhs.TargetPercentBetweenActors;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.NearTargetDistance) ?? true))
+            {
+                item.NearTargetDistance = rhs.NearTargetDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.LocationSpring) ?? true))
+            {
+                item.LocationSpring = rhs.LocationSpring;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetSpring) ?? true))
+            {
+                item.TargetSpring = rhs.TargetSpring;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.RotationOffset) ?? true))
+            {
+                item.RotationOffset = rhs.RotationOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Animation) ?? true))
+            {
+                item.Animation = rhs.Animation;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2632,110 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly CameraShotBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ICameraShotGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Context,
+                header: translationParams.ConvertToCustom(RecordTypes.NLDT),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                EnumBinaryTranslation<CameraShot.ActionType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Action,
+                    length: 4);
+                EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Location,
+                    length: 4);
+                EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Target,
+                    length: 4);
+                EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TimeMultiplierPlayer);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TimeMultiplierTarget);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TimeMultiplierGlobal);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MaxTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MinTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TargetPercentBetweenActors);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NearTargetDistance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.LocationSpring);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TargetSpring);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RotationOffset);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpaceModifier,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Animation,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             ICameraShotGetter item,
@@ -1184,10 +2752,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2807,130 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly CameraShotBinaryCreateTranslation Instance = new CameraShotBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CAMS;
+        public static ParseResult FillBinaryRecordTypes(
+            ICameraShotInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CameraShot_FieldIndex.Model;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)CameraShot_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.NLDT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Context = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)CameraShot_FieldIndex.Context;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)CameraShot_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Action = EnumBinaryTranslation<CameraShot.ActionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Location = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Target = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TimeMultiplierPlayer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TimeMultiplierTarget = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TimeMultiplierGlobal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MaxTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MinTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TargetPercentBetweenActors = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.NearTargetDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.LocationSpring = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TargetSpring = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.RotationOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CameraShot_FieldIndex.RotationOffset;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)CameraShot_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Animation = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)CameraShot_FieldIndex.Animation;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2963,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraShotCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CameraShotCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CameraShotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2979,95 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ICameraShot);
 
 
+        public IModelGetter? Model { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region Context
+        private int? _ContextLocation;
+        public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        private RangeInt32? _DATALocation;
+        #region Action
+        private int _ActionLocation => _DATALocation!.Value.Min;
+        private bool _Action_IsSet => _DATALocation.HasValue;
+        public CameraShot.ActionType Action => _Action_IsSet ? (CameraShot.ActionType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ActionLocation, 0x4)) : default;
+        #endregion
+        #region Location
+        private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Location_IsSet => _DATALocation.HasValue;
+        public CameraShot.LocationType Location => _Location_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_LocationLocation, 0x4)) : default;
+        #endregion
+        #region Target
+        private int _TargetLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Target_IsSet => _DATALocation.HasValue;
+        public CameraShot.LocationType Target => _Target_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetLocation, 0x4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public CameraShot.Flag Flags => _Flags_IsSet ? (CameraShot.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region TimeMultiplierPlayer
+        private int _TimeMultiplierPlayerLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _TimeMultiplierPlayer_IsSet => _DATALocation.HasValue;
+        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _recordData.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default;
+        #endregion
+        #region TimeMultiplierTarget
+        private int _TimeMultiplierTargetLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _TimeMultiplierTarget_IsSet => _DATALocation.HasValue;
+        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _recordData.Slice(_TimeMultiplierTargetLocation, 4).Float() : default;
+        #endregion
+        #region TimeMultiplierGlobal
+        private int _TimeMultiplierGlobalLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _TimeMultiplierGlobal_IsSet => _DATALocation.HasValue;
+        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _recordData.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default;
+        #endregion
+        #region MaxTime
+        private int _MaxTimeLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _MaxTime_IsSet => _DATALocation.HasValue;
+        public Single MaxTime => _MaxTime_IsSet ? _recordData.Slice(_MaxTimeLocation, 4).Float() : default;
+        #endregion
+        #region MinTime
+        private int _MinTimeLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _MinTime_IsSet => _DATALocation.HasValue;
+        public Single MinTime => _MinTime_IsSet ? _recordData.Slice(_MinTimeLocation, 4).Float() : default;
+        #endregion
+        #region TargetPercentBetweenActors
+        private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _TargetPercentBetweenActors_IsSet => _DATALocation.HasValue;
+        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _recordData.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default;
+        #endregion
+        #region NearTargetDistance
+        private int _NearTargetDistanceLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _NearTargetDistance_IsSet => _DATALocation.HasValue;
+        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _recordData.Slice(_NearTargetDistanceLocation, 4).Float() : default;
+        #endregion
+        #region LocationSpring
+        private int _LocationSpringLocation => _DATALocation!.Value.Min + 0x2C;
+        private bool _LocationSpring_IsSet => _DATALocation.HasValue;
+        public Single LocationSpring => _LocationSpring_IsSet ? _recordData.Slice(_LocationSpringLocation, 4).Float() : default;
+        #endregion
+        #region TargetSpring
+        private int _TargetSpringLocation => _DATALocation!.Value.Min + 0x30;
+        private bool _TargetSpring_IsSet => _DATALocation.HasValue;
+        public Single TargetSpring => _TargetSpring_IsSet ? _recordData.Slice(_TargetSpringLocation, 4).Float() : default;
+        #endregion
+        #region RotationOffset
+        private int _RotationOffsetLocation => _DATALocation!.Value.Min + 0x34;
+        private bool _RotationOffset_IsSet => _DATALocation.HasValue;
+        public P3Float RotationOffset => _RotationOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationOffsetLocation, 12)) : default;
+        #endregion
+        #region ImageSpaceModifier
+        private int? _ImageSpaceModifierLocation;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        #endregion
+        #region Animation
+        private int? _AnimationLocation;
+        public String? Animation => _AnimationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +3125,91 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CameraShot_FieldIndex.Model;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)CameraShot_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.NLDT:
+                {
+                    _ContextLocation = (stream.Position - offset);
+                    return (int)CameraShot_FieldIndex.Context;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)CameraShot_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CameraShot_FieldIndex.RotationOffset;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _ImageSpaceModifierLocation = (stream.Position - offset);
+                    return (int)CameraShot_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _AnimationLocation = (stream.Position - offset);
+                    return (int)CameraShot_FieldIndex.Animation;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

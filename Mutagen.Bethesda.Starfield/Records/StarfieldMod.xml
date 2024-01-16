@@ -87,6 +87,7 @@
       <Group name="BodyParts" refName="BodyPartData" />
       <Group name="AddonNodes" refName="AddonNode" />
       <Group name="ActorValueInformation" refName="ActorValueInformation" />
+      <Group name="CameraShots" refName="CameraShot" />
       <Group name="ArmorAddons" refName="ArmorAddon" />
       <Group name="Locations" refName="Location" />
       <Group name="DefaultObjects" refName="DefaultObject" />

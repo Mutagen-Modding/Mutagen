@@ -51,6 +51,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - BiomeMarker
 - Book
+- CameraShot
 - Container
 - Flora
 - Furniture
@@ -87,6 +88,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BodyData
 - BodyPartData
 - Book
+- CameraShot
 - Container
 - ContainerModification
 - DestructionStage
@@ -404,6 +406,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IWeightValue
 ### CameraSceneAction
 - INamed
+### CameraShot
+- IKeyworded
+- IModeled
 ### Cell
 - INamed
 ### Class

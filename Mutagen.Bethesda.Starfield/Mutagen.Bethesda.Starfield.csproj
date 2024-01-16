@@ -2086,6 +2086,9 @@
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CameraShot.cs">
+      <DependentUpon>CameraShot.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Cell.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>

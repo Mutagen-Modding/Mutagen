@@ -66,10 +66,10 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IAffinityEventGetter.FNAM => this.FNAM;
         #endregion
-        #region NLDT
-        public String? NLDT { get; set; }
+        #region Context
+        public String? Context { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAffinityEventGetter.NLDT => this.NLDT;
+        String? IAffinityEventGetter.Context => this.Context;
         #endregion
         #region ActorReactions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.FNAM = initialValue;
-                this.NLDT = initialValue;
+                this.Context = initialValue;
                 this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
                 this.ActorValue = initialValue;
                 this.Size = initialValue;
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem FNAM,
-                TItem NLDT,
+                TItem Context,
                 TItem ActorReactions,
                 TItem ActorValue,
                 TItem Size,
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.FNAM = FNAM;
-                this.NLDT = NLDT;
+                this.Context = Context;
                 this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(ActorReactions, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
                 this.ActorValue = ActorValue;
                 this.Size = Size;
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem FNAM;
-            public TItem NLDT;
+            public TItem Context;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>? ActorReactions;
             public TItem ActorValue;
             public TItem Size;
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.NLDT, rhs.NLDT)) return false;
+                if (!object.Equals(this.Context, rhs.Context)) return false;
                 if (!object.Equals(this.ActorReactions, rhs.ActorReactions)) return false;
                 if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
                 if (!object.Equals(this.Size, rhs.Size)) return false;
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.FNAM);
-                hash.Add(this.NLDT);
+                hash.Add(this.Context);
                 hash.Add(this.ActorReactions);
                 hash.Add(this.ActorValue);
                 hash.Add(this.Size);
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.FNAM)) return false;
-                if (!eval(this.NLDT)) return false;
+                if (!eval(this.Context)) return false;
                 if (this.ActorReactions != null)
                 {
                     if (!eval(this.ActorReactions.Overall)) return false;
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.FNAM)) return true;
-                if (eval(this.NLDT)) return true;
+                if (eval(this.Context)) return true;
                 if (this.ActorReactions != null)
                 {
                     if (eval(this.ActorReactions.Overall)) return true;
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.FNAM = eval(this.FNAM);
-                obj.NLDT = eval(this.NLDT);
+                obj.Context = eval(this.Context);
                 if (ActorReactions != null)
                 {
                     obj.ActorReactions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorReaction.Mask<R>?>>?>(eval(this.ActorReactions.Overall), Enumerable.Empty<MaskItemIndexed<R, ActorReaction.Mask<R>?>>());
@@ -371,9 +371,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FNAM, "FNAM");
                     }
-                    if (printMask?.NLDT ?? true)
+                    if (printMask?.Context ?? true)
                     {
-                        sb.AppendItem(NLDT, "NLDT");
+                        sb.AppendItem(Context, "Context");
                     }
                     if ((printMask?.ActorReactions?.Overall ?? true)
                         && ActorReactions is {} ActorReactionsItem)
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Exception? FNAM;
-            public Exception? NLDT;
+            public Exception? Context;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>? ActorReactions;
             public Exception? ActorValue;
             public Exception? Size;
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case AffinityEvent_FieldIndex.FNAM:
                         return FNAM;
-                    case AffinityEvent_FieldIndex.NLDT:
-                        return NLDT;
+                    case AffinityEvent_FieldIndex.Context:
+                        return Context;
                     case AffinityEvent_FieldIndex.ActorReactions:
                         return ActorReactions;
                     case AffinityEvent_FieldIndex.ActorValue:
@@ -470,8 +470,8 @@ namespace Mutagen.Bethesda.Starfield
                     case AffinityEvent_FieldIndex.FNAM:
                         this.FNAM = ex;
                         break;
-                    case AffinityEvent_FieldIndex.NLDT:
-                        this.NLDT = ex;
+                    case AffinityEvent_FieldIndex.Context:
+                        this.Context = ex;
                         break;
                     case AffinityEvent_FieldIndex.ActorReactions:
                         this.ActorReactions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>(ex, null);
@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Starfield
                     case AffinityEvent_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
                         break;
-                    case AffinityEvent_FieldIndex.NLDT:
-                        this.NLDT = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.Context:
+                        this.Context = (Exception?)obj;
                         break;
                     case AffinityEvent_FieldIndex.ActorReactions:
                         this.ActorReactions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>)obj;
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (FNAM != null) return true;
-                if (NLDT != null) return true;
+                if (Context != null) return true;
                 if (ActorReactions != null) return true;
                 if (ActorValue != null) return true;
                 if (Size != null) return true;
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(FNAM, "FNAM");
                 }
                 {
-                    sb.AppendItem(NLDT, "NLDT");
+                    sb.AppendItem(Context, "Context");
                 }
                 if (ActorReactions is {} ActorReactionsItem)
                 {
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.NLDT = this.NLDT.Combine(rhs.NLDT);
+                ret.Context = this.Context.Combine(rhs.Context);
                 ret.ActorReactions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorReactions?.Overall, rhs.ActorReactions?.Overall), Noggog.ExceptionExt.Combine(this.ActorReactions?.Specific, rhs.ActorReactions?.Specific));
                 ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
                 ret.Size = this.Size.Combine(rhs.Size);
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public bool FNAM;
-            public bool NLDT;
+            public bool Context;
             public ActorReaction.TranslationMask? ActorReactions;
             public bool ActorValue;
             public bool Size;
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.FNAM = defaultOn;
-                this.NLDT = defaultOn;
+                this.Context = defaultOn;
                 this.ActorValue = defaultOn;
                 this.Size = defaultOn;
                 this.Distance = defaultOn;
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((FNAM, null));
-                ret.Add((NLDT, null));
+                ret.Add((Context, null));
                 ret.Add((ActorReactions == null ? DefaultOn : !ActorReactions.GetCrystal().CopyNothing, ActorReactions?.GetCrystal()));
                 ret.Add((ActorValue, null));
                 ret.Add((Size, null));
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         new MemorySlice<Byte> FNAM { get; set; }
-        new String? NLDT { get; set; }
+        new String? Context { get; set; }
         new ExtendedList<ActorReaction> ActorReactions { get; }
         new IFormLink<IActorValueInformationGetter> ActorValue { get; set; }
         new IFormLink<IGlobalGetter> Size { get; set; }
@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => AffinityEvent_Registration.Instance;
         ReadOnlyMemorySlice<Byte> FNAM { get; }
-        String? NLDT { get; }
+        String? Context { get; }
         IReadOnlyList<IActorReactionGetter> ActorReactions { get; }
         IFormLinkGetter<IActorValueInformationGetter> ActorValue { get; }
         IFormLinkGetter<IGlobalGetter> Size { get; }
@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         FNAM = 7,
-        NLDT = 8,
+        Context = 8,
         ActorReactions = 9,
         ActorValue = 10,
         Size = 11,
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.FNAM = Array.Empty<byte>();
-            item.NLDT = default;
+            item.Context = default;
             item.ActorReactions.Clear();
             item.ActorValue.Clear();
             item.Size.Clear();
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.FNAM = MemoryExtensions.SequenceEqual(item.FNAM.Span, rhs.FNAM.Span);
-            ret.NLDT = string.Equals(item.NLDT, rhs.NLDT);
+            ret.Context = string.Equals(item.Context, rhs.Context);
             ret.ActorReactions = item.ActorReactions.CollectionEqualsHelper(
                 rhs.ActorReactions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1309,10 +1309,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"FNAM => {SpanExt.ToHexString(item.FNAM)}");
             }
-            if ((printMask?.NLDT ?? true)
-                && item.NLDT is {} NLDTItem)
+            if ((printMask?.Context ?? true)
+                && item.Context is {} ContextItem)
             {
-                sb.AppendItem(NLDTItem, "NLDT");
+                sb.AppendItem(ContextItem, "Context");
             }
             if (printMask?.ActorReactions?.Overall ?? true)
             {
@@ -1402,9 +1402,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.FNAM.Span, rhs.FNAM.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.NLDT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Context) ?? true))
             {
-                if (!string.Equals(lhs.NLDT, rhs.NLDT)) return false;
+                if (!string.Equals(lhs.Context, rhs.Context)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorReactions) ?? true))
             {
@@ -1459,9 +1459,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.FNAM);
-            if (item.NLDT is {} NLDTitem)
+            if (item.Context is {} Contextitem)
             {
-                hash.Add(NLDTitem);
+                hash.Add(Contextitem);
             }
             hash.Add(item.ActorReactions);
             hash.Add(item.ActorValue);
@@ -1594,9 +1594,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FNAM = rhs.FNAM.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.NLDT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Context) ?? true))
             {
-                item.NLDT = rhs.NLDT;
+                item.Context = rhs.Context;
             }
             if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorReactions) ?? true))
             {
@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NLDT,
+                item: item.Context,
                 header: translationParams.ConvertToCustom(RecordTypes.NLDT),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActorReactionGetter>.Instance.Write(
@@ -1933,10 +1933,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NLDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NLDT = StringBinaryTranslation.Instance.Parse(
+                    item.Context = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)AffinityEvent_FieldIndex.NLDT;
+                    return (int)AffinityEvent_FieldIndex.Context;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.RNAM:
@@ -2042,9 +2042,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FNAMLocation;
         public ReadOnlyMemorySlice<Byte> FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region NLDT
-        private int? _NLDTLocation;
-        public String? NLDT => _NLDTLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NLDTLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Context
+        private int? _ContextLocation;
+        public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = Array.Empty<IActorReactionGetter>();
         #region ActorValue
@@ -2143,8 +2143,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NLDT:
                 {
-                    _NLDTLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.NLDT;
+                    _ContextLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.Context;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.RNAM:

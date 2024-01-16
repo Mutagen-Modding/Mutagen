@@ -2,6 +2,32 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="CameraShot" recordType="CAMS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="Context" recordType="NLDT" />
+      <RefList name="Conditions" refName="Condition" />
+      <Data>
+        <Fields>
+          <Enum name="Action" enumName="CameraShot.ActionType" byteLength="4" />
+          <Enum name="Location" enumName="CameraShot.LocationType" byteLength="4" />
+          <Enum name="Target" enumName="CameraShot.LocationType" byteLength="4" />
+          <Enum name="Flags" enumName="CameraShot.Flag" byteLength="4" />
+          <Float name="TimeMultiplierPlayer" />
+          <Float name="TimeMultiplierTarget" />
+          <Float name="TimeMultiplierGlobal" />
+          <Float name="MaxTime" />
+          <Float name="MinTime" />
+          <Float name="TargetPercentBetweenActors" />
+          <Float name="NearTargetDistance" />
+          <Float name="LocationSpring" />
+          <Float name="TargetSpring" />
+          <P3Float name="RotationOffset" />
+        </Fields>
+      </Data>
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+      <String name="Animation" recordType="GNAM" />
     </Fields>
   </Object>
 </Loqui>
