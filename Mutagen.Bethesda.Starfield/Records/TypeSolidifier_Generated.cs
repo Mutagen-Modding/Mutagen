@@ -2508,9 +2508,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MaterialType</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter> MaterialType(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter> MaterialType(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMaterialTypeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2520,9 +2520,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on MaterialType</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter> MaterialType(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter> MaterialType(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IMaterialTypeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMaterialType, IMaterialTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

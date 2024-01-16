@@ -90,6 +90,7 @@
       <Group name="CameraShots" refName="CameraShot" />
       <Group name="CameraPaths" refName="CameraPath" />
       <Group name="VoiceTypes" refName="VoiceType" />
+      <Group name="MaterialTypes" refName="MaterialType" />
       <Group name="ArmorAddons" refName="ArmorAddon" />
       <Group name="Locations" refName="Location" />
       <Group name="DefaultObjects" refName="DefaultObject" />

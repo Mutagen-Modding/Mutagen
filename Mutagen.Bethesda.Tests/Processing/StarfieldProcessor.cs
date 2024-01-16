@@ -54,6 +54,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
+        AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -1188,6 +1189,16 @@ public class StarfieldProcessor : Processor
                 i++;
                 offset = i * 0x1C;
             }
+        }
+    }
+    
+    private void ProcessMaterialTypes(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.CNAM, out var cnam))
+        {
+            ProcessColorFloat(cnam, fileOffset, alpha: false);
         }
     }
 }

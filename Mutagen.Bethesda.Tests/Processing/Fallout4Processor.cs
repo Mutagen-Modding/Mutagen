@@ -675,16 +675,17 @@ public class Fallout4Processor : Processor
             ProcessFormIDOverflow(rec, fileOffset);
         }
     }
+    
     private void ProcessMaterialTypes(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-
         if (majorFrame.TryFindSubrecord(RecordTypes.CNAM, out var cnam))
         {
             ProcessColorFloat(cnam, fileOffset, alpha: false);
         }
     }
+    
     private void ProcessDefaultObjects(
         MajorRecordFrame majorFrame,
         long fileOffset)

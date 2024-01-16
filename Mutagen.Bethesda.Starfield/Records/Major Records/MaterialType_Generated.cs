@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -32,6 +34,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -54,6 +57,75 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Parent
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _Parent = new FormLinkNullable<IMaterialTypeGetter>();
+        public IFormLinkNullable<IMaterialTypeGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialTypeGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region HavokDisplayColor
+        public Color? HavokDisplayColor { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? IMaterialTypeGetter.HavokDisplayColor => this.HavokDisplayColor;
+        #endregion
+        #region Buoyancy
+        public Single? Buoyancy { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMaterialTypeGetter.Buoyancy => this.Buoyancy;
+        #endregion
+        #region Flags
+        public MaterialType.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        MaterialType.Flag? IMaterialTypeGetter.Flags => this.Flags;
+        #endregion
+        #region HavokImpactDataSet
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _HavokImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
+        public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet
+        {
+            get => _HavokImpactDataSet;
+            set => _HavokImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
+        #endregion
+        #region BreakableFX
+        public String? BreakableFX { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialTypeGetter.BreakableFX => this.BreakableFX;
+        #endregion
+        #region ModelData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _ModelData;
+        public MemorySlice<Byte>? ModelData
+        {
+            get => this._ModelData;
+            set => this._ModelData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IMaterialTypeGetter.ModelData => this.ModelData;
+        #endregion
 
         #region To String
 
@@ -79,6 +151,14 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Parent = initialValue;
+                this.Name = initialValue;
+                this.HavokDisplayColor = initialValue;
+                this.Buoyancy = initialValue;
+                this.Flags = initialValue;
+                this.HavokImpactDataSet = initialValue;
+                this.BreakableFX = initialValue;
+                this.ModelData = initialValue;
             }
 
             public Mask(
@@ -88,7 +168,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Parent,
+                TItem Name,
+                TItem HavokDisplayColor,
+                TItem Buoyancy,
+                TItem Flags,
+                TItem HavokImpactDataSet,
+                TItem BreakableFX,
+                TItem ModelData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +186,14 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Parent = Parent;
+                this.Name = Name;
+                this.HavokDisplayColor = HavokDisplayColor;
+                this.Buoyancy = Buoyancy;
+                this.Flags = Flags;
+                this.HavokImpactDataSet = HavokImpactDataSet;
+                this.BreakableFX = BreakableFX;
+                this.ModelData = ModelData;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +202,17 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Parent;
+            public TItem Name;
+            public TItem HavokDisplayColor;
+            public TItem Buoyancy;
+            public TItem Flags;
+            public TItem HavokImpactDataSet;
+            public TItem BreakableFX;
+            public TItem ModelData;
             #endregion
 
             #region Equals
@@ -119,11 +226,27 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.HavokDisplayColor, rhs.HavokDisplayColor)) return false;
+                if (!object.Equals(this.Buoyancy, rhs.Buoyancy)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.HavokImpactDataSet, rhs.HavokImpactDataSet)) return false;
+                if (!object.Equals(this.BreakableFX, rhs.BreakableFX)) return false;
+                if (!object.Equals(this.ModelData, rhs.ModelData)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Parent);
+                hash.Add(this.Name);
+                hash.Add(this.HavokDisplayColor);
+                hash.Add(this.Buoyancy);
+                hash.Add(this.Flags);
+                hash.Add(this.HavokImpactDataSet);
+                hash.Add(this.BreakableFX);
+                hash.Add(this.ModelData);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +257,14 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Parent)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.HavokDisplayColor)) return false;
+                if (!eval(this.Buoyancy)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.HavokImpactDataSet)) return false;
+                if (!eval(this.BreakableFX)) return false;
+                if (!eval(this.ModelData)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +273,14 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Parent)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.HavokDisplayColor)) return true;
+                if (eval(this.Buoyancy)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.HavokImpactDataSet)) return true;
+                if (eval(this.BreakableFX)) return true;
+                if (eval(this.ModelData)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +296,14 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Parent = eval(this.Parent);
+                obj.Name = eval(this.Name);
+                obj.HavokDisplayColor = eval(this.HavokDisplayColor);
+                obj.Buoyancy = eval(this.Buoyancy);
+                obj.Flags = eval(this.Flags);
+                obj.HavokImpactDataSet = eval(this.HavokImpactDataSet);
+                obj.BreakableFX = eval(this.BreakableFX);
+                obj.ModelData = eval(this.ModelData);
             }
             #endregion
 
@@ -175,6 +322,38 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MaterialType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Parent ?? true)
+                    {
+                        sb.AppendItem(Parent, "Parent");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.HavokDisplayColor ?? true)
+                    {
+                        sb.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                    }
+                    if (printMask?.Buoyancy ?? true)
+                    {
+                        sb.AppendItem(Buoyancy, "Buoyancy");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.HavokImpactDataSet ?? true)
+                    {
+                        sb.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
+                    }
+                    if (printMask?.BreakableFX ?? true)
+                    {
+                        sb.AppendItem(BreakableFX, "BreakableFX");
+                    }
+                    if (printMask?.ModelData ?? true)
+                    {
+                        sb.AppendItem(ModelData, "ModelData");
+                    }
                 }
             }
             #endregion
@@ -185,12 +364,39 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Parent;
+            public Exception? Name;
+            public Exception? HavokDisplayColor;
+            public Exception? Buoyancy;
+            public Exception? Flags;
+            public Exception? HavokImpactDataSet;
+            public Exception? BreakableFX;
+            public Exception? ModelData;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialType_FieldIndex.Parent:
+                        return Parent;
+                    case MaterialType_FieldIndex.Name:
+                        return Name;
+                    case MaterialType_FieldIndex.HavokDisplayColor:
+                        return HavokDisplayColor;
+                    case MaterialType_FieldIndex.Buoyancy:
+                        return Buoyancy;
+                    case MaterialType_FieldIndex.Flags:
+                        return Flags;
+                    case MaterialType_FieldIndex.HavokImpactDataSet:
+                        return HavokImpactDataSet;
+                    case MaterialType_FieldIndex.BreakableFX:
+                        return BreakableFX;
+                    case MaterialType_FieldIndex.ModelData:
+                        return ModelData;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +407,30 @@ namespace Mutagen.Bethesda.Starfield
                 MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialType_FieldIndex.Parent:
+                        this.Parent = ex;
+                        break;
+                    case MaterialType_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case MaterialType_FieldIndex.HavokDisplayColor:
+                        this.HavokDisplayColor = ex;
+                        break;
+                    case MaterialType_FieldIndex.Buoyancy:
+                        this.Buoyancy = ex;
+                        break;
+                    case MaterialType_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case MaterialType_FieldIndex.HavokImpactDataSet:
+                        this.HavokImpactDataSet = ex;
+                        break;
+                    case MaterialType_FieldIndex.BreakableFX:
+                        this.BreakableFX = ex;
+                        break;
+                    case MaterialType_FieldIndex.ModelData:
+                        this.ModelData = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +442,30 @@ namespace Mutagen.Bethesda.Starfield
                 MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialType_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.HavokDisplayColor:
+                        this.HavokDisplayColor = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.Buoyancy:
+                        this.Buoyancy = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.HavokImpactDataSet:
+                        this.HavokImpactDataSet = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.BreakableFX:
+                        this.BreakableFX = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.ModelData:
+                        this.ModelData = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +475,14 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Parent != null) return true;
+                if (Name != null) return true;
+                if (HavokDisplayColor != null) return true;
+                if (Buoyancy != null) return true;
+                if (Flags != null) return true;
+                if (HavokImpactDataSet != null) return true;
+                if (BreakableFX != null) return true;
+                if (ModelData != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +509,30 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                }
+                {
+                    sb.AppendItem(Buoyancy, "Buoyancy");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
+                }
+                {
+                    sb.AppendItem(BreakableFX, "BreakableFX");
+                }
+                {
+                    sb.AppendItem(ModelData, "ModelData");
+                }
             }
             #endregion
 
@@ -255,6 +541,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.HavokDisplayColor = this.HavokDisplayColor.Combine(rhs.HavokDisplayColor);
+                ret.Buoyancy = this.Buoyancy.Combine(rhs.Buoyancy);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.HavokImpactDataSet = this.HavokImpactDataSet.Combine(rhs.HavokImpactDataSet);
+                ret.BreakableFX = this.BreakableFX.Combine(rhs.BreakableFX);
+                ret.ModelData = this.ModelData.Combine(rhs.ModelData);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +570,47 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Parent;
+            public bool Name;
+            public bool HavokDisplayColor;
+            public bool Buoyancy;
+            public bool Flags;
+            public bool HavokImpactDataSet;
+            public bool BreakableFX;
+            public bool ModelData;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Parent = defaultOn;
+                this.Name = defaultOn;
+                this.HavokDisplayColor = defaultOn;
+                this.Buoyancy = defaultOn;
+                this.Flags = defaultOn;
+                this.HavokImpactDataSet = defaultOn;
+                this.BreakableFX = defaultOn;
+                this.ModelData = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Parent, null));
+                ret.Add((Name, null));
+                ret.Add((HavokDisplayColor, null));
+                ret.Add((Buoyancy, null));
+                ret.Add((Flags, null));
+                ret.Add((HavokImpactDataSet, null));
+                ret.Add((BreakableFX, null));
+                ret.Add((ModelData, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +622,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialTypeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public MaterialType(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +752,24 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMaterialType :
+        IFormLinkContainer,
         ILoquiObjectSetter<IMaterialTypeInternal>,
         IMaterialTypeGetter,
+        INamed,
+        INamedRequired,
         IStarfieldMajorRecordInternal
     {
+        new IFormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        new String? Name { get; set; }
+        new Color? HavokDisplayColor { get; set; }
+        new Single? Buoyancy { get; set; }
+        new MaterialType.Flag? Flags { get; set; }
+        new IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; set; }
+        new String? BreakableFX { get; set; }
+        new MemorySlice<Byte>? ModelData { get; set; }
     }
 
     public partial interface IMaterialTypeInternal :
@@ -441,10 +783,26 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IMaterialTypeGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMaterialTypeGetter>,
-        IMapsToGetter<IMaterialTypeGetter>
+        IMapsToGetter<IMaterialTypeGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
+        IFormLinkNullableGetter<IMaterialTypeGetter> Parent { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
+        String? Name { get; }
+        #endregion
+        Color? HavokDisplayColor { get; }
+        Single? Buoyancy { get; }
+        MaterialType.Flag? Flags { get; }
+        IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet { get; }
+        String? BreakableFX { get; }
+        ReadOnlyMemorySlice<Byte>? ModelData { get; }
 
     }
 
@@ -621,6 +979,14 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Parent = 7,
+        Name = 8,
+        HavokDisplayColor = 9,
+        Buoyancy = 10,
+        Flags = 11,
+        HavokImpactDataSet = 12,
+        BreakableFX = 13,
+        ModelData = 14,
     }
     #endregion
 
@@ -631,9 +997,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(MaterialType.Mask<>);
 
@@ -663,8 +1029,20 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.MATT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.MATT);
+            var all = RecordCollection.Factory(
+                RecordTypes.MATT,
+                RecordTypes.PNAM,
+                RecordTypes.MNAM,
+                RecordTypes.CNAM,
+                RecordTypes.BNAM,
+                RecordTypes.FNAM,
+                RecordTypes.HNAM,
+                RecordTypes.ANAM,
+                RecordTypes.FLLD);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialTypeBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1084,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMaterialTypeInternal item)
         {
             ClearPartial();
+            item.Parent.Clear();
+            item.Name = default;
+            item.HavokDisplayColor = default;
+            item.Buoyancy = default;
+            item.Flags = default;
+            item.HavokImpactDataSet.Clear();
+            item.BreakableFX = default;
+            item.ModelData = default;
             base.Clear(item);
         }
         
@@ -723,6 +1109,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IMaterialType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Parent.Relink(mapping);
+            obj.HavokImpactDataSet.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +1178,14 @@ namespace Mutagen.Bethesda.Starfield
             MaterialType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.HavokDisplayColor = item.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor);
+            ret.Buoyancy = item.Buoyancy.EqualsWithin(rhs.Buoyancy);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.HavokImpactDataSet = item.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet);
+            ret.BreakableFX = string.Equals(item.BreakableFX, rhs.BreakableFX);
+            ret.ModelData = MemorySliceExt.SequenceEqual(item.ModelData, rhs.ModelData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1235,44 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Parent ?? true)
+            {
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.HavokDisplayColor ?? true)
+                && item.HavokDisplayColor is {} HavokDisplayColorItem)
+            {
+                sb.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
+            }
+            if ((printMask?.Buoyancy ?? true)
+                && item.Buoyancy is {} BuoyancyItem)
+            {
+                sb.AppendItem(BuoyancyItem, "Buoyancy");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
+            if (printMask?.HavokImpactDataSet ?? true)
+            {
+                sb.AppendItem(item.HavokImpactDataSet.FormKeyNullable, "HavokImpactDataSet");
+            }
+            if ((printMask?.BreakableFX ?? true)
+                && item.BreakableFX is {} BreakableFXItem)
+            {
+                sb.AppendItem(BreakableFXItem, "BreakableFX");
+            }
+            if ((printMask?.ModelData ?? true)
+                && item.ModelData is {} ModelDataItem)
+            {
+                sb.AppendLine($"ModelData => {SpanExt.ToHexString(ModelDataItem)}");
+            }
         }
         
         public static MaterialType_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1323,38 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
+            {
+                if (!lhs.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
+            {
+                if (!lhs.Buoyancy.EqualsWithin(rhs.Buoyancy)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
+            {
+                if (!lhs.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.BreakableFX) ?? true))
+            {
+                if (!string.Equals(lhs.BreakableFX, rhs.BreakableFX)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.ModelData, rhs.ModelData)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1383,32 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMaterialTypeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Parent);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.HavokDisplayColor is {} HavokDisplayColoritem)
+            {
+                hash.Add(HavokDisplayColoritem);
+            }
+            if (item.Buoyancy is {} Buoyancyitem)
+            {
+                hash.Add(Buoyancyitem);
+            }
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            hash.Add(item.HavokImpactDataSet);
+            if (item.BreakableFX is {} BreakableFXitem)
+            {
+                hash.Add(BreakableFXitem);
+            }
+            if (item.ModelData is {} ModelDataItem)
+            {
+                hash.Add(ModelDataItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1437,14 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
+            {
+                yield return ParentInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.HavokImpactDataSet, out var HavokImpactDataSetInfo))
+            {
+                yield return HavokImpactDataSetInfo;
             }
             yield break;
         }
@@ -1020,6 +1520,45 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
+            {
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
+            {
+                item.HavokDisplayColor = rhs.HavokDisplayColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
+            {
+                item.Buoyancy = rhs.Buoyancy;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
+            {
+                item.HavokImpactDataSet.SetTo(rhs.HavokImpactDataSet.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.BreakableFX) ?? true))
+            {
+                item.BreakableFX = rhs.BreakableFX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
+            {
+                if(rhs.ModelData is {} ModelDatarhs)
+                {
+                    item.ModelData = ModelDatarhs.ToArray();
+                }
+                else
+                {
+                    item.ModelData = default;
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1707,53 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly MaterialTypeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IMaterialTypeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Parent,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HavokDisplayColor,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM),
+                binaryType: ColorBinaryType.NoAlphaFloat);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Buoyancy,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            EnumBinaryTranslation<MaterialType.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HavokImpactDataSet,
+                header: translationParams.ConvertToCustom(RecordTypes.HNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BreakableFX,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                binaryType: StringBinaryType.NullTerminate);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.ModelData,
+                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
+        }
+
         public void Write(
             MutagenWriter writer,
             IMaterialTypeGetter item,
@@ -1184,10 +1770,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1825,84 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly MaterialTypeBinaryCreateTranslation Instance = new MaterialTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MATT;
+        public static ParseResult FillBinaryRecordTypes(
+            IMaterialTypeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)MaterialType_FieldIndex.Parent;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)MaterialType_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HavokDisplayColor = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    return (int)MaterialType_FieldIndex.HavokDisplayColor;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Buoyancy = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MaterialType_FieldIndex.Buoyancy;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<MaterialType.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)MaterialType_FieldIndex.Flags;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HavokImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)MaterialType_FieldIndex.HavokImpactDataSet;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BreakableFX = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)MaterialType_FieldIndex.BreakableFX;
+                }
+                case RecordTypeInts.FLLD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ModelData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MaterialType_FieldIndex.ModelData;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1935,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1950,42 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IMaterialType);
 
 
+        #region Parent
+        private int? _ParentLocation;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        #region HavokDisplayColor
+        private int? _HavokDisplayColorLocation;
+        public Color? HavokDisplayColor => _HavokDisplayColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HavokDisplayColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color?);
+        #endregion
+        #region Buoyancy
+        private int? _BuoyancyLocation;
+        public Single? Buoyancy => _BuoyancyLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BuoyancyLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public MaterialType.Flag? Flags => _FlagsLocation.HasValue ? (MaterialType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MaterialType.Flag?);
+        #endregion
+        #region HavokImpactDataSet
+        private int? _HavokImpactDataSetLocation;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        #endregion
+        #region BreakableFX
+        private int? _BreakableFXLocation;
+        public String? BreakableFX => _BreakableFXLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BreakableFXLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ModelData
+        private int? _ModelDataLocation;
+        public ReadOnlyMemorySlice<Byte>? ModelData => _ModelDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2043,69 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    _ParentLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.Parent;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _HavokDisplayColorLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.HavokDisplayColor;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BuoyancyLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.Buoyancy;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.Flags;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _HavokImpactDataSetLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.HavokImpactDataSet;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _BreakableFXLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.BreakableFX;
+                }
+                case RecordTypeInts.FLLD:
+                {
+                    _ModelDataLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.ModelData;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

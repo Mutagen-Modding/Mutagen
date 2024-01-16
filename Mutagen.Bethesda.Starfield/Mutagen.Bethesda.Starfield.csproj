@@ -2248,6 +2248,9 @@
     <Compile Include="Records\Major Records\MagicEffectSummonCreatureArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MaterialType.cs">
+      <DependentUpon>MaterialType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
@@ -2464,7 +2467,9 @@
     <Compile Include="Records\Major Records\Transform.cs">
       <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\VoiceType.cs" />
+    <Compile Include="Records\Major Records\VoiceType.cs">
+      <DependentUpon>VoiceType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Water.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>

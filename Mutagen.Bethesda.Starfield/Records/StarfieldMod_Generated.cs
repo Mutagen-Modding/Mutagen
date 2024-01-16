@@ -143,6 +143,7 @@ namespace Mutagen.Bethesda.Starfield
             _CameraShots_Object = new StarfieldGroup<CameraShot>(this);
             _CameraPaths_Object = new StarfieldGroup<CameraPath>(this);
             _VoiceTypes_Object = new StarfieldGroup<VoiceType>(this);
+            _MaterialTypes_Object = new StarfieldGroup<MaterialType>(this);
             _ArmorAddons_Object = new StarfieldGroup<ArmorAddon>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -756,6 +757,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IVoiceTypeGetter> IStarfieldModGetter.VoiceTypes => _VoiceTypes_Object;
         #endregion
+        #region MaterialTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<MaterialType> _MaterialTypes_Object;
+        public StarfieldGroup<MaterialType> MaterialTypes => _MaterialTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IMaterialTypeGetter> IStarfieldModGetter.MaterialTypes => _MaterialTypes_Object;
+        #endregion
         #region ArmorAddons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<ArmorAddon> _ArmorAddons_Object;
@@ -1019,6 +1027,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CameraShots = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.CameraPaths = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.VoiceTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.MaterialTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ArmorAddons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1126,6 +1135,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem CameraShots,
                 TItem CameraPaths,
                 TItem VoiceTypes,
+                TItem MaterialTypes,
                 TItem ArmorAddons,
                 TItem Locations,
                 TItem DefaultObjects,
@@ -1231,6 +1241,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CameraShots = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CameraShots, new StarfieldGroup.Mask<TItem>(CameraShots));
                 this.CameraPaths = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CameraPaths, new StarfieldGroup.Mask<TItem>(CameraPaths));
                 this.VoiceTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(VoiceTypes, new StarfieldGroup.Mask<TItem>(VoiceTypes));
+                this.MaterialTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MaterialTypes, new StarfieldGroup.Mask<TItem>(MaterialTypes));
                 this.ArmorAddons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ArmorAddons, new StarfieldGroup.Mask<TItem>(ArmorAddons));
                 this.Locations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Locations, new StarfieldGroup.Mask<TItem>(Locations));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
@@ -1346,6 +1357,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CameraShots { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CameraPaths { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? VoiceTypes { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MaterialTypes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ArmorAddons { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Locations { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
@@ -1462,6 +1474,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.CameraShots, rhs.CameraShots)) return false;
                 if (!object.Equals(this.CameraPaths, rhs.CameraPaths)) return false;
                 if (!object.Equals(this.VoiceTypes, rhs.VoiceTypes)) return false;
+                if (!object.Equals(this.MaterialTypes, rhs.MaterialTypes)) return false;
                 if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
                 if (!object.Equals(this.Locations, rhs.Locations)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
@@ -1571,6 +1584,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.CameraShots);
                 hash.Add(this.CameraPaths);
                 hash.Add(this.VoiceTypes);
+                hash.Add(this.MaterialTypes);
                 hash.Add(this.ArmorAddons);
                 hash.Add(this.Locations);
                 hash.Add(this.DefaultObjects);
@@ -2018,6 +2032,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.VoiceTypes.Overall)) return false;
                     if (this.VoiceTypes.Specific != null && !this.VoiceTypes.Specific.All(eval)) return false;
+                }
+                if (MaterialTypes != null)
+                {
+                    if (!eval(this.MaterialTypes.Overall)) return false;
+                    if (this.MaterialTypes.Specific != null && !this.MaterialTypes.Specific.All(eval)) return false;
                 }
                 if (ArmorAddons != null)
                 {
@@ -2546,6 +2565,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.VoiceTypes.Overall)) return true;
                     if (this.VoiceTypes.Specific != null && this.VoiceTypes.Specific.Any(eval)) return true;
                 }
+                if (MaterialTypes != null)
+                {
+                    if (eval(this.MaterialTypes.Overall)) return true;
+                    if (this.MaterialTypes.Specific != null && this.MaterialTypes.Specific.Any(eval)) return true;
+                }
                 if (ArmorAddons != null)
                 {
                     if (eval(this.ArmorAddons.Overall)) return true;
@@ -2744,6 +2768,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
                 obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
                 obj.VoiceTypes = this.VoiceTypes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.VoiceTypes.Overall), this.VoiceTypes.Specific?.Translate(eval));
+                obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
                 obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
                 obj.Locations = this.Locations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
@@ -3118,6 +3143,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         VoiceTypes?.Print(sb);
                     }
+                    if (printMask?.MaterialTypes?.Overall ?? true)
+                    {
+                        MaterialTypes?.Print(sb);
+                    }
                     if (printMask?.ArmorAddons?.Overall ?? true)
                     {
                         ArmorAddons?.Print(sb);
@@ -3306,6 +3335,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<VoiceType.ErrorMask>?>? VoiceTypes;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Location.ErrorMask>?>? Locations;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
@@ -3502,6 +3532,8 @@ namespace Mutagen.Bethesda.Starfield
                         return CameraPaths;
                     case StarfieldMod_FieldIndex.VoiceTypes:
                         return VoiceTypes;
+                    case StarfieldMod_FieldIndex.MaterialTypes:
+                        return MaterialTypes;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         return ArmorAddons;
                     case StarfieldMod_FieldIndex.Locations:
@@ -3803,6 +3835,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.VoiceTypes:
                         this.VoiceTypes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<VoiceType.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<MaterialType.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
@@ -4126,6 +4161,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.VoiceTypes:
                         this.VoiceTypes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<VoiceType.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<MaterialType.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
                         break;
@@ -4278,6 +4316,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (CameraShots != null) return true;
                 if (CameraPaths != null) return true;
                 if (VoiceTypes != null) return true;
+                if (MaterialTypes != null) return true;
                 if (ArmorAddons != null) return true;
                 if (Locations != null) return true;
                 if (DefaultObjects != null) return true;
@@ -4407,6 +4446,7 @@ namespace Mutagen.Bethesda.Starfield
                 CameraShots?.Print(sb);
                 CameraPaths?.Print(sb);
                 VoiceTypes?.Print(sb);
+                MaterialTypes?.Print(sb);
                 ArmorAddons?.Print(sb);
                 Locations?.Print(sb);
                 DefaultObjects?.Print(sb);
@@ -4519,6 +4559,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.CameraShots = this.CameraShots.Combine(rhs.CameraShots, (l, r) => l.Combine(r));
                 ret.CameraPaths = this.CameraPaths.Combine(rhs.CameraPaths, (l, r) => l.Combine(r));
                 ret.VoiceTypes = this.VoiceTypes.Combine(rhs.VoiceTypes, (l, r) => l.Combine(r));
+                ret.MaterialTypes = this.MaterialTypes.Combine(rhs.MaterialTypes, (l, r) => l.Combine(r));
                 ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
                 ret.Locations = this.Locations.Combine(rhs.Locations, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
@@ -4646,6 +4687,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<CameraShot.TranslationMask>? CameraShots;
             public StarfieldGroup.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
             public StarfieldGroup.TranslationMask<VoiceType.TranslationMask>? VoiceTypes;
+            public StarfieldGroup.TranslationMask<MaterialType.TranslationMask>? MaterialTypes;
             public StarfieldGroup.TranslationMask<ArmorAddon.TranslationMask>? ArmorAddons;
             public StarfieldGroup.TranslationMask<Location.TranslationMask>? Locations;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
@@ -4774,6 +4816,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((CameraShots != null ? CameraShots.OnOverall : DefaultOn, CameraShots?.GetCrystal()));
                 ret.Add((CameraPaths != null ? CameraPaths.OnOverall : DefaultOn, CameraPaths?.GetCrystal()));
                 ret.Add((VoiceTypes != null ? VoiceTypes.OnOverall : DefaultOn, VoiceTypes?.GetCrystal()));
+                ret.Add((MaterialTypes != null ? MaterialTypes.OnOverall : DefaultOn, MaterialTypes?.GetCrystal()));
                 ret.Add((ArmorAddons != null ? ArmorAddons.OnOverall : DefaultOn, ArmorAddons?.GetCrystal()));
                 ret.Add((Locations != null ? Locations.OnOverall : DefaultOn, Locations?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
@@ -4923,6 +4966,7 @@ namespace Mutagen.Bethesda.Starfield
             _CameraShots_Object = new StarfieldGroup<CameraShot>(this);
             _CameraPaths_Object = new StarfieldGroup<CameraPath>(this);
             _VoiceTypes_Object = new StarfieldGroup<VoiceType>(this);
+            _MaterialTypes_Object = new StarfieldGroup<MaterialType>(this);
             _ArmorAddons_Object = new StarfieldGroup<ArmorAddon>(this);
             _Locations_Object = new StarfieldGroup<Location>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -5284,6 +5328,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VoiceTypes.RecordCache.Set(rhsMod.VoiceTypes.RecordCache.Items);
             }
+            if (mask?.MaterialTypes ?? true)
+            {
+                this.MaterialTypes.RecordCache.Set(rhsMod.MaterialTypes.RecordCache.Items);
+            }
             if (mask?.ArmorAddons ?? true)
             {
                 this.ArmorAddons.RecordCache.Set(rhsMod.ArmorAddons.RecordCache.Items);
@@ -5457,6 +5505,7 @@ namespace Mutagen.Bethesda.Starfield
             count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
             count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
             count += VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
             count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
@@ -5834,6 +5883,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<CameraShot> CameraShots { get; }
         new StarfieldGroup<CameraPath> CameraPaths { get; }
         new StarfieldGroup<VoiceType> VoiceTypes { get; }
+        new StarfieldGroup<MaterialType> MaterialTypes { get; }
         new StarfieldGroup<ArmorAddon> ArmorAddons { get; }
         new StarfieldGroup<Location> Locations { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
@@ -5957,6 +6007,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ICameraShotGetter> CameraShots { get; }
         IStarfieldGroupGetter<ICameraPathGetter> CameraPaths { get; }
         IStarfieldGroupGetter<IVoiceTypeGetter> VoiceTypes { get; }
+        IStarfieldGroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
         IStarfieldGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
         IStarfieldGroupGetter<ILocationGetter> Locations { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
@@ -6643,26 +6694,27 @@ namespace Mutagen.Bethesda.Starfield
         CameraShots = 81,
         CameraPaths = 82,
         VoiceTypes = 83,
-        ArmorAddons = 84,
-        Locations = 85,
-        DefaultObjects = 86,
-        Outfits = 87,
-        AimModels = 88,
-        AimAssistModels = 89,
-        Layers = 90,
-        ConstructibleObjects = 91,
-        ObjectModifications = 92,
-        InstanceNamingRules = 93,
-        AttractionRules = 94,
-        Resources = 95,
-        BiomeSwaps = 96,
-        SnapTemplates = 97,
-        Planets = 98,
-        ConditionRecords = 99,
-        SurfacePatternStyles = 100,
-        TerminalMenus = 101,
-        LegendaryItems = 102,
-        ActorValueModulations = 103,
+        MaterialTypes = 84,
+        ArmorAddons = 85,
+        Locations = 86,
+        DefaultObjects = 87,
+        Outfits = 88,
+        AimModels = 89,
+        AimAssistModels = 90,
+        Layers = 91,
+        ConstructibleObjects = 92,
+        ObjectModifications = 93,
+        InstanceNamingRules = 94,
+        AttractionRules = 95,
+        Resources = 96,
+        BiomeSwaps = 97,
+        SnapTemplates = 98,
+        Planets = 99,
+        ConditionRecords = 100,
+        SurfacePatternStyles = 101,
+        TerminalMenus = 102,
+        LegendaryItems = 103,
+        ActorValueModulations = 104,
     }
     #endregion
 
@@ -6673,9 +6725,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 104;
+        public const ushort AdditionalFieldCount = 105;
 
-        public const ushort FieldCount = 104;
+        public const ushort FieldCount = 105;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -6824,6 +6876,7 @@ namespace Mutagen.Bethesda.Starfield
             item.CameraShots.Clear();
             item.CameraPaths.Clear();
             item.VoiceTypes.Clear();
+            item.MaterialTypes.Clear();
             item.ArmorAddons.Clear();
             item.Locations.Clear();
             item.DefaultObjects.Clear();
@@ -6920,6 +6973,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.CameraShots.RemapLinks(mapping);
             obj.CameraPaths.RemapLinks(mapping);
             obj.VoiceTypes.RemapLinks(mapping);
+            obj.MaterialTypes.RemapLinks(mapping);
             obj.ArmorAddons.RemapLinks(mapping);
             obj.Locations.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
@@ -7052,6 +7106,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.CameraShots.Remove(keys);
             obj.CameraPaths.Remove(keys);
             obj.VoiceTypes.Remove(keys);
+            obj.MaterialTypes.Remove(keys);
             obj.ArmorAddons.Remove(keys);
             obj.Locations.Remove(keys);
             obj.DefaultObjects.Remove(keys);
@@ -7764,6 +7819,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
                     obj.VoiceTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    obj.MaterialTypes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -8914,6 +8977,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.CameraShots = MaskItemExt.Factory(item.CameraShots.GetEqualsMask(rhs.CameraShots, include), include);
             ret.CameraPaths = MaskItemExt.Factory(item.CameraPaths.GetEqualsMask(rhs.CameraPaths, include), include);
             ret.VoiceTypes = MaskItemExt.Factory(item.VoiceTypes.GetEqualsMask(rhs.VoiceTypes, include), include);
+            ret.MaterialTypes = MaskItemExt.Factory(item.MaterialTypes.GetEqualsMask(rhs.MaterialTypes, include), include);
             ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
             ret.Locations = MaskItemExt.Factory(item.Locations.GetEqualsMask(rhs.Locations, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
@@ -9313,6 +9377,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.VoiceTypes?.Overall ?? true)
             {
                 item.VoiceTypes?.Print(sb, "VoiceTypes");
+            }
+            if (printMask?.MaterialTypes?.Overall ?? true)
+            {
+                item.MaterialTypes?.Print(sb, "MaterialTypes");
             }
             if (printMask?.ArmorAddons?.Overall ?? true)
             {
@@ -10075,6 +10143,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isVoiceTypesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MaterialTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MaterialTypes, rhs.MaterialTypes, out var lhsMaterialTypes, out var rhsMaterialTypes, out var isMaterialTypesEqual))
+                {
+                    if (!object.Equals(lhsMaterialTypes, rhsMaterialTypes)) return false;
+                }
+                else if (!isMaterialTypesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ArmorAddons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ArmorAddons, rhs.ArmorAddons, out var lhsArmorAddons, out var rhsArmorAddons, out var isArmorAddonsEqual))
@@ -10325,6 +10401,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.CameraShots);
             hash.Add(item.CameraPaths);
             hash.Add(item.VoiceTypes);
+            hash.Add(item.MaterialTypes);
             hash.Add(item.ArmorAddons);
             hash.Add(item.Locations);
             hash.Add(item.DefaultObjects);
@@ -10777,6 +10854,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
                     return obj.VoiceTypes;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    return obj.MaterialTypes;
                 case "ArmorAddon":
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
@@ -10903,7 +10985,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[103];
+            Stream[] outputStreams = new Stream[104];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -10988,26 +11070,27 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.CameraShots, 80, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CameraPaths, 81, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 83, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 84, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 85, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 86, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 87, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 88, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 89, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 90, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 91, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 92, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 93, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 94, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 95, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 96, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 97, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 98, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 99, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 100, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 101, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 102, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 84, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 85, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 86, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 87, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 88, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 89, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 90, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 91, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 92, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 93, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 94, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 95, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 96, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 97, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 98, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 99, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 100, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 101, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 102, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 103, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11345,6 +11428,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.VoiceTypes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -11748,6 +11835,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.VoiceTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12600,6 +12691,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
                     foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13677,6 +13777,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.VoiceTypes,
                 groupGetter: (m) => m.VoiceTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MaterialType, IMaterialTypeGetter>(
+                srcGroup: obj.MaterialTypes,
+                type: typeof(IMaterialTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MaterialTypes,
+                groupGetter: (m) => m.MaterialTypes))
             {
                 yield return item;
             }
@@ -15035,6 +15144,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.VoiceTypes,
                         groupGetter: (m) => m.VoiceTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MaterialType, IMaterialTypeGetter>(
+                        srcGroup: obj.MaterialTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MaterialTypes,
+                        groupGetter: (m) => m.MaterialTypes))
                     {
                         yield return item;
                     }
@@ -17640,6 +17763,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MaterialTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.MaterialTypes);
+                try
+                {
+                    item.MaterialTypes.DeepCopyIn(
+                        rhs: rhs.MaterialTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.MaterialTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ArmorAddons) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ArmorAddons);
@@ -18213,6 +18356,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool CameraShots;
         public bool CameraPaths;
         public bool VoiceTypes;
+        public bool MaterialTypes;
         public bool ArmorAddons;
         public bool Locations;
         public bool DefaultObjects;
@@ -18321,6 +18465,7 @@ namespace Mutagen.Bethesda.Starfield
             CameraShots = defaultValue;
             CameraPaths = defaultValue;
             VoiceTypes = defaultValue;
+            MaterialTypes = defaultValue;
             ArmorAddons = defaultValue;
             Locations = defaultValue;
             DefaultObjects = defaultValue;
@@ -19309,6 +19454,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)VoiceTypesItem).BinaryWriteTranslator).Write<IVoiceTypeGetter>(
                         item: VoiceTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MaterialTypes ?? true)
+            {
+                var MaterialTypesItem = item.MaterialTypes;
+                if (MaterialTypesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)MaterialTypesItem).BinaryWriteTranslator).Write<IMaterialTypeGetter>(
+                        item: MaterialTypesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -20755,6 +20911,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.VoiceTypes;
                 }
+                case RecordTypeInts.MATT:
+                {
+                    if (importMask?.MaterialTypes ?? true)
+                    {
+                        item.MaterialTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.MaterialTypes;
+                }
                 case RecordTypeInts.ARMA:
                 {
                     if (importMask?.ArmorAddons ?? true)
@@ -21621,6 +21791,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? StarfieldGroupBinaryOverlay<IVoiceTypeGetter>.StarfieldGroupFactory(_stream, _VoiceTypesLocations, _package) : default;
         public IStarfieldGroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new StarfieldGroup<VoiceType>(this);
         #endregion
+        #region MaterialTypes
+        private List<RangeInt64>? _MaterialTypesLocations;
+        private IStarfieldGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? StarfieldGroupBinaryOverlay<IMaterialTypeGetter>.StarfieldGroupFactory(_stream, _MaterialTypesLocations, _package) : default;
+        public IStarfieldGroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new StarfieldGroup<MaterialType>(this);
+        #endregion
         #region ArmorAddons
         private List<RangeInt64>? _ArmorAddonsLocations;
         private IStarfieldGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? StarfieldGroupBinaryOverlay<IArmorAddonGetter>.StarfieldGroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
@@ -22311,6 +22486,12 @@ namespace Mutagen.Bethesda.Starfield
                     _VoiceTypesLocations ??= new();
                     _VoiceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.VoiceTypes;
+                }
+                case RecordTypeInts.MATT:
+                {
+                    _MaterialTypesLocations ??= new();
+                    _MaterialTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.ARMA:
                 {
