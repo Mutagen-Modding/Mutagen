@@ -606,6 +606,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ImageSpaceAdapter_Registration.Instance,
             ImageSpaceModifiableFormComponent_Registration.Instance,
             Impact_Registration.Instance,
+            ImpactData_Registration.Instance,
             ImpactDataSet_Registration.Instance,
             ImpactHNAM_Registration.Instance,
             Ingestible_Registration.Instance,

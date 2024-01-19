@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,20 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Impacts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ImpactData> _Impacts = new ExtendedList<ImpactData>();
+        public ExtendedList<ImpactData> Impacts
+        {
+            get => this._Impacts;
+            init => this._Impacts = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IImpactDataGetter> IImpactDataSetGetter.Impacts => _Impacts;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +94,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +104,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Impacts)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +115,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(Impacts, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +124,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>? Impacts;
             #endregion
 
             #region Equals
@@ -119,11 +141,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Impacts);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +158,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Impacts != null)
+                {
+                    if (!eval(this.Impacts.Overall)) return false;
+                    if (this.Impacts.Specific != null)
+                    {
+                        foreach (var item in this.Impacts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +178,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Impacts != null)
+                {
+                    if (eval(this.Impacts.Overall)) return true;
+                    if (this.Impacts.Specific != null)
+                    {
+                        foreach (var item in this.Impacts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +205,21 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Impacts != null)
+                {
+                    obj.Impacts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ImpactData.Mask<R>?>>?>(eval(this.Impacts.Overall), Enumerable.Empty<MaskItemIndexed<R, ImpactData.Mask<R>?>>());
+                    if (Impacts.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ImpactData.Mask<R>?>>();
+                        obj.Impacts.Specific = l;
+                        foreach (var item in Impacts.Specific)
+                        {
+                            MaskItemIndexed<R, ImpactData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ImpactData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +238,25 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ImpactDataSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Impacts?.Overall ?? true)
+                        && Impacts is {} ImpactsItem)
+                    {
+                        sb.AppendLine("Impacts =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ImpactsItem.Overall);
+                            if (ImpactsItem.Specific != null)
+                            {
+                                foreach (var subItem in ImpactsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +267,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>? Impacts;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImpactDataSet_FieldIndex.Impacts:
+                        return Impacts;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +289,9 @@ namespace Mutagen.Bethesda.Starfield
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImpactDataSet_FieldIndex.Impacts:
+                        this.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +303,9 @@ namespace Mutagen.Bethesda.Starfield
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImpactDataSet_FieldIndex.Impacts:
+                        this.Impacts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +315,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Impacts != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +342,24 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Impacts is {} ImpactsItem)
+                {
+                    sb.AppendLine("Impacts =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ImpactsItem.Overall);
+                        if (ImpactsItem.Specific != null)
+                        {
+                            foreach (var subItem in ImpactsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +368,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Impacts?.Overall, rhs.Impacts?.Overall), Noggog.ExceptionExt.Combine(this.Impacts?.Specific, rhs.Impacts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,6 +390,10 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ImpactData.TranslationMask? Impacts;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -285,6 +403,12 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Impacts == null ? DefaultOn : !Impacts.GetCrystal().CopyNothing, Impacts?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +420,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImpactDataSet_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ImpactDataSetCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetSetterCommon.Instance.RemapLinks(this, mapping);
         public ImpactDataSet(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +550,12 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IImpactDataSet :
+        IFormLinkContainer,
         IImpactDataSetGetter,
         ILoquiObjectSetter<IImpactDataSetInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<ImpactData> Impacts { get; }
     }
 
     public partial interface IImpactDataSetInternal :
@@ -441,10 +569,12 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IImpactDataSetGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IImpactDataSetGetter>,
         IMapsToGetter<IImpactDataSetGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
+        IReadOnlyList<IImpactDataGetter> Impacts { get; }
 
     }
 
@@ -621,6 +751,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Impacts = 7,
     }
     #endregion
 
@@ -631,9 +762,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(ImpactDataSet.Mask<>);
 
@@ -663,8 +794,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.IPDS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.IPDS);
+            var all = RecordCollection.Factory(
+                RecordTypes.IPDS,
+                RecordTypes.PNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImpactDataSetBinaryWriteTranslation);
         #region Interface
@@ -706,6 +842,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IImpactDataSetInternal item)
         {
             ClearPartial();
+            item.Impacts.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +860,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IImpactDataSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Impacts.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +928,10 @@ namespace Mutagen.Bethesda.Starfield
             ImpactDataSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Impacts = item.Impacts.CollectionEqualsHelper(
+                rhs.Impacts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +981,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Impacts?.Overall ?? true)
+            {
+                sb.AppendLine("Impacts =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Impacts)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static ImpactDataSet_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1045,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Impacts) ?? true))
+            {
+                if (!lhs.Impacts.SequenceEqual(rhs.Impacts, (l, r) => ((ImpactDataCommon)((IImpactDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImpactDataSet_FieldIndex.Impacts)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1077,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IImpactDataSetGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Impacts);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1106,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Impacts.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1020,6 +1185,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Impacts) ?? true))
+            {
+                errorMask?.PushIndex((int)ImpactDataSet_FieldIndex.Impacts);
+                try
+                {
+                    item.Impacts.SetTo(
+                        rhs.Impacts
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1357,28 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ImpactDataSetBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IImpactDataSetGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IImpactDataGetter>.Instance.Write(
+                writer: writer,
+                items: item.Impacts,
+                transl: (MutagenWriter subWriter, IImpactDataGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ImpactDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IImpactDataSetGetter item,
@@ -1184,10 +1395,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1450,40 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ImpactDataSetBinaryCreateTranslation Instance = new ImpactDataSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IPDS;
+        public static ParseResult FillBinaryRecordTypes(
+            IImpactDataSetInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    item.Impacts.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ImpactData>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: ImpactData_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ImpactData.TryCreateFromBinary));
+                    return (int)ImpactDataSet_FieldIndex.Impacts;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1516,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ImpactDataSetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImpactDataSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1531,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IImpactDataSet);
 
 
+        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<IImpactDataGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1589,44 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    this.Impacts = BinaryOverlayList.FactoryByArray<IImpactDataGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ImpactDataBinaryOverlay.ImpactDataFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: ImpactData_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)ImpactDataSet_FieldIndex.Impacts;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
