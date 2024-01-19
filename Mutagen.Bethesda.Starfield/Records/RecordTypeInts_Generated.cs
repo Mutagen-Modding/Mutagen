@@ -385,6 +385,9 @@ public partial class RecordTypeInts
     public const int IDLF = 0x464C4449;
     public const int IDLM = 0x4D4C4449;
     public const int IDLT = 0x544C4449;
+    public const int IDP1 = 0x31504449;
+    public const int IDP3 = 0x33504449;
+    public const int IDSH = 0x48534449;
     public const int IMAD = 0x44414D49;
     public const int IMGS = 0x53474D49;
     public const int IMSP = 0x50534D49;

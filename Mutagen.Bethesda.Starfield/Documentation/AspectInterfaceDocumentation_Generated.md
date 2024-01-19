@@ -101,6 +101,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Hazard
 - HeadPart
 - IdleMarker
+- Impact
 - Ingestible
 - Key
 - LegendaryItem
@@ -493,6 +494,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeyworded
 - IModeled
 - IObjectBounded
+### Impact
+- IModeled
 ### Ingestible
 - IKeyworded
 - IModeled

@@ -127,6 +127,7 @@ namespace Mutagen.Bethesda.Starfield
                 Hazard_Registration.Instance,
                 HeadPart_Registration.Instance,
                 IdleMarker_Registration.Instance,
+                Impact_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Key_Registration.Instance,
                 LegendaryItem_Registration.Instance,

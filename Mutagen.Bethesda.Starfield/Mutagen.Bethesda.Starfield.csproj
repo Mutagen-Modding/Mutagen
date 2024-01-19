@@ -2176,6 +2176,7 @@
     <Compile Include="Records\Major Records\IdleMarker.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Impact.cs" />
     <Compile Include="Records\Major Records\Ingestible.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
@@ -6379,6 +6380,12 @@
     </Compile>
     <Compile Include="Records\Major Records\BodyPart_Generated.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Decal_Generated.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ImpactHNAM_Generated.cs">
+      <DependentUpon>Impact.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

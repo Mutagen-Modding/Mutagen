@@ -387,6 +387,9 @@ public partial class RecordTypes
     public static readonly RecordType IDLF = new(0x464C4449);
     public static readonly RecordType IDLM = new(0x4D4C4449);
     public static readonly RecordType IDLT = new(0x544C4449);
+    public static readonly RecordType IDP1 = new(0x31504449);
+    public static readonly RecordType IDP3 = new(0x33504449);
+    public static readonly RecordType IDSH = new(0x48534449);
     public static readonly RecordType IMAD = new(0x44414D49);
     public static readonly RecordType IMGS = new(0x53474D49);
     public static readonly RecordType IMSP = new(0x50534D49);
