@@ -95,6 +95,7 @@
       <Group name="ImpactDataSets" refName="ImpactDataSet" />"
       <Group name="ArmorAddons" refName="ArmorAddon" />
       <Group name="Locations" refName="Location" />
+      <Group name="Messages" refName="Message" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />

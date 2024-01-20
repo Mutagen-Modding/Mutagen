@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +25,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +57,91 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Description
+        public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IMessageGetter.Description => this.Description;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IMessageGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region INAM
+        public Int32 INAM { get; set; } = default;
+        #endregion
+        #region OwnerQuest
+        private readonly IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> OwnerQuest
+        {
+            get => _OwnerQuest;
+            set => _OwnerQuest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IMessageGetter.OwnerQuest => this.OwnerQuest;
+        #endregion
+        #region Flags
+        public Message.Flag Flags { get; set; } = default;
+        #endregion
+        #region DisplayTime
+        public UInt32? DisplayTime { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IMessageGetter.DisplayTime => this.DisplayTime;
+        #endregion
+        #region BNAM
+        public UInt32? BNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IMessageGetter.BNAM => this.BNAM;
+        #endregion
+        #region ShortTitle
+        public TranslatedString? ShortTitle { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IMessageGetter.ShortTitle => this.ShortTitle;
+        #endregion
+        #region MenuButtons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<MessageButton> _MenuButtons = new ExtendedList<MessageButton>();
+        public ExtendedList<MessageButton> MenuButtons
+        {
+            get => this._MenuButtons;
+            init => this._MenuButtons = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IMessageButtonGetter> IMessageGetter.MenuButtons => _MenuButtons;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +167,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Description = initialValue;
+                this.Name = initialValue;
+                this.INAM = initialValue;
+                this.OwnerQuest = initialValue;
+                this.Flags = initialValue;
+                this.DisplayTime = initialValue;
+                this.BNAM = initialValue;
+                this.ShortTitle = initialValue;
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +185,16 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Description,
+                TItem Name,
+                TItem INAM,
+                TItem OwnerQuest,
+                TItem Flags,
+                TItem DisplayTime,
+                TItem BNAM,
+                TItem ShortTitle,
+                TItem MenuButtons)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +204,15 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Description = Description;
+                this.Name = Name;
+                this.INAM = INAM;
+                this.OwnerQuest = OwnerQuest;
+                this.Flags = Flags;
+                this.DisplayTime = DisplayTime;
+                this.BNAM = BNAM;
+                this.ShortTitle = ShortTitle;
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(MenuButtons, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +221,18 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Description;
+            public TItem Name;
+            public TItem INAM;
+            public TItem OwnerQuest;
+            public TItem Flags;
+            public TItem DisplayTime;
+            public TItem BNAM;
+            public TItem ShortTitle;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>? MenuButtons;
             #endregion
 
             #region Equals
@@ -119,11 +246,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.INAM, rhs.INAM)) return false;
+                if (!object.Equals(this.OwnerQuest, rhs.OwnerQuest)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.DisplayTime, rhs.DisplayTime)) return false;
+                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(this.ShortTitle, rhs.ShortTitle)) return false;
+                if (!object.Equals(this.MenuButtons, rhs.MenuButtons)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Description);
+                hash.Add(this.Name);
+                hash.Add(this.INAM);
+                hash.Add(this.OwnerQuest);
+                hash.Add(this.Flags);
+                hash.Add(this.DisplayTime);
+                hash.Add(this.BNAM);
+                hash.Add(this.ShortTitle);
+                hash.Add(this.MenuButtons);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +279,26 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.INAM)) return false;
+                if (!eval(this.OwnerQuest)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.DisplayTime)) return false;
+                if (!eval(this.BNAM)) return false;
+                if (!eval(this.ShortTitle)) return false;
+                if (this.MenuButtons != null)
+                {
+                    if (!eval(this.MenuButtons.Overall)) return false;
+                    if (this.MenuButtons.Specific != null)
+                    {
+                        foreach (var item in this.MenuButtons.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +307,26 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.INAM)) return true;
+                if (eval(this.OwnerQuest)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.DisplayTime)) return true;
+                if (eval(this.BNAM)) return true;
+                if (eval(this.ShortTitle)) return true;
+                if (this.MenuButtons != null)
+                {
+                    if (eval(this.MenuButtons.Overall)) return true;
+                    if (this.MenuButtons.Specific != null)
+                    {
+                        foreach (var item in this.MenuButtons.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +342,29 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Description = eval(this.Description);
+                obj.Name = eval(this.Name);
+                obj.INAM = eval(this.INAM);
+                obj.OwnerQuest = eval(this.OwnerQuest);
+                obj.Flags = eval(this.Flags);
+                obj.DisplayTime = eval(this.DisplayTime);
+                obj.BNAM = eval(this.BNAM);
+                obj.ShortTitle = eval(this.ShortTitle);
+                if (MenuButtons != null)
+                {
+                    obj.MenuButtons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MessageButton.Mask<R>?>>?>(eval(this.MenuButtons.Overall), Enumerable.Empty<MaskItemIndexed<R, MessageButton.Mask<R>?>>());
+                    if (MenuButtons.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, MessageButton.Mask<R>?>>();
+                        obj.MenuButtons.Specific = l;
+                        foreach (var item in MenuButtons.Specific)
+                        {
+                            MaskItemIndexed<R, MessageButton.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MessageButton.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +383,57 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Message.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.INAM ?? true)
+                    {
+                        sb.AppendItem(INAM, "INAM");
+                    }
+                    if (printMask?.OwnerQuest ?? true)
+                    {
+                        sb.AppendItem(OwnerQuest, "OwnerQuest");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.DisplayTime ?? true)
+                    {
+                        sb.AppendItem(DisplayTime, "DisplayTime");
+                    }
+                    if (printMask?.BNAM ?? true)
+                    {
+                        sb.AppendItem(BNAM, "BNAM");
+                    }
+                    if (printMask?.ShortTitle ?? true)
+                    {
+                        sb.AppendItem(ShortTitle, "ShortTitle");
+                    }
+                    if ((printMask?.MenuButtons?.Overall ?? true)
+                        && MenuButtons is {} MenuButtonsItem)
+                    {
+                        sb.AppendLine("MenuButtons =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MenuButtonsItem.Overall);
+                            if (MenuButtonsItem.Specific != null)
+                            {
+                                foreach (var subItem in MenuButtonsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +444,42 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Description;
+            public Exception? Name;
+            public Exception? INAM;
+            public Exception? OwnerQuest;
+            public Exception? Flags;
+            public Exception? DisplayTime;
+            public Exception? BNAM;
+            public Exception? ShortTitle;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>? MenuButtons;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Message_FieldIndex enu = (Message_FieldIndex)index;
                 switch (enu)
                 {
+                    case Message_FieldIndex.Description:
+                        return Description;
+                    case Message_FieldIndex.Name:
+                        return Name;
+                    case Message_FieldIndex.INAM:
+                        return INAM;
+                    case Message_FieldIndex.OwnerQuest:
+                        return OwnerQuest;
+                    case Message_FieldIndex.Flags:
+                        return Flags;
+                    case Message_FieldIndex.DisplayTime:
+                        return DisplayTime;
+                    case Message_FieldIndex.BNAM:
+                        return BNAM;
+                    case Message_FieldIndex.ShortTitle:
+                        return ShortTitle;
+                    case Message_FieldIndex.MenuButtons:
+                        return MenuButtons;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +490,33 @@ namespace Mutagen.Bethesda.Starfield
                 Message_FieldIndex enu = (Message_FieldIndex)index;
                 switch (enu)
                 {
+                    case Message_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Message_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Message_FieldIndex.INAM:
+                        this.INAM = ex;
+                        break;
+                    case Message_FieldIndex.OwnerQuest:
+                        this.OwnerQuest = ex;
+                        break;
+                    case Message_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Message_FieldIndex.DisplayTime:
+                        this.DisplayTime = ex;
+                        break;
+                    case Message_FieldIndex.BNAM:
+                        this.BNAM = ex;
+                        break;
+                    case Message_FieldIndex.ShortTitle:
+                        this.ShortTitle = ex;
+                        break;
+                    case Message_FieldIndex.MenuButtons:
+                        this.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +528,33 @@ namespace Mutagen.Bethesda.Starfield
                 Message_FieldIndex enu = (Message_FieldIndex)index;
                 switch (enu)
                 {
+                    case Message_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.INAM:
+                        this.INAM = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.OwnerQuest:
+                        this.OwnerQuest = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.DisplayTime:
+                        this.DisplayTime = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.BNAM:
+                        this.BNAM = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.ShortTitle:
+                        this.ShortTitle = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.MenuButtons:
+                        this.MenuButtons = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +564,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Description != null) return true;
+                if (Name != null) return true;
+                if (INAM != null) return true;
+                if (OwnerQuest != null) return true;
+                if (Flags != null) return true;
+                if (DisplayTime != null) return true;
+                if (BNAM != null) return true;
+                if (ShortTitle != null) return true;
+                if (MenuButtons != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +599,48 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(INAM, "INAM");
+                }
+                {
+                    sb.AppendItem(OwnerQuest, "OwnerQuest");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(DisplayTime, "DisplayTime");
+                }
+                {
+                    sb.AppendItem(BNAM, "BNAM");
+                }
+                {
+                    sb.AppendItem(ShortTitle, "ShortTitle");
+                }
+                if (MenuButtons is {} MenuButtonsItem)
+                {
+                    sb.AppendLine("MenuButtons =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MenuButtonsItem.Overall);
+                        if (MenuButtonsItem.Specific != null)
+                        {
+                            foreach (var subItem in MenuButtonsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +649,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.INAM = this.INAM.Combine(rhs.INAM);
+                ret.OwnerQuest = this.OwnerQuest.Combine(rhs.OwnerQuest);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.DisplayTime = this.DisplayTime.Combine(rhs.DisplayTime);
+                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
+                ret.ShortTitle = this.ShortTitle.Combine(rhs.ShortTitle);
+                ret.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MenuButtons?.Overall, rhs.MenuButtons?.Overall), Noggog.ExceptionExt.Combine(this.MenuButtons?.Specific, rhs.MenuButtons?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +679,49 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Description;
+            public bool Name;
+            public bool INAM;
+            public bool OwnerQuest;
+            public bool Flags;
+            public bool DisplayTime;
+            public bool BNAM;
+            public bool ShortTitle;
+            public MessageButton.TranslationMask? MenuButtons;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Description = defaultOn;
+                this.Name = defaultOn;
+                this.INAM = defaultOn;
+                this.OwnerQuest = defaultOn;
+                this.Flags = defaultOn;
+                this.DisplayTime = defaultOn;
+                this.BNAM = defaultOn;
+                this.ShortTitle = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Description, null));
+                ret.Add((Name, null));
+                ret.Add((INAM, null));
+                ret.Add((OwnerQuest, null));
+                ret.Add((Flags, null));
+                ret.Add((DisplayTime, null));
+                ret.Add((BNAM, null));
+                ret.Add((ShortTitle, null));
+                ret.Add((MenuButtons == null ? DefaultOn : !MenuButtons.GetCrystal().CopyNothing, MenuButtons?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +733,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Message_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MessageCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageSetterCommon.Instance.RemapLinks(this, mapping);
         public Message(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +863,27 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMessage :
+        IFormLinkContainer,
         ILoquiObjectSetter<IMessageInternal>,
         IMessageGetter,
-        IStarfieldMajorRecordInternal
+        INamed,
+        INamedRequired,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new TranslatedString Description { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new Int32 INAM { get; set; }
+        new IFormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
+        new Message.Flag Flags { get; set; }
+        new UInt32? DisplayTime { get; set; }
+        new UInt32? BNAM { get; set; }
+        new TranslatedString? ShortTitle { get; set; }
+        new ExtendedList<MessageButton> MenuButtons { get; }
     }
 
     public partial interface IMessageInternal :
@@ -441,10 +897,29 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IMessageGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMessageGetter>,
-        IMapsToGetter<IMessageGetter>
+        IMapsToGetter<IMessageGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Message_Registration.Instance;
+        ITranslatedStringGetter Description { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        Int32 INAM { get; }
+        IFormLinkNullableGetter<IQuestGetter> OwnerQuest { get; }
+        Message.Flag Flags { get; }
+        UInt32? DisplayTime { get; }
+        UInt32? BNAM { get; }
+        ITranslatedStringGetter? ShortTitle { get; }
+        IReadOnlyList<IMessageButtonGetter> MenuButtons { get; }
 
     }
 
@@ -621,6 +1096,15 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Description = 7,
+        Name = 8,
+        INAM = 9,
+        OwnerQuest = 10,
+        Flags = 11,
+        DisplayTime = 12,
+        BNAM = 13,
+        ShortTitle = 14,
+        MenuButtons = 15,
     }
     #endregion
 
@@ -631,9 +1115,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Message.Mask<>);
 
@@ -663,8 +1147,26 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.MESG);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.MESG);
+            var all = RecordCollection.Factory(
+                RecordTypes.MESG,
+                RecordTypes.DESC,
+                RecordTypes.FULL,
+                RecordTypes.INAM,
+                RecordTypes.QNAM,
+                RecordTypes.DNAM,
+                RecordTypes.TNAM,
+                RecordTypes.BNAM,
+                RecordTypes.NNAM,
+                RecordTypes.ITXT,
+                RecordTypes.CTDA,
+                RecordTypes.DODT,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MessageBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1208,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMessageInternal item)
         {
             ClearPartial();
+            item.Description.Clear();
+            item.Name = default;
+            item.INAM = default;
+            item.OwnerQuest.Clear();
+            item.Flags = default;
+            item.DisplayTime = default;
+            item.BNAM = default;
+            item.ShortTitle = default;
+            item.MenuButtons.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1234,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IMessage obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.OwnerQuest.Relink(mapping);
+            obj.MenuButtons.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1303,18 @@ namespace Mutagen.Bethesda.Starfield
             Message.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.INAM = item.INAM == rhs.INAM;
+            ret.OwnerQuest = item.OwnerQuest.Equals(rhs.OwnerQuest);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.DisplayTime = item.DisplayTime == rhs.DisplayTime;
+            ret.BNAM = item.BNAM == rhs.BNAM;
+            ret.ShortTitle = object.Equals(item.ShortTitle, rhs.ShortTitle);
+            ret.MenuButtons = item.MenuButtons.CollectionEqualsHelper(
+                rhs.MenuButtons,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1364,56 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Description ?? true)
+            {
+                sb.AppendItem(item.Description, "Description");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.INAM ?? true)
+            {
+                sb.AppendItem(item.INAM, "INAM");
+            }
+            if (printMask?.OwnerQuest ?? true)
+            {
+                sb.AppendItem(item.OwnerQuest.FormKeyNullable, "OwnerQuest");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if ((printMask?.DisplayTime ?? true)
+                && item.DisplayTime is {} DisplayTimeItem)
+            {
+                sb.AppendItem(DisplayTimeItem, "DisplayTime");
+            }
+            if ((printMask?.BNAM ?? true)
+                && item.BNAM is {} BNAMItem)
+            {
+                sb.AppendItem(BNAMItem, "BNAM");
+            }
+            if ((printMask?.ShortTitle ?? true)
+                && item.ShortTitle is {} ShortTitleItem)
+            {
+                sb.AppendItem(ShortTitleItem, "ShortTitle");
+            }
+            if (printMask?.MenuButtons?.Overall ?? true)
+            {
+                sb.AppendLine("MenuButtons =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.MenuButtons)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Message_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1464,42 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
+            {
+                if (lhs.INAM != rhs.INAM) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.OwnerQuest) ?? true))
+            {
+                if (!lhs.OwnerQuest.Equals(rhs.OwnerQuest)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.DisplayTime) ?? true))
+            {
+                if (lhs.DisplayTime != rhs.DisplayTime) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.BNAM) ?? true))
+            {
+                if (lhs.BNAM != rhs.BNAM) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.ShortTitle) ?? true))
+            {
+                if (!object.Equals(lhs.ShortTitle, rhs.ShortTitle)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
+            {
+                if (!lhs.MenuButtons.SequenceEqual(rhs.MenuButtons, (l, r) => ((MessageButtonCommon)((IMessageButtonGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Message_FieldIndex.MenuButtons)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1528,27 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMessageGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Description);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.INAM);
+            hash.Add(item.OwnerQuest);
+            hash.Add(item.Flags);
+            if (item.DisplayTime is {} DisplayTimeitem)
+            {
+                hash.Add(DisplayTimeitem);
+            }
+            if (item.BNAM is {} BNAMitem)
+            {
+                hash.Add(BNAMitem);
+            }
+            if (item.ShortTitle is {} ShortTitleitem)
+            {
+                hash.Add(ShortTitleitem);
+            }
+            hash.Add(item.MenuButtons);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1577,14 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.OwnerQuest, out var OwnerQuestInfo))
+            {
+                yield return OwnerQuestInfo;
+            }
+            foreach (var item in obj.MenuButtons.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1020,6 +1660,62 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
+            {
+                item.INAM = rhs.INAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.OwnerQuest) ?? true))
+            {
+                item.OwnerQuest.SetTo(rhs.OwnerQuest.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.DisplayTime) ?? true))
+            {
+                item.DisplayTime = rhs.DisplayTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.BNAM) ?? true))
+            {
+                item.BNAM = rhs.BNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.ShortTitle) ?? true))
+            {
+                item.ShortTitle = rhs.ShortTitle?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
+            {
+                errorMask?.PushIndex((int)Message_FieldIndex.MenuButtons);
+                try
+                {
+                    item.MenuButtons.SetTo(
+                        rhs.MenuButtons
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1864,67 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly MessageBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IMessageGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.INAM,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OwnerQuest,
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
+            EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.DisplayTime,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.BNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ShortTitle,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMessageButtonGetter>.Instance.Write(
+                writer: writer,
+                items: item.MenuButtons,
+                transl: (MutagenWriter subWriter, IMessageButtonGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((MessageButtonBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IMessageGetter item,
@@ -1184,10 +1941,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1996,101 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly MessageBinaryCreateTranslation Instance = new MessageBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MESG;
+        public static ParseResult FillBinaryRecordTypes(
+            IMessageInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Message_FieldIndex.Description;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Message_FieldIndex.Name;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.INAM = frame.ReadInt32();
+                    return (int)Message_FieldIndex.INAM;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Message_FieldIndex.OwnerQuest;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Message_FieldIndex.Flags;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DisplayTime = frame.ReadUInt32();
+                    return (int)Message_FieldIndex.DisplayTime;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BNAM = frame.ReadUInt32();
+                    return (int)Message_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ShortTitle = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Message_FieldIndex.ShortTitle;
+                }
+                case RecordTypeInts.ITXT:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.DODT:
+                {
+                    item.MenuButtons.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MessageButton>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: MessageButton_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: MessageButton.TryCreateFromBinary));
+                    return (int)Message_FieldIndex.MenuButtons;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2123,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MessageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MessageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2138,47 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IMessage);
 
 
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region INAM
+        private int? _INAMLocation;
+        public Int32 INAM => _INAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
+        #region OwnerQuest
+        private int? _OwnerQuestLocation;
+        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Message.Flag Flags => _FlagsLocation.HasValue ? (Message.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Message.Flag);
+        #endregion
+        #region DisplayTime
+        private int? _DisplayTimeLocation;
+        public UInt32? DisplayTime => _DisplayTimeLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayTimeLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region BNAM
+        private int? _BNAMLocation;
+        public UInt32? BNAM => _BNAMLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region ShortTitle
+        private int? _ShortTitleLocation;
+        public ITranslatedStringGetter? ShortTitle => _ShortTitleLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortTitleLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<IMessageButtonGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2236,80 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.Description;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.Name;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _INAMLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.INAM;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _OwnerQuestLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.OwnerQuest;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.Flags;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _DisplayTimeLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.DisplayTime;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BNAMLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _ShortTitleLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.ShortTitle;
+                }
+                case RecordTypeInts.ITXT:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.DODT:
+                {
+                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<IMessageButtonGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: MessageButton_Registration.TriggerSpecs,
+                        factory: MessageButtonBinaryOverlay.MessageButtonFactory);
+                    return (int)Message_FieldIndex.MenuButtons;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

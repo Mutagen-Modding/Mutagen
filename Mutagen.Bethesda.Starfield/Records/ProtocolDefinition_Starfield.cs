@@ -876,6 +876,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             MeleeAimAssistModel_Registration.Instance,
             MenuPausedConditionData_Registration.Instance,
             Message_Registration.Instance,
+            MessageButton_Registration.Instance,
             MiscItem_Registration.Instance,
             ModdedItemHasKeywordConditionData_Registration.Instance,
             Model_Registration.Instance,

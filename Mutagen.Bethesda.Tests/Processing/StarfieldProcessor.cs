@@ -177,6 +177,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "EXPL", "FULL" },
                     new RecordType[] { "BPTD", "BPTN" },
                     new RecordType[] { "AVIF", "FULL", "ANAM" },
+                    new RecordType[] { "MESG", "FULL", "NNAM", "ITXT" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -190,6 +191,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "QUST", "CNAM" },
                     new RecordType[] { "AMMO", "DESC" },
                     new RecordType[] { "FURN", "DESC" },
+                    new RecordType[] { "MESG", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

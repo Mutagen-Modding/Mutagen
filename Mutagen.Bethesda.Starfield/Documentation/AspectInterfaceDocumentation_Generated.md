@@ -170,6 +170,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Location
 - MagicEffect
 - MaterialType
+- Message
 - MiscItem
 - MorphGroup
 - MoveableStatic
@@ -556,6 +557,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IScripted
 ### MaterialType
+- INamed
+### Message
 - INamed
 ### MiscItem
 - IHaveVirtualMachineAdapter
