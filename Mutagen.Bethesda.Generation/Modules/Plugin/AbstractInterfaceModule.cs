@@ -91,17 +91,32 @@ public class AbstractInterfaceModule : GenerationModule
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var rec in baseClasses.OrderBy(x => x.Name))
                     {
-                        mappingGen.AppendLine(
-                            $"dict[typeof({rec.Interface(getter: false)})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
-                        using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
+                        using (var args = mappingGen.Call(
+                                   $"dict[typeof({rec.Interface(getter: false)})] = new {nameof(InterfaceMappingResult)}"))
                         {
-                            foreach (var inheriting in await rec.InheritingObjects())
+                            args.Add("true");
+                            await args.Add(async regisSb =>
                             {
-                                if (grupTypes.Contains(inheriting))
+                                regisSb.AppendLine($"new {nameof(ILoquiRegistration)}[]");
+                                using (regisSb.CurlyBrace())
                                 {
-                                    mappingGen.AppendLine($"{inheriting.RegistrationName}.Instance,");
+                                    foreach (var inheriting in await rec.InheritingObjects())
+                                    {
+                                        if (grupTypes.Contains(inheriting))
+                                        {
+                                            regisSb.AppendLine($"{inheriting.RegistrationName}.Instance,");
+                                        }
+                                    }
                                 }
-                            }
+                            });
+                            args.Add(regisSb =>
+                            {
+                                using (var c = regisSb.Call("new InterfaceMappingTypes"))
+                                {
+                                    c.Add($"Setter: typeof({rec.Interface(getter: false)})");
+                                    c.Add($"Getter: typeof({rec.Interface(getter: true)})");
+                                }
+                            });
                         }
         
                         mappingGen.AppendLine(
@@ -166,11 +181,26 @@ public class AbstractInterfaceModule : GenerationModule
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var rec in inheritingChildren.OrderBy(x => x.Key.Name))
                     {
-                        mappingGen.AppendLine(
-                            $"dict[typeof({rec.Key.Interface(getter: false)})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
-                        using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
+                        using (var args = mappingGen.Call(
+                                   $"dict[typeof({rec.Key.Interface(getter: false)})] = new {nameof(InterfaceMappingResult)}"))
                         {
-                            mappingGen.AppendLine($"{rec.Value.RegistrationName}.Instance,");
+                            args.Add("true");
+                            args.Add(regisSb =>
+                            {
+                                regisSb.AppendLine($"new {nameof(ILoquiRegistration)}[]");
+                                using (regisSb.CurlyBrace())
+                                {
+                                    regisSb.AppendLine($"{rec.Value.RegistrationName}.Instance,");
+                                }
+                            });
+                            args.Add(regisSb =>
+                            {
+                                using (var c = regisSb.Call("new InterfaceMappingTypes"))
+                                {
+                                    c.Add($"Setter: typeof({rec.Key.Interface(getter: false)})");
+                                    c.Add($"Getter: typeof({rec.Key.Interface(getter: true)})");
+                                }
+                            });
                         }
 
                         mappingGen.AppendLine(

@@ -19,12 +19,17 @@ internal class SkyrimIsolatedAbstractInterfaceMapping : IInterfaceMapping
     public SkyrimIsolatedAbstractInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
-        dict[typeof(IAStoryManagerNode)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            StoryManagerBranchNode_Registration.Instance,
-            StoryManagerQuestNode_Registration.Instance,
-            StoryManagerEventNode_Registration.Instance,
-        });
+        dict[typeof(IAStoryManagerNode)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                StoryManagerBranchNode_Registration.Instance,
+                StoryManagerQuestNode_Registration.Instance,
+                StoryManagerEventNode_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IAStoryManagerNode),
+                Getter: typeof(IAStoryManagerNodeGetter)));
         dict[typeof(IAStoryManagerNodeGetter)] = dict[typeof(IAStoryManagerNode)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }

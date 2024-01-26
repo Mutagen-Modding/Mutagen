@@ -199,7 +199,8 @@ public class AspectInterfaceModule : GenerationModule
                             foreach (var subDef in aspectDef.Value.OrderBy(x => x.Key.Name))
                             {
                                 (string Name, bool Setter)? first = null;
-                                foreach (var reg in subDef.Key.Registrations.OrderBy(x => x.Name))
+                                var subDefRegistrations = subDef.Key.Registrations.OrderBy(x => x.Name).ToArray();
+                                foreach (var reg in subDefRegistrations)
                                 {
                                     if (first == null)
                                     {
@@ -209,13 +210,49 @@ public class AspectInterfaceModule : GenerationModule
                                             throw new ArgumentException(
                                                 $"Added two keys for aspect interface definition: {first.Value.Name}");
                                         }
-                                        mappingGen.AppendLine($"dict[typeof({first.Value.Name})] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
-                                        using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
+
+                                        using (var args = mappingGen.Call(
+                                                   $"dict[typeof({first.Value.Name})] = new {nameof(InterfaceMappingResult)}"))
                                         {
-                                            foreach (var obj in subDef.Value.OrderBy(x => x.Name))
+                                            args.Add(first.Value.Setter.ToString().ToLower());
+                                            args.Add(regisSb =>
                                             {
-                                                mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
-                                            }
+                                                regisSb.AppendLine($"new {nameof(ILoquiRegistration)}[]");
+                                                using (regisSb.CurlyBrace())
+                                                {
+                                                    foreach (var obj in subDef.Value.OrderBy(x => x.Name))
+                                                    {
+                                                        regisSb.AppendLine($"{obj.RegistrationName}.Instance,");
+                                                    }
+                                                }
+                                            });
+                                            args.Add(regisSb =>
+                                            {
+                                                string? setter = null;
+                                                string? getter = null;
+
+                                                void Set(string name)
+                                                {
+                                                    if (name.Contains("Getter"))
+                                                    {
+                                                        getter = name;
+                                                    }
+                                                    else
+                                                    {
+                                                        setter = name;
+                                                    }
+                                                }
+
+                                                for (int i = 0; i < subDefRegistrations.Length && i < 2; i++)
+                                                {
+                                                    Set(subDefRegistrations[i].Name);
+                                                }
+                                                using (var c = regisSb.Call("new InterfaceMappingTypes"))
+                                                {
+                                                    c.Add($"Setter: {(setter == null ? "null" : $"typeof({setter})")}");
+                                                    c.Add($"Getter: {(getter == null ? "null" : $"typeof({getter})")}");
+                                                }
+                                            });
                                         }
                                     }
                                     else
@@ -250,14 +287,32 @@ public class AspectInterfaceModule : GenerationModule
                                 throw new ArgumentException(
                                     $"Added two keys for aspect interface definition: {loose.Key}");
                             }
-                            mappingGen.AppendLine($"dict[typeof({loose.Key})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
-                            using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
+
+                            using (var args = mappingGen.Call(
+                                       $"dict[typeof({loose.Key})] = new {nameof(InterfaceMappingResult)}"))
                             {
-                                foreach (var obj in loose.Value)
+                                args.Add("true");
+                                args.Add(regisSb =>
                                 {
-                                    mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
-                                }
+                                    regisSb.AppendLine($"new {nameof(ILoquiRegistration)}[]");
+                                    using (regisSb.CurlyBrace())
+                                    {
+                                        foreach (var obj in loose.Value)
+                                        {
+                                            regisSb.AppendLine($"{obj.RegistrationName}.Instance,");
+                                        }
+                                    }
+                                });
+                                args.Add(regisSb =>
+                                {
+                                    using (var c = regisSb.Call("new InterfaceMappingTypes"))
+                                    {
+                                        c.Add($"Setter: typeof({loose.Key})");
+                                        c.Add($"Getter: typeof({loose.Key}Getter)");
+                                    }
+                                });
                             }
+                            
                             if (!addedKeys.Add($"{loose.Key}Getter"))
                             {
                                 throw new ArgumentException(
