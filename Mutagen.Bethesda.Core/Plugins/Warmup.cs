@@ -49,6 +49,7 @@ public static class Warmup
             }
             
             Initialization.SpinUp(protocols.ToArray());
+            GetterTypeMapping.Warmup();
             MetaInterfaceMapping.Warmup();
             OverrideMaskRegistrations.Warmup();
             _warmedUp = true;

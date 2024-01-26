@@ -481,6 +481,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Records\Mapping\GetterTypeMapping.cs" />
         <Compile Include="Plugins\Records\Mapping\IInterfaceMapping.cs"/>
         <Compile Include="Plugins\Records\Mapping\InheritingInterfaceMapping.cs">
             <CodeLanguage>cs</CodeLanguage>
