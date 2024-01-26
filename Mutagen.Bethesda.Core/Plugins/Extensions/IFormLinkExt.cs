@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda;
 
@@ -786,16 +787,16 @@ public static class IFormLinkExt
 
     public static bool TryToStandardizedIdentifier(this IFormLinkIdentifier identifier, [MaybeNullWhen(false)] out IFormLinkIdentifier standardized)
     {
-        if (LoquiRegistration.TryGetRegister(identifier.Type, out var regis))
+        if (GetterTypeMapping.Instance.TryGetGetterType(identifier.Type, out var getterType))
         {
-            if (identifier.Type == regis.GetterType)
+            if (identifier.Type == getterType)
             {
                 standardized = identifier;
                 return true;
             }
             else
             {
-                standardized = new FormLinkInformation(identifier.FormKey, regis.GetterType);
+                standardized = new FormLinkInformation(identifier.FormKey, getterType);
                 return true;
             }
         }
