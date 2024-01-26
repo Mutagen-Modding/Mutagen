@@ -8,6 +8,8 @@ public interface IGetterTypeMapper
 {
     bool TryGetGetterType(Type t, [MaybeNullWhen(false)] out Type getter);
     bool TryGetGetterType(GameCategory category, Type t, [MaybeNullWhen(false)] out Type getter);
+    bool TryGetGetterType(string fullName, [MaybeNullWhen(false)] out Type getter);
+    bool TryGetGetterType(GameCategory category, string fullName, [MaybeNullWhen(false)] out Type getter);
 }
 
 public class GetterTypeMapper : IGetterTypeMapper
@@ -46,6 +48,42 @@ public class GetterTypeMapper : IGetterTypeMapper
         }
 
         if (_meta.TryGetRegistrationsForInterface(category, t, out var interfaceRegis))
+        {
+            getter = interfaceRegis.Types.Getter;
+            return true;
+        }
+
+        getter = default;
+        return false;
+    }
+
+    public bool TryGetGetterType(string fullName, [MaybeNullWhen(false)] out Type getter)
+    {
+        if (LoquiRegistration.TryGetRegisterByFullName(fullName, out var regis))
+        {
+            getter = regis.GetterType;
+            return true;
+        }
+
+        if (_meta.TryGetRegistrationsForInterface(fullName, out var interfaceRegis))
+        {
+            getter = interfaceRegis.Types.Getter;
+            return true;
+        }
+
+        getter = default;
+        return false;
+    }
+
+    public bool TryGetGetterType(GameCategory category, string fullName, [MaybeNullWhen(false)] out Type getter)
+    {
+        if (LoquiRegistration.TryGetRegisterByFullName(fullName, out var loquiRegis))
+        {
+            getter = loquiRegis.GetterType;
+            return loquiRegis.ProtocolKey.Namespace == Enums<GameCategory>.ToStringFast((int)category);
+        }
+
+        if (_meta.TryGetRegistrationsForInterface(category, fullName, out var interfaceRegis))
         {
             getter = interfaceRegis.Types.Getter;
             return true;

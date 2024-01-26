@@ -9,6 +9,10 @@ public interface IMetaInterfaceMapGetter
         [MaybeNullWhen(false)] out InterfaceMappingResult registrations);
     bool TryGetRegistrationsForInterface(Type type,
         [MaybeNullWhen(false)] out InterfaceMappingResult registrations);
+    bool TryGetRegistrationsForInterface(GameCategory mode, string fullName,
+        [MaybeNullWhen(false)] out InterfaceMappingResult registrations);
+    bool TryGetRegistrationsForInterface(string fullName,
+        [MaybeNullWhen(false)] out InterfaceMappingResult registrations);
 }
 
 internal sealed class MetaInterfaceMapper : IMetaInterfaceMapGetter
@@ -19,6 +23,8 @@ internal sealed class MetaInterfaceMapper : IMetaInterfaceMapGetter
     private readonly IIsolatedAbstractInterfaceMapGetter _abstractInterfaceMapGetter;
     private readonly Lazy<Dictionary<GameCategory, Dictionary<Type, InterfaceMappingResult>>> _categoryTypeDict;
     private readonly Lazy<Dictionary<Type, InterfaceMappingResult>> _typeDict;
+    private readonly Lazy<Dictionary<GameCategory, Dictionary<string, InterfaceMappingResult>>> _categoryTypeDictByName;
+    private readonly Lazy<Dictionary<string, InterfaceMappingResult>> _typeDictByName;
     
     public MetaInterfaceMapper(
         IAspectInterfaceMapGetter aspectInterfaceMapGetter,
@@ -43,6 +49,21 @@ internal sealed class MetaInterfaceMapper : IMetaInterfaceMapGetter
             }
             return ret;
         });
+        _categoryTypeDictByName = new Lazy<Dictionary<GameCategory, Dictionary<string, InterfaceMappingResult>>>(() =>
+        {
+            var ret = new Dictionary<GameCategory, Dictionary<string, InterfaceMappingResult>>();
+            foreach (var cat in _categoryTypeDict.Value)
+            {
+                var dict = new Dictionary<string, InterfaceMappingResult>();
+                foreach (var kv in cat.Value)
+                {
+                    dict[kv.Key.FullName!] = kv.Value;
+                }
+
+                ret[cat.Key] = dict;
+            }
+            return ret;
+        });
         _typeDict = new Lazy<Dictionary<Type, InterfaceMappingResult>>(() =>
         {
             var ret = new Dictionary<Type, InterfaceMappingResult>();
@@ -57,6 +78,15 @@ internal sealed class MetaInterfaceMapper : IMetaInterfaceMapGetter
                 {
                     ret[kv.Key] = items with { Registrations = items.Registrations.Concat(kv.Value.Registrations).ToList() };
                 }
+            }
+            return ret;
+        });
+        _typeDictByName = new Lazy<Dictionary<string, InterfaceMappingResult>>(() =>
+        {
+            var ret = new Dictionary<string, InterfaceMappingResult>();
+            foreach (var cat in _typeDict.Value)
+            {
+                ret[cat.Key.FullName!] = cat.Value;
             }
             return ret;
         });
@@ -75,6 +105,21 @@ internal sealed class MetaInterfaceMapper : IMetaInterfaceMapGetter
     public bool TryGetRegistrationsForInterface(Type type, [MaybeNullWhen(false)] out InterfaceMappingResult registrations)
     {
         return _typeDict.Value.TryGetValue(type, out registrations);
+    }
+
+    public bool TryGetRegistrationsForInterface(GameCategory mode, string fullName, [MaybeNullWhen(false)] out InterfaceMappingResult registrations)
+    {
+        if (!_categoryTypeDictByName.Value.TryGetValue(mode, out var subDict))
+        {
+            registrations = default;
+            return false;
+        }
+        return subDict.TryGetValue(fullName, out registrations);
+    }
+
+    public bool TryGetRegistrationsForInterface(string fullName, [MaybeNullWhen(false)] out InterfaceMappingResult registrations)
+    {
+        return _typeDictByName.Value.TryGetValue(fullName, out registrations);
     }
 }
 

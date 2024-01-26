@@ -48,6 +48,45 @@ public class GetterTypeMapperTests
     }
     
     [Fact]
+    internal void TypicalByName()
+    {
+        GetterTypeMapping.Instance.TryGetGetterType("Mutagen.Bethesda.Skyrim.Armor", out var result)
+            .Should().BeTrue();
+        result.Should().Be(typeof(IArmorGetter));
+        GetterTypeMapping.Instance.TryGetGetterType("Mutagen.Bethesda.Skyrim.IArmor", out result)
+            .Should().BeTrue();
+        result.Should().Be(typeof(IArmorGetter));
+        GetterTypeMapping.Instance.TryGetGetterType("Mutagen.Bethesda.Skyrim.IArmorGetter", out result)
+            .Should().BeTrue();
+        result.Should().Be(typeof(IArmorGetter));
+    }
+    
+    [Fact]
+    internal void ByCategoryByName()
+    {
+        GetterTypeMapping.Instance.TryGetGetterType(GameCategory.Skyrim,"Mutagen.Bethesda.Skyrim.Armor", out var result)
+            .Should().BeTrue();
+        result.Should().Be(typeof(IArmorGetter));
+        GetterTypeMapping.Instance.TryGetGetterType(GameCategory.Skyrim,"Mutagen.Bethesda.Skyrim.IArmor", out result)
+            .Should().BeTrue();
+        result.Should().Be(typeof(IArmorGetter));
+        GetterTypeMapping.Instance.TryGetGetterType(GameCategory.Skyrim,"Mutagen.Bethesda.Skyrim.IArmorGetter", out result)
+            .Should().BeTrue();
+        result.Should().Be(typeof(IArmorGetter));
+    }
+    
+    [Fact]
+    internal void ByCategoryByNameMiss()
+    {
+        GetterTypeMapping.Instance.TryGetGetterType(GameCategory.Oblivion,"Mutagen.Bethesda.Skyrim.Armor", out var result)
+            .Should().BeFalse();
+        GetterTypeMapping.Instance.TryGetGetterType(GameCategory.Oblivion,"Mutagen.Bethesda.Skyrim.IArmor", out result)
+            .Should().BeFalse();
+        GetterTypeMapping.Instance.TryGetGetterType(GameCategory.Oblivion,"Mutagen.Bethesda.Skyrim.IArmorGetter", out result)
+            .Should().BeFalse();
+    }
+    
+    [Fact]
     internal void AspectInterface()
     {
         GetterTypeMapping.Instance.TryGetGetterType(typeof(INamed), out var result)
