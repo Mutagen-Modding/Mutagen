@@ -6398,5 +6398,8 @@
     <Compile Include="Records\Major Records\MessageButton_Generated.cs">
       <DependentUpon>Message.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DefaultObjectUse_Generated.cs">
+      <DependentUpon>DefaultObjectManager.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

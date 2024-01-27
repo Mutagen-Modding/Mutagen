@@ -159,6 +159,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Decal_Registration.Instance,
             DefaultObject_Registration.Instance,
             DefaultObjectManager_Registration.Instance,
+            DefaultObjectUse_Registration.Instance,
             DestructableData_Registration.Instance,
             Destructible_Registration.Instance,
             DestructibleObjectComponent_Registration.Instance,

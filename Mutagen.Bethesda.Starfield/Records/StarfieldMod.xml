@@ -96,6 +96,7 @@
       <Group name="ArmorAddons" refName="ArmorAddon" />
       <Group name="Locations" refName="Location" />
       <Group name="Messages" refName="Message" />
+      <Group name="DefaultObjectManagers" refName="DefaultObjectManager" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />
