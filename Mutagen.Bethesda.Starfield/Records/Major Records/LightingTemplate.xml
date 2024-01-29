@@ -2,6 +2,31 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LightingTemplate" recordType="LGTM" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Data>
+        <Fields>
+          <Color name="AmbientColor" binaryType="Alpha" />
+          <Color name="DirectionalColor" binaryType="Alpha" />
+          <Color name="FogNearColor" binaryType="Alpha" />
+          <Float name="FogNear" />
+          <Float name="FogFar" />
+          <Int32 name="DirectionalRotationXY" />
+          <Int32 name="DirectionalRotationZ" />
+          <Float name="DirectionalFade" />
+          <Float name="FogClipDistance" />
+          <Float name="FogPower" />
+          <ByteArray name="Unused" byteLength="32" nullable="false" />
+          <Color name="FogFarColor" binaryType="Alpha" />
+          <Float name="FogMax" />
+          <Float name="LightFadeStartDistance" />
+          <Float name="LightFadeEndDistance" />
+          <Int32 name="Unknown" />
+          <Float name="NearHeightMid" />
+          <Float name="NearHeightRange" />
+          <Color name="FogColorHighNear" binaryType="Alpha" />
+          <Color name="FogColorHighFar" binaryType="Alpha" />
+        </Fields>
+      </Data>
+      <RefDirect name="DirectionalAmbientColors" refName="AmbientColors" recordType="DALC" />
     </Fields>
   </Object>
 </Loqui>

@@ -151,6 +151,7 @@ namespace Mutagen.Bethesda.Starfield
             _Messages_Object = new StarfieldGroup<Message>(this);
             _DefaultObjectManagers_Object = new StarfieldGroup<DefaultObjectManager>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
+            _LightingTemplates_Object = new StarfieldGroup<LightingTemplate>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
@@ -817,6 +818,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IDefaultObjectGetter> IStarfieldModGetter.DefaultObjects => _DefaultObjects_Object;
         #endregion
+        #region LightingTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<LightingTemplate> _LightingTemplates_Object;
+        public StarfieldGroup<LightingTemplate> LightingTemplates => _LightingTemplates_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ILightingTemplateGetter> IStarfieldModGetter.LightingTemplates => _LightingTemplates_Object;
+        #endregion
         #region Outfits
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Outfit> _Outfits_Object;
@@ -1067,6 +1075,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Messages = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjectManagers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.LightingTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1179,6 +1188,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Messages,
                 TItem DefaultObjectManagers,
                 TItem DefaultObjects,
+                TItem LightingTemplates,
                 TItem Outfits,
                 TItem AimModels,
                 TItem AimAssistModels,
@@ -1289,6 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Messages = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Messages, new StarfieldGroup.Mask<TItem>(Messages));
                 this.DefaultObjectManagers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjectManagers, new StarfieldGroup.Mask<TItem>(DefaultObjectManagers));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
+                this.LightingTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LightingTemplates, new StarfieldGroup.Mask<TItem>(LightingTemplates));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Outfits, new StarfieldGroup.Mask<TItem>(Outfits));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimModels, new StarfieldGroup.Mask<TItem>(AimModels));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimAssistModels, new StarfieldGroup.Mask<TItem>(AimAssistModels));
@@ -1409,6 +1420,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Messages { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjectManagers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LightingTemplates { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Outfits { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimAssistModels { get; set; }
@@ -1530,6 +1542,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Messages, rhs.Messages)) return false;
                 if (!object.Equals(this.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
+                if (!object.Equals(this.LightingTemplates, rhs.LightingTemplates)) return false;
                 if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
                 if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
                 if (!object.Equals(this.AimAssistModels, rhs.AimAssistModels)) return false;
@@ -1644,6 +1657,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Messages);
                 hash.Add(this.DefaultObjectManagers);
                 hash.Add(this.DefaultObjects);
+                hash.Add(this.LightingTemplates);
                 hash.Add(this.Outfits);
                 hash.Add(this.AimModels);
                 hash.Add(this.AimAssistModels);
@@ -2128,6 +2142,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.DefaultObjects.Overall)) return false;
                     if (this.DefaultObjects.Specific != null && !this.DefaultObjects.Specific.All(eval)) return false;
+                }
+                if (LightingTemplates != null)
+                {
+                    if (!eval(this.LightingTemplates.Overall)) return false;
+                    if (this.LightingTemplates.Specific != null && !this.LightingTemplates.Specific.All(eval)) return false;
                 }
                 if (Outfits != null)
                 {
@@ -2681,6 +2700,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.DefaultObjects.Overall)) return true;
                     if (this.DefaultObjects.Specific != null && this.DefaultObjects.Specific.Any(eval)) return true;
                 }
+                if (LightingTemplates != null)
+                {
+                    if (eval(this.LightingTemplates.Overall)) return true;
+                    if (this.LightingTemplates.Specific != null && this.LightingTemplates.Specific.Any(eval)) return true;
+                }
                 if (Outfits != null)
                 {
                     if (eval(this.Outfits.Overall)) return true;
@@ -2872,6 +2896,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Messages = this.Messages == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Messages.Overall), this.Messages.Specific?.Translate(eval));
                 obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
+                obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
                 obj.Outfits = this.Outfits == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
                 obj.AimModels = this.AimModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
                 obj.AimAssistModels = this.AimAssistModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimAssistModels.Overall), this.AimAssistModels.Specific?.Translate(eval));
@@ -3275,6 +3300,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         DefaultObjects?.Print(sb);
                     }
+                    if (printMask?.LightingTemplates?.Overall ?? true)
+                    {
+                        LightingTemplates?.Print(sb);
+                    }
                     if (printMask?.Outfits?.Overall ?? true)
                     {
                         Outfits?.Print(sb);
@@ -3459,6 +3488,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Message.ErrorMask>?>? Messages;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>? Outfits;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>? AimModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistModel.ErrorMask>?>? AimAssistModels;
@@ -3668,6 +3698,8 @@ namespace Mutagen.Bethesda.Starfield
                         return DefaultObjectManagers;
                     case StarfieldMod_FieldIndex.DefaultObjects:
                         return DefaultObjects;
+                    case StarfieldMod_FieldIndex.LightingTemplates:
+                        return LightingTemplates;
                     case StarfieldMod_FieldIndex.Outfits:
                         return Outfits;
                     case StarfieldMod_FieldIndex.AimModels:
@@ -3987,6 +4019,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.DefaultObjects:
                         this.DefaultObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LightingTemplate.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Outfits:
                         this.Outfits = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>(ex, null);
@@ -4325,6 +4360,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.DefaultObjects:
                         this.DefaultObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LightingTemplate.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Outfits:
                         this.Outfits = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>?)obj;
                         break;
@@ -4476,6 +4514,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Messages != null) return true;
                 if (DefaultObjectManagers != null) return true;
                 if (DefaultObjects != null) return true;
+                if (LightingTemplates != null) return true;
                 if (Outfits != null) return true;
                 if (AimModels != null) return true;
                 if (AimAssistModels != null) return true;
@@ -4610,6 +4649,7 @@ namespace Mutagen.Bethesda.Starfield
                 Messages?.Print(sb);
                 DefaultObjectManagers?.Print(sb);
                 DefaultObjects?.Print(sb);
+                LightingTemplates?.Print(sb);
                 Outfits?.Print(sb);
                 AimModels?.Print(sb);
                 AimAssistModels?.Print(sb);
@@ -4727,6 +4767,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Messages = this.Messages.Combine(rhs.Messages, (l, r) => l.Combine(r));
                 ret.DefaultObjectManagers = this.DefaultObjectManagers.Combine(rhs.DefaultObjectManagers, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
+                ret.LightingTemplates = this.LightingTemplates.Combine(rhs.LightingTemplates, (l, r) => l.Combine(r));
                 ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
                 ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
                 ret.AimAssistModels = this.AimAssistModels.Combine(rhs.AimAssistModels, (l, r) => l.Combine(r));
@@ -4859,6 +4900,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Message.TranslationMask>? Messages;
             public StarfieldGroup.TranslationMask<DefaultObjectManager.TranslationMask>? DefaultObjectManagers;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
+            public StarfieldGroup.TranslationMask<LightingTemplate.TranslationMask>? LightingTemplates;
             public StarfieldGroup.TranslationMask<Outfit.TranslationMask>? Outfits;
             public StarfieldGroup.TranslationMask<AimModel.TranslationMask>? AimModels;
             public StarfieldGroup.TranslationMask<AimAssistModel.TranslationMask>? AimAssistModels;
@@ -4992,6 +5034,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Messages != null ? Messages.OnOverall : DefaultOn, Messages?.GetCrystal()));
                 ret.Add((DefaultObjectManagers != null ? DefaultObjectManagers.OnOverall : DefaultOn, DefaultObjectManagers?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
+                ret.Add((LightingTemplates != null ? LightingTemplates.OnOverall : DefaultOn, LightingTemplates?.GetCrystal()));
                 ret.Add((Outfits != null ? Outfits.OnOverall : DefaultOn, Outfits?.GetCrystal()));
                 ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
                 ret.Add((AimAssistModels != null ? AimAssistModels.OnOverall : DefaultOn, AimAssistModels?.GetCrystal()));
@@ -5146,6 +5189,7 @@ namespace Mutagen.Bethesda.Starfield
             _Messages_Object = new StarfieldGroup<Message>(this);
             _DefaultObjectManagers_Object = new StarfieldGroup<DefaultObjectManager>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
+            _LightingTemplates_Object = new StarfieldGroup<LightingTemplate>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
@@ -5536,6 +5580,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultObjects.RecordCache.Set(rhsMod.DefaultObjects.RecordCache.Items);
             }
+            if (mask?.LightingTemplates ?? true)
+            {
+                this.LightingTemplates.RecordCache.Set(rhsMod.LightingTemplates.RecordCache.Items);
+            }
             if (mask?.Outfits ?? true)
             {
                 this.Outfits.RecordCache.Set(rhsMod.Outfits.RecordCache.Items);
@@ -5705,6 +5753,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Messages.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
             count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
@@ -6087,6 +6136,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Message> Messages { get; }
         new StarfieldGroup<DefaultObjectManager> DefaultObjectManagers { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
+        new StarfieldGroup<LightingTemplate> LightingTemplates { get; }
         new StarfieldGroup<Outfit> Outfits { get; }
         new StarfieldGroup<AimModel> AimModels { get; }
         new StarfieldGroup<AimAssistModel> AimAssistModels { get; }
@@ -6215,6 +6265,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IMessageGetter> Messages { get; }
         IStarfieldGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
+        IStarfieldGroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
         IStarfieldGroupGetter<IOutfitGetter> Outfits { get; }
         IStarfieldGroupGetter<IAimModelGetter> AimModels { get; }
         IStarfieldGroupGetter<IAimAssistModelGetter> AimAssistModels { get; }
@@ -6906,23 +6957,24 @@ namespace Mutagen.Bethesda.Starfield
         Messages = 89,
         DefaultObjectManagers = 90,
         DefaultObjects = 91,
-        Outfits = 92,
-        AimModels = 93,
-        AimAssistModels = 94,
-        Layers = 95,
-        ConstructibleObjects = 96,
-        ObjectModifications = 97,
-        InstanceNamingRules = 98,
-        AttractionRules = 99,
-        Resources = 100,
-        BiomeSwaps = 101,
-        SnapTemplates = 102,
-        Planets = 103,
-        ConditionRecords = 104,
-        SurfacePatternStyles = 105,
-        TerminalMenus = 106,
-        LegendaryItems = 107,
-        ActorValueModulations = 108,
+        LightingTemplates = 92,
+        Outfits = 93,
+        AimModels = 94,
+        AimAssistModels = 95,
+        Layers = 96,
+        ConstructibleObjects = 97,
+        ObjectModifications = 98,
+        InstanceNamingRules = 99,
+        AttractionRules = 100,
+        Resources = 101,
+        BiomeSwaps = 102,
+        SnapTemplates = 103,
+        Planets = 104,
+        ConditionRecords = 105,
+        SurfacePatternStyles = 106,
+        TerminalMenus = 107,
+        LegendaryItems = 108,
+        ActorValueModulations = 109,
     }
     #endregion
 
@@ -6933,9 +6985,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 109;
+        public const ushort AdditionalFieldCount = 110;
 
-        public const ushort FieldCount = 109;
+        public const ushort FieldCount = 110;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -7092,6 +7144,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Messages.Clear();
             item.DefaultObjectManagers.Clear();
             item.DefaultObjects.Clear();
+            item.LightingTemplates.Clear();
             item.Outfits.Clear();
             item.AimModels.Clear();
             item.AimAssistModels.Clear();
@@ -7330,6 +7383,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Messages.Remove(keys);
             obj.DefaultObjectManagers.Remove(keys);
             obj.DefaultObjects.Remove(keys);
+            obj.LightingTemplates.Remove(keys);
             obj.Outfits.Remove(keys);
             obj.AimModels.Remove(keys);
             obj.AimAssistModels.Remove(keys);
@@ -8103,6 +8157,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IDefaultObject":
                 case "IDefaultObjectInternal":
                     obj.DefaultObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    obj.LightingTemplates.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -9245,6 +9307,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Messages = MaskItemExt.Factory(item.Messages.GetEqualsMask(rhs.Messages, include), include);
             ret.DefaultObjectManagers = MaskItemExt.Factory(item.DefaultObjectManagers.GetEqualsMask(rhs.DefaultObjectManagers, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
+            ret.LightingTemplates = MaskItemExt.Factory(item.LightingTemplates.GetEqualsMask(rhs.LightingTemplates, include), include);
             ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
             ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
             ret.AimAssistModels = MaskItemExt.Factory(item.AimAssistModels.GetEqualsMask(rhs.AimAssistModels, include), include);
@@ -9673,6 +9736,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.DefaultObjects?.Overall ?? true)
             {
                 item.DefaultObjects?.Print(sb, "DefaultObjects");
+            }
+            if (printMask?.LightingTemplates?.Overall ?? true)
+            {
+                item.LightingTemplates?.Print(sb, "LightingTemplates");
             }
             if (printMask?.Outfits?.Overall ?? true)
             {
@@ -10487,6 +10554,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isDefaultObjectsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LightingTemplates) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightingTemplates, rhs.LightingTemplates, out var lhsLightingTemplates, out var rhsLightingTemplates, out var isLightingTemplatesEqual))
+                {
+                    if (!object.Equals(lhsLightingTemplates, rhsLightingTemplates)) return false;
+                }
+                else if (!isLightingTemplatesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Outfits) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Outfits, rhs.Outfits, out var lhsOutfits, out var rhsOutfits, out var isOutfitsEqual))
@@ -10721,6 +10796,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Messages);
             hash.Add(item.DefaultObjectManagers);
             hash.Add(item.DefaultObjects);
+            hash.Add(item.LightingTemplates);
             hash.Add(item.Outfits);
             hash.Add(item.AimModels);
             hash.Add(item.AimAssistModels);
@@ -11210,6 +11286,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IDefaultObject":
                 case "IDefaultObjectInternal":
                     return obj.DefaultObjects;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    return obj.LightingTemplates;
                 case "Outfit":
                 case "IOutfitGetter":
                 case "IOutfit":
@@ -11321,7 +11402,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[108];
+            Stream[] outputStreams = new Stream[109];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -11414,23 +11495,24 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Messages, 88, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 89, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 90, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 91, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 92, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 93, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 94, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 95, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 96, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 97, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 98, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 99, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 100, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 101, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 102, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 103, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 104, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 105, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 106, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 107, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 91, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 92, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 93, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 94, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 95, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 96, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 97, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 98, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 99, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 100, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 101, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 102, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 103, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 104, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 105, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 106, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 107, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 108, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12223,6 +12305,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.DefaultObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LightingTemplates.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13135,6 +13221,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IDefaultObject":
                 case "IDefaultObjectInternal":
                     foreach (var item in obj.DefaultObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -14257,6 +14352,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.DefaultObjects,
                 groupGetter: (m) => m.DefaultObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, LightingTemplate, ILightingTemplateGetter>(
+                srcGroup: obj.LightingTemplates,
+                type: typeof(ILightingTemplateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LightingTemplates,
+                groupGetter: (m) => m.LightingTemplates))
             {
                 yield return item;
             }
@@ -15700,6 +15804,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.DefaultObjects,
                         groupGetter: (m) => m.DefaultObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, LightingTemplate, ILightingTemplateGetter>(
+                        srcGroup: obj.LightingTemplates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LightingTemplates,
+                        groupGetter: (m) => m.LightingTemplates))
                     {
                         yield return item;
                     }
@@ -18430,6 +18548,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LightingTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.LightingTemplates);
+                try
+                {
+                    item.LightingTemplates.DeepCopyIn(
+                        rhs: rhs.LightingTemplates,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.LightingTemplates));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Outfits) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Outfits);
@@ -18951,6 +19089,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Messages;
         public bool DefaultObjectManagers;
         public bool DefaultObjects;
+        public bool LightingTemplates;
         public bool Outfits;
         public bool AimModels;
         public bool AimAssistModels;
@@ -19064,6 +19203,7 @@ namespace Mutagen.Bethesda.Starfield
             Messages = defaultValue;
             DefaultObjectManagers = defaultValue;
             DefaultObjects = defaultValue;
+            LightingTemplates = defaultValue;
             Outfits = defaultValue;
             AimModels = defaultValue;
             AimAssistModels = defaultValue;
@@ -20137,6 +20277,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)DefaultObjectsItem).BinaryWriteTranslator).Write<IDefaultObjectGetter>(
                         item: DefaultObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LightingTemplates ?? true)
+            {
+                var LightingTemplatesItem = item.LightingTemplates;
+                if (LightingTemplatesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)LightingTemplatesItem).BinaryWriteTranslator).Write<ILightingTemplateGetter>(
+                        item: LightingTemplatesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -21662,6 +21813,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.DefaultObjects;
                 }
+                case RecordTypeInts.LGTM:
+                {
+                    if (importMask?.LightingTemplates ?? true)
+                    {
+                        item.LightingTemplates.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.LightingTemplates;
+                }
                 case RecordTypeInts.OTFT:
                 {
                     if (importMask?.Outfits ?? true)
@@ -22526,6 +22691,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IDefaultObjectGetter>? _DefaultObjects => _DefaultObjectsLocations != null ? StarfieldGroupBinaryOverlay<IDefaultObjectGetter>.StarfieldGroupFactory(_stream, _DefaultObjectsLocations, _package) : default;
         public IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects => _DefaultObjects ?? new StarfieldGroup<DefaultObject>(this);
         #endregion
+        #region LightingTemplates
+        private List<RangeInt64>? _LightingTemplatesLocations;
+        private IStarfieldGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? StarfieldGroupBinaryOverlay<ILightingTemplateGetter>.StarfieldGroupFactory(_stream, _LightingTemplatesLocations, _package) : default;
+        public IStarfieldGroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new StarfieldGroup<LightingTemplate>(this);
+        #endregion
         #region Outfits
         private List<RangeInt64>? _OutfitsLocations;
         private IStarfieldGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? StarfieldGroupBinaryOverlay<IOutfitGetter>.StarfieldGroupFactory(_stream, _OutfitsLocations, _package) : default;
@@ -23249,6 +23419,12 @@ namespace Mutagen.Bethesda.Starfield
                     _DefaultObjectsLocations ??= new();
                     _DefaultObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.DefaultObjects;
+                }
+                case RecordTypeInts.LGTM:
+                {
+                    _LightingTemplatesLocations ??= new();
+                    _LightingTemplatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.OTFT:
                 {
