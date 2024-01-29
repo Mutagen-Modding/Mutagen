@@ -115,7 +115,8 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
     {
         return types.Select(type =>
         {
-            if (!GetterTypeMapping.Instance.TryGetGetterType(type, out var getterType))
+            // Done by name, as types may not align if from different mutagen versions
+            if (!GetterTypeMapping.Instance.TryGetGetterType(type.FullName!, out var getterType))
             {
                 throw new ArgumentException($"Can't create a formlink control for type: {type}");
             }
