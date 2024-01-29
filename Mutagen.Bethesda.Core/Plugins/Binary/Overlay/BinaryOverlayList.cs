@@ -95,8 +95,7 @@ internal abstract class BinaryOverlayList
         RecordType countType,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
-        var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.Subrecord(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(stream.RemainingMemory);
         var recType = initialHeader.RecordType;
         if (recType == countType)
         {
@@ -122,7 +121,7 @@ internal abstract class BinaryOverlayList
         else
         {
             return FactoryByStartIndex(
-                mem: stream.RemainingMemory,
+                mem: initialHeader.Content,
                 package: package,
                 getter: getter,
                 itemLength: itemLength);

@@ -560,9 +560,9 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         else 
         { 
+            reader.Position += subHeader.HeaderLength; 
             return Parse( 
-                reader, 
-                triggeringRecord, 
+                reader.SpawnWithLength(subHeader.ContentLength), 
                 transl); 
         } 
     } 
@@ -754,9 +754,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         { 
             return Parse( 
                 reader, 
-                transl, 
-                triggeringRecord, 
-                translationParams); 
+                transl); 
         } 
     } 
  
