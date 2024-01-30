@@ -2116,6 +2116,9 @@
     <Compile Include="Records\Major Records\CollisionLayer.cs">
       <DependentUpon>CollisionLayer.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ColorRecord.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CombatStyle.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>
@@ -6445,6 +6448,15 @@
     </Compile>
     <Compile Include="Records\Major Records\StoryManagerEventNode_Generated.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AColorRecordData_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ColorData_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ColorRemappingIndex_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

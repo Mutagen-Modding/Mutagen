@@ -9,6 +9,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
     public static void Register()
     {
         LoquiRegistration.Register(
+            AColorRecordData_Registration.Instance,
             AComponent_Registration.Instance,
             AcousticSpace_Registration.Instance,
             ActionRecord_Registration.Instance,
@@ -125,7 +126,9 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Clouds_Registration.Instance,
             CollectionAlias_Registration.Instance,
             CollisionLayer_Registration.Instance,
+            ColorData_Registration.Instance,
             ColorRecord_Registration.Instance,
+            ColorRemappingIndex_Registration.Instance,
             CombatStyle_Registration.Instance,
             Condition_Registration.Instance,
             ConditionData_Registration.Instance,

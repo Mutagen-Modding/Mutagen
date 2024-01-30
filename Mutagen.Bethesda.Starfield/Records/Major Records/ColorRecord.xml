@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
+      <RefDirect name="Data" refName="AColorRecordData" binary="Custom" recordType="CNAM" nullable="False" defaultType="ColorData" />
+      <Enum name="Flags" recordType="FNAM" byteLength="4" nullable="False" enumName="ColorRecord.Flag" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="AColorRecordData" objType="Subrecord" abstract="true" />
+  <Object name="ColorData" objType="Subrecord" baseClass="AColorRecordData">
+    <Fields>
+      <Color name="Color" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="ColorRemappingIndex" objType="Subrecord" baseClass="AColorRecordData">
+    <Fields>
+      <Float name="Index" />
     </Fields>
   </Object>
 </Loqui>
