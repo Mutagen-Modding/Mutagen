@@ -549,6 +549,7 @@ public partial class RecordTypes
     public static readonly RecordType MSTT = new(0x5454534D);
     public static readonly RecordType MTNM = new(0x4D4E544D);
     public static readonly RecordType MTPT = new(0x5450544D);
+    public static readonly RecordType MTSH = new(0x4853544D);
     public static readonly RecordType MTYP = new(0x5059544D);
     public static readonly RecordType MUID = new(0x4449554D);
     public static readonly RecordType MUSC = new(0x4353554D);

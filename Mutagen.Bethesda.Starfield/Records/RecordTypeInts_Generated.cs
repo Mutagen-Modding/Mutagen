@@ -547,6 +547,7 @@ public partial class RecordTypeInts
     public const int MSTT = 0x5454534D;
     public const int MTNM = 0x4D4E544D;
     public const int MTPT = 0x5450544D;
+    public const int MTSH = 0x4853544D;
     public const int MTYP = 0x5059544D;
     public const int MUID = 0x4449554D;
     public const int MUSC = 0x4353554D;
