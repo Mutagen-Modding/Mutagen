@@ -145,6 +145,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - CameraSceneAction
 - Cell
 - Class
+- CollisionLayer
 - Container
 - ContainerModification
 - DamageType
@@ -423,6 +424,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Cell
 - INamed
 ### Class
+- INamed
+### CollisionLayer
 - INamed
 ### Container
 - IHaveVirtualMachineAdapter

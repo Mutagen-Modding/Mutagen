@@ -277,6 +277,7 @@ namespace Mutagen.Bethesda.Starfield
                     CameraSceneAction_Registration.Instance,
                     Cell_Registration.Instance,
                     Class_Registration.Instance,
+                    CollisionLayer_Registration.Instance,
                     Container_Registration.Instance,
                     ContainerModification_Registration.Instance,
                     DamageType_Registration.Instance,

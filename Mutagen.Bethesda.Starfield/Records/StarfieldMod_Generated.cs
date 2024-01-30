@@ -163,6 +163,7 @@ namespace Mutagen.Bethesda.Starfield
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _ArtObjects_Object = new StarfieldGroup<ArtObject>(this);
             _MovementTypes_Object = new StarfieldGroup<MovementType>(this);
+            _CollisionLayers_Object = new StarfieldGroup<CollisionLayer>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
             _Layers_Object = new StarfieldGroup<Layer>(this);
@@ -912,6 +913,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IMovementTypeGetter> IStarfieldModGetter.MovementTypes => _MovementTypes_Object;
         #endregion
+        #region CollisionLayers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<CollisionLayer> _CollisionLayers_Object;
+        public StarfieldGroup<CollisionLayer> CollisionLayers => _CollisionLayers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ICollisionLayerGetter> IStarfieldModGetter.CollisionLayers => _CollisionLayers_Object;
+        #endregion
         #region AimModels
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AimModel> _AimModels_Object;
@@ -1167,6 +1175,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ArtObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.MovementTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.CollisionLayers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1290,6 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Outfits,
                 TItem ArtObjects,
                 TItem MovementTypes,
+                TItem CollisionLayers,
                 TItem AimModels,
                 TItem AimAssistModels,
                 TItem Layers,
@@ -1411,6 +1421,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Outfits, new StarfieldGroup.Mask<TItem>(Outfits));
                 this.ArtObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ArtObjects, new StarfieldGroup.Mask<TItem>(ArtObjects));
                 this.MovementTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MovementTypes, new StarfieldGroup.Mask<TItem>(MovementTypes));
+                this.CollisionLayers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CollisionLayers, new StarfieldGroup.Mask<TItem>(CollisionLayers));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimModels, new StarfieldGroup.Mask<TItem>(AimModels));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimAssistModels, new StarfieldGroup.Mask<TItem>(AimAssistModels));
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Layers, new StarfieldGroup.Mask<TItem>(Layers));
@@ -1542,6 +1553,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Outfits { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ArtObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MovementTypes { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CollisionLayers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimAssistModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Layers { get; set; }
@@ -1674,6 +1686,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
                 if (!object.Equals(this.ArtObjects, rhs.ArtObjects)) return false;
                 if (!object.Equals(this.MovementTypes, rhs.MovementTypes)) return false;
+                if (!object.Equals(this.CollisionLayers, rhs.CollisionLayers)) return false;
                 if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
                 if (!object.Equals(this.AimAssistModels, rhs.AimAssistModels)) return false;
                 if (!object.Equals(this.Layers, rhs.Layers)) return false;
@@ -1799,6 +1812,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Outfits);
                 hash.Add(this.ArtObjects);
                 hash.Add(this.MovementTypes);
+                hash.Add(this.CollisionLayers);
                 hash.Add(this.AimModels);
                 hash.Add(this.AimAssistModels);
                 hash.Add(this.Layers);
@@ -2342,6 +2356,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.MovementTypes.Overall)) return false;
                     if (this.MovementTypes.Specific != null && !this.MovementTypes.Specific.All(eval)) return false;
+                }
+                if (CollisionLayers != null)
+                {
+                    if (!eval(this.CollisionLayers.Overall)) return false;
+                    if (this.CollisionLayers.Specific != null && !this.CollisionLayers.Specific.All(eval)) return false;
                 }
                 if (AimModels != null)
                 {
@@ -2950,6 +2969,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.MovementTypes.Overall)) return true;
                     if (this.MovementTypes.Specific != null && this.MovementTypes.Specific.Any(eval)) return true;
                 }
+                if (CollisionLayers != null)
+                {
+                    if (eval(this.CollisionLayers.Overall)) return true;
+                    if (this.CollisionLayers.Specific != null && this.CollisionLayers.Specific.Any(eval)) return true;
+                }
                 if (AimModels != null)
                 {
                     if (eval(this.AimModels.Overall)) return true;
@@ -3148,6 +3172,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Outfits = this.Outfits == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
                 obj.ArtObjects = this.ArtObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ArtObjects.Overall), this.ArtObjects.Specific?.Translate(eval));
                 obj.MovementTypes = this.MovementTypes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MovementTypes.Overall), this.MovementTypes.Specific?.Translate(eval));
+                obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
                 obj.AimModels = this.AimModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
                 obj.AimAssistModels = this.AimAssistModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimAssistModels.Overall), this.AimAssistModels.Specific?.Translate(eval));
                 obj.Layers = this.Layers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Layers.Overall), this.Layers.Specific?.Translate(eval));
@@ -3598,6 +3623,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         MovementTypes?.Print(sb);
                     }
+                    if (printMask?.CollisionLayers?.Overall ?? true)
+                    {
+                        CollisionLayers?.Print(sb);
+                    }
                     if (printMask?.AimModels?.Overall ?? true)
                     {
                         AimModels?.Print(sb);
@@ -3790,6 +3819,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>? Outfits;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ArtObject.ErrorMask>?>? ArtObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<MovementType.ErrorMask>?>? MovementTypes;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>? AimModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistModel.ErrorMask>?>? AimAssistModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Layer.ErrorMask>?>? Layers;
@@ -4022,6 +4052,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ArtObjects;
                     case StarfieldMod_FieldIndex.MovementTypes:
                         return MovementTypes;
+                    case StarfieldMod_FieldIndex.CollisionLayers:
+                        return CollisionLayers;
                     case StarfieldMod_FieldIndex.AimModels:
                         return AimModels;
                     case StarfieldMod_FieldIndex.AimAssistModels:
@@ -4375,6 +4407,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.MovementTypes:
                         this.MovementTypes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<MovementType.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<CollisionLayer.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AimModels:
                         this.AimModels = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>(ex, null);
@@ -4746,6 +4781,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.MovementTypes:
                         this.MovementTypes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<MovementType.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<CollisionLayer.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AimModels:
                         this.AimModels = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>?)obj;
                         break;
@@ -4906,6 +4944,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Outfits != null) return true;
                 if (ArtObjects != null) return true;
                 if (MovementTypes != null) return true;
+                if (CollisionLayers != null) return true;
                 if (AimModels != null) return true;
                 if (AimAssistModels != null) return true;
                 if (Layers != null) return true;
@@ -5051,6 +5090,7 @@ namespace Mutagen.Bethesda.Starfield
                 Outfits?.Print(sb);
                 ArtObjects?.Print(sb);
                 MovementTypes?.Print(sb);
+                CollisionLayers?.Print(sb);
                 AimModels?.Print(sb);
                 AimAssistModels?.Print(sb);
                 Layers?.Print(sb);
@@ -5179,6 +5219,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
                 ret.ArtObjects = this.ArtObjects.Combine(rhs.ArtObjects, (l, r) => l.Combine(r));
                 ret.MovementTypes = this.MovementTypes.Combine(rhs.MovementTypes, (l, r) => l.Combine(r));
+                ret.CollisionLayers = this.CollisionLayers.Combine(rhs.CollisionLayers, (l, r) => l.Combine(r));
                 ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
                 ret.AimAssistModels = this.AimAssistModels.Combine(rhs.AimAssistModels, (l, r) => l.Combine(r));
                 ret.Layers = this.Layers.Combine(rhs.Layers, (l, r) => l.Combine(r));
@@ -5322,6 +5363,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Outfit.TranslationMask>? Outfits;
             public StarfieldGroup.TranslationMask<ArtObject.TranslationMask>? ArtObjects;
             public StarfieldGroup.TranslationMask<MovementType.TranslationMask>? MovementTypes;
+            public StarfieldGroup.TranslationMask<CollisionLayer.TranslationMask>? CollisionLayers;
             public StarfieldGroup.TranslationMask<AimModel.TranslationMask>? AimModels;
             public StarfieldGroup.TranslationMask<AimAssistModel.TranslationMask>? AimAssistModels;
             public StarfieldGroup.TranslationMask<Layer.TranslationMask>? Layers;
@@ -5466,6 +5508,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Outfits != null ? Outfits.OnOverall : DefaultOn, Outfits?.GetCrystal()));
                 ret.Add((ArtObjects != null ? ArtObjects.OnOverall : DefaultOn, ArtObjects?.GetCrystal()));
                 ret.Add((MovementTypes != null ? MovementTypes.OnOverall : DefaultOn, MovementTypes?.GetCrystal()));
+                ret.Add((CollisionLayers != null ? CollisionLayers.OnOverall : DefaultOn, CollisionLayers?.GetCrystal()));
                 ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
                 ret.Add((AimAssistModels != null ? AimAssistModels.OnOverall : DefaultOn, AimAssistModels?.GetCrystal()));
                 ret.Add((Layers != null ? Layers.OnOverall : DefaultOn, Layers?.GetCrystal()));
@@ -5631,6 +5674,7 @@ namespace Mutagen.Bethesda.Starfield
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _ArtObjects_Object = new StarfieldGroup<ArtObject>(this);
             _MovementTypes_Object = new StarfieldGroup<MovementType>(this);
+            _CollisionLayers_Object = new StarfieldGroup<CollisionLayer>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
             _Layers_Object = new StarfieldGroup<Layer>(this);
@@ -6068,6 +6112,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.MovementTypes.RecordCache.Set(rhsMod.MovementTypes.RecordCache.Items);
             }
+            if (mask?.CollisionLayers ?? true)
+            {
+                this.CollisionLayers.RecordCache.Set(rhsMod.CollisionLayers.RecordCache.Items);
+            }
             if (mask?.AimModels ?? true)
             {
                 this.AimModels.RecordCache.Set(rhsMod.AimModels.RecordCache.Items);
@@ -6245,6 +6293,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
             count += ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
@@ -6638,6 +6687,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Outfit> Outfits { get; }
         new StarfieldGroup<ArtObject> ArtObjects { get; }
         new StarfieldGroup<MovementType> MovementTypes { get; }
+        new StarfieldGroup<CollisionLayer> CollisionLayers { get; }
         new StarfieldGroup<AimModel> AimModels { get; }
         new StarfieldGroup<AimAssistModel> AimAssistModels { get; }
         new StarfieldGroup<Layer> Layers { get; }
@@ -6777,6 +6827,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IOutfitGetter> Outfits { get; }
         IStarfieldGroupGetter<IArtObjectGetter> ArtObjects { get; }
         IStarfieldGroupGetter<IMovementTypeGetter> MovementTypes { get; }
+        IStarfieldGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
         IStarfieldGroupGetter<IAimModelGetter> AimModels { get; }
         IStarfieldGroupGetter<IAimAssistModelGetter> AimAssistModels { get; }
         IStarfieldGroupGetter<ILayerGetter> Layers { get; }
@@ -7479,22 +7530,23 @@ namespace Mutagen.Bethesda.Starfield
         Outfits = 101,
         ArtObjects = 102,
         MovementTypes = 103,
-        AimModels = 104,
-        AimAssistModels = 105,
-        Layers = 106,
-        ConstructibleObjects = 107,
-        ObjectModifications = 108,
-        InstanceNamingRules = 109,
-        AttractionRules = 110,
-        Resources = 111,
-        BiomeSwaps = 112,
-        SnapTemplates = 113,
-        Planets = 114,
-        ConditionRecords = 115,
-        SurfacePatternStyles = 116,
-        TerminalMenus = 117,
-        LegendaryItems = 118,
-        ActorValueModulations = 119,
+        CollisionLayers = 104,
+        AimModels = 105,
+        AimAssistModels = 106,
+        Layers = 107,
+        ConstructibleObjects = 108,
+        ObjectModifications = 109,
+        InstanceNamingRules = 110,
+        AttractionRules = 111,
+        Resources = 112,
+        BiomeSwaps = 113,
+        SnapTemplates = 114,
+        Planets = 115,
+        ConditionRecords = 116,
+        SurfacePatternStyles = 117,
+        TerminalMenus = 118,
+        LegendaryItems = 119,
+        ActorValueModulations = 120,
     }
     #endregion
 
@@ -7505,9 +7557,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 120;
+        public const ushort AdditionalFieldCount = 121;
 
-        public const ushort FieldCount = 120;
+        public const ushort FieldCount = 121;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -7676,6 +7728,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Outfits.Clear();
             item.ArtObjects.Clear();
             item.MovementTypes.Clear();
+            item.CollisionLayers.Clear();
             item.AimModels.Clear();
             item.AimAssistModels.Clear();
             item.Layers.Clear();
@@ -7786,6 +7839,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.EquipTypes.RemapLinks(mapping);
             obj.Outfits.RemapLinks(mapping);
             obj.ArtObjects.RemapLinks(mapping);
+            obj.CollisionLayers.RemapLinks(mapping);
             obj.Layers.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
             obj.ObjectModifications.RemapLinks(mapping);
@@ -7934,6 +7988,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Outfits.Remove(keys);
             obj.ArtObjects.Remove(keys);
             obj.MovementTypes.Remove(keys);
+            obj.CollisionLayers.Remove(keys);
             obj.AimModels.Remove(keys);
             obj.AimAssistModels.Remove(keys);
             obj.Layers.Remove(keys);
@@ -8802,6 +8857,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IMovementType":
                 case "IMovementTypeInternal":
                     obj.MovementTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    obj.CollisionLayers.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -9956,6 +10019,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
             ret.ArtObjects = MaskItemExt.Factory(item.ArtObjects.GetEqualsMask(rhs.ArtObjects, include), include);
             ret.MovementTypes = MaskItemExt.Factory(item.MovementTypes.GetEqualsMask(rhs.MovementTypes, include), include);
+            ret.CollisionLayers = MaskItemExt.Factory(item.CollisionLayers.GetEqualsMask(rhs.CollisionLayers, include), include);
             ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
             ret.AimAssistModels = MaskItemExt.Factory(item.AimAssistModels.GetEqualsMask(rhs.AimAssistModels, include), include);
             ret.Layers = MaskItemExt.Factory(item.Layers.GetEqualsMask(rhs.Layers, include), include);
@@ -10431,6 +10495,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.MovementTypes?.Overall ?? true)
             {
                 item.MovementTypes?.Print(sb, "MovementTypes");
+            }
+            if (printMask?.CollisionLayers?.Overall ?? true)
+            {
+                item.CollisionLayers?.Print(sb, "CollisionLayers");
             }
             if (printMask?.AimModels?.Overall ?? true)
             {
@@ -11337,6 +11405,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isMovementTypesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.CollisionLayers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CollisionLayers, rhs.CollisionLayers, out var lhsCollisionLayers, out var rhsCollisionLayers, out var isCollisionLayersEqual))
+                {
+                    if (!object.Equals(lhsCollisionLayers, rhsCollisionLayers)) return false;
+                }
+                else if (!isCollisionLayersEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimModels) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AimModels, rhs.AimModels, out var lhsAimModels, out var rhsAimModels, out var isAimModelsEqual))
@@ -11575,6 +11651,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Outfits);
             hash.Add(item.ArtObjects);
             hash.Add(item.MovementTypes);
+            hash.Add(item.CollisionLayers);
             hash.Add(item.AimModels);
             hash.Add(item.AimAssistModels);
             hash.Add(item.Layers);
@@ -12123,6 +12200,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IMovementType":
                 case "IMovementTypeInternal":
                     return obj.MovementTypes;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    return obj.CollisionLayers;
                 case "AimModel":
                 case "IAimModelGetter":
                 case "IAimModel":
@@ -12229,7 +12311,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[119];
+            Stream[] outputStreams = new Stream[120];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -12334,22 +12416,23 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Outfits, 100, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ArtObjects, 101, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MovementTypes, 102, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 103, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 104, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 105, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 106, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 107, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 108, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 109, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 110, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 111, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 112, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 113, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 114, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 115, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 116, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 117, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 118, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 103, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 104, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 105, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 106, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 107, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 108, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 109, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 110, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 111, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 112, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 113, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 114, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 115, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 116, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 117, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 118, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 119, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12759,6 +12842,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ArtObjects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CollisionLayers.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -13226,6 +13313,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.MovementTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CollisionLayers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -14242,6 +14333,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IMovementType":
                 case "IMovementTypeInternal":
                     foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15463,6 +15563,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.MovementTypes,
                 groupGetter: (m) => m.MovementTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, CollisionLayer, ICollisionLayerGetter>(
+                srcGroup: obj.CollisionLayers,
+                type: typeof(ICollisionLayerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CollisionLayers,
+                groupGetter: (m) => m.CollisionLayers))
             {
                 yield return item;
             }
@@ -17065,6 +17174,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.MovementTypes,
                         groupGetter: (m) => m.MovementTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, CollisionLayer, ICollisionLayerGetter>(
+                        srcGroup: obj.CollisionLayers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CollisionLayers,
+                        groupGetter: (m) => m.CollisionLayers))
                     {
                         yield return item;
                     }
@@ -20028,6 +20151,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.CollisionLayers) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.CollisionLayers);
+                try
+                {
+                    item.CollisionLayers.DeepCopyIn(
+                        rhs: rhs.CollisionLayers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.CollisionLayers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimModels) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AimModels);
@@ -20541,6 +20684,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Outfits;
         public bool ArtObjects;
         public bool MovementTypes;
+        public bool CollisionLayers;
         public bool AimModels;
         public bool AimAssistModels;
         public bool Layers;
@@ -20665,6 +20809,7 @@ namespace Mutagen.Bethesda.Starfield
             Outfits = defaultValue;
             ArtObjects = defaultValue;
             MovementTypes = defaultValue;
+            CollisionLayers = defaultValue;
             AimModels = defaultValue;
             AimAssistModels = defaultValue;
             Layers = defaultValue;
@@ -21869,6 +22014,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)MovementTypesItem).BinaryWriteTranslator).Write<IMovementTypeGetter>(
                         item: MovementTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CollisionLayers ?? true)
+            {
+                var CollisionLayersItem = item.CollisionLayers;
+                if (CollisionLayersItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)CollisionLayersItem).BinaryWriteTranslator).Write<ICollisionLayerGetter>(
+                        item: CollisionLayersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -23551,6 +23707,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.MovementTypes;
                 }
+                case RecordTypeInts.COLL:
+                {
+                    if (importMask?.CollisionLayers ?? true)
+                    {
+                        item.CollisionLayers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.CollisionLayers;
+                }
                 case RecordTypeInts.AMDL:
                 {
                     if (importMask?.AimModels ?? true)
@@ -24461,6 +24631,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? StarfieldGroupBinaryOverlay<IMovementTypeGetter>.StarfieldGroupFactory(_stream, _MovementTypesLocations, _package) : default;
         public IStarfieldGroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new StarfieldGroup<MovementType>(this);
         #endregion
+        #region CollisionLayers
+        private List<RangeInt64>? _CollisionLayersLocations;
+        private IStarfieldGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? StarfieldGroupBinaryOverlay<ICollisionLayerGetter>.StarfieldGroupFactory(_stream, _CollisionLayersLocations, _package) : default;
+        public IStarfieldGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new StarfieldGroup<CollisionLayer>(this);
+        #endregion
         #region AimModels
         private List<RangeInt64>? _AimModelsLocations;
         private IStarfieldGroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? StarfieldGroupBinaryOverlay<IAimModelGetter>.StarfieldGroupFactory(_stream, _AimModelsLocations, _package) : default;
@@ -25251,6 +25426,12 @@ namespace Mutagen.Bethesda.Starfield
                     _MovementTypesLocations ??= new();
                     _MovementTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.MovementTypes;
+                }
+                case RecordTypeInts.COLL:
+                {
+                    _CollisionLayersLocations ??= new();
+                    _CollisionLayersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.CollisionLayers;
                 }
                 case RecordTypeInts.AMDL:
                 {

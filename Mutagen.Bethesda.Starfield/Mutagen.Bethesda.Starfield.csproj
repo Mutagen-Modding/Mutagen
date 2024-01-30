@@ -2113,6 +2113,9 @@
     <Compile Include="Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CollisionLayer.cs">
+      <DependentUpon>CollisionLayer.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CombatStyle.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>

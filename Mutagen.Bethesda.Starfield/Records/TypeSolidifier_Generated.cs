@@ -924,9 +924,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CollisionLayer</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter> CollisionLayer(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter> CollisionLayer(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICollisionLayerGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -936,9 +936,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on CollisionLayer</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter> CollisionLayer(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter> CollisionLayer(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICollisionLayerGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ICollisionLayer, ICollisionLayerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -32,6 +34,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -54,6 +57,42 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Context
+        public String? Context { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICollisionLayerGetter.Context => this.Context;
+        #endregion
+        #region Index
+        public UInt32 Index { get; set; } = default;
+        #endregion
+        #region DebugColor
+        public Color? DebugColor { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? ICollisionLayerGetter.DebugColor => this.DebugColor;
+        #endregion
+        #region Flags
+        public CollisionLayer.Flag Flags { get; set; } = default;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
+        public String Name { get; set; } = string.Empty;
+        #endregion
+        #region CollidesWith
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? _CollidesWith;
+        public ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith
+        {
+            get => this._CollidesWith;
+            set => this._CollidesWith = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ICollisionLayerGetter>>? ICollisionLayerGetter.CollidesWith => _CollidesWith;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +118,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Context = initialValue;
+                this.Index = initialValue;
+                this.DebugColor = initialValue;
+                this.Flags = initialValue;
+                this.Name = initialValue;
+                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -88,7 +133,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Context,
+                TItem Index,
+                TItem DebugColor,
+                TItem Flags,
+                TItem Name,
+                TItem CollidesWith)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +149,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Context = Context;
+                this.Index = Index;
+                this.DebugColor = DebugColor;
+                this.Flags = Flags;
+                this.Name = Name;
+                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CollidesWith, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +163,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Context;
+            public TItem Index;
+            public TItem DebugColor;
+            public TItem Flags;
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CollidesWith;
             #endregion
 
             #region Equals
@@ -119,11 +185,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Context, rhs.Context)) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
+                if (!object.Equals(this.DebugColor, rhs.DebugColor)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.CollidesWith, rhs.CollidesWith)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Context);
+                hash.Add(this.Index);
+                hash.Add(this.DebugColor);
+                hash.Add(this.Flags);
+                hash.Add(this.Name);
+                hash.Add(this.CollidesWith);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +212,22 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Context)) return false;
+                if (!eval(this.Index)) return false;
+                if (!eval(this.DebugColor)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Name)) return false;
+                if (this.CollidesWith != null)
+                {
+                    if (!eval(this.CollidesWith.Overall)) return false;
+                    if (this.CollidesWith.Specific != null)
+                    {
+                        foreach (var item in this.CollidesWith.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +236,22 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Context)) return true;
+                if (eval(this.Index)) return true;
+                if (eval(this.DebugColor)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Name)) return true;
+                if (this.CollidesWith != null)
+                {
+                    if (eval(this.CollidesWith.Overall)) return true;
+                    if (this.CollidesWith.Specific != null)
+                    {
+                        foreach (var item in this.CollidesWith.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +267,25 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Context = eval(this.Context);
+                obj.Index = eval(this.Index);
+                obj.DebugColor = eval(this.DebugColor);
+                obj.Flags = eval(this.Flags);
+                obj.Name = eval(this.Name);
+                if (CollidesWith != null)
+                {
+                    obj.CollidesWith = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CollidesWith.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (CollidesWith.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.CollidesWith.Specific = l;
+                        foreach (var item in CollidesWith.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +304,47 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(CollisionLayer.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Context ?? true)
+                    {
+                        sb.AppendItem(Context, "Context");
+                    }
+                    if (printMask?.Index ?? true)
+                    {
+                        sb.AppendItem(Index, "Index");
+                    }
+                    if (printMask?.DebugColor ?? true)
+                    {
+                        sb.AppendItem(DebugColor, "DebugColor");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.CollidesWith?.Overall ?? true)
+                        && CollidesWith is {} CollidesWithItem)
+                    {
+                        sb.AppendLine("CollidesWith =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CollidesWithItem.Overall);
+                            if (CollidesWithItem.Specific != null)
+                            {
+                                foreach (var subItem in CollidesWithItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +355,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Context;
+            public Exception? Index;
+            public Exception? DebugColor;
+            public Exception? Flags;
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CollidesWith;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Context:
+                        return Context;
+                    case CollisionLayer_FieldIndex.Index:
+                        return Index;
+                    case CollisionLayer_FieldIndex.DebugColor:
+                        return DebugColor;
+                    case CollisionLayer_FieldIndex.Flags:
+                        return Flags;
+                    case CollisionLayer_FieldIndex.Name:
+                        return Name;
+                    case CollisionLayer_FieldIndex.CollidesWith:
+                        return CollidesWith;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +392,24 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Context:
+                        this.Context = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.DebugColor:
+                        this.DebugColor = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.CollidesWith:
+                        this.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +421,24 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Context:
+                        this.Context = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.Index:
+                        this.Index = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.DebugColor:
+                        this.DebugColor = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.CollidesWith:
+                        this.CollidesWith = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +448,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Context != null) return true;
+                if (Index != null) return true;
+                if (DebugColor != null) return true;
+                if (Flags != null) return true;
+                if (Name != null) return true;
+                if (CollidesWith != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +480,41 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Context, "Context");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(DebugColor, "DebugColor");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                if (CollidesWith is {} CollidesWithItem)
+                {
+                    sb.AppendLine("CollidesWith =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CollidesWithItem.Overall);
+                        if (CollidesWithItem.Specific != null)
+                        {
+                            foreach (var subItem in CollidesWithItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +523,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Context = this.Context.Combine(rhs.Context);
+                ret.Index = this.Index.Combine(rhs.Index);
+                ret.DebugColor = this.DebugColor.Combine(rhs.DebugColor);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CollidesWith?.Overall, rhs.CollidesWith?.Overall), Noggog.ExceptionExt.Combine(this.CollidesWith?.Specific, rhs.CollidesWith?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +550,41 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Context;
+            public bool Index;
+            public bool DebugColor;
+            public bool Flags;
+            public bool Name;
+            public bool CollidesWith;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Context = defaultOn;
+                this.Index = defaultOn;
+                this.DebugColor = defaultOn;
+                this.Flags = defaultOn;
+                this.Name = defaultOn;
+                this.CollidesWith = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Context, null));
+                ret.Add((Index, null));
+                ret.Add((DebugColor, null));
+                ret.Add((Flags, null));
+                ret.Add((Name, null));
+                ret.Add((CollidesWith, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +596,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CollisionLayer_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CollisionLayerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerSetterCommon.Instance.RemapLinks(this, mapping);
         public CollisionLayer(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -425,9 +727,20 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ICollisionLayer :
         ICollisionLayerGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICollisionLayerInternal>,
+        INamedRequired,
         IStarfieldMajorRecordInternal
     {
+        new String? Context { get; set; }
+        new UInt32 Index { get; set; }
+        new Color? DebugColor { get; set; }
+        new CollisionLayer.Flag Flags { get; set; }
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
+        new String Name { get; set; }
+        new ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; set; }
     }
 
     public partial interface ICollisionLayerInternal :
@@ -441,10 +754,23 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ICollisionLayerGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ICollisionLayerGetter>,
-        IMapsToGetter<ICollisionLayerGetter>
+        IMapsToGetter<ICollisionLayerGetter>,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => CollisionLayer_Registration.Instance;
+        String? Context { get; }
+        UInt32 Index { get; }
+        Color? DebugColor { get; }
+        CollisionLayer.Flag Flags { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequiredGetter
+        /// </summary>
+        String Name { get; }
+        #endregion
+        IReadOnlyList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; }
 
     }
 
@@ -621,6 +947,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Context = 7,
+        Index = 8,
+        DebugColor = 9,
+        Flags = 10,
+        Name = 11,
+        CollidesWith = 12,
     }
     #endregion
 
@@ -631,9 +963,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(CollisionLayer.Mask<>);
 
@@ -663,8 +995,18 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.COLL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.COLL);
+            var all = RecordCollection.Factory(
+                RecordTypes.COLL,
+                RecordTypes.NLDT,
+                RecordTypes.BNAM,
+                RecordTypes.FNAM,
+                RecordTypes.GNAM,
+                RecordTypes.MNAM,
+                RecordTypes.CNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CollisionLayerBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1048,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICollisionLayerInternal item)
         {
             ClearPartial();
+            item.Context = default;
+            item.Index = default;
+            item.DebugColor = default;
+            item.Flags = default;
+            item.Name = string.Empty;
+            item.CollidesWith = null;
             base.Clear(item);
         }
         
@@ -723,6 +1071,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ICollisionLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.CollidesWith?.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1139,15 @@ namespace Mutagen.Bethesda.Starfield
             CollisionLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Context = string.Equals(item.Context, rhs.Context);
+            ret.Index = item.Index == rhs.Index;
+            ret.DebugColor = item.DebugColor.ColorOnlyEquals(rhs.DebugColor);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.CollidesWith = item.CollidesWith.CollectionEqualsHelper(
+                rhs.CollidesWith,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1197,43 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Context ?? true)
+                && item.Context is {} ContextItem)
+            {
+                sb.AppendItem(ContextItem, "Context");
+            }
+            if (printMask?.Index ?? true)
+            {
+                sb.AppendItem(item.Index, "Index");
+            }
+            if ((printMask?.DebugColor ?? true)
+                && item.DebugColor is {} DebugColorItem)
+            {
+                sb.AppendItem(DebugColorItem, "DebugColor");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Name ?? true)
+            {
+                sb.AppendItem(item.Name, "Name");
+            }
+            if ((printMask?.CollidesWith?.Overall ?? true)
+                && item.CollidesWith is {} CollidesWithItem)
+            {
+                sb.AppendLine("CollidesWith =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in CollidesWithItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static CollisionLayer_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1284,30 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Context) ?? true))
+            {
+                if (!string.Equals(lhs.Context, rhs.Context)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
+            {
+                if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
+            {
+                if (!lhs.CollidesWith.SequenceEqualNullable(rhs.CollidesWith)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1336,18 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ICollisionLayerGetter item)
         {
             var hash = new HashCode();
+            if (item.Context is {} Contextitem)
+            {
+                hash.Add(Contextitem);
+            }
+            hash.Add(item.Index);
+            if (item.DebugColor is {} DebugColoritem)
+            {
+                hash.Add(DebugColoritem);
+            }
+            hash.Add(item.Flags);
+            hash.Add(item.Name);
+            hash.Add(item.CollidesWith);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1376,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.CollidesWith is {} CollidesWithItem)
+            {
+                foreach (var item in CollidesWithItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1020,6 +1458,53 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Context) ?? true))
+            {
+                item.Context = rhs.Context;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
+            {
+                item.Index = rhs.Index;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
+            {
+                item.DebugColor = rhs.DebugColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
+            {
+                errorMask?.PushIndex((int)CollisionLayer_FieldIndex.CollidesWith);
+                try
+                {
+                    if ((rhs.CollidesWith != null))
+                    {
+                        item.CollidesWith = 
+                            rhs.CollidesWith
+                            .Select(r => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ICollisionLayerGetter>>();
+                    }
+                    else
+                    {
+                        item.CollidesWith = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1653,50 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly CollisionLayerBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ICollisionLayerGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Context,
+                header: translationParams.ConvertToCustom(RecordTypes.NLDT),
+                binaryType: StringBinaryType.NullTerminate);
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Index,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DebugColor,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            EnumBinaryTranslation<CollisionLayer.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICollisionLayerGetter>>.Instance.Write(
+                writer: writer,
+                items: item.CollidesWith,
+                recordType: translationParams.ConvertToCustom(RecordTypes.CNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICollisionLayerGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ICollisionLayerGetter item,
@@ -1184,10 +1713,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1768,76 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly CollisionLayerBinaryCreateTranslation Instance = new CollisionLayerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.COLL;
+        public static ParseResult FillBinaryRecordTypes(
+            ICollisionLayerInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.NLDT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Context = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)CollisionLayer_FieldIndex.Context;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = frame.ReadUInt32();
+                    return (int)CollisionLayer_FieldIndex.Index;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DebugColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)CollisionLayer_FieldIndex.DebugColor;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<CollisionLayer.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)CollisionLayer_FieldIndex.Flags;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)CollisionLayer_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CollidesWith = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICollisionLayerGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ICollisionLayerGetter>>();
+                    return (int)CollisionLayer_FieldIndex.CollidesWith;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1870,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CollisionLayerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CollisionLayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1885,27 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ICollisionLayer);
 
 
+        #region Context
+        private int? _ContextLocation;
+        public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Index
+        private int? _IndexLocation;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
+        #region DebugColor
+        private int? _DebugColorLocation;
+        public Color? DebugColor => _DebugColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DebugColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public CollisionLayer.Flag Flags => _FlagsLocation.HasValue ? (CollisionLayer.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CollisionLayer.Flag);
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1963,66 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.NLDT:
+                {
+                    _ContextLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Context;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _IndexLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Index;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _DebugColorLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.DebugColor;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Flags;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CollidesWith = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICollisionLayerGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ICollisionLayerGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)CollisionLayer_FieldIndex.CollidesWith;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
