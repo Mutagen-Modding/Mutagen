@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,6 +55,53 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMovementTypeGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region SPED
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _SPED;
+        public MemorySlice<Byte>? SPED
+        {
+            get => this._SPED;
+            set => this._SPED = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IMovementTypeGetter.SPED => this.SPED;
+        #endregion
+        #region FlightAngleGain
+        public Single? FlightAngleGain { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMovementTypeGetter.FlightAngleGain => this.FlightAngleGain;
+        #endregion
+        #region KNAM
+        public Single? KNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMovementTypeGetter.KNAM => this.KNAM;
+        #endregion
+        #region INTV
+        public UInt32? INTV { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IMovementTypeGetter.INTV => this.INTV;
+        #endregion
+        #region BOLV
+        public Boolean BOLV { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -79,6 +127,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.SPED = initialValue;
+                this.FlightAngleGain = initialValue;
+                this.KNAM = initialValue;
+                this.INTV = initialValue;
+                this.BOLV = initialValue;
             }
 
             public Mask(
@@ -88,7 +142,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Name,
+                TItem SPED,
+                TItem FlightAngleGain,
+                TItem KNAM,
+                TItem INTV,
+                TItem BOLV)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +158,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Name = Name;
+                this.SPED = SPED;
+                this.FlightAngleGain = FlightAngleGain;
+                this.KNAM = KNAM;
+                this.INTV = INTV;
+                this.BOLV = BOLV;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +172,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem SPED;
+            public TItem FlightAngleGain;
+            public TItem KNAM;
+            public TItem INTV;
+            public TItem BOLV;
             #endregion
 
             #region Equals
@@ -119,11 +194,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.SPED, rhs.SPED)) return false;
+                if (!object.Equals(this.FlightAngleGain, rhs.FlightAngleGain)) return false;
+                if (!object.Equals(this.KNAM, rhs.KNAM)) return false;
+                if (!object.Equals(this.INTV, rhs.INTV)) return false;
+                if (!object.Equals(this.BOLV, rhs.BOLV)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.SPED);
+                hash.Add(this.FlightAngleGain);
+                hash.Add(this.KNAM);
+                hash.Add(this.INTV);
+                hash.Add(this.BOLV);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +221,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.SPED)) return false;
+                if (!eval(this.FlightAngleGain)) return false;
+                if (!eval(this.KNAM)) return false;
+                if (!eval(this.INTV)) return false;
+                if (!eval(this.BOLV)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +235,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.SPED)) return true;
+                if (eval(this.FlightAngleGain)) return true;
+                if (eval(this.KNAM)) return true;
+                if (eval(this.INTV)) return true;
+                if (eval(this.BOLV)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +256,12 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.SPED = eval(this.SPED);
+                obj.FlightAngleGain = eval(this.FlightAngleGain);
+                obj.KNAM = eval(this.KNAM);
+                obj.INTV = eval(this.INTV);
+                obj.BOLV = eval(this.BOLV);
             }
             #endregion
 
@@ -175,6 +280,30 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MovementType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.SPED ?? true)
+                    {
+                        sb.AppendItem(SPED, "SPED");
+                    }
+                    if (printMask?.FlightAngleGain ?? true)
+                    {
+                        sb.AppendItem(FlightAngleGain, "FlightAngleGain");
+                    }
+                    if (printMask?.KNAM ?? true)
+                    {
+                        sb.AppendItem(KNAM, "KNAM");
+                    }
+                    if (printMask?.INTV ?? true)
+                    {
+                        sb.AppendItem(INTV, "INTV");
+                    }
+                    if (printMask?.BOLV ?? true)
+                    {
+                        sb.AppendItem(BOLV, "BOLV");
+                    }
                 }
             }
             #endregion
@@ -185,12 +314,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? SPED;
+            public Exception? FlightAngleGain;
+            public Exception? KNAM;
+            public Exception? INTV;
+            public Exception? BOLV;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementType_FieldIndex.Name:
+                        return Name;
+                    case MovementType_FieldIndex.SPED:
+                        return SPED;
+                    case MovementType_FieldIndex.FlightAngleGain:
+                        return FlightAngleGain;
+                    case MovementType_FieldIndex.KNAM:
+                        return KNAM;
+                    case MovementType_FieldIndex.INTV:
+                        return INTV;
+                    case MovementType_FieldIndex.BOLV:
+                        return BOLV;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +351,24 @@ namespace Mutagen.Bethesda.Starfield
                 MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementType_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case MovementType_FieldIndex.SPED:
+                        this.SPED = ex;
+                        break;
+                    case MovementType_FieldIndex.FlightAngleGain:
+                        this.FlightAngleGain = ex;
+                        break;
+                    case MovementType_FieldIndex.KNAM:
+                        this.KNAM = ex;
+                        break;
+                    case MovementType_FieldIndex.INTV:
+                        this.INTV = ex;
+                        break;
+                    case MovementType_FieldIndex.BOLV:
+                        this.BOLV = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +380,24 @@ namespace Mutagen.Bethesda.Starfield
                 MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementType_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.SPED:
+                        this.SPED = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.FlightAngleGain:
+                        this.FlightAngleGain = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.KNAM:
+                        this.KNAM = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.INTV:
+                        this.INTV = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.BOLV:
+                        this.BOLV = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +407,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (SPED != null) return true;
+                if (FlightAngleGain != null) return true;
+                if (KNAM != null) return true;
+                if (INTV != null) return true;
+                if (BOLV != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +439,24 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(SPED, "SPED");
+                }
+                {
+                    sb.AppendItem(FlightAngleGain, "FlightAngleGain");
+                }
+                {
+                    sb.AppendItem(KNAM, "KNAM");
+                }
+                {
+                    sb.AppendItem(INTV, "INTV");
+                }
+                {
+                    sb.AppendItem(BOLV, "BOLV");
+                }
             }
             #endregion
 
@@ -255,6 +465,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.SPED = this.SPED.Combine(rhs.SPED);
+                ret.FlightAngleGain = this.FlightAngleGain.Combine(rhs.FlightAngleGain);
+                ret.KNAM = this.KNAM.Combine(rhs.KNAM);
+                ret.INTV = this.INTV.Combine(rhs.INTV);
+                ret.BOLV = this.BOLV.Combine(rhs.BOLV);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +492,41 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool SPED;
+            public bool FlightAngleGain;
+            public bool KNAM;
+            public bool INTV;
+            public bool BOLV;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.SPED = defaultOn;
+                this.FlightAngleGain = defaultOn;
+                this.KNAM = defaultOn;
+                this.INTV = defaultOn;
+                this.BOLV = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((SPED, null));
+                ret.Add((FlightAngleGain, null));
+                ret.Add((KNAM, null));
+                ret.Add((INTV, null));
+                ret.Add((BOLV, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -426,8 +668,19 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IMovementType :
         ILoquiObjectSetter<IMovementTypeInternal>,
         IMovementTypeGetter,
+        INamed,
+        INamedRequired,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        new String? Name { get; set; }
+        new MemorySlice<Byte>? SPED { get; set; }
+        new Single? FlightAngleGain { get; set; }
+        new Single? KNAM { get; set; }
+        new UInt32? INTV { get; set; }
+        new Boolean BOLV { get; set; }
     }
 
     public partial interface IMovementTypeInternal :
@@ -442,9 +695,22 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IMovementTypeGetter>,
-        IMapsToGetter<IMovementTypeGetter>
+        IMapsToGetter<IMovementTypeGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => MovementType_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
+        String? Name { get; }
+        #endregion
+        ReadOnlyMemorySlice<Byte>? SPED { get; }
+        Single? FlightAngleGain { get; }
+        Single? KNAM { get; }
+        UInt32? INTV { get; }
+        Boolean BOLV { get; }
 
     }
 
@@ -621,6 +887,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Name = 7,
+        SPED = 8,
+        FlightAngleGain = 9,
+        KNAM = 10,
+        INTV = 11,
+        BOLV = 12,
     }
     #endregion
 
@@ -631,9 +903,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(MovementType.Mask<>);
 
@@ -663,8 +935,18 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.MOVT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.MOVT);
+            var all = RecordCollection.Factory(
+                RecordTypes.MOVT,
+                RecordTypes.MNAM,
+                RecordTypes.SPED,
+                RecordTypes.LNAM,
+                RecordTypes.KNAM,
+                RecordTypes.INTV,
+                RecordTypes.BOLV);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MovementTypeBinaryWriteTranslation);
         #region Interface
@@ -706,6 +988,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMovementTypeInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.SPED = default;
+            item.FlightAngleGain = default;
+            item.KNAM = default;
+            item.INTV = default;
+            item.BOLV = default;
             base.Clear(item);
         }
         
@@ -790,6 +1078,12 @@ namespace Mutagen.Bethesda.Starfield
             MovementType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.SPED = MemorySliceExt.SequenceEqual(item.SPED, rhs.SPED);
+            ret.FlightAngleGain = item.FlightAngleGain.EqualsWithin(rhs.FlightAngleGain);
+            ret.KNAM = item.KNAM.EqualsWithin(rhs.KNAM);
+            ret.INTV = item.INTV == rhs.INTV;
+            ret.BOLV = item.BOLV == rhs.BOLV;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1133,35 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.SPED ?? true)
+                && item.SPED is {} SPEDItem)
+            {
+                sb.AppendLine($"SPED => {SpanExt.ToHexString(SPEDItem)}");
+            }
+            if ((printMask?.FlightAngleGain ?? true)
+                && item.FlightAngleGain is {} FlightAngleGainItem)
+            {
+                sb.AppendItem(FlightAngleGainItem, "FlightAngleGain");
+            }
+            if ((printMask?.KNAM ?? true)
+                && item.KNAM is {} KNAMItem)
+            {
+                sb.AppendItem(KNAMItem, "KNAM");
+            }
+            if ((printMask?.INTV ?? true)
+                && item.INTV is {} INTVItem)
+            {
+                sb.AppendItem(INTVItem, "INTV");
+            }
+            if (printMask?.BOLV ?? true)
+            {
+                sb.AppendItem(item.BOLV, "BOLV");
+            }
         }
         
         public static MovementType_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1212,30 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.SPED) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.SPED, rhs.SPED)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.FlightAngleGain) ?? true))
+            {
+                if (!lhs.FlightAngleGain.EqualsWithin(rhs.FlightAngleGain)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.KNAM) ?? true))
+            {
+                if (!lhs.KNAM.EqualsWithin(rhs.KNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.INTV) ?? true))
+            {
+                if (lhs.INTV != rhs.INTV) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.BOLV) ?? true))
+            {
+                if (lhs.BOLV != rhs.BOLV) return false;
+            }
             return true;
         }
         
@@ -917,6 +1264,27 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMovementTypeGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.SPED is {} SPEDItem)
+            {
+                hash.Add(SPEDItem);
+            }
+            if (item.FlightAngleGain is {} FlightAngleGainitem)
+            {
+                hash.Add(FlightAngleGainitem);
+            }
+            if (item.KNAM is {} KNAMitem)
+            {
+                hash.Add(KNAMitem);
+            }
+            if (item.INTV is {} INTVitem)
+            {
+                hash.Add(INTVitem);
+            }
+            hash.Add(item.BOLV);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,6 +1388,37 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.SPED) ?? true))
+            {
+                if(rhs.SPED is {} SPEDrhs)
+                {
+                    item.SPED = SPEDrhs.ToArray();
+                }
+                else
+                {
+                    item.SPED = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.FlightAngleGain) ?? true))
+            {
+                item.FlightAngleGain = rhs.FlightAngleGain;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.KNAM) ?? true))
+            {
+                item.KNAM = rhs.KNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.INTV) ?? true))
+            {
+                item.INTV = rhs.INTV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.BOLV) ?? true))
+            {
+                item.BOLV = rhs.BOLV;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1567,42 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly MovementTypeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IMovementTypeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.SPED,
+                header: translationParams.ConvertToCustom(RecordTypes.SPED));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FlightAngleGain,
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.KNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.KNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.INTV,
+                header: translationParams.ConvertToCustom(RecordTypes.INTV));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.BOLV,
+                header: translationParams.ConvertToCustom(RecordTypes.BOLV));
+        }
+
         public void Write(
             MutagenWriter writer,
             IMovementTypeGetter item,
@@ -1184,10 +1619,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1674,67 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly MovementTypeBinaryCreateTranslation Instance = new MovementTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MOVT;
+        public static ParseResult FillBinaryRecordTypes(
+            IMovementTypeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)MovementType_FieldIndex.Name;
+                }
+                case RecordTypeInts.SPED:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SPED = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MovementType_FieldIndex.SPED;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FlightAngleGain = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MovementType_FieldIndex.FlightAngleGain;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.KNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MovementType_FieldIndex.KNAM;
+                }
+                case RecordTypeInts.INTV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.INTV = frame.ReadUInt32();
+                    return (int)MovementType_FieldIndex.INTV;
+                }
+                case RecordTypeInts.BOLV:
+                {
+                    item.BOLV = true;
+                    return (int)MovementType_FieldIndex.BOLV;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1283,6 +1781,34 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IMovementType);
 
 
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        #region SPED
+        private int? _SPEDLocation;
+        public ReadOnlyMemorySlice<Byte>? SPED => _SPEDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SPEDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region FlightAngleGain
+        private int? _FlightAngleGainLocation;
+        public Single? FlightAngleGain => _FlightAngleGainLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlightAngleGainLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region KNAM
+        private int? _KNAMLocation;
+        public Single? KNAM => _KNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _KNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region INTV
+        private int? _INTVLocation;
+        public UInt32? INTV => _INTVLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTVLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region BOLV
+        private int? _BOLVLocation;
+        public Boolean BOLV => _BOLVLocation.HasValue ? true : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1866,59 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MNAM:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)MovementType_FieldIndex.Name;
+                }
+                case RecordTypeInts.SPED:
+                {
+                    _SPEDLocation = (stream.Position - offset);
+                    return (int)MovementType_FieldIndex.SPED;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _FlightAngleGainLocation = (stream.Position - offset);
+                    return (int)MovementType_FieldIndex.FlightAngleGain;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    _KNAMLocation = (stream.Position - offset);
+                    return (int)MovementType_FieldIndex.KNAM;
+                }
+                case RecordTypeInts.INTV:
+                {
+                    _INTVLocation = (stream.Position - offset);
+                    return (int)MovementType_FieldIndex.INTV;
+                }
+                case RecordTypeInts.BOLV:
+                {
+                    _BOLVLocation = (stream.Position - offset);
+                    return (int)MovementType_FieldIndex.BOLV;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

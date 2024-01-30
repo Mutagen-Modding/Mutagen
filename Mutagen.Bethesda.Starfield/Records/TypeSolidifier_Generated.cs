@@ -2676,9 +2676,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MovementType</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter> MovementType(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter> MovementType(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMovementTypeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2688,9 +2688,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on MovementType</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter> MovementType(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter> MovementType(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IMovementTypeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMovementType, IMovementTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

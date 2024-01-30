@@ -109,6 +109,7 @@
       <Group name="EquipTypes" refName="EquipType" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="ArtObjects" refName="ArtObject" />
+      <Group name="MovementTypes" refName="MovementType" />
       <Group name="AimModels" refName="AimModel" />
       <Group name="AimAssistModels" refName="AimAssistModel" />
       <Group name="Layers" refName="Layer" />

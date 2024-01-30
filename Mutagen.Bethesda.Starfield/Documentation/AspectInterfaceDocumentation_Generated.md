@@ -176,6 +176,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MorphGroup
 - MoveableStatic
+- MovementType
 - MoveSceneAction
 - Npc
 - NpcModification
@@ -585,6 +586,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### MovementType
+- INamed
 ### MoveSceneAction
 - INamed
 ### NavigationMesh
