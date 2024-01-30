@@ -159,6 +159,7 @@ namespace Mutagen.Bethesda.Starfield
             _StoryManagerQuestNodes_Object = new StarfieldGroup<StoryManagerQuestNode>(this);
             _StoryManagerEventNodes_Object = new StarfieldGroup<StoryManagerEventNode>(this);
             _MusicTracks_Object = new StarfieldGroup<MusicTrack>(this);
+            _EquipTypes_Object = new StarfieldGroup<EquipType>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
@@ -881,6 +882,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IMusicTrackGetter> IStarfieldModGetter.MusicTracks => _MusicTracks_Object;
         #endregion
+        #region EquipTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<EquipType> _EquipTypes_Object;
+        public StarfieldGroup<EquipType> EquipTypes => _EquipTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IEquipTypeGetter> IStarfieldModGetter.EquipTypes => _EquipTypes_Object;
+        #endregion
         #region Outfits
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Outfit> _Outfits_Object;
@@ -1139,6 +1147,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.StoryManagerQuestNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StoryManagerEventNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.MusicTracks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.EquipTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1259,6 +1268,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StoryManagerQuestNodes,
                 TItem StoryManagerEventNodes,
                 TItem MusicTracks,
+                TItem EquipTypes,
                 TItem Outfits,
                 TItem AimModels,
                 TItem AimAssistModels,
@@ -1377,6 +1387,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.StoryManagerQuestNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StoryManagerQuestNodes, new StarfieldGroup.Mask<TItem>(StoryManagerQuestNodes));
                 this.StoryManagerEventNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StoryManagerEventNodes, new StarfieldGroup.Mask<TItem>(StoryManagerEventNodes));
                 this.MusicTracks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MusicTracks, new StarfieldGroup.Mask<TItem>(MusicTracks));
+                this.EquipTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(EquipTypes, new StarfieldGroup.Mask<TItem>(EquipTypes));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Outfits, new StarfieldGroup.Mask<TItem>(Outfits));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimModels, new StarfieldGroup.Mask<TItem>(AimModels));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimAssistModels, new StarfieldGroup.Mask<TItem>(AimAssistModels));
@@ -1505,6 +1516,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StoryManagerQuestNodes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MusicTracks { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? EquipTypes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Outfits { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimAssistModels { get; set; }
@@ -1634,6 +1646,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
                 if (!object.Equals(this.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
                 if (!object.Equals(this.MusicTracks, rhs.MusicTracks)) return false;
+                if (!object.Equals(this.EquipTypes, rhs.EquipTypes)) return false;
                 if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
                 if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
                 if (!object.Equals(this.AimAssistModels, rhs.AimAssistModels)) return false;
@@ -1756,6 +1769,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.StoryManagerQuestNodes);
                 hash.Add(this.StoryManagerEventNodes);
                 hash.Add(this.MusicTracks);
+                hash.Add(this.EquipTypes);
                 hash.Add(this.Outfits);
                 hash.Add(this.AimModels);
                 hash.Add(this.AimAssistModels);
@@ -2280,6 +2294,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.MusicTracks.Overall)) return false;
                     if (this.MusicTracks.Specific != null && !this.MusicTracks.Specific.All(eval)) return false;
+                }
+                if (EquipTypes != null)
+                {
+                    if (!eval(this.EquipTypes.Overall)) return false;
+                    if (this.EquipTypes.Specific != null && !this.EquipTypes.Specific.All(eval)) return false;
                 }
                 if (Outfits != null)
                 {
@@ -2873,6 +2892,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.MusicTracks.Overall)) return true;
                     if (this.MusicTracks.Specific != null && this.MusicTracks.Specific.Any(eval)) return true;
                 }
+                if (EquipTypes != null)
+                {
+                    if (eval(this.EquipTypes.Overall)) return true;
+                    if (this.EquipTypes.Specific != null && this.EquipTypes.Specific.Any(eval)) return true;
+                }
                 if (Outfits != null)
                 {
                     if (eval(this.Outfits.Overall)) return true;
@@ -3072,6 +3096,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.StoryManagerQuestNodes = this.StoryManagerQuestNodes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StoryManagerQuestNodes.Overall), this.StoryManagerQuestNodes.Specific?.Translate(eval));
                 obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
                 obj.MusicTracks = this.MusicTracks == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MusicTracks.Overall), this.MusicTracks.Specific?.Translate(eval));
+                obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
                 obj.Outfits = this.Outfits == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
                 obj.AimModels = this.AimModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
                 obj.AimAssistModels = this.AimAssistModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimAssistModels.Overall), this.AimAssistModels.Specific?.Translate(eval));
@@ -3507,6 +3532,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         MusicTracks?.Print(sb);
                     }
+                    if (printMask?.EquipTypes?.Overall ?? true)
+                    {
+                        EquipTypes?.Print(sb);
+                    }
                     if (printMask?.Outfits?.Overall ?? true)
                     {
                         Outfits?.Print(sb);
@@ -3699,6 +3728,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StoryManagerQuestNode.ErrorMask>?>? StoryManagerQuestNodes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<MusicTrack.ErrorMask>?>? MusicTracks;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>? Outfits;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>? AimModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistModel.ErrorMask>?>? AimAssistModels;
@@ -3924,6 +3954,8 @@ namespace Mutagen.Bethesda.Starfield
                         return StoryManagerEventNodes;
                     case StarfieldMod_FieldIndex.MusicTracks:
                         return MusicTracks;
+                    case StarfieldMod_FieldIndex.EquipTypes:
+                        return EquipTypes;
                     case StarfieldMod_FieldIndex.Outfits:
                         return Outfits;
                     case StarfieldMod_FieldIndex.AimModels:
@@ -4267,6 +4299,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.MusicTracks:
                         this.MusicTracks = new MaskItem<Exception?, StarfieldGroup.ErrorMask<MusicTrack.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.EquipTypes:
+                        this.EquipTypes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<EquipType.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Outfits:
                         this.Outfits = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>(ex, null);
@@ -4629,6 +4664,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.MusicTracks:
                         this.MusicTracks = (MaskItem<Exception?, StarfieldGroup.ErrorMask<MusicTrack.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.EquipTypes:
+                        this.EquipTypes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<EquipType.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Outfits:
                         this.Outfits = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>?)obj;
                         break;
@@ -4788,6 +4826,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (StoryManagerQuestNodes != null) return true;
                 if (StoryManagerEventNodes != null) return true;
                 if (MusicTracks != null) return true;
+                if (EquipTypes != null) return true;
                 if (Outfits != null) return true;
                 if (AimModels != null) return true;
                 if (AimAssistModels != null) return true;
@@ -4930,6 +4969,7 @@ namespace Mutagen.Bethesda.Starfield
                 StoryManagerQuestNodes?.Print(sb);
                 StoryManagerEventNodes?.Print(sb);
                 MusicTracks?.Print(sb);
+                EquipTypes?.Print(sb);
                 Outfits?.Print(sb);
                 AimModels?.Print(sb);
                 AimAssistModels?.Print(sb);
@@ -5055,6 +5095,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.StoryManagerQuestNodes = this.StoryManagerQuestNodes.Combine(rhs.StoryManagerQuestNodes, (l, r) => l.Combine(r));
                 ret.StoryManagerEventNodes = this.StoryManagerEventNodes.Combine(rhs.StoryManagerEventNodes, (l, r) => l.Combine(r));
                 ret.MusicTracks = this.MusicTracks.Combine(rhs.MusicTracks, (l, r) => l.Combine(r));
+                ret.EquipTypes = this.EquipTypes.Combine(rhs.EquipTypes, (l, r) => l.Combine(r));
                 ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
                 ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
                 ret.AimAssistModels = this.AimAssistModels.Combine(rhs.AimAssistModels, (l, r) => l.Combine(r));
@@ -5195,6 +5236,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<StoryManagerQuestNode.TranslationMask>? StoryManagerQuestNodes;
             public StarfieldGroup.TranslationMask<StoryManagerEventNode.TranslationMask>? StoryManagerEventNodes;
             public StarfieldGroup.TranslationMask<MusicTrack.TranslationMask>? MusicTracks;
+            public StarfieldGroup.TranslationMask<EquipType.TranslationMask>? EquipTypes;
             public StarfieldGroup.TranslationMask<Outfit.TranslationMask>? Outfits;
             public StarfieldGroup.TranslationMask<AimModel.TranslationMask>? AimModels;
             public StarfieldGroup.TranslationMask<AimAssistModel.TranslationMask>? AimAssistModels;
@@ -5336,6 +5378,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((StoryManagerQuestNodes != null ? StoryManagerQuestNodes.OnOverall : DefaultOn, StoryManagerQuestNodes?.GetCrystal()));
                 ret.Add((StoryManagerEventNodes != null ? StoryManagerEventNodes.OnOverall : DefaultOn, StoryManagerEventNodes?.GetCrystal()));
                 ret.Add((MusicTracks != null ? MusicTracks.OnOverall : DefaultOn, MusicTracks?.GetCrystal()));
+                ret.Add((EquipTypes != null ? EquipTypes.OnOverall : DefaultOn, EquipTypes?.GetCrystal()));
                 ret.Add((Outfits != null ? Outfits.OnOverall : DefaultOn, Outfits?.GetCrystal()));
                 ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
                 ret.Add((AimAssistModels != null ? AimAssistModels.OnOverall : DefaultOn, AimAssistModels?.GetCrystal()));
@@ -5498,6 +5541,7 @@ namespace Mutagen.Bethesda.Starfield
             _StoryManagerQuestNodes_Object = new StarfieldGroup<StoryManagerQuestNode>(this);
             _StoryManagerEventNodes_Object = new StarfieldGroup<StoryManagerEventNode>(this);
             _MusicTracks_Object = new StarfieldGroup<MusicTrack>(this);
+            _EquipTypes_Object = new StarfieldGroup<EquipType>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
@@ -5920,6 +5964,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.MusicTracks.RecordCache.Set(rhsMod.MusicTracks.RecordCache.Items);
             }
+            if (mask?.EquipTypes ?? true)
+            {
+                this.EquipTypes.RecordCache.Set(rhsMod.EquipTypes.RecordCache.Items);
+            }
             if (mask?.Outfits ?? true)
             {
                 this.Outfits.RecordCache.Set(rhsMod.Outfits.RecordCache.Items);
@@ -6097,6 +6145,7 @@ namespace Mutagen.Bethesda.Starfield
             count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
@@ -6487,6 +6536,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<StoryManagerQuestNode> StoryManagerQuestNodes { get; }
         new StarfieldGroup<StoryManagerEventNode> StoryManagerEventNodes { get; }
         new StarfieldGroup<MusicTrack> MusicTracks { get; }
+        new StarfieldGroup<EquipType> EquipTypes { get; }
         new StarfieldGroup<Outfit> Outfits { get; }
         new StarfieldGroup<AimModel> AimModels { get; }
         new StarfieldGroup<AimAssistModel> AimAssistModels { get; }
@@ -6623,6 +6673,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes { get; }
         IStarfieldGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
         IStarfieldGroupGetter<IMusicTrackGetter> MusicTracks { get; }
+        IStarfieldGroupGetter<IEquipTypeGetter> EquipTypes { get; }
         IStarfieldGroupGetter<IOutfitGetter> Outfits { get; }
         IStarfieldGroupGetter<IAimModelGetter> AimModels { get; }
         IStarfieldGroupGetter<IAimAssistModelGetter> AimAssistModels { get; }
@@ -7322,23 +7373,24 @@ namespace Mutagen.Bethesda.Starfield
         StoryManagerQuestNodes = 97,
         StoryManagerEventNodes = 98,
         MusicTracks = 99,
-        Outfits = 100,
-        AimModels = 101,
-        AimAssistModels = 102,
-        Layers = 103,
-        ConstructibleObjects = 104,
-        ObjectModifications = 105,
-        InstanceNamingRules = 106,
-        AttractionRules = 107,
-        Resources = 108,
-        BiomeSwaps = 109,
-        SnapTemplates = 110,
-        Planets = 111,
-        ConditionRecords = 112,
-        SurfacePatternStyles = 113,
-        TerminalMenus = 114,
-        LegendaryItems = 115,
-        ActorValueModulations = 116,
+        EquipTypes = 100,
+        Outfits = 101,
+        AimModels = 102,
+        AimAssistModels = 103,
+        Layers = 104,
+        ConstructibleObjects = 105,
+        ObjectModifications = 106,
+        InstanceNamingRules = 107,
+        AttractionRules = 108,
+        Resources = 109,
+        BiomeSwaps = 110,
+        SnapTemplates = 111,
+        Planets = 112,
+        ConditionRecords = 113,
+        SurfacePatternStyles = 114,
+        TerminalMenus = 115,
+        LegendaryItems = 116,
+        ActorValueModulations = 117,
     }
     #endregion
 
@@ -7349,9 +7401,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 117;
+        public const ushort AdditionalFieldCount = 118;
 
-        public const ushort FieldCount = 117;
+        public const ushort FieldCount = 118;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -7516,6 +7568,7 @@ namespace Mutagen.Bethesda.Starfield
             item.StoryManagerQuestNodes.Clear();
             item.StoryManagerEventNodes.Clear();
             item.MusicTracks.Clear();
+            item.EquipTypes.Clear();
             item.Outfits.Clear();
             item.AimModels.Clear();
             item.AimAssistModels.Clear();
@@ -7624,6 +7677,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.StoryManagerQuestNodes.RemapLinks(mapping);
             obj.StoryManagerEventNodes.RemapLinks(mapping);
             obj.MusicTracks.RemapLinks(mapping);
+            obj.EquipTypes.RemapLinks(mapping);
             obj.Outfits.RemapLinks(mapping);
             obj.Layers.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
@@ -7769,6 +7823,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.StoryManagerQuestNodes.Remove(keys);
             obj.StoryManagerEventNodes.Remove(keys);
             obj.MusicTracks.Remove(keys);
+            obj.EquipTypes.Remove(keys);
             obj.Outfits.Remove(keys);
             obj.AimModels.Remove(keys);
             obj.AimAssistModels.Remove(keys);
@@ -8606,6 +8661,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
                     obj.MusicTracks.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    obj.EquipTypes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -9756,6 +9819,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.StoryManagerQuestNodes = MaskItemExt.Factory(item.StoryManagerQuestNodes.GetEqualsMask(rhs.StoryManagerQuestNodes, include), include);
             ret.StoryManagerEventNodes = MaskItemExt.Factory(item.StoryManagerEventNodes.GetEqualsMask(rhs.StoryManagerEventNodes, include), include);
             ret.MusicTracks = MaskItemExt.Factory(item.MusicTracks.GetEqualsMask(rhs.MusicTracks, include), include);
+            ret.EquipTypes = MaskItemExt.Factory(item.EquipTypes.GetEqualsMask(rhs.EquipTypes, include), include);
             ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
             ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
             ret.AimAssistModels = MaskItemExt.Factory(item.AimAssistModels.GetEqualsMask(rhs.AimAssistModels, include), include);
@@ -10216,6 +10280,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.MusicTracks?.Overall ?? true)
             {
                 item.MusicTracks?.Print(sb, "MusicTracks");
+            }
+            if (printMask?.EquipTypes?.Overall ?? true)
+            {
+                item.EquipTypes?.Print(sb, "EquipTypes");
             }
             if (printMask?.Outfits?.Overall ?? true)
             {
@@ -11094,6 +11162,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isMusicTracksEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.EquipTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EquipTypes, rhs.EquipTypes, out var lhsEquipTypes, out var rhsEquipTypes, out var isEquipTypesEqual))
+                {
+                    if (!object.Equals(lhsEquipTypes, rhsEquipTypes)) return false;
+                }
+                else if (!isEquipTypesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Outfits) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Outfits, rhs.Outfits, out var lhsOutfits, out var rhsOutfits, out var isOutfitsEqual))
@@ -11336,6 +11412,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.StoryManagerQuestNodes);
             hash.Add(item.StoryManagerEventNodes);
             hash.Add(item.MusicTracks);
+            hash.Add(item.EquipTypes);
             hash.Add(item.Outfits);
             hash.Add(item.AimModels);
             hash.Add(item.AimAssistModels);
@@ -11865,6 +11942,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
                     return obj.MusicTracks;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    return obj.EquipTypes;
                 case "Outfit":
                 case "IOutfitGetter":
                 case "IOutfit":
@@ -11976,7 +12058,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[116];
+            Stream[] outputStreams = new Stream[117];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -12077,23 +12159,24 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, 96, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 97, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MusicTracks, 98, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 99, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 100, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 101, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 102, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 103, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 104, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 105, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 106, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 107, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 108, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 109, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 110, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 111, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 112, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 113, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 114, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 115, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, 99, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 100, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 101, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 102, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 103, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 104, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 105, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 106, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 107, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 108, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 109, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 110, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 111, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 112, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 113, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 114, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 115, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 116, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12491,6 +12574,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.MusicTracks.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EquipTypes.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -12946,6 +13033,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.MusicTracks.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EquipTypes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13930,6 +14021,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
                     foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15124,6 +15224,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.MusicTracks,
                 groupGetter: (m) => m.MusicTracks))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, EquipType, IEquipTypeGetter>(
+                srcGroup: obj.EquipTypes,
+                type: typeof(IEquipTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EquipTypes,
+                groupGetter: (m) => m.EquipTypes))
             {
                 yield return item;
             }
@@ -16679,6 +16788,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.MusicTracks,
                         groupGetter: (m) => m.MusicTracks))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, EquipType, IEquipTypeGetter>(
+                        srcGroup: obj.EquipTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EquipTypes,
+                        groupGetter: (m) => m.EquipTypes))
                     {
                         yield return item;
                     }
@@ -19569,6 +19692,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.EquipTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.EquipTypes);
+                try
+                {
+                    item.EquipTypes.DeepCopyIn(
+                        rhs: rhs.EquipTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.EquipTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Outfits) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Outfits);
@@ -20098,6 +20241,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool StoryManagerQuestNodes;
         public bool StoryManagerEventNodes;
         public bool MusicTracks;
+        public bool EquipTypes;
         public bool Outfits;
         public bool AimModels;
         public bool AimAssistModels;
@@ -20219,6 +20363,7 @@ namespace Mutagen.Bethesda.Starfield
             StoryManagerQuestNodes = defaultValue;
             StoryManagerEventNodes = defaultValue;
             MusicTracks = defaultValue;
+            EquipTypes = defaultValue;
             Outfits = defaultValue;
             AimModels = defaultValue;
             AimAssistModels = defaultValue;
@@ -21380,6 +21525,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)MusicTracksItem).BinaryWriteTranslator).Write<IMusicTrackGetter>(
                         item: MusicTracksItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.EquipTypes ?? true)
+            {
+                var EquipTypesItem = item.EquipTypes;
+                if (EquipTypesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)EquipTypesItem).BinaryWriteTranslator).Write<IEquipTypeGetter>(
+                        item: EquipTypesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -23017,6 +23173,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.MusicTracks;
                 }
+                case RecordTypeInts.EQUP:
+                {
+                    if (importMask?.EquipTypes ?? true)
+                    {
+                        item.EquipTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.EquipTypes;
+                }
                 case RecordTypeInts.OTFT:
                 {
                     if (importMask?.Outfits ?? true)
@@ -23921,6 +24091,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? StarfieldGroupBinaryOverlay<IMusicTrackGetter>.StarfieldGroupFactory(_stream, _MusicTracksLocations, _package) : default;
         public IStarfieldGroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new StarfieldGroup<MusicTrack>(this);
         #endregion
+        #region EquipTypes
+        private List<RangeInt64>? _EquipTypesLocations;
+        private IStarfieldGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? StarfieldGroupBinaryOverlay<IEquipTypeGetter>.StarfieldGroupFactory(_stream, _EquipTypesLocations, _package) : default;
+        public IStarfieldGroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new StarfieldGroup<EquipType>(this);
+        #endregion
         #region Outfits
         private List<RangeInt64>? _OutfitsLocations;
         private IStarfieldGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? StarfieldGroupBinaryOverlay<IOutfitGetter>.StarfieldGroupFactory(_stream, _OutfitsLocations, _package) : default;
@@ -24692,6 +24867,12 @@ namespace Mutagen.Bethesda.Starfield
                     _MusicTracksLocations ??= new();
                     _MusicTracksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.MusicTracks;
+                }
+                case RecordTypeInts.EQUP:
+                {
+                    _EquipTypesLocations ??= new();
+                    _EquipTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.OTFT:
                 {
