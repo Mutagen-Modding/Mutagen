@@ -38,7 +38,7 @@
     <Fields>
       <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
       <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
-      <RecordType name="Type" recordType="ENAM" />
+      <Enum name="Type" enumName="StoryManagerEventNode.Types" byteLength="4" recordType="ENAM" />
     </Fields>
     <AdditionalContainedRecordType>ADBO</AdditionalContainedRecordType>
     <AdditionalContainedRecordType>ADCR</AdditionalContainedRecordType>

@@ -65,9 +65,9 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? IStoryManagerEventNodeGetter.MaxConcurrentQuests => this.MaxConcurrentQuests;
         #endregion
         #region Type
-        public RecordType? Type { get; set; }
+        public StoryManagerEventNode.Types? Type { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RecordType? IStoryManagerEventNodeGetter.Type => this.Type;
+        StoryManagerEventNode.Types? IStoryManagerEventNodeGetter.Type => this.Type;
         #endregion
 
         #region To String
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new AStoryManagerNode.Flag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
-        new RecordType? Type { get; set; }
+        new StoryManagerEventNode.Types? Type { get; set; }
     }
 
     public partial interface IStoryManagerEventNodeInternal :
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration StaticRegistration => StoryManagerEventNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }
         UInt32? MaxConcurrentQuests { get; }
-        RecordType? Type { get; }
+        StoryManagerEventNode.Types? Type { get; }
 
     }
 
@@ -1532,9 +1532,10 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.MaxConcurrentQuests,
                 header: translationParams.ConvertToCustom(RecordTypes.XNAM));
-            RecordTypeBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Type,
+            EnumBinaryTranslation<StoryManagerEventNode.Types, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
         }
 
@@ -1649,7 +1650,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<StoryManagerEventNode.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)StoryManagerEventNode_FieldIndex.Type;
                 }
                 default:
@@ -1720,7 +1723,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Type
         private int? _TypeLocation;
-        public RecordType? Type => _TypeLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
+        public StoryManagerEventNode.Types? Type => _TypeLocation.HasValue ? (StoryManagerEventNode.Types)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(StoryManagerEventNode.Types?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
