@@ -893,6 +893,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             MoveSceneAction_Registration.Instance,
             MusicTrack_Registration.Instance,
             MusicType_Registration.Instance,
+            MusicTypeData_Registration.Instance,
             NavigationDoorLink_Registration.Instance,
             NavigationMapInfo_Registration.Instance,
             NavigationMesh_Registration.Instance,

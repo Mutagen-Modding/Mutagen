@@ -2,6 +2,20 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Enum name="Flags" enumName="MusicType.Flag" byteLength="4" recordType="FNAM" nullable="False" />
+      <RefDirect name="Data" refName="MusicTypeData" />
+      <Float name="FadeDuration" recordType="WNAM" />
+      <ByteArray name="VNAM" recordType="VNAM" unknown="true" />
+      <ByteArray name="UNAM" recordType="UNAM" unknown="true" />
+      <List name="Tracks" recordType="TNAM">
+        <FormLink refName="MusicTrack" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="MusicTypeData" recordType="PNAM" objType="Subrecord">
+    <Fields>
+      <UInt16 name="Priority" />
+      <Float name="DuckingDecibel" binaryType="Integer" integerType="UShort" divisor="100" />
     </Fields>
   </Object>
 </Loqui>

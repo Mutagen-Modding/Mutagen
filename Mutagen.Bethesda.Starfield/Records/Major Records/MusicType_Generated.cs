@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,61 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Flags
+        public MusicType.Flag Flags { get; set; } = default;
+        #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MusicTypeData? _Data;
+        public MusicTypeData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IMusicTypeDataGetter? IMusicTypeGetter.Data => this.Data;
+        #endregion
+        #region FadeDuration
+        public Single? FadeDuration { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMusicTypeGetter.FadeDuration => this.FadeDuration;
+        #endregion
+        #region VNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _VNAM;
+        public MemorySlice<Byte>? VNAM
+        {
+            get => this._VNAM;
+            set => this._VNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IMusicTypeGetter.VNAM => this.VNAM;
+        #endregion
+        #region UNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _UNAM;
+        public MemorySlice<Byte>? UNAM
+        {
+            get => this._UNAM;
+            set => this._UNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IMusicTypeGetter.UNAM => this.UNAM;
+        #endregion
+        #region Tracks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IMusicTrackGetter>>? _Tracks;
+        public ExtendedList<IFormLinkGetter<IMusicTrackGetter>>? Tracks
+        {
+            get => this._Tracks;
+            set => this._Tracks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? IMusicTypeGetter.Tracks => _Tracks;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +135,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Flags = initialValue;
+                this.Data = new MaskItem<TItem, MusicTypeData.Mask<TItem>?>(initialValue, new MusicTypeData.Mask<TItem>(initialValue));
+                this.FadeDuration = initialValue;
+                this.VNAM = initialValue;
+                this.UNAM = initialValue;
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -88,7 +150,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Flags,
+                TItem Data,
+                TItem FadeDuration,
+                TItem VNAM,
+                TItem UNAM,
+                TItem Tracks)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +166,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Flags = Flags;
+                this.Data = new MaskItem<TItem, MusicTypeData.Mask<TItem>?>(Data, new MusicTypeData.Mask<TItem>(Data));
+                this.FadeDuration = FadeDuration;
+                this.VNAM = VNAM;
+                this.UNAM = UNAM;
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Tracks, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +180,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Flags;
+            public MaskItem<TItem, MusicTypeData.Mask<TItem>?>? Data { get; set; }
+            public TItem FadeDuration;
+            public TItem VNAM;
+            public TItem UNAM;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Tracks;
             #endregion
 
             #region Equals
@@ -119,11 +202,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.FadeDuration, rhs.FadeDuration)) return false;
+                if (!object.Equals(this.VNAM, rhs.VNAM)) return false;
+                if (!object.Equals(this.UNAM, rhs.UNAM)) return false;
+                if (!object.Equals(this.Tracks, rhs.Tracks)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.Data);
+                hash.Add(this.FadeDuration);
+                hash.Add(this.VNAM);
+                hash.Add(this.UNAM);
+                hash.Add(this.Tracks);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +229,26 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Flags)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (!eval(this.FadeDuration)) return false;
+                if (!eval(this.VNAM)) return false;
+                if (!eval(this.UNAM)) return false;
+                if (this.Tracks != null)
+                {
+                    if (!eval(this.Tracks.Overall)) return false;
+                    if (this.Tracks.Specific != null)
+                    {
+                        foreach (var item in this.Tracks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +257,26 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Flags)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (eval(this.FadeDuration)) return true;
+                if (eval(this.VNAM)) return true;
+                if (eval(this.UNAM)) return true;
+                if (this.Tracks != null)
+                {
+                    if (eval(this.Tracks.Overall)) return true;
+                    if (this.Tracks.Specific != null)
+                    {
+                        foreach (var item in this.Tracks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +292,25 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Flags = eval(this.Flags);
+                obj.Data = this.Data == null ? null : new MaskItem<R, MusicTypeData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.FadeDuration = eval(this.FadeDuration);
+                obj.VNAM = eval(this.VNAM);
+                obj.UNAM = eval(this.UNAM);
+                if (Tracks != null)
+                {
+                    obj.Tracks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Tracks.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Tracks.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Tracks.Specific = l;
+                        foreach (var item in Tracks.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +329,47 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MusicType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
+                    if (printMask?.FadeDuration ?? true)
+                    {
+                        sb.AppendItem(FadeDuration, "FadeDuration");
+                    }
+                    if (printMask?.VNAM ?? true)
+                    {
+                        sb.AppendItem(VNAM, "VNAM");
+                    }
+                    if (printMask?.UNAM ?? true)
+                    {
+                        sb.AppendItem(UNAM, "UNAM");
+                    }
+                    if ((printMask?.Tracks?.Overall ?? true)
+                        && Tracks is {} TracksItem)
+                    {
+                        sb.AppendLine("Tracks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TracksItem.Overall);
+                            if (TracksItem.Specific != null)
+                            {
+                                foreach (var subItem in TracksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +380,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Flags;
+            public MaskItem<Exception?, MusicTypeData.ErrorMask?>? Data;
+            public Exception? FadeDuration;
+            public Exception? VNAM;
+            public Exception? UNAM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Tracks;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MusicType_FieldIndex enu = (MusicType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicType_FieldIndex.Flags:
+                        return Flags;
+                    case MusicType_FieldIndex.Data:
+                        return Data;
+                    case MusicType_FieldIndex.FadeDuration:
+                        return FadeDuration;
+                    case MusicType_FieldIndex.VNAM:
+                        return VNAM;
+                    case MusicType_FieldIndex.UNAM:
+                        return UNAM;
+                    case MusicType_FieldIndex.Tracks:
+                        return Tracks;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +417,24 @@ namespace Mutagen.Bethesda.Starfield
                 MusicType_FieldIndex enu = (MusicType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicType_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case MusicType_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, MusicTypeData.ErrorMask?>(ex, null);
+                        break;
+                    case MusicType_FieldIndex.FadeDuration:
+                        this.FadeDuration = ex;
+                        break;
+                    case MusicType_FieldIndex.VNAM:
+                        this.VNAM = ex;
+                        break;
+                    case MusicType_FieldIndex.UNAM:
+                        this.UNAM = ex;
+                        break;
+                    case MusicType_FieldIndex.Tracks:
+                        this.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +446,24 @@ namespace Mutagen.Bethesda.Starfield
                 MusicType_FieldIndex enu = (MusicType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicType_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case MusicType_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, MusicTypeData.ErrorMask?>?)obj;
+                        break;
+                    case MusicType_FieldIndex.FadeDuration:
+                        this.FadeDuration = (Exception?)obj;
+                        break;
+                    case MusicType_FieldIndex.VNAM:
+                        this.VNAM = (Exception?)obj;
+                        break;
+                    case MusicType_FieldIndex.UNAM:
+                        this.UNAM = (Exception?)obj;
+                        break;
+                    case MusicType_FieldIndex.Tracks:
+                        this.Tracks = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +473,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Flags != null) return true;
+                if (Data != null) return true;
+                if (FadeDuration != null) return true;
+                if (VNAM != null) return true;
+                if (UNAM != null) return true;
+                if (Tracks != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +505,39 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(FadeDuration, "FadeDuration");
+                }
+                {
+                    sb.AppendItem(VNAM, "VNAM");
+                }
+                {
+                    sb.AppendItem(UNAM, "UNAM");
+                }
+                if (Tracks is {} TracksItem)
+                {
+                    sb.AppendLine("Tracks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TracksItem.Overall);
+                        if (TracksItem.Specific != null)
+                        {
+                            foreach (var subItem in TracksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +546,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.FadeDuration = this.FadeDuration.Combine(rhs.FadeDuration);
+                ret.VNAM = this.VNAM.Combine(rhs.VNAM);
+                ret.UNAM = this.UNAM.Combine(rhs.UNAM);
+                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), Noggog.ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +573,40 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Flags;
+            public MusicTypeData.TranslationMask? Data;
+            public bool FadeDuration;
+            public bool VNAM;
+            public bool UNAM;
+            public bool Tracks;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Flags = defaultOn;
+                this.FadeDuration = defaultOn;
+                this.VNAM = defaultOn;
+                this.UNAM = defaultOn;
+                this.Tracks = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Flags, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((FadeDuration, null));
+                ret.Add((VNAM, null));
+                ret.Add((UNAM, null));
+                ret.Add((Tracks, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +618,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MusicType_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MusicTypeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public MusicType(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +748,17 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMusicType :
+        IFormLinkContainer,
         ILoquiObjectSetter<IMusicTypeInternal>,
         IMusicTypeGetter,
         IStarfieldMajorRecordInternal
     {
+        new MusicType.Flag Flags { get; set; }
+        new MusicTypeData? Data { get; set; }
+        new Single? FadeDuration { get; set; }
+        new MemorySlice<Byte>? VNAM { get; set; }
+        new MemorySlice<Byte>? UNAM { get; set; }
+        new ExtendedList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTypeInternal :
@@ -441,10 +772,17 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IMusicTypeGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMusicTypeGetter>,
         IMapsToGetter<IMusicTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => MusicType_Registration.Instance;
+        MusicType.Flag Flags { get; }
+        IMusicTypeDataGetter? Data { get; }
+        Single? FadeDuration { get; }
+        ReadOnlyMemorySlice<Byte>? VNAM { get; }
+        ReadOnlyMemorySlice<Byte>? UNAM { get; }
+        IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; }
 
     }
 
@@ -621,6 +959,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Flags = 7,
+        Data = 8,
+        FadeDuration = 9,
+        VNAM = 10,
+        UNAM = 11,
+        Tracks = 12,
     }
     #endregion
 
@@ -631,9 +975,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(MusicType.Mask<>);
 
@@ -663,8 +1007,18 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.MUSC);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.MUSC);
+            var all = RecordCollection.Factory(
+                RecordTypes.MUSC,
+                RecordTypes.FNAM,
+                RecordTypes.PNAM,
+                RecordTypes.WNAM,
+                RecordTypes.VNAM,
+                RecordTypes.UNAM,
+                RecordTypes.TNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MusicTypeBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1060,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMusicTypeInternal item)
         {
             ClearPartial();
+            item.Flags = default;
+            item.Data = null;
+            item.FadeDuration = default;
+            item.VNAM = default;
+            item.UNAM = default;
+            item.Tracks = null;
             base.Clear(item);
         }
         
@@ -723,6 +1083,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IMusicType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Tracks?.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1151,19 @@ namespace Mutagen.Bethesda.Starfield
             MusicType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.FadeDuration = item.FadeDuration.EqualsWithin(rhs.FadeDuration);
+            ret.VNAM = MemorySliceExt.SequenceEqual(item.VNAM, rhs.VNAM);
+            ret.UNAM = MemorySliceExt.SequenceEqual(item.UNAM, rhs.UNAM);
+            ret.Tracks = item.Tracks.CollectionEqualsHelper(
+                rhs.Tracks,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1213,45 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
+            {
+                DataItem?.Print(sb, "Data");
+            }
+            if ((printMask?.FadeDuration ?? true)
+                && item.FadeDuration is {} FadeDurationItem)
+            {
+                sb.AppendItem(FadeDurationItem, "FadeDuration");
+            }
+            if ((printMask?.VNAM ?? true)
+                && item.VNAM is {} VNAMItem)
+            {
+                sb.AppendLine($"VNAM => {SpanExt.ToHexString(VNAMItem)}");
+            }
+            if ((printMask?.UNAM ?? true)
+                && item.UNAM is {} UNAMItem)
+            {
+                sb.AppendLine($"UNAM => {SpanExt.ToHexString(UNAMItem)}");
+            }
+            if ((printMask?.Tracks?.Overall ?? true)
+                && item.Tracks is {} TracksItem)
+            {
+                sb.AppendLine("Tracks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in TracksItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static MusicType_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1302,34 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((MusicTypeDataCommon)((IMusicTypeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)MusicType_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.FadeDuration) ?? true))
+            {
+                if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.VNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.VNAM, rhs.VNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.UNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.UNAM, rhs.UNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.Tracks) ?? true))
+            {
+                if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1358,24 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMusicTypeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Flags);
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
+            if (item.FadeDuration is {} FadeDurationitem)
+            {
+                hash.Add(FadeDurationitem);
+            }
+            if (item.VNAM is {} VNAMItem)
+            {
+                hash.Add(VNAMItem);
+            }
+            if (item.UNAM is {} UNAMItem)
+            {
+                hash.Add(UNAMItem);
+            }
+            hash.Add(item.Tracks);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1404,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Tracks is {} TracksItem)
+            {
+                foreach (var item in TracksItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1020,6 +1486,89 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MusicType_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicType_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)MusicType_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MusicType_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicType_FieldIndex.FadeDuration) ?? true))
+            {
+                item.FadeDuration = rhs.FadeDuration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicType_FieldIndex.VNAM) ?? true))
+            {
+                if(rhs.VNAM is {} VNAMrhs)
+                {
+                    item.VNAM = VNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.VNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicType_FieldIndex.UNAM) ?? true))
+            {
+                if(rhs.UNAM is {} UNAMrhs)
+                {
+                    item.UNAM = UNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.UNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicType_FieldIndex.Tracks) ?? true))
+            {
+                errorMask?.PushIndex((int)MusicType_FieldIndex.Tracks);
+                try
+                {
+                    if ((rhs.Tracks != null))
+                    {
+                        item.Tracks = 
+                            rhs.Tracks
+                            .Select(r => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
+                    }
+                    else
+                    {
+                        item.Tracks = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1717,51 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly MusicTypeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IMusicTypeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            EnumBinaryTranslation<MusicType.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            if (item.Data is {} DataItem)
+            {
+                ((MusicTypeDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FadeDuration,
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.VNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.UNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.UNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMusicTrackGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Tracks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.TNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IMusicTypeGetter item,
@@ -1184,10 +1778,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1833,71 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly MusicTypeBinaryCreateTranslation Instance = new MusicTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MUSC;
+        public static ParseResult FillBinaryRecordTypes(
+            IMusicTypeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<MusicType.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)MusicType_FieldIndex.Flags;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    item.Data = Mutagen.Bethesda.Starfield.MusicTypeData.CreateFromBinary(frame: frame);
+                    return (int)MusicType_FieldIndex.Data;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FadeDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MusicType_FieldIndex.FadeDuration;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MusicType_FieldIndex.VNAM;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.UNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MusicType_FieldIndex.UNAM;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Tracks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMusicTrackGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
+                    return (int)MusicType_FieldIndex.Tracks;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1930,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MusicTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MusicTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1945,27 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IMusicType);
 
 
+        #region Flags
+        private int? _FlagsLocation;
+        public MusicType.Flag Flags => _FlagsLocation.HasValue ? (MusicType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MusicType.Flag);
+        #endregion
+        #region Data
+        private RangeInt32? _DataLocation;
+        public IMusicTypeDataGetter? Data => _DataLocation.HasValue ? MusicTypeDataBinaryOverlay.MusicTypeDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region FadeDuration
+        private int? _FadeDurationLocation;
+        public Single? FadeDuration => _FadeDurationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeDurationLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region VNAM
+        private int? _VNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? VNAM => _VNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region UNAM
+        private int? _UNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? UNAM => _UNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2023,66 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)MusicType_FieldIndex.Flags;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)MusicType_FieldIndex.Data;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    _FadeDurationLocation = (stream.Position - offset);
+                    return (int)MusicType_FieldIndex.FadeDuration;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    _VNAMLocation = (stream.Position - offset);
+                    return (int)MusicType_FieldIndex.VNAM;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    _UNAMLocation = (stream.Position - offset);
+                    return (int)MusicType_FieldIndex.UNAM;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Tracks = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IMusicTrackGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IMusicTrackGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)MusicType_FieldIndex.Tracks;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

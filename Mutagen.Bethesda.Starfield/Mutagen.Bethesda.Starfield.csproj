@@ -2263,6 +2263,9 @@
     <Compile Include="Records\Major Records\MoveableStatic.cs">
       <DependentUpon>MoveableStatic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MusicType.cs">
+      <DependentUpon>MusicType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\NavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
@@ -6400,6 +6403,9 @@
     </Compile>
     <Compile Include="Records\Major Records\DefaultObjectUse_Generated.cs">
       <DependentUpon>DefaultObjectManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MusicTypeData_Generated.cs">
+      <DependentUpon>MusicType.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
