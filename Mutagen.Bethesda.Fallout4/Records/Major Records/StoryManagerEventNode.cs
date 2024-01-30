@@ -40,7 +40,7 @@ partial class StoryManagerEventNode
         OnActorAttach = RecordTypeInts.OAAT,
         PlayerConnect = RecordTypeInts.PCON,
         PayFineEvent = RecordTypeInts.PFIN,
-        PlayerRecievesFavor = RecordTypeInts.PRFV,
+        PlayerReceivesFavor = RecordTypeInts.PRFV,
         QuickPlayMatchEvent = RecordTypeInts.QPMT,
         QuestStart = RecordTypeInts.QSTR,
         PlayerRemoveItem = RecordTypeInts.REMP,
