@@ -49,6 +49,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - Ammunition
 - Armor
+- ArtObject
 - BiomeMarker
 - Book
 - CameraShot
@@ -84,6 +85,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - AnimatedObject
 - AObjectModification
 - ArmorModification
+- ArtObject
 - BiomeMarker
 - BodyData
 - BodyPartData
@@ -238,6 +240,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - AddonNode
 - Ammunition
 - Armor
+- ArtObject
 - AudioOcclusionPrimitive
 - BendableSpline
 - BiomeMarker
@@ -375,6 +378,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ArmorModification
 - IModeled
 - INamed
+### ArtObject
+- IKeyworded
+- IModeled
+- IObjectBounded
 ### ASceneAction
 - INamed
 ### AudioOcclusionPrimitive

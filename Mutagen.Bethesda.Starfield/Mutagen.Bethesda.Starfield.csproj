@@ -2071,6 +2071,9 @@
     <Compile Include="Records\Major Records\ArmorAddon.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ArtObject.cs">
+      <DependentUpon>ArtObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ASceneAction.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>

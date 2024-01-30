@@ -2,6 +2,23 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ArtObject" recordType="ARTO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <RefList name="Components" refName="AComponent" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="DNAM" >
+        <Fields>
+          <Enum name="Type" enumName="ArtObject.TypeEnum" byteLength="4" />
+          <UInt32 name="DNAMUnknown" unknown="true" />
+        </Fields>
+      </Data>
+      <FormLink name="EffectShader" refName="EffectShader" recordType="ENAM" />
     </Fields>
   </Object>
 </Loqui>
