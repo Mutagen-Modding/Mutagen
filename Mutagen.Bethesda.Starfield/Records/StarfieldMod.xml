@@ -100,6 +100,8 @@
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="LightingTemplates" refName="LightingTemplate" />
       <Group name="MusicTypes" refName="MusicType" />
+      <Group name="Footsteps" refName="Footstep" />
+      <Group name="FootstepSets" refName="FootstepSet" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />
       <Group name="AimAssistModels" refName="AimAssistModel" />

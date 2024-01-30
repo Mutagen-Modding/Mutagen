@@ -2,6 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Footstep" recordType="FSTP" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <FormLink name="ImpactDataSet" recordType="DATA" refName="ImpactDataSet" nullable="False" />
+      <String name="Tag" recordType="ANAM" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,76 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region WalkFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps
+        {
+            get => this._WalkFootsteps;
+            init => this._WalkFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkFootsteps => _WalkFootsteps;
+        #endregion
+
+        #endregion
+        #region RunFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _RunFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunFootsteps
+        {
+            get => this._RunFootsteps;
+            init => this._RunFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.RunFootsteps => _RunFootsteps;
+        #endregion
+
+        #endregion
+        #region SprintFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _SprintFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps
+        {
+            get => this._SprintFootsteps;
+            init => this._SprintFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.SprintFootsteps => _SprintFootsteps;
+        #endregion
+
+        #endregion
+        #region SneakFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _SneakFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> SneakFootsteps
+        {
+            get => this._SneakFootsteps;
+            init => this._SneakFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.SneakFootsteps => _SneakFootsteps;
+        #endregion
+
+        #endregion
+        #region SwimFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _SwimFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> SwimFootsteps
+        {
+            get => this._SwimFootsteps;
+            init => this._SwimFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.SwimFootsteps => _SwimFootsteps;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +150,11 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -88,7 +164,12 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem WalkFootsteps,
+                TItem RunFootsteps,
+                TItem SprintFootsteps,
+                TItem SneakFootsteps,
+                TItem SwimFootsteps)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +179,11 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SprintFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SneakFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SwimFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +192,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RunFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SprintFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SneakFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SwimFootsteps;
             #endregion
 
             #region Equals
@@ -119,11 +213,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.WalkFootsteps, rhs.WalkFootsteps)) return false;
+                if (!object.Equals(this.RunFootsteps, rhs.RunFootsteps)) return false;
+                if (!object.Equals(this.SprintFootsteps, rhs.SprintFootsteps)) return false;
+                if (!object.Equals(this.SneakFootsteps, rhs.SneakFootsteps)) return false;
+                if (!object.Equals(this.SwimFootsteps, rhs.SwimFootsteps)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.WalkFootsteps);
+                hash.Add(this.RunFootsteps);
+                hash.Add(this.SprintFootsteps);
+                hash.Add(this.SneakFootsteps);
+                hash.Add(this.SwimFootsteps);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +238,61 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.WalkFootsteps != null)
+                {
+                    if (!eval(this.WalkFootsteps.Overall)) return false;
+                    if (this.WalkFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.WalkFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RunFootsteps != null)
+                {
+                    if (!eval(this.RunFootsteps.Overall)) return false;
+                    if (this.RunFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.RunFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SprintFootsteps != null)
+                {
+                    if (!eval(this.SprintFootsteps.Overall)) return false;
+                    if (this.SprintFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.SprintFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SneakFootsteps != null)
+                {
+                    if (!eval(this.SneakFootsteps.Overall)) return false;
+                    if (this.SneakFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.SneakFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SwimFootsteps != null)
+                {
+                    if (!eval(this.SwimFootsteps.Overall)) return false;
+                    if (this.SwimFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.SwimFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +301,61 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.WalkFootsteps != null)
+                {
+                    if (eval(this.WalkFootsteps.Overall)) return true;
+                    if (this.WalkFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.WalkFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RunFootsteps != null)
+                {
+                    if (eval(this.RunFootsteps.Overall)) return true;
+                    if (this.RunFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.RunFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SprintFootsteps != null)
+                {
+                    if (eval(this.SprintFootsteps.Overall)) return true;
+                    if (this.SprintFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.SprintFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SneakFootsteps != null)
+                {
+                    if (eval(this.SneakFootsteps.Overall)) return true;
+                    if (this.SneakFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.SneakFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SwimFootsteps != null)
+                {
+                    if (eval(this.SwimFootsteps.Overall)) return true;
+                    if (this.SwimFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.SwimFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +371,76 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (WalkFootsteps != null)
+                {
+                    obj.WalkFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (WalkFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.WalkFootsteps.Specific = l;
+                        foreach (var item in WalkFootsteps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (RunFootsteps != null)
+                {
+                    obj.RunFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RunFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RunFootsteps.Specific = l;
+                        foreach (var item in RunFootsteps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (SprintFootsteps != null)
+                {
+                    obj.SprintFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SprintFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SprintFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SprintFootsteps.Specific = l;
+                        foreach (var item in SprintFootsteps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (SneakFootsteps != null)
+                {
+                    obj.SneakFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SneakFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SneakFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SneakFootsteps.Specific = l;
+                        foreach (var item in SneakFootsteps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (SwimFootsteps != null)
+                {
+                    obj.SwimFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SwimFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SwimFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SwimFootsteps.Specific = l;
+                        foreach (var item in SwimFootsteps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +459,111 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(FootstepSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.WalkFootsteps?.Overall ?? true)
+                        && WalkFootsteps is {} WalkFootstepsItem)
+                    {
+                        sb.AppendLine("WalkFootsteps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(WalkFootstepsItem.Overall);
+                            if (WalkFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in WalkFootstepsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.RunFootsteps?.Overall ?? true)
+                        && RunFootsteps is {} RunFootstepsItem)
+                    {
+                        sb.AppendLine("RunFootsteps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RunFootstepsItem.Overall);
+                            if (RunFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in RunFootstepsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.SprintFootsteps?.Overall ?? true)
+                        && SprintFootsteps is {} SprintFootstepsItem)
+                    {
+                        sb.AppendLine("SprintFootsteps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SprintFootstepsItem.Overall);
+                            if (SprintFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in SprintFootstepsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.SneakFootsteps?.Overall ?? true)
+                        && SneakFootsteps is {} SneakFootstepsItem)
+                    {
+                        sb.AppendLine("SneakFootsteps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SneakFootstepsItem.Overall);
+                            if (SneakFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in SneakFootstepsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.SwimFootsteps?.Overall ?? true)
+                        && SwimFootsteps is {} SwimFootstepsItem)
+                    {
+                        sb.AppendLine("SwimFootsteps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SwimFootstepsItem.Overall);
+                            if (SwimFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in SwimFootstepsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +574,30 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RunFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SprintFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SneakFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SwimFootsteps;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.WalkFootsteps:
+                        return WalkFootsteps;
+                    case FootstepSet_FieldIndex.RunFootsteps:
+                        return RunFootsteps;
+                    case FootstepSet_FieldIndex.SprintFootsteps:
+                        return SprintFootsteps;
+                    case FootstepSet_FieldIndex.SneakFootsteps:
+                        return SneakFootsteps;
+                    case FootstepSet_FieldIndex.SwimFootsteps:
+                        return SwimFootsteps;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +608,21 @@ namespace Mutagen.Bethesda.Starfield
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.WalkFootsteps:
+                        this.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.RunFootsteps:
+                        this.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.SprintFootsteps:
+                        this.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.SneakFootsteps:
+                        this.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.SwimFootsteps:
+                        this.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +634,21 @@ namespace Mutagen.Bethesda.Starfield
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.WalkFootsteps:
+                        this.WalkFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.RunFootsteps:
+                        this.RunFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.SprintFootsteps:
+                        this.SprintFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.SneakFootsteps:
+                        this.SneakFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.SwimFootsteps:
+                        this.SwimFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +658,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (WalkFootsteps != null) return true;
+                if (RunFootsteps != null) return true;
+                if (SprintFootsteps != null) return true;
+                if (SneakFootsteps != null) return true;
+                if (SwimFootsteps != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +689,106 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (WalkFootsteps is {} WalkFootstepsItem)
+                {
+                    sb.AppendLine("WalkFootsteps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(WalkFootstepsItem.Overall);
+                        if (WalkFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in WalkFootstepsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (RunFootsteps is {} RunFootstepsItem)
+                {
+                    sb.AppendLine("RunFootsteps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RunFootstepsItem.Overall);
+                        if (RunFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in RunFootstepsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (SprintFootsteps is {} SprintFootstepsItem)
+                {
+                    sb.AppendLine("SprintFootsteps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SprintFootstepsItem.Overall);
+                        if (SprintFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in SprintFootstepsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (SneakFootsteps is {} SneakFootstepsItem)
+                {
+                    sb.AppendLine("SneakFootsteps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SneakFootstepsItem.Overall);
+                        if (SneakFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in SneakFootstepsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (SwimFootsteps is {} SwimFootstepsItem)
+                {
+                    sb.AppendLine("SwimFootsteps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SwimFootstepsItem.Overall);
+                        if (SwimFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in SwimFootstepsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +797,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Overall, rhs.WalkFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Specific, rhs.WalkFootsteps?.Specific));
+                ret.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RunFootsteps?.Overall, rhs.RunFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.RunFootsteps?.Specific, rhs.RunFootsteps?.Specific));
+                ret.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Overall, rhs.SprintFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Specific, rhs.SprintFootsteps?.Specific));
+                ret.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SneakFootsteps?.Overall, rhs.SneakFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SneakFootsteps?.Specific, rhs.SneakFootsteps?.Specific));
+                ret.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SwimFootsteps?.Overall, rhs.SwimFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SwimFootsteps?.Specific, rhs.SwimFootsteps?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +823,38 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool WalkFootsteps;
+            public bool RunFootsteps;
+            public bool SprintFootsteps;
+            public bool SneakFootsteps;
+            public bool SwimFootsteps;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.WalkFootsteps = defaultOn;
+                this.RunFootsteps = defaultOn;
+                this.SprintFootsteps = defaultOn;
+                this.SneakFootsteps = defaultOn;
+                this.SwimFootsteps = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((WalkFootsteps, null));
+                ret.Add((RunFootsteps, null));
+                ret.Add((SprintFootsteps, null));
+                ret.Add((SneakFootsteps, null));
+                ret.Add((SwimFootsteps, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +866,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FootstepSetCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetSetterCommon.Instance.RemapLinks(this, mapping);
         public FootstepSet(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -425,9 +997,15 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IFootstepSet :
         IFootstepSetGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFootstepSetInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> RunFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> SneakFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> SwimFootsteps { get; }
     }
 
     public partial interface IFootstepSetInternal :
@@ -441,10 +1019,16 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFootstepSetGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IFootstepSetGetter>,
         IMapsToGetter<IFootstepSetGetter>
     {
         static new ILoquiRegistration StaticRegistration => FootstepSet_Registration.Instance;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SneakFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SwimFootsteps { get; }
 
     }
 
@@ -621,6 +1205,11 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        WalkFootsteps = 7,
+        RunFootsteps = 8,
+        SprintFootsteps = 9,
+        SneakFootsteps = 10,
+        SwimFootsteps = 11,
     }
     #endregion
 
@@ -631,9 +1220,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(FootstepSet.Mask<>);
 
@@ -663,8 +1252,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.FSTS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.FSTS);
+            var all = RecordCollection.Factory(
+                RecordTypes.FSTS,
+                RecordTypes.XCNT);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FootstepSetBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1300,11 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFootstepSetInternal item)
         {
             ClearPartial();
+            item.WalkFootsteps.Clear();
+            item.RunFootsteps.Clear();
+            item.SprintFootsteps.Clear();
+            item.SneakFootsteps.Clear();
+            item.SwimFootsteps.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1322,11 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IFootstepSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.WalkFootsteps.RemapLinks(mapping);
+            obj.RunFootsteps.RemapLinks(mapping);
+            obj.SprintFootsteps.RemapLinks(mapping);
+            obj.SneakFootsteps.RemapLinks(mapping);
+            obj.SwimFootsteps.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1394,26 @@ namespace Mutagen.Bethesda.Starfield
             FootstepSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.WalkFootsteps = item.WalkFootsteps.CollectionEqualsHelper(
+                rhs.WalkFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.RunFootsteps = item.RunFootsteps.CollectionEqualsHelper(
+                rhs.RunFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.SprintFootsteps = item.SprintFootsteps.CollectionEqualsHelper(
+                rhs.SprintFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.SneakFootsteps = item.SneakFootsteps.CollectionEqualsHelper(
+                rhs.SneakFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.SwimFootsteps = item.SwimFootsteps.CollectionEqualsHelper(
+                rhs.SwimFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1463,76 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.WalkFootsteps?.Overall ?? true)
+            {
+                sb.AppendLine("WalkFootsteps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.WalkFootsteps)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.RunFootsteps?.Overall ?? true)
+            {
+                sb.AppendLine("RunFootsteps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.RunFootsteps)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.SprintFootsteps?.Overall ?? true)
+            {
+                sb.AppendLine("SprintFootsteps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SprintFootsteps)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.SneakFootsteps?.Overall ?? true)
+            {
+                sb.AppendLine("SneakFootsteps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SneakFootsteps)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.SwimFootsteps?.Overall ?? true)
+            {
+                sb.AppendLine("SwimFootsteps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SwimFootsteps)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static FootstepSet_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1583,26 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
+            {
+                if (!lhs.WalkFootsteps.SequenceEqualNullable(rhs.WalkFootsteps)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunFootsteps) ?? true))
+            {
+                if (!lhs.RunFootsteps.SequenceEqualNullable(rhs.RunFootsteps)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SprintFootsteps) ?? true))
+            {
+                if (!lhs.SprintFootsteps.SequenceEqualNullable(rhs.SprintFootsteps)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SneakFootsteps) ?? true))
+            {
+                if (!lhs.SneakFootsteps.SequenceEqualNullable(rhs.SneakFootsteps)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SwimFootsteps) ?? true))
+            {
+                if (!lhs.SwimFootsteps.SequenceEqualNullable(rhs.SwimFootsteps)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1631,11 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IFootstepSetGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.WalkFootsteps);
+            hash.Add(item.RunFootsteps);
+            hash.Add(item.SprintFootsteps);
+            hash.Add(item.SneakFootsteps);
+            hash.Add(item.SwimFootsteps);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1664,26 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.WalkFootsteps)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.RunFootsteps)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.SprintFootsteps)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.SneakFootsteps)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.SwimFootsteps)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1020,6 +1759,101 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkFootsteps);
+                try
+                {
+                    item.WalkFootsteps.SetTo(
+                        rhs.WalkFootsteps
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunFootsteps);
+                try
+                {
+                    item.RunFootsteps.SetTo(
+                        rhs.RunFootsteps
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SprintFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.SprintFootsteps);
+                try
+                {
+                    item.SprintFootsteps.SetTo(
+                        rhs.SprintFootsteps
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SneakFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.SneakFootsteps);
+                try
+                {
+                    item.SneakFootsteps.SetTo(
+                        rhs.SneakFootsteps
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SwimFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.SwimFootsteps);
+                try
+                {
+                    item.SwimFootsteps.SetTo(
+                        rhs.SwimFootsteps
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2002,42 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly FootstepSetBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IFootstepSetGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IFootstepSetGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FootstepSetBinaryWriteTranslation.WriteBinaryCount(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCountCustom(
+            MutagenWriter writer,
+            IFootstepSetGetter item);
+
+        public static void WriteBinaryCount(
+            MutagenWriter writer,
+            IFootstepSetGetter item)
+        {
+            WriteBinaryCountCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IFootstepSetGetter item,
@@ -1179,15 +2049,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2109,51 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly FootstepSetBinaryCreateTranslation Instance = new FootstepSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FSTS;
+        public static void FillBinaryStructs(
+            IFootstepSetInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IFootstepSetInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.XCNT:
+                {
+                    return FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial ParseResult FillBinaryCountCustom(
+            MutagenFrame frame,
+            IFootstepSetInternal item,
+            PreviousParse lastParsed);
+
     }
 
 }
@@ -1269,6 +2186,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FootstepSetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FootstepSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2201,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFootstepSet);
 
 
+        #region Count
+        public partial ParseResult CountCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2264,36 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.XCNT:
+                {
+                    return CountCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

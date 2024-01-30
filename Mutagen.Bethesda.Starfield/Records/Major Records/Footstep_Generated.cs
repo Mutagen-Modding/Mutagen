@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,19 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ImpactDataSet
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region Tag
+        public String Tag { get; set; } = string.Empty;
+        #endregion
 
         #region To String
 
@@ -79,6 +93,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ImpactDataSet = initialValue;
+                this.Tag = initialValue;
             }
 
             public Mask(
@@ -88,7 +104,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ImpactDataSet,
+                TItem Tag)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +116,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ImpactDataSet = ImpactDataSet;
+                this.Tag = Tag;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +126,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem ImpactDataSet;
+            public TItem Tag;
             #endregion
 
             #region Equals
@@ -119,11 +144,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.Tag, rhs.Tag)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.Tag);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +163,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.Tag)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +173,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.Tag)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +190,8 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.Tag = eval(this.Tag);
             }
             #endregion
 
@@ -175,6 +210,14 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Footstep.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.Tag ?? true)
+                    {
+                        sb.AppendItem(Tag, "Tag");
+                    }
                 }
             }
             #endregion
@@ -185,12 +228,21 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? ImpactDataSet;
+            public Exception? Tag;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Footstep_FieldIndex enu = (Footstep_FieldIndex)index;
                 switch (enu)
                 {
+                    case Footstep_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case Footstep_FieldIndex.Tag:
+                        return Tag;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +253,12 @@ namespace Mutagen.Bethesda.Starfield
                 Footstep_FieldIndex enu = (Footstep_FieldIndex)index;
                 switch (enu)
                 {
+                    case Footstep_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case Footstep_FieldIndex.Tag:
+                        this.Tag = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +270,12 @@ namespace Mutagen.Bethesda.Starfield
                 Footstep_FieldIndex enu = (Footstep_FieldIndex)index;
                 switch (enu)
                 {
+                    case Footstep_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case Footstep_FieldIndex.Tag:
+                        this.Tag = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +285,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (Tag != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +313,12 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(Tag, "Tag");
+                }
             }
             #endregion
 
@@ -255,6 +327,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.Tag = this.Tag.Combine(rhs.Tag);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +350,29 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool ImpactDataSet;
+            public bool Tag;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ImpactDataSet = defaultOn;
+                this.Tag = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ImpactDataSet, null));
+                ret.Add((Tag, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +384,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Footstep_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FootstepCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetterCommon.Instance.RemapLinks(this, mapping);
         public Footstep(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -425,9 +515,12 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IFootstep :
         IFootstepGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFootstepInternal>,
         IStarfieldMajorRecordInternal
     {
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new String Tag { get; set; }
     }
 
     public partial interface IFootstepInternal :
@@ -441,10 +534,13 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFootstepGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IFootstepGetter>,
         IMapsToGetter<IFootstepGetter>
     {
         static new ILoquiRegistration StaticRegistration => Footstep_Registration.Instance;
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
+        String Tag { get; }
 
     }
 
@@ -621,6 +717,8 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ImpactDataSet = 7,
+        Tag = 8,
     }
     #endregion
 
@@ -631,9 +729,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Footstep.Mask<>);
 
@@ -663,8 +761,14 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.FSTP);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.FSTP);
+            var all = RecordCollection.Factory(
+                RecordTypes.FSTP,
+                RecordTypes.DATA,
+                RecordTypes.ANAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FootstepBinaryWriteTranslation);
         #region Interface
@@ -706,6 +810,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFootstepInternal item)
         {
             ClearPartial();
+            item.ImpactDataSet.Clear();
+            item.Tag = string.Empty;
             base.Clear(item);
         }
         
@@ -723,6 +829,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IFootstep obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.ImpactDataSet.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +897,8 @@ namespace Mutagen.Bethesda.Starfield
             Footstep.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.Tag = string.Equals(item.Tag, rhs.Tag);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +948,14 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+            }
+            if (printMask?.Tag ?? true)
+            {
+                sb.AppendItem(item.Tag, "Tag");
+            }
         }
         
         public static Footstep_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1006,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
+            {
+                if (!string.Equals(lhs.Tag, rhs.Tag)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1042,8 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IFootstepGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.Tag);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -946,6 +1073,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
             yield break;
         }
         
@@ -1020,6 +1148,14 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
+            {
+                item.Tag = rhs.Tag;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1304,26 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly FootstepBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IFootstepGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ImpactDataSet,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Tag,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             IFootstepGetter item,
@@ -1184,10 +1340,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1395,44 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly FootstepBinaryCreateTranslation Instance = new FootstepBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FSTP;
+        public static ParseResult FillBinaryRecordTypes(
+            IFootstepInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Footstep_FieldIndex.ImpactDataSet;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Tag = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Footstep_FieldIndex.Tag;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1465,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FootstepCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FootstepBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1480,14 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFootstep);
 
 
+        #region ImpactDataSet
+        private int? _ImpactDataSetLocation;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region Tag
+        private int? _TagLocation;
+        public String Tag => _TagLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TagLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1545,39 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _ImpactDataSetLocation = (stream.Position - offset);
+                    return (int)Footstep_FieldIndex.ImpactDataSet;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _TagLocation = (stream.Position - offset);
+                    return (int)Footstep_FieldIndex.Tag;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
