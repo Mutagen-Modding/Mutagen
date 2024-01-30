@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="Fallout4MajorRecord">
+  <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Data" refName="AColorRecordData" binary="Custom" recordType="CNAM" nullable="False" defaultType="ColorData" />

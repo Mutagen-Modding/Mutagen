@@ -14,6 +14,12 @@ namespace Mutagen.Bethesda.Fallout4;
 partial class ColorRecord
 {
     [Flags]
+    public enum MajorFlag
+    {
+        NonPlayable = 0x02,
+    }
+    
+    [Flags]
     public enum Flag
     {
         Playable = 0x01,
