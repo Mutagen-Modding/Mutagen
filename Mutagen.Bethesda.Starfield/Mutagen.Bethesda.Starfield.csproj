@@ -2074,6 +2074,9 @@
     <Compile Include="Records\Major Records\ASceneAction.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AStoryManagerNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -2463,6 +2466,12 @@
     </Compile>
     <Compile Include="Records\Major Records\StaticCollection.cs">
       <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerEventNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuestNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Subgraph.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -6409,6 +6418,21 @@
     </Compile>
     <Compile Include="Records\Major Records\MusicTypeData_Generated.cs">
       <DependentUpon>MusicType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AStoryManagerNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerBranchNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuestNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuest_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerEventNode_Generated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

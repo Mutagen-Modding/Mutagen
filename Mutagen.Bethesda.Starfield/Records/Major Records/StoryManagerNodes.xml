@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AStoryManagerNode" abstract="true" baseClass="StarfieldMajorRecord" objType="Record">
+    <Fields>
+      <FormLink name="Parent" recordType="PNAM" refName="AStoryManagerNode" />
+      <FormLink name="PreviousSibling" recordType="SNAM" refName="AStoryManagerNode" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerBranchNode" recordType="SMBN" baseClass="AStoryManagerNode" objType="Record">
+    <Fields>
+      <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
+      <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerQuestNode" recordType="SMQN" baseClass="AStoryManagerNode" objType="Record">
+    <Fields>
+      <Data recordType="DNAM">
+        <Fields>
+          <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="2" />
+          <Enum name="QuestFlags" enumName="StoryManagerQuestNode.QuestFlag" byteLength="2" />
+        </Fields>
+      </Data>
+      <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
+      <UInt32 name="MaxNumQuestsToRun" recordType="MNAM" />
+      <Float name="HoursUntilReset" recordType="HNAM" />
+      <RefList name="Quests" counterRecType="QNAM" nullable="False" refName="StoryManagerQuest" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerQuest" objType="Subrecord">
+    <Fields>
+      <FormLink name="Quest" recordType="NNAM" refName="Quest" />
+      <Float name="HoursUntilReset" recordType="RNAM" divisor="24" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerEventNode" recordType="SMEN" baseClass="AStoryManagerNode" objType="Record">
+    <Fields>
+      <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
+      <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
+      <Enum name="Type" enumName="StoryManagerEventNode.Types" byteLength="4" recordType="ENAM" />
+    </Fields>
+    <AdditionalContainedRecordType>ADBO</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ADCR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ADIA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AFAV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AHEL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AIPL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AOBJ</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ARRT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ASSU</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>BRIB</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CAST</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CHRR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CLOC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CLRL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CRFT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CURE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>DEAD</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ESJA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FLAT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>HACK</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ILOC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>INFC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>INTM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>IRON</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>JAIL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>KILL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LCLD</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LCPG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LEVL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LOCK</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NVPE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>OAAT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PCON</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PFIN</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PRFV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>QPMT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>QSTR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>REMP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SCPT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SKIL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>STIJ</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>TMEE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>TRES</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LAND</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>DOCK</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>XPLL</AdditionalContainedRecordType>
+  </Object>
+</Loqui>

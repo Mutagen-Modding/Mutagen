@@ -102,6 +102,9 @@
       <Group name="MusicTypes" refName="MusicType" />
       <Group name="Footsteps" refName="Footstep" />
       <Group name="FootstepSets" refName="FootstepSet" />
+      <Group name="StoryManagerBranchNodes" refName="StoryManagerBranchNode" />
+      <Group name="StoryManagerQuestNodes" refName="StoryManagerQuestNode" />
+      <Group name="StoryManagerEventNodes" refName="StoryManagerEventNode" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />
       <Group name="AimAssistModels" refName="AimAssistModel" />
