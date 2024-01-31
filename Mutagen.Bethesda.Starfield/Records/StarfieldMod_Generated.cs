@@ -169,6 +169,7 @@ namespace Mutagen.Bethesda.Starfield
             _ReferenceGroups_Object = new StarfieldGroup<ReferenceGroup>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
+            _MeleeAimAssistModels_Object = new StarfieldGroup<MeleeAimAssistModel>(this);
             _Layers_Object = new StarfieldGroup<Layer>(this);
             _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
@@ -958,6 +959,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAimAssistModelGetter> IStarfieldModGetter.AimAssistModels => _AimAssistModels_Object;
         #endregion
+        #region MeleeAimAssistModels
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<MeleeAimAssistModel> _MeleeAimAssistModels_Object;
+        public StarfieldGroup<MeleeAimAssistModel> MeleeAimAssistModels => _MeleeAimAssistModels_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IMeleeAimAssistModelGetter> IStarfieldModGetter.MeleeAimAssistModels => _MeleeAimAssistModels_Object;
+        #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Layer> _Layers_Object;
@@ -1205,6 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ReferenceGroups = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.MeleeAimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1332,6 +1341,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ReferenceGroups,
                 TItem AimModels,
                 TItem AimAssistModels,
+                TItem MeleeAimAssistModels,
                 TItem Layers,
                 TItem ConstructibleObjects,
                 TItem ObjectModifications,
@@ -1457,6 +1467,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ReferenceGroups = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ReferenceGroups, new StarfieldGroup.Mask<TItem>(ReferenceGroups));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimModels, new StarfieldGroup.Mask<TItem>(AimModels));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimAssistModels, new StarfieldGroup.Mask<TItem>(AimAssistModels));
+                this.MeleeAimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MeleeAimAssistModels, new StarfieldGroup.Mask<TItem>(MeleeAimAssistModels));
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Layers, new StarfieldGroup.Mask<TItem>(Layers));
                 this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ObjectModifications, new StarfieldGroup.Mask<TItem>(ObjectModifications));
@@ -1592,6 +1603,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ReferenceGroups { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimAssistModels { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MeleeAimAssistModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Layers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ObjectModifications { get; set; }
@@ -1728,6 +1740,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ReferenceGroups, rhs.ReferenceGroups)) return false;
                 if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
                 if (!object.Equals(this.AimAssistModels, rhs.AimAssistModels)) return false;
+                if (!object.Equals(this.MeleeAimAssistModels, rhs.MeleeAimAssistModels)) return false;
                 if (!object.Equals(this.Layers, rhs.Layers)) return false;
                 if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
@@ -1857,6 +1870,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ReferenceGroups);
                 hash.Add(this.AimModels);
                 hash.Add(this.AimAssistModels);
+                hash.Add(this.MeleeAimAssistModels);
                 hash.Add(this.Layers);
                 hash.Add(this.ConstructibleObjects);
                 hash.Add(this.ObjectModifications);
@@ -2428,6 +2442,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.AimAssistModels.Overall)) return false;
                     if (this.AimAssistModels.Specific != null && !this.AimAssistModels.Specific.All(eval)) return false;
+                }
+                if (MeleeAimAssistModels != null)
+                {
+                    if (!eval(this.MeleeAimAssistModels.Overall)) return false;
+                    if (this.MeleeAimAssistModels.Specific != null && !this.MeleeAimAssistModels.Specific.All(eval)) return false;
                 }
                 if (Layers != null)
                 {
@@ -3056,6 +3075,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AimAssistModels.Overall)) return true;
                     if (this.AimAssistModels.Specific != null && this.AimAssistModels.Specific.Any(eval)) return true;
                 }
+                if (MeleeAimAssistModels != null)
+                {
+                    if (eval(this.MeleeAimAssistModels.Overall)) return true;
+                    if (this.MeleeAimAssistModels.Specific != null && this.MeleeAimAssistModels.Specific.Any(eval)) return true;
+                }
                 if (Layers != null)
                 {
                     if (eval(this.Layers.Overall)) return true;
@@ -3250,6 +3274,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ReferenceGroups = this.ReferenceGroups == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ReferenceGroups.Overall), this.ReferenceGroups.Specific?.Translate(eval));
                 obj.AimModels = this.AimModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
                 obj.AimAssistModels = this.AimAssistModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimAssistModels.Overall), this.AimAssistModels.Specific?.Translate(eval));
+                obj.MeleeAimAssistModels = this.MeleeAimAssistModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MeleeAimAssistModels.Overall), this.MeleeAimAssistModels.Specific?.Translate(eval));
                 obj.Layers = this.Layers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Layers.Overall), this.Layers.Specific?.Translate(eval));
                 obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
                 obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
@@ -3722,6 +3747,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AimAssistModels?.Print(sb);
                     }
+                    if (printMask?.MeleeAimAssistModels?.Overall ?? true)
+                    {
+                        MeleeAimAssistModels?.Print(sb);
+                    }
                     if (printMask?.Layers?.Overall ?? true)
                     {
                         Layers?.Print(sb);
@@ -3912,6 +3941,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ReferenceGroup.ErrorMask>?>? ReferenceGroups;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>? AimModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistModel.ErrorMask>?>? AimAssistModels;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<MeleeAimAssistModel.ErrorMask>?>? MeleeAimAssistModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Layer.ErrorMask>?>? Layers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
@@ -4154,6 +4184,8 @@ namespace Mutagen.Bethesda.Starfield
                         return AimModels;
                     case StarfieldMod_FieldIndex.AimAssistModels:
                         return AimAssistModels;
+                    case StarfieldMod_FieldIndex.MeleeAimAssistModels:
+                        return MeleeAimAssistModels;
                     case StarfieldMod_FieldIndex.Layers:
                         return Layers;
                     case StarfieldMod_FieldIndex.ConstructibleObjects:
@@ -4521,6 +4553,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.AimAssistModels:
                         this.AimAssistModels = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistModel.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.MeleeAimAssistModels:
+                        this.MeleeAimAssistModels = new MaskItem<Exception?, StarfieldGroup.ErrorMask<MeleeAimAssistModel.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Layers:
                         this.Layers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Layer.ErrorMask>?>(ex, null);
@@ -4904,6 +4939,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AimAssistModels:
                         this.AimAssistModels = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistModel.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.MeleeAimAssistModels:
+                        this.MeleeAimAssistModels = (MaskItem<Exception?, StarfieldGroup.ErrorMask<MeleeAimAssistModel.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Layers:
                         this.Layers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Layer.ErrorMask>?>?)obj;
                         break;
@@ -5064,6 +5102,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ReferenceGroups != null) return true;
                 if (AimModels != null) return true;
                 if (AimAssistModels != null) return true;
+                if (MeleeAimAssistModels != null) return true;
                 if (Layers != null) return true;
                 if (ConstructibleObjects != null) return true;
                 if (ObjectModifications != null) return true;
@@ -5213,6 +5252,7 @@ namespace Mutagen.Bethesda.Starfield
                 ReferenceGroups?.Print(sb);
                 AimModels?.Print(sb);
                 AimAssistModels?.Print(sb);
+                MeleeAimAssistModels?.Print(sb);
                 Layers?.Print(sb);
                 ConstructibleObjects?.Print(sb);
                 ObjectModifications?.Print(sb);
@@ -5345,6 +5385,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ReferenceGroups = this.ReferenceGroups.Combine(rhs.ReferenceGroups, (l, r) => l.Combine(r));
                 ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
                 ret.AimAssistModels = this.AimAssistModels.Combine(rhs.AimAssistModels, (l, r) => l.Combine(r));
+                ret.MeleeAimAssistModels = this.MeleeAimAssistModels.Combine(rhs.MeleeAimAssistModels, (l, r) => l.Combine(r));
                 ret.Layers = this.Layers.Combine(rhs.Layers, (l, r) => l.Combine(r));
                 ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
@@ -5492,6 +5533,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<ReferenceGroup.TranslationMask>? ReferenceGroups;
             public StarfieldGroup.TranslationMask<AimModel.TranslationMask>? AimModels;
             public StarfieldGroup.TranslationMask<AimAssistModel.TranslationMask>? AimAssistModels;
+            public StarfieldGroup.TranslationMask<MeleeAimAssistModel.TranslationMask>? MeleeAimAssistModels;
             public StarfieldGroup.TranslationMask<Layer.TranslationMask>? Layers;
             public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
             public StarfieldGroup.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
@@ -5640,6 +5682,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ReferenceGroups != null ? ReferenceGroups.OnOverall : DefaultOn, ReferenceGroups?.GetCrystal()));
                 ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
                 ret.Add((AimAssistModels != null ? AimAssistModels.OnOverall : DefaultOn, AimAssistModels?.GetCrystal()));
+                ret.Add((MeleeAimAssistModels != null ? MeleeAimAssistModels.OnOverall : DefaultOn, MeleeAimAssistModels?.GetCrystal()));
                 ret.Add((Layers != null ? Layers.OnOverall : DefaultOn, Layers?.GetCrystal()));
                 ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
                 ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
@@ -5809,6 +5852,7 @@ namespace Mutagen.Bethesda.Starfield
             _ReferenceGroups_Object = new StarfieldGroup<ReferenceGroup>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
+            _MeleeAimAssistModels_Object = new StarfieldGroup<MeleeAimAssistModel>(this);
             _Layers_Object = new StarfieldGroup<Layer>(this);
             _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
@@ -6268,6 +6312,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.AimAssistModels.RecordCache.Set(rhsMod.AimAssistModels.RecordCache.Items);
             }
+            if (mask?.MeleeAimAssistModels ?? true)
+            {
+                this.MeleeAimAssistModels.RecordCache.Set(rhsMod.MeleeAimAssistModels.RecordCache.Items);
+            }
             if (mask?.Layers ?? true)
             {
                 this.Layers.RecordCache.Set(rhsMod.Layers.RecordCache.Items);
@@ -6443,6 +6491,7 @@ namespace Mutagen.Bethesda.Starfield
             count += ReferenceGroups.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MeleeAimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
@@ -6840,6 +6889,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<ReferenceGroup> ReferenceGroups { get; }
         new StarfieldGroup<AimModel> AimModels { get; }
         new StarfieldGroup<AimAssistModel> AimAssistModels { get; }
+        new StarfieldGroup<MeleeAimAssistModel> MeleeAimAssistModels { get; }
         new StarfieldGroup<Layer> Layers { get; }
         new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
         new StarfieldGroup<AObjectModification> ObjectModifications { get; }
@@ -6983,6 +7033,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IReferenceGroupGetter> ReferenceGroups { get; }
         IStarfieldGroupGetter<IAimModelGetter> AimModels { get; }
         IStarfieldGroupGetter<IAimAssistModelGetter> AimAssistModels { get; }
+        IStarfieldGroupGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModels { get; }
         IStarfieldGroupGetter<ILayerGetter> Layers { get; }
         IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
         IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
@@ -7689,20 +7740,21 @@ namespace Mutagen.Bethesda.Starfield
         ReferenceGroups = 107,
         AimModels = 108,
         AimAssistModels = 109,
-        Layers = 110,
-        ConstructibleObjects = 111,
-        ObjectModifications = 112,
-        InstanceNamingRules = 113,
-        AttractionRules = 114,
-        Resources = 115,
-        BiomeSwaps = 116,
-        SnapTemplates = 117,
-        Planets = 118,
-        ConditionRecords = 119,
-        SurfacePatternStyles = 120,
-        TerminalMenus = 121,
-        LegendaryItems = 122,
-        ActorValueModulations = 123,
+        MeleeAimAssistModels = 110,
+        Layers = 111,
+        ConstructibleObjects = 112,
+        ObjectModifications = 113,
+        InstanceNamingRules = 114,
+        AttractionRules = 115,
+        Resources = 116,
+        BiomeSwaps = 117,
+        SnapTemplates = 118,
+        Planets = 119,
+        ConditionRecords = 120,
+        SurfacePatternStyles = 121,
+        TerminalMenus = 122,
+        LegendaryItems = 123,
+        ActorValueModulations = 124,
     }
     #endregion
 
@@ -7713,9 +7765,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 124;
+        public const ushort AdditionalFieldCount = 125;
 
-        public const ushort FieldCount = 124;
+        public const ushort FieldCount = 125;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -7890,6 +7942,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ReferenceGroups.Clear();
             item.AimModels.Clear();
             item.AimAssistModels.Clear();
+            item.MeleeAimAssistModels.Clear();
             item.Layers.Clear();
             item.ConstructibleObjects.Clear();
             item.ObjectModifications.Clear();
@@ -8155,6 +8208,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ReferenceGroups.Remove(keys);
             obj.AimModels.Remove(keys);
             obj.AimAssistModels.Remove(keys);
+            obj.MeleeAimAssistModels.Remove(keys);
             obj.Layers.Remove(keys);
             obj.ConstructibleObjects.Remove(keys);
             obj.ObjectModifications.Remove(keys);
@@ -9069,6 +9123,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAimAssistModel":
                 case "IAimAssistModelInternal":
                     obj.AimAssistModels.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MeleeAimAssistModel":
+                case "IMeleeAimAssistModelGetter":
+                case "IMeleeAimAssistModel":
+                case "IMeleeAimAssistModelInternal":
+                    obj.MeleeAimAssistModels.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -10221,6 +10283,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ReferenceGroups = MaskItemExt.Factory(item.ReferenceGroups.GetEqualsMask(rhs.ReferenceGroups, include), include);
             ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
             ret.AimAssistModels = MaskItemExt.Factory(item.AimAssistModels.GetEqualsMask(rhs.AimAssistModels, include), include);
+            ret.MeleeAimAssistModels = MaskItemExt.Factory(item.MeleeAimAssistModels.GetEqualsMask(rhs.MeleeAimAssistModels, include), include);
             ret.Layers = MaskItemExt.Factory(item.Layers.GetEqualsMask(rhs.Layers, include), include);
             ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
             ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
@@ -10718,6 +10781,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.AimAssistModels?.Overall ?? true)
             {
                 item.AimAssistModels?.Print(sb, "AimAssistModels");
+            }
+            if (printMask?.MeleeAimAssistModels?.Overall ?? true)
+            {
+                item.MeleeAimAssistModels?.Print(sb, "MeleeAimAssistModels");
             }
             if (printMask?.Layers?.Overall ?? true)
             {
@@ -11664,6 +11731,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAimAssistModelsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MeleeAimAssistModels) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MeleeAimAssistModels, rhs.MeleeAimAssistModels, out var lhsMeleeAimAssistModels, out var rhsMeleeAimAssistModels, out var isMeleeAimAssistModelsEqual))
+                {
+                    if (!object.Equals(lhsMeleeAimAssistModels, rhsMeleeAimAssistModels)) return false;
+                }
+                else if (!isMeleeAimAssistModelsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Layers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Layers, rhs.Layers, out var lhsLayers, out var rhsLayers, out var isLayersEqual))
@@ -11892,6 +11967,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ReferenceGroups);
             hash.Add(item.AimModels);
             hash.Add(item.AimAssistModels);
+            hash.Add(item.MeleeAimAssistModels);
             hash.Add(item.Layers);
             hash.Add(item.ConstructibleObjects);
             hash.Add(item.ObjectModifications);
@@ -12468,6 +12544,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAimAssistModel":
                 case "IAimAssistModelInternal":
                     return obj.AimAssistModels;
+                case "MeleeAimAssistModel":
+                case "IMeleeAimAssistModelGetter":
+                case "IMeleeAimAssistModel":
+                case "IMeleeAimAssistModelInternal":
+                    return obj.MeleeAimAssistModels;
                 case "Layer":
                 case "ILayerGetter":
                 case "ILayer":
@@ -12564,7 +12645,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[123];
+            Stream[] outputStreams = new Stream[124];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -12675,20 +12756,21 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.ReferenceGroups, 106, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AimModels, 107, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 108, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 109, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 110, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 111, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 112, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 113, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 114, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 115, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 116, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 117, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 118, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 119, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 120, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 121, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 122, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MeleeAimAssistModels, 109, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 110, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 111, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 112, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 113, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 114, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 115, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 116, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 117, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 118, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 119, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 120, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 121, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 122, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 123, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -13601,6 +13683,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.AimAssistModels.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MeleeAimAssistModels.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -14663,6 +14749,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAimAssistModel":
                 case "IAimAssistModelInternal":
                     foreach (var item in obj.AimAssistModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MeleeAimAssistModel":
+                case "IMeleeAimAssistModelGetter":
+                case "IMeleeAimAssistModel":
+                case "IMeleeAimAssistModelInternal":
+                    foreach (var item in obj.MeleeAimAssistModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15920,6 +16015,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.AimAssistModels,
                 groupGetter: (m) => m.AimAssistModels))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MeleeAimAssistModel, IMeleeAimAssistModelGetter>(
+                srcGroup: obj.MeleeAimAssistModels,
+                type: typeof(IMeleeAimAssistModelGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MeleeAimAssistModels,
+                groupGetter: (m) => m.MeleeAimAssistModels))
             {
                 yield return item;
             }
@@ -17588,6 +17692,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.AimAssistModels,
                         groupGetter: (m) => m.AimAssistModels))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MeleeAimAssistModel":
+                case "IMeleeAimAssistModelGetter":
+                case "IMeleeAimAssistModel":
+                case "IMeleeAimAssistModelInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MeleeAimAssistModel, IMeleeAimAssistModelGetter>(
+                        srcGroup: obj.MeleeAimAssistModels,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MeleeAimAssistModels,
+                        groupGetter: (m) => m.MeleeAimAssistModels))
                     {
                         yield return item;
                     }
@@ -20650,6 +20768,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MeleeAimAssistModels) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.MeleeAimAssistModels);
+                try
+                {
+                    item.MeleeAimAssistModels.DeepCopyIn(
+                        rhs: rhs.MeleeAimAssistModels,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.MeleeAimAssistModels));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Layers) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Layers);
@@ -21129,6 +21267,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool ReferenceGroups;
         public bool AimModels;
         public bool AimAssistModels;
+        public bool MeleeAimAssistModels;
         public bool Layers;
         public bool ConstructibleObjects;
         public bool ObjectModifications;
@@ -21257,6 +21396,7 @@ namespace Mutagen.Bethesda.Starfield
             ReferenceGroups = defaultValue;
             AimModels = defaultValue;
             AimAssistModels = defaultValue;
+            MeleeAimAssistModels = defaultValue;
             Layers = defaultValue;
             ConstructibleObjects = defaultValue;
             ObjectModifications = defaultValue;
@@ -22525,6 +22665,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AimAssistModelsItem).BinaryWriteTranslator).Write<IAimAssistModelGetter>(
                         item: AimAssistModelsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MeleeAimAssistModels ?? true)
+            {
+                var MeleeAimAssistModelsItem = item.MeleeAimAssistModels;
+                if (MeleeAimAssistModelsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)MeleeAimAssistModelsItem).BinaryWriteTranslator).Write<IMeleeAimAssistModelGetter>(
+                        item: MeleeAimAssistModelsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -24269,6 +24420,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.AimAssistModels;
                 }
+                case RecordTypeInts.MAAM:
+                {
+                    if (importMask?.MeleeAimAssistModels ?? true)
+                    {
+                        item.MeleeAimAssistModels.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.MeleeAimAssistModels;
+                }
                 case RecordTypeInts.LAYR:
                 {
                     if (importMask?.Layers ?? true)
@@ -25181,6 +25346,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAimAssistModelGetter>? _AimAssistModels => _AimAssistModelsLocations != null ? StarfieldGroupBinaryOverlay<IAimAssistModelGetter>.StarfieldGroupFactory(_stream, _AimAssistModelsLocations, _package) : default;
         public IStarfieldGroupGetter<IAimAssistModelGetter> AimAssistModels => _AimAssistModels ?? new StarfieldGroup<AimAssistModel>(this);
         #endregion
+        #region MeleeAimAssistModels
+        private List<RangeInt64>? _MeleeAimAssistModelsLocations;
+        private IStarfieldGroupGetter<IMeleeAimAssistModelGetter>? _MeleeAimAssistModels => _MeleeAimAssistModelsLocations != null ? StarfieldGroupBinaryOverlay<IMeleeAimAssistModelGetter>.StarfieldGroupFactory(_stream, _MeleeAimAssistModelsLocations, _package) : default;
+        public IStarfieldGroupGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModels => _MeleeAimAssistModels ?? new StarfieldGroup<MeleeAimAssistModel>(this);
+        #endregion
         #region Layers
         private List<RangeInt64>? _LayersLocations;
         private IStarfieldGroupGetter<ILayerGetter>? _Layers => _LayersLocations != null ? StarfieldGroupBinaryOverlay<ILayerGetter>.StarfieldGroupFactory(_stream, _LayersLocations, _package) : default;
@@ -25997,6 +26167,12 @@ namespace Mutagen.Bethesda.Starfield
                     _AimAssistModelsLocations ??= new();
                     _AimAssistModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AimAssistModels;
+                }
+                case RecordTypeInts.MAAM:
+                {
+                    _MeleeAimAssistModelsLocations ??= new();
+                    _MeleeAimAssistModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.MeleeAimAssistModels;
                 }
                 case RecordTypeInts.LAYR:
                 {

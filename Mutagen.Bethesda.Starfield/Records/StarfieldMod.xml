@@ -116,6 +116,7 @@
       <Group name="ReferenceGroups" refName="ReferenceGroup" />
       <Group name="AimModels" refName="AimModel" />
       <Group name="AimAssistModels" refName="AimAssistModel" />
+      <Group name="MeleeAimAssistModels" refName="MeleeAimAssistModel" />
       <Group name="Layers" refName="Layer" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="ObjectModifications" refName="AObjectModification" />

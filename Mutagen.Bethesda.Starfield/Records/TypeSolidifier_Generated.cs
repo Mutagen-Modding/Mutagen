@@ -2556,9 +2556,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MeleeAimAssistModel</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter> MeleeAimAssistModel(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter> MeleeAimAssistModel(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMeleeAimAssistModelGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2568,9 +2568,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on MeleeAimAssistModel</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter> MeleeAimAssistModel(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter> MeleeAimAssistModel(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IMeleeAimAssistModelGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMeleeAimAssistModel, IMeleeAimAssistModelGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
