@@ -715,6 +715,7 @@ public partial class RecordTypeInts
     public const int QTYP = 0x50595451;
     public const int QUAL = 0x4C415551;
     public const int QUST = 0x54535551;
+    public const int RABG = 0x47424152;
     public const int RACE = 0x45434152;
     public const int RBPC = 0x43504252;
     public const int RCLR = 0x524C4352;

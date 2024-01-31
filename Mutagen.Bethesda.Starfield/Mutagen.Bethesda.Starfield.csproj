@@ -2452,6 +2452,9 @@
     <Compile Include="Records\Major Records\Resource.cs">
       <DependentUpon>Resource.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ReverbParameters.cs">
+      <DependentUpon>ReverbParameters.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Scene.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
