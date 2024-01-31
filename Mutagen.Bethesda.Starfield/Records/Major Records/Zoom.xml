@@ -2,6 +2,19 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Zoom" recordType="ZOOM" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Data recordType="ZNAM" >
+        <Fields>
+          <FormLink name="ImagespaceModifier" refName="ImageSpaceAdapter" />
+          <P3Float name="CameraOffset" />
+          <Float name="FovMult" />
+          <Enum name="Overlay" enumName="Zoom.OverlayType" byteLength="1" />
+          <Float name="AdsDistanceFromCameraOffset" />
+          <Bool name="AdsHeightDelayEnabled" byteLength="1" />
+          <Float name="AdsHeightDelaySeconds" />
+          <Bool name="AdsDepthEnabled" byteLength="1" />
+          <Float name="AdsDepthDelaySeconds" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

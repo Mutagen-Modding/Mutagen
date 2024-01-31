@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,40 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ImagespaceModifier
+        private readonly IFormLink<IImageSpaceAdapterGetter> _ImagespaceModifier = new FormLink<IImageSpaceAdapterGetter>();
+        public IFormLink<IImageSpaceAdapterGetter> ImagespaceModifier
+        {
+            get => _ImagespaceModifier;
+            set => _ImagespaceModifier.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImageSpaceAdapterGetter> IZoomGetter.ImagespaceModifier => this.ImagespaceModifier;
+        #endregion
+        #region CameraOffset
+        public P3Float CameraOffset { get; set; } = default;
+        #endregion
+        #region FovMult
+        public Single FovMult { get; set; } = default;
+        #endregion
+        #region Overlay
+        public Zoom.OverlayType Overlay { get; set; } = default;
+        #endregion
+        #region AdsDistanceFromCameraOffset
+        public Single AdsDistanceFromCameraOffset { get; set; } = default;
+        #endregion
+        #region AdsHeightDelayEnabled
+        public Boolean AdsHeightDelayEnabled { get; set; } = default;
+        #endregion
+        #region AdsHeightDelaySeconds
+        public Single AdsHeightDelaySeconds { get; set; } = default;
+        #endregion
+        #region AdsDepthEnabled
+        public Boolean AdsDepthEnabled { get; set; } = default;
+        #endregion
+        #region AdsDepthDelaySeconds
+        public Single AdsDepthDelaySeconds { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -79,6 +114,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ImagespaceModifier = initialValue;
+                this.CameraOffset = initialValue;
+                this.FovMult = initialValue;
+                this.Overlay = initialValue;
+                this.AdsDistanceFromCameraOffset = initialValue;
+                this.AdsHeightDelayEnabled = initialValue;
+                this.AdsHeightDelaySeconds = initialValue;
+                this.AdsDepthEnabled = initialValue;
+                this.AdsDepthDelaySeconds = initialValue;
             }
 
             public Mask(
@@ -88,7 +132,16 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ImagespaceModifier,
+                TItem CameraOffset,
+                TItem FovMult,
+                TItem Overlay,
+                TItem AdsDistanceFromCameraOffset,
+                TItem AdsHeightDelayEnabled,
+                TItem AdsHeightDelaySeconds,
+                TItem AdsDepthEnabled,
+                TItem AdsDepthDelaySeconds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +151,15 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ImagespaceModifier = ImagespaceModifier;
+                this.CameraOffset = CameraOffset;
+                this.FovMult = FovMult;
+                this.Overlay = Overlay;
+                this.AdsDistanceFromCameraOffset = AdsDistanceFromCameraOffset;
+                this.AdsHeightDelayEnabled = AdsHeightDelayEnabled;
+                this.AdsHeightDelaySeconds = AdsHeightDelaySeconds;
+                this.AdsDepthEnabled = AdsDepthEnabled;
+                this.AdsDepthDelaySeconds = AdsDepthDelaySeconds;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +168,18 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem ImagespaceModifier;
+            public TItem CameraOffset;
+            public TItem FovMult;
+            public TItem Overlay;
+            public TItem AdsDistanceFromCameraOffset;
+            public TItem AdsHeightDelayEnabled;
+            public TItem AdsHeightDelaySeconds;
+            public TItem AdsDepthEnabled;
+            public TItem AdsDepthDelaySeconds;
             #endregion
 
             #region Equals
@@ -119,11 +193,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ImagespaceModifier, rhs.ImagespaceModifier)) return false;
+                if (!object.Equals(this.CameraOffset, rhs.CameraOffset)) return false;
+                if (!object.Equals(this.FovMult, rhs.FovMult)) return false;
+                if (!object.Equals(this.Overlay, rhs.Overlay)) return false;
+                if (!object.Equals(this.AdsDistanceFromCameraOffset, rhs.AdsDistanceFromCameraOffset)) return false;
+                if (!object.Equals(this.AdsHeightDelayEnabled, rhs.AdsHeightDelayEnabled)) return false;
+                if (!object.Equals(this.AdsHeightDelaySeconds, rhs.AdsHeightDelaySeconds)) return false;
+                if (!object.Equals(this.AdsDepthEnabled, rhs.AdsDepthEnabled)) return false;
+                if (!object.Equals(this.AdsDepthDelaySeconds, rhs.AdsDepthDelaySeconds)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ImagespaceModifier);
+                hash.Add(this.CameraOffset);
+                hash.Add(this.FovMult);
+                hash.Add(this.Overlay);
+                hash.Add(this.AdsDistanceFromCameraOffset);
+                hash.Add(this.AdsHeightDelayEnabled);
+                hash.Add(this.AdsHeightDelaySeconds);
+                hash.Add(this.AdsDepthEnabled);
+                hash.Add(this.AdsDepthDelaySeconds);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +226,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.ImagespaceModifier)) return false;
+                if (!eval(this.CameraOffset)) return false;
+                if (!eval(this.FovMult)) return false;
+                if (!eval(this.Overlay)) return false;
+                if (!eval(this.AdsDistanceFromCameraOffset)) return false;
+                if (!eval(this.AdsHeightDelayEnabled)) return false;
+                if (!eval(this.AdsHeightDelaySeconds)) return false;
+                if (!eval(this.AdsDepthEnabled)) return false;
+                if (!eval(this.AdsDepthDelaySeconds)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +243,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.ImagespaceModifier)) return true;
+                if (eval(this.CameraOffset)) return true;
+                if (eval(this.FovMult)) return true;
+                if (eval(this.Overlay)) return true;
+                if (eval(this.AdsDistanceFromCameraOffset)) return true;
+                if (eval(this.AdsHeightDelayEnabled)) return true;
+                if (eval(this.AdsHeightDelaySeconds)) return true;
+                if (eval(this.AdsDepthEnabled)) return true;
+                if (eval(this.AdsDepthDelaySeconds)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +267,15 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ImagespaceModifier = eval(this.ImagespaceModifier);
+                obj.CameraOffset = eval(this.CameraOffset);
+                obj.FovMult = eval(this.FovMult);
+                obj.Overlay = eval(this.Overlay);
+                obj.AdsDistanceFromCameraOffset = eval(this.AdsDistanceFromCameraOffset);
+                obj.AdsHeightDelayEnabled = eval(this.AdsHeightDelayEnabled);
+                obj.AdsHeightDelaySeconds = eval(this.AdsHeightDelaySeconds);
+                obj.AdsDepthEnabled = eval(this.AdsDepthEnabled);
+                obj.AdsDepthDelaySeconds = eval(this.AdsDepthDelaySeconds);
             }
             #endregion
 
@@ -175,6 +294,42 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Zoom.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ImagespaceModifier ?? true)
+                    {
+                        sb.AppendItem(ImagespaceModifier, "ImagespaceModifier");
+                    }
+                    if (printMask?.CameraOffset ?? true)
+                    {
+                        sb.AppendItem(CameraOffset, "CameraOffset");
+                    }
+                    if (printMask?.FovMult ?? true)
+                    {
+                        sb.AppendItem(FovMult, "FovMult");
+                    }
+                    if (printMask?.Overlay ?? true)
+                    {
+                        sb.AppendItem(Overlay, "Overlay");
+                    }
+                    if (printMask?.AdsDistanceFromCameraOffset ?? true)
+                    {
+                        sb.AppendItem(AdsDistanceFromCameraOffset, "AdsDistanceFromCameraOffset");
+                    }
+                    if (printMask?.AdsHeightDelayEnabled ?? true)
+                    {
+                        sb.AppendItem(AdsHeightDelayEnabled, "AdsHeightDelayEnabled");
+                    }
+                    if (printMask?.AdsHeightDelaySeconds ?? true)
+                    {
+                        sb.AppendItem(AdsHeightDelaySeconds, "AdsHeightDelaySeconds");
+                    }
+                    if (printMask?.AdsDepthEnabled ?? true)
+                    {
+                        sb.AppendItem(AdsDepthEnabled, "AdsDepthEnabled");
+                    }
+                    if (printMask?.AdsDepthDelaySeconds ?? true)
+                    {
+                        sb.AppendItem(AdsDepthDelaySeconds, "AdsDepthDelaySeconds");
+                    }
                 }
             }
             #endregion
@@ -185,12 +340,42 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? ImagespaceModifier;
+            public Exception? CameraOffset;
+            public Exception? FovMult;
+            public Exception? Overlay;
+            public Exception? AdsDistanceFromCameraOffset;
+            public Exception? AdsHeightDelayEnabled;
+            public Exception? AdsHeightDelaySeconds;
+            public Exception? AdsDepthEnabled;
+            public Exception? AdsDepthDelaySeconds;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Zoom_FieldIndex enu = (Zoom_FieldIndex)index;
                 switch (enu)
                 {
+                    case Zoom_FieldIndex.ImagespaceModifier:
+                        return ImagespaceModifier;
+                    case Zoom_FieldIndex.CameraOffset:
+                        return CameraOffset;
+                    case Zoom_FieldIndex.FovMult:
+                        return FovMult;
+                    case Zoom_FieldIndex.Overlay:
+                        return Overlay;
+                    case Zoom_FieldIndex.AdsDistanceFromCameraOffset:
+                        return AdsDistanceFromCameraOffset;
+                    case Zoom_FieldIndex.AdsHeightDelayEnabled:
+                        return AdsHeightDelayEnabled;
+                    case Zoom_FieldIndex.AdsHeightDelaySeconds:
+                        return AdsHeightDelaySeconds;
+                    case Zoom_FieldIndex.AdsDepthEnabled:
+                        return AdsDepthEnabled;
+                    case Zoom_FieldIndex.AdsDepthDelaySeconds:
+                        return AdsDepthDelaySeconds;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +386,33 @@ namespace Mutagen.Bethesda.Starfield
                 Zoom_FieldIndex enu = (Zoom_FieldIndex)index;
                 switch (enu)
                 {
+                    case Zoom_FieldIndex.ImagespaceModifier:
+                        this.ImagespaceModifier = ex;
+                        break;
+                    case Zoom_FieldIndex.CameraOffset:
+                        this.CameraOffset = ex;
+                        break;
+                    case Zoom_FieldIndex.FovMult:
+                        this.FovMult = ex;
+                        break;
+                    case Zoom_FieldIndex.Overlay:
+                        this.Overlay = ex;
+                        break;
+                    case Zoom_FieldIndex.AdsDistanceFromCameraOffset:
+                        this.AdsDistanceFromCameraOffset = ex;
+                        break;
+                    case Zoom_FieldIndex.AdsHeightDelayEnabled:
+                        this.AdsHeightDelayEnabled = ex;
+                        break;
+                    case Zoom_FieldIndex.AdsHeightDelaySeconds:
+                        this.AdsHeightDelaySeconds = ex;
+                        break;
+                    case Zoom_FieldIndex.AdsDepthEnabled:
+                        this.AdsDepthEnabled = ex;
+                        break;
+                    case Zoom_FieldIndex.AdsDepthDelaySeconds:
+                        this.AdsDepthDelaySeconds = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +424,33 @@ namespace Mutagen.Bethesda.Starfield
                 Zoom_FieldIndex enu = (Zoom_FieldIndex)index;
                 switch (enu)
                 {
+                    case Zoom_FieldIndex.ImagespaceModifier:
+                        this.ImagespaceModifier = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.CameraOffset:
+                        this.CameraOffset = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.FovMult:
+                        this.FovMult = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.Overlay:
+                        this.Overlay = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.AdsDistanceFromCameraOffset:
+                        this.AdsDistanceFromCameraOffset = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.AdsHeightDelayEnabled:
+                        this.AdsHeightDelayEnabled = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.AdsHeightDelaySeconds:
+                        this.AdsHeightDelaySeconds = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.AdsDepthEnabled:
+                        this.AdsDepthEnabled = (Exception?)obj;
+                        break;
+                    case Zoom_FieldIndex.AdsDepthDelaySeconds:
+                        this.AdsDepthDelaySeconds = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +460,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ImagespaceModifier != null) return true;
+                if (CameraOffset != null) return true;
+                if (FovMult != null) return true;
+                if (Overlay != null) return true;
+                if (AdsDistanceFromCameraOffset != null) return true;
+                if (AdsHeightDelayEnabled != null) return true;
+                if (AdsHeightDelaySeconds != null) return true;
+                if (AdsDepthEnabled != null) return true;
+                if (AdsDepthDelaySeconds != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +495,33 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ImagespaceModifier, "ImagespaceModifier");
+                }
+                {
+                    sb.AppendItem(CameraOffset, "CameraOffset");
+                }
+                {
+                    sb.AppendItem(FovMult, "FovMult");
+                }
+                {
+                    sb.AppendItem(Overlay, "Overlay");
+                }
+                {
+                    sb.AppendItem(AdsDistanceFromCameraOffset, "AdsDistanceFromCameraOffset");
+                }
+                {
+                    sb.AppendItem(AdsHeightDelayEnabled, "AdsHeightDelayEnabled");
+                }
+                {
+                    sb.AppendItem(AdsHeightDelaySeconds, "AdsHeightDelaySeconds");
+                }
+                {
+                    sb.AppendItem(AdsDepthEnabled, "AdsDepthEnabled");
+                }
+                {
+                    sb.AppendItem(AdsDepthDelaySeconds, "AdsDepthDelaySeconds");
+                }
             }
             #endregion
 
@@ -255,6 +530,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ImagespaceModifier = this.ImagespaceModifier.Combine(rhs.ImagespaceModifier);
+                ret.CameraOffset = this.CameraOffset.Combine(rhs.CameraOffset);
+                ret.FovMult = this.FovMult.Combine(rhs.FovMult);
+                ret.Overlay = this.Overlay.Combine(rhs.Overlay);
+                ret.AdsDistanceFromCameraOffset = this.AdsDistanceFromCameraOffset.Combine(rhs.AdsDistanceFromCameraOffset);
+                ret.AdsHeightDelayEnabled = this.AdsHeightDelayEnabled.Combine(rhs.AdsHeightDelayEnabled);
+                ret.AdsHeightDelaySeconds = this.AdsHeightDelaySeconds.Combine(rhs.AdsHeightDelaySeconds);
+                ret.AdsDepthEnabled = this.AdsDepthEnabled.Combine(rhs.AdsDepthEnabled);
+                ret.AdsDepthDelaySeconds = this.AdsDepthDelaySeconds.Combine(rhs.AdsDepthDelaySeconds);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +560,50 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool ImagespaceModifier;
+            public bool CameraOffset;
+            public bool FovMult;
+            public bool Overlay;
+            public bool AdsDistanceFromCameraOffset;
+            public bool AdsHeightDelayEnabled;
+            public bool AdsHeightDelaySeconds;
+            public bool AdsDepthEnabled;
+            public bool AdsDepthDelaySeconds;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ImagespaceModifier = defaultOn;
+                this.CameraOffset = defaultOn;
+                this.FovMult = defaultOn;
+                this.Overlay = defaultOn;
+                this.AdsDistanceFromCameraOffset = defaultOn;
+                this.AdsHeightDelayEnabled = defaultOn;
+                this.AdsHeightDelaySeconds = defaultOn;
+                this.AdsDepthEnabled = defaultOn;
+                this.AdsDepthDelaySeconds = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ImagespaceModifier, null));
+                ret.Add((CameraOffset, null));
+                ret.Add((FovMult, null));
+                ret.Add((Overlay, null));
+                ret.Add((AdsDistanceFromCameraOffset, null));
+                ret.Add((AdsHeightDelayEnabled, null));
+                ret.Add((AdsHeightDelaySeconds, null));
+                ret.Add((AdsDepthEnabled, null));
+                ret.Add((AdsDepthDelaySeconds, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +615,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Zoom_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ZoomCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ZoomSetterCommon.Instance.RemapLinks(this, mapping);
         public Zoom(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +745,20 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IZoom :
+        IFormLinkContainer,
         ILoquiObjectSetter<IZoomInternal>,
         IStarfieldMajorRecordInternal,
         IZoomGetter
     {
+        new IFormLink<IImageSpaceAdapterGetter> ImagespaceModifier { get; set; }
+        new P3Float CameraOffset { get; set; }
+        new Single FovMult { get; set; }
+        new Zoom.OverlayType Overlay { get; set; }
+        new Single AdsDistanceFromCameraOffset { get; set; }
+        new Boolean AdsHeightDelayEnabled { get; set; }
+        new Single AdsHeightDelaySeconds { get; set; }
+        new Boolean AdsDepthEnabled { get; set; }
+        new Single AdsDepthDelaySeconds { get; set; }
     }
 
     public partial interface IZoomInternal :
@@ -441,10 +772,20 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IZoomGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IZoomGetter>,
         IMapsToGetter<IZoomGetter>
     {
         static new ILoquiRegistration StaticRegistration => Zoom_Registration.Instance;
+        IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier { get; }
+        P3Float CameraOffset { get; }
+        Single FovMult { get; }
+        Zoom.OverlayType Overlay { get; }
+        Single AdsDistanceFromCameraOffset { get; }
+        Boolean AdsHeightDelayEnabled { get; }
+        Single AdsHeightDelaySeconds { get; }
+        Boolean AdsDepthEnabled { get; }
+        Single AdsDepthDelaySeconds { get; }
 
     }
 
@@ -621,6 +962,15 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ImagespaceModifier = 7,
+        CameraOffset = 8,
+        FovMult = 9,
+        Overlay = 10,
+        AdsDistanceFromCameraOffset = 11,
+        AdsHeightDelayEnabled = 12,
+        AdsHeightDelaySeconds = 13,
+        AdsDepthEnabled = 14,
+        AdsDepthDelaySeconds = 15,
     }
     #endregion
 
@@ -631,9 +981,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Zoom.Mask<>);
 
@@ -663,8 +1013,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.ZOOM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.ZOOM);
+            var all = RecordCollection.Factory(
+                RecordTypes.ZOOM,
+                RecordTypes.ZNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ZoomBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1061,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IZoomInternal item)
         {
             ClearPartial();
+            item.ImagespaceModifier.Clear();
+            item.CameraOffset = default;
+            item.FovMult = default;
+            item.Overlay = default;
+            item.AdsDistanceFromCameraOffset = default;
+            item.AdsHeightDelayEnabled = default;
+            item.AdsHeightDelaySeconds = default;
+            item.AdsDepthEnabled = default;
+            item.AdsDepthDelaySeconds = default;
             base.Clear(item);
         }
         
@@ -723,6 +1087,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IZoom obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.ImagespaceModifier.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +1155,15 @@ namespace Mutagen.Bethesda.Starfield
             Zoom.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ImagespaceModifier = item.ImagespaceModifier.Equals(rhs.ImagespaceModifier);
+            ret.CameraOffset = item.CameraOffset.Equals(rhs.CameraOffset);
+            ret.FovMult = item.FovMult.EqualsWithin(rhs.FovMult);
+            ret.Overlay = item.Overlay == rhs.Overlay;
+            ret.AdsDistanceFromCameraOffset = item.AdsDistanceFromCameraOffset.EqualsWithin(rhs.AdsDistanceFromCameraOffset);
+            ret.AdsHeightDelayEnabled = item.AdsHeightDelayEnabled == rhs.AdsHeightDelayEnabled;
+            ret.AdsHeightDelaySeconds = item.AdsHeightDelaySeconds.EqualsWithin(rhs.AdsHeightDelaySeconds);
+            ret.AdsDepthEnabled = item.AdsDepthEnabled == rhs.AdsDepthEnabled;
+            ret.AdsDepthDelaySeconds = item.AdsDepthDelaySeconds.EqualsWithin(rhs.AdsDepthDelaySeconds);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1213,42 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ImagespaceModifier ?? true)
+            {
+                sb.AppendItem(item.ImagespaceModifier.FormKey, "ImagespaceModifier");
+            }
+            if (printMask?.CameraOffset ?? true)
+            {
+                sb.AppendItem(item.CameraOffset, "CameraOffset");
+            }
+            if (printMask?.FovMult ?? true)
+            {
+                sb.AppendItem(item.FovMult, "FovMult");
+            }
+            if (printMask?.Overlay ?? true)
+            {
+                sb.AppendItem(item.Overlay, "Overlay");
+            }
+            if (printMask?.AdsDistanceFromCameraOffset ?? true)
+            {
+                sb.AppendItem(item.AdsDistanceFromCameraOffset, "AdsDistanceFromCameraOffset");
+            }
+            if (printMask?.AdsHeightDelayEnabled ?? true)
+            {
+                sb.AppendItem(item.AdsHeightDelayEnabled, "AdsHeightDelayEnabled");
+            }
+            if (printMask?.AdsHeightDelaySeconds ?? true)
+            {
+                sb.AppendItem(item.AdsHeightDelaySeconds, "AdsHeightDelaySeconds");
+            }
+            if (printMask?.AdsDepthEnabled ?? true)
+            {
+                sb.AppendItem(item.AdsDepthEnabled, "AdsDepthEnabled");
+            }
+            if (printMask?.AdsDepthDelaySeconds ?? true)
+            {
+                sb.AppendItem(item.AdsDepthDelaySeconds, "AdsDepthDelaySeconds");
+            }
         }
         
         public static Zoom_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1299,42 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.ImagespaceModifier) ?? true))
+            {
+                if (!lhs.ImagespaceModifier.Equals(rhs.ImagespaceModifier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.CameraOffset) ?? true))
+            {
+                if (!lhs.CameraOffset.Equals(rhs.CameraOffset)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.FovMult) ?? true))
+            {
+                if (!lhs.FovMult.EqualsWithin(rhs.FovMult)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.Overlay) ?? true))
+            {
+                if (lhs.Overlay != rhs.Overlay) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsDistanceFromCameraOffset) ?? true))
+            {
+                if (!lhs.AdsDistanceFromCameraOffset.EqualsWithin(rhs.AdsDistanceFromCameraOffset)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsHeightDelayEnabled) ?? true))
+            {
+                if (lhs.AdsHeightDelayEnabled != rhs.AdsHeightDelayEnabled) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsHeightDelaySeconds) ?? true))
+            {
+                if (!lhs.AdsHeightDelaySeconds.EqualsWithin(rhs.AdsHeightDelaySeconds)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsDepthEnabled) ?? true))
+            {
+                if (lhs.AdsDepthEnabled != rhs.AdsDepthEnabled) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsDepthDelaySeconds) ?? true))
+            {
+                if (!lhs.AdsDepthDelaySeconds.EqualsWithin(rhs.AdsDepthDelaySeconds)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1363,15 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IZoomGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ImagespaceModifier);
+            hash.Add(item.CameraOffset);
+            hash.Add(item.FovMult);
+            hash.Add(item.Overlay);
+            hash.Add(item.AdsDistanceFromCameraOffset);
+            hash.Add(item.AdsHeightDelayEnabled);
+            hash.Add(item.AdsHeightDelaySeconds);
+            hash.Add(item.AdsDepthEnabled);
+            hash.Add(item.AdsDepthDelaySeconds);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -946,6 +1401,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.ImagespaceModifier);
             yield break;
         }
         
@@ -1020,6 +1476,42 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.ImagespaceModifier) ?? true))
+            {
+                item.ImagespaceModifier.SetTo(rhs.ImagespaceModifier.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.CameraOffset) ?? true))
+            {
+                item.CameraOffset = rhs.CameraOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.FovMult) ?? true))
+            {
+                item.FovMult = rhs.FovMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.Overlay) ?? true))
+            {
+                item.Overlay = rhs.Overlay;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsDistanceFromCameraOffset) ?? true))
+            {
+                item.AdsDistanceFromCameraOffset = rhs.AdsDistanceFromCameraOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsHeightDelayEnabled) ?? true))
+            {
+                item.AdsHeightDelayEnabled = rhs.AdsHeightDelayEnabled;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsHeightDelaySeconds) ?? true))
+            {
+                item.AdsHeightDelaySeconds = rhs.AdsHeightDelaySeconds;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsDepthEnabled) ?? true))
+            {
+                item.AdsDepthEnabled = rhs.AdsDepthEnabled;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.AdsDepthDelaySeconds) ?? true))
+            {
+                item.AdsDepthDelaySeconds = rhs.AdsDepthDelaySeconds;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1660,44 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ZoomBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IZoomGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ZNAM)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImagespaceModifier);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.CameraOffset);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FovMult);
+                EnumBinaryTranslation<Zoom.OverlayType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Overlay,
+                    length: 1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AdsDistanceFromCameraOffset);
+                writer.Write(item.AdsHeightDelayEnabled);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AdsHeightDelaySeconds);
+                writer.Write(item.AdsDepthEnabled);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AdsDepthDelaySeconds);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IZoomGetter item,
@@ -1184,10 +1714,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1769,56 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ZoomBinaryCreateTranslation Instance = new ZoomBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ZOOM;
+        public static ParseResult FillBinaryRecordTypes(
+            IZoomInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ImagespaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 12) return null;
+                    item.CameraOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FovMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Overlay = EnumBinaryTranslation<Zoom.OverlayType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AdsDistanceFromCameraOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.AdsHeightDelayEnabled = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AdsHeightDelaySeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.AdsDepthEnabled = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AdsDepthDelaySeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Zoom_FieldIndex.AdsDepthDelaySeconds;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1851,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ZoomCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ZoomBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1866,52 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IZoom);
 
 
+        private RangeInt32? _ZNAMLocation;
+        #region ImagespaceModifier
+        private int _ImagespaceModifierLocation => _ZNAMLocation!.Value.Min;
+        private bool _ImagespaceModifier_IsSet => _ZNAMLocation.HasValue;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier => _ImagespaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImagespaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        #endregion
+        #region CameraOffset
+        private int _CameraOffsetLocation => _ZNAMLocation!.Value.Min + 0x4;
+        private bool _CameraOffset_IsSet => _ZNAMLocation.HasValue;
+        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_CameraOffsetLocation, 12)) : default;
+        #endregion
+        #region FovMult
+        private int _FovMultLocation => _ZNAMLocation!.Value.Min + 0x10;
+        private bool _FovMult_IsSet => _ZNAMLocation.HasValue;
+        public Single FovMult => _FovMult_IsSet ? _recordData.Slice(_FovMultLocation, 4).Float() : default;
+        #endregion
+        #region Overlay
+        private int _OverlayLocation => _ZNAMLocation!.Value.Min + 0x14;
+        private bool _Overlay_IsSet => _ZNAMLocation.HasValue;
+        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)_recordData.Span.Slice(_OverlayLocation, 0x1)[0] : default;
+        #endregion
+        #region AdsDistanceFromCameraOffset
+        private int _AdsDistanceFromCameraOffsetLocation => _ZNAMLocation!.Value.Min + 0x15;
+        private bool _AdsDistanceFromCameraOffset_IsSet => _ZNAMLocation.HasValue;
+        public Single AdsDistanceFromCameraOffset => _AdsDistanceFromCameraOffset_IsSet ? _recordData.Slice(_AdsDistanceFromCameraOffsetLocation, 4).Float() : default;
+        #endregion
+        #region AdsHeightDelayEnabled
+        private int _AdsHeightDelayEnabledLocation => _ZNAMLocation!.Value.Min + 0x19;
+        private bool _AdsHeightDelayEnabled_IsSet => _ZNAMLocation.HasValue;
+        public Boolean AdsHeightDelayEnabled => _AdsHeightDelayEnabled_IsSet ? _recordData.Slice(_AdsHeightDelayEnabledLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region AdsHeightDelaySeconds
+        private int _AdsHeightDelaySecondsLocation => _ZNAMLocation!.Value.Min + 0x1A;
+        private bool _AdsHeightDelaySeconds_IsSet => _ZNAMLocation.HasValue;
+        public Single AdsHeightDelaySeconds => _AdsHeightDelaySeconds_IsSet ? _recordData.Slice(_AdsHeightDelaySecondsLocation, 4).Float() : default;
+        #endregion
+        #region AdsDepthEnabled
+        private int _AdsDepthEnabledLocation => _ZNAMLocation!.Value.Min + 0x1E;
+        private bool _AdsDepthEnabled_IsSet => _ZNAMLocation.HasValue;
+        public Boolean AdsDepthEnabled => _AdsDepthEnabled_IsSet ? _recordData.Slice(_AdsDepthEnabledLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region AdsDepthDelaySeconds
+        private int _AdsDepthDelaySecondsLocation => _ZNAMLocation!.Value.Min + 0x1F;
+        private bool _AdsDepthDelaySeconds_IsSet => _ZNAMLocation.HasValue;
+        public Single AdsDepthDelaySeconds => _AdsDepthDelaySeconds_IsSet ? _recordData.Slice(_AdsDepthDelaySecondsLocation, 4).Float() : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1969,34 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.ZNAM:
+                {
+                    _ZNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Zoom_FieldIndex.AdsDepthDelaySeconds;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

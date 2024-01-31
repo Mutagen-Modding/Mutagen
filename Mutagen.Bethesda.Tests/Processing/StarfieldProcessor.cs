@@ -55,6 +55,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
         AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
+        AddDynamicProcessing(RecordTypes.ZOOM, ProcessZooms);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -1201,6 +1202,23 @@ public class StarfieldProcessor : Processor
         if (majorFrame.TryFindSubrecord(RecordTypes.CNAM, out var cnam))
         {
             ProcessColorFloat(cnam, fileOffset, alpha: false);
+        }
+    }
+    
+    private void ProcessZooms(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.ZNAM, out var znam))
+        {
+            int pos = 4;
+            ProcessZeroFloats(znam, fileOffset, ref pos, 4);
+            pos += 1;
+            ProcessZeroFloat(znam, fileOffset, ref pos);
+            pos += 1;
+            ProcessZeroFloat(znam, fileOffset, ref pos);
+            pos += 1;
+            ProcessZeroFloat(znam, fileOffset, ref pos);
         }
     }
 }

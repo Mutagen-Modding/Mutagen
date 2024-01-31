@@ -120,6 +120,7 @@
       <Group name="Layers" refName="Layer" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="ObjectModifications" refName="AObjectModification" />
+      <Group name="Zooms" refName="Zoom" />
       <Group name="InstanceNamingRules" refName="InstanceNamingRules" />
       <Group name="AttractionRules" refName="AttractionRule" />
       <Group name="Resources" refName="Resource" />

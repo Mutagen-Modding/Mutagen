@@ -2535,6 +2535,9 @@
     <Compile Include="Records\Major Records\WorldspaceSubBlock.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Zoom.cs">
+      <DependentUpon>Zoom.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\ProtocolDefinition_Starfield.cs" />
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
