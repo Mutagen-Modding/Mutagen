@@ -166,6 +166,7 @@ namespace Mutagen.Bethesda.Starfield
             _CollisionLayers_Object = new StarfieldGroup<CollisionLayer>(this);
             _Colors_Object = new StarfieldGroup<ColorRecord>(this);
             _ReverbParameters_Object = new StarfieldGroup<ReverbParameters>(this);
+            _ReferenceGroups_Object = new StarfieldGroup<ReferenceGroup>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
             _Layers_Object = new StarfieldGroup<Layer>(this);
@@ -936,6 +937,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IReverbParametersGetter> IStarfieldModGetter.ReverbParameters => _ReverbParameters_Object;
         #endregion
+        #region ReferenceGroups
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ReferenceGroup> _ReferenceGroups_Object;
+        public StarfieldGroup<ReferenceGroup> ReferenceGroups => _ReferenceGroups_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IReferenceGroupGetter> IStarfieldModGetter.ReferenceGroups => _ReferenceGroups_Object;
+        #endregion
         #region AimModels
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AimModel> _AimModels_Object;
@@ -1194,6 +1202,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CollisionLayers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Colors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ReverbParameters = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ReferenceGroups = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1320,6 +1329,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem CollisionLayers,
                 TItem Colors,
                 TItem ReverbParameters,
+                TItem ReferenceGroups,
                 TItem AimModels,
                 TItem AimAssistModels,
                 TItem Layers,
@@ -1444,6 +1454,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CollisionLayers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CollisionLayers, new StarfieldGroup.Mask<TItem>(CollisionLayers));
                 this.Colors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Colors, new StarfieldGroup.Mask<TItem>(Colors));
                 this.ReverbParameters = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ReverbParameters, new StarfieldGroup.Mask<TItem>(ReverbParameters));
+                this.ReferenceGroups = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ReferenceGroups, new StarfieldGroup.Mask<TItem>(ReferenceGroups));
                 this.AimModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimModels, new StarfieldGroup.Mask<TItem>(AimModels));
                 this.AimAssistModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimAssistModels, new StarfieldGroup.Mask<TItem>(AimAssistModels));
                 this.Layers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Layers, new StarfieldGroup.Mask<TItem>(Layers));
@@ -1578,6 +1589,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CollisionLayers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Colors { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ReverbParameters { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ReferenceGroups { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimAssistModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Layers { get; set; }
@@ -1713,6 +1725,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.CollisionLayers, rhs.CollisionLayers)) return false;
                 if (!object.Equals(this.Colors, rhs.Colors)) return false;
                 if (!object.Equals(this.ReverbParameters, rhs.ReverbParameters)) return false;
+                if (!object.Equals(this.ReferenceGroups, rhs.ReferenceGroups)) return false;
                 if (!object.Equals(this.AimModels, rhs.AimModels)) return false;
                 if (!object.Equals(this.AimAssistModels, rhs.AimAssistModels)) return false;
                 if (!object.Equals(this.Layers, rhs.Layers)) return false;
@@ -1841,6 +1854,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.CollisionLayers);
                 hash.Add(this.Colors);
                 hash.Add(this.ReverbParameters);
+                hash.Add(this.ReferenceGroups);
                 hash.Add(this.AimModels);
                 hash.Add(this.AimAssistModels);
                 hash.Add(this.Layers);
@@ -2399,6 +2413,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ReverbParameters.Overall)) return false;
                     if (this.ReverbParameters.Specific != null && !this.ReverbParameters.Specific.All(eval)) return false;
+                }
+                if (ReferenceGroups != null)
+                {
+                    if (!eval(this.ReferenceGroups.Overall)) return false;
+                    if (this.ReferenceGroups.Specific != null && !this.ReferenceGroups.Specific.All(eval)) return false;
                 }
                 if (AimModels != null)
                 {
@@ -3022,6 +3041,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ReverbParameters.Overall)) return true;
                     if (this.ReverbParameters.Specific != null && this.ReverbParameters.Specific.Any(eval)) return true;
                 }
+                if (ReferenceGroups != null)
+                {
+                    if (eval(this.ReferenceGroups.Overall)) return true;
+                    if (this.ReferenceGroups.Specific != null && this.ReferenceGroups.Specific.Any(eval)) return true;
+                }
                 if (AimModels != null)
                 {
                     if (eval(this.AimModels.Overall)) return true;
@@ -3223,6 +3247,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
                 obj.Colors = this.Colors == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
                 obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
+                obj.ReferenceGroups = this.ReferenceGroups == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ReferenceGroups.Overall), this.ReferenceGroups.Specific?.Translate(eval));
                 obj.AimModels = this.AimModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimModels.Overall), this.AimModels.Specific?.Translate(eval));
                 obj.AimAssistModels = this.AimAssistModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimAssistModels.Overall), this.AimAssistModels.Specific?.Translate(eval));
                 obj.Layers = this.Layers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Layers.Overall), this.Layers.Specific?.Translate(eval));
@@ -3685,6 +3710,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ReverbParameters?.Print(sb);
                     }
+                    if (printMask?.ReferenceGroups?.Overall ?? true)
+                    {
+                        ReferenceGroups?.Print(sb);
+                    }
                     if (printMask?.AimModels?.Overall ?? true)
                     {
                         AimModels?.Print(sb);
@@ -3880,6 +3909,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ReferenceGroup.ErrorMask>?>? ReferenceGroups;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>? AimModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistModel.ErrorMask>?>? AimAssistModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Layer.ErrorMask>?>? Layers;
@@ -4118,6 +4148,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Colors;
                     case StarfieldMod_FieldIndex.ReverbParameters:
                         return ReverbParameters;
+                    case StarfieldMod_FieldIndex.ReferenceGroups:
+                        return ReferenceGroups;
                     case StarfieldMod_FieldIndex.AimModels:
                         return AimModels;
                     case StarfieldMod_FieldIndex.AimAssistModels:
@@ -4480,6 +4512,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ReverbParameters:
                         this.ReverbParameters = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ReverbParameters.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ReferenceGroups:
+                        this.ReferenceGroups = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ReferenceGroup.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AimModels:
                         this.AimModels = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>(ex, null);
@@ -4860,6 +4895,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ReverbParameters:
                         this.ReverbParameters = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ReverbParameters.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.ReferenceGroups:
+                        this.ReferenceGroups = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ReferenceGroup.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AimModels:
                         this.AimModels = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AimModel.ErrorMask>?>?)obj;
                         break;
@@ -5023,6 +5061,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (CollisionLayers != null) return true;
                 if (Colors != null) return true;
                 if (ReverbParameters != null) return true;
+                if (ReferenceGroups != null) return true;
                 if (AimModels != null) return true;
                 if (AimAssistModels != null) return true;
                 if (Layers != null) return true;
@@ -5171,6 +5210,7 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayers?.Print(sb);
                 Colors?.Print(sb);
                 ReverbParameters?.Print(sb);
+                ReferenceGroups?.Print(sb);
                 AimModels?.Print(sb);
                 AimAssistModels?.Print(sb);
                 Layers?.Print(sb);
@@ -5302,6 +5342,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.CollisionLayers = this.CollisionLayers.Combine(rhs.CollisionLayers, (l, r) => l.Combine(r));
                 ret.Colors = this.Colors.Combine(rhs.Colors, (l, r) => l.Combine(r));
                 ret.ReverbParameters = this.ReverbParameters.Combine(rhs.ReverbParameters, (l, r) => l.Combine(r));
+                ret.ReferenceGroups = this.ReferenceGroups.Combine(rhs.ReferenceGroups, (l, r) => l.Combine(r));
                 ret.AimModels = this.AimModels.Combine(rhs.AimModels, (l, r) => l.Combine(r));
                 ret.AimAssistModels = this.AimAssistModels.Combine(rhs.AimAssistModels, (l, r) => l.Combine(r));
                 ret.Layers = this.Layers.Combine(rhs.Layers, (l, r) => l.Combine(r));
@@ -5448,6 +5489,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<CollisionLayer.TranslationMask>? CollisionLayers;
             public StarfieldGroup.TranslationMask<ColorRecord.TranslationMask>? Colors;
             public StarfieldGroup.TranslationMask<ReverbParameters.TranslationMask>? ReverbParameters;
+            public StarfieldGroup.TranslationMask<ReferenceGroup.TranslationMask>? ReferenceGroups;
             public StarfieldGroup.TranslationMask<AimModel.TranslationMask>? AimModels;
             public StarfieldGroup.TranslationMask<AimAssistModel.TranslationMask>? AimAssistModels;
             public StarfieldGroup.TranslationMask<Layer.TranslationMask>? Layers;
@@ -5595,6 +5637,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((CollisionLayers != null ? CollisionLayers.OnOverall : DefaultOn, CollisionLayers?.GetCrystal()));
                 ret.Add((Colors != null ? Colors.OnOverall : DefaultOn, Colors?.GetCrystal()));
                 ret.Add((ReverbParameters != null ? ReverbParameters.OnOverall : DefaultOn, ReverbParameters?.GetCrystal()));
+                ret.Add((ReferenceGroups != null ? ReferenceGroups.OnOverall : DefaultOn, ReferenceGroups?.GetCrystal()));
                 ret.Add((AimModels != null ? AimModels.OnOverall : DefaultOn, AimModels?.GetCrystal()));
                 ret.Add((AimAssistModels != null ? AimAssistModels.OnOverall : DefaultOn, AimAssistModels?.GetCrystal()));
                 ret.Add((Layers != null ? Layers.OnOverall : DefaultOn, Layers?.GetCrystal()));
@@ -5763,6 +5806,7 @@ namespace Mutagen.Bethesda.Starfield
             _CollisionLayers_Object = new StarfieldGroup<CollisionLayer>(this);
             _Colors_Object = new StarfieldGroup<ColorRecord>(this);
             _ReverbParameters_Object = new StarfieldGroup<ReverbParameters>(this);
+            _ReferenceGroups_Object = new StarfieldGroup<ReferenceGroup>(this);
             _AimModels_Object = new StarfieldGroup<AimModel>(this);
             _AimAssistModels_Object = new StarfieldGroup<AimAssistModel>(this);
             _Layers_Object = new StarfieldGroup<Layer>(this);
@@ -6212,6 +6256,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ReverbParameters.RecordCache.Set(rhsMod.ReverbParameters.RecordCache.Items);
             }
+            if (mask?.ReferenceGroups ?? true)
+            {
+                this.ReferenceGroups.RecordCache.Set(rhsMod.ReferenceGroups.RecordCache.Items);
+            }
             if (mask?.AimModels ?? true)
             {
                 this.AimModels.RecordCache.Set(rhsMod.AimModels.RecordCache.Items);
@@ -6392,6 +6440,7 @@ namespace Mutagen.Bethesda.Starfield
             count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
             count += Colors.RecordCache.Count > 0 ? 1 : default(uint);
             count += ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ReferenceGroups.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimAssistModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += Layers.RecordCache.Count > 0 ? 1 : default(uint);
@@ -6788,6 +6837,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<CollisionLayer> CollisionLayers { get; }
         new StarfieldGroup<ColorRecord> Colors { get; }
         new StarfieldGroup<ReverbParameters> ReverbParameters { get; }
+        new StarfieldGroup<ReferenceGroup> ReferenceGroups { get; }
         new StarfieldGroup<AimModel> AimModels { get; }
         new StarfieldGroup<AimAssistModel> AimAssistModels { get; }
         new StarfieldGroup<Layer> Layers { get; }
@@ -6930,6 +6980,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
         IStarfieldGroupGetter<IColorRecordGetter> Colors { get; }
         IStarfieldGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
+        IStarfieldGroupGetter<IReferenceGroupGetter> ReferenceGroups { get; }
         IStarfieldGroupGetter<IAimModelGetter> AimModels { get; }
         IStarfieldGroupGetter<IAimAssistModelGetter> AimAssistModels { get; }
         IStarfieldGroupGetter<ILayerGetter> Layers { get; }
@@ -7635,22 +7686,23 @@ namespace Mutagen.Bethesda.Starfield
         CollisionLayers = 104,
         Colors = 105,
         ReverbParameters = 106,
-        AimModels = 107,
-        AimAssistModels = 108,
-        Layers = 109,
-        ConstructibleObjects = 110,
-        ObjectModifications = 111,
-        InstanceNamingRules = 112,
-        AttractionRules = 113,
-        Resources = 114,
-        BiomeSwaps = 115,
-        SnapTemplates = 116,
-        Planets = 117,
-        ConditionRecords = 118,
-        SurfacePatternStyles = 119,
-        TerminalMenus = 120,
-        LegendaryItems = 121,
-        ActorValueModulations = 122,
+        ReferenceGroups = 107,
+        AimModels = 108,
+        AimAssistModels = 109,
+        Layers = 110,
+        ConstructibleObjects = 111,
+        ObjectModifications = 112,
+        InstanceNamingRules = 113,
+        AttractionRules = 114,
+        Resources = 115,
+        BiomeSwaps = 116,
+        SnapTemplates = 117,
+        Planets = 118,
+        ConditionRecords = 119,
+        SurfacePatternStyles = 120,
+        TerminalMenus = 121,
+        LegendaryItems = 122,
+        ActorValueModulations = 123,
     }
     #endregion
 
@@ -7661,9 +7713,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 123;
+        public const ushort AdditionalFieldCount = 124;
 
-        public const ushort FieldCount = 123;
+        public const ushort FieldCount = 124;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -7835,6 +7887,7 @@ namespace Mutagen.Bethesda.Starfield
             item.CollisionLayers.Clear();
             item.Colors.Clear();
             item.ReverbParameters.Clear();
+            item.ReferenceGroups.Clear();
             item.AimModels.Clear();
             item.AimAssistModels.Clear();
             item.Layers.Clear();
@@ -7947,6 +8000,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ArtObjects.RemapLinks(mapping);
             obj.CollisionLayers.RemapLinks(mapping);
             obj.Colors.RemapLinks(mapping);
+            obj.ReferenceGroups.RemapLinks(mapping);
             obj.Layers.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
             obj.ObjectModifications.RemapLinks(mapping);
@@ -8098,6 +8152,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.CollisionLayers.Remove(keys);
             obj.Colors.Remove(keys);
             obj.ReverbParameters.Remove(keys);
+            obj.ReferenceGroups.Remove(keys);
             obj.AimModels.Remove(keys);
             obj.AimAssistModels.Remove(keys);
             obj.Layers.Remove(keys);
@@ -8993,6 +9048,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    obj.ReferenceGroups.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "AimModel":
                 case "IAimModelGetter":
                 case "IAimModel":
@@ -9880,6 +9943,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.ReferenceGroups is IAssetLinkContainer ReferenceGroupslinkCont)
+            {
+                foreach (var item in ReferenceGroupslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.ConstructibleObjects is IAssetLinkContainer ConstructibleObjectslinkCont)
             {
                 foreach (var item in ConstructibleObjectslinkCont.EnumerateListedAssetLinks())
@@ -9989,6 +10059,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Impacts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ReferenceGroups.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ObjectModifications.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SnapTemplates.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -10147,6 +10218,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.CollisionLayers = MaskItemExt.Factory(item.CollisionLayers.GetEqualsMask(rhs.CollisionLayers, include), include);
             ret.Colors = MaskItemExt.Factory(item.Colors.GetEqualsMask(rhs.Colors, include), include);
             ret.ReverbParameters = MaskItemExt.Factory(item.ReverbParameters.GetEqualsMask(rhs.ReverbParameters, include), include);
+            ret.ReferenceGroups = MaskItemExt.Factory(item.ReferenceGroups.GetEqualsMask(rhs.ReferenceGroups, include), include);
             ret.AimModels = MaskItemExt.Factory(item.AimModels.GetEqualsMask(rhs.AimModels, include), include);
             ret.AimAssistModels = MaskItemExt.Factory(item.AimAssistModels.GetEqualsMask(rhs.AimAssistModels, include), include);
             ret.Layers = MaskItemExt.Factory(item.Layers.GetEqualsMask(rhs.Layers, include), include);
@@ -10634,6 +10706,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.ReverbParameters?.Overall ?? true)
             {
                 item.ReverbParameters?.Print(sb, "ReverbParameters");
+            }
+            if (printMask?.ReferenceGroups?.Overall ?? true)
+            {
+                item.ReferenceGroups?.Print(sb, "ReferenceGroups");
             }
             if (printMask?.AimModels?.Overall ?? true)
             {
@@ -11564,6 +11640,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isReverbParametersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ReferenceGroups) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ReferenceGroups, rhs.ReferenceGroups, out var lhsReferenceGroups, out var rhsReferenceGroups, out var isReferenceGroupsEqual))
+                {
+                    if (!object.Equals(lhsReferenceGroups, rhsReferenceGroups)) return false;
+                }
+                else if (!isReferenceGroupsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimModels) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AimModels, rhs.AimModels, out var lhsAimModels, out var rhsAimModels, out var isAimModelsEqual))
@@ -11805,6 +11889,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.CollisionLayers);
             hash.Add(item.Colors);
             hash.Add(item.ReverbParameters);
+            hash.Add(item.ReferenceGroups);
             hash.Add(item.AimModels);
             hash.Add(item.AimAssistModels);
             hash.Add(item.Layers);
@@ -12368,6 +12453,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
                     return obj.ReverbParameters;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    return obj.ReferenceGroups;
                 case "AimModel":
                 case "IAimModelGetter":
                 case "IAimModel":
@@ -12474,7 +12564,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[122];
+            Stream[] outputStreams = new Stream[123];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -12582,22 +12672,23 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 103, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Colors, 104, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ReverbParameters, 105, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 106, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 107, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Layers, 108, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 109, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 110, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 111, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 112, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 113, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 114, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 115, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 116, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 117, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 118, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 119, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 120, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 121, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ReferenceGroups, 106, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 107, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistModels, 108, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Layers, 109, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 110, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 111, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 112, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 113, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 114, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 115, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 116, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 117, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 118, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 119, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 120, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 121, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 122, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -13015,6 +13106,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Colors.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReferenceGroups.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -13494,6 +13589,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ReverbParameters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReferenceGroups.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -14537,6 +14636,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
                     foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    foreach (var item in obj.ReferenceGroups.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15785,6 +15893,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.ReverbParameters,
                 groupGetter: (m) => m.ReverbParameters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ReferenceGroup, IReferenceGroupGetter>(
+                srcGroup: obj.ReferenceGroups,
+                type: typeof(IReferenceGroupGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ReferenceGroups,
+                groupGetter: (m) => m.ReferenceGroups))
             {
                 yield return item;
             }
@@ -17433,6 +17550,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "ReferenceGroup":
+                case "IReferenceGroupGetter":
+                case "IReferenceGroup":
+                case "IReferenceGroupInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ReferenceGroup, IReferenceGroupGetter>(
+                        srcGroup: obj.ReferenceGroups,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ReferenceGroups,
+                        groupGetter: (m) => m.ReferenceGroups))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AimModel":
                 case "IAimModelGetter":
                 case "IAimModel":
@@ -18250,6 +18381,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.ArtObjects is IAssetLinkContainerGetter ArtObjectslinkCont)
                 {
                     foreach (var item in ArtObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.ReferenceGroups is IAssetLinkContainerGetter ReferenceGroupslinkCont)
+                {
+                    foreach (var item in ReferenceGroupslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -20452,6 +20590,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ReferenceGroups) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ReferenceGroups);
+                try
+                {
+                    item.ReferenceGroups.DeepCopyIn(
+                        rhs: rhs.ReferenceGroups,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ReferenceGroups));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimModels) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AimModels);
@@ -20968,6 +21126,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool CollisionLayers;
         public bool Colors;
         public bool ReverbParameters;
+        public bool ReferenceGroups;
         public bool AimModels;
         public bool AimAssistModels;
         public bool Layers;
@@ -21095,6 +21254,7 @@ namespace Mutagen.Bethesda.Starfield
             CollisionLayers = defaultValue;
             Colors = defaultValue;
             ReverbParameters = defaultValue;
+            ReferenceGroups = defaultValue;
             AimModels = defaultValue;
             AimAssistModels = defaultValue;
             Layers = defaultValue;
@@ -22332,6 +22492,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ReverbParametersItem).BinaryWriteTranslator).Write<IReverbParametersGetter>(
                         item: ReverbParametersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ReferenceGroups ?? true)
+            {
+                var ReferenceGroupsItem = item.ReferenceGroups;
+                if (ReferenceGroupsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ReferenceGroupsItem).BinaryWriteTranslator).Write<IReferenceGroupGetter>(
+                        item: ReferenceGroupsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -24056,6 +24227,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.ReverbParameters;
                 }
+                case RecordTypeInts.RFGP:
+                {
+                    if (importMask?.ReferenceGroups ?? true)
+                    {
+                        item.ReferenceGroups.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ReferenceGroups;
+                }
                 case RecordTypeInts.AMDL:
                 {
                     if (importMask?.AimModels ?? true)
@@ -24981,6 +25166,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? StarfieldGroupBinaryOverlay<IReverbParametersGetter>.StarfieldGroupFactory(_stream, _ReverbParametersLocations, _package) : default;
         public IStarfieldGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new StarfieldGroup<ReverbParameters>(this);
         #endregion
+        #region ReferenceGroups
+        private List<RangeInt64>? _ReferenceGroupsLocations;
+        private IStarfieldGroupGetter<IReferenceGroupGetter>? _ReferenceGroups => _ReferenceGroupsLocations != null ? StarfieldGroupBinaryOverlay<IReferenceGroupGetter>.StarfieldGroupFactory(_stream, _ReferenceGroupsLocations, _package) : default;
+        public IStarfieldGroupGetter<IReferenceGroupGetter> ReferenceGroups => _ReferenceGroups ?? new StarfieldGroup<ReferenceGroup>(this);
+        #endregion
         #region AimModels
         private List<RangeInt64>? _AimModelsLocations;
         private IStarfieldGroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? StarfieldGroupBinaryOverlay<IAimModelGetter>.StarfieldGroupFactory(_stream, _AimModelsLocations, _package) : default;
@@ -25789,6 +25979,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ReverbParametersLocations ??= new();
                     _ReverbParametersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ReverbParameters;
+                }
+                case RecordTypeInts.RFGP:
+                {
+                    _ReferenceGroupsLocations ??= new();
+                    _ReferenceGroupsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ReferenceGroups;
                 }
                 case RecordTypeInts.AMDL:
                 {
