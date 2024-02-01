@@ -8,7 +8,7 @@
   <Object name="NavigationMeshObstacleManagerSubObject" objType="Subrecord">
     <Fields>
       <UInt32 name="Index" recordType="INDX" />
-      <List name="DATAs">
+      <List name="DATAs" unknown="true" >
         <UInt64 recordType="DATA" />
       </List>
       <ByteArray name="INTV" recordType="INTV" />

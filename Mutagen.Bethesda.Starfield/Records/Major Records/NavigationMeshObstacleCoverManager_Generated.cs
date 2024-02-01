@@ -54,6 +54,20 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region SubObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<NavigationMeshObstacleManagerSubObject> _SubObjects = new ExtendedList<NavigationMeshObstacleManagerSubObject>();
+        public ExtendedList<NavigationMeshObstacleManagerSubObject> SubObjects
+        {
+            get => this._SubObjects;
+            init => this._SubObjects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> INavigationMeshObstacleCoverManagerGetter.SubObjects => _SubObjects;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +103,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem SubObjects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +114,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(SubObjects, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +123,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>? SubObjects;
             #endregion
 
             #region Equals
@@ -119,11 +140,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.SubObjects, rhs.SubObjects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.SubObjects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +157,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.SubObjects != null)
+                {
+                    if (!eval(this.SubObjects.Overall)) return false;
+                    if (this.SubObjects.Specific != null)
+                    {
+                        foreach (var item in this.SubObjects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +177,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.SubObjects != null)
+                {
+                    if (eval(this.SubObjects.Overall)) return true;
+                    if (this.SubObjects.Specific != null)
+                    {
+                        foreach (var item in this.SubObjects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +204,21 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (SubObjects != null)
+                {
+                    obj.SubObjects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>?>(eval(this.SubObjects.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>());
+                    if (SubObjects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>();
+                        obj.SubObjects.Specific = l;
+                        foreach (var item in SubObjects.Specific)
+                        {
+                            MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +237,25 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(NavigationMeshObstacleCoverManager.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.SubObjects?.Overall ?? true)
+                        && SubObjects is {} SubObjectsItem)
+                    {
+                        sb.AppendLine("SubObjects =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SubObjectsItem.Overall);
+                            if (SubObjectsItem.Specific != null)
+                            {
+                                foreach (var subItem in SubObjectsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +266,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>? SubObjects;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 NavigationMeshObstacleCoverManager_FieldIndex enu = (NavigationMeshObstacleCoverManager_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMeshObstacleCoverManager_FieldIndex.SubObjects:
+                        return SubObjects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +288,9 @@ namespace Mutagen.Bethesda.Starfield
                 NavigationMeshObstacleCoverManager_FieldIndex enu = (NavigationMeshObstacleCoverManager_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMeshObstacleCoverManager_FieldIndex.SubObjects:
+                        this.SubObjects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +302,9 @@ namespace Mutagen.Bethesda.Starfield
                 NavigationMeshObstacleCoverManager_FieldIndex enu = (NavigationMeshObstacleCoverManager_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMeshObstacleCoverManager_FieldIndex.SubObjects:
+                        this.SubObjects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +314,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (SubObjects != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +341,24 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (SubObjects is {} SubObjectsItem)
+                {
+                    sb.AppendLine("SubObjects =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SubObjectsItem.Overall);
+                        if (SubObjectsItem.Specific != null)
+                        {
+                            foreach (var subItem in SubObjectsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +367,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.SubObjects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubObjects?.Overall, rhs.SubObjects?.Overall), Noggog.ExceptionExt.Combine(this.SubObjects?.Specific, rhs.SubObjects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,6 +389,10 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public NavigationMeshObstacleManagerSubObject.TranslationMask? SubObjects;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -285,6 +402,12 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((SubObjects == null ? DefaultOn : !SubObjects.GetCrystal().CopyNothing, SubObjects?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -428,6 +551,7 @@ namespace Mutagen.Bethesda.Starfield
         INavigationMeshObstacleCoverManagerGetter,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<NavigationMeshObstacleManagerSubObject> SubObjects { get; }
     }
 
     public partial interface INavigationMeshObstacleCoverManagerInternal :
@@ -445,6 +569,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<INavigationMeshObstacleCoverManagerGetter>
     {
         static new ILoquiRegistration StaticRegistration => NavigationMeshObstacleCoverManager_Registration.Instance;
+        IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; }
 
     }
 
@@ -621,6 +746,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        SubObjects = 7,
     }
     #endregion
 
@@ -631,9 +757,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(NavigationMeshObstacleCoverManager.Mask<>);
 
@@ -663,8 +789,16 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.NOCM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.NOCM);
+            var all = RecordCollection.Factory(
+                RecordTypes.NOCM,
+                RecordTypes.INDX,
+                RecordTypes.DATA,
+                RecordTypes.INTV,
+                RecordTypes.NAM1);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshObstacleCoverManagerBinaryWriteTranslation);
         #region Interface
@@ -706,6 +840,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavigationMeshObstacleCoverManagerInternal item)
         {
             ClearPartial();
+            item.SubObjects.Clear();
             base.Clear(item);
         }
         
@@ -790,6 +925,10 @@ namespace Mutagen.Bethesda.Starfield
             NavigationMeshObstacleCoverManager.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.SubObjects = item.SubObjects.CollectionEqualsHelper(
+                rhs.SubObjects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +978,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.SubObjects?.Overall ?? true)
+            {
+                sb.AppendLine("SubObjects =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SubObjects)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static NavigationMeshObstacleCoverManager_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1042,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshObstacleCoverManager_FieldIndex.SubObjects) ?? true))
+            {
+                if (!lhs.SubObjects.SequenceEqual(rhs.SubObjects, (l, r) => ((NavigationMeshObstacleManagerSubObjectCommon)((INavigationMeshObstacleManagerSubObjectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshObstacleCoverManager_FieldIndex.SubObjects)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1074,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(INavigationMeshObstacleCoverManagerGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.SubObjects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,6 +1178,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshObstacleCoverManager_FieldIndex.SubObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMeshObstacleCoverManager_FieldIndex.SubObjects);
+                try
+                {
+                    item.SubObjects.SetTo(
+                        rhs.SubObjects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1350,28 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly NavigationMeshObstacleCoverManagerBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            INavigationMeshObstacleCoverManagerGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMeshObstacleManagerSubObjectGetter>.Instance.Write(
+                writer: writer,
+                items: item.SubObjects,
+                transl: (MutagenWriter subWriter, INavigationMeshObstacleManagerSubObjectGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             INavigationMeshObstacleCoverManagerGetter item,
@@ -1184,10 +1388,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1443,43 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly NavigationMeshObstacleCoverManagerBinaryCreateTranslation Instance = new NavigationMeshObstacleCoverManagerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NOCM;
+        public static ParseResult FillBinaryRecordTypes(
+            INavigationMeshObstacleCoverManagerInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.DATA:
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.NAM1:
+                {
+                    item.SubObjects.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationMeshObstacleManagerSubObject>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: NavigationMeshObstacleManagerSubObject_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: NavigationMeshObstacleManagerSubObject.TryCreateFromBinary));
+                    return (int)NavigationMeshObstacleCoverManager_FieldIndex.SubObjects;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1283,6 +1526,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(INavigationMeshObstacleCoverManager);
 
 
+        public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = Array.Empty<INavigationMeshObstacleManagerSubObjectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1584,41 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.DATA:
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.NAM1:
+                {
+                    this.SubObjects = this.ParseRepeatedTypelessSubrecord<INavigationMeshObstacleManagerSubObjectGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: NavigationMeshObstacleManagerSubObject_Registration.TriggerSpecs,
+                        factory: NavigationMeshObstacleManagerSubObjectBinaryOverlay.NavigationMeshObstacleManagerSubObjectFactory);
+                    return (int)NavigationMeshObstacleCoverManager_FieldIndex.SubObjects;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

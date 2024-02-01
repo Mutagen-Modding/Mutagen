@@ -6488,5 +6488,8 @@
     <Compile Include="Records\Major Records\BiomeLandItem_Generated.cs">
       <DependentUpon>Biome.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NavigationMeshObstacleManagerSubObject_Generated.cs">
+      <DependentUpon>NavigationMeshObstacleCoverManager.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

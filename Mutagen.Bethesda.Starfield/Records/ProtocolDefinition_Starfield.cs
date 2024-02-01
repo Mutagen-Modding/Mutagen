@@ -910,6 +910,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             NavigationMesh_Registration.Instance,
             NavigationMeshInfoMap_Registration.Instance,
             NavigationMeshObstacleCoverManager_Registration.Instance,
+            NavigationMeshObstacleManagerSubObject_Registration.Instance,
             NavmeshCover_Registration.Instance,
             NavmeshCoverTriangleMap_Registration.Instance,
             NavmeshGeometry_Registration.Instance,
