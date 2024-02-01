@@ -54,6 +54,45 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ColorInfluence
+        public Single? ColorInfluence { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILensFlareGetter.ColorInfluence => this.ColorInfluence;
+        #endregion
+        #region FadeDistanceRadiusScale
+        public Single? FadeDistanceRadiusScale { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILensFlareGetter.FadeDistanceRadiusScale => this.FadeDistanceRadiusScale;
+        #endregion
+        #region ENAM
+        public Single? ENAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILensFlareGetter.ENAM => this.ENAM;
+        #endregion
+        #region MNAM
+        public Single? MNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILensFlareGetter.MNAM => this.MNAM;
+        #endregion
+        #region XNAM
+        public Single? XNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILensFlareGetter.XNAM => this.XNAM;
+        #endregion
+        #region Sprites
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LensFlareSprite>? _Sprites;
+        public ExtendedList<LensFlareSprite>? Sprites
+        {
+            get => this._Sprites;
+            set => this._Sprites = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILensFlareSpriteGetter>? ILensFlareGetter.Sprites => _Sprites;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +118,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ColorInfluence = initialValue;
+                this.FadeDistanceRadiusScale = initialValue;
+                this.ENAM = initialValue;
+                this.MNAM = initialValue;
+                this.XNAM = initialValue;
+                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +133,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ColorInfluence,
+                TItem FadeDistanceRadiusScale,
+                TItem ENAM,
+                TItem MNAM,
+                TItem XNAM,
+                TItem Sprites)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +149,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ColorInfluence = ColorInfluence;
+                this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
+                this.ENAM = ENAM;
+                this.MNAM = MNAM;
+                this.XNAM = XNAM;
+                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +163,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem ColorInfluence;
+            public TItem FadeDistanceRadiusScale;
+            public TItem ENAM;
+            public TItem MNAM;
+            public TItem XNAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>? Sprites;
             #endregion
 
             #region Equals
@@ -119,11 +185,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ColorInfluence, rhs.ColorInfluence)) return false;
+                if (!object.Equals(this.FadeDistanceRadiusScale, rhs.FadeDistanceRadiusScale)) return false;
+                if (!object.Equals(this.ENAM, rhs.ENAM)) return false;
+                if (!object.Equals(this.MNAM, rhs.MNAM)) return false;
+                if (!object.Equals(this.XNAM, rhs.XNAM)) return false;
+                if (!object.Equals(this.Sprites, rhs.Sprites)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ColorInfluence);
+                hash.Add(this.FadeDistanceRadiusScale);
+                hash.Add(this.ENAM);
+                hash.Add(this.MNAM);
+                hash.Add(this.XNAM);
+                hash.Add(this.Sprites);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +212,23 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.ColorInfluence)) return false;
+                if (!eval(this.FadeDistanceRadiusScale)) return false;
+                if (!eval(this.ENAM)) return false;
+                if (!eval(this.MNAM)) return false;
+                if (!eval(this.XNAM)) return false;
+                if (this.Sprites != null)
+                {
+                    if (!eval(this.Sprites.Overall)) return false;
+                    if (this.Sprites.Specific != null)
+                    {
+                        foreach (var item in this.Sprites.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +237,23 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.ColorInfluence)) return true;
+                if (eval(this.FadeDistanceRadiusScale)) return true;
+                if (eval(this.ENAM)) return true;
+                if (eval(this.MNAM)) return true;
+                if (eval(this.XNAM)) return true;
+                if (this.Sprites != null)
+                {
+                    if (eval(this.Sprites.Overall)) return true;
+                    if (this.Sprites.Specific != null)
+                    {
+                        foreach (var item in this.Sprites.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +269,26 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ColorInfluence = eval(this.ColorInfluence);
+                obj.FadeDistanceRadiusScale = eval(this.FadeDistanceRadiusScale);
+                obj.ENAM = eval(this.ENAM);
+                obj.MNAM = eval(this.MNAM);
+                obj.XNAM = eval(this.XNAM);
+                if (Sprites != null)
+                {
+                    obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), Enumerable.Empty<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>());
+                    if (Sprites.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>();
+                        obj.Sprites.Specific = l;
+                        foreach (var item in Sprites.Specific)
+                        {
+                            MaskItemIndexed<R, LensFlareSprite.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LensFlareSprite.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +307,45 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LensFlare.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ColorInfluence ?? true)
+                    {
+                        sb.AppendItem(ColorInfluence, "ColorInfluence");
+                    }
+                    if (printMask?.FadeDistanceRadiusScale ?? true)
+                    {
+                        sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
+                    }
+                    if (printMask?.ENAM ?? true)
+                    {
+                        sb.AppendItem(ENAM, "ENAM");
+                    }
+                    if (printMask?.MNAM ?? true)
+                    {
+                        sb.AppendItem(MNAM, "MNAM");
+                    }
+                    if (printMask?.XNAM ?? true)
+                    {
+                        sb.AppendItem(XNAM, "XNAM");
+                    }
+                    if ((printMask?.Sprites?.Overall ?? true)
+                        && Sprites is {} SpritesItem)
+                    {
+                        sb.AppendLine("Sprites =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SpritesItem.Overall);
+                            if (SpritesItem.Specific != null)
+                            {
+                                foreach (var subItem in SpritesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +356,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? ColorInfluence;
+            public Exception? FadeDistanceRadiusScale;
+            public Exception? ENAM;
+            public Exception? MNAM;
+            public Exception? XNAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>? Sprites;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
                 switch (enu)
                 {
+                    case LensFlare_FieldIndex.ColorInfluence:
+                        return ColorInfluence;
+                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
+                        return FadeDistanceRadiusScale;
+                    case LensFlare_FieldIndex.ENAM:
+                        return ENAM;
+                    case LensFlare_FieldIndex.MNAM:
+                        return MNAM;
+                    case LensFlare_FieldIndex.XNAM:
+                        return XNAM;
+                    case LensFlare_FieldIndex.Sprites:
+                        return Sprites;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +393,24 @@ namespace Mutagen.Bethesda.Starfield
                 LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
                 switch (enu)
                 {
+                    case LensFlare_FieldIndex.ColorInfluence:
+                        this.ColorInfluence = ex;
+                        break;
+                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
+                        this.FadeDistanceRadiusScale = ex;
+                        break;
+                    case LensFlare_FieldIndex.ENAM:
+                        this.ENAM = ex;
+                        break;
+                    case LensFlare_FieldIndex.MNAM:
+                        this.MNAM = ex;
+                        break;
+                    case LensFlare_FieldIndex.XNAM:
+                        this.XNAM = ex;
+                        break;
+                    case LensFlare_FieldIndex.Sprites:
+                        this.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +422,24 @@ namespace Mutagen.Bethesda.Starfield
                 LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
                 switch (enu)
                 {
+                    case LensFlare_FieldIndex.ColorInfluence:
+                        this.ColorInfluence = (Exception?)obj;
+                        break;
+                    case LensFlare_FieldIndex.FadeDistanceRadiusScale:
+                        this.FadeDistanceRadiusScale = (Exception?)obj;
+                        break;
+                    case LensFlare_FieldIndex.ENAM:
+                        this.ENAM = (Exception?)obj;
+                        break;
+                    case LensFlare_FieldIndex.MNAM:
+                        this.MNAM = (Exception?)obj;
+                        break;
+                    case LensFlare_FieldIndex.XNAM:
+                        this.XNAM = (Exception?)obj;
+                        break;
+                    case LensFlare_FieldIndex.Sprites:
+                        this.Sprites = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +449,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ColorInfluence != null) return true;
+                if (FadeDistanceRadiusScale != null) return true;
+                if (ENAM != null) return true;
+                if (MNAM != null) return true;
+                if (XNAM != null) return true;
+                if (Sprites != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +481,39 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ColorInfluence, "ColorInfluence");
+                }
+                {
+                    sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
+                }
+                {
+                    sb.AppendItem(ENAM, "ENAM");
+                }
+                {
+                    sb.AppendItem(MNAM, "MNAM");
+                }
+                {
+                    sb.AppendItem(XNAM, "XNAM");
+                }
+                if (Sprites is {} SpritesItem)
+                {
+                    sb.AppendLine("Sprites =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SpritesItem.Overall);
+                        if (SpritesItem.Specific != null)
+                        {
+                            foreach (var subItem in SpritesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +522,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ColorInfluence = this.ColorInfluence.Combine(rhs.ColorInfluence);
+                ret.FadeDistanceRadiusScale = this.FadeDistanceRadiusScale.Combine(rhs.FadeDistanceRadiusScale);
+                ret.ENAM = this.ENAM.Combine(rhs.ENAM);
+                ret.MNAM = this.MNAM.Combine(rhs.MNAM);
+                ret.XNAM = this.XNAM.Combine(rhs.XNAM);
+                ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), Noggog.ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +549,40 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool ColorInfluence;
+            public bool FadeDistanceRadiusScale;
+            public bool ENAM;
+            public bool MNAM;
+            public bool XNAM;
+            public LensFlareSprite.TranslationMask? Sprites;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ColorInfluence = defaultOn;
+                this.FadeDistanceRadiusScale = defaultOn;
+                this.ENAM = defaultOn;
+                this.MNAM = defaultOn;
+                this.XNAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ColorInfluence, null));
+                ret.Add((FadeDistanceRadiusScale, null));
+                ret.Add((ENAM, null));
+                ret.Add((MNAM, null));
+                ret.Add((XNAM, null));
+                ret.Add((Sprites == null ? DefaultOn : !Sprites.GetCrystal().CopyNothing, Sprites?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -428,6 +726,12 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ILensFlareInternal>,
         IStarfieldMajorRecordInternal
     {
+        new Single? ColorInfluence { get; set; }
+        new Single? FadeDistanceRadiusScale { get; set; }
+        new Single? ENAM { get; set; }
+        new Single? MNAM { get; set; }
+        new Single? XNAM { get; set; }
+        new ExtendedList<LensFlareSprite>? Sprites { get; set; }
     }
 
     public partial interface ILensFlareInternal :
@@ -445,6 +749,12 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<ILensFlareGetter>
     {
         static new ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
+        Single? ColorInfluence { get; }
+        Single? FadeDistanceRadiusScale { get; }
+        Single? ENAM { get; }
+        Single? MNAM { get; }
+        Single? XNAM { get; }
+        IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; }
 
     }
 
@@ -621,6 +931,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ColorInfluence = 7,
+        FadeDistanceRadiusScale = 8,
+        ENAM = 9,
+        MNAM = 10,
+        XNAM = 11,
+        Sprites = 12,
     }
     #endregion
 
@@ -631,9 +947,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(LensFlare.Mask<>);
 
@@ -663,8 +979,20 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LENS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LENS);
+            var all = RecordCollection.Factory(
+                RecordTypes.LENS,
+                RecordTypes.CNAM,
+                RecordTypes.DNAM,
+                RecordTypes.ENAM,
+                RecordTypes.MNAM,
+                RecordTypes.XNAM,
+                RecordTypes.LFSP,
+                RecordTypes.FNAM,
+                RecordTypes.LFSD);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LensFlareBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1034,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILensFlareInternal item)
         {
             ClearPartial();
+            item.ColorInfluence = default;
+            item.FadeDistanceRadiusScale = default;
+            item.ENAM = default;
+            item.MNAM = default;
+            item.XNAM = default;
+            item.Sprites = null;
             base.Clear(item);
         }
         
@@ -790,6 +1124,15 @@ namespace Mutagen.Bethesda.Starfield
             LensFlare.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ColorInfluence = item.ColorInfluence.EqualsWithin(rhs.ColorInfluence);
+            ret.FadeDistanceRadiusScale = item.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale);
+            ret.ENAM = item.ENAM.EqualsWithin(rhs.ENAM);
+            ret.MNAM = item.MNAM.EqualsWithin(rhs.MNAM);
+            ret.XNAM = item.XNAM.EqualsWithin(rhs.XNAM);
+            ret.Sprites = item.Sprites.CollectionEqualsHelper(
+                rhs.Sprites,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1182,46 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.ColorInfluence ?? true)
+                && item.ColorInfluence is {} ColorInfluenceItem)
+            {
+                sb.AppendItem(ColorInfluenceItem, "ColorInfluence");
+            }
+            if ((printMask?.FadeDistanceRadiusScale ?? true)
+                && item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleItem)
+            {
+                sb.AppendItem(FadeDistanceRadiusScaleItem, "FadeDistanceRadiusScale");
+            }
+            if ((printMask?.ENAM ?? true)
+                && item.ENAM is {} ENAMItem)
+            {
+                sb.AppendItem(ENAMItem, "ENAM");
+            }
+            if ((printMask?.MNAM ?? true)
+                && item.MNAM is {} MNAMItem)
+            {
+                sb.AppendItem(MNAMItem, "MNAM");
+            }
+            if ((printMask?.XNAM ?? true)
+                && item.XNAM is {} XNAMItem)
+            {
+                sb.AppendItem(XNAMItem, "XNAM");
+            }
+            if ((printMask?.Sprites?.Overall ?? true)
+                && item.Sprites is {} SpritesItem)
+            {
+                sb.AppendLine("Sprites =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in SpritesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static LensFlare_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1272,30 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
+            {
+                if (!lhs.ColorInfluence.EqualsWithin(rhs.ColorInfluence)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
+            {
+                if (!lhs.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ENAM) ?? true))
+            {
+                if (!lhs.ENAM.EqualsWithin(rhs.ENAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MNAM) ?? true))
+            {
+                if (!lhs.MNAM.EqualsWithin(rhs.MNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.XNAM) ?? true))
+            {
+                if (!lhs.XNAM.EqualsWithin(rhs.XNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
+            {
+                if (!lhs.Sprites.SequenceEqualNullable(rhs.Sprites, (l, r) => ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LensFlare_FieldIndex.Sprites)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1324,27 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILensFlareGetter item)
         {
             var hash = new HashCode();
+            if (item.ColorInfluence is {} ColorInfluenceitem)
+            {
+                hash.Add(ColorInfluenceitem);
+            }
+            if (item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleitem)
+            {
+                hash.Add(FadeDistanceRadiusScaleitem);
+            }
+            if (item.ENAM is {} ENAMitem)
+            {
+                hash.Add(ENAMitem);
+            }
+            if (item.MNAM is {} MNAMitem)
+            {
+                hash.Add(MNAMitem);
+            }
+            if (item.XNAM is {} XNAMitem)
+            {
+                hash.Add(XNAMitem);
+            }
+            hash.Add(item.Sprites);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,6 +1448,58 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
+            {
+                item.ColorInfluence = rhs.ColorInfluence;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
+            {
+                item.FadeDistanceRadiusScale = rhs.FadeDistanceRadiusScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ENAM) ?? true))
+            {
+                item.ENAM = rhs.ENAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MNAM) ?? true))
+            {
+                item.MNAM = rhs.MNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.XNAM) ?? true))
+            {
+                item.XNAM = rhs.XNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
+            {
+                errorMask?.PushIndex((int)LensFlare_FieldIndex.Sprites);
+                try
+                {
+                    if ((rhs.Sprites != null))
+                    {
+                        item.Sprites = 
+                            rhs.Sprites
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LensFlareSprite>();
+                    }
+                    else
+                    {
+                        item.Sprites = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1648,50 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly LensFlareBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ILensFlareGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ColorInfluence,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FadeDistanceRadiusScale,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ENAM,
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILensFlareSpriteGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Sprites,
+                counterType: RecordTypes.LFSP,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, ILensFlareSpriteGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LensFlareSpriteBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ILensFlareGetter item,
@@ -1184,10 +1708,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1763,73 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LENS;
+        public static ParseResult FillBinaryRecordTypes(
+            ILensFlareInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ColorInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.ColorInfluence;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FadeDistanceRadiusScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ENAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.ENAM;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.MNAM;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.XNAM;
+                }
+                case RecordTypeInts.LFSP:
+                {
+                    item.Sprites = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LensFlareSprite>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.LFSP,
+                            triggeringRecord: LensFlareSprite_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: LensFlareSprite.TryCreateFromBinary)
+                        .CastExtendedList<LensFlareSprite>();
+                    return (int)LensFlare_FieldIndex.Sprites;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1283,6 +1876,27 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILensFlare);
 
 
+        #region ColorInfluence
+        private int? _ColorInfluenceLocation;
+        public Single? ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region FadeDistanceRadiusScale
+        private int? _FadeDistanceRadiusScaleLocation;
+        public Single? FadeDistanceRadiusScale => _FadeDistanceRadiusScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeDistanceRadiusScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ENAM
+        private int? _ENAMLocation;
+        public Single? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region MNAM
+        private int? _MNAMLocation;
+        public Single? MNAM => _MNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region XNAM
+        private int? _XNAMLocation;
+        public Single? XNAM => _XNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1954,67 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.CNAM:
+                {
+                    _ColorInfluenceLocation = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.ColorInfluence;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _FadeDistanceRadiusScaleLocation = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _ENAMLocation = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.ENAM;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _MNAMLocation = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.MNAM;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    _XNAMLocation = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.XNAM;
+                }
+                case RecordTypeInts.LFSP:
+                {
+                    this.Sprites = BinaryOverlayList.FactoryByCountPerItem<ILensFlareSpriteGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: LensFlareSprite_Registration.TriggerSpecs,
+                        countType: RecordTypes.LFSP,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => LensFlareSpriteBinaryOverlay.LensFlareSpriteFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)LensFlare_FieldIndex.Sprites;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

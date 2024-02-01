@@ -56,6 +56,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
         AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
         AddDynamicProcessing(RecordTypes.ZOOM, ProcessZooms);
+        AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -1220,6 +1221,18 @@ public class StarfieldProcessor : Processor
             ProcessZeroFloat(znam, fileOffset, ref pos);
             pos += 1;
             ProcessZeroFloat(znam, fileOffset, ref pos);
+        }
+    }
+
+    private void ProcessLenses(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LFSD))
+        {
+            int loc = 0;
+            ProcessColorFloat(subRec, fileOffset, ref loc, alpha: false);
+            ProcessZeroFloats(subRec, fileOffset, ref loc, 5);
         }
     }
 }

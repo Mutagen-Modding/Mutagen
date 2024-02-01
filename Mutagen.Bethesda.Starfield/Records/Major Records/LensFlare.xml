@@ -2,6 +2,30 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LensFlare" recordType="LENS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Float name="ColorInfluence" recordType="CNAM" />
+      <Float name="FadeDistanceRadiusScale" recordType="DNAM" />
+      <Float name="ENAM" recordType="ENAM" />
+      <Float name="MNAM" recordType="MNAM" />
+      <Float name="XNAM" recordType="XNAM" />
+      <RefList name="Sprites" refName="LensFlareSprite" counterRecType="LFSP" allowNoCounter="false" />
+    </Fields>
+  </Object>
+  <Object name="LensFlareSprite" objType="Subrecord">
+    <Fields>
+      <String name="LensFlareSpriteId" recordType="DNAM" />
+      <String name="Texture" recordType="FNAM" />
+      <RefDirect name="Data" refName="LensFlareSpriteData" />
+    </Fields>
+  </Object>
+  <Object name="LensFlareSpriteData" objType="Subrecord" recordType="LFSD">
+    <Fields>
+      <Color name="Tint" binaryType="NoAlphaFloat" />
+      <Float name="Width" />
+      <Float name="Height" />
+      <Float name="Position" />
+      <Float name="AngularFade" />
+      <Float name="Opacity" />
+      <Enum name="Flags" enumName="LensFlareSpriteData.Flag" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

@@ -2215,6 +2215,9 @@
     <Compile Include="Records\Major Records\LegendaryItem.cs">
       <DependentUpon>LegendaryItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LensFlareSpriteData.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
@@ -6490,6 +6493,12 @@
     </Compile>
     <Compile Include="Records\Major Records\NavigationMeshObstacleManagerSubObject_Generated.cs">
       <DependentUpon>NavigationMeshObstacleCoverManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LensFlareSprite_Generated.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LensFlareSpriteData_Generated.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
