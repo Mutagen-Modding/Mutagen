@@ -2,6 +2,13 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ObjectVisibilityManager" recordType="OVIS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Objects" refName="ObjectVisibilityManagerItem" />
+    </Fields>
+  </Object>
+  <Object name="ObjectVisibilityManagerItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="Object" recordType="INDX" refName="Static" />
+      <RefList name="ObjectBounds" refName="ObjectBoundsFloat" recordType="DATA" />
     </Fields>
   </Object>
 </Loqui>

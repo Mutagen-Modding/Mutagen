@@ -129,6 +129,7 @@
       <Group name="Biomes" refName="Biome" />
       <Group name="NavigationMeshObstacleCoverManagers" refName="NavigationMeshObstacleCoverManager" />
       <Group name="LensFlares" refName="LensFlare" />
+      <Group name="ObjectVisibilityManagers" refName="ObjectVisibilityManager" />
       <Group name="BiomeSwaps" refName="BiomeSwap" />
       <Group name="SnapTemplates" refName="SnapTemplate" />
       <Group name="Planets" refName="Planet" />

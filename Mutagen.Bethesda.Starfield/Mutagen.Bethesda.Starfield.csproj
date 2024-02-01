@@ -6500,5 +6500,11 @@
     <Compile Include="Records\Major Records\LensFlareSpriteData_Generated.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectBoundsFloat_Generated.cs">
+      <DependentUpon>ObjectBounds.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectVisibilityManagerItem_Generated.cs">
+      <DependentUpon>ObjectVisibilityManager.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

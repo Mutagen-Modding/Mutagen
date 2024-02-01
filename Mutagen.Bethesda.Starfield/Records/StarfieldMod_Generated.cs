@@ -182,6 +182,7 @@ namespace Mutagen.Bethesda.Starfield
             _Biomes_Object = new StarfieldGroup<Biome>(this);
             _NavigationMeshObstacleCoverManagers_Object = new StarfieldGroup<NavigationMeshObstacleCoverManager>(this);
             _LensFlares_Object = new StarfieldGroup<LensFlare>(this);
+            _ObjectVisibilityManagers_Object = new StarfieldGroup<ObjectVisibilityManager>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _SnapTemplates_Object = new StarfieldGroup<SnapTemplate>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
@@ -1056,6 +1057,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ILensFlareGetter> IStarfieldModGetter.LensFlares => _LensFlares_Object;
         #endregion
+        #region ObjectVisibilityManagers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ObjectVisibilityManager> _ObjectVisibilityManagers_Object;
+        public StarfieldGroup<ObjectVisibilityManager> ObjectVisibilityManagers => _ObjectVisibilityManagers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IObjectVisibilityManagerGetter> IStarfieldModGetter.ObjectVisibilityManagers => _ObjectVisibilityManagers_Object;
+        #endregion
         #region BiomeSwaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<BiomeSwap> _BiomeSwaps_Object;
@@ -1274,6 +1282,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Biomes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.NavigationMeshObstacleCoverManagers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LensFlares = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ObjectVisibilityManagers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SnapTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1408,6 +1417,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Biomes,
                 TItem NavigationMeshObstacleCoverManagers,
                 TItem LensFlares,
+                TItem ObjectVisibilityManagers,
                 TItem BiomeSwaps,
                 TItem SnapTemplates,
                 TItem Planets,
@@ -1540,6 +1550,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Biomes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Biomes, new StarfieldGroup.Mask<TItem>(Biomes));
                 this.NavigationMeshObstacleCoverManagers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(NavigationMeshObstacleCoverManagers, new StarfieldGroup.Mask<TItem>(NavigationMeshObstacleCoverManagers));
                 this.LensFlares = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LensFlares, new StarfieldGroup.Mask<TItem>(LensFlares));
+                this.ObjectVisibilityManagers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ObjectVisibilityManagers, new StarfieldGroup.Mask<TItem>(ObjectVisibilityManagers));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeSwaps, new StarfieldGroup.Mask<TItem>(BiomeSwaps));
                 this.SnapTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SnapTemplates, new StarfieldGroup.Mask<TItem>(SnapTemplates));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
@@ -1682,6 +1693,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Biomes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? NavigationMeshObstacleCoverManagers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LensFlares { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ObjectVisibilityManagers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeSwaps { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SnapTemplates { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
@@ -1825,6 +1837,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Biomes, rhs.Biomes)) return false;
                 if (!object.Equals(this.NavigationMeshObstacleCoverManagers, rhs.NavigationMeshObstacleCoverManagers)) return false;
                 if (!object.Equals(this.LensFlares, rhs.LensFlares)) return false;
+                if (!object.Equals(this.ObjectVisibilityManagers, rhs.ObjectVisibilityManagers)) return false;
                 if (!object.Equals(this.BiomeSwaps, rhs.BiomeSwaps)) return false;
                 if (!object.Equals(this.SnapTemplates, rhs.SnapTemplates)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
@@ -1961,6 +1974,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Biomes);
                 hash.Add(this.NavigationMeshObstacleCoverManagers);
                 hash.Add(this.LensFlares);
+                hash.Add(this.ObjectVisibilityManagers);
                 hash.Add(this.BiomeSwaps);
                 hash.Add(this.SnapTemplates);
                 hash.Add(this.Planets);
@@ -2591,6 +2605,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.LensFlares.Overall)) return false;
                     if (this.LensFlares.Specific != null && !this.LensFlares.Specific.All(eval)) return false;
+                }
+                if (ObjectVisibilityManagers != null)
+                {
+                    if (!eval(this.ObjectVisibilityManagers.Overall)) return false;
+                    if (this.ObjectVisibilityManagers.Specific != null && !this.ObjectVisibilityManagers.Specific.All(eval)) return false;
                 }
                 if (BiomeSwaps != null)
                 {
@@ -3254,6 +3273,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.LensFlares.Overall)) return true;
                     if (this.LensFlares.Specific != null && this.LensFlares.Specific.Any(eval)) return true;
                 }
+                if (ObjectVisibilityManagers != null)
+                {
+                    if (eval(this.ObjectVisibilityManagers.Overall)) return true;
+                    if (this.ObjectVisibilityManagers.Specific != null && this.ObjectVisibilityManagers.Specific.Any(eval)) return true;
+                }
                 if (BiomeSwaps != null)
                 {
                     if (eval(this.BiomeSwaps.Overall)) return true;
@@ -3431,6 +3455,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Biomes = this.Biomes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Biomes.Overall), this.Biomes.Specific?.Translate(eval));
                 obj.NavigationMeshObstacleCoverManagers = this.NavigationMeshObstacleCoverManagers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.NavigationMeshObstacleCoverManagers.Overall), this.NavigationMeshObstacleCoverManagers.Specific?.Translate(eval));
                 obj.LensFlares = this.LensFlares == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LensFlares.Overall), this.LensFlares.Specific?.Translate(eval));
+                obj.ObjectVisibilityManagers = this.ObjectVisibilityManagers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ObjectVisibilityManagers.Overall), this.ObjectVisibilityManagers.Specific?.Translate(eval));
                 obj.BiomeSwaps = this.BiomeSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeSwaps.Overall), this.BiomeSwaps.Specific?.Translate(eval));
                 obj.SnapTemplates = this.SnapTemplates == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SnapTemplates.Overall), this.SnapTemplates.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
@@ -3949,6 +3974,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         LensFlares?.Print(sb);
                     }
+                    if (printMask?.ObjectVisibilityManagers?.Overall ?? true)
+                    {
+                        ObjectVisibilityManagers?.Print(sb);
+                    }
                     if (printMask?.BiomeSwaps?.Overall ?? true)
                     {
                         BiomeSwaps?.Print(sb);
@@ -4128,6 +4157,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Biome.ErrorMask>?>? Biomes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<NavigationMeshObstacleCoverManager.ErrorMask>?>? NavigationMeshObstacleCoverManagers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LensFlare.ErrorMask>?>? LensFlares;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ObjectVisibilityManager.ErrorMask>?>? ObjectVisibilityManagers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>? BiomeSwaps;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplate.ErrorMask>?>? SnapTemplates;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
@@ -4390,6 +4420,8 @@ namespace Mutagen.Bethesda.Starfield
                         return NavigationMeshObstacleCoverManagers;
                     case StarfieldMod_FieldIndex.LensFlares:
                         return LensFlares;
+                    case StarfieldMod_FieldIndex.ObjectVisibilityManagers:
+                        return ObjectVisibilityManagers;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         return BiomeSwaps;
                     case StarfieldMod_FieldIndex.SnapTemplates:
@@ -4784,6 +4816,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.LensFlares:
                         this.LensFlares = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LensFlare.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ObjectVisibilityManagers:
+                        this.ObjectVisibilityManagers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ObjectVisibilityManager.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         this.BiomeSwaps = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>(ex, null);
@@ -5188,6 +5223,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.LensFlares:
                         this.LensFlares = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LensFlare.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.ObjectVisibilityManagers:
+                        this.ObjectVisibilityManagers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ObjectVisibilityManager.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         this.BiomeSwaps = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>?)obj;
                         break;
@@ -5343,6 +5381,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Biomes != null) return true;
                 if (NavigationMeshObstacleCoverManagers != null) return true;
                 if (LensFlares != null) return true;
+                if (ObjectVisibilityManagers != null) return true;
                 if (BiomeSwaps != null) return true;
                 if (SnapTemplates != null) return true;
                 if (Planets != null) return true;
@@ -5499,6 +5538,7 @@ namespace Mutagen.Bethesda.Starfield
                 Biomes?.Print(sb);
                 NavigationMeshObstacleCoverManagers?.Print(sb);
                 LensFlares?.Print(sb);
+                ObjectVisibilityManagers?.Print(sb);
                 BiomeSwaps?.Print(sb);
                 SnapTemplates?.Print(sb);
                 Planets?.Print(sb);
@@ -5638,6 +5678,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Biomes = this.Biomes.Combine(rhs.Biomes, (l, r) => l.Combine(r));
                 ret.NavigationMeshObstacleCoverManagers = this.NavigationMeshObstacleCoverManagers.Combine(rhs.NavigationMeshObstacleCoverManagers, (l, r) => l.Combine(r));
                 ret.LensFlares = this.LensFlares.Combine(rhs.LensFlares, (l, r) => l.Combine(r));
+                ret.ObjectVisibilityManagers = this.ObjectVisibilityManagers.Combine(rhs.ObjectVisibilityManagers, (l, r) => l.Combine(r));
                 ret.BiomeSwaps = this.BiomeSwaps.Combine(rhs.BiomeSwaps, (l, r) => l.Combine(r));
                 ret.SnapTemplates = this.SnapTemplates.Combine(rhs.SnapTemplates, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
@@ -5792,6 +5833,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Biome.TranslationMask>? Biomes;
             public StarfieldGroup.TranslationMask<NavigationMeshObstacleCoverManager.TranslationMask>? NavigationMeshObstacleCoverManagers;
             public StarfieldGroup.TranslationMask<LensFlare.TranslationMask>? LensFlares;
+            public StarfieldGroup.TranslationMask<ObjectVisibilityManager.TranslationMask>? ObjectVisibilityManagers;
             public StarfieldGroup.TranslationMask<BiomeSwap.TranslationMask>? BiomeSwaps;
             public StarfieldGroup.TranslationMask<SnapTemplate.TranslationMask>? SnapTemplates;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
@@ -5947,6 +5989,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Biomes != null ? Biomes.OnOverall : DefaultOn, Biomes?.GetCrystal()));
                 ret.Add((NavigationMeshObstacleCoverManagers != null ? NavigationMeshObstacleCoverManagers.OnOverall : DefaultOn, NavigationMeshObstacleCoverManagers?.GetCrystal()));
                 ret.Add((LensFlares != null ? LensFlares.OnOverall : DefaultOn, LensFlares?.GetCrystal()));
+                ret.Add((ObjectVisibilityManagers != null ? ObjectVisibilityManagers.OnOverall : DefaultOn, ObjectVisibilityManagers?.GetCrystal()));
                 ret.Add((BiomeSwaps != null ? BiomeSwaps.OnOverall : DefaultOn, BiomeSwaps?.GetCrystal()));
                 ret.Add((SnapTemplates != null ? SnapTemplates.OnOverall : DefaultOn, SnapTemplates?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
@@ -6123,6 +6166,7 @@ namespace Mutagen.Bethesda.Starfield
             _Biomes_Object = new StarfieldGroup<Biome>(this);
             _NavigationMeshObstacleCoverManagers_Object = new StarfieldGroup<NavigationMeshObstacleCoverManager>(this);
             _LensFlares_Object = new StarfieldGroup<LensFlare>(this);
+            _ObjectVisibilityManagers_Object = new StarfieldGroup<ObjectVisibilityManager>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _SnapTemplates_Object = new StarfieldGroup<SnapTemplate>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
@@ -6628,6 +6672,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.LensFlares.RecordCache.Set(rhsMod.LensFlares.RecordCache.Items);
             }
+            if (mask?.ObjectVisibilityManagers ?? true)
+            {
+                this.ObjectVisibilityManagers.RecordCache.Set(rhsMod.ObjectVisibilityManagers.RecordCache.Items);
+            }
             if (mask?.BiomeSwaps ?? true)
             {
                 this.BiomeSwaps.RecordCache.Set(rhsMod.BiomeSwaps.RecordCache.Items);
@@ -6792,6 +6840,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Biomes.RecordCache.Count > 0 ? 1 : default(uint);
             count += NavigationMeshObstacleCoverManagers.RecordCache.Count > 0 ? 1 : default(uint);
             count += LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ObjectVisibilityManagers.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
             count += SnapTemplates.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
@@ -7196,6 +7245,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Biome> Biomes { get; }
         new StarfieldGroup<NavigationMeshObstacleCoverManager> NavigationMeshObstacleCoverManagers { get; }
         new StarfieldGroup<LensFlare> LensFlares { get; }
+        new StarfieldGroup<ObjectVisibilityManager> ObjectVisibilityManagers { get; }
         new StarfieldGroup<BiomeSwap> BiomeSwaps { get; }
         new StarfieldGroup<SnapTemplate> SnapTemplates { get; }
         new StarfieldGroup<Planet> Planets { get; }
@@ -7346,6 +7396,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IBiomeGetter> Biomes { get; }
         IStarfieldGroupGetter<INavigationMeshObstacleCoverManagerGetter> NavigationMeshObstacleCoverManagers { get; }
         IStarfieldGroupGetter<ILensFlareGetter> LensFlares { get; }
+        IStarfieldGroupGetter<IObjectVisibilityManagerGetter> ObjectVisibilityManagers { get; }
         IStarfieldGroupGetter<IBiomeSwapGetter> BiomeSwaps { get; }
         IStarfieldGroupGetter<ISnapTemplateGetter> SnapTemplates { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
@@ -8059,14 +8110,15 @@ namespace Mutagen.Bethesda.Starfield
         Biomes = 120,
         NavigationMeshObstacleCoverManagers = 121,
         LensFlares = 122,
-        BiomeSwaps = 123,
-        SnapTemplates = 124,
-        Planets = 125,
-        ConditionRecords = 126,
-        SurfacePatternStyles = 127,
-        TerminalMenus = 128,
-        LegendaryItems = 129,
-        ActorValueModulations = 130,
+        ObjectVisibilityManagers = 123,
+        BiomeSwaps = 124,
+        SnapTemplates = 125,
+        Planets = 126,
+        ConditionRecords = 127,
+        SurfacePatternStyles = 128,
+        TerminalMenus = 129,
+        LegendaryItems = 130,
+        ActorValueModulations = 131,
     }
     #endregion
 
@@ -8077,9 +8129,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 131;
+        public const ushort AdditionalFieldCount = 132;
 
-        public const ushort FieldCount = 131;
+        public const ushort FieldCount = 132;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -8267,6 +8319,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Biomes.Clear();
             item.NavigationMeshObstacleCoverManagers.Clear();
             item.LensFlares.Clear();
+            item.ObjectVisibilityManagers.Clear();
             item.BiomeSwaps.Clear();
             item.SnapTemplates.Clear();
             item.Planets.Clear();
@@ -8381,6 +8434,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AnimationSoundTagSets.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
             obj.Biomes.RemapLinks(mapping);
+            obj.ObjectVisibilityManagers.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
             obj.ConditionRecords.RemapLinks(mapping);
@@ -8543,6 +8597,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Biomes.Remove(keys);
             obj.NavigationMeshObstacleCoverManagers.Remove(keys);
             obj.LensFlares.Remove(keys);
+            obj.ObjectVisibilityManagers.Remove(keys);
             obj.BiomeSwaps.Remove(keys);
             obj.SnapTemplates.Remove(keys);
             obj.Planets.Remove(keys);
@@ -9583,6 +9638,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILensFlare":
                 case "ILensFlareInternal":
                     obj.LensFlares.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    obj.ObjectVisibilityManagers.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -10672,6 +10735,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Biomes = MaskItemExt.Factory(item.Biomes.GetEqualsMask(rhs.Biomes, include), include);
             ret.NavigationMeshObstacleCoverManagers = MaskItemExt.Factory(item.NavigationMeshObstacleCoverManagers.GetEqualsMask(rhs.NavigationMeshObstacleCoverManagers, include), include);
             ret.LensFlares = MaskItemExt.Factory(item.LensFlares.GetEqualsMask(rhs.LensFlares, include), include);
+            ret.ObjectVisibilityManagers = MaskItemExt.Factory(item.ObjectVisibilityManagers.GetEqualsMask(rhs.ObjectVisibilityManagers, include), include);
             ret.BiomeSwaps = MaskItemExt.Factory(item.BiomeSwaps.GetEqualsMask(rhs.BiomeSwaps, include), include);
             ret.SnapTemplates = MaskItemExt.Factory(item.SnapTemplates.GetEqualsMask(rhs.SnapTemplates, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
@@ -11215,6 +11279,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.LensFlares?.Overall ?? true)
             {
                 item.LensFlares?.Print(sb, "LensFlares");
+            }
+            if (printMask?.ObjectVisibilityManagers?.Overall ?? true)
+            {
+                item.ObjectVisibilityManagers?.Print(sb, "ObjectVisibilityManagers");
             }
             if (printMask?.BiomeSwaps?.Overall ?? true)
             {
@@ -12241,6 +12309,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isLensFlaresEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ObjectVisibilityManagers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectVisibilityManagers, rhs.ObjectVisibilityManagers, out var lhsObjectVisibilityManagers, out var rhsObjectVisibilityManagers, out var isObjectVisibilityManagersEqual))
+                {
+                    if (!object.Equals(lhsObjectVisibilityManagers, rhsObjectVisibilityManagers)) return false;
+                }
+                else if (!isObjectVisibilityManagersEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.BiomeSwaps) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BiomeSwaps, rhs.BiomeSwaps, out var lhsBiomeSwaps, out var rhsBiomeSwaps, out var isBiomeSwapsEqual))
@@ -12434,6 +12510,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Biomes);
             hash.Add(item.NavigationMeshObstacleCoverManagers);
             hash.Add(item.LensFlares);
+            hash.Add(item.ObjectVisibilityManagers);
             hash.Add(item.BiomeSwaps);
             hash.Add(item.SnapTemplates);
             hash.Add(item.Planets);
@@ -13069,6 +13146,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILensFlare":
                 case "ILensFlareInternal":
                     return obj.LensFlares;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    return obj.ObjectVisibilityManagers;
                 case "BiomeSwap":
                 case "IBiomeSwapGetter":
                 case "IBiomeSwap":
@@ -13135,7 +13217,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[130];
+            Stream[] outputStreams = new Stream[131];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -13259,14 +13341,15 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Biomes, 119, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.NavigationMeshObstacleCoverManagers, 120, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LensFlares, 121, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 122, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 123, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 124, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 125, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 126, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 127, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 128, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 129, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectVisibilityManagers, 122, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 123, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 124, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 125, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 126, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 127, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 128, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 129, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 130, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -13724,6 +13807,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Biomes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectVisibilityManagers.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -14247,6 +14334,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.LensFlares.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectVisibilityManagers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -15402,6 +15493,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILensFlare":
                 case "ILensFlareInternal":
                     foreach (var item in obj.LensFlares.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    foreach (var item in obj.ObjectVisibilityManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16722,6 +16822,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.LensFlares,
                 groupGetter: (m) => m.LensFlares))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ObjectVisibilityManager, IObjectVisibilityManagerGetter>(
+                srcGroup: obj.ObjectVisibilityManagers,
+                type: typeof(IObjectVisibilityManagerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ObjectVisibilityManagers,
+                groupGetter: (m) => m.ObjectVisibilityManagers))
             {
                 yield return item;
             }
@@ -18518,6 +18627,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.LensFlares,
                         groupGetter: (m) => m.LensFlares))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ObjectVisibilityManager":
+                case "IObjectVisibilityManagerGetter":
+                case "IObjectVisibilityManager":
+                case "IObjectVisibilityManagerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ObjectVisibilityManager, IObjectVisibilityManagerGetter>(
+                        srcGroup: obj.ObjectVisibilityManagers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ObjectVisibilityManagers,
+                        groupGetter: (m) => m.ObjectVisibilityManagers))
                     {
                         yield return item;
                     }
@@ -21756,6 +21879,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ObjectVisibilityManagers) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ObjectVisibilityManagers);
+                try
+                {
+                    item.ObjectVisibilityManagers.DeepCopyIn(
+                        rhs: rhs.ObjectVisibilityManagers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ObjectVisibilityManagers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.BiomeSwaps) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.BiomeSwaps);
@@ -22128,6 +22271,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Biomes;
         public bool NavigationMeshObstacleCoverManagers;
         public bool LensFlares;
+        public bool ObjectVisibilityManagers;
         public bool BiomeSwaps;
         public bool SnapTemplates;
         public bool Planets;
@@ -22263,6 +22407,7 @@ namespace Mutagen.Bethesda.Starfield
             Biomes = defaultValue;
             NavigationMeshObstacleCoverManagers = defaultValue;
             LensFlares = defaultValue;
+            ObjectVisibilityManagers = defaultValue;
             BiomeSwaps = defaultValue;
             SnapTemplates = defaultValue;
             Planets = defaultValue;
@@ -23668,6 +23813,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)LensFlaresItem).BinaryWriteTranslator).Write<ILensFlareGetter>(
                         item: LensFlaresItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ObjectVisibilityManagers ?? true)
+            {
+                var ObjectVisibilityManagersItem = item.ObjectVisibilityManagers;
+                if (ObjectVisibilityManagersItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ObjectVisibilityManagersItem).BinaryWriteTranslator).Write<IObjectVisibilityManagerGetter>(
+                        item: ObjectVisibilityManagersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -25528,6 +25684,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.LensFlares;
                 }
+                case RecordTypeInts.OVIS:
+                {
+                    if (importMask?.ObjectVisibilityManagers ?? true)
+                    {
+                        item.ObjectVisibilityManagers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ObjectVisibilityManagers;
+                }
                 case RecordTypeInts.OSWP:
                 {
                     if (importMask?.BiomeSwaps ?? true)
@@ -26421,6 +26591,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? StarfieldGroupBinaryOverlay<ILensFlareGetter>.StarfieldGroupFactory(_stream, _LensFlaresLocations, _package) : default;
         public IStarfieldGroupGetter<ILensFlareGetter> LensFlares => _LensFlares ?? new StarfieldGroup<LensFlare>(this);
         #endregion
+        #region ObjectVisibilityManagers
+        private List<RangeInt64>? _ObjectVisibilityManagersLocations;
+        private IStarfieldGroupGetter<IObjectVisibilityManagerGetter>? _ObjectVisibilityManagers => _ObjectVisibilityManagersLocations != null ? StarfieldGroupBinaryOverlay<IObjectVisibilityManagerGetter>.StarfieldGroupFactory(_stream, _ObjectVisibilityManagersLocations, _package) : default;
+        public IStarfieldGroupGetter<IObjectVisibilityManagerGetter> ObjectVisibilityManagers => _ObjectVisibilityManagers ?? new StarfieldGroup<ObjectVisibilityManager>(this);
+        #endregion
         #region BiomeSwaps
         private List<RangeInt64>? _BiomeSwapsLocations;
         private IStarfieldGroupGetter<IBiomeSwapGetter>? _BiomeSwaps => _BiomeSwapsLocations != null ? StarfieldGroupBinaryOverlay<IBiomeSwapGetter>.StarfieldGroupFactory(_stream, _BiomeSwapsLocations, _package) : default;
@@ -27285,6 +27460,12 @@ namespace Mutagen.Bethesda.Starfield
                     _LensFlaresLocations ??= new();
                     _LensFlaresLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.LensFlares;
+                }
+                case RecordTypeInts.OVIS:
+                {
+                    _ObjectVisibilityManagersLocations ??= new();
+                    _ObjectVisibilityManagersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ObjectVisibilityManagers;
                 }
                 case RecordTypeInts.OSWP:
                 {
