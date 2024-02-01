@@ -804,6 +804,8 @@ public partial class RecordTypeInts
     public const int SRAC = 0x43415253;
     public const int SRAF = 0x46415253;
     public const int SSPN = 0x4E505353;
+    public const int STAD = 0x44415453;
+    public const int STAE = 0x45415453;
     public const int STAG = 0x47415453;
     public const int STAT = 0x54415453;
     public const int STBH = 0x48425453;
@@ -813,6 +815,7 @@ public partial class RecordTypeInts
     public const int STKD = 0x444B5453;
     public const int STLS = 0x534C5453;
     public const int STMP = 0x504D5453;
+    public const int STMS = 0x534D5453;
     public const int STND = 0x444E5453;
     public const int STON = 0x4E4F5453;
     public const int STOP = 0x504F5453;

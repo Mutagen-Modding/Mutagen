@@ -6467,5 +6467,8 @@
     <Compile Include="Records\Major Records\SoundKeywordMappingItem_Generated.cs">
       <DependentUpon>SoundKeywordMapping.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AnimationSoundTag_Generated.cs">
+      <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

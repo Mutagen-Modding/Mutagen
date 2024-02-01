@@ -40,6 +40,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             AnimationGraphComponent_Registration.Instance,
             AnimationSceneAction_Registration.Instance,
             AnimationSceneItem_Registration.Instance,
+            AnimationSoundTag_Registration.Instance,
             AnimationSoundTagSet_Registration.Instance,
             ANpcLevel_Registration.Instance,
             AObjectModification_Registration.Instance,

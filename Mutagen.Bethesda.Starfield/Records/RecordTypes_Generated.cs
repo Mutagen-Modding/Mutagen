@@ -806,6 +806,8 @@ public partial class RecordTypes
     public static readonly RecordType SRAC = new(0x43415253);
     public static readonly RecordType SRAF = new(0x46415253);
     public static readonly RecordType SSPN = new(0x4E505353);
+    public static readonly RecordType STAD = new(0x44415453);
+    public static readonly RecordType STAE = new(0x45415453);
     public static readonly RecordType STAG = new(0x47415453);
     public static readonly RecordType STAT = new(0x54415453);
     public static readonly RecordType STBH = new(0x48425453);
@@ -815,6 +817,7 @@ public partial class RecordTypes
     public static readonly RecordType STKD = new(0x444B5453);
     public static readonly RecordType STLS = new(0x534C5453);
     public static readonly RecordType STMP = new(0x504D5453);
+    public static readonly RecordType STMS = new(0x534D5453);
     public static readonly RecordType STND = new(0x444E5453);
     public static readonly RecordType STON = new(0x4E4F5453);
     public static readonly RecordType STOP = new(0x504F5453);
