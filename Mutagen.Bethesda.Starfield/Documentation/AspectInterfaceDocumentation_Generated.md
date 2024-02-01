@@ -73,6 +73,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - QuestReferenceAlias
 - Race
 - Resource
+- SoundKeywordMapping
 - SoundMarker
 - Spell
 - Terminal
@@ -761,6 +762,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### SoundEchoMarker
 - IObjectBounded
+### SoundKeywordMapping
+- IKeyworded
 ### SoundMarker
 - IKeyworded
 - IObjectBounded

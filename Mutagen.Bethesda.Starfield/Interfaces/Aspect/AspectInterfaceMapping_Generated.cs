@@ -108,6 +108,7 @@ namespace Mutagen.Bethesda.Starfield
                     QuestReferenceAlias_Registration.Instance,
                     Race_Registration.Instance,
                     Resource_Registration.Instance,
+                    SoundKeywordMapping_Registration.Instance,
                     SoundMarker_Registration.Instance,
                     Spell_Registration.Instance,
                     Terminal_Registration.Instance,

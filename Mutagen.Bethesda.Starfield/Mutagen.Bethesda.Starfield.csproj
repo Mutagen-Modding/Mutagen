@@ -6464,5 +6464,8 @@
     <Compile Include="Records\Major Records\ColorRemappingIndex_Generated.cs">
       <DependentUpon>ColorRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundKeywordMappingItem_Generated.cs">
+      <DependentUpon>SoundKeywordMapping.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

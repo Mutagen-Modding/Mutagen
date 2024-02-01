@@ -122,6 +122,7 @@
       <Group name="ObjectModifications" refName="AObjectModification" />
       <Group name="Zooms" refName="Zoom" />
       <Group name="InstanceNamingRules" refName="InstanceNamingRules" />
+      <Group name="SoundKeywordMappings" refName="SoundKeywordMapping" />
       <Group name="AttractionRules" refName="AttractionRule" />
       <Group name="Resources" refName="Resource" />
       <Group name="BiomeSwaps" refName="BiomeSwap" />

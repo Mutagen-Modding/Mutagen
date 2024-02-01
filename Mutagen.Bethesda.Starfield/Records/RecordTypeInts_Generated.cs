@@ -738,6 +738,8 @@ public partial class RecordTypeInts
     public const int RQPK = 0x4B505152;
     public const int RSCS = 0x53435352;
     public const int RSGD = 0x44475352;
+    public const int RSMC = 0x434D5352;
+    public const int RSMH = 0x484D5352;
     public const int RSPJ = 0x4A505352;
     public const int RVSH = 0x48535652;
     public const int SAIA = 0x41494153;

@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +56,57 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region WED0
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _WED0;
+        public SoundReference? WED0
+        {
+            get => _WED0;
+            set => _WED0 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? ISoundKeywordMappingGetter.WED0 => this.WED0;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>> _Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>> Keywords
+        {
+            get => this._Keywords;
+            init => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>> ISoundKeywordMappingGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        ExtendedList<IFormLinkGetter<IKeywordGetter>>? IKeyworded<IKeywordGetter>.Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value ?? new();
+        }
+        #endregion
+        #endregion
+        #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SoundKeywordMappingItem> _Items = new ExtendedList<SoundKeywordMappingItem>();
+        public ExtendedList<SoundKeywordMappingItem> Items
+        {
+            get => this._Items;
+            init => this._Items = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISoundKeywordMappingItemGetter> ISoundKeywordMappingGetter.Items => _Items;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +132,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +144,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem WED0,
+                TItem Keywords,
+                TItem Items)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +157,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +168,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED0 { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>?>? Items;
             #endregion
 
             #region Equals
@@ -119,11 +187,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.WED0, rhs.WED0)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.WED0);
+                hash.Add(this.Keywords);
+                hash.Add(this.Items);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +208,34 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (WED0 != null)
+                {
+                    if (!eval(this.WED0.Overall)) return false;
+                    if (this.WED0.Specific != null && !this.WED0.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +244,34 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (WED0 != null)
+                {
+                    if (eval(this.WED0.Overall)) return true;
+                    if (this.WED0.Specific != null && this.WED0.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +287,36 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
+                        {
+                            MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +335,50 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SoundKeywordMapping.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.WED0?.Overall ?? true)
+                    {
+                        WED0?.Print(sb);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
+                    {
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +389,24 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? WED0;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundKeywordMappingItem.ErrorMask?>>?>? Items;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SoundKeywordMapping_FieldIndex enu = (SoundKeywordMapping_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundKeywordMapping_FieldIndex.WED0:
+                        return WED0;
+                    case SoundKeywordMapping_FieldIndex.Keywords:
+                        return Keywords;
+                    case SoundKeywordMapping_FieldIndex.Items:
+                        return Items;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +417,15 @@ namespace Mutagen.Bethesda.Starfield
                 SoundKeywordMapping_FieldIndex enu = (SoundKeywordMapping_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundKeywordMapping_FieldIndex.WED0:
+                        this.WED0 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case SoundKeywordMapping_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SoundKeywordMapping_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundKeywordMappingItem.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +437,15 @@ namespace Mutagen.Bethesda.Starfield
                 SoundKeywordMapping_FieldIndex enu = (SoundKeywordMapping_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundKeywordMapping_FieldIndex.WED0:
+                        this.WED0 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case SoundKeywordMapping_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SoundKeywordMapping_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundKeywordMappingItem.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +455,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (WED0 != null) return true;
+                if (Keywords != null) return true;
+                if (Items != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +484,45 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                WED0?.Print(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Items is {} ItemsItem)
+                {
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +531,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.WED0 = this.WED0.Combine(rhs.WED0, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundKeywordMappingItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +555,30 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public SoundReference.TranslationMask? WED0;
+            public bool Keywords;
+            public SoundKeywordMappingItem.TranslationMask? Items;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Keywords = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((WED0 != null ? WED0.OnOverall : DefaultOn, WED0?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +590,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundKeywordMapping_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundKeywordMappingCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundKeywordMappingSetterCommon.Instance.RemapLinks(this, mapping);
         public SoundKeywordMapping(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +720,18 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISoundKeywordMapping :
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISoundKeywordMappingInternal>,
         ISoundKeywordMappingGetter,
         IStarfieldMajorRecordInternal
     {
+        new SoundReference? WED0 { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>> Keywords { get; }
+        new ExtendedList<SoundKeywordMappingItem> Items { get; }
     }
 
     public partial interface ISoundKeywordMappingInternal :
@@ -441,10 +745,20 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ISoundKeywordMappingGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISoundKeywordMappingGetter>,
         IMapsToGetter<ISoundKeywordMappingGetter>
     {
         static new ILoquiRegistration StaticRegistration => SoundKeywordMapping_Registration.Instance;
+        ISoundReferenceGetter? WED0 { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; }
+        #endregion
+        IReadOnlyList<ISoundKeywordMappingItemGetter> Items { get; }
 
     }
 
@@ -621,6 +935,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        WED0 = 7,
+        Keywords = 8,
+        Items = 9,
     }
     #endregion
 
@@ -631,9 +948,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(SoundKeywordMapping.Mask<>);
 
@@ -663,8 +980,16 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.KSSM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.KSSM);
+            var all = RecordCollection.Factory(
+                RecordTypes.KSSM,
+                RecordTypes.WED0,
+                RecordTypes.KNAM,
+                RecordTypes.RSMC,
+                RecordTypes.RSMH);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundKeywordMappingBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1031,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISoundKeywordMappingInternal item)
         {
             ClearPartial();
+            item.WED0 = null;
+            item.Keywords.Clear();
+            item.Items.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1051,9 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISoundKeywordMapping obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.WED0?.RemapLinks(mapping);
+            obj.Keywords.RemapLinks(mapping);
+            obj.Items.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1121,19 @@ namespace Mutagen.Bethesda.Starfield
             SoundKeywordMapping.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.WED0 = EqualsMaskHelper.EqualsHelper(
+                item.WED0,
+                rhs.WED0,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1183,39 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.WED0?.Overall ?? true)
+                && item.WED0 is {} WED0Item)
+            {
+                WED0Item?.Print(sb, "WED0");
+            }
+            if (printMask?.Keywords?.Overall ?? true)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Keywords)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static SoundKeywordMapping_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1266,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.WED0) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WED0, rhs.WED0, out var lhsWED0, out var rhsWED0, out var isWED0Equal))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsWED0).CommonInstance()!).Equals(lhsWED0, rhsWED0, equalsMask?.GetSubCrystal((int)SoundKeywordMapping_FieldIndex.WED0))) return false;
+                }
+                else if (!isWED0Equal) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((SoundKeywordMappingItemCommon)((ISoundKeywordMappingItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SoundKeywordMapping_FieldIndex.Items)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1310,12 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISoundKeywordMappingGetter item)
         {
             var hash = new HashCode();
+            if (item.WED0 is {} WED0item)
+            {
+                hash.Add(WED0item);
+            }
+            hash.Add(item.Keywords);
+            hash.Add(item.Items);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1344,21 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.WED0 is {} WED0Items)
+            {
+                foreach (var item in WED0Items.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Keywords)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1020,6 +1434,75 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.WED0) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundKeywordMapping_FieldIndex.WED0);
+                try
+                {
+                    if(rhs.WED0 is {} rhsWED0)
+                    {
+                        item.WED0 = rhsWED0.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoundKeywordMapping_FieldIndex.WED0));
+                    }
+                    else
+                    {
+                        item.WED0 = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundKeywordMapping_FieldIndex.Keywords);
+                try
+                {
+                    item.Keywords.SetTo(
+                        rhs.Keywords
+                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Items) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundKeywordMapping_FieldIndex.Items);
+                try
+                {
+                    item.Items.SetTo(
+                        rhs.Items
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1651,48 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SoundKeywordMappingBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISoundKeywordMappingGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.WED0 is {} WED0Item)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.WED0))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)WED0Item).BinaryWriteTranslator).Write(
+                        item: WED0Item,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Keywords,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.KNAM));
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISoundKeywordMappingItemGetter>.Instance.Write(
+                writer: writer,
+                items: item.Items,
+                transl: (MutagenWriter subWriter, ISoundKeywordMappingItemGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SoundKeywordMappingItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ISoundKeywordMappingGetter item,
@@ -1184,10 +1709,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1764,56 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SoundKeywordMappingBinaryCreateTranslation Instance = new SoundKeywordMappingBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.KSSM;
+        public static ParseResult FillBinaryRecordTypes(
+            ISoundKeywordMappingInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.WED0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.WED0 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)SoundKeywordMapping_FieldIndex.WED0;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    item.Keywords.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)SoundKeywordMapping_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.RSMC:
+                case RecordTypeInts.RSMH:
+                {
+                    item.Items.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SoundKeywordMappingItem>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: SoundKeywordMappingItem_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SoundKeywordMappingItem.TryCreateFromBinary));
+                    return (int)SoundKeywordMapping_FieldIndex.Items;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1846,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundKeywordMappingCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundKeywordMappingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1861,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISoundKeywordMapping);
 
 
+        public ISoundReferenceGetter? WED0 { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        public IReadOnlyList<ISoundKeywordMappingItemGetter> Items { get; private set; } = Array.Empty<ISoundKeywordMappingItemGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1924,62 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.WED0:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.WED0 = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)SoundKeywordMapping_FieldIndex.WED0;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.KNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)SoundKeywordMapping_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.RSMC:
+                case RecordTypeInts.RSMH:
+                {
+                    this.Items = this.ParseRepeatedTypelessSubrecord<ISoundKeywordMappingItemGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: SoundKeywordMappingItem_Registration.TriggerSpecs,
+                        factory: SoundKeywordMappingItemBinaryOverlay.SoundKeywordMappingItemFactory);
+                    return (int)SoundKeywordMapping_FieldIndex.Items;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

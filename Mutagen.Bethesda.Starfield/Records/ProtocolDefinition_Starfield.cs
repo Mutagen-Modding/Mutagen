@@ -1160,6 +1160,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             SnapTemplateRnamTraversal_Registration.Instance,
             SoundEchoMarker_Registration.Instance,
             SoundKeywordMapping_Registration.Instance,
+            SoundKeywordMappingItem_Registration.Instance,
             SoundMarker_Registration.Instance,
             SoundReference_Registration.Instance,
             SoundTagComponent_Registration.Instance,

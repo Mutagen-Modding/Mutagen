@@ -175,6 +175,7 @@ namespace Mutagen.Bethesda.Starfield
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
             _Zooms_Object = new StarfieldGroup<Zoom>(this);
             _InstanceNamingRules_Object = new StarfieldGroup<InstanceNamingRules>(this);
+            _SoundKeywordMappings_Object = new StarfieldGroup<SoundKeywordMapping>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
@@ -1002,6 +1003,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IInstanceNamingRulesGetter> IStarfieldModGetter.InstanceNamingRules => _InstanceNamingRules_Object;
         #endregion
+        #region SoundKeywordMappings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<SoundKeywordMapping> _SoundKeywordMappings_Object;
+        public StarfieldGroup<SoundKeywordMapping> SoundKeywordMappings => _SoundKeywordMappings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ISoundKeywordMappingGetter> IStarfieldModGetter.SoundKeywordMappings => _SoundKeywordMappings_Object;
+        #endregion
         #region AttractionRules
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AttractionRule> _AttractionRules_Object;
@@ -1227,6 +1235,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Zooms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.InstanceNamingRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.SoundKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1356,6 +1365,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ObjectModifications,
                 TItem Zooms,
                 TItem InstanceNamingRules,
+                TItem SoundKeywordMappings,
                 TItem AttractionRules,
                 TItem Resources,
                 TItem BiomeSwaps,
@@ -1483,6 +1493,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ObjectModifications, new StarfieldGroup.Mask<TItem>(ObjectModifications));
                 this.Zooms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Zooms, new StarfieldGroup.Mask<TItem>(Zooms));
                 this.InstanceNamingRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(InstanceNamingRules, new StarfieldGroup.Mask<TItem>(InstanceNamingRules));
+                this.SoundKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SoundKeywordMappings, new StarfieldGroup.Mask<TItem>(SoundKeywordMappings));
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AttractionRules, new StarfieldGroup.Mask<TItem>(AttractionRules));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeSwaps, new StarfieldGroup.Mask<TItem>(BiomeSwaps));
@@ -1620,6 +1631,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ObjectModifications { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Zooms { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? InstanceNamingRules { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SoundKeywordMappings { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AttractionRules { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeSwaps { get; set; }
@@ -1758,6 +1770,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
                 if (!object.Equals(this.Zooms, rhs.Zooms)) return false;
                 if (!object.Equals(this.InstanceNamingRules, rhs.InstanceNamingRules)) return false;
+                if (!object.Equals(this.SoundKeywordMappings, rhs.SoundKeywordMappings)) return false;
                 if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
                 if (!object.Equals(this.BiomeSwaps, rhs.BiomeSwaps)) return false;
@@ -1889,6 +1902,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ObjectModifications);
                 hash.Add(this.Zooms);
                 hash.Add(this.InstanceNamingRules);
+                hash.Add(this.SoundKeywordMappings);
                 hash.Add(this.AttractionRules);
                 hash.Add(this.Resources);
                 hash.Add(this.BiomeSwaps);
@@ -2486,6 +2500,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.InstanceNamingRules.Overall)) return false;
                     if (this.InstanceNamingRules.Specific != null && !this.InstanceNamingRules.Specific.All(eval)) return false;
+                }
+                if (SoundKeywordMappings != null)
+                {
+                    if (!eval(this.SoundKeywordMappings.Overall)) return false;
+                    if (this.SoundKeywordMappings.Specific != null && !this.SoundKeywordMappings.Specific.All(eval)) return false;
                 }
                 if (AttractionRules != null)
                 {
@@ -3124,6 +3143,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.InstanceNamingRules.Overall)) return true;
                     if (this.InstanceNamingRules.Specific != null && this.InstanceNamingRules.Specific.Any(eval)) return true;
                 }
+                if (SoundKeywordMappings != null)
+                {
+                    if (eval(this.SoundKeywordMappings.Overall)) return true;
+                    if (this.SoundKeywordMappings.Specific != null && this.SoundKeywordMappings.Specific.Any(eval)) return true;
+                }
                 if (AttractionRules != null)
                 {
                     if (eval(this.AttractionRules.Overall)) return true;
@@ -3304,6 +3328,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
                 obj.Zooms = this.Zooms == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Zooms.Overall), this.Zooms.Specific?.Translate(eval));
                 obj.InstanceNamingRules = this.InstanceNamingRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.InstanceNamingRules.Overall), this.InstanceNamingRules.Specific?.Translate(eval));
+                obj.SoundKeywordMappings = this.SoundKeywordMappings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SoundKeywordMappings.Overall), this.SoundKeywordMappings.Specific?.Translate(eval));
                 obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
                 obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
                 obj.BiomeSwaps = this.BiomeSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeSwaps.Overall), this.BiomeSwaps.Specific?.Translate(eval));
@@ -3796,6 +3821,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         InstanceNamingRules?.Print(sb);
                     }
+                    if (printMask?.SoundKeywordMappings?.Overall ?? true)
+                    {
+                        SoundKeywordMappings?.Print(sb);
+                    }
                     if (printMask?.AttractionRules?.Overall ?? true)
                     {
                         AttractionRules?.Print(sb);
@@ -3976,6 +4005,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Zoom.ErrorMask>?>? Zooms;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<InstanceNamingRules.ErrorMask>?>? InstanceNamingRules;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundKeywordMapping.ErrorMask>?>? SoundKeywordMappings;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>? BiomeSwaps;
@@ -4226,6 +4256,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Zooms;
                     case StarfieldMod_FieldIndex.InstanceNamingRules:
                         return InstanceNamingRules;
+                    case StarfieldMod_FieldIndex.SoundKeywordMappings:
+                        return SoundKeywordMappings;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         return AttractionRules;
                     case StarfieldMod_FieldIndex.Resources:
@@ -4603,6 +4635,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.InstanceNamingRules:
                         this.InstanceNamingRules = new MaskItem<Exception?, StarfieldGroup.ErrorMask<InstanceNamingRules.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.SoundKeywordMappings:
+                        this.SoundKeywordMappings = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundKeywordMapping.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>(ex, null);
@@ -4992,6 +5027,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.InstanceNamingRules:
                         this.InstanceNamingRules = (MaskItem<Exception?, StarfieldGroup.ErrorMask<InstanceNamingRules.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.SoundKeywordMappings:
+                        this.SoundKeywordMappings = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundKeywordMapping.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AttractionRules:
                         this.AttractionRules = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>?)obj;
                         break;
@@ -5146,6 +5184,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ObjectModifications != null) return true;
                 if (Zooms != null) return true;
                 if (InstanceNamingRules != null) return true;
+                if (SoundKeywordMappings != null) return true;
                 if (AttractionRules != null) return true;
                 if (Resources != null) return true;
                 if (BiomeSwaps != null) return true;
@@ -5297,6 +5336,7 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectModifications?.Print(sb);
                 Zooms?.Print(sb);
                 InstanceNamingRules?.Print(sb);
+                SoundKeywordMappings?.Print(sb);
                 AttractionRules?.Print(sb);
                 Resources?.Print(sb);
                 BiomeSwaps?.Print(sb);
@@ -5431,6 +5471,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
                 ret.Zooms = this.Zooms.Combine(rhs.Zooms, (l, r) => l.Combine(r));
                 ret.InstanceNamingRules = this.InstanceNamingRules.Combine(rhs.InstanceNamingRules, (l, r) => l.Combine(r));
+                ret.SoundKeywordMappings = this.SoundKeywordMappings.Combine(rhs.SoundKeywordMappings, (l, r) => l.Combine(r));
                 ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
                 ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
                 ret.BiomeSwaps = this.BiomeSwaps.Combine(rhs.BiomeSwaps, (l, r) => l.Combine(r));
@@ -5580,6 +5621,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
             public StarfieldGroup.TranslationMask<Zoom.TranslationMask>? Zooms;
             public StarfieldGroup.TranslationMask<InstanceNamingRules.TranslationMask>? InstanceNamingRules;
+            public StarfieldGroup.TranslationMask<SoundKeywordMapping.TranslationMask>? SoundKeywordMappings;
             public StarfieldGroup.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
             public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
             public StarfieldGroup.TranslationMask<BiomeSwap.TranslationMask>? BiomeSwaps;
@@ -5730,6 +5772,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
                 ret.Add((Zooms != null ? Zooms.OnOverall : DefaultOn, Zooms?.GetCrystal()));
                 ret.Add((InstanceNamingRules != null ? InstanceNamingRules.OnOverall : DefaultOn, InstanceNamingRules?.GetCrystal()));
+                ret.Add((SoundKeywordMappings != null ? SoundKeywordMappings.OnOverall : DefaultOn, SoundKeywordMappings?.GetCrystal()));
                 ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
                 ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
                 ret.Add((BiomeSwaps != null ? BiomeSwaps.OnOverall : DefaultOn, BiomeSwaps?.GetCrystal()));
@@ -5901,6 +5944,7 @@ namespace Mutagen.Bethesda.Starfield
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
             _Zooms_Object = new StarfieldGroup<Zoom>(this);
             _InstanceNamingRules_Object = new StarfieldGroup<InstanceNamingRules>(this);
+            _SoundKeywordMappings_Object = new StarfieldGroup<SoundKeywordMapping>(this);
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
@@ -6380,6 +6424,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.InstanceNamingRules.RecordCache.Set(rhsMod.InstanceNamingRules.RecordCache.Items);
             }
+            if (mask?.SoundKeywordMappings ?? true)
+            {
+                this.SoundKeywordMappings.RecordCache.Set(rhsMod.SoundKeywordMappings.RecordCache.Items);
+            }
             if (mask?.AttractionRules ?? true)
             {
                 this.AttractionRules.RecordCache.Set(rhsMod.AttractionRules.RecordCache.Items);
@@ -6545,6 +6593,7 @@ namespace Mutagen.Bethesda.Starfield
             count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
             count += Zooms.RecordCache.Count > 0 ? 1 : default(uint);
             count += InstanceNamingRules.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
             count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
             count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
@@ -6944,6 +6993,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<AObjectModification> ObjectModifications { get; }
         new StarfieldGroup<Zoom> Zooms { get; }
         new StarfieldGroup<InstanceNamingRules> InstanceNamingRules { get; }
+        new StarfieldGroup<SoundKeywordMapping> SoundKeywordMappings { get; }
         new StarfieldGroup<AttractionRule> AttractionRules { get; }
         new StarfieldGroup<Resource> Resources { get; }
         new StarfieldGroup<BiomeSwap> BiomeSwaps { get; }
@@ -7089,6 +7139,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
         IStarfieldGroupGetter<IZoomGetter> Zooms { get; }
         IStarfieldGroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules { get; }
+        IStarfieldGroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings { get; }
         IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules { get; }
         IStarfieldGroupGetter<IResourceGetter> Resources { get; }
         IStarfieldGroupGetter<IBiomeSwapGetter> BiomeSwaps { get; }
@@ -7797,16 +7848,17 @@ namespace Mutagen.Bethesda.Starfield
         ObjectModifications = 113,
         Zooms = 114,
         InstanceNamingRules = 115,
-        AttractionRules = 116,
-        Resources = 117,
-        BiomeSwaps = 118,
-        SnapTemplates = 119,
-        Planets = 120,
-        ConditionRecords = 121,
-        SurfacePatternStyles = 122,
-        TerminalMenus = 123,
-        LegendaryItems = 124,
-        ActorValueModulations = 125,
+        SoundKeywordMappings = 116,
+        AttractionRules = 117,
+        Resources = 118,
+        BiomeSwaps = 119,
+        SnapTemplates = 120,
+        Planets = 121,
+        ConditionRecords = 122,
+        SurfacePatternStyles = 123,
+        TerminalMenus = 124,
+        LegendaryItems = 125,
+        ActorValueModulations = 126,
     }
     #endregion
 
@@ -7817,9 +7869,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 126;
+        public const ushort AdditionalFieldCount = 127;
 
-        public const ushort FieldCount = 126;
+        public const ushort FieldCount = 127;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -8000,6 +8052,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectModifications.Clear();
             item.Zooms.Clear();
             item.InstanceNamingRules.Clear();
+            item.SoundKeywordMappings.Clear();
             item.AttractionRules.Clear();
             item.Resources.Clear();
             item.BiomeSwaps.Clear();
@@ -8112,6 +8165,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ObjectModifications.RemapLinks(mapping);
             obj.Zooms.RemapLinks(mapping);
             obj.InstanceNamingRules.RemapLinks(mapping);
+            obj.SoundKeywordMappings.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
@@ -8268,6 +8322,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ObjectModifications.Remove(keys);
             obj.Zooms.Remove(keys);
             obj.InstanceNamingRules.Remove(keys);
+            obj.SoundKeywordMappings.Remove(keys);
             obj.AttractionRules.Remove(keys);
             obj.Resources.Remove(keys);
             obj.BiomeSwaps.Remove(keys);
@@ -9254,6 +9309,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IInstanceNamingRules":
                 case "IInstanceNamingRulesInternal":
                     obj.InstanceNamingRules.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SoundKeywordMapping":
+                case "ISoundKeywordMappingGetter":
+                case "ISoundKeywordMapping":
+                case "ISoundKeywordMappingInternal":
+                    obj.SoundKeywordMappings.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -10352,6 +10415,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
             ret.Zooms = MaskItemExt.Factory(item.Zooms.GetEqualsMask(rhs.Zooms, include), include);
             ret.InstanceNamingRules = MaskItemExt.Factory(item.InstanceNamingRules.GetEqualsMask(rhs.InstanceNamingRules, include), include);
+            ret.SoundKeywordMappings = MaskItemExt.Factory(item.SoundKeywordMappings.GetEqualsMask(rhs.SoundKeywordMappings, include), include);
             ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
             ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
             ret.BiomeSwaps = MaskItemExt.Factory(item.BiomeSwaps.GetEqualsMask(rhs.BiomeSwaps, include), include);
@@ -10869,6 +10933,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.InstanceNamingRules?.Overall ?? true)
             {
                 item.InstanceNamingRules?.Print(sb, "InstanceNamingRules");
+            }
+            if (printMask?.SoundKeywordMappings?.Overall ?? true)
+            {
+                item.SoundKeywordMappings?.Print(sb, "SoundKeywordMappings");
             }
             if (printMask?.AttractionRules?.Overall ?? true)
             {
@@ -11847,6 +11915,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isInstanceNamingRulesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SoundKeywordMappings) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SoundKeywordMappings, rhs.SoundKeywordMappings, out var lhsSoundKeywordMappings, out var rhsSoundKeywordMappings, out var isSoundKeywordMappingsEqual))
+                {
+                    if (!object.Equals(lhsSoundKeywordMappings, rhsSoundKeywordMappings)) return false;
+                }
+                else if (!isSoundKeywordMappingsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AttractionRules) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AttractionRules, rhs.AttractionRules, out var lhsAttractionRules, out var rhsAttractionRules, out var isAttractionRulesEqual))
@@ -12049,6 +12125,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ObjectModifications);
             hash.Add(item.Zooms);
             hash.Add(item.InstanceNamingRules);
+            hash.Add(item.SoundKeywordMappings);
             hash.Add(item.AttractionRules);
             hash.Add(item.Resources);
             hash.Add(item.BiomeSwaps);
@@ -12651,6 +12728,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IInstanceNamingRules":
                 case "IInstanceNamingRulesInternal":
                     return obj.InstanceNamingRules;
+                case "SoundKeywordMapping":
+                case "ISoundKeywordMappingGetter":
+                case "ISoundKeywordMapping":
+                case "ISoundKeywordMappingInternal":
+                    return obj.SoundKeywordMappings;
                 case "AttractionRule":
                 case "IAttractionRuleGetter":
                 case "IAttractionRule":
@@ -12727,7 +12809,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[125];
+            Stream[] outputStreams = new Stream[126];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -12844,16 +12926,17 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 112, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Zooms, 113, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.InstanceNamingRules, 114, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 115, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 116, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 117, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 118, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 119, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 120, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 121, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 122, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 123, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 124, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoundKeywordMappings, 115, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 116, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 117, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 118, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 119, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 120, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 121, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 122, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 123, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 124, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 125, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -13295,6 +13378,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.InstanceNamingRules.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundKeywordMappings.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -13794,6 +13881,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.InstanceNamingRules.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundKeywordMappings.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -14894,6 +14985,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IInstanceNamingRules":
                 case "IInstanceNamingRulesInternal":
                     foreach (var item in obj.InstanceNamingRules.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundKeywordMapping":
+                case "ISoundKeywordMappingGetter":
+                case "ISoundKeywordMapping":
+                case "ISoundKeywordMappingInternal":
+                    foreach (var item in obj.SoundKeywordMappings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16169,6 +16269,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.InstanceNamingRules,
                 groupGetter: (m) => m.InstanceNamingRules))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SoundKeywordMapping, ISoundKeywordMappingGetter>(
+                srcGroup: obj.SoundKeywordMappings,
+                type: typeof(ISoundKeywordMappingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundKeywordMappings,
+                groupGetter: (m) => m.SoundKeywordMappings))
             {
                 yield return item;
             }
@@ -17885,6 +17994,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.InstanceNamingRules,
                         groupGetter: (m) => m.InstanceNamingRules))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundKeywordMapping":
+                case "ISoundKeywordMappingGetter":
+                case "ISoundKeywordMapping":
+                case "ISoundKeywordMappingInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SoundKeywordMapping, ISoundKeywordMappingGetter>(
+                        srcGroup: obj.SoundKeywordMappings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundKeywordMappings,
+                        groupGetter: (m) => m.SoundKeywordMappings))
                     {
                         yield return item;
                     }
@@ -21011,6 +21134,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SoundKeywordMappings) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SoundKeywordMappings);
+                try
+                {
+                    item.SoundKeywordMappings.DeepCopyIn(
+                        rhs: rhs.SoundKeywordMappings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.SoundKeywordMappings));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AttractionRules) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AttractionRules);
@@ -21416,6 +21559,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool ObjectModifications;
         public bool Zooms;
         public bool InstanceNamingRules;
+        public bool SoundKeywordMappings;
         public bool AttractionRules;
         public bool Resources;
         public bool BiomeSwaps;
@@ -21546,6 +21690,7 @@ namespace Mutagen.Bethesda.Starfield
             ObjectModifications = defaultValue;
             Zooms = defaultValue;
             InstanceNamingRules = defaultValue;
+            SoundKeywordMappings = defaultValue;
             AttractionRules = defaultValue;
             Resources = defaultValue;
             BiomeSwaps = defaultValue;
@@ -22876,6 +23021,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)InstanceNamingRulesItem).BinaryWriteTranslator).Write<IInstanceNamingRulesGetter>(
                         item: InstanceNamingRulesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SoundKeywordMappings ?? true)
+            {
+                var SoundKeywordMappingsItem = item.SoundKeywordMappings;
+                if (SoundKeywordMappingsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SoundKeywordMappingsItem).BinaryWriteTranslator).Write<ISoundKeywordMappingGetter>(
+                        item: SoundKeywordMappingsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -24660,6 +24816,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.InstanceNamingRules;
                 }
+                case RecordTypeInts.KSSM:
+                {
+                    if (importMask?.SoundKeywordMappings ?? true)
+                    {
+                        item.SoundKeywordMappings.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.SoundKeywordMappings;
+                }
                 case RecordTypeInts.AORU:
                 {
                     if (importMask?.AttractionRules ?? true)
@@ -25546,6 +25716,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IInstanceNamingRulesGetter>? _InstanceNamingRules => _InstanceNamingRulesLocations != null ? StarfieldGroupBinaryOverlay<IInstanceNamingRulesGetter>.StarfieldGroupFactory(_stream, _InstanceNamingRulesLocations, _package) : default;
         public IStarfieldGroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules => _InstanceNamingRules ?? new StarfieldGroup<InstanceNamingRules>(this);
         #endregion
+        #region SoundKeywordMappings
+        private List<RangeInt64>? _SoundKeywordMappingsLocations;
+        private IStarfieldGroupGetter<ISoundKeywordMappingGetter>? _SoundKeywordMappings => _SoundKeywordMappingsLocations != null ? StarfieldGroupBinaryOverlay<ISoundKeywordMappingGetter>.StarfieldGroupFactory(_stream, _SoundKeywordMappingsLocations, _package) : default;
+        public IStarfieldGroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings => _SoundKeywordMappings ?? new StarfieldGroup<SoundKeywordMapping>(this);
+        #endregion
         #region AttractionRules
         private List<RangeInt64>? _AttractionRulesLocations;
         private IStarfieldGroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? StarfieldGroupBinaryOverlay<IAttractionRuleGetter>.StarfieldGroupFactory(_stream, _AttractionRulesLocations, _package) : default;
@@ -26378,6 +26553,12 @@ namespace Mutagen.Bethesda.Starfield
                     _InstanceNamingRulesLocations ??= new();
                     _InstanceNamingRulesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.InstanceNamingRules;
+                }
+                case RecordTypeInts.KSSM:
+                {
+                    _SoundKeywordMappingsLocations ??= new();
+                    _SoundKeywordMappingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.SoundKeywordMappings;
                 }
                 case RecordTypeInts.AORU:
                 {
