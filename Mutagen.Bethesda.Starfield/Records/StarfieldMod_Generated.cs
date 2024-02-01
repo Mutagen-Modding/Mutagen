@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda.Starfield
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
             _AnimationSoundTagSets_Object = new StarfieldGroup<AnimationSoundTagSet>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
+            _Biomes_Object = new StarfieldGroup<Biome>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _SnapTemplates_Object = new StarfieldGroup<SnapTemplate>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
@@ -1032,6 +1033,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IResourceGetter> IStarfieldModGetter.Resources => _Resources_Object;
         #endregion
+        #region Biomes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Biome> _Biomes_Object;
+        public StarfieldGroup<Biome> Biomes => _Biomes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IBiomeGetter> IStarfieldModGetter.Biomes => _Biomes_Object;
+        #endregion
         #region BiomeSwaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<BiomeSwap> _BiomeSwaps_Object;
@@ -1247,6 +1255,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AnimationSoundTagSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Biomes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SnapTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1378,6 +1387,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AttractionRules,
                 TItem AnimationSoundTagSets,
                 TItem Resources,
+                TItem Biomes,
                 TItem BiomeSwaps,
                 TItem SnapTemplates,
                 TItem Planets,
@@ -1507,6 +1517,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AttractionRules = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AttractionRules, new StarfieldGroup.Mask<TItem>(AttractionRules));
                 this.AnimationSoundTagSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimationSoundTagSets, new StarfieldGroup.Mask<TItem>(AnimationSoundTagSets));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
+                this.Biomes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Biomes, new StarfieldGroup.Mask<TItem>(Biomes));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeSwaps, new StarfieldGroup.Mask<TItem>(BiomeSwaps));
                 this.SnapTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SnapTemplates, new StarfieldGroup.Mask<TItem>(SnapTemplates));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
@@ -1646,6 +1657,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AttractionRules { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimationSoundTagSets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Biomes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeSwaps { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SnapTemplates { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
@@ -1786,6 +1798,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
                 if (!object.Equals(this.AnimationSoundTagSets, rhs.AnimationSoundTagSets)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
+                if (!object.Equals(this.Biomes, rhs.Biomes)) return false;
                 if (!object.Equals(this.BiomeSwaps, rhs.BiomeSwaps)) return false;
                 if (!object.Equals(this.SnapTemplates, rhs.SnapTemplates)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
@@ -1919,6 +1932,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.AttractionRules);
                 hash.Add(this.AnimationSoundTagSets);
                 hash.Add(this.Resources);
+                hash.Add(this.Biomes);
                 hash.Add(this.BiomeSwaps);
                 hash.Add(this.SnapTemplates);
                 hash.Add(this.Planets);
@@ -2534,6 +2548,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Resources.Overall)) return false;
                     if (this.Resources.Specific != null && !this.Resources.Specific.All(eval)) return false;
+                }
+                if (Biomes != null)
+                {
+                    if (!eval(this.Biomes.Overall)) return false;
+                    if (this.Biomes.Specific != null && !this.Biomes.Specific.All(eval)) return false;
                 }
                 if (BiomeSwaps != null)
                 {
@@ -3182,6 +3201,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Resources.Overall)) return true;
                     if (this.Resources.Specific != null && this.Resources.Specific.Any(eval)) return true;
                 }
+                if (Biomes != null)
+                {
+                    if (eval(this.Biomes.Overall)) return true;
+                    if (this.Biomes.Specific != null && this.Biomes.Specific.Any(eval)) return true;
+                }
                 if (BiomeSwaps != null)
                 {
                     if (eval(this.BiomeSwaps.Overall)) return true;
@@ -3356,6 +3380,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
                 obj.AnimationSoundTagSets = this.AnimationSoundTagSets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimationSoundTagSets.Overall), this.AnimationSoundTagSets.Specific?.Translate(eval));
                 obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
+                obj.Biomes = this.Biomes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Biomes.Overall), this.Biomes.Specific?.Translate(eval));
                 obj.BiomeSwaps = this.BiomeSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeSwaps.Overall), this.BiomeSwaps.Specific?.Translate(eval));
                 obj.SnapTemplates = this.SnapTemplates == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SnapTemplates.Overall), this.SnapTemplates.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
@@ -3862,6 +3887,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Resources?.Print(sb);
                     }
+                    if (printMask?.Biomes?.Overall ?? true)
+                    {
+                        Biomes?.Print(sb);
+                    }
                     if (printMask?.BiomeSwaps?.Overall ?? true)
                     {
                         BiomeSwaps?.Print(sb);
@@ -4038,6 +4067,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimationSoundTagSet.ErrorMask>?>? AnimationSoundTagSets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Biome.ErrorMask>?>? Biomes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>? BiomeSwaps;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplate.ErrorMask>?>? SnapTemplates;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
@@ -4294,6 +4324,8 @@ namespace Mutagen.Bethesda.Starfield
                         return AnimationSoundTagSets;
                     case StarfieldMod_FieldIndex.Resources:
                         return Resources;
+                    case StarfieldMod_FieldIndex.Biomes:
+                        return Biomes;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         return BiomeSwaps;
                     case StarfieldMod_FieldIndex.SnapTemplates:
@@ -4679,6 +4711,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Resources:
                         this.Resources = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Biomes:
+                        this.Biomes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Biome.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         this.BiomeSwaps = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>(ex, null);
@@ -5074,6 +5109,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Resources:
                         this.Resources = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Biomes:
+                        this.Biomes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Biome.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.BiomeSwaps:
                         this.BiomeSwaps = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>?)obj;
                         break;
@@ -5226,6 +5264,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (AttractionRules != null) return true;
                 if (AnimationSoundTagSets != null) return true;
                 if (Resources != null) return true;
+                if (Biomes != null) return true;
                 if (BiomeSwaps != null) return true;
                 if (SnapTemplates != null) return true;
                 if (Planets != null) return true;
@@ -5379,6 +5418,7 @@ namespace Mutagen.Bethesda.Starfield
                 AttractionRules?.Print(sb);
                 AnimationSoundTagSets?.Print(sb);
                 Resources?.Print(sb);
+                Biomes?.Print(sb);
                 BiomeSwaps?.Print(sb);
                 SnapTemplates?.Print(sb);
                 Planets?.Print(sb);
@@ -5515,6 +5555,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
                 ret.AnimationSoundTagSets = this.AnimationSoundTagSets.Combine(rhs.AnimationSoundTagSets, (l, r) => l.Combine(r));
                 ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
+                ret.Biomes = this.Biomes.Combine(rhs.Biomes, (l, r) => l.Combine(r));
                 ret.BiomeSwaps = this.BiomeSwaps.Combine(rhs.BiomeSwaps, (l, r) => l.Combine(r));
                 ret.SnapTemplates = this.SnapTemplates.Combine(rhs.SnapTemplates, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
@@ -5666,6 +5707,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
             public StarfieldGroup.TranslationMask<AnimationSoundTagSet.TranslationMask>? AnimationSoundTagSets;
             public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
+            public StarfieldGroup.TranslationMask<Biome.TranslationMask>? Biomes;
             public StarfieldGroup.TranslationMask<BiomeSwap.TranslationMask>? BiomeSwaps;
             public StarfieldGroup.TranslationMask<SnapTemplate.TranslationMask>? SnapTemplates;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
@@ -5818,6 +5860,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
                 ret.Add((AnimationSoundTagSets != null ? AnimationSoundTagSets.OnOverall : DefaultOn, AnimationSoundTagSets?.GetCrystal()));
                 ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
+                ret.Add((Biomes != null ? Biomes.OnOverall : DefaultOn, Biomes?.GetCrystal()));
                 ret.Add((BiomeSwaps != null ? BiomeSwaps.OnOverall : DefaultOn, BiomeSwaps?.GetCrystal()));
                 ret.Add((SnapTemplates != null ? SnapTemplates.OnOverall : DefaultOn, SnapTemplates?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
@@ -5991,6 +6034,7 @@ namespace Mutagen.Bethesda.Starfield
             _AttractionRules_Object = new StarfieldGroup<AttractionRule>(this);
             _AnimationSoundTagSets_Object = new StarfieldGroup<AnimationSoundTagSet>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
+            _Biomes_Object = new StarfieldGroup<Biome>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _SnapTemplates_Object = new StarfieldGroup<SnapTemplate>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
@@ -6484,6 +6528,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Resources.RecordCache.Set(rhsMod.Resources.RecordCache.Items);
             }
+            if (mask?.Biomes ?? true)
+            {
+                this.Biomes.RecordCache.Set(rhsMod.Biomes.RecordCache.Items);
+            }
             if (mask?.BiomeSwaps ?? true)
             {
                 this.BiomeSwaps.RecordCache.Set(rhsMod.BiomeSwaps.RecordCache.Items);
@@ -6645,6 +6693,7 @@ namespace Mutagen.Bethesda.Starfield
             count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimationSoundTagSets.RecordCache.Count > 0 ? 1 : default(uint);
             count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Biomes.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
             count += SnapTemplates.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
@@ -7046,6 +7095,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<AttractionRule> AttractionRules { get; }
         new StarfieldGroup<AnimationSoundTagSet> AnimationSoundTagSets { get; }
         new StarfieldGroup<Resource> Resources { get; }
+        new StarfieldGroup<Biome> Biomes { get; }
         new StarfieldGroup<BiomeSwap> BiomeSwaps { get; }
         new StarfieldGroup<SnapTemplate> SnapTemplates { get; }
         new StarfieldGroup<Planet> Planets { get; }
@@ -7193,6 +7243,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules { get; }
         IStarfieldGroupGetter<IAnimationSoundTagSetGetter> AnimationSoundTagSets { get; }
         IStarfieldGroupGetter<IResourceGetter> Resources { get; }
+        IStarfieldGroupGetter<IBiomeGetter> Biomes { get; }
         IStarfieldGroupGetter<IBiomeSwapGetter> BiomeSwaps { get; }
         IStarfieldGroupGetter<ISnapTemplateGetter> SnapTemplates { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
@@ -7903,14 +7954,15 @@ namespace Mutagen.Bethesda.Starfield
         AttractionRules = 117,
         AnimationSoundTagSets = 118,
         Resources = 119,
-        BiomeSwaps = 120,
-        SnapTemplates = 121,
-        Planets = 122,
-        ConditionRecords = 123,
-        SurfacePatternStyles = 124,
-        TerminalMenus = 125,
-        LegendaryItems = 126,
-        ActorValueModulations = 127,
+        Biomes = 120,
+        BiomeSwaps = 121,
+        SnapTemplates = 122,
+        Planets = 123,
+        ConditionRecords = 124,
+        SurfacePatternStyles = 125,
+        TerminalMenus = 126,
+        LegendaryItems = 127,
+        ActorValueModulations = 128,
     }
     #endregion
 
@@ -7921,9 +7973,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 128;
+        public const ushort AdditionalFieldCount = 129;
 
-        public const ushort FieldCount = 128;
+        public const ushort FieldCount = 129;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -8108,6 +8160,7 @@ namespace Mutagen.Bethesda.Starfield
             item.AttractionRules.Clear();
             item.AnimationSoundTagSets.Clear();
             item.Resources.Clear();
+            item.Biomes.Clear();
             item.BiomeSwaps.Clear();
             item.SnapTemplates.Clear();
             item.Planets.Clear();
@@ -8221,6 +8274,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SoundKeywordMappings.RemapLinks(mapping);
             obj.AnimationSoundTagSets.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
+            obj.Biomes.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
             obj.ConditionRecords.RemapLinks(mapping);
@@ -8380,6 +8434,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AttractionRules.Remove(keys);
             obj.AnimationSoundTagSets.Remove(keys);
             obj.Resources.Remove(keys);
+            obj.Biomes.Remove(keys);
             obj.BiomeSwaps.Remove(keys);
             obj.SnapTemplates.Remove(keys);
             obj.Planets.Remove(keys);
@@ -9396,6 +9451,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IResource":
                 case "IResourceInternal":
                     obj.Resources.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Biome":
+                case "IBiomeGetter":
+                case "IBiome":
+                case "IBiomeInternal":
+                    obj.Biomes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -10482,6 +10545,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
             ret.AnimationSoundTagSets = MaskItemExt.Factory(item.AnimationSoundTagSets.GetEqualsMask(rhs.AnimationSoundTagSets, include), include);
             ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
+            ret.Biomes = MaskItemExt.Factory(item.Biomes.GetEqualsMask(rhs.Biomes, include), include);
             ret.BiomeSwaps = MaskItemExt.Factory(item.BiomeSwaps.GetEqualsMask(rhs.BiomeSwaps, include), include);
             ret.SnapTemplates = MaskItemExt.Factory(item.SnapTemplates.GetEqualsMask(rhs.SnapTemplates, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
@@ -11013,6 +11077,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Resources?.Overall ?? true)
             {
                 item.Resources?.Print(sb, "Resources");
+            }
+            if (printMask?.Biomes?.Overall ?? true)
+            {
+                item.Biomes?.Print(sb, "Biomes");
             }
             if (printMask?.BiomeSwaps?.Overall ?? true)
             {
@@ -12015,6 +12083,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isResourcesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Biomes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Biomes, rhs.Biomes, out var lhsBiomes, out var rhsBiomes, out var isBiomesEqual))
+                {
+                    if (!object.Equals(lhsBiomes, rhsBiomes)) return false;
+                }
+                else if (!isBiomesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.BiomeSwaps) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BiomeSwaps, rhs.BiomeSwaps, out var lhsBiomeSwaps, out var rhsBiomeSwaps, out var isBiomeSwapsEqual))
@@ -12205,6 +12281,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.AttractionRules);
             hash.Add(item.AnimationSoundTagSets);
             hash.Add(item.Resources);
+            hash.Add(item.Biomes);
             hash.Add(item.BiomeSwaps);
             hash.Add(item.SnapTemplates);
             hash.Add(item.Planets);
@@ -12825,6 +12902,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IResource":
                 case "IResourceInternal":
                     return obj.Resources;
+                case "Biome":
+                case "IBiomeGetter":
+                case "IBiome":
+                case "IBiomeInternal":
+                    return obj.Biomes;
                 case "BiomeSwap":
                 case "IBiomeSwapGetter":
                 case "IBiomeSwap":
@@ -12891,7 +12973,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[127];
+            Stream[] outputStreams = new Stream[128];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -13012,14 +13094,15 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.AttractionRules, 116, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AnimationSoundTagSets, 117, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Resources, 118, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 119, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 120, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 121, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 122, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 123, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 124, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 125, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 126, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Biomes, 119, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 120, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 121, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 122, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 123, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 124, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 125, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 126, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 127, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -13473,6 +13556,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Resources.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Biomes.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -13984,6 +14071,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Resources.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Biomes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -15112,6 +15203,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IResource":
                 case "IResourceInternal":
                     foreach (var item in obj.Resources.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Biome":
+                case "IBiomeGetter":
+                case "IBiome":
+                case "IBiomeInternal":
+                    foreach (var item in obj.Biomes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16405,6 +16505,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Resources,
                 groupGetter: (m) => m.Resources))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Biome, IBiomeGetter>(
+                srcGroup: obj.Biomes,
+                type: typeof(IBiomeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Biomes,
+                groupGetter: (m) => m.Biomes))
             {
                 yield return item;
             }
@@ -18159,6 +18268,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Resources,
                         groupGetter: (m) => m.Resources))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Biome":
+                case "IBiomeGetter":
+                case "IBiome":
+                case "IBiomeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Biome, IBiomeGetter>(
+                        srcGroup: obj.Biomes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Biomes,
+                        groupGetter: (m) => m.Biomes))
                     {
                         yield return item;
                     }
@@ -21337,6 +21460,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Biomes) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Biomes);
+                try
+                {
+                    item.Biomes.DeepCopyIn(
+                        rhs: rhs.Biomes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Biomes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.BiomeSwaps) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.BiomeSwaps);
@@ -21706,6 +21849,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool AttractionRules;
         public bool AnimationSoundTagSets;
         public bool Resources;
+        public bool Biomes;
         public bool BiomeSwaps;
         public bool SnapTemplates;
         public bool Planets;
@@ -21838,6 +21982,7 @@ namespace Mutagen.Bethesda.Starfield
             AttractionRules = defaultValue;
             AnimationSoundTagSets = defaultValue;
             Resources = defaultValue;
+            Biomes = defaultValue;
             BiomeSwaps = defaultValue;
             SnapTemplates = defaultValue;
             Planets = defaultValue;
@@ -23210,6 +23355,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ResourcesItem).BinaryWriteTranslator).Write<IResourceGetter>(
                         item: ResourcesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Biomes ?? true)
+            {
+                var BiomesItem = item.Biomes;
+                if (BiomesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)BiomesItem).BinaryWriteTranslator).Write<IBiomeGetter>(
+                        item: BiomesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -25028,6 +25184,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Resources;
                 }
+                case RecordTypeInts.BIOM:
+                {
+                    if (importMask?.Biomes ?? true)
+                    {
+                        item.Biomes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Biomes;
+                }
                 case RecordTypeInts.OSWP:
                 {
                     if (importMask?.BiomeSwaps ?? true)
@@ -25906,6 +26076,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IResourceGetter>? _Resources => _ResourcesLocations != null ? StarfieldGroupBinaryOverlay<IResourceGetter>.StarfieldGroupFactory(_stream, _ResourcesLocations, _package) : default;
         public IStarfieldGroupGetter<IResourceGetter> Resources => _Resources ?? new StarfieldGroup<Resource>(this);
         #endregion
+        #region Biomes
+        private List<RangeInt64>? _BiomesLocations;
+        private IStarfieldGroupGetter<IBiomeGetter>? _Biomes => _BiomesLocations != null ? StarfieldGroupBinaryOverlay<IBiomeGetter>.StarfieldGroupFactory(_stream, _BiomesLocations, _package) : default;
+        public IStarfieldGroupGetter<IBiomeGetter> Biomes => _Biomes ?? new StarfieldGroup<Biome>(this);
+        #endregion
         #region BiomeSwaps
         private List<RangeInt64>? _BiomeSwapsLocations;
         private IStarfieldGroupGetter<IBiomeSwapGetter>? _BiomeSwaps => _BiomeSwapsLocations != null ? StarfieldGroupBinaryOverlay<IBiomeSwapGetter>.StarfieldGroupFactory(_stream, _BiomeSwapsLocations, _package) : default;
@@ -26752,6 +26927,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ResourcesLocations ??= new();
                     _ResourcesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Resources;
+                }
+                case RecordTypeInts.BIOM:
+                {
+                    _BiomesLocations ??= new();
+                    _BiomesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Biomes;
                 }
                 case RecordTypeInts.OSWP:
                 {

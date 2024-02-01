@@ -612,9 +612,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Biome</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter> Biome(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter> Biome(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IBiomeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -624,9 +624,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Biome</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter> Biome(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter> Biome(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IBiomeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IBiome, IBiomeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

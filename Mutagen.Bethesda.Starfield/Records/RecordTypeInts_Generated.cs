@@ -148,13 +148,19 @@ public partial class RecordTypeInts
     public const int BAMT = 0x544D4142;
     public const int BCOL = 0x4C4F4342;
     public const int BDED = 0x44454442;
+    public const int BDFS = 0x53464442;
     public const int BDST = 0x54534442;
     public const int BFCB = 0x42434642;
     public const int BFCE = 0x45434642;
+    public const int BIAS = 0x53414942;
     public const int BIDS = 0x53444942;
+    public const int BIMT = 0x544D4942;
     public const int BIOM = 0x4D4F4942;
     public const int BIPL = 0x4C504942;
     public const int BLUF = 0x46554C42;
+    public const int BMC1 = 0x31434D42;
+    public const int BMC2 = 0x32434D42;
+    public const int BMC3 = 0x33434D42;
     public const int BMMO = 0x4F4D4D42;
     public const int BMOD = 0x444F4D42;
     public const int BMPN = 0x4E504D42;
@@ -177,6 +183,7 @@ public partial class RecordTypeInts
     public const int BRIB = 0x42495242;
     public const int BSIZ = 0x5A495342;
     public const int BSMP = 0x504D5342;
+    public const int BTPS = 0x53505442;
     public const int BTXT = 0x54585442;
     public const int BUO4 = 0x344F5542;
     public const int CAMS = 0x534D4143;
@@ -290,6 +297,7 @@ public partial class RecordTypeInts
     public const int EFID = 0x44494645;
     public const int EFIF = 0x46494645;
     public const int EFIT = 0x54494645;
+    public const int EFSD = 0x44534645;
     public const int EFSH = 0x48534645;
     public const int EFSQ = 0x51534645;
     public const int EITM = 0x4D544945;
@@ -851,11 +859,13 @@ public partial class RecordTypeInts
     public const int TX01 = 0x31305854;
     public const int TX08 = 0x38305854;
     public const int TX09 = 0x39305854;
+    public const int TX16 = 0x36315854;
     public const int TX17 = 0x37315854;
     public const int TX19 = 0x39315854;
     public const int TXST = 0x54535854;
     public const int UNAM = 0x4D414E55;
     public const int UNWP = 0x50574E55;
+    public const int UX00 = 0x30305855;
     public const int VAAC = 0x43414156;
     public const int VADC = 0x43444156;
     public const int VAIN = 0x4E494156;
@@ -882,6 +892,7 @@ public partial class RecordTypeInts
     public const int VTXT = 0x54585456;
     public const int VTYP = 0x50595456;
     public const int VUSE = 0x45535556;
+    public const int VX00 = 0x30305856;
     public const int WABB = 0x42424157;
     public const int WABS = 0x53424157;
     public const int WACB = 0x42434157;
@@ -986,6 +997,7 @@ public partial class RecordTypeInts
     public const int WVAR = 0x52415657;
     public const int WVIS = 0x53495657;
     public const int WWED = 0x44455757;
+    public const int WX00 = 0x30305857;
     public const int XACT = 0x54434158;
     public const int XALD = 0x444C4158;
     public const int XALG = 0x474C4158;
@@ -1079,8 +1091,10 @@ public partial class RecordTypeInts
     public const int XWCU = 0x55435758;
     public const int XWEM = 0x4D455758;
     public const int XWPK = 0x4B505758;
+    public const int XX00 = 0x30305858;
     public const int XXXX = 0x58585858;
     public const int YNAM = 0x4D414E59;
+    public const int YX00 = 0x30305859;
     public const int ZDTA = 0x4154445A;
     public const int ZFOV = 0x564F465A;
     public const int ZIMG = 0x474D495A;

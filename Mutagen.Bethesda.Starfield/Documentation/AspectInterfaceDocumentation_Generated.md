@@ -50,7 +50,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ammunition
 - Armor
 - ArtObject
+- Biome
 - BiomeMarker
+- BiomeMarkerType
 - Book
 - CameraShot
 - Container
@@ -140,6 +142,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - ArmorModification
 - ASceneAction
+- Biome
 - BipedObjectData
 - BlueprintComponentBODSItem
 - BodyPart
@@ -395,12 +398,17 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### BendableSpline
 - IObjectBounded
+### Biome
+- IKeyworded
+- INamed
 ### BiomeMarker
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
 - IObjectBounded
 - IScripted
+### BiomeMarkerType
+- IKeyworded
 ### BipedObjectData
 - INamed
 ### BlueprintComponentBODSItem

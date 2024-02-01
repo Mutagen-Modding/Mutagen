@@ -126,6 +126,7 @@
       <Group name="AttractionRules" refName="AttractionRule" />
       <Group name="AnimationSoundTagSets" refName="AnimationSoundTagSet" />
       <Group name="Resources" refName="Resource" />
+      <Group name="Biomes" refName="Biome" />
       <Group name="BiomeSwaps" refName="BiomeSwap" />
       <Group name="SnapTemplates" refName="SnapTemplate" />
       <Group name="Planets" refName="Planet" />

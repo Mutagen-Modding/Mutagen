@@ -6470,5 +6470,23 @@
     <Compile Include="Records\Major Records\AnimationSoundTag_Generated.cs">
       <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\BiomeFNAMItem_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeFNAMPackIn_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeWaterData_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeMarkerType_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeLNAMItem_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeLandItem_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
