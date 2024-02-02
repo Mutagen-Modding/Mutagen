@@ -204,9 +204,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AimAssistPose</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter> AimAssistPose(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter> AimAssistPose(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAimAssistPoseGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -216,9 +216,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on AimAssistPose</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter> AimAssistPose(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter> AimAssistPose(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAimAssistPoseGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimAssistPose, IAimAssistPoseGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

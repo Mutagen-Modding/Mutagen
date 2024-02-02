@@ -27,10 +27,12 @@ public partial class RecordTypes
     public static readonly RecordType AA20 = new(0x30324141);
     public static readonly RecordType AA21 = new(0x31324141);
     public static readonly RecordType AA22 = new(0x32324141);
+    public static readonly RecordType AAAP = new(0x50414141);
     public static readonly RecordType AACT = new(0x54434141);
     public static readonly RecordType AAMB = new(0x424D4141);
     public static readonly RecordType AAMD = new(0x444D4141);
     public static readonly RecordType AAPD = new(0x44504141);
+    public static readonly RecordType AAPS = new(0x53504141);
     public static readonly RecordType ABBI = new(0x49424241);
     public static readonly RecordType ABBM = new(0x4D424241);
     public static readonly RecordType ABOD = new(0x444F4241);
@@ -731,6 +733,7 @@ public partial class RecordTypes
     public static readonly RecordType QUST = new(0x54535551);
     public static readonly RecordType RABG = new(0x47424152);
     public static readonly RecordType RACE = new(0x45434152);
+    public static readonly RecordType RADR = new(0x52444152);
     public static readonly RecordType RBPC = new(0x43504252);
     public static readonly RecordType RCLR = new(0x524C4352);
     public static readonly RecordType RDAT = new(0x54414452);
@@ -1005,6 +1008,7 @@ public partial class RecordTypes
     public static readonly RecordType WTHR = new(0x52485457);
     public static readonly RecordType WTHS = new(0x53485457);
     public static readonly RecordType WTMC = new(0x434D5457);
+    public static readonly RecordType WTMX = new(0x584D5457);
     public static readonly RecordType WTRM = new(0x4D525457);
     public static readonly RecordType WTUR = new(0x52555457);
     public static readonly RecordType WVAR = new(0x52415657);

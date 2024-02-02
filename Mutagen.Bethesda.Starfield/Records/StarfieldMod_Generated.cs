@@ -193,6 +193,7 @@ namespace Mutagen.Bethesda.Starfield
             _Atmospheres_Object = new StarfieldGroup<Atmosphere>(this);
             _LeveledSpaceCells_Object = new StarfieldGroup<LeveledSpaceCell>(this);
             _SpeechChallenges_Object = new StarfieldGroup<SpeechChallenge>(this);
+            _AimAssistPoses_Object = new StarfieldGroup<AimAssistPose>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
@@ -1142,6 +1143,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ISpeechChallengeGetter> IStarfieldModGetter.SpeechChallenges => _SpeechChallenges_Object;
         #endregion
+        #region AimAssistPoses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<AimAssistPose> _AimAssistPoses_Object;
+        public StarfieldGroup<AimAssistPose> AimAssistPoses => _AimAssistPoses_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IAimAssistPoseGetter> IStarfieldModGetter.AimAssistPoses => _AimAssistPoses_Object;
+        #endregion
         #region Planets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Planet> _Planets_Object;
@@ -1357,6 +1365,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Atmospheres = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LeveledSpaceCells = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SpeechChallenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.AimAssistPoses = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1500,6 +1509,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Atmospheres,
                 TItem LeveledSpaceCells,
                 TItem SpeechChallenges,
+                TItem AimAssistPoses,
                 TItem Planets,
                 TItem ConditionRecords,
                 TItem SurfacePatternStyles,
@@ -1641,6 +1651,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Atmospheres = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Atmospheres, new StarfieldGroup.Mask<TItem>(Atmospheres));
                 this.LeveledSpaceCells = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledSpaceCells, new StarfieldGroup.Mask<TItem>(LeveledSpaceCells));
                 this.SpeechChallenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SpeechChallenges, new StarfieldGroup.Mask<TItem>(SpeechChallenges));
+                this.AimAssistPoses = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimAssistPoses, new StarfieldGroup.Mask<TItem>(AimAssistPoses));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConditionRecords, new StarfieldGroup.Mask<TItem>(ConditionRecords));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
@@ -1792,6 +1803,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Atmospheres { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledSpaceCells { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SpeechChallenges { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimAssistPoses { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConditionRecords { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
@@ -1944,6 +1956,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Atmospheres, rhs.Atmospheres)) return false;
                 if (!object.Equals(this.LeveledSpaceCells, rhs.LeveledSpaceCells)) return false;
                 if (!object.Equals(this.SpeechChallenges, rhs.SpeechChallenges)) return false;
+                if (!object.Equals(this.AimAssistPoses, rhs.AimAssistPoses)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
                 if (!object.Equals(this.ConditionRecords, rhs.ConditionRecords)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
@@ -2089,6 +2102,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Atmospheres);
                 hash.Add(this.LeveledSpaceCells);
                 hash.Add(this.SpeechChallenges);
+                hash.Add(this.AimAssistPoses);
                 hash.Add(this.Planets);
                 hash.Add(this.ConditionRecords);
                 hash.Add(this.SurfacePatternStyles);
@@ -2772,6 +2786,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.SpeechChallenges.Overall)) return false;
                     if (this.SpeechChallenges.Specific != null && !this.SpeechChallenges.Specific.All(eval)) return false;
+                }
+                if (AimAssistPoses != null)
+                {
+                    if (!eval(this.AimAssistPoses.Overall)) return false;
+                    if (this.AimAssistPoses.Specific != null && !this.AimAssistPoses.Specific.All(eval)) return false;
                 }
                 if (Planets != null)
                 {
@@ -3480,6 +3499,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.SpeechChallenges.Overall)) return true;
                     if (this.SpeechChallenges.Specific != null && this.SpeechChallenges.Specific.Any(eval)) return true;
                 }
+                if (AimAssistPoses != null)
+                {
+                    if (eval(this.AimAssistPoses.Overall)) return true;
+                    if (this.AimAssistPoses.Specific != null && this.AimAssistPoses.Specific.Any(eval)) return true;
+                }
                 if (Planets != null)
                 {
                     if (eval(this.Planets.Overall)) return true;
@@ -3658,6 +3682,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Atmospheres = this.Atmospheres == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Atmospheres.Overall), this.Atmospheres.Specific?.Translate(eval));
                 obj.LeveledSpaceCells = this.LeveledSpaceCells == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledSpaceCells.Overall), this.LeveledSpaceCells.Specific?.Translate(eval));
                 obj.SpeechChallenges = this.SpeechChallenges == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SpeechChallenges.Overall), this.SpeechChallenges.Specific?.Translate(eval));
+                obj.AimAssistPoses = this.AimAssistPoses == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimAssistPoses.Overall), this.AimAssistPoses.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
                 obj.ConditionRecords = this.ConditionRecords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConditionRecords.Overall), this.ConditionRecords.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
@@ -4218,6 +4243,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         SpeechChallenges?.Print(sb);
                     }
+                    if (printMask?.AimAssistPoses?.Overall ?? true)
+                    {
+                        AimAssistPoses?.Print(sb);
+                    }
                     if (printMask?.Planets?.Overall ?? true)
                     {
                         Planets?.Print(sb);
@@ -4400,6 +4429,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Atmosphere.ErrorMask>?>? Atmospheres;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledSpaceCell.ErrorMask>?>? LeveledSpaceCells;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SpeechChallenge.ErrorMask>?>? SpeechChallenges;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistPose.ErrorMask>?>? AimAssistPoses;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>? ConditionRecords;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
@@ -4682,6 +4712,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LeveledSpaceCells;
                     case StarfieldMod_FieldIndex.SpeechChallenges:
                         return SpeechChallenges;
+                    case StarfieldMod_FieldIndex.AimAssistPoses:
+                        return AimAssistPoses;
                     case StarfieldMod_FieldIndex.Planets:
                         return Planets;
                     case StarfieldMod_FieldIndex.ConditionRecords:
@@ -5105,6 +5137,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.SpeechChallenges:
                         this.SpeechChallenges = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SpeechChallenge.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.AimAssistPoses:
+                        this.AimAssistPoses = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistPose.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>(ex, null);
@@ -5536,6 +5571,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.SpeechChallenges:
                         this.SpeechChallenges = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SpeechChallenge.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.AimAssistPoses:
+                        this.AimAssistPoses = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AimAssistPose.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>?)obj;
                         break;
@@ -5696,6 +5734,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Atmospheres != null) return true;
                 if (LeveledSpaceCells != null) return true;
                 if (SpeechChallenges != null) return true;
+                if (AimAssistPoses != null) return true;
                 if (Planets != null) return true;
                 if (ConditionRecords != null) return true;
                 if (SurfacePatternStyles != null) return true;
@@ -5861,6 +5900,7 @@ namespace Mutagen.Bethesda.Starfield
                 Atmospheres?.Print(sb);
                 LeveledSpaceCells?.Print(sb);
                 SpeechChallenges?.Print(sb);
+                AimAssistPoses?.Print(sb);
                 Planets?.Print(sb);
                 ConditionRecords?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
@@ -6009,6 +6049,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Atmospheres = this.Atmospheres.Combine(rhs.Atmospheres, (l, r) => l.Combine(r));
                 ret.LeveledSpaceCells = this.LeveledSpaceCells.Combine(rhs.LeveledSpaceCells, (l, r) => l.Combine(r));
                 ret.SpeechChallenges = this.SpeechChallenges.Combine(rhs.SpeechChallenges, (l, r) => l.Combine(r));
+                ret.AimAssistPoses = this.AimAssistPoses.Combine(rhs.AimAssistPoses, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
                 ret.ConditionRecords = this.ConditionRecords.Combine(rhs.ConditionRecords, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
@@ -6172,6 +6213,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Atmosphere.TranslationMask>? Atmospheres;
             public StarfieldGroup.TranslationMask<LeveledSpaceCell.TranslationMask>? LeveledSpaceCells;
             public StarfieldGroup.TranslationMask<SpeechChallenge.TranslationMask>? SpeechChallenges;
+            public StarfieldGroup.TranslationMask<AimAssistPose.TranslationMask>? AimAssistPoses;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
             public StarfieldGroup.TranslationMask<ConditionRecord.TranslationMask>? ConditionRecords;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
@@ -6336,6 +6378,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Atmospheres != null ? Atmospheres.OnOverall : DefaultOn, Atmospheres?.GetCrystal()));
                 ret.Add((LeveledSpaceCells != null ? LeveledSpaceCells.OnOverall : DefaultOn, LeveledSpaceCells?.GetCrystal()));
                 ret.Add((SpeechChallenges != null ? SpeechChallenges.OnOverall : DefaultOn, SpeechChallenges?.GetCrystal()));
+                ret.Add((AimAssistPoses != null ? AimAssistPoses.OnOverall : DefaultOn, AimAssistPoses?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
                 ret.Add((ConditionRecords != null ? ConditionRecords.OnOverall : DefaultOn, ConditionRecords?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
@@ -6521,6 +6564,7 @@ namespace Mutagen.Bethesda.Starfield
             _Atmospheres_Object = new StarfieldGroup<Atmosphere>(this);
             _LeveledSpaceCells_Object = new StarfieldGroup<LeveledSpaceCell>(this);
             _SpeechChallenges_Object = new StarfieldGroup<SpeechChallenge>(this);
+            _AimAssistPoses_Object = new StarfieldGroup<AimAssistPose>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
@@ -7068,6 +7112,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.SpeechChallenges.RecordCache.Set(rhsMod.SpeechChallenges.RecordCache.Items);
             }
+            if (mask?.AimAssistPoses ?? true)
+            {
+                this.AimAssistPoses.RecordCache.Set(rhsMod.AimAssistPoses.RecordCache.Items);
+            }
             if (mask?.Planets ?? true)
             {
                 this.Planets.RecordCache.Set(rhsMod.Planets.RecordCache.Items);
@@ -7235,6 +7283,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Atmospheres.RecordCache.Count > 0 ? 1 : default(uint);
             count += LeveledSpaceCells.RecordCache.Count > 0 ? 1 : default(uint);
             count += SpeechChallenges.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AimAssistPoses.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
@@ -7648,6 +7697,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Atmosphere> Atmospheres { get; }
         new StarfieldGroup<LeveledSpaceCell> LeveledSpaceCells { get; }
         new StarfieldGroup<SpeechChallenge> SpeechChallenges { get; }
+        new StarfieldGroup<AimAssistPose> AimAssistPoses { get; }
         new StarfieldGroup<Planet> Planets { get; }
         new StarfieldGroup<ConditionRecord> ConditionRecords { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
@@ -7807,6 +7857,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IAtmosphereGetter> Atmospheres { get; }
         IStarfieldGroupGetter<ILeveledSpaceCellGetter> LeveledSpaceCells { get; }
         IStarfieldGroupGetter<ISpeechChallengeGetter> SpeechChallenges { get; }
+        IStarfieldGroupGetter<IAimAssistPoseGetter> AimAssistPoses { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
         IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
@@ -8529,12 +8580,13 @@ namespace Mutagen.Bethesda.Starfield
         Atmospheres = 131,
         LeveledSpaceCells = 132,
         SpeechChallenges = 133,
-        Planets = 134,
-        ConditionRecords = 135,
-        SurfacePatternStyles = 136,
-        TerminalMenus = 137,
-        LegendaryItems = 138,
-        ActorValueModulations = 139,
+        AimAssistPoses = 134,
+        Planets = 135,
+        ConditionRecords = 136,
+        SurfacePatternStyles = 137,
+        TerminalMenus = 138,
+        LegendaryItems = 139,
+        ActorValueModulations = 140,
     }
     #endregion
 
@@ -8545,9 +8597,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 140;
+        public const ushort AdditionalFieldCount = 141;
 
-        public const ushort FieldCount = 140;
+        public const ushort FieldCount = 141;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -8746,6 +8798,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Atmospheres.Clear();
             item.LeveledSpaceCells.Clear();
             item.SpeechChallenges.Clear();
+            item.AimAssistPoses.Clear();
             item.Planets.Clear();
             item.ConditionRecords.Clear();
             item.SurfacePatternStyles.Clear();
@@ -9038,6 +9091,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Atmospheres.Remove(keys);
             obj.LeveledSpaceCells.Remove(keys);
             obj.SpeechChallenges.Remove(keys);
+            obj.AimAssistPoses.Remove(keys);
             obj.Planets.Remove(keys);
             obj.ConditionRecords.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
@@ -10167,6 +10221,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "AimAssistPose":
+                case "IAimAssistPoseGetter":
+                case "IAimAssistPose":
+                case "IAimAssistPoseInternal":
+                    obj.AimAssistPoses.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -11275,6 +11337,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Atmospheres = MaskItemExt.Factory(item.Atmospheres.GetEqualsMask(rhs.Atmospheres, include), include);
             ret.LeveledSpaceCells = MaskItemExt.Factory(item.LeveledSpaceCells.GetEqualsMask(rhs.LeveledSpaceCells, include), include);
             ret.SpeechChallenges = MaskItemExt.Factory(item.SpeechChallenges.GetEqualsMask(rhs.SpeechChallenges, include), include);
+            ret.AimAssistPoses = MaskItemExt.Factory(item.AimAssistPoses.GetEqualsMask(rhs.AimAssistPoses, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
             ret.ConditionRecords = MaskItemExt.Factory(item.ConditionRecords.GetEqualsMask(rhs.ConditionRecords, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
@@ -11860,6 +11923,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SpeechChallenges?.Overall ?? true)
             {
                 item.SpeechChallenges?.Print(sb, "SpeechChallenges");
+            }
+            if (printMask?.AimAssistPoses?.Overall ?? true)
+            {
+                item.AimAssistPoses?.Print(sb, "AimAssistPoses");
             }
             if (printMask?.Planets?.Overall ?? true)
             {
@@ -12966,6 +13033,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isSpeechChallengesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimAssistPoses) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AimAssistPoses, rhs.AimAssistPoses, out var lhsAimAssistPoses, out var rhsAimAssistPoses, out var isAimAssistPosesEqual))
+                {
+                    if (!object.Equals(lhsAimAssistPoses, rhsAimAssistPoses)) return false;
+                }
+                else if (!isAimAssistPosesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Planets, rhs.Planets, out var lhsPlanets, out var rhsPlanets, out var isPlanetsEqual))
@@ -13154,6 +13229,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Atmospheres);
             hash.Add(item.LeveledSpaceCells);
             hash.Add(item.SpeechChallenges);
+            hash.Add(item.AimAssistPoses);
             hash.Add(item.Planets);
             hash.Add(item.ConditionRecords);
             hash.Add(item.SurfacePatternStyles);
@@ -13842,6 +13918,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISpeechChallenge":
                 case "ISpeechChallengeInternal":
                     return obj.SpeechChallenges;
+                case "AimAssistPose":
+                case "IAimAssistPoseGetter":
+                case "IAimAssistPose":
+                case "IAimAssistPoseInternal":
+                    return obj.AimAssistPoses;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -13898,7 +13979,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[139];
+            Stream[] outputStreams = new Stream[140];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -14033,12 +14114,13 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Atmospheres, 130, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LeveledSpaceCells, 131, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SpeechChallenges, 132, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 133, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 134, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 135, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 136, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 137, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 138, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimAssistPoses, 133, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 134, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 135, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 136, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 137, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 138, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 139, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -15091,6 +15173,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SpeechChallenges.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AimAssistPoses.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -16337,6 +16423,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISpeechChallenge":
                 case "ISpeechChallengeInternal":
                     foreach (var item in obj.SpeechChallenges.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AimAssistPose":
+                case "IAimAssistPoseGetter":
+                case "IAimAssistPose":
+                case "IAimAssistPoseInternal":
+                    foreach (var item in obj.AimAssistPoses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -17738,6 +17833,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.SpeechChallenges,
                 groupGetter: (m) => m.SpeechChallenges))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AimAssistPose, IAimAssistPoseGetter>(
+                srcGroup: obj.AimAssistPoses,
+                type: typeof(IAimAssistPoseGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AimAssistPoses,
+                groupGetter: (m) => m.AimAssistPoses))
             {
                 yield return item;
             }
@@ -19670,6 +19774,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.SpeechChallenges,
                         groupGetter: (m) => m.SpeechChallenges))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AimAssistPose":
+                case "IAimAssistPoseGetter":
+                case "IAimAssistPose":
+                case "IAimAssistPoseInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AimAssistPose, IAimAssistPoseGetter>(
+                        srcGroup: obj.AimAssistPoses,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AimAssistPoses,
+                        groupGetter: (m) => m.AimAssistPoses))
                     {
                         yield return item;
                     }
@@ -23114,6 +23232,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimAssistPoses) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AimAssistPoses);
+                try
+                {
+                    item.AimAssistPoses.DeepCopyIn(
+                        rhs: rhs.AimAssistPoses,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AimAssistPoses));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Planets);
@@ -23457,6 +23595,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Atmospheres;
         public bool LeveledSpaceCells;
         public bool SpeechChallenges;
+        public bool AimAssistPoses;
         public bool Planets;
         public bool ConditionRecords;
         public bool SurfacePatternStyles;
@@ -23601,6 +23740,7 @@ namespace Mutagen.Bethesda.Starfield
             Atmospheres = defaultValue;
             LeveledSpaceCells = defaultValue;
             SpeechChallenges = defaultValue;
+            AimAssistPoses = defaultValue;
             Planets = defaultValue;
             ConditionRecords = defaultValue;
             SurfacePatternStyles = defaultValue;
@@ -25125,6 +25265,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SpeechChallengesItem).BinaryWriteTranslator).Write<ISpeechChallengeGetter>(
                         item: SpeechChallengesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AimAssistPoses ?? true)
+            {
+                var AimAssistPosesItem = item.AimAssistPoses;
+                if (AimAssistPosesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AimAssistPosesItem).BinaryWriteTranslator).Write<IAimAssistPoseGetter>(
+                        item: AimAssistPosesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -27117,6 +27268,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.SpeechChallenges;
                 }
+                case RecordTypeInts.AAPD:
+                {
+                    if (importMask?.AimAssistPoses ?? true)
+                    {
+                        item.AimAssistPoses.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.AimAssistPoses;
+                }
                 case RecordTypeInts.PNDT:
                 {
                     if (importMask?.Planets ?? true)
@@ -28036,6 +28201,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _SpeechChallengesLocations;
         private IStarfieldGroupGetter<ISpeechChallengeGetter>? _SpeechChallenges => _SpeechChallengesLocations != null ? StarfieldGroupBinaryOverlay<ISpeechChallengeGetter>.StarfieldGroupFactory(_stream, _SpeechChallengesLocations, _package) : default;
         public IStarfieldGroupGetter<ISpeechChallengeGetter> SpeechChallenges => _SpeechChallenges ?? new StarfieldGroup<SpeechChallenge>(this);
+        #endregion
+        #region AimAssistPoses
+        private List<RangeInt64>? _AimAssistPosesLocations;
+        private IStarfieldGroupGetter<IAimAssistPoseGetter>? _AimAssistPoses => _AimAssistPosesLocations != null ? StarfieldGroupBinaryOverlay<IAimAssistPoseGetter>.StarfieldGroupFactory(_stream, _AimAssistPosesLocations, _package) : default;
+        public IStarfieldGroupGetter<IAimAssistPoseGetter> AimAssistPoses => _AimAssistPoses ?? new StarfieldGroup<AimAssistPose>(this);
         #endregion
         #region Planets
         private List<RangeInt64>? _PlanetsLocations;
@@ -28957,6 +29127,12 @@ namespace Mutagen.Bethesda.Starfield
                     _SpeechChallengesLocations ??= new();
                     _SpeechChallengesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.SpeechChallenges;
+                }
+                case RecordTypeInts.AAPD:
+                {
+                    _AimAssistPosesLocations ??= new();
+                    _AimAssistPosesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.AimAssistPoses;
                 }
                 case RecordTypeInts.PNDT:
                 {

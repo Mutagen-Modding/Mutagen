@@ -6516,5 +6516,8 @@
       <DependentUpon>LeveledSpaceCell.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\ISpaceCellSpawn_Generated.cs" />
+    <Compile Include="Records\Major Records\AimAssistPosePoint_Generated.cs">
+      <DependentUpon>AimAssistPose.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

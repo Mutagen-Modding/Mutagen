@@ -25,10 +25,12 @@ public partial class RecordTypeInts
     public const int AA20 = 0x30324141;
     public const int AA21 = 0x31324141;
     public const int AA22 = 0x32324141;
+    public const int AAAP = 0x50414141;
     public const int AACT = 0x54434141;
     public const int AAMB = 0x424D4141;
     public const int AAMD = 0x444D4141;
     public const int AAPD = 0x44504141;
+    public const int AAPS = 0x53504141;
     public const int ABBI = 0x49424241;
     public const int ABBM = 0x4D424241;
     public const int ABOD = 0x444F4241;
@@ -729,6 +731,7 @@ public partial class RecordTypeInts
     public const int QUST = 0x54535551;
     public const int RABG = 0x47424152;
     public const int RACE = 0x45434152;
+    public const int RADR = 0x52444152;
     public const int RBPC = 0x43504252;
     public const int RCLR = 0x524C4352;
     public const int RDAT = 0x54414452;
@@ -1003,6 +1006,7 @@ public partial class RecordTypeInts
     public const int WTHR = 0x52485457;
     public const int WTHS = 0x53485457;
     public const int WTMC = 0x434D5457;
+    public const int WTMX = 0x584D5457;
     public const int WTRM = 0x4D525457;
     public const int WTUR = 0x52555457;
     public const int WVAR = 0x52415657;
