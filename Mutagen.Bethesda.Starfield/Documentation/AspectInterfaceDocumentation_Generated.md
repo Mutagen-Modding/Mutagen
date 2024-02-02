@@ -78,6 +78,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SnapTemplateNode
 - SoundKeywordMapping
 - SoundMarker
+- SpeechChallenge
 - Spell
 - Terminal
 - Weapon
@@ -785,6 +786,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### SoundMarker
 - IKeyworded
 - IObjectBounded
+### SpeechChallenge
+- IKeyworded
 ### Spell
 - IKeyworded
 - INamed

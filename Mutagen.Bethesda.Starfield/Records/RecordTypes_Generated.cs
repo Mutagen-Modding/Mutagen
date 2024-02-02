@@ -266,6 +266,7 @@ public partial class RecordTypes
     public static readonly RecordType DFOB = new(0x424F4644);
     public static readonly RecordType DFTM = new(0x4D544644);
     public static readonly RecordType DIAL = new(0x4C414944);
+    public static readonly RecordType DIFF = new(0x46464944);
     public static readonly RecordType DLBR = new(0x52424C44);
     public static readonly RecordType DMAX = new(0x58414D44);
     public static readonly RecordType DMDL = new(0x4C444D44);
@@ -777,6 +778,7 @@ public partial class RecordTypes
     public static readonly RecordType SFPC = new(0x43504653);
     public static readonly RecordType SFPT = new(0x54504653);
     public static readonly RecordType SFTR = new(0x52544653);
+    public static readonly RecordType SGEN = new(0x4E454753);
     public static readonly RecordType SGNM = new(0x4D4E4753);
     public static readonly RecordType SHRT = new(0x54524853);
     public static readonly RecordType SHWB = new(0x42574853);
@@ -812,11 +814,14 @@ public partial class RecordTypes
     public static readonly RecordType SPOR = new(0x524F5053);
     public static readonly RecordType SPPK = new(0x4B505053);
     public static readonly RecordType SPPQ = new(0x51505053);
+    public static readonly RecordType SPQU = new(0x55515053);
     public static readonly RecordType SPRK = new(0x4B525053);
     public static readonly RecordType SPRP = new(0x50525053);
     public static readonly RecordType SPRW = new(0x57525053);
+    public static readonly RecordType SPWI = new(0x49575053);
     public static readonly RecordType SRAC = new(0x43415253);
     public static readonly RecordType SRAF = new(0x46415253);
+    public static readonly RecordType SRAN = new(0x4E415253);
     public static readonly RecordType SSPN = new(0x4E505353);
     public static readonly RecordType STAD = new(0x44415453);
     public static readonly RecordType STAE = new(0x45415453);

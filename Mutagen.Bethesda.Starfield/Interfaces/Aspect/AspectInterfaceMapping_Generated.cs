@@ -113,6 +113,7 @@ namespace Mutagen.Bethesda.Starfield
                     SnapTemplateNode_Registration.Instance,
                     SoundKeywordMapping_Registration.Instance,
                     SoundMarker_Registration.Instance,
+                    SpeechChallenge_Registration.Instance,
                     Spell_Registration.Instance,
                     Terminal_Registration.Instance,
                     Weapon_Registration.Instance,

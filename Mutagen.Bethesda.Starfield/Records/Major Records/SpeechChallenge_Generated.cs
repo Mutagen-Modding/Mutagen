@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +56,78 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region QuestStageOnWin
+        public Int16? QuestStageOnWin { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int16? ISpeechChallengeGetter.QuestStageOnWin => this.QuestStageOnWin;
+        #endregion
+        #region QuestStageOnLoss
+        public Int16? QuestStageOnLoss { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int16? ISpeechChallengeGetter.QuestStageOnLoss => this.QuestStageOnLoss;
+        #endregion
+        #region SRAN
+        public Boolean SRAN { get; set; } = default;
+        #endregion
+        #region SGEN
+        public Boolean SGEN { get; set; } = default;
+        #endregion
+        #region Quest
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> ISpeechChallengeGetter.Quest => this.Quest;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ISpeechChallengeGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Scenes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ISceneGetter>>? _Scenes;
+        public ExtendedList<IFormLinkGetter<ISceneGetter>>? Scenes
+        {
+            get => this._Scenes;
+            set => this._Scenes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ISceneGetter>>? ISpeechChallengeGetter.Scenes => _Scenes;
+        #endregion
+
+        #endregion
+        #region DIFF
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _DIFF;
+        public MemorySlice<Byte>? DIFF
+        {
+            get => this._DIFF;
+            set => this._DIFF = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ISpeechChallengeGetter.DIFF => this.DIFF;
+        #endregion
 
         #region To String
 
@@ -79,6 +153,14 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.QuestStageOnWin = initialValue;
+                this.QuestStageOnLoss = initialValue;
+                this.SRAN = initialValue;
+                this.SGEN = initialValue;
+                this.Quest = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Scenes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DIFF = initialValue;
             }
 
             public Mask(
@@ -88,7 +170,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem QuestStageOnWin,
+                TItem QuestStageOnLoss,
+                TItem SRAN,
+                TItem SGEN,
+                TItem Quest,
+                TItem Keywords,
+                TItem Scenes,
+                TItem DIFF)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +188,14 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.QuestStageOnWin = QuestStageOnWin;
+                this.QuestStageOnLoss = QuestStageOnLoss;
+                this.SRAN = SRAN;
+                this.SGEN = SGEN;
+                this.Quest = Quest;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Scenes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Scenes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DIFF = DIFF;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +204,17 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem QuestStageOnWin;
+            public TItem QuestStageOnLoss;
+            public TItem SRAN;
+            public TItem SGEN;
+            public TItem Quest;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Scenes;
+            public TItem DIFF;
             #endregion
 
             #region Equals
@@ -119,11 +228,27 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.QuestStageOnWin, rhs.QuestStageOnWin)) return false;
+                if (!object.Equals(this.QuestStageOnLoss, rhs.QuestStageOnLoss)) return false;
+                if (!object.Equals(this.SRAN, rhs.SRAN)) return false;
+                if (!object.Equals(this.SGEN, rhs.SGEN)) return false;
+                if (!object.Equals(this.Quest, rhs.Quest)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Scenes, rhs.Scenes)) return false;
+                if (!object.Equals(this.DIFF, rhs.DIFF)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.QuestStageOnWin);
+                hash.Add(this.QuestStageOnLoss);
+                hash.Add(this.SRAN);
+                hash.Add(this.SGEN);
+                hash.Add(this.Quest);
+                hash.Add(this.Keywords);
+                hash.Add(this.Scenes);
+                hash.Add(this.DIFF);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +259,34 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.QuestStageOnWin)) return false;
+                if (!eval(this.QuestStageOnLoss)) return false;
+                if (!eval(this.SRAN)) return false;
+                if (!eval(this.SGEN)) return false;
+                if (!eval(this.Quest)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Scenes != null)
+                {
+                    if (!eval(this.Scenes.Overall)) return false;
+                    if (this.Scenes.Specific != null)
+                    {
+                        foreach (var item in this.Scenes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DIFF)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +295,34 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.QuestStageOnWin)) return true;
+                if (eval(this.QuestStageOnLoss)) return true;
+                if (eval(this.SRAN)) return true;
+                if (eval(this.SGEN)) return true;
+                if (eval(this.Quest)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Scenes != null)
+                {
+                    if (eval(this.Scenes.Overall)) return true;
+                    if (this.Scenes.Specific != null)
+                    {
+                        foreach (var item in this.Scenes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DIFF)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +338,40 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.QuestStageOnWin = eval(this.QuestStageOnWin);
+                obj.QuestStageOnLoss = eval(this.QuestStageOnLoss);
+                obj.SRAN = eval(this.SRAN);
+                obj.SGEN = eval(this.SGEN);
+                obj.Quest = eval(this.Quest);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Scenes != null)
+                {
+                    obj.Scenes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Scenes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Scenes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Scenes.Specific = l;
+                        foreach (var item in Scenes.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.DIFF = eval(this.DIFF);
             }
             #endregion
 
@@ -175,6 +390,72 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SpeechChallenge.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.QuestStageOnWin ?? true)
+                    {
+                        sb.AppendItem(QuestStageOnWin, "QuestStageOnWin");
+                    }
+                    if (printMask?.QuestStageOnLoss ?? true)
+                    {
+                        sb.AppendItem(QuestStageOnLoss, "QuestStageOnLoss");
+                    }
+                    if (printMask?.SRAN ?? true)
+                    {
+                        sb.AppendItem(SRAN, "SRAN");
+                    }
+                    if (printMask?.SGEN ?? true)
+                    {
+                        sb.AppendItem(SGEN, "SGEN");
+                    }
+                    if (printMask?.Quest ?? true)
+                    {
+                        sb.AppendItem(Quest, "Quest");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Scenes?.Overall ?? true)
+                        && Scenes is {} ScenesItem)
+                    {
+                        sb.AppendLine("Scenes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ScenesItem.Overall);
+                            if (ScenesItem.Specific != null)
+                            {
+                                foreach (var subItem in ScenesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.DIFF ?? true)
+                    {
+                        sb.AppendItem(DIFF, "DIFF");
+                    }
                 }
             }
             #endregion
@@ -185,12 +466,39 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? QuestStageOnWin;
+            public Exception? QuestStageOnLoss;
+            public Exception? SRAN;
+            public Exception? SGEN;
+            public Exception? Quest;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Scenes;
+            public Exception? DIFF;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SpeechChallenge_FieldIndex enu = (SpeechChallenge_FieldIndex)index;
                 switch (enu)
                 {
+                    case SpeechChallenge_FieldIndex.QuestStageOnWin:
+                        return QuestStageOnWin;
+                    case SpeechChallenge_FieldIndex.QuestStageOnLoss:
+                        return QuestStageOnLoss;
+                    case SpeechChallenge_FieldIndex.SRAN:
+                        return SRAN;
+                    case SpeechChallenge_FieldIndex.SGEN:
+                        return SGEN;
+                    case SpeechChallenge_FieldIndex.Quest:
+                        return Quest;
+                    case SpeechChallenge_FieldIndex.Keywords:
+                        return Keywords;
+                    case SpeechChallenge_FieldIndex.Scenes:
+                        return Scenes;
+                    case SpeechChallenge_FieldIndex.DIFF:
+                        return DIFF;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +509,30 @@ namespace Mutagen.Bethesda.Starfield
                 SpeechChallenge_FieldIndex enu = (SpeechChallenge_FieldIndex)index;
                 switch (enu)
                 {
+                    case SpeechChallenge_FieldIndex.QuestStageOnWin:
+                        this.QuestStageOnWin = ex;
+                        break;
+                    case SpeechChallenge_FieldIndex.QuestStageOnLoss:
+                        this.QuestStageOnLoss = ex;
+                        break;
+                    case SpeechChallenge_FieldIndex.SRAN:
+                        this.SRAN = ex;
+                        break;
+                    case SpeechChallenge_FieldIndex.SGEN:
+                        this.SGEN = ex;
+                        break;
+                    case SpeechChallenge_FieldIndex.Quest:
+                        this.Quest = ex;
+                        break;
+                    case SpeechChallenge_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SpeechChallenge_FieldIndex.Scenes:
+                        this.Scenes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SpeechChallenge_FieldIndex.DIFF:
+                        this.DIFF = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +544,30 @@ namespace Mutagen.Bethesda.Starfield
                 SpeechChallenge_FieldIndex enu = (SpeechChallenge_FieldIndex)index;
                 switch (enu)
                 {
+                    case SpeechChallenge_FieldIndex.QuestStageOnWin:
+                        this.QuestStageOnWin = (Exception?)obj;
+                        break;
+                    case SpeechChallenge_FieldIndex.QuestStageOnLoss:
+                        this.QuestStageOnLoss = (Exception?)obj;
+                        break;
+                    case SpeechChallenge_FieldIndex.SRAN:
+                        this.SRAN = (Exception?)obj;
+                        break;
+                    case SpeechChallenge_FieldIndex.SGEN:
+                        this.SGEN = (Exception?)obj;
+                        break;
+                    case SpeechChallenge_FieldIndex.Quest:
+                        this.Quest = (Exception?)obj;
+                        break;
+                    case SpeechChallenge_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SpeechChallenge_FieldIndex.Scenes:
+                        this.Scenes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SpeechChallenge_FieldIndex.DIFF:
+                        this.DIFF = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +577,14 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (QuestStageOnWin != null) return true;
+                if (QuestStageOnLoss != null) return true;
+                if (SRAN != null) return true;
+                if (SGEN != null) return true;
+                if (Quest != null) return true;
+                if (Keywords != null) return true;
+                if (Scenes != null) return true;
+                if (DIFF != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +611,64 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(QuestStageOnWin, "QuestStageOnWin");
+                }
+                {
+                    sb.AppendItem(QuestStageOnLoss, "QuestStageOnLoss");
+                }
+                {
+                    sb.AppendItem(SRAN, "SRAN");
+                }
+                {
+                    sb.AppendItem(SGEN, "SGEN");
+                }
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Scenes is {} ScenesItem)
+                {
+                    sb.AppendLine("Scenes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ScenesItem.Overall);
+                        if (ScenesItem.Specific != null)
+                        {
+                            foreach (var subItem in ScenesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(DIFF, "DIFF");
+                }
             }
             #endregion
 
@@ -255,6 +677,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.QuestStageOnWin = this.QuestStageOnWin.Combine(rhs.QuestStageOnWin);
+                ret.QuestStageOnLoss = this.QuestStageOnLoss.Combine(rhs.QuestStageOnLoss);
+                ret.SRAN = this.SRAN.Combine(rhs.SRAN);
+                ret.SGEN = this.SGEN.Combine(rhs.SGEN);
+                ret.Quest = this.Quest.Combine(rhs.Quest);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Scenes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), Noggog.ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
+                ret.DIFF = this.DIFF.Combine(rhs.DIFF);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +706,47 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool QuestStageOnWin;
+            public bool QuestStageOnLoss;
+            public bool SRAN;
+            public bool SGEN;
+            public bool Quest;
+            public bool Keywords;
+            public bool Scenes;
+            public bool DIFF;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.QuestStageOnWin = defaultOn;
+                this.QuestStageOnLoss = defaultOn;
+                this.SRAN = defaultOn;
+                this.SGEN = defaultOn;
+                this.Quest = defaultOn;
+                this.Keywords = defaultOn;
+                this.Scenes = defaultOn;
+                this.DIFF = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((QuestStageOnWin, null));
+                ret.Add((QuestStageOnLoss, null));
+                ret.Add((SRAN, null));
+                ret.Add((SGEN, null));
+                ret.Add((Quest, null));
+                ret.Add((Keywords, null));
+                ret.Add((Scenes, null));
+                ret.Add((DIFF, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +758,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SpeechChallenge_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SpeechChallengeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpeechChallengeSetterCommon.Instance.RemapLinks(this, mapping);
         public SpeechChallenge(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +888,23 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISpeechChallenge :
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISpeechChallengeInternal>,
         ISpeechChallengeGetter,
         IStarfieldMajorRecordInternal
     {
+        new Int16? QuestStageOnWin { get; set; }
+        new Int16? QuestStageOnLoss { get; set; }
+        new Boolean SRAN { get; set; }
+        new Boolean SGEN { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLinkGetter<ISceneGetter>>? Scenes { get; set; }
+        new MemorySlice<Byte>? DIFF { get; set; }
     }
 
     public partial interface ISpeechChallengeInternal :
@@ -441,10 +918,25 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ISpeechChallengeGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISpeechChallengeGetter>,
         IMapsToGetter<ISpeechChallengeGetter>
     {
         static new ILoquiRegistration StaticRegistration => SpeechChallenge_Registration.Instance;
+        Int16? QuestStageOnWin { get; }
+        Int16? QuestStageOnLoss { get; }
+        Boolean SRAN { get; }
+        Boolean SGEN { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IReadOnlyList<IFormLinkGetter<ISceneGetter>>? Scenes { get; }
+        ReadOnlyMemorySlice<Byte>? DIFF { get; }
 
     }
 
@@ -621,6 +1113,14 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        QuestStageOnWin = 7,
+        QuestStageOnLoss = 8,
+        SRAN = 9,
+        SGEN = 10,
+        Quest = 11,
+        Keywords = 12,
+        Scenes = 13,
+        DIFF = 14,
     }
     #endregion
 
@@ -631,9 +1131,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(SpeechChallenge.Mask<>);
 
@@ -663,8 +1163,21 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SPCH);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SPCH);
+            var all = RecordCollection.Factory(
+                RecordTypes.SPCH,
+                RecordTypes.SPWI,
+                RecordTypes.SPLO,
+                RecordTypes.SRAN,
+                RecordTypes.SGEN,
+                RecordTypes.SPQU,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.SPMA,
+                RecordTypes.DIFF);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SpeechChallengeBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1219,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISpeechChallengeInternal item)
         {
             ClearPartial();
+            item.QuestStageOnWin = default;
+            item.QuestStageOnLoss = default;
+            item.SRAN = default;
+            item.SGEN = default;
+            item.Quest.Clear();
+            item.Keywords = null;
+            item.Scenes = null;
+            item.DIFF = default;
             base.Clear(item);
         }
         
@@ -723,6 +1244,9 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISpeechChallenge obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Quest.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Scenes?.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +1314,20 @@ namespace Mutagen.Bethesda.Starfield
             SpeechChallenge.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.QuestStageOnWin = item.QuestStageOnWin == rhs.QuestStageOnWin;
+            ret.QuestStageOnLoss = item.QuestStageOnLoss == rhs.QuestStageOnLoss;
+            ret.SRAN = item.SRAN == rhs.SRAN;
+            ret.SGEN = item.SGEN == rhs.SGEN;
+            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Scenes = item.Scenes.CollectionEqualsHelper(
+                rhs.Scenes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.DIFF = MemorySliceExt.SequenceEqual(item.DIFF, rhs.DIFF);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1377,63 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.QuestStageOnWin ?? true)
+                && item.QuestStageOnWin is {} QuestStageOnWinItem)
+            {
+                sb.AppendItem(QuestStageOnWinItem, "QuestStageOnWin");
+            }
+            if ((printMask?.QuestStageOnLoss ?? true)
+                && item.QuestStageOnLoss is {} QuestStageOnLossItem)
+            {
+                sb.AppendItem(QuestStageOnLossItem, "QuestStageOnLoss");
+            }
+            if (printMask?.SRAN ?? true)
+            {
+                sb.AppendItem(item.SRAN, "SRAN");
+            }
+            if (printMask?.SGEN ?? true)
+            {
+                sb.AppendItem(item.SGEN, "SGEN");
+            }
+            if (printMask?.Quest ?? true)
+            {
+                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Scenes?.Overall ?? true)
+                && item.Scenes is {} ScenesItem)
+            {
+                sb.AppendLine("Scenes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ScenesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.DIFF ?? true)
+                && item.DIFF is {} DIFFItem)
+            {
+                sb.AppendLine($"DIFF => {SpanExt.ToHexString(DIFFItem)}");
+            }
         }
         
         public static SpeechChallenge_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1484,38 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.QuestStageOnWin) ?? true))
+            {
+                if (lhs.QuestStageOnWin != rhs.QuestStageOnWin) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.QuestStageOnLoss) ?? true))
+            {
+                if (lhs.QuestStageOnLoss != rhs.QuestStageOnLoss) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.SRAN) ?? true))
+            {
+                if (lhs.SRAN != rhs.SRAN) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.SGEN) ?? true))
+            {
+                if (lhs.SGEN != rhs.SGEN) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.Scenes) ?? true))
+            {
+                if (!lhs.Scenes.SequenceEqualNullable(rhs.Scenes)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.DIFF) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.DIFF, rhs.DIFF)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1544,23 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISpeechChallengeGetter item)
         {
             var hash = new HashCode();
+            if (item.QuestStageOnWin is {} QuestStageOnWinitem)
+            {
+                hash.Add(QuestStageOnWinitem);
+            }
+            if (item.QuestStageOnLoss is {} QuestStageOnLossitem)
+            {
+                hash.Add(QuestStageOnLossitem);
+            }
+            hash.Add(item.SRAN);
+            hash.Add(item.SGEN);
+            hash.Add(item.Quest);
+            hash.Add(item.Keywords);
+            hash.Add(item.Scenes);
+            if (item.DIFF is {} DIFFItem)
+            {
+                hash.Add(DIFFItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1589,24 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
+            {
+                yield return QuestInfo;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Scenes is {} ScenesItem)
+            {
+                foreach (var item in ScenesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1020,6 +1682,91 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.QuestStageOnWin) ?? true))
+            {
+                item.QuestStageOnWin = rhs.QuestStageOnWin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.QuestStageOnLoss) ?? true))
+            {
+                item.QuestStageOnLoss = rhs.QuestStageOnLoss;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.SRAN) ?? true))
+            {
+                item.SRAN = rhs.SRAN;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.SGEN) ?? true))
+            {
+                item.SGEN = rhs.SGEN;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.Quest) ?? true))
+            {
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)SpeechChallenge_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.Scenes) ?? true))
+            {
+                errorMask?.PushIndex((int)SpeechChallenge_FieldIndex.Scenes);
+                try
+                {
+                    if ((rhs.Scenes != null))
+                    {
+                        item.Scenes = 
+                            rhs.Scenes
+                            .Select(r => (IFormLinkGetter<ISceneGetter>)new FormLink<ISceneGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ISceneGetter>>();
+                    }
+                    else
+                    {
+                        item.Scenes = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.DIFF) ?? true))
+            {
+                if(rhs.DIFF is {} DIFFrhs)
+                {
+                    item.DIFF = DIFFrhs.ToArray();
+                }
+                else
+                {
+                    item.DIFF = default;
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1915,63 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SpeechChallengeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISpeechChallengeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.QuestStageOnWin,
+                header: translationParams.ConvertToCustom(RecordTypes.SPWI));
+            Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.QuestStageOnLoss,
+                header: translationParams.ConvertToCustom(RecordTypes.SPLO));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.SRAN,
+                header: translationParams.ConvertToCustom(RecordTypes.SRAN));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.SGEN,
+                header: translationParams.ConvertToCustom(RecordTypes.SGEN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Quest,
+                header: translationParams.ConvertToCustom(RecordTypes.SPQU));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISceneGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Scenes,
+                recordType: translationParams.ConvertToCustom(RecordTypes.SPMA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISceneGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DIFF,
+                header: translationParams.ConvertToCustom(RecordTypes.DIFF));
+        }
+
         public void Write(
             MutagenWriter writer,
             ISpeechChallengeGetter item,
@@ -1184,10 +1988,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2043,87 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SpeechChallengeBinaryCreateTranslation Instance = new SpeechChallengeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SPCH;
+        public static ParseResult FillBinaryRecordTypes(
+            ISpeechChallengeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.SPWI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.QuestStageOnWin = frame.ReadInt16();
+                    return (int)SpeechChallenge_FieldIndex.QuestStageOnWin;
+                }
+                case RecordTypeInts.SPLO:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.QuestStageOnLoss = frame.ReadInt16();
+                    return (int)SpeechChallenge_FieldIndex.QuestStageOnLoss;
+                }
+                case RecordTypeInts.SRAN:
+                {
+                    item.SRAN = true;
+                    return (int)SpeechChallenge_FieldIndex.SRAN;
+                }
+                case RecordTypeInts.SGEN:
+                {
+                    item.SGEN = true;
+                    return (int)SpeechChallenge_FieldIndex.SGEN;
+                }
+                case RecordTypeInts.SPQU:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SpeechChallenge_FieldIndex.Quest;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)SpeechChallenge_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.SPMA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Scenes = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISceneGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ISceneGetter>>();
+                    return (int)SpeechChallenge_FieldIndex.Scenes;
+                }
+                case RecordTypeInts.DIFF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DIFF = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SpeechChallenge_FieldIndex.DIFF;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2156,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SpeechChallengeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpeechChallengeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2171,35 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISpeechChallenge);
 
 
+        #region QuestStageOnWin
+        private int? _QuestStageOnWinLocation;
+        public Int16? QuestStageOnWin => _QuestStageOnWinLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestStageOnWinLocation.Value, _package.MetaData.Constants)) : default(Int16?);
+        #endregion
+        #region QuestStageOnLoss
+        private int? _QuestStageOnLossLocation;
+        public Int16? QuestStageOnLoss => _QuestStageOnLossLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestStageOnLossLocation.Value, _package.MetaData.Constants)) : default(Int16?);
+        #endregion
+        #region SRAN
+        private int? _SRANLocation;
+        public Boolean SRAN => _SRANLocation.HasValue ? true : default;
+        #endregion
+        #region SGEN
+        private int? _SGENLocation;
+        public Boolean SGEN => _SGENLocation.HasValue ? true : default;
+        #endregion
+        #region Quest
+        private int? _QuestLocation;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ISceneGetter>>? Scenes { get; private set; }
+        #region DIFF
+        private int? _DIFFLocation;
+        public ReadOnlyMemorySlice<Byte>? DIFF => _DIFFLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DIFFLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2257,84 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.SPWI:
+                {
+                    _QuestStageOnWinLocation = (stream.Position - offset);
+                    return (int)SpeechChallenge_FieldIndex.QuestStageOnWin;
+                }
+                case RecordTypeInts.SPLO:
+                {
+                    _QuestStageOnLossLocation = (stream.Position - offset);
+                    return (int)SpeechChallenge_FieldIndex.QuestStageOnLoss;
+                }
+                case RecordTypeInts.SRAN:
+                {
+                    _SRANLocation = (stream.Position - offset);
+                    return (int)SpeechChallenge_FieldIndex.SRAN;
+                }
+                case RecordTypeInts.SGEN:
+                {
+                    _SGENLocation = (stream.Position - offset);
+                    return (int)SpeechChallenge_FieldIndex.SGEN;
+                }
+                case RecordTypeInts.SPQU:
+                {
+                    _QuestLocation = (stream.Position - offset);
+                    return (int)SpeechChallenge_FieldIndex.Quest;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)SpeechChallenge_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.SPMA:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Scenes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISceneGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ISceneGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)SpeechChallenge_FieldIndex.Scenes;
+                }
+                case RecordTypeInts.DIFF:
+                {
+                    _DIFFLocation = (stream.Position - offset);
+                    return (int)SpeechChallenge_FieldIndex.DIFF;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

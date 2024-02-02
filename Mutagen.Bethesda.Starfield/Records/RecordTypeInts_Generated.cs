@@ -264,6 +264,7 @@ public partial class RecordTypeInts
     public const int DFOB = 0x424F4644;
     public const int DFTM = 0x4D544644;
     public const int DIAL = 0x4C414944;
+    public const int DIFF = 0x46464944;
     public const int DLBR = 0x52424C44;
     public const int DMAX = 0x58414D44;
     public const int DMDL = 0x4C444D44;
@@ -775,6 +776,7 @@ public partial class RecordTypeInts
     public const int SFPC = 0x43504653;
     public const int SFPT = 0x54504653;
     public const int SFTR = 0x52544653;
+    public const int SGEN = 0x4E454753;
     public const int SGNM = 0x4D4E4753;
     public const int SHRT = 0x54524853;
     public const int SHWB = 0x42574853;
@@ -810,11 +812,14 @@ public partial class RecordTypeInts
     public const int SPOR = 0x524F5053;
     public const int SPPK = 0x4B505053;
     public const int SPPQ = 0x51505053;
+    public const int SPQU = 0x55515053;
     public const int SPRK = 0x4B525053;
     public const int SPRP = 0x50525053;
     public const int SPRW = 0x57525053;
+    public const int SPWI = 0x49575053;
     public const int SRAC = 0x43415253;
     public const int SRAF = 0x46415253;
+    public const int SRAN = 0x4E415253;
     public const int SSPN = 0x4E505353;
     public const int STAD = 0x44415453;
     public const int STAE = 0x45415453;

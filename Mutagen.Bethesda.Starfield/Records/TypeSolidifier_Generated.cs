@@ -3636,9 +3636,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SpeechChallenge</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter> SpeechChallenge(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter> SpeechChallenge(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISpeechChallengeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3648,9 +3648,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SpeechChallenge</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter> SpeechChallenge(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter> SpeechChallenge(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISpeechChallengeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISpeechChallenge, ISpeechChallengeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
