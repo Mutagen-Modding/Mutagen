@@ -137,6 +137,7 @@
       <Group name="MorphableObjects" refName="MorphableObject" />
       <Group name="Traversals" refName="Traversal" />
       <Group name="ResourceGenerationData" refName="ResourceGenerationData" />
+      <Group name="Atmospheres" refName="Atmosphere" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />

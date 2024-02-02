@@ -2,6 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Atmosphere" recordType="ATMO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+      <FormLink name="ReflectionParent" recordType="RFDP" refName="Atmosphere" />
+      <ByteArray name="ReflectionDiff" recordType="RDIF" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

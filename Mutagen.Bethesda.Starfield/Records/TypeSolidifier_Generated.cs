@@ -516,9 +516,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Atmosphere</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter> Atmosphere(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter> Atmosphere(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAtmosphereGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -528,9 +528,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Atmosphere</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter> Atmosphere(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter> Atmosphere(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAtmosphereGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAtmosphere, IAtmosphereGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
