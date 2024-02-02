@@ -573,6 +573,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Global_Registration.Instance,
             Grass_Registration.Instance,
             GroundCover_Registration.Instance,
+            GroundCoverGrass_Registration.Instance,
             GroupedPackIn_Registration.Instance,
             HasActorRefOwnerConditionData_Registration.Instance,
             HasAssociationTypeAnyConditionData_Registration.Instance,

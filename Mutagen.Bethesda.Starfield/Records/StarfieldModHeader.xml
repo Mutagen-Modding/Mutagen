@@ -19,6 +19,7 @@
       <ByteArray name="Screenshot" recordType="SCRN" />
       <RefList name="TransientTypes" refName="TransientType" />
       <ByteArray name="INTV" recordType="INTV" />
+      <ByteArray name="BNAM" recordType="BNAM" />
       <Int32 name="INCC" recordType="INCC" />
       <ByteArray name="CHGL" recordType="CHGL" />
     </Fields>

@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +57,53 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IGroundCoverGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Grasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<GroundCoverGrass> _Grasses = new ExtendedList<GroundCoverGrass>();
+        public ExtendedList<GroundCoverGrass> Grasses
+        {
+            get => this._Grasses;
+            init => this._Grasses = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IGroundCoverGrassGetter> IGroundCoverGetter.Grasses => _Grasses;
+        #endregion
+
+        #endregion
+        #region LandscapeTextures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> _LandscapeTextures = new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>();
+        public ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures
+        {
+            get => this._LandscapeTextures;
+            init => this._LandscapeTextures = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> IGroundCoverGetter.LandscapeTextures => _LandscapeTextures;
+        #endregion
+
+        #endregion
+        #region YNAM
+        public Single? YNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IGroundCoverGetter.YNAM => this.YNAM;
+        #endregion
 
         #region To String
 
@@ -79,6 +129,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>());
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.YNAM = initialValue;
             }
 
             public Mask(
@@ -88,7 +142,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem Grasses,
+                TItem LandscapeTextures,
+                TItem YNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +156,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(Grasses, Enumerable.Empty<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>());
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, Enumerable.Empty<(int Index, TItem Value)>());
+                this.YNAM = YNAM;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +168,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>? Grasses;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LandscapeTextures;
+            public TItem YNAM;
             #endregion
 
             #region Equals
@@ -119,11 +188,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
+                if (!object.Equals(this.YNAM, rhs.YNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.Grasses);
+                hash.Add(this.LandscapeTextures);
+                hash.Add(this.YNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +211,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null)
+                    {
+                        foreach (var item in this.Grasses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LandscapeTextures != null)
+                {
+                    if (!eval(this.LandscapeTextures.Overall)) return false;
+                    if (this.LandscapeTextures.Specific != null)
+                    {
+                        foreach (var item in this.LandscapeTextures.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.YNAM)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +255,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null)
+                    {
+                        foreach (var item in this.Grasses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LandscapeTextures != null)
+                {
+                    if (eval(this.LandscapeTextures.Overall)) return true;
+                    if (this.LandscapeTextures.Specific != null)
+                    {
+                        foreach (var item in this.LandscapeTextures.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.YNAM)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +306,51 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Grasses != null)
+                {
+                    obj.Grasses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>>?>(eval(this.Grasses.Overall), Enumerable.Empty<MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>>());
+                    if (Grasses.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>>();
+                        obj.Grasses.Specific = l;
+                        foreach (var item in Grasses.Specific)
+                        {
+                            MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LandscapeTextures != null)
+                {
+                    obj.LandscapeTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LandscapeTextures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LandscapeTextures.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LandscapeTextures.Specific = l;
+                        foreach (var item in LandscapeTextures.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.YNAM = eval(this.YNAM);
             }
             #endregion
 
@@ -175,6 +369,69 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(GroundCover.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Grasses?.Overall ?? true)
+                        && Grasses is {} GrassesItem)
+                    {
+                        sb.AppendLine("Grasses =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(GrassesItem.Overall);
+                            if (GrassesItem.Specific != null)
+                            {
+                                foreach (var subItem in GrassesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.LandscapeTextures?.Overall ?? true)
+                        && LandscapeTextures is {} LandscapeTexturesItem)
+                    {
+                        sb.AppendLine("LandscapeTextures =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LandscapeTexturesItem.Overall);
+                            if (LandscapeTexturesItem.Specific != null)
+                            {
+                                foreach (var subItem in LandscapeTexturesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.YNAM ?? true)
+                    {
+                        sb.AppendItem(YNAM, "YNAM");
+                    }
                 }
             }
             #endregion
@@ -185,12 +442,27 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, GroundCoverGrass.ErrorMask?>>?>? Grasses;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LandscapeTextures;
+            public Exception? YNAM;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 GroundCover_FieldIndex enu = (GroundCover_FieldIndex)index;
                 switch (enu)
                 {
+                    case GroundCover_FieldIndex.Components:
+                        return Components;
+                    case GroundCover_FieldIndex.Grasses:
+                        return Grasses;
+                    case GroundCover_FieldIndex.LandscapeTextures:
+                        return LandscapeTextures;
+                    case GroundCover_FieldIndex.YNAM:
+                        return YNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +473,18 @@ namespace Mutagen.Bethesda.Starfield
                 GroundCover_FieldIndex enu = (GroundCover_FieldIndex)index;
                 switch (enu)
                 {
+                    case GroundCover_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case GroundCover_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, GroundCoverGrass.ErrorMask?>>?>(ex, null);
+                        break;
+                    case GroundCover_FieldIndex.LandscapeTextures:
+                        this.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case GroundCover_FieldIndex.YNAM:
+                        this.YNAM = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +496,18 @@ namespace Mutagen.Bethesda.Starfield
                 GroundCover_FieldIndex enu = (GroundCover_FieldIndex)index;
                 switch (enu)
                 {
+                    case GroundCover_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case GroundCover_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, GroundCoverGrass.ErrorMask?>>?>)obj;
+                        break;
+                    case GroundCover_FieldIndex.LandscapeTextures:
+                        this.LandscapeTextures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case GroundCover_FieldIndex.YNAM:
+                        this.YNAM = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +517,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (Grasses != null) return true;
+                if (LandscapeTextures != null) return true;
+                if (YNAM != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +547,65 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Grasses is {} GrassesItem)
+                {
+                    sb.AppendLine("Grasses =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(GrassesItem.Overall);
+                        if (GrassesItem.Specific != null)
+                        {
+                            foreach (var subItem in GrassesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (LandscapeTextures is {} LandscapeTexturesItem)
+                {
+                    sb.AppendLine("LandscapeTextures =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LandscapeTexturesItem.Overall);
+                        if (LandscapeTexturesItem.Specific != null)
+                        {
+                            foreach (var subItem in LandscapeTexturesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(YNAM, "YNAM");
+                }
             }
             #endregion
 
@@ -255,6 +614,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Grasses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, GroundCoverGrass.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), Noggog.ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                ret.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Overall, rhs.LandscapeTextures?.Overall), Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Specific, rhs.LandscapeTextures?.Specific));
+                ret.YNAM = this.YNAM.Combine(rhs.YNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +639,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public GroundCoverGrass.TranslationMask? Grasses;
+            public bool LandscapeTextures;
+            public bool YNAM;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.LandscapeTextures = defaultOn;
+                this.YNAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Grasses == null ? DefaultOn : !Grasses.GetCrystal().CopyNothing, Grasses?.GetCrystal()));
+                ret.Add((LandscapeTextures, null));
+                ret.Add((YNAM, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +677,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GroundCover_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GroundCoverCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroundCoverSetterCommon.Instance.RemapLinks(this, mapping);
         public GroundCover(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +728,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IGroundCover);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => GroundCoverCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => GroundCoverSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => GroundCoverSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => GroundCoverSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +811,16 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IGroundCover :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         IGroundCoverGetter,
         ILoquiObjectSetter<IGroundCoverInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<AComponent> Components { get; }
+        new ExtendedList<GroundCoverGrass> Grasses { get; }
+        new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
+        new Single? YNAM { get; set; }
     }
 
     public partial interface IGroundCoverInternal :
@@ -440,11 +833,17 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.GCVR)]
     public partial interface IGroundCoverGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IGroundCoverGetter>,
         IMapsToGetter<IGroundCoverGetter>
     {
         static new ILoquiRegistration StaticRegistration => GroundCover_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IReadOnlyList<IGroundCoverGrassGetter> Grasses { get; }
+        IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
+        Single? YNAM { get; }
 
     }
 
@@ -621,6 +1020,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        Grasses = 8,
+        LandscapeTextures = 9,
+        YNAM = 10,
     }
     #endregion
 
@@ -631,9 +1034,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(GroundCover.Mask<>);
 
@@ -663,8 +1066,18 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.GCVR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.GCVR);
+            var all = RecordCollection.Factory(
+                RecordTypes.GCVR,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.GNAM,
+                RecordTypes.DNAM,
+                RecordTypes.LNAM,
+                RecordTypes.YNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GroundCoverBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1119,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGroundCoverInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.Grasses.Clear();
+            item.LandscapeTextures.Clear();
+            item.YNAM = default;
             base.Clear(item);
         }
         
@@ -723,6 +1140,33 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IGroundCover obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Grasses.RemapLinks(mapping);
+            obj.LandscapeTextures.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IGroundCover obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IGroundCover obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +1234,19 @@ namespace Mutagen.Bethesda.Starfield
             GroundCover.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Grasses = item.Grasses.CollectionEqualsHelper(
+                rhs.Grasses,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LandscapeTextures = item.LandscapeTextures.CollectionEqualsHelper(
+                rhs.LandscapeTextures,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.YNAM = item.YNAM.EqualsWithin(rhs.YNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1296,53 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Grasses?.Overall ?? true)
+            {
+                sb.AppendLine("Grasses =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Grasses)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.LandscapeTextures?.Overall ?? true)
+            {
+                sb.AppendLine("LandscapeTextures =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.LandscapeTextures)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.YNAM ?? true)
+                && item.YNAM is {} YNAMItem)
+            {
+                sb.AppendItem(YNAMItem, "YNAM");
+            }
         }
         
         public static GroundCover_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1393,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GroundCover_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)GroundCover_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)GroundCover_FieldIndex.Grasses) ?? true))
+            {
+                if (!lhs.Grasses.SequenceEqual(rhs.Grasses, (l, r) => ((GroundCoverGrassCommon)((IGroundCoverGrassGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)GroundCover_FieldIndex.Grasses)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)GroundCover_FieldIndex.LandscapeTextures) ?? true))
+            {
+                if (!lhs.LandscapeTextures.SequenceEqualNullable(rhs.LandscapeTextures)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)GroundCover_FieldIndex.YNAM) ?? true))
+            {
+                if (!lhs.YNAM.EqualsWithin(rhs.YNAM)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1437,13 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IGroundCoverGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            hash.Add(item.Grasses);
+            hash.Add(item.LandscapeTextures);
+            if (item.YNAM is {} YNAMitem)
+            {
+                hash.Add(YNAMitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1472,36 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Grasses.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.LandscapeTextures)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IGroundCoverGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +1577,77 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)GroundCover_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)GroundCover_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)GroundCover_FieldIndex.Grasses) ?? true))
+            {
+                errorMask?.PushIndex((int)GroundCover_FieldIndex.Grasses);
+                try
+                {
+                    item.Grasses.SetTo(
+                        rhs.Grasses
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)GroundCover_FieldIndex.LandscapeTextures) ?? true))
+            {
+                errorMask?.PushIndex((int)GroundCover_FieldIndex.LandscapeTextures);
+                try
+                {
+                    item.LandscapeTextures.SetTo(
+                        rhs.LandscapeTextures
+                        .Select(r => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)GroundCover_FieldIndex.YNAM) ?? true))
+            {
+                item.YNAM = rhs.YNAM;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1796,53 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly GroundCoverBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IGroundCoverGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IGroundCoverGrassGetter>.Instance.Write(
+                writer: writer,
+                items: item.Grasses,
+                transl: (MutagenWriter subWriter, IGroundCoverGrassGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((GroundCoverGrassBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandscapeTextureGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LandscapeTextures,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandscapeTextureGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+                });
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.YNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IGroundCoverGetter item,
@@ -1184,10 +1859,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1914,66 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly GroundCoverBinaryCreateTranslation Instance = new GroundCoverBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GCVR;
+        public static ParseResult FillBinaryRecordTypes(
+            IGroundCoverInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)GroundCover_FieldIndex.Components;
+                }
+                case RecordTypeInts.GNAM:
+                case RecordTypeInts.DNAM:
+                {
+                    item.Grasses.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<GroundCoverGrass>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: GroundCoverGrass_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: GroundCoverGrass.TryCreateFromBinary));
+                    return (int)GroundCover_FieldIndex.Grasses;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    item.LandscapeTextures.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandscapeTextureGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.LNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)GroundCover_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.YNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)GroundCover_FieldIndex.YNAM;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2006,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GroundCoverCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => GroundCoverCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GroundCoverBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2022,13 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IGroundCover);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IGroundCoverGrassGetter> Grasses { get; private set; } = Array.Empty<IGroundCoverGrassGetter>();
+        public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = Array.Empty<IFormLinkGetter<ILandscapeTextureGetter>>();
+        #region YNAM
+        private int? _YNAMLocation;
+        public Single? YNAM => _YNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _YNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2086,67 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)GroundCover_FieldIndex.Components;
+                }
+                case RecordTypeInts.GNAM:
+                case RecordTypeInts.DNAM:
+                {
+                    this.Grasses = this.ParseRepeatedTypelessSubrecord<IGroundCoverGrassGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: GroundCoverGrass_Registration.TriggerSpecs,
+                        factory: GroundCoverGrassBinaryOverlay.GroundCoverGrassFactory);
+                    return (int)GroundCover_FieldIndex.Grasses;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    this.LandscapeTextures = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ILandscapeTextureGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.LNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)GroundCover_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    _YNAMLocation = (stream.Position - offset);
+                    return (int)GroundCover_FieldIndex.YNAM;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -186,6 +186,7 @@ namespace Mutagen.Bethesda.Starfield
             _SnapTemplateNodes_Object = new StarfieldGroup<SnapTemplateNode>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _SnapTemplates_Object = new StarfieldGroup<SnapTemplate>(this);
+            _GroundCovers_Object = new StarfieldGroup<GroundCover>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
@@ -1086,6 +1087,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ISnapTemplateGetter> IStarfieldModGetter.SnapTemplates => _SnapTemplates_Object;
         #endregion
+        #region GroundCovers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<GroundCover> _GroundCovers_Object;
+        public StarfieldGroup<GroundCover> GroundCovers => _GroundCovers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IGroundCoverGetter> IStarfieldModGetter.GroundCovers => _GroundCovers_Object;
+        #endregion
         #region Planets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Planet> _Planets_Object;
@@ -1294,6 +1302,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SnapTemplateNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SnapTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.GroundCovers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1430,6 +1439,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SnapTemplateNodes,
                 TItem BiomeSwaps,
                 TItem SnapTemplates,
+                TItem GroundCovers,
                 TItem Planets,
                 TItem ConditionRecords,
                 TItem SurfacePatternStyles,
@@ -1564,6 +1574,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SnapTemplateNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SnapTemplateNodes, new StarfieldGroup.Mask<TItem>(SnapTemplateNodes));
                 this.BiomeSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BiomeSwaps, new StarfieldGroup.Mask<TItem>(BiomeSwaps));
                 this.SnapTemplates = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SnapTemplates, new StarfieldGroup.Mask<TItem>(SnapTemplates));
+                this.GroundCovers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GroundCovers, new StarfieldGroup.Mask<TItem>(GroundCovers));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConditionRecords, new StarfieldGroup.Mask<TItem>(ConditionRecords));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
@@ -1708,6 +1719,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SnapTemplateNodes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BiomeSwaps { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SnapTemplates { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GroundCovers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConditionRecords { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
@@ -1853,6 +1865,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SnapTemplateNodes, rhs.SnapTemplateNodes)) return false;
                 if (!object.Equals(this.BiomeSwaps, rhs.BiomeSwaps)) return false;
                 if (!object.Equals(this.SnapTemplates, rhs.SnapTemplates)) return false;
+                if (!object.Equals(this.GroundCovers, rhs.GroundCovers)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
                 if (!object.Equals(this.ConditionRecords, rhs.ConditionRecords)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
@@ -1991,6 +2004,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SnapTemplateNodes);
                 hash.Add(this.BiomeSwaps);
                 hash.Add(this.SnapTemplates);
+                hash.Add(this.GroundCovers);
                 hash.Add(this.Planets);
                 hash.Add(this.ConditionRecords);
                 hash.Add(this.SurfacePatternStyles);
@@ -2639,6 +2653,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.SnapTemplates.Overall)) return false;
                     if (this.SnapTemplates.Specific != null && !this.SnapTemplates.Specific.All(eval)) return false;
+                }
+                if (GroundCovers != null)
+                {
+                    if (!eval(this.GroundCovers.Overall)) return false;
+                    if (this.GroundCovers.Specific != null && !this.GroundCovers.Specific.All(eval)) return false;
                 }
                 if (Planets != null)
                 {
@@ -3312,6 +3331,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.SnapTemplates.Overall)) return true;
                     if (this.SnapTemplates.Specific != null && this.SnapTemplates.Specific.Any(eval)) return true;
                 }
+                if (GroundCovers != null)
+                {
+                    if (eval(this.GroundCovers.Overall)) return true;
+                    if (this.GroundCovers.Specific != null && this.GroundCovers.Specific.Any(eval)) return true;
+                }
                 if (Planets != null)
                 {
                     if (eval(this.Planets.Overall)) return true;
@@ -3483,6 +3507,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SnapTemplateNodes = this.SnapTemplateNodes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SnapTemplateNodes.Overall), this.SnapTemplateNodes.Specific?.Translate(eval));
                 obj.BiomeSwaps = this.BiomeSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BiomeSwaps.Overall), this.BiomeSwaps.Specific?.Translate(eval));
                 obj.SnapTemplates = this.SnapTemplates == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SnapTemplates.Overall), this.SnapTemplates.Specific?.Translate(eval));
+                obj.GroundCovers = this.GroundCovers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GroundCovers.Overall), this.GroundCovers.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
                 obj.ConditionRecords = this.ConditionRecords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConditionRecords.Overall), this.ConditionRecords.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
@@ -4015,6 +4040,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         SnapTemplates?.Print(sb);
                     }
+                    if (printMask?.GroundCovers?.Overall ?? true)
+                    {
+                        GroundCovers?.Print(sb);
+                    }
                     if (printMask?.Planets?.Overall ?? true)
                     {
                         Planets?.Print(sb);
@@ -4190,6 +4219,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateNode.ErrorMask>?>? SnapTemplateNodes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BiomeSwap.ErrorMask>?>? BiomeSwaps;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplate.ErrorMask>?>? SnapTemplates;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<GroundCover.ErrorMask>?>? GroundCovers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>? ConditionRecords;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
@@ -4458,6 +4488,8 @@ namespace Mutagen.Bethesda.Starfield
                         return BiomeSwaps;
                     case StarfieldMod_FieldIndex.SnapTemplates:
                         return SnapTemplates;
+                    case StarfieldMod_FieldIndex.GroundCovers:
+                        return GroundCovers;
                     case StarfieldMod_FieldIndex.Planets:
                         return Planets;
                     case StarfieldMod_FieldIndex.ConditionRecords:
@@ -4860,6 +4892,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.SnapTemplates:
                         this.SnapTemplates = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplate.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.GroundCovers:
+                        this.GroundCovers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<GroundCover.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>(ex, null);
@@ -5270,6 +5305,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.SnapTemplates:
                         this.SnapTemplates = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplate.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.GroundCovers:
+                        this.GroundCovers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<GroundCover.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>?)obj;
                         break;
@@ -5423,6 +5461,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (SnapTemplateNodes != null) return true;
                 if (BiomeSwaps != null) return true;
                 if (SnapTemplates != null) return true;
+                if (GroundCovers != null) return true;
                 if (Planets != null) return true;
                 if (ConditionRecords != null) return true;
                 if (SurfacePatternStyles != null) return true;
@@ -5581,6 +5620,7 @@ namespace Mutagen.Bethesda.Starfield
                 SnapTemplateNodes?.Print(sb);
                 BiomeSwaps?.Print(sb);
                 SnapTemplates?.Print(sb);
+                GroundCovers?.Print(sb);
                 Planets?.Print(sb);
                 ConditionRecords?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
@@ -5722,6 +5762,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SnapTemplateNodes = this.SnapTemplateNodes.Combine(rhs.SnapTemplateNodes, (l, r) => l.Combine(r));
                 ret.BiomeSwaps = this.BiomeSwaps.Combine(rhs.BiomeSwaps, (l, r) => l.Combine(r));
                 ret.SnapTemplates = this.SnapTemplates.Combine(rhs.SnapTemplates, (l, r) => l.Combine(r));
+                ret.GroundCovers = this.GroundCovers.Combine(rhs.GroundCovers, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
                 ret.ConditionRecords = this.ConditionRecords.Combine(rhs.ConditionRecords, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
@@ -5878,6 +5919,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<SnapTemplateNode.TranslationMask>? SnapTemplateNodes;
             public StarfieldGroup.TranslationMask<BiomeSwap.TranslationMask>? BiomeSwaps;
             public StarfieldGroup.TranslationMask<SnapTemplate.TranslationMask>? SnapTemplates;
+            public StarfieldGroup.TranslationMask<GroundCover.TranslationMask>? GroundCovers;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
             public StarfieldGroup.TranslationMask<ConditionRecord.TranslationMask>? ConditionRecords;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
@@ -6035,6 +6077,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SnapTemplateNodes != null ? SnapTemplateNodes.OnOverall : DefaultOn, SnapTemplateNodes?.GetCrystal()));
                 ret.Add((BiomeSwaps != null ? BiomeSwaps.OnOverall : DefaultOn, BiomeSwaps?.GetCrystal()));
                 ret.Add((SnapTemplates != null ? SnapTemplates.OnOverall : DefaultOn, SnapTemplates?.GetCrystal()));
+                ret.Add((GroundCovers != null ? GroundCovers.OnOverall : DefaultOn, GroundCovers?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
                 ret.Add((ConditionRecords != null ? ConditionRecords.OnOverall : DefaultOn, ConditionRecords?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
@@ -6213,6 +6256,7 @@ namespace Mutagen.Bethesda.Starfield
             _SnapTemplateNodes_Object = new StarfieldGroup<SnapTemplateNode>(this);
             _BiomeSwaps_Object = new StarfieldGroup<BiomeSwap>(this);
             _SnapTemplates_Object = new StarfieldGroup<SnapTemplate>(this);
+            _GroundCovers_Object = new StarfieldGroup<GroundCover>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
@@ -6732,6 +6776,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.SnapTemplates.RecordCache.Set(rhsMod.SnapTemplates.RecordCache.Items);
             }
+            if (mask?.GroundCovers ?? true)
+            {
+                this.GroundCovers.RecordCache.Set(rhsMod.GroundCovers.RecordCache.Items);
+            }
             if (mask?.Planets ?? true)
             {
                 this.Planets.RecordCache.Set(rhsMod.Planets.RecordCache.Items);
@@ -6892,6 +6940,7 @@ namespace Mutagen.Bethesda.Starfield
             count += SnapTemplateNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += BiomeSwaps.RecordCache.Count > 0 ? 1 : default(uint);
             count += SnapTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += GroundCovers.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
@@ -7298,6 +7347,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<SnapTemplateNode> SnapTemplateNodes { get; }
         new StarfieldGroup<BiomeSwap> BiomeSwaps { get; }
         new StarfieldGroup<SnapTemplate> SnapTemplates { get; }
+        new StarfieldGroup<GroundCover> GroundCovers { get; }
         new StarfieldGroup<Planet> Planets { get; }
         new StarfieldGroup<ConditionRecord> ConditionRecords { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
@@ -7450,6 +7500,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ISnapTemplateNodeGetter> SnapTemplateNodes { get; }
         IStarfieldGroupGetter<IBiomeSwapGetter> BiomeSwaps { get; }
         IStarfieldGroupGetter<ISnapTemplateGetter> SnapTemplates { get; }
+        IStarfieldGroupGetter<IGroundCoverGetter> GroundCovers { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
         IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
@@ -8165,12 +8216,13 @@ namespace Mutagen.Bethesda.Starfield
         SnapTemplateNodes = 124,
         BiomeSwaps = 125,
         SnapTemplates = 126,
-        Planets = 127,
-        ConditionRecords = 128,
-        SurfacePatternStyles = 129,
-        TerminalMenus = 130,
-        LegendaryItems = 131,
-        ActorValueModulations = 132,
+        GroundCovers = 127,
+        Planets = 128,
+        ConditionRecords = 129,
+        SurfacePatternStyles = 130,
+        TerminalMenus = 131,
+        LegendaryItems = 132,
+        ActorValueModulations = 133,
     }
     #endregion
 
@@ -8181,9 +8233,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 133;
+        public const ushort AdditionalFieldCount = 134;
 
-        public const ushort FieldCount = 133;
+        public const ushort FieldCount = 134;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -8375,6 +8427,7 @@ namespace Mutagen.Bethesda.Starfield
             item.SnapTemplateNodes.Clear();
             item.BiomeSwaps.Clear();
             item.SnapTemplates.Clear();
+            item.GroundCovers.Clear();
             item.Planets.Clear();
             item.ConditionRecords.Clear();
             item.SurfacePatternStyles.Clear();
@@ -8490,6 +8543,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ObjectVisibilityManagers.RemapLinks(mapping);
             obj.SnapTemplateNodes.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
+            obj.GroundCovers.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
             obj.ConditionRecords.RemapLinks(mapping);
             obj.TerminalMenus.RemapLinks(mapping);
@@ -8655,6 +8709,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SnapTemplateNodes.Remove(keys);
             obj.BiomeSwaps.Remove(keys);
             obj.SnapTemplates.Remove(keys);
+            obj.GroundCovers.Remove(keys);
             obj.Planets.Remove(keys);
             obj.ConditionRecords.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
@@ -9728,6 +9783,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "GroundCover":
+                case "IGroundCoverGetter":
+                case "IGroundCover":
+                case "IGroundCoverInternal":
+                    obj.GroundCovers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -10542,6 +10605,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.GroundCovers is IAssetLinkContainer GroundCoverslinkCont)
+            {
+                foreach (var item in GroundCoverslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Planets is IAssetLinkContainer PlanetslinkCont)
             {
                 foreach (var item in PlanetslinkCont.EnumerateListedAssetLinks())
@@ -10635,6 +10705,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ObjectModifications.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SnapTemplateNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SnapTemplates.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.GroundCovers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueModulations.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -10810,6 +10881,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.SnapTemplateNodes = MaskItemExt.Factory(item.SnapTemplateNodes.GetEqualsMask(rhs.SnapTemplateNodes, include), include);
             ret.BiomeSwaps = MaskItemExt.Factory(item.BiomeSwaps.GetEqualsMask(rhs.BiomeSwaps, include), include);
             ret.SnapTemplates = MaskItemExt.Factory(item.SnapTemplates.GetEqualsMask(rhs.SnapTemplates, include), include);
+            ret.GroundCovers = MaskItemExt.Factory(item.GroundCovers.GetEqualsMask(rhs.GroundCovers, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
             ret.ConditionRecords = MaskItemExt.Factory(item.ConditionRecords.GetEqualsMask(rhs.ConditionRecords, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
@@ -11367,6 +11439,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SnapTemplates?.Overall ?? true)
             {
                 item.SnapTemplates?.Print(sb, "SnapTemplates");
+            }
+            if (printMask?.GroundCovers?.Overall ?? true)
+            {
+                item.GroundCovers?.Print(sb, "GroundCovers");
             }
             if (printMask?.Planets?.Overall ?? true)
             {
@@ -12417,6 +12493,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isSnapTemplatesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GroundCovers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GroundCovers, rhs.GroundCovers, out var lhsGroundCovers, out var rhsGroundCovers, out var isGroundCoversEqual))
+                {
+                    if (!object.Equals(lhsGroundCovers, rhsGroundCovers)) return false;
+                }
+                else if (!isGroundCoversEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Planets, rhs.Planets, out var lhsPlanets, out var rhsPlanets, out var isPlanetsEqual))
@@ -12598,6 +12682,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SnapTemplateNodes);
             hash.Add(item.BiomeSwaps);
             hash.Add(item.SnapTemplates);
+            hash.Add(item.GroundCovers);
             hash.Add(item.Planets);
             hash.Add(item.ConditionRecords);
             hash.Add(item.SurfacePatternStyles);
@@ -13251,6 +13336,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISnapTemplate":
                 case "ISnapTemplateInternal":
                     return obj.SnapTemplates;
+                case "GroundCover":
+                case "IGroundCoverGetter":
+                case "IGroundCover":
+                case "IGroundCoverInternal":
+                    return obj.GroundCovers;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -13307,7 +13397,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[132];
+            Stream[] outputStreams = new Stream[133];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -13435,12 +13525,13 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.SnapTemplateNodes, 123, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 124, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SnapTemplates, 125, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 126, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 127, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 128, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 129, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 130, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 131, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.GroundCovers, 126, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 127, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 128, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 129, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 130, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 131, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 132, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -13910,6 +14001,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SnapTemplates.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.GroundCovers.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -14445,6 +14540,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SnapTemplates.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.GroundCovers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -15628,6 +15727,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISnapTemplate":
                 case "ISnapTemplateInternal":
                     foreach (var item in obj.SnapTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GroundCover":
+                case "IGroundCoverGetter":
+                case "IGroundCover":
+                case "IGroundCoverInternal":
+                    foreach (var item in obj.GroundCovers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16966,6 +17074,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.SnapTemplates,
                 groupGetter: (m) => m.SnapTemplates))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GroundCover, IGroundCoverGetter>(
+                srcGroup: obj.GroundCovers,
+                type: typeof(IGroundCoverGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GroundCovers,
+                groupGetter: (m) => m.GroundCovers))
             {
                 yield return item;
             }
@@ -18804,6 +18921,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "GroundCover":
+                case "IGroundCoverGetter":
+                case "IGroundCover":
+                case "IGroundCoverInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GroundCover, IGroundCoverGetter>(
+                        srcGroup: obj.GroundCovers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GroundCovers,
+                        groupGetter: (m) => m.GroundCovers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -19516,6 +19647,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.SnapTemplates is IAssetLinkContainerGetter SnapTemplateslinkCont)
                 {
                     foreach (var item in SnapTemplateslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.GroundCovers is IAssetLinkContainerGetter GroundCoverslinkCont)
+                {
+                    foreach (var item in GroundCoverslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -22097,6 +22235,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GroundCovers) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.GroundCovers);
+                try
+                {
+                    item.GroundCovers.DeepCopyIn(
+                        rhs: rhs.GroundCovers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.GroundCovers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Planets);
@@ -22433,6 +22591,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool SnapTemplateNodes;
         public bool BiomeSwaps;
         public bool SnapTemplates;
+        public bool GroundCovers;
         public bool Planets;
         public bool ConditionRecords;
         public bool SurfacePatternStyles;
@@ -22570,6 +22729,7 @@ namespace Mutagen.Bethesda.Starfield
             SnapTemplateNodes = defaultValue;
             BiomeSwaps = defaultValue;
             SnapTemplates = defaultValue;
+            GroundCovers = defaultValue;
             Planets = defaultValue;
             ConditionRecords = defaultValue;
             SurfacePatternStyles = defaultValue;
@@ -24017,6 +24177,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SnapTemplatesItem).BinaryWriteTranslator).Write<ISnapTemplateGetter>(
                         item: SnapTemplatesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.GroundCovers ?? true)
+            {
+                var GroundCoversItem = item.GroundCovers;
+                if (GroundCoversItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)GroundCoversItem).BinaryWriteTranslator).Write<IGroundCoverGetter>(
+                        item: GroundCoversItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -25911,6 +26082,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.SnapTemplates;
                 }
+                case RecordTypeInts.GCVR:
+                {
+                    if (importMask?.GroundCovers ?? true)
+                    {
+                        item.GroundCovers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.GroundCovers;
+                }
                 case RecordTypeInts.PNDT:
                 {
                     if (importMask?.Planets ?? true)
@@ -26796,6 +26981,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ISnapTemplateGetter>? _SnapTemplates => _SnapTemplatesLocations != null ? StarfieldGroupBinaryOverlay<ISnapTemplateGetter>.StarfieldGroupFactory(_stream, _SnapTemplatesLocations, _package) : default;
         public IStarfieldGroupGetter<ISnapTemplateGetter> SnapTemplates => _SnapTemplates ?? new StarfieldGroup<SnapTemplate>(this);
         #endregion
+        #region GroundCovers
+        private List<RangeInt64>? _GroundCoversLocations;
+        private IStarfieldGroupGetter<IGroundCoverGetter>? _GroundCovers => _GroundCoversLocations != null ? StarfieldGroupBinaryOverlay<IGroundCoverGetter>.StarfieldGroupFactory(_stream, _GroundCoversLocations, _package) : default;
+        public IStarfieldGroupGetter<IGroundCoverGetter> GroundCovers => _GroundCovers ?? new StarfieldGroup<GroundCover>(this);
+        #endregion
         #region Planets
         private List<RangeInt64>? _PlanetsLocations;
         private IStarfieldGroupGetter<IPlanetGetter>? _Planets => _PlanetsLocations != null ? StarfieldGroupBinaryOverlay<IPlanetGetter>.StarfieldGroupFactory(_stream, _PlanetsLocations, _package) : default;
@@ -27674,6 +27864,12 @@ namespace Mutagen.Bethesda.Starfield
                     _SnapTemplatesLocations ??= new();
                     _SnapTemplatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.SnapTemplates;
+                }
+                case RecordTypeInts.GCVR:
+                {
+                    _GroundCoversLocations ??= new();
+                    _GroundCoversLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.GroundCovers;
                 }
                 case RecordTypeInts.PNDT:
                 {

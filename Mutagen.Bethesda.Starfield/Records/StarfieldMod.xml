@@ -133,6 +133,7 @@
       <Group name="SnapTemplateNodes" refName="SnapTemplateNode" />
       <Group name="BiomeSwaps" refName="BiomeSwap" />
       <Group name="SnapTemplates" refName="SnapTemplate" />
+      <Group name="GroundCovers" refName="GroundCover" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />

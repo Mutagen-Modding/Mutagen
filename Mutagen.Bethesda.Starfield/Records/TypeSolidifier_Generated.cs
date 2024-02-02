@@ -1812,9 +1812,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GroundCover</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter> GroundCover(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter> GroundCover(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGroundCoverGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1824,9 +1824,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on GroundCover</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter> GroundCover(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter> GroundCover(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGroundCoverGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGroundCover, IGroundCoverGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

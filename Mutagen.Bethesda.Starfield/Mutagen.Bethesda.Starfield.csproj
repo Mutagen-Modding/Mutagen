@@ -6506,5 +6506,8 @@
     <Compile Include="Records\Major Records\ObjectVisibilityManagerItem_Generated.cs">
       <DependentUpon>ObjectVisibilityManager.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GroundCoverGrass_Generated.cs">
+      <DependentUpon>GroundCover.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
