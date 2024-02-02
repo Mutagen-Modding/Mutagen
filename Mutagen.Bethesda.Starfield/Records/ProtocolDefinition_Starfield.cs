@@ -1116,6 +1116,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ResistanceDestructible_Registration.Instance,
             Resource_Registration.Instance,
             ResourceGenerationData_Registration.Instance,
+            ResourceGenerationDataItem_Registration.Instance,
             ResourceVeinHasKeywordConditionData_Registration.Instance,
             ReverbParameters_Registration.Instance,
             SameFactionAsPCConditionData_Registration.Instance,

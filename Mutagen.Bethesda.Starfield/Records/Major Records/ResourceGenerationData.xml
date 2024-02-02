@@ -2,6 +2,13 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ResourceGenerationData" recordType="RSGD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Items" refName="ResourceGenerationDataItem" />
+    </Fields>
+  </Object>
+  <Object name="ResourceGenerationDataItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Resource" recordType="RNAM" refName="Resource" nullable="false" />
+      <ByteArray name="Floats" byteLength="140" recordType="DNAM" nullable="false" />
     </Fields>
   </Object>
 </Loqui>

@@ -3372,9 +3372,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ResourceGenerationData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter> ResourceGenerationData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter> ResourceGenerationData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IResourceGenerationDataGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3384,9 +3384,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on ResourceGenerationData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter> ResourceGenerationData(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter> ResourceGenerationData(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IResourceGenerationDataGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IResourceGenerationData, IResourceGenerationDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

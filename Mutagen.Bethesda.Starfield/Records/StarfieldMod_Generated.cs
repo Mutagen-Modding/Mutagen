@@ -189,6 +189,7 @@ namespace Mutagen.Bethesda.Starfield
             _GroundCovers_Object = new StarfieldGroup<GroundCover>(this);
             _MorphableObjects_Object = new StarfieldGroup<MorphableObject>(this);
             _Traversals_Object = new StarfieldGroup<Traversal>(this);
+            _ResourceGenerationData_Object = new StarfieldGroup<ResourceGenerationData>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
@@ -1110,6 +1111,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ITraversalGetter> IStarfieldModGetter.Traversals => _Traversals_Object;
         #endregion
+        #region ResourceGenerationData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ResourceGenerationData> _ResourceGenerationData_Object;
+        public StarfieldGroup<ResourceGenerationData> ResourceGenerationData => _ResourceGenerationData_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IResourceGenerationDataGetter> IStarfieldModGetter.ResourceGenerationData => _ResourceGenerationData_Object;
+        #endregion
         #region Planets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Planet> _Planets_Object;
@@ -1321,6 +1329,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroundCovers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.MorphableObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Traversals = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ResourceGenerationData = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1460,6 +1469,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem GroundCovers,
                 TItem MorphableObjects,
                 TItem Traversals,
+                TItem ResourceGenerationData,
                 TItem Planets,
                 TItem ConditionRecords,
                 TItem SurfacePatternStyles,
@@ -1597,6 +1607,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroundCovers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GroundCovers, new StarfieldGroup.Mask<TItem>(GroundCovers));
                 this.MorphableObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MorphableObjects, new StarfieldGroup.Mask<TItem>(MorphableObjects));
                 this.Traversals = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Traversals, new StarfieldGroup.Mask<TItem>(Traversals));
+                this.ResourceGenerationData = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ResourceGenerationData, new StarfieldGroup.Mask<TItem>(ResourceGenerationData));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConditionRecords, new StarfieldGroup.Mask<TItem>(ConditionRecords));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
@@ -1744,6 +1755,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GroundCovers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MorphableObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Traversals { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ResourceGenerationData { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConditionRecords { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
@@ -1892,6 +1904,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.GroundCovers, rhs.GroundCovers)) return false;
                 if (!object.Equals(this.MorphableObjects, rhs.MorphableObjects)) return false;
                 if (!object.Equals(this.Traversals, rhs.Traversals)) return false;
+                if (!object.Equals(this.ResourceGenerationData, rhs.ResourceGenerationData)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
                 if (!object.Equals(this.ConditionRecords, rhs.ConditionRecords)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
@@ -2033,6 +2046,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.GroundCovers);
                 hash.Add(this.MorphableObjects);
                 hash.Add(this.Traversals);
+                hash.Add(this.ResourceGenerationData);
                 hash.Add(this.Planets);
                 hash.Add(this.ConditionRecords);
                 hash.Add(this.SurfacePatternStyles);
@@ -2696,6 +2710,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Traversals.Overall)) return false;
                     if (this.Traversals.Specific != null && !this.Traversals.Specific.All(eval)) return false;
+                }
+                if (ResourceGenerationData != null)
+                {
+                    if (!eval(this.ResourceGenerationData.Overall)) return false;
+                    if (this.ResourceGenerationData.Specific != null && !this.ResourceGenerationData.Specific.All(eval)) return false;
                 }
                 if (Planets != null)
                 {
@@ -3384,6 +3403,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Traversals.Overall)) return true;
                     if (this.Traversals.Specific != null && this.Traversals.Specific.Any(eval)) return true;
                 }
+                if (ResourceGenerationData != null)
+                {
+                    if (eval(this.ResourceGenerationData.Overall)) return true;
+                    if (this.ResourceGenerationData.Specific != null && this.ResourceGenerationData.Specific.Any(eval)) return true;
+                }
                 if (Planets != null)
                 {
                     if (eval(this.Planets.Overall)) return true;
@@ -3558,6 +3582,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GroundCovers = this.GroundCovers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GroundCovers.Overall), this.GroundCovers.Specific?.Translate(eval));
                 obj.MorphableObjects = this.MorphableObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MorphableObjects.Overall), this.MorphableObjects.Specific?.Translate(eval));
                 obj.Traversals = this.Traversals == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Traversals.Overall), this.Traversals.Specific?.Translate(eval));
+                obj.ResourceGenerationData = this.ResourceGenerationData == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ResourceGenerationData.Overall), this.ResourceGenerationData.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
                 obj.ConditionRecords = this.ConditionRecords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConditionRecords.Overall), this.ConditionRecords.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
@@ -4102,6 +4127,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Traversals?.Print(sb);
                     }
+                    if (printMask?.ResourceGenerationData?.Overall ?? true)
+                    {
+                        ResourceGenerationData?.Print(sb);
+                    }
                     if (printMask?.Planets?.Overall ?? true)
                     {
                         Planets?.Print(sb);
@@ -4280,6 +4309,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<GroundCover.ErrorMask>?>? GroundCovers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<MorphableObject.ErrorMask>?>? MorphableObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Traversal.ErrorMask>?>? Traversals;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ResourceGenerationData.ErrorMask>?>? ResourceGenerationData;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>? ConditionRecords;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
@@ -4554,6 +4584,8 @@ namespace Mutagen.Bethesda.Starfield
                         return MorphableObjects;
                     case StarfieldMod_FieldIndex.Traversals:
                         return Traversals;
+                    case StarfieldMod_FieldIndex.ResourceGenerationData:
+                        return ResourceGenerationData;
                     case StarfieldMod_FieldIndex.Planets:
                         return Planets;
                     case StarfieldMod_FieldIndex.ConditionRecords:
@@ -4965,6 +4997,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Traversals:
                         this.Traversals = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Traversal.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ResourceGenerationData:
+                        this.ResourceGenerationData = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ResourceGenerationData.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>(ex, null);
@@ -5384,6 +5419,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Traversals:
                         this.Traversals = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Traversal.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.ResourceGenerationData:
+                        this.ResourceGenerationData = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ResourceGenerationData.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>?)obj;
                         break;
@@ -5540,6 +5578,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (GroundCovers != null) return true;
                 if (MorphableObjects != null) return true;
                 if (Traversals != null) return true;
+                if (ResourceGenerationData != null) return true;
                 if (Planets != null) return true;
                 if (ConditionRecords != null) return true;
                 if (SurfacePatternStyles != null) return true;
@@ -5701,6 +5740,7 @@ namespace Mutagen.Bethesda.Starfield
                 GroundCovers?.Print(sb);
                 MorphableObjects?.Print(sb);
                 Traversals?.Print(sb);
+                ResourceGenerationData?.Print(sb);
                 Planets?.Print(sb);
                 ConditionRecords?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
@@ -5845,6 +5885,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.GroundCovers = this.GroundCovers.Combine(rhs.GroundCovers, (l, r) => l.Combine(r));
                 ret.MorphableObjects = this.MorphableObjects.Combine(rhs.MorphableObjects, (l, r) => l.Combine(r));
                 ret.Traversals = this.Traversals.Combine(rhs.Traversals, (l, r) => l.Combine(r));
+                ret.ResourceGenerationData = this.ResourceGenerationData.Combine(rhs.ResourceGenerationData, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
                 ret.ConditionRecords = this.ConditionRecords.Combine(rhs.ConditionRecords, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
@@ -6004,6 +6045,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<GroundCover.TranslationMask>? GroundCovers;
             public StarfieldGroup.TranslationMask<MorphableObject.TranslationMask>? MorphableObjects;
             public StarfieldGroup.TranslationMask<Traversal.TranslationMask>? Traversals;
+            public StarfieldGroup.TranslationMask<ResourceGenerationData.TranslationMask>? ResourceGenerationData;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
             public StarfieldGroup.TranslationMask<ConditionRecord.TranslationMask>? ConditionRecords;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
@@ -6164,6 +6206,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((GroundCovers != null ? GroundCovers.OnOverall : DefaultOn, GroundCovers?.GetCrystal()));
                 ret.Add((MorphableObjects != null ? MorphableObjects.OnOverall : DefaultOn, MorphableObjects?.GetCrystal()));
                 ret.Add((Traversals != null ? Traversals.OnOverall : DefaultOn, Traversals?.GetCrystal()));
+                ret.Add((ResourceGenerationData != null ? ResourceGenerationData.OnOverall : DefaultOn, ResourceGenerationData?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
                 ret.Add((ConditionRecords != null ? ConditionRecords.OnOverall : DefaultOn, ConditionRecords?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
@@ -6345,6 +6388,7 @@ namespace Mutagen.Bethesda.Starfield
             _GroundCovers_Object = new StarfieldGroup<GroundCover>(this);
             _MorphableObjects_Object = new StarfieldGroup<MorphableObject>(this);
             _Traversals_Object = new StarfieldGroup<Traversal>(this);
+            _ResourceGenerationData_Object = new StarfieldGroup<ResourceGenerationData>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
@@ -6876,6 +6920,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Traversals.RecordCache.Set(rhsMod.Traversals.RecordCache.Items);
             }
+            if (mask?.ResourceGenerationData ?? true)
+            {
+                this.ResourceGenerationData.RecordCache.Set(rhsMod.ResourceGenerationData.RecordCache.Items);
+            }
             if (mask?.Planets ?? true)
             {
                 this.Planets.RecordCache.Set(rhsMod.Planets.RecordCache.Items);
@@ -7039,6 +7087,7 @@ namespace Mutagen.Bethesda.Starfield
             count += GroundCovers.RecordCache.Count > 0 ? 1 : default(uint);
             count += MorphableObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Traversals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ResourceGenerationData.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
@@ -7448,6 +7497,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<GroundCover> GroundCovers { get; }
         new StarfieldGroup<MorphableObject> MorphableObjects { get; }
         new StarfieldGroup<Traversal> Traversals { get; }
+        new StarfieldGroup<ResourceGenerationData> ResourceGenerationData { get; }
         new StarfieldGroup<Planet> Planets { get; }
         new StarfieldGroup<ConditionRecord> ConditionRecords { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
@@ -7603,6 +7653,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IGroundCoverGetter> GroundCovers { get; }
         IStarfieldGroupGetter<IMorphableObjectGetter> MorphableObjects { get; }
         IStarfieldGroupGetter<ITraversalGetter> Traversals { get; }
+        IStarfieldGroupGetter<IResourceGenerationDataGetter> ResourceGenerationData { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
         IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
@@ -8321,12 +8372,13 @@ namespace Mutagen.Bethesda.Starfield
         GroundCovers = 127,
         MorphableObjects = 128,
         Traversals = 129,
-        Planets = 130,
-        ConditionRecords = 131,
-        SurfacePatternStyles = 132,
-        TerminalMenus = 133,
-        LegendaryItems = 134,
-        ActorValueModulations = 135,
+        ResourceGenerationData = 130,
+        Planets = 131,
+        ConditionRecords = 132,
+        SurfacePatternStyles = 133,
+        TerminalMenus = 134,
+        LegendaryItems = 135,
+        ActorValueModulations = 136,
     }
     #endregion
 
@@ -8337,9 +8389,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 136;
+        public const ushort AdditionalFieldCount = 137;
 
-        public const ushort FieldCount = 136;
+        public const ushort FieldCount = 137;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -8534,6 +8586,7 @@ namespace Mutagen.Bethesda.Starfield
             item.GroundCovers.Clear();
             item.MorphableObjects.Clear();
             item.Traversals.Clear();
+            item.ResourceGenerationData.Clear();
             item.Planets.Clear();
             item.ConditionRecords.Clear();
             item.SurfacePatternStyles.Clear();
@@ -8650,6 +8703,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SnapTemplateNodes.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.GroundCovers.RemapLinks(mapping);
+            obj.ResourceGenerationData.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
             obj.ConditionRecords.RemapLinks(mapping);
             obj.TerminalMenus.RemapLinks(mapping);
@@ -8818,6 +8872,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.GroundCovers.Remove(keys);
             obj.MorphableObjects.Remove(keys);
             obj.Traversals.Remove(keys);
+            obj.ResourceGenerationData.Remove(keys);
             obj.Planets.Remove(keys);
             obj.ConditionRecords.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
@@ -9915,6 +9970,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "ResourceGenerationData":
+                case "IResourceGenerationDataGetter":
+                case "IResourceGenerationData":
+                case "IResourceGenerationDataInternal":
+                    obj.ResourceGenerationData.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -11009,6 +11072,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.GroundCovers = MaskItemExt.Factory(item.GroundCovers.GetEqualsMask(rhs.GroundCovers, include), include);
             ret.MorphableObjects = MaskItemExt.Factory(item.MorphableObjects.GetEqualsMask(rhs.MorphableObjects, include), include);
             ret.Traversals = MaskItemExt.Factory(item.Traversals.GetEqualsMask(rhs.Traversals, include), include);
+            ret.ResourceGenerationData = MaskItemExt.Factory(item.ResourceGenerationData.GetEqualsMask(rhs.ResourceGenerationData, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
             ret.ConditionRecords = MaskItemExt.Factory(item.ConditionRecords.GetEqualsMask(rhs.ConditionRecords, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
@@ -11578,6 +11642,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Traversals?.Overall ?? true)
             {
                 item.Traversals?.Print(sb, "Traversals");
+            }
+            if (printMask?.ResourceGenerationData?.Overall ?? true)
+            {
+                item.ResourceGenerationData?.Print(sb, "ResourceGenerationData");
             }
             if (printMask?.Planets?.Overall ?? true)
             {
@@ -12652,6 +12720,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isTraversalsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ResourceGenerationData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ResourceGenerationData, rhs.ResourceGenerationData, out var lhsResourceGenerationData, out var rhsResourceGenerationData, out var isResourceGenerationDataEqual))
+                {
+                    if (!object.Equals(lhsResourceGenerationData, rhsResourceGenerationData)) return false;
+                }
+                else if (!isResourceGenerationDataEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Planets, rhs.Planets, out var lhsPlanets, out var rhsPlanets, out var isPlanetsEqual))
@@ -12836,6 +12912,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.GroundCovers);
             hash.Add(item.MorphableObjects);
             hash.Add(item.Traversals);
+            hash.Add(item.ResourceGenerationData);
             hash.Add(item.Planets);
             hash.Add(item.ConditionRecords);
             hash.Add(item.SurfacePatternStyles);
@@ -13504,6 +13581,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ITraversal":
                 case "ITraversalInternal":
                     return obj.Traversals;
+                case "ResourceGenerationData":
+                case "IResourceGenerationDataGetter":
+                case "IResourceGenerationData":
+                case "IResourceGenerationDataInternal":
+                    return obj.ResourceGenerationData;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -13560,7 +13642,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[135];
+            Stream[] outputStreams = new Stream[136];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -13691,12 +13773,13 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.GroundCovers, 126, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MorphableObjects, 127, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Traversals, 128, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 129, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 130, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 131, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 132, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 133, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 134, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ResourceGenerationData, 129, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 130, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 131, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 132, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 133, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 134, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 135, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -14170,6 +14253,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.GroundCovers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ResourceGenerationData.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -14717,6 +14804,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Traversals.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ResourceGenerationData.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -15927,6 +16018,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ITraversal":
                 case "ITraversalInternal":
                     foreach (var item in obj.Traversals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ResourceGenerationData":
+                case "IResourceGenerationDataGetter":
+                case "IResourceGenerationData":
+                case "IResourceGenerationDataInternal":
+                    foreach (var item in obj.ResourceGenerationData.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -17292,6 +17392,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Traversals,
                 groupGetter: (m) => m.Traversals))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ResourceGenerationData, IResourceGenerationDataGetter>(
+                srcGroup: obj.ResourceGenerationData,
+                type: typeof(IResourceGenerationDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ResourceGenerationData,
+                groupGetter: (m) => m.ResourceGenerationData))
             {
                 yield return item;
             }
@@ -19168,6 +19277,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Traversals,
                         groupGetter: (m) => m.Traversals))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ResourceGenerationData":
+                case "IResourceGenerationDataGetter":
+                case "IResourceGenerationData":
+                case "IResourceGenerationDataInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ResourceGenerationData, IResourceGenerationDataGetter>(
+                        srcGroup: obj.ResourceGenerationData,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ResourceGenerationData,
+                        groupGetter: (m) => m.ResourceGenerationData))
                     {
                         yield return item;
                     }
@@ -22532,6 +22655,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ResourceGenerationData) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ResourceGenerationData);
+                try
+                {
+                    item.ResourceGenerationData.DeepCopyIn(
+                        rhs: rhs.ResourceGenerationData,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ResourceGenerationData));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Planets);
@@ -22871,6 +23014,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool GroundCovers;
         public bool MorphableObjects;
         public bool Traversals;
+        public bool ResourceGenerationData;
         public bool Planets;
         public bool ConditionRecords;
         public bool SurfacePatternStyles;
@@ -23011,6 +23155,7 @@ namespace Mutagen.Bethesda.Starfield
             GroundCovers = defaultValue;
             MorphableObjects = defaultValue;
             Traversals = defaultValue;
+            ResourceGenerationData = defaultValue;
             Planets = defaultValue;
             ConditionRecords = defaultValue;
             SurfacePatternStyles = defaultValue;
@@ -24491,6 +24636,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)TraversalsItem).BinaryWriteTranslator).Write<ITraversalGetter>(
                         item: TraversalsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ResourceGenerationData ?? true)
+            {
+                var ResourceGenerationDataItem = item.ResourceGenerationData;
+                if (ResourceGenerationDataItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ResourceGenerationDataItem).BinaryWriteTranslator).Write<IResourceGenerationDataGetter>(
+                        item: ResourceGenerationDataItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -26427,6 +26583,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Traversals;
                 }
+                case RecordTypeInts.RSGD:
+                {
+                    if (importMask?.ResourceGenerationData ?? true)
+                    {
+                        item.ResourceGenerationData.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ResourceGenerationData;
+                }
                 case RecordTypeInts.PNDT:
                 {
                     if (importMask?.Planets ?? true)
@@ -27327,6 +27497,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ITraversalGetter>? _Traversals => _TraversalsLocations != null ? StarfieldGroupBinaryOverlay<ITraversalGetter>.StarfieldGroupFactory(_stream, _TraversalsLocations, _package) : default;
         public IStarfieldGroupGetter<ITraversalGetter> Traversals => _Traversals ?? new StarfieldGroup<Traversal>(this);
         #endregion
+        #region ResourceGenerationData
+        private List<RangeInt64>? _ResourceGenerationDataLocations;
+        private IStarfieldGroupGetter<IResourceGenerationDataGetter>? _ResourceGenerationData => _ResourceGenerationDataLocations != null ? StarfieldGroupBinaryOverlay<IResourceGenerationDataGetter>.StarfieldGroupFactory(_stream, _ResourceGenerationDataLocations, _package) : default;
+        public IStarfieldGroupGetter<IResourceGenerationDataGetter> ResourceGenerationData => _ResourceGenerationData ?? new StarfieldGroup<ResourceGenerationData>(this);
+        #endregion
         #region Planets
         private List<RangeInt64>? _PlanetsLocations;
         private IStarfieldGroupGetter<IPlanetGetter>? _Planets => _PlanetsLocations != null ? StarfieldGroupBinaryOverlay<IPlanetGetter>.StarfieldGroupFactory(_stream, _PlanetsLocations, _package) : default;
@@ -28223,6 +28398,12 @@ namespace Mutagen.Bethesda.Starfield
                     _TraversalsLocations ??= new();
                     _TraversalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Traversals;
+                }
+                case RecordTypeInts.RSGD:
+                {
+                    _ResourceGenerationDataLocations ??= new();
+                    _ResourceGenerationDataLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ResourceGenerationData;
                 }
                 case RecordTypeInts.PNDT:
                 {

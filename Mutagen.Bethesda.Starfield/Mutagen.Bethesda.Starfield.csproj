@@ -6509,5 +6509,8 @@
     <Compile Include="Records\Major Records\GroundCoverGrass_Generated.cs">
       <DependentUpon>GroundCover.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ResourceGenerationDataItem_Generated.cs">
+      <DependentUpon>ResourceGenerationData.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
