@@ -67,6 +67,7 @@
     </Fields>
     <LinkInterface>IComplexLocation</LinkInterface>
     <LinkInterface>ICellOrObject</LinkInterface>
+    <LinkInterface>ISpaceCellSpawn</LinkInterface>
   </Object>
   <Object name="CellGrid" objType="Subrecord" recordType="XCLC">
     <Fields>

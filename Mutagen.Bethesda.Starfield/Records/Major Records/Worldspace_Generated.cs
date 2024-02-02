@@ -3461,6 +3461,13 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                     break;
+                case "ISpaceCellSpawn":
+                case "ISpaceCellSpawnGetter":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IOwner":
                 case "IOwnerGetter":
                     {

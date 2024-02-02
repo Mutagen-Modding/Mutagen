@@ -6512,5 +6512,9 @@
     <Compile Include="Records\Major Records\ResourceGenerationDataItem_Generated.cs">
       <DependentUpon>ResourceGenerationData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledSpaceCellEntry_Generated.cs">
+      <DependentUpon>LeveledSpaceCell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ISpaceCellSpawn_Generated.cs" />
   </ItemGroup>
 </Project>

@@ -138,6 +138,7 @@
       <Group name="Traversals" refName="Traversal" />
       <Group name="ResourceGenerationData" refName="ResourceGenerationData" />
       <Group name="Atmospheres" refName="Atmosphere" />
+      <Group name="LeveledSpaceCells" refName="LeveledSpaceCell" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />

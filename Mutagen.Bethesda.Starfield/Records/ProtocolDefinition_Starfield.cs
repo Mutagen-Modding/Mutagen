@@ -833,6 +833,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             LeveledPackIn_Registration.Instance,
             LeveledPackInEntry_Registration.Instance,
             LeveledSpaceCell_Registration.Instance,
+            LeveledSpaceCellEntry_Registration.Instance,
             LevelMinusPCLevelConditionData_Registration.Instance,
             Light_Registration.Instance,
             LightAnimFormComponent_Registration.Instance,

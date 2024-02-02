@@ -2340,9 +2340,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LeveledSpaceCell</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter> LeveledSpaceCell(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter> LeveledSpaceCell(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILeveledSpaceCellGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2352,9 +2352,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on LeveledSpaceCell</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter> LeveledSpaceCell(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter> LeveledSpaceCell(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILeveledSpaceCellGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ILeveledSpaceCell, ILeveledSpaceCellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4496,6 +4496,30 @@ namespace Mutagen.Bethesda.Starfield
             return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICellOrObject, ICellOrObjectGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICellOrObjectGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ICellOrObject, ICellOrObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to ISpaceCellSpawn
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on ISpaceCellSpawn</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpaceCellSpawn, ISpaceCellSpawnGetter> ISpaceCellSpawn(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpaceCellSpawn, ISpaceCellSpawnGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<ISpaceCellSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISpaceCellSpawn, ISpaceCellSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to ISpaceCellSpawn
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on ISpaceCellSpawn</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpaceCellSpawn, ISpaceCellSpawnGetter> ISpaceCellSpawn(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISpaceCellSpawn, ISpaceCellSpawnGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<ISpaceCellSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISpaceCellSpawn, ISpaceCellSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

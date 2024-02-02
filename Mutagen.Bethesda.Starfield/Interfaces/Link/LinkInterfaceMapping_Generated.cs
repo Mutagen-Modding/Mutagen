@@ -158,6 +158,17 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ICellOrObject),
                 Getter: typeof(ICellOrObjectGetter)));
         dict[typeof(ICellOrObjectGetter)] = dict[typeof(ICellOrObject)] with { Setter = false };
+        dict[typeof(ISpaceCellSpawn)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Cell_Registration.Instance,
+                LeveledSpaceCell_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(ISpaceCellSpawn),
+                Getter: typeof(ISpaceCellSpawnGetter)));
+        dict[typeof(ISpaceCellSpawnGetter)] = dict[typeof(ISpaceCellSpawn)] with { Setter = false };
         dict[typeof(IResourceTarget)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

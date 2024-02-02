@@ -2,6 +2,29 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledSpaceCell" recordType="LVSC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Float name="ChanceNone" recordType="LVLD" nullable="False" />
+      <UInt8 name="MaxCount" recordType="LVLM" nullable="False" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="2" />
+      <FormLink name="UseGlobal" refName="Global" recordType="LVLG" />
+      <RefList name="Entries" counterRecType="LLCT" refName="LeveledNpcEntry" counterLength="1" />
+    </Fields>
+    <LinkInterface>ISpaceCellSpawn</LinkInterface>
+  </Object>
+  <Object name="LeveledSpaceCellEntry" objType="Subrecord" >
+    <Fields>
+      <Data recordType="LVLO">
+        <Fields>
+          <Int16 name="Level" />
+          <Int16 name="Unused" />
+          <FormLink name="Reference">
+            <Interface>ISpaceCellSpawn</Interface>
+          </FormLink>
+          <Int16 name="Count" />
+          <Percent name="ChanceNone" integerType="Byte" />
+          <Int8 name="Unused2" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>

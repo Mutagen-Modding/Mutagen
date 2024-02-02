@@ -2607,6 +2607,7 @@ namespace Mutagen.Bethesda.Starfield
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
+        ISpaceCellSpawn,
         IStarfieldMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -2680,6 +2681,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<ICellGetter>,
         INamedGetter,
         INamedRequiredGetter,
+        ISpaceCellSpawnGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

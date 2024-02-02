@@ -122,6 +122,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IResourceTarget
 - ConstructibleObject
 - LeveledItem
+### ISpaceCellSpawn
+- Cell
+- LeveledSpaceCell
 ### ISpellRecord
 - Spell
 ### IStaticTarget
@@ -177,6 +180,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Cell
 - ICellOrObject
 - IComplexLocation
+- ISpaceCellSpawn
 ### ConstructibleObject
 - IResourceTarget
 ### Container
@@ -227,6 +231,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - INpcTemplateTarget
 ### LeveledPackIn
 - ILeveledPackInTarget
+### LeveledSpaceCell
+- ISpaceCellSpawn
 ### Light
 - IEmittance
 ### LocationReferenceType
