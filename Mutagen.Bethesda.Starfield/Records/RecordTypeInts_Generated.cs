@@ -788,6 +788,7 @@ public partial class RecordTypeInts
     public const int SNBH = 0x48424E53;
     public const int SNDD = 0x44444E53;
     public const int SNOT = 0x544F4E53;
+    public const int SNST = 0x54534E53;
     public const int SNTP = 0x50544E53;
     public const int SODA = 0x41444F53;
     public const int SOFT = 0x54464F53;

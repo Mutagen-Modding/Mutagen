@@ -790,6 +790,7 @@ public partial class RecordTypes
     public static readonly RecordType SNBH = new(0x48424E53);
     public static readonly RecordType SNDD = new(0x44444E53);
     public static readonly RecordType SNOT = new(0x544F4E53);
+    public static readonly RecordType SNST = new(0x54534E53);
     public static readonly RecordType SNTP = new(0x50544E53);
     public static readonly RecordType SODA = new(0x41444F53);
     public static readonly RecordType SOFT = new(0x54464F53);

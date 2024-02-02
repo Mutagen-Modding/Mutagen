@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -32,6 +36,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -54,6 +59,137 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ISnapTemplateNodeGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISnapTemplateNodeGetter.ODTY => this.ODTY;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ISnapTemplateNodeGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ISnapTemplateNodeGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ISnapTemplateNodeGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region CNAM
+        public Color? CNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? ISnapTemplateNodeGetter.CNAM => this.CNAM;
+        #endregion
+        #region FNAM
+        public UInt32? FNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ISnapTemplateNodeGetter.FNAM => this.FNAM;
+        #endregion
+        #region SNST
+        public UInt32? SNST { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ISnapTemplateNodeGetter.SNST => this.SNST;
+        #endregion
+        #region AdjacentSnapNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ISnapTemplateNodeGetter>> _AdjacentSnapNodes = new ExtendedList<IFormLinkGetter<ISnapTemplateNodeGetter>>();
+        public ExtendedList<IFormLinkGetter<ISnapTemplateNodeGetter>> AdjacentSnapNodes
+        {
+            get => this._AdjacentSnapNodes;
+            init => this._AdjacentSnapNodes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ISnapTemplateNodeGetter>> ISnapTemplateNodeGetter.AdjacentSnapNodes => _AdjacentSnapNodes;
+        #endregion
+
+        #endregion
+        #region SnapAngles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Single> _SnapAngles = new ExtendedList<Single>();
+        public ExtendedList<Single> SnapAngles
+        {
+            get => this._SnapAngles;
+            init => this._SnapAngles = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<Single> ISnapTemplateNodeGetter.SnapAngles => _SnapAngles;
+        #endregion
+
+        #endregion
+        #region ArtObject
+        private readonly IFormLinkNullable<IArtObjectGetter> _ArtObject = new FormLinkNullable<IArtObjectGetter>();
+        public IFormLinkNullable<IArtObjectGetter> ArtObject
+        {
+            get => _ArtObject;
+            set => _ArtObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArtObjectGetter> ISnapTemplateNodeGetter.ArtObject => this.ArtObject;
+        #endregion
 
         #region To String
 
@@ -79,6 +215,17 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CNAM = initialValue;
+                this.FNAM = initialValue;
+                this.SNST = initialValue;
+                this.AdjacentSnapNodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SnapAngles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ArtObject = initialValue;
             }
 
             public Mask(
@@ -88,7 +235,18 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem Components,
+                TItem Model,
+                TItem Keywords,
+                TItem CNAM,
+                TItem FNAM,
+                TItem SNST,
+                TItem AdjacentSnapNodes,
+                TItem SnapAngles,
+                TItem ArtObject)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +256,17 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CNAM = CNAM;
+                this.FNAM = FNAM;
+                this.SNST = SNST;
+                this.AdjacentSnapNodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdjacentSnapNodes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SnapAngles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SnapAngles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ArtObject = ArtObject;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +275,20 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem CNAM;
+            public TItem FNAM;
+            public TItem SNST;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AdjacentSnapNodes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SnapAngles;
+            public TItem ArtObject;
             #endregion
 
             #region Equals
@@ -119,11 +302,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.SNST, rhs.SNST)) return false;
+                if (!object.Equals(this.AdjacentSnapNodes, rhs.AdjacentSnapNodes)) return false;
+                if (!object.Equals(this.SnapAngles, rhs.SnapAngles)) return false;
+                if (!object.Equals(this.ArtObject, rhs.ArtObject)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.Components);
+                hash.Add(this.Model);
+                hash.Add(this.Keywords);
+                hash.Add(this.CNAM);
+                hash.Add(this.FNAM);
+                hash.Add(this.SNST);
+                hash.Add(this.AdjacentSnapNodes);
+                hash.Add(this.SnapAngles);
+                hash.Add(this.ArtObject);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +339,66 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.CNAM)) return false;
+                if (!eval(this.FNAM)) return false;
+                if (!eval(this.SNST)) return false;
+                if (this.AdjacentSnapNodes != null)
+                {
+                    if (!eval(this.AdjacentSnapNodes.Overall)) return false;
+                    if (this.AdjacentSnapNodes.Specific != null)
+                    {
+                        foreach (var item in this.AdjacentSnapNodes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SnapAngles != null)
+                {
+                    if (!eval(this.SnapAngles.Overall)) return false;
+                    if (this.SnapAngles.Specific != null)
+                    {
+                        foreach (var item in this.SnapAngles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ArtObject)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +407,66 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.CNAM)) return true;
+                if (eval(this.FNAM)) return true;
+                if (eval(this.SNST)) return true;
+                if (this.AdjacentSnapNodes != null)
+                {
+                    if (eval(this.AdjacentSnapNodes.Overall)) return true;
+                    if (this.AdjacentSnapNodes.Specific != null)
+                    {
+                        foreach (var item in this.AdjacentSnapNodes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SnapAngles != null)
+                {
+                    if (eval(this.SnapAngles.Overall)) return true;
+                    if (this.SnapAngles.Specific != null)
+                    {
+                        foreach (var item in this.SnapAngles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ArtObject)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +482,70 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.CNAM = eval(this.CNAM);
+                obj.FNAM = eval(this.FNAM);
+                obj.SNST = eval(this.SNST);
+                if (AdjacentSnapNodes != null)
+                {
+                    obj.AdjacentSnapNodes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdjacentSnapNodes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AdjacentSnapNodes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AdjacentSnapNodes.Specific = l;
+                        foreach (var item in AdjacentSnapNodes.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (SnapAngles != null)
+                {
+                    obj.SnapAngles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SnapAngles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SnapAngles.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SnapAngles.Specific = l;
+                        foreach (var item in SnapAngles.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.ArtObject = eval(this.ArtObject);
             }
             #endregion
 
@@ -175,6 +564,116 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SnapTemplateNode.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.CNAM ?? true)
+                    {
+                        sb.AppendItem(CNAM, "CNAM");
+                    }
+                    if (printMask?.FNAM ?? true)
+                    {
+                        sb.AppendItem(FNAM, "FNAM");
+                    }
+                    if (printMask?.SNST ?? true)
+                    {
+                        sb.AppendItem(SNST, "SNST");
+                    }
+                    if ((printMask?.AdjacentSnapNodes?.Overall ?? true)
+                        && AdjacentSnapNodes is {} AdjacentSnapNodesItem)
+                    {
+                        sb.AppendLine("AdjacentSnapNodes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AdjacentSnapNodesItem.Overall);
+                            if (AdjacentSnapNodesItem.Specific != null)
+                            {
+                                foreach (var subItem in AdjacentSnapNodesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.SnapAngles?.Overall ?? true)
+                        && SnapAngles is {} SnapAnglesItem)
+                    {
+                        sb.AppendLine("SnapAngles =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SnapAnglesItem.Overall);
+                            if (SnapAnglesItem.Specific != null)
+                            {
+                                foreach (var subItem in SnapAnglesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.ArtObject ?? true)
+                    {
+                        sb.AppendItem(ArtObject, "ArtObject");
+                    }
                 }
             }
             #endregion
@@ -185,12 +684,48 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? CNAM;
+            public Exception? FNAM;
+            public Exception? SNST;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AdjacentSnapNodes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SnapAngles;
+            public Exception? ArtObject;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SnapTemplateNode_FieldIndex enu = (SnapTemplateNode_FieldIndex)index;
                 switch (enu)
                 {
+                    case SnapTemplateNode_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case SnapTemplateNode_FieldIndex.ODTY:
+                        return ODTY;
+                    case SnapTemplateNode_FieldIndex.Components:
+                        return Components;
+                    case SnapTemplateNode_FieldIndex.Model:
+                        return Model;
+                    case SnapTemplateNode_FieldIndex.Keywords:
+                        return Keywords;
+                    case SnapTemplateNode_FieldIndex.CNAM:
+                        return CNAM;
+                    case SnapTemplateNode_FieldIndex.FNAM:
+                        return FNAM;
+                    case SnapTemplateNode_FieldIndex.SNST:
+                        return SNST;
+                    case SnapTemplateNode_FieldIndex.AdjacentSnapNodes:
+                        return AdjacentSnapNodes;
+                    case SnapTemplateNode_FieldIndex.SnapAngles:
+                        return SnapAngles;
+                    case SnapTemplateNode_FieldIndex.ArtObject:
+                        return ArtObject;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +736,39 @@ namespace Mutagen.Bethesda.Starfield
                 SnapTemplateNode_FieldIndex enu = (SnapTemplateNode_FieldIndex)index;
                 switch (enu)
                 {
+                    case SnapTemplateNode_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case SnapTemplateNode_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case SnapTemplateNode_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SnapTemplateNode_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case SnapTemplateNode_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SnapTemplateNode_FieldIndex.CNAM:
+                        this.CNAM = ex;
+                        break;
+                    case SnapTemplateNode_FieldIndex.FNAM:
+                        this.FNAM = ex;
+                        break;
+                    case SnapTemplateNode_FieldIndex.SNST:
+                        this.SNST = ex;
+                        break;
+                    case SnapTemplateNode_FieldIndex.AdjacentSnapNodes:
+                        this.AdjacentSnapNodes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SnapTemplateNode_FieldIndex.SnapAngles:
+                        this.SnapAngles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SnapTemplateNode_FieldIndex.ArtObject:
+                        this.ArtObject = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +780,39 @@ namespace Mutagen.Bethesda.Starfield
                 SnapTemplateNode_FieldIndex enu = (SnapTemplateNode_FieldIndex)index;
                 switch (enu)
                 {
+                    case SnapTemplateNode_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.CNAM:
+                        this.CNAM = (Exception?)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.FNAM:
+                        this.FNAM = (Exception?)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.SNST:
+                        this.SNST = (Exception?)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.AdjacentSnapNodes:
+                        this.AdjacentSnapNodes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.SnapAngles:
+                        this.SnapAngles = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SnapTemplateNode_FieldIndex.ArtObject:
+                        this.ArtObject = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +822,17 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (Components != null) return true;
+                if (Model != null) return true;
+                if (Keywords != null) return true;
+                if (CNAM != null) return true;
+                if (FNAM != null) return true;
+                if (SNST != null) return true;
+                if (AdjacentSnapNodes != null) return true;
+                if (SnapAngles != null) return true;
+                if (ArtObject != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +859,101 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Model?.Print(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(SNST, "SNST");
+                }
+                if (AdjacentSnapNodes is {} AdjacentSnapNodesItem)
+                {
+                    sb.AppendLine("AdjacentSnapNodes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AdjacentSnapNodesItem.Overall);
+                        if (AdjacentSnapNodesItem.Specific != null)
+                        {
+                            foreach (var subItem in AdjacentSnapNodesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (SnapAngles is {} SnapAnglesItem)
+                {
+                    sb.AppendLine("SnapAngles =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SnapAnglesItem.Overall);
+                        if (SnapAnglesItem.Specific != null)
+                        {
+                            foreach (var subItem in SnapAnglesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(ArtObject, "ArtObject");
+                }
             }
             #endregion
 
@@ -255,6 +962,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
+                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.SNST = this.SNST.Combine(rhs.SNST);
+                ret.AdjacentSnapNodes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AdjacentSnapNodes?.Overall, rhs.AdjacentSnapNodes?.Overall), Noggog.ExceptionExt.Combine(this.AdjacentSnapNodes?.Specific, rhs.AdjacentSnapNodes?.Specific));
+                ret.SnapAngles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SnapAngles?.Overall, rhs.SnapAngles?.Overall), Noggog.ExceptionExt.Combine(this.SnapAngles?.Specific, rhs.SnapAngles?.Specific));
+                ret.ArtObject = this.ArtObject.Combine(rhs.ArtObject);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +994,53 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public AComponent.TranslationMask? Components;
+            public Model.TranslationMask? Model;
+            public bool Keywords;
+            public bool CNAM;
+            public bool FNAM;
+            public bool SNST;
+            public bool AdjacentSnapNodes;
+            public bool SnapAngles;
+            public bool ArtObject;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.Keywords = defaultOn;
+                this.CNAM = defaultOn;
+                this.FNAM = defaultOn;
+                this.SNST = defaultOn;
+                this.AdjacentSnapNodes = defaultOn;
+                this.SnapAngles = defaultOn;
+                this.ArtObject = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((CNAM, null));
+                ret.Add((FNAM, null));
+                ret.Add((SNST, null));
+                ret.Add((AdjacentSnapNodes, null));
+                ret.Add((SnapAngles, null));
+                ret.Add((ArtObject, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1052,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SnapTemplateNode_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SnapTemplateNodeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SnapTemplateNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public SnapTemplateNode(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1103,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ISnapTemplateNode);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SnapTemplateNodeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SnapTemplateNodeSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SnapTemplateNodeSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SnapTemplateNodeSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1186,35 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISnapTemplateNode :
+        IAssetLinkContainer,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISnapTemplateNodeInternal>,
+        IModeled,
+        IObjectBounded,
         ISnapTemplateNodeGetter,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new Color? CNAM { get; set; }
+        new UInt32? FNAM { get; set; }
+        new UInt32? SNST { get; set; }
+        new ExtendedList<IFormLinkGetter<ISnapTemplateNodeGetter>> AdjacentSnapNodes { get; }
+        new ExtendedList<Single> SnapAngles { get; }
+        new IFormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
     }
 
     public partial interface ISnapTemplateNodeInternal :
@@ -440,11 +1227,42 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.STND)]
     public partial interface ISnapTemplateNodeGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISnapTemplateNodeGetter>,
-        IMapsToGetter<ISnapTemplateNodeGetter>
+        IMapsToGetter<ISnapTemplateNodeGetter>,
+        IModeledGetter,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => SnapTemplateNode_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        Color? CNAM { get; }
+        UInt32? FNAM { get; }
+        UInt32? SNST { get; }
+        IReadOnlyList<IFormLinkGetter<ISnapTemplateNodeGetter>> AdjacentSnapNodes { get; }
+        IReadOnlyList<Single> SnapAngles { get; }
+        IFormLinkNullableGetter<IArtObjectGetter> ArtObject { get; }
 
     }
 
@@ -621,6 +1439,17 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ODTY = 8,
+        Components = 9,
+        Model = 10,
+        Keywords = 11,
+        CNAM = 12,
+        FNAM = 13,
+        SNST = 14,
+        AdjacentSnapNodes = 15,
+        SnapAngles = 16,
+        ArtObject = 17,
     }
     #endregion
 
@@ -631,9 +1460,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(SnapTemplateNode.Mask<>);
 
@@ -663,8 +1492,31 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.STND);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.STND);
+            var all = RecordCollection.Factory(
+                RecordTypes.STND,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CNAM,
+                RecordTypes.FNAM,
+                RecordTypes.SNST,
+                RecordTypes.NNAM,
+                RecordTypes.FLTV,
+                RecordTypes.ANAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SnapTemplateNodeBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1558,17 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISnapTemplateNodeInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.Components.Clear();
+            item.Model = null;
+            item.Keywords = null;
+            item.CNAM = default;
+            item.FNAM = default;
+            item.SNST = default;
+            item.AdjacentSnapNodes.Clear();
+            item.SnapAngles.Clear();
+            item.ArtObject.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1586,43 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISnapTemplateNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.AdjacentSnapNodes.RemapLinks(mapping);
+            obj.ArtObject.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISnapTemplateNode obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ISnapTemplateNode obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -790,6 +1690,33 @@ namespace Mutagen.Bethesda.Starfield
             SnapTemplateNode.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.CNAM = item.CNAM.ColorOnlyEquals(rhs.CNAM);
+            ret.FNAM = item.FNAM == rhs.FNAM;
+            ret.SNST = item.SNST == rhs.SNST;
+            ret.AdjacentSnapNodes = item.AdjacentSnapNodes.CollectionEqualsHelper(
+                rhs.AdjacentSnapNodes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.SnapAngles = item.SnapAngles.CollectionEqualsHelper(
+                rhs.SnapAngles,
+                (l, r) => l.EqualsWithin(r),
+                include);
+            ret.ArtObject = item.ArtObject.Equals(rhs.ArtObject);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1766,96 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.CNAM ?? true)
+                && item.CNAM is {} CNAMItem)
+            {
+                sb.AppendItem(CNAMItem, "CNAM");
+            }
+            if ((printMask?.FNAM ?? true)
+                && item.FNAM is {} FNAMItem)
+            {
+                sb.AppendItem(FNAMItem, "FNAM");
+            }
+            if ((printMask?.SNST ?? true)
+                && item.SNST is {} SNSTItem)
+            {
+                sb.AppendItem(SNSTItem, "SNST");
+            }
+            if (printMask?.AdjacentSnapNodes?.Overall ?? true)
+            {
+                sb.AppendLine("AdjacentSnapNodes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.AdjacentSnapNodes)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.SnapAngles?.Overall ?? true)
+            {
+                sb.AppendLine("SnapAngles =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SnapAngles)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
+            if (printMask?.ArtObject ?? true)
+            {
+                sb.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
+            }
         }
         
         public static SnapTemplateNode_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1906,58 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)SnapTemplateNode_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SnapTemplateNode_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)SnapTemplateNode_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.CNAM) ?? true))
+            {
+                if (!lhs.CNAM.ColorOnlyEquals(rhs.CNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.FNAM) ?? true))
+            {
+                if (lhs.FNAM != rhs.FNAM) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.SNST) ?? true))
+            {
+                if (lhs.SNST != rhs.SNST) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.AdjacentSnapNodes) ?? true))
+            {
+                if (!lhs.AdjacentSnapNodes.SequenceEqualNullable(rhs.AdjacentSnapNodes)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.SnapAngles) ?? true))
+            {
+                if (!lhs.SnapAngles.SequenceEqualNullable(rhs.SnapAngles)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.ArtObject) ?? true))
+            {
+                if (!lhs.ArtObject.Equals(rhs.ArtObject)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1986,32 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISnapTemplateNodeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            hash.Add(item.Components);
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.CNAM is {} CNAMitem)
+            {
+                hash.Add(CNAMitem);
+            }
+            if (item.FNAM is {} FNAMitem)
+            {
+                hash.Add(FNAMitem);
+            }
+            if (item.SNST is {} SNSTitem)
+            {
+                hash.Add(SNSTitem);
+            }
+            hash.Add(item.AdjacentSnapNodes);
+            hash.Add(item.SnapAngles);
+            hash.Add(item.ArtObject);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +2040,57 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.AdjacentSnapNodes)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.ArtObject, out var ArtObjectInfo))
+            {
+                yield return ArtObjectInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISnapTemplateNodeGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1020,6 +2166,161 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplateNode_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)SnapTemplateNode_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplateNode_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplateNode_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SnapTemplateNode_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplateNode_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.CNAM) ?? true))
+            {
+                item.CNAM = rhs.CNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.FNAM) ?? true))
+            {
+                item.FNAM = rhs.FNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.SNST) ?? true))
+            {
+                item.SNST = rhs.SNST;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.AdjacentSnapNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplateNode_FieldIndex.AdjacentSnapNodes);
+                try
+                {
+                    item.AdjacentSnapNodes.SetTo(
+                        rhs.AdjacentSnapNodes
+                        .Select(r => (IFormLinkGetter<ISnapTemplateNodeGetter>)new FormLink<ISnapTemplateNodeGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.SnapAngles) ?? true))
+            {
+                errorMask?.PushIndex((int)SnapTemplateNode_FieldIndex.SnapAngles);
+                try
+                {
+                    item.SnapAngles.SetTo(rhs.SnapAngles);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SnapTemplateNode_FieldIndex.ArtObject) ?? true))
+            {
+                item.ArtObject.SetTo(rhs.ArtObject.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2469,87 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SnapTemplateNodeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISnapTemplateNodeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.SNST,
+                header: translationParams.ConvertToCustom(RecordTypes.SNST));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISnapTemplateNodeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AdjacentSnapNodes,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISnapTemplateNodeGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.NNAM));
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.WritePerItem(
+                writer: writer,
+                items: item.SnapAngles,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FLTV),
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ArtObject,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             ISnapTemplateNodeGetter item,
@@ -1184,10 +2566,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2621,119 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SnapTemplateNodeBinaryCreateTranslation Instance = new SnapTemplateNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.STND;
+        public static ParseResult FillBinaryRecordTypes(
+            ISnapTemplateNodeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)SnapTemplateNode_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SnapTemplateNode_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)SnapTemplateNode_FieldIndex.Components;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)SnapTemplateNode_FieldIndex.Model;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)SnapTemplateNode_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CNAM = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)SnapTemplateNode_FieldIndex.CNAM;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FNAM = frame.ReadUInt32();
+                    return (int)SnapTemplateNode_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.SNST:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SNST = frame.ReadUInt32();
+                    return (int)SnapTemplateNode_FieldIndex.SNST;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    item.AdjacentSnapNodes.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISnapTemplateNodeGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)SnapTemplateNode_FieldIndex.AdjacentSnapNodes;
+                }
+                case RecordTypeInts.FLTV:
+                {
+                    item.SnapAngles.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.FLTV),
+                            transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+                    return (int)SnapTemplateNode_FieldIndex.SnapAngles;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SnapTemplateNode_FieldIndex.ArtObject;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2766,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SnapTemplateNodeCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SnapTemplateNodeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SnapTemplateNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2782,39 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISnapTemplateNode);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IModelGetter? Model { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region CNAM
+        private int? _CNAMLocation;
+        public Color? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
+        #region FNAM
+        private int? _FNAMLocation;
+        public UInt32? FNAM => _FNAMLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region SNST
+        private int? _SNSTLocation;
+        public UInt32? SNST => _SNSTLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNSTLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ISnapTemplateNodeGetter>> AdjacentSnapNodes { get; private set; } = Array.Empty<IFormLinkGetter<ISnapTemplateNodeGetter>>();
+        public IReadOnlyList<Single> SnapAngles { get; private set; } = Array.Empty<Single>();
+        #region ArtObject
+        private int? _ArtObjectLocation;
+        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2872,123 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)SnapTemplateNode_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)SnapTemplateNode_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)SnapTemplateNode_FieldIndex.Components;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)SnapTemplateNode_FieldIndex.Model;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)SnapTemplateNode_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CNAMLocation = (stream.Position - offset);
+                    return (int)SnapTemplateNode_FieldIndex.CNAM;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FNAMLocation = (stream.Position - offset);
+                    return (int)SnapTemplateNode_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.SNST:
+                {
+                    _SNSTLocation = (stream.Position - offset);
+                    return (int)SnapTemplateNode_FieldIndex.SNST;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    this.AdjacentSnapNodes = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISnapTemplateNodeGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<ISnapTemplateNodeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.NNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)SnapTemplateNode_FieldIndex.AdjacentSnapNodes;
+                }
+                case RecordTypeInts.FLTV:
+                {
+                    this.SnapAngles = BinaryOverlayList.FactoryByArray<Single>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => s.Float(),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.FLTV,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)SnapTemplateNode_FieldIndex.SnapAngles;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _ArtObjectLocation = (stream.Position - offset);
+                    return (int)SnapTemplateNode_FieldIndex.ArtObject;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

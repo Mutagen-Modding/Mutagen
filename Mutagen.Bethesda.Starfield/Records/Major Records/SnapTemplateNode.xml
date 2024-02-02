@@ -2,6 +2,23 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SnapTemplateNode" recordType="STND" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <Color name="CNAM" recordType="CNAM" unknown="true" binaryType="Alpha" />
+      <UInt32 name="FNAM" recordType="FNAM" unknown="true" />
+      <UInt32 name="SNST" recordType="SNST" unknown="true" />
+      <List name="AdjacentSnapNodes" >
+        <FormLink recordType="NNAM" refName="SnapTemplateNode" />
+      </List>
+      <List name="SnapAngles" >
+        <Float recordType="FLTV" />
+      </List>
+      <FormLink name="ArtObject" refName="ArtObject" recordType="ANAM" />
     </Fields>
   </Object>
 </Loqui>

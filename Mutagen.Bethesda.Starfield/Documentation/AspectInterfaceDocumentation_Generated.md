@@ -75,6 +75,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - QuestReferenceAlias
 - Race
 - Resource
+- SnapTemplateNode
 - SoundKeywordMapping
 - SoundMarker
 - Spell
@@ -123,6 +124,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlanetModelComponent
 - Projectile
 - SkeletalModel
+- SnapTemplateNode
 - Static
 - StaticCollection
 - Terminal
@@ -276,6 +278,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PackIn
 - ProjectedDecal
 - Projectile
+- SnapTemplateNode
 - SoundEchoMarker
 - SoundMarker
 - Spell
@@ -771,6 +774,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### SkeletalModel
 - IModeled
+### SnapTemplateNode
+- IKeyworded
+- IModeled
+- IObjectBounded
 ### SoundEchoMarker
 - IObjectBounded
 ### SoundKeywordMapping
