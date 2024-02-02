@@ -54,6 +54,17 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region DNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _DNAM;
+        public MemorySlice<Byte>? DNAM
+        {
+            get => this._DNAM;
+            set => this._DNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ITraversalGetter.DNAM => this.DNAM;
+        #endregion
 
         #region To String
 
@@ -79,6 +90,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.DNAM = initialValue;
             }
 
             public Mask(
@@ -88,7 +100,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem DNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +111,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.DNAM = DNAM;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +120,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem DNAM;
             #endregion
 
             #region Equals
@@ -119,11 +137,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.DNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +154,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.DNAM)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +163,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.DNAM)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +179,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.DNAM = eval(this.DNAM);
             }
             #endregion
 
@@ -175,6 +198,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Traversal.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.DNAM ?? true)
+                    {
+                        sb.AppendItem(DNAM, "DNAM");
+                    }
                 }
             }
             #endregion
@@ -185,12 +212,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? DNAM;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Traversal_FieldIndex enu = (Traversal_FieldIndex)index;
                 switch (enu)
                 {
+                    case Traversal_FieldIndex.DNAM:
+                        return DNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +234,9 @@ namespace Mutagen.Bethesda.Starfield
                 Traversal_FieldIndex enu = (Traversal_FieldIndex)index;
                 switch (enu)
                 {
+                    case Traversal_FieldIndex.DNAM:
+                        this.DNAM = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +248,9 @@ namespace Mutagen.Bethesda.Starfield
                 Traversal_FieldIndex enu = (Traversal_FieldIndex)index;
                 switch (enu)
                 {
+                    case Traversal_FieldIndex.DNAM:
+                        this.DNAM = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +260,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (DNAM != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +287,9 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(DNAM, "DNAM");
+                }
             }
             #endregion
 
@@ -255,6 +298,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +320,26 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool DNAM;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.DNAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((DNAM, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -429,6 +484,7 @@ namespace Mutagen.Bethesda.Starfield
         ITraversalGetter,
         ITraversalTarget
     {
+        new MemorySlice<Byte>? DNAM { get; set; }
     }
 
     public partial interface ITraversalInternal :
@@ -447,6 +503,7 @@ namespace Mutagen.Bethesda.Starfield
         ITraversalTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Traversal_Registration.Instance;
+        ReadOnlyMemorySlice<Byte>? DNAM { get; }
 
     }
 
@@ -623,6 +680,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        DNAM = 7,
     }
     #endregion
 
@@ -633,9 +691,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Traversal.Mask<>);
 
@@ -665,8 +723,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.TRAV);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.TRAV);
+            var all = RecordCollection.Factory(
+                RecordTypes.TRAV,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TraversalBinaryWriteTranslation);
         #region Interface
@@ -708,6 +771,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ITraversalInternal item)
         {
             ClearPartial();
+            item.DNAM = default;
             base.Clear(item);
         }
         
@@ -792,6 +856,7 @@ namespace Mutagen.Bethesda.Starfield
             Traversal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -841,6 +906,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.DNAM ?? true)
+                && item.DNAM is {} DNAMItem)
+            {
+                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+            }
         }
         
         public static Traversal_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -891,6 +961,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Traversal_FieldIndex.DNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
+            }
             return true;
         }
         
@@ -919,6 +993,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ITraversalGetter item)
         {
             var hash = new HashCode();
+            if (item.DNAM is {} DNAMItem)
+            {
+                hash.Add(DNAMItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1022,6 +1100,17 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Traversal_FieldIndex.DNAM) ?? true))
+            {
+                if(rhs.DNAM is {} DNAMrhs)
+                {
+                    item.DNAM = DNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.DNAM = default;
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1170,6 +1259,21 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly TraversalBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ITraversalGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             ITraversalGetter item,
@@ -1186,10 +1290,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1239,6 +1345,36 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly TraversalBinaryCreateTranslation Instance = new TraversalBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TRAV;
+        public static ParseResult FillBinaryRecordTypes(
+            ITraversalInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Traversal_FieldIndex.DNAM;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1285,6 +1421,10 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ITraversal);
 
 
+        #region DNAM
+        private int? _DNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1342,6 +1482,34 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = (stream.Position - offset);
+                    return (int)Traversal_FieldIndex.DNAM;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

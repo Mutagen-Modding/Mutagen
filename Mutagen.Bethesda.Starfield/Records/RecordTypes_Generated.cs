@@ -534,6 +534,7 @@ public partial class RecordTypes
     public static readonly RecordType MO7C = new(0x43374F4D);
     public static readonly RecordType MO7F = new(0x46374F4D);
     public static readonly RecordType MO7T = new(0x54374F4D);
+    public static readonly RecordType MOBC = new(0x43424F4D);
     public static readonly RecordType MOD2 = new(0x32444F4D);
     public static readonly RecordType MOD3 = new(0x33444F4D);
     public static readonly RecordType MOD4 = new(0x34444F4D);
@@ -838,6 +839,7 @@ public partial class RecordTypes
     public static readonly RecordType STSC = new(0x43535453);
     public static readonly RecordType SUNP = new(0x504E5553);
     public static readonly RecordType SWMV = new(0x564D5753);
+    public static readonly RecordType TCMP = new(0x504D4354);
     public static readonly RecordType TEMP = new(0x504D4554);
     public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TES4 = new(0x34534554);
@@ -848,6 +850,7 @@ public partial class RecordTypes
     public static readonly RecordType TIQS = new(0x53514954);
     public static readonly RecordType TMEE = new(0x45454D54);
     public static readonly RecordType TMLM = new(0x4D4C4D54);
+    public static readonly RecordType TMPP = new(0x50504D54);
     public static readonly RecordType TMVT = new(0x54564D54);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TODD = new(0x44444F54);

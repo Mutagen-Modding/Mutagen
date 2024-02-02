@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Traversal" recordType="TRAV" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
     </Fields>
     <LinkInterface>ITraversalTarget</LinkInterface>
   </Object>

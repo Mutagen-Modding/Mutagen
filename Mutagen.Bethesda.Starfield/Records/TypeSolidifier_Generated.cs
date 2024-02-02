@@ -2628,9 +2628,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MorphableObject</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter> MorphableObject(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter> MorphableObject(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMorphableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2640,9 +2640,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on MorphableObject</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter> MorphableObject(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter> MorphableObject(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IMorphableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMorphableObject, IMorphableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3996,9 +3996,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Traversal</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter> Traversal(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter> Traversal(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ITraversalGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4008,9 +4008,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Traversal</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter> Traversal(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter> Traversal(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ITraversalGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITraversal, ITraversalGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

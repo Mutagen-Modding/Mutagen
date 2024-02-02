@@ -532,6 +532,7 @@ public partial class RecordTypeInts
     public const int MO7C = 0x43374F4D;
     public const int MO7F = 0x46374F4D;
     public const int MO7T = 0x54374F4D;
+    public const int MOBC = 0x43424F4D;
     public const int MOD2 = 0x32444F4D;
     public const int MOD3 = 0x33444F4D;
     public const int MOD4 = 0x34444F4D;
@@ -836,6 +837,7 @@ public partial class RecordTypeInts
     public const int STSC = 0x43535453;
     public const int SUNP = 0x504E5553;
     public const int SWMV = 0x564D5753;
+    public const int TCMP = 0x504D4354;
     public const int TEMP = 0x504D4554;
     public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
@@ -846,6 +848,7 @@ public partial class RecordTypeInts
     public const int TIQS = 0x53514954;
     public const int TMEE = 0x45454D54;
     public const int TMLM = 0x4D4C4D54;
+    public const int TMPP = 0x50504D54;
     public const int TMVT = 0x54564D54;
     public const int TNAM = 0x4D414E54;
     public const int TODD = 0x44444F54;
