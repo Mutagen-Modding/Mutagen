@@ -135,10 +135,12 @@ public partial class PexFile
         Read(pexFile, br);
 
         if (stream.Position != stream.Length)
+        {
             throw new InvalidDataException("Finished reading but end of the stream was not reached! " +
                                            $"Current position: {stream.Position} " +
                                            $"Stream length: {stream.Length} " +
                                            $"Missing: {stream.Length - stream.Position}");
+        }
 
         return pexFile;
     }

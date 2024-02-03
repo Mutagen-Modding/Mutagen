@@ -516,7 +516,9 @@ public abstract class PassthroughTest
             }
             foreach (var bsa in bsas)
             {
-                var archive = Archive.CreateReader(GameRelease, Path.Combine(Path.GetDirectoryName(FilePath)!, bsa.String));
+                var path = Path.Combine(Path.GetDirectoryName(FilePath)!, bsa.String);
+                if (!File.Exists(path)) continue;
+                var archive = Archive.CreateReader(GameRelease, path);
                 foreach (var file in archive.Files)
                 {
                     if (!Path.GetExtension(file.Path).Equals(".pex", StringComparison.OrdinalIgnoreCase)) continue;
