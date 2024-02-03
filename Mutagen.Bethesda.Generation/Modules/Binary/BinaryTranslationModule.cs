@@ -572,7 +572,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     }
                     if (lastUnknownField != null)
                     {
-                        lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos + {lengths.CurAccessor}";
+                        lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos{(string.IsNullOrEmpty(lengths.CurAccessor) ? null : $" + {lengths.CurAccessor}")}";
                         lengths.CurType = PassedType.Relative;
                     }
                 }

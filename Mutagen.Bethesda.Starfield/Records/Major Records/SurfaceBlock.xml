@@ -2,6 +2,35 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SurfaceBlock" recordType="SFBK" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <String name="ANAM" recordType="ANAM" />
+      <RefDirect name="DNAM" recordType="DNAM" refName="SurfaceBlockIntItem" nullable="False" />
+      <RefDirect name="ENAM" recordType="ENAM" refName="SurfaceBlockFloatItem" nullable="False" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <UInt8 name="GNAM" recordType="GNAM" />
+      <UInt16 name="HNAM" recordType="HNAM" nullable="False" />
+      <UInt8 name="INAM" recordType="INAM" nullable="False" />
+      <UInt8 name="JNAM" recordType="JNAM" nullable="False" />
+      <UInt8 name="KNAM" recordType="KNAM" nullable="False" />
+      <Float name="WHGT" recordType="WHGT" nullable="False" />
+      <String name="NAM0" recordType="NAM0" />
+      <String name="NAM1" recordType="NAM1" />
+      <Int64 name="NAM2" recordType="NAM2" />
+      <RefDirect name="NAM3" recordType="NAM3" refName="SurfaceBlockIntItem" />
+      <RefDirect name="NAM4" recordType="NAM4" refName="SurfaceBlockFloatItem" />
+      <FormLink name="NAM5" recordType="NAM5" refName="SurfaceBlock" />
+    </Fields>
+  </Object>
+  <Object name="SurfaceBlockIntItem" objType="Subrecord">
+    <Fields>
+      <UInt32 name="First" />
+      <UInt32 name="Second" />
+    </Fields>
+  </Object>
+  <Object name="SurfaceBlockFloatItem" objType="Subrecord">
+    <Fields>
+      <UInt32 name="First" />
+      <UInt32 name="Second" />
     </Fields>
   </Object>
 </Loqui>

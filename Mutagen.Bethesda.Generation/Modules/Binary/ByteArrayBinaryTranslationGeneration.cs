@@ -226,7 +226,12 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {recordDataAccessor}.Span.Slice(_{typeGen.Name}Location, {(await this.ExpectedLength(objGen, typeGen)).Value}).ToArray() : {(typeGen.Nullable ? $"default(ReadOnlyMemorySlice<byte>?)" : "ReadOnlyMemorySlice<byte>.Empty")};");
+                var expLen = (await this.ExpectedLength(objGen, typeGen))?.ToString();
+                if (expLen == null)
+                {
+                    expLen = $"_{dataType.GetFieldData().RecordType}Location!.Value.Max - _{typeGen.Name}Location + 1";
+                }
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {recordDataAccessor}.Span.Slice(_{typeGen.Name}Location{(expLen != null ? $", {expLen}" : null)}).ToArray() : {(typeGen.Nullable ? $"default(ReadOnlyMemorySlice<byte>?)" : "ReadOnlyMemorySlice<byte>.Empty")};");
             }
         }
     }

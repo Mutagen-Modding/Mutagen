@@ -317,7 +317,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                     if (length.PassedType == BinaryTranslationModule.PassedType.Direct)
                     {
                         passedLenForField =
-                            $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {passedLenForField}";
+                            $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)}{(passedLenForField.IsNullOrWhitespace() ? null : $" + {passedLenForField}")}";
                     }
                     
                     await subTypeGen.GenerateWrapperUnknownLengthParse(

@@ -439,4 +439,29 @@
       <ByteArray name="REFL" recordType="REFL" unknown="true" />
     </Fields>
   </Object>
+  <Object name="BlockEditorMetaDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data>
+        <Fields>
+          <String name="UnknownString1" binaryType="PrependLength" />
+          <UInt8 name="UnknownByte" />
+          <String name="UnknownString2" binaryType="PrependLength" />
+          <String name="UnknownString3" binaryType="PrependLength" />
+          <List name="UnknownInts" counterLength="4" >
+            <Int32 />
+          </List>
+          <Int32 name="UnknownInt1" />
+          <Int32 name="UnknownInt2" />
+          <Int32 name="UnknownInt3" />
+          <Int32 name="UnknownInt4" />
+          <ByteArray name="UnknownEnding" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="BlockCellHeightGridComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="DATA" recordType="DATA" />
+    </Fields>
+  </Object>
 </Loqui>

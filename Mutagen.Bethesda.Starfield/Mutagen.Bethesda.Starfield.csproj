@@ -6519,5 +6519,17 @@
     <Compile Include="Records\Major Records\AimAssistPosePoint_Generated.cs">
       <DependentUpon>AimAssistPose.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SurfaceBlockIntItem_Generated.cs">
+      <DependentUpon>SurfaceBlock.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SurfaceBlockFloatItem_Generated.cs">
+      <DependentUpon>SurfaceBlock.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BlockEditorMetaDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BlockCellHeightGridComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

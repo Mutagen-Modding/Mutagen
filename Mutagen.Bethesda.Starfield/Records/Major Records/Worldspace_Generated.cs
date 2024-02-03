@@ -3321,6 +3321,12 @@ namespace Mutagen.Bethesda.Starfield
                 case "SpacePhysicsComponent":
                 case "ISpacePhysicsComponentGetter":
                 case "ISpacePhysicsComponent":
+                case "BlockEditorMetaDataComponent":
+                case "IBlockEditorMetaDataComponentGetter":
+                case "IBlockEditorMetaDataComponent":
+                case "BlockCellHeightGridComponent":
+                case "IBlockCellHeightGridComponentGetter":
+                case "IBlockCellHeightGridComponent":
                     break;
                 case "WorldspaceGridReference":
                 case "IWorldspaceGridReferenceGetter":

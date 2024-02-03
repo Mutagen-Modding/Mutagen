@@ -63,6 +63,8 @@ public partial class AComponent
         BGSMaterialPropertyComponent,
         BGSWorkshopItemColor,
         BGSSpacePhysicsComponent,
+        BGSBlockEditorMetaData_Component,
+        BGSBlockCellHeighGrid_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -187,6 +189,10 @@ public partial class AComponent
                 return WorkshopItemColorComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSSpacePhysicsComponent:
                 return SpacePhysicsComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSBlockEditorMetaData_Component:
+                return BlockEditorMetaDataComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSBlockCellHeighGrid_Component:
+                return BlockCellHeightGridComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -281,6 +287,8 @@ partial class AComponentBinaryWriteTranslation
             IMaterialPropertyComponentGetter _ => AComponent.ComponentType.BGSMaterialPropertyComponent,
             IWorkshopItemColorComponentGetter _ => AComponent.ComponentType.BGSWorkshopItemColor,
             ISpacePhysicsComponentGetter _ => AComponent.ComponentType.BGSSpacePhysicsComponent,
+            IBlockEditorMetaDataComponentGetter _ => AComponent.ComponentType.BGSBlockEditorMetaData_Component,
+            IBlockCellHeightGridComponentGetter _ => AComponent.ComponentType.BGSBlockCellHeighGrid_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -403,6 +411,10 @@ partial class AComponentBinaryOverlay
                 return WorkshopItemColorComponentBinaryOverlay.WorkshopItemColorComponentFactory(stream, package);
             case AComponent.ComponentType.BGSSpacePhysicsComponent:
                 return SpacePhysicsComponentBinaryOverlay.SpacePhysicsComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSBlockEditorMetaData_Component:
+                return BlockEditorMetaDataComponentBinaryOverlay.BlockEditorMetaDataComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSBlockCellHeighGrid_Component:
+                return BlockCellHeightGridComponentBinaryOverlay.BlockCellHeightGridComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

@@ -3756,9 +3756,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SurfaceBlock</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter> SurfaceBlock(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter> SurfaceBlock(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISurfaceBlockGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3768,9 +3768,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SurfaceBlock</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter> SurfaceBlock(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter> SurfaceBlock(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISurfaceBlockGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISurfaceBlock, ISurfaceBlockGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4044,9 +4044,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on VolumetricLighting</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter> VolumetricLighting(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter> VolumetricLighting(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IVolumetricLightingGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4056,9 +4056,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on VolumetricLighting</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter> VolumetricLighting(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter> VolumetricLighting(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IVolumetricLightingGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IVolumetricLighting, IVolumetricLightingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

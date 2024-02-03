@@ -141,6 +141,8 @@
       <Group name="LeveledSpaceCells" refName="LeveledSpaceCell" />
       <Group name="SpeechChallenges" refName="SpeechChallenge" />
       <Group name="AimAssistPoses" refName="AimAssistPose" />
+      <Group name="VolumetricLightings" refName="VolumetricLighting" />
+      <Group name="SurfaceBlocks" refName="SurfaceBlock" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
