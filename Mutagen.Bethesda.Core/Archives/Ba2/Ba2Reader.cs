@@ -394,7 +394,7 @@ class BA2FileEntry : IArchiveFile
 
         if (!Compressed)
         {
-            return new FramedStream(fs, fs.Position + len);
+            return new FramedStream(fs, len);
         }
         else
         {
