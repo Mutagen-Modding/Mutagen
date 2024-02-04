@@ -522,16 +522,15 @@ public abstract class PassthroughTest
                 foreach (var file in archive.Files)
                 {
                     if (!Path.GetExtension(file.Path).Equals(".pex", StringComparison.OrdinalIgnoreCase)) continue;
-                    TestPex(GameRelease, file.GetMemorySlice());
+                    TestPex(GameRelease, file.AsStream());
                 }
             }
         });
     }
-
-    public void TestPex(GameRelease release, ReadOnlyMemorySlice<byte> bytes)
+    
+    public void TestPex(GameRelease release, Stream stream)
     {
-        var memStream = BinaryMemoryReadStream.LittleEndian(bytes);
-        PexFile.CreateFromStream(memStream, release.ToCategory());
+        PexFile.CreateFromStream(stream, release.ToCategory());
     }
 
     public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)
