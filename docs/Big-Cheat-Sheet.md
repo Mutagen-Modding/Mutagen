@@ -86,7 +86,7 @@ If you're just copy pasting code, often it will not compile because some require
     ```
 
 ## Look Up a Record
-``` { .cs hl_lines=4 }```
+``` { .cs hl_lines=4 }
 ILinkCache linkCache = ...;
 var formLink = new FormLink<IFormListGetter>(FormKey.Factory("123456:Skyrim.esm"));
 
@@ -143,14 +143,26 @@ var npcLink = npcGetter.ToLink();
 	
 
 ## Iterate Winning Overrides
-``` { .cs hl_lines=3 }
-ILoadOrder<ISkyrimMod, ISkyrimModGetter> loadOrder = ...;
+=== "Normal Record"
+    ``` { .cs hl_lines=3 }
+    ILoadOrder<ISkyrimMod, ISkyrimModGetter> loadOrder = ...;
+    
+    foreach (var keywordGetter in loadOrder.PriorityOrder.Keywords().WinningOverrides())
+    {
+       // Process each keyword record's winning override
+    }
+    ```
 
-foreach (var keywordGetter in loadOrder.PriorityOrder.Keywords().WinningOverrides())
-{
-   // Process each keyword record's winning override
-}
-```
+=== "Mod Context"
+    ``` { .cs hl_lines=3 }
+    ILoadOrder<ISkyrimMod, ISkyrimModGetter> loadOrder = ...;
+    ILinkCache linkCache = ...;
+    
+    foreach (var cellContext in loadOrder.PriorityOrder.Cell().WinningContextOverrides(linkCache))
+    {
+       // Process each cell record's winning override
+    }
+    ```
 
 [:octicons-arrow-right-24: Winning Overrides](loadorder/Winning-Overrides.md)
 
@@ -164,6 +176,29 @@ foreach (var keywordGetter in loadOrder.ListedOrder.Keywords().WinningOverrides(
 
 ??? Reasoning
     By swapping to ListedOrder, the loop will now iterate over the original definitions of each record.  By viewing the load order "backwards", is sees the original mods as the winning override to return
+
+## Override a Cell (or other nested record)
+=== "Specific Cell"
+    ```cs
+    FormKey someFormKey = ...;
+    ILinkCache linkCache = ...;
+    ISkyrimMod outgoingMod = ...;
+	
+    var cellContext = linkCache.ResolveContext<ICell, ICellGetter>(someFormKey);
+    var overrideCell = cellContext.GetOrAddAsOverride(outgoingMod);
+    ```
+=== "All Cells"
+    ```cs
+    ILoadOrder<ISkyrimMod, ISkyrimModGetter> loadOrder = ...;
+    FormKey someFormKey = ...;
+    ILinkCache linkCache = ...;
+    ISkyrimMod outgoingMod = ...;
+	
+    foreach (var cellContext in loadOrder.PriorityOrder.Cell().WinningContextOverrides(linkCache))
+    {
+        var overrideCell = cellContext.GetOrAddAsOverride(outgoingMod);
+    }
+    ```
 
 ## Check If A FormLink Points to a Specific Record
 === "FormKey Mapping Library"
