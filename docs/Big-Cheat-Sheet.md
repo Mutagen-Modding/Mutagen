@@ -102,13 +102,13 @@ if (linkCache.TryResolve(formLink, out var foundRecord))
     Using the [FormKey Generator](https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys) project is a good alternative to hand constructing FormLinks"
 
 ## Convert FormKey to FormID
-### Via MasterReferenceCollection
-``` { .cs hl_lines="4" }
-FormKey formKey = ...;
-IMasterReferenceCollection masterCollection = ...;
-
-FormID formID = masterCollection.GetFormID(formKey);
-```
+=== Via MasterReferenceCollection
+    ``` { .cs hl_lines="4" }
+    FormKey formKey = ...;
+    IMasterReferenceCollection masterCollection = ...;
+    
+    FormID formID = masterCollection.GetFormID(formKey);
+    ```
 
 [:octicons-arrow-right-24: FormKeys](plugins/ModKey, FormKey, FormLink.md#formkey)
 
@@ -140,8 +140,6 @@ var npcLink = npcGetter.ToLink();
 	
     [:octicons-arrow-right-24: Use Getter Interfaces in FormLinks](best-practices/FormLinks-Target-Getter-Interfaces.md)
 	
-	
-
 ## Iterate Winning Overrides
 === "Normal Record"
     ``` { .cs hl_lines=3 }
@@ -177,7 +175,7 @@ foreach (var keywordGetter in loadOrder.ListedOrder.Keywords().WinningOverrides(
 ??? Reasoning
     By swapping to ListedOrder, the loop will now iterate over the original definitions of each record.  By viewing the load order "backwards", is sees the original mods as the winning override to return
 
-## Override a Cell (or other nested record)
+## Override a Nested Record
 === "Specific Cell"
     ```cs
     FormKey someFormKey = ...;
