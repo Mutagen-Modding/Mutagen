@@ -198,6 +198,8 @@ foreach (var keywordGetter in loadOrder.ListedOrder.Keywords().WinningOverrides(
     }
     ```
 
+[:octicons-arrow-right-24: Winning Overrides](linkcache/ModContexts.md)
+
 ## Check If A FormLink Points to a Specific Record
 === "FormKey Mapping Library"
     ``` cs
