@@ -8,7 +8,7 @@ Mutagen is a C# library for analyzing, modifying, and creating Bethesda mods. On
 ## Documentation
 Check out the [![Documentation](https://i.imgur.com/DGoSrNg.png)](https://mutagen-modding.github.io/Mutagen/) [Official Documentation](https://mutagen-modding.github.io/Mutagen/) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
 
-Also be sure to check out the [Big Cheat Sheet](https://mutagen-modding.github.io/Mutagen/top/Big-Cheat-Sheet/)
+Also be sure to check out the [Big Cheat Sheet](https://mutagen-modding.github.io/Mutagen/Big-Cheat-Sheet/)
 
 ## Goals
 What is Mutagen trying to provide?
