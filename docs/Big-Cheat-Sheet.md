@@ -102,7 +102,7 @@ if (linkCache.TryResolve(formLink, out var foundRecord))
     Using the [FormKey Generator](https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys) project is a good alternative to hand constructing FormLinks"
 
 ## Convert FormKey to FormID
-=== Via MasterReferenceCollection
+=== MasterReferenceCollection
     ``` { .cs hl_lines="4" }
     FormKey formKey = ...;
     IMasterReferenceCollection masterCollection = ...;
@@ -118,6 +118,23 @@ FormKey formKey = ...;
 // NOTE: Typically want to use the "getter" interfaces for FormLinks
 var npcLink = formKey.ToLink<INpcGetter>();
 ```
+
+[:octicons-arrow-right-24: FormLinks](plugins/ModKey, FormKey, FormLink.md#formlink)
+
+## Convert FormLink to NullableFormLink
+=== SetTo
+    ``` { .cs hl_lines="4" }
+    IFormLinkGetter<IEquipTypeGetter> link = ...;
+    IFormLinkNullableGetter<IEquipTypeGetter> nullableLink = ...;
+    
+    nullableLink.SetTo(link);
+    ```
+=== AsNullable
+    ``` { .cs hl_lines="3" }
+    IFormLinkGetter<IEquipTypeGetter> link = ...;
+	
+    IFormLinkNullableGetter<IEquipTypeGetter> nullableLink = link.AsNullable();
+    ```
 
 [:octicons-arrow-right-24: FormLinks](plugins/ModKey, FormKey, FormLink.md#formlink)
 
