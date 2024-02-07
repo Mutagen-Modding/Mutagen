@@ -1,0 +1,2074 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://mutagen-modding.github.io/Mutagen/lowlevel/Binary-Utility/">
+      
+      
+        <link rel="prev" href="../Binary-Streams/">
+      
+      
+        <link rel="next" href="../../game-specific/oblivion/Oblivion-Aspect-Interfaces/">
+      
+      <link rel="icon" href="../../mutagen-icon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>Binary Utility - Mutagen Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#binary-utility" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mutagen Documentation" class="md-header__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../../mutagen-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mutagen Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Binary Utility
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen-Modding/Mutagen
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Mutagen Documentation" class="md-nav__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../../mutagen-icon.png" alt="logo">
+
+    </a>
+    Mutagen Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen-Modding/Mutagen
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Big-Cheat-Sheet/" class="md-nav__link">
+        Big Cheat Sheet
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../plugins/">Plugin Record Suite</a>
+          
+            <label for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Plugin Record Suite" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Plugin Record Suite
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/ModKey%2C%20FormKey%2C%20FormLink/" class="md-nav__link">
+        ModKey, FormKey, FormLink
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Binary-Importing/" class="md-nav__link">
+        Importing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Binary-Exporting/" class="md-nav__link">
+        Exporting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Interfaces/" class="md-nav__link">
+        Interfaces (Aspect/Link/Getters)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Copy-Functionality/" class="md-nav__link">
+        Copy Functionality
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Equality-Checks/" class="md-nav__link">
+        Equality Checks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Translation-Masks/" class="md-nav__link">
+        Translation Masks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Flags-and-Enums/" class="md-nav__link">
+        Flags and Enums
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/AssetLink/" class="md-nav__link">
+        Asset Links
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Create%2C-Duplicate%2C-and-Override/" class="md-nav__link">
+        Create, Duplicate, and Override
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Printing/" class="md-nav__link">
+        Printing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Mod-Construction-and-Importing/" class="md-nav__link">
+        Mod Construction and Importing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Abstract-Subclassing/" class="md-nav__link">
+        Abstract Subclassing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/Bethesda-Format-Abstraction/" class="md-nav__link">
+        Bethesda Format Abstraction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/FormKey-Allocation-and-Persistence/" class="md-nav__link">
+        FormKey Allocation and Persistence
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../plugins/specific/">Specific Records</a>
+          
+            <label for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Specific Records" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Specific Records
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/specific/Globals-And-GameSettings/" class="md-nav__link">
+        Globals and GameSettings
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../environment/">Environment</a>
+          
+            <label for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Environment" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Environment
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/Environment-Construction/" class="md-nav__link">
+        Environment Construction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/Game-Locations/" class="md-nav__link">
+        Game Locations
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../linkcache/">Link Cache</a>
+          
+            <label for="__nav_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Link Cache" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Link Cache
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Record-Resolves/" class="md-nav__link">
+        Record Resolves
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Scoping-Type/" class="md-nav__link">
+        Scoping Type
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/ModContexts/" class="md-nav__link">
+        Mod Contexts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Previous-Override-Iteration/" class="md-nav__link">
+        Previous Override Iteration
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../loadorder/">Load Order</a>
+          
+            <label for="__nav_7">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Load Order" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Load Order
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../loadorder/Winning-Overrides/" class="md-nav__link">
+        Winning Override Iteration
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Archives/" class="md-nav__link">
+        Archives (BSAs)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strings/" class="md-nav__link">
+        Strings
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          Getting Familiar with C#
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Familiar with C#" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Familiar with C#
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../familiar/Namespaces/" class="md-nav__link">
+        Namespaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../familiar/Nullability-to-Indicate-Record-Presence/" class="md-nav__link">
+        Nullability to Indicate Record Presence
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_11" tabindex="0" aria-expanded="false">
+          Best Practices
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Best Practices" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Best Practices
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Read-Only/" class="md-nav__link">
+        Prefer Readonly Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Accessing-Known-Records/" class="md-nav__link">
+        Accessing Known Records
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLinks-Target-Getter-Interfaces/" class="md-nav__link">
+        FormLinks Target Getter Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLinks-vs-EditorID-as-Identifiers/" class="md-nav__link">
+        FormLinks vs EditorID as Identifiers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLink-vs-FormLinkNullable/" class="md-nav__link">
+        FormLink vs FormLinkNullable
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Enumerable-Laziness/" class="md-nav__link">
+        Enumerable Laziness
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/TryGet-Concepts/" class="md-nav__link">
+        TryGet Concepts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/ITPO-Avoidance/" class="md-nav__link">
+        ITPO Avoidance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Reuse-Translation-Masks/" class="md-nav__link">
+        Reuse Translation Masks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Modifying-Groups-Being-Iterated/" class="md-nav__link">
+        Modifying Groups Being Iterated
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../wpf/">WPF Library</a>
+          
+            <label for="__nav_12">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="WPF Library" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          WPF Library
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/FormKey-Picker/" class="md-nav__link">
+        FormKey Picker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/ModKey-Picker/" class="md-nav__link">
+        ModKey Picker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/Reflection-Powered-Settings/" class="md-nav__link">
+        Reflection Powered Settings
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/Adding-Required-Resources/" class="md-nav__link">
+        Adding Required Resources
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Json/" class="md-nav__link">
+        Json
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_14" type="checkbox" id="__nav_14" checked>
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">Low Level Tools</a>
+          
+            <label for="__nav_14">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Low Level Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Low Level Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../C%23-Span/" class="md-nav__link">
+        C# Span
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Header-Structs/" class="md-nav__link">
+        Header Structs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Game-Constants/" class="md-nav__link">
+        Game Constants
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Binary-Streams/" class="md-nav__link">
+        Binary Streams
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Binary Utility
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Binary Utility
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#binarystringutility" class="md-nav__link">
+    BinaryStringUtility
+  </a>
+  
+    <nav class="md-nav" aria-label="BinaryStringUtility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tozstring" class="md-nav__link">
+    ToZString
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processwholetozstring" class="md-nav__link">
+    ProcessWholeToZString
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseunknownlengthstring" class="md-nav__link">
+    ParseUnknownLengthString
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subrecord-iteration-and-location" class="md-nav__link">
+    SubRecord Iteration and Location
+  </a>
+  
+    <nav class="md-nav" aria-label="SubRecord Iteration and Location">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enumeratesubrecords" class="md-nav__link">
+    EnumerateSubrecords
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tryfindfirstsubrecord" class="md-nav__link">
+    TryFindFirstSubrecord
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#findfirstsubrecords" class="md-nav__link">
+    FindFirstSubrecords
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilefirstsubrecordlocations" class="md-nav__link">
+    CompileFirstSubrecordLocations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recordlocator" class="md-nav__link">
+    RecordLocator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decompression" class="md-nav__link">
+    Decompression
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_15" tabindex="0" aria-expanded="false">
+          Game Specific Documentation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Game Specific Documentation" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Game Specific Documentation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15_1" type="checkbox" id="__nav_15_1" >
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_15_1" tabindex="0" aria-expanded="false">
+          Oblivion
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Oblivion" data-md-level="2">
+        <label class="md-nav__title" for="__nav_15_1">
+          <span class="md-nav__icon md-icon"></span>
+          Oblivion
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/oblivion/Oblivion-Aspect-Interfaces/" class="md-nav__link">
+        Oblivion Aspect Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/oblivion/Oblivion-Link-Interfaces/" class="md-nav__link">
+        Oblivion Link Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15_2" type="checkbox" id="__nav_15_2" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_15_2" tabindex="0" aria-expanded="false">
+          Skyrim
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Skyrim" data-md-level="2">
+        <label class="md-nav__title" for="__nav_15_2">
+          <span class="md-nav__icon md-icon"></span>
+          Skyrim
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Perks/" class="md-nav__link">
+        Skyrim Perks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Aspect-Interfaces/" class="md-nav__link">
+        Skyrim Aspect Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Link-Interfaces/" class="md-nav__link">
+        Skyrim Link Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Correctness/" class="md-nav__link">
+        Correctness
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#binarystringutility" class="md-nav__link">
+    BinaryStringUtility
+  </a>
+  
+    <nav class="md-nav" aria-label="BinaryStringUtility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tozstring" class="md-nav__link">
+    ToZString
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processwholetozstring" class="md-nav__link">
+    ProcessWholeToZString
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseunknownlengthstring" class="md-nav__link">
+    ParseUnknownLengthString
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subrecord-iteration-and-location" class="md-nav__link">
+    SubRecord Iteration and Location
+  </a>
+  
+    <nav class="md-nav" aria-label="SubRecord Iteration and Location">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enumeratesubrecords" class="md-nav__link">
+    EnumerateSubrecords
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tryfindfirstsubrecord" class="md-nav__link">
+    TryFindFirstSubrecord
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#findfirstsubrecords" class="md-nav__link">
+    FindFirstSubrecords
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilefirstsubrecordlocations" class="md-nav__link">
+    CompileFirstSubrecordLocations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recordlocator" class="md-nav__link">
+    RecordLocator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decompression" class="md-nav__link">
+    Decompression
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="binary-utility">Binary Utility</h1>
+<h2 id="binarystringutility">BinaryStringUtility</h2>
+<p>Bethesda games store their strings on disk in a single byte format, with a null terminator.  There are some convenience parsing functions inside <code>BinaryStringUtility</code> to convert these to C# strings.</p>
+<h3 id="tozstring">ToZString</h3>
+<p>This function assumes the entire input span is bytes that need to be converted to a string.  There should be no null termination at the end, or it will be included in the resulting string.</p>
+<h3 id="processwholetozstring">ProcessWholeToZString</h3>
+<p>This function assumes the entire input span is part of the string, and may have a null termination.  It will trim off the null termination if it exists, and return a string.  Good for typical use.
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">subRecordBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">subRecordFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">SubRecordFrame</span><span class="p">(</span><span class="n">someBytes</span><span class="p">.</span><span class="n">AsSpan</span><span class="p">());</span>
+<span class="kt">string</span><span class="w"> </span><span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BinaryStringUtility</span><span class="p">.</span><span class="n">ProcessWholeToZString</span><span class="p">(</span><span class="n">subRecordFrame</span><span class="p">.</span><span class="n">Content</span><span class="p">);</span>
+</code></pre></div></p>
+<h3 id="parseunknownlengthstring">ParseUnknownLengthString</h3>
+<p>Sometimes you might not be able to trim your input span to a string's contents exactly.  This call will help by locating the first null byte, and retrieving the string up until that point.
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">bytesOfUnknownLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="kt">string</span><span class="w"> </span><span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BinaryStringUtility</span><span class="p">.</span><span class="n">ParseUnknownLengthString</span><span class="p">(</span><span class="n">bytesOfUnknownLength</span><span class="p">.</span><span class="n">AsSpan</span><span class="p">());</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">amountParsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str</span><span class="p">.</span><span class="n">Length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// +1 for the null termination that was trimmed</span>
+</code></pre></div></p>
+<h2 id="subrecord-iteration-and-location">SubRecord Iteration and Location</h2>
+<p>There are some convenience methods for iterating and locating Subrecords in a set of raw bytes in <code>UtilityTranslation</code>.  These are extension methods onto <code>HeaderConstants</code> and <code>MajorRecordFrame</code>, so they can be used directly from those objects.</p>
+<h3 id="enumeratesubrecords">EnumerateSubrecords</h3>
+<p>Print some metadata for all Subrecords in a MajorRecord
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HeaderConstants</span><span class="p">.</span><span class="n">Skyrim</span><span class="p">;</span>
+<span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">majorRecordBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">majorFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">MajorRecordFrame</span><span class="p">(</span><span class="n">majorRecordBytes</span><span class="p">.</span><span class="n">AsSpan</span><span class="p">());</span>
+
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="n">KeyValuePair</span><span class="o">&lt;</span><span class="n">RecordType</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">EnumerateSubrecords</span><span class="p">())</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Scope to the start of the subrecord&#39;s data, relative to the MajorRecord content</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subRecordSpan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">Slice</span><span class="p">(</span><span class="n">loc</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">SubRecord</span><span class="p">(</span><span class="n">subRecordSpan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;Found subrecord {loc.Key} at position {loc.Value}, with length {subHeader.ContentLength}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="tryfindfirstsubrecord">TryFindFirstSubrecord</h3>
+<p>This call returns the first location of a subrecord type.  Good for locating a specific subrecord
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">majorFrame</span><span class="p">.</span><span class="n">TryFindFirstSubrecord</span><span class="p">(</span><span class="s">&quot;EDID&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">SubRecordFrame</span><span class="w"> </span><span class="n">subFrame</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;Found EDID with length {subFrame.Header.ContentLength}: &quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;   {BinaryStringUtility.ProcessWholeToZString(subFrame.Content)}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="findfirstsubrecords">FindFirstSubrecords</h3>
+<p>This call returns the first location of each subrecord type queried for.  Good for finding a set of subrecords in one pass.
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">finds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">FindFirstSubrecords</span><span class="p">(</span><span class="s">&quot;EDID&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;FULL&quot;</span><span class="p">);</span>
+<span class="c1">// If EDID found</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">finds</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Scope to the start of the subrecord&#39;s data, relative to the MajorRecord content</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subRecordSpan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">Slice</span><span class="p">(</span><span class="n">finds</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">SubRecord</span><span class="p">(</span><span class="n">subRecordSpan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;Found EDID with length {subFrame.Header.ContentLength}: &quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;   {BinaryStringUtility.ProcessWholeToZString(subFrame.Content)}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// If FULL found</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">finds</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Scope to the start of the subrecord&#39;s data, relative to the MajorRecord content</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subRecordSpan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">Slice</span><span class="p">(</span><span class="n">finds</span><span class="p">[</span><span class="m">1</span><span class="p">]);</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">SubRecord</span><span class="p">(</span><span class="n">subRecordSpan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;Found FULL with length {subFrame.Header.ContentLength}: &quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;   {BinaryStringUtility.ProcessWholeToZString(subFrame.Content)}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="compilefirstsubrecordlocations">CompileFirstSubrecordLocations</h3>
+<p>Similar to FindFirstSubrecords, except the results are put into a <code>Dictionary&lt;RecordType, int&gt;</code> for cleaner use.  Comes at the cost of higher overhead to construct this dictionary.  Another low cost alternative is just using <code>EnumerateSubrecords</code> with a <code>switch</code> statement.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">edid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RecordType</span><span class="p">(</span><span class="s">&quot;EDID&quot;</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">full</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RecordType</span><span class="p">(</span><span class="s">&quot;FULL&quot;</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">finds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">CompileFirstSubrecordLocations</span><span class="p">(</span><span class="n">edid</span><span class="p">,</span><span class="w"> </span><span class="n">full</span><span class="p">);</span>
+
+<span class="c1">// If EDID found</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">finds</span><span class="p">.</span><span class="n">TryGetValue</span><span class="p">(</span><span class="n">edid</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">loc</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Scope to the start of the subrecord&#39;s data, relative to the MajorRecord content</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subRecordSpan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">Slice</span><span class="p">(</span><span class="n">loc</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">SubRecord</span><span class="p">(</span><span class="n">subRecordSpan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;Found EDID with length {subFrame.Header.ContentLength}: &quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;   {BinaryStringUtility.ProcessWholeToZString(subFrame.Content)}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// If FULL found</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">finds</span><span class="p">.</span><span class="n">TryGetValue</span><span class="p">(</span><span class="n">full</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">loc</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Scope to the start of the subrecord&#39;s data, relative to the MajorRecord content</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subRecordSpan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">majorFrame</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">Slice</span><span class="p">(</span><span class="n">loc</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">subFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="p">.</span><span class="n">SubRecord</span><span class="p">(</span><span class="n">subRecordSpan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;Found FULL with length {subFrame.Header.ContentLength}: &quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;   {BinaryStringUtility.ProcessWholeToZString(subFrame.Content)}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="recordlocator">RecordLocator</h2>
+<p><code>RecordLocator</code> is a convenience class that processes a mod stream and returns all the locations of Groups and MajorRecords.</p>
+<p>It takes a few optional arguments:</p>
+<ul>
+<li>RecordInterest, to limit the search to specific <code>RecordType</code>s</li>
+<li>Additional Criteria lambda, to add custom filter logic</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MutagenReadStream</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">,</span><span class="w"> </span><span class="n">HeaderConstants</span><span class="p">.</span><span class="n">Skyrim</span><span class="p">);</span>
+<span class="n">RecordLocator</span><span class="p">.</span><span class="n">FileLocations</span><span class="w"> </span><span class="n">locs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RecordLocator</span><span class="p">.</span><span class="n">FileLocations</span><span class="p">.</span><span class="n">GetFileLocations</span><span class="p">(</span>
+<span class="w">    </span><span class="n">stream</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// Only search for NPCs</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RecordInterest</span><span class="p">(</span><span class="s">&quot;NPC_&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="c1">// That are compressed</span>
+<span class="w">    </span><span class="n">additionalCriteria</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">stream</span><span class="p">,</span><span class="w"> </span><span class="n">recordType</span><span class="p">,</span><span class="w"> </span><span class="n">recLength</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">majorHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stream</span><span class="p">.</span><span class="n">Meta</span><span class="p">.</span><span class="n">GetMajorRecord</span><span class="p">(</span><span class="n">stream</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">majorHeader</span><span class="p">.</span><span class="n">IsCompressed</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="c1">/// Can enumerate Group locations</span>
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">groupLoc</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">locs</span><span class="p">.</span><span class="n">GrupLocations</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;Group located at: {groupLoc}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">/// Can enumerate MajorRecord locations</span>
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="n">KeyValuePair</span><span class="o">&lt;</span><span class="kt">long</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">FormID</span><span class="w"> </span><span class="n">FormID</span><span class="p">,</span><span class="w"> </span><span class="n">RecordType</span><span class="w"> </span><span class="n">Record</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">recLoc</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">locs</span><span class="p">.</span><span class="n">ListedRecords</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;MajorRecord located at: {recLoc.Key}, {recLoc.Value.FormID}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">/// Can query a specific FormID&#39;s location</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">locs</span><span class="p">.</span><span class="n">TryGetSection</span><span class="p">(</span><span class="n">someFormID</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">RangeInt64</span><span class="w"> </span><span class="n">loc</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="n">stream</span><span class="p">.</span><span class="n">Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loc</span><span class="p">.</span><span class="n">Min</span><span class="p">;</span>
+<span class="w">   </span><span class="kt">var</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stream</span><span class="p">.</span><span class="n">Meta</span><span class="p">.</span><span class="n">ReadMajorRecord</span><span class="p">(</span><span class="n">stream</span><span class="p">);</span>
+<span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;MajorRecord type: {header.RecordType}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">/// Can query what record exists at a location</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">locs</span><span class="p">.</span><span class="n">TryGetRecord</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="n">x1234</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="p">(</span><span class="n">FormID</span><span class="w"> </span><span class="n">FormID</span><span class="p">,</span><span class="w"> </span><span class="n">RecordType</span><span class="w"> </span><span class="n">Record</span><span class="p">)</span><span class="w"> </span><span class="n">rec</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;{rec.Record}: {rec.FormID}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">/// Can enumerate the parent Group locations for a FormID</span>
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">groupLoc</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">locs</span><span class="p">.</span><span class="n">GetContainingGroupLocations</span><span class="p">(</span><span class="n">someFormID</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="n">stream</span><span class="p">.</span><span class="n">Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">groupLoc</span><span class="p">;</span>
+<span class="w">   </span><span class="kt">var</span><span class="w"> </span><span class="n">groupHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stream</span><span class="p">.</span><span class="n">Meta</span><span class="p">.</span><span class="n">ReadGroupHeader</span><span class="p">(</span><span class="n">stream</span><span class="p">);</span>
+<span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$&quot;{someFormID} has parent group at: {groupLoc}.  Type: {groupHeader.GroupType}&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This class just provides a common use case of locating records.  If more fine tuned logic is needed, just fall back to using <a href="../Header-Structs/">Header Struct</a> parsing yourself with the extra logic you need.</p>
+<p>Note that this class uses FormID, and does not make use of the abstraction concepts found in <a href="../../plugins/ModKey%2C%20FormKey%2C%20FormLink/">ModKey, FormKey, FormLink</a></p>
+<h2 id="decompression">Decompression</h2>
+<p>MajorRecords with their compression flag enabled come in a compressed format.  The byte content needs to be unzipped before it can be read.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://github.com/Mutagen-Modding" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tooltips", "content.code.copy", "navigation.instant", "navigation.tracking", "navigation.indexes", "navigation.path"], "search": "../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+    
+  </body>
+</html>
