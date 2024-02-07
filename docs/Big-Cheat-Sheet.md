@@ -239,8 +239,9 @@ Copy an existing record with a new FormKey
     ```
 === "From Target Mod"
     === "Next Available FormKey"
-        ``` cs
-        var dup = someMod.Npcs.DuplicateInAsNewRecord();
+        ``` cs { .cs hl_lines="2" }
+		Npc someRecord = ...;
+        var dup = someMod.Npcs.DuplicateInAsNewRecord(someRecord);
         ```
     === "Specific FormKey"
         ``` { .cs hl_lines="2" }
