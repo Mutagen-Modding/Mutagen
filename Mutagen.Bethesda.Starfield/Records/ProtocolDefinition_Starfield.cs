@@ -1218,6 +1218,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             SurfaceBlockIntItem_Registration.Instance,
             SurfacePattern_Registration.Instance,
             SurfacePatternConfig_Registration.Instance,
+            SurfacePatternConfigItem_Registration.Instance,
             SurfacePatternStyle_Registration.Instance,
             SurfaceTree_Registration.Instance,
             SystemBodyHasKeywordConditionData_Registration.Instance,

@@ -6531,5 +6531,8 @@
     <Compile Include="Records\Common Subrecords\BlockCellHeightGridComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SurfacePatternConfigItem_Generated.cs">
+      <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
