@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public MusicType.Flag Flags { get; set; } = default;
+        public MusicType.Flag Flags { get; set; } = default(MusicType.Flag);
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMusicTypeInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(MusicType.Flag);
             item.Data = null;
             item.FadeDuration = default;
             item.Tracks = null;
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Tracks = 
                             rhs.Tracks
-                            .Select(r => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
                     }
                     else

@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Slots = 
                             rhs.Slots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

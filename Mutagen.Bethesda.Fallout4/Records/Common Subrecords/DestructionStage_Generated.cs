@@ -54,19 +54,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region HealthPercent
-        public Byte HealthPercent { get; set; } = default;
+        public Byte HealthPercent { get; set; } = default(Byte);
         #endregion
         #region Index
-        public Byte Index { get; set; } = default;
+        public Byte Index { get; set; } = default(Byte);
         #endregion
         #region ModelDamageStage
-        public Byte ModelDamageStage { get; set; } = default;
+        public Byte ModelDamageStage { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Destructible.DestructionStageDataFlag Flags { get; set; } = default;
+        public Destructible.DestructionStageDataFlag Flags { get; set; } = default(Destructible.DestructionStageDataFlag);
         #endregion
         #region SelfDamagePerSecond
-        public Int32 SelfDamagePerSecond { get; set; } = default;
+        public Int32 SelfDamagePerSecond { get; set; } = default(Int32);
         #endregion
         #region Explosion
         private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IDebrisGetter> IDestructionStageGetter.Debris => this.Debris;
         #endregion
         #region DebrisCount
-        public Int32 DebrisCount { get; set; } = default;
+        public Int32 DebrisCount { get; set; } = default(Int32);
         #endregion
         #region SequenceName
         public String? SequenceName { get; set; }
@@ -1089,14 +1089,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDestructionStage item)
         {
             ClearPartial();
-            item.HealthPercent = default;
-            item.Index = default;
-            item.ModelDamageStage = default;
-            item.Flags = default;
-            item.SelfDamagePerSecond = default;
+            item.HealthPercent = default(Byte);
+            item.Index = default(Byte);
+            item.ModelDamageStage = default(Byte);
+            item.Flags = default(Destructible.DestructionStageDataFlag);
+            item.SelfDamagePerSecond = default(Int32);
             item.Explosion.Clear();
             item.Debris.Clear();
-            item.DebrisCount = default;
+            item.DebrisCount = default(Int32);
             item.SequenceName = default;
             item.Model = null;
         }
@@ -1740,7 +1740,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region SelfDamagePerSecond
         private int _SelfDamagePerSecondLocation => _DSTDLocation!.Value.Min + 0x4;
         private bool _SelfDamagePerSecond_IsSet => _DSTDLocation.HasValue;
-        public Int32 SelfDamagePerSecond => _SelfDamagePerSecond_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SelfDamagePerSecondLocation, 4)) : default;
+        public Int32 SelfDamagePerSecond => _SelfDamagePerSecond_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SelfDamagePerSecondLocation, 4)) : default(Int32);
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DSTDLocation!.Value.Min + 0x8;
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DebrisCount
         private int _DebrisCountLocation => _DSTDLocation!.Value.Min + 0x10;
         private bool _DebrisCount_IsSet => _DSTDLocation.HasValue;
-        public Int32 DebrisCount => _DebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DebrisCountLocation, 4)) : default;
+        public Int32 DebrisCount => _DebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DebrisCountLocation, 4)) : default(Int32);
         #endregion
         #region SequenceName
         private int? _SequenceNameLocation;

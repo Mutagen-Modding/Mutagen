@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Versioning
-        public LocationTargetRadius.VersioningBreaks Versioning { get; set; } = default;
+        public LocationTargetRadius.VersioningBreaks Versioning { get; set; } = default(LocationTargetRadius.VersioningBreaks);
         #endregion
         #region Radius
-        public UInt32 Radius { get; set; } = default;
+        public UInt32 Radius { get; set; } = default(UInt32);
         #endregion
         #region CollectionIndex
-        public UInt32 CollectionIndex { get; set; } = default;
+        public UInt32 CollectionIndex { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -801,10 +801,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILocationTargetRadius item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(LocationTargetRadius.VersioningBreaks);
             item.Target.Clear();
-            item.Radius = default;
-            item.CollectionIndex = default;
+            item.Radius = default(UInt32);
+            item.CollectionIndex = default(UInt32);
         }
         
         #region Mutagen

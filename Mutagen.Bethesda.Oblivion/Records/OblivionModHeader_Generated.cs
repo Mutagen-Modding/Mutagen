@@ -52,13 +52,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public OblivionModHeader.HeaderFlag Flags { get; set; } = default;
+        public OblivionModHeader.HeaderFlag Flags { get; set; } = default(OblivionModHeader.HeaderFlag);
         #endregion
         #region FormID
-        public UInt32 FormID { get; set; } = default;
+        public UInt32 FormID { get; set; } = default(UInt32);
         #endregion
         #region Version
-        public Int32 Version { get; set; } = default;
+        public Int32 Version { get; set; } = default(Int32);
         #endregion
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
@@ -1091,9 +1091,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IOblivionModHeader item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.FormID = default;
-            item.Version = default;
+            item.Flags = default(OblivionModHeader.HeaderFlag);
+            item.FormID = default(UInt32);
+            item.Version = default(Int32);
             item.Stats.Clear();
             item.TypeOffsets = default;
             item.Deleted = default;

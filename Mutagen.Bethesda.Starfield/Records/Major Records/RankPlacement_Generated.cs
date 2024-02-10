@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
-        public SByte Rank { get; set; } = default;
+        public SByte Rank { get; set; } = default(SByte);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Faction.Clear();
-            item.Rank = default;
+            item.Rank = default(SByte);
         }
         
         #region Mutagen

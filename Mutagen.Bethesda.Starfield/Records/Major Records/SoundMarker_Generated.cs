@@ -125,10 +125,10 @@ namespace Mutagen.Bethesda.Starfield
         ISoundReferenceGetter? ISoundMarkerGetter.SMLS => this.SMLS;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; } = default;
+        public Single Unknown2 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1144,8 +1144,8 @@ namespace Mutagen.Bethesda.Starfield
             item.XALG = default;
             item.Keywords = null;
             item.SMLS = null;
-            item.Unknown = default;
-            item.Unknown2 = default;
+            item.Unknown = default(Int32);
+            item.Unknown2 = default(Single);
             base.Clear(item);
         }
         
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2093,12 +2093,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown
         private int _UnknownLocation => _DEVTLocation!.Value.Min;
         private bool _Unknown_IsSet => _DEVTLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DEVTLocation!.Value.Min + 0x4;
         private bool _Unknown2_IsSet => _DEVTLocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default;
+        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

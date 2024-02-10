@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Stage
-        public UInt16 Stage { get; set; } = default;
+        public UInt16 Stage { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region StageIndex
-        public Int32 StageIndex { get; set; } = default;
+        public Int32 StageIndex { get; set; } = default(Int32);
         #endregion
         #region Unknown2
-        public SByte Unknown2 { get; set; } = default;
+        public SByte Unknown2 { get; set; } = default(SByte);
         #endregion
         #region ScriptName
         public String ScriptName { get; set; } = string.Empty;
@@ -857,10 +857,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestScriptFragment item)
         {
             ClearPartial();
-            item.Stage = default;
-            item.Unknown = default;
-            item.StageIndex = default;
-            item.Unknown2 = default;
+            item.Stage = default(UInt16);
+            item.Unknown = default(Int16);
+            item.StageIndex = default(Int32);
+            item.Unknown2 = default(SByte);
             item.ScriptName = string.Empty;
             item.FragmentName = string.Empty;
         }

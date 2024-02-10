@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Slack
-        public Single Slack { get; set; } = default;
+        public Single Slack { get; set; } = default(Single);
         #endregion
         #region Thickness
-        public Single Thickness { get; set; } = default;
+        public Single Thickness { get; set; } = default(Single);
         #endregion
         #region HalfExtents
-        public P3Float HalfExtents { get; set; } = default;
+        public P3Float HalfExtents { get; set; } = default(P3Float);
         #endregion
         #region IsWindDetachedEnd
-        public Boolean IsWindDetachedEnd { get; set; } = default;
+        public Boolean IsWindDetachedEnd { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectSpline item)
         {
             ClearPartial();
-            item.Slack = default;
-            item.Thickness = default;
-            item.HalfExtents = default;
-            item.IsWindDetachedEnd = default;
+            item.Slack = default(Single);
+            item.Thickness = default(Single);
+            item.HalfExtents = default(P3Float);
+            item.IsWindDetachedEnd = default(Boolean);
         }
         
         #region Mutagen

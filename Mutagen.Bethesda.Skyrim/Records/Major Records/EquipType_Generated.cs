@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.SlotParents = 
                             rhs.SlotParents
-                            .Select(r => (IFormLinkGetter<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IEquipTypeGetter>>();
                     }
                     else

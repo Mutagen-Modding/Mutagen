@@ -140,22 +140,22 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IMaterialPathGetter> IProjectedDecalGetter.Material => this.Material;
         #endregion
         #region UnknownData1
-        public Single UnknownData1 { get; set; } = default;
+        public Single UnknownData1 { get; set; } = default(Single);
         #endregion
         #region UnknownData2
-        public Single UnknownData2 { get; set; } = default;
+        public Single UnknownData2 { get; set; } = default(Single);
         #endregion
         #region UnknownData3
-        public Single UnknownData3 { get; set; } = default;
+        public Single UnknownData3 { get; set; } = default(Single);
         #endregion
         #region UnknownData4
-        public Single UnknownData4 { get; set; } = default;
+        public Single UnknownData4 { get; set; } = default(Single);
         #endregion
         #region UnknownData5
-        public Single UnknownData5 { get; set; } = default;
+        public Single UnknownData5 { get; set; } = default(Single);
         #endregion
         #region UnknownData6
-        public Single UnknownData6 { get; set; } = default;
+        public Single UnknownData6 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1374,12 +1374,12 @@ namespace Mutagen.Bethesda.Starfield
             item.Transforms = null;
             item.SnapBehavior.Clear();
             item.Material.Clear();
-            item.UnknownData1 = default;
-            item.UnknownData2 = default;
-            item.UnknownData3 = default;
-            item.UnknownData4 = default;
-            item.UnknownData5 = default;
-            item.UnknownData6 = default;
+            item.UnknownData1 = default(Single);
+            item.UnknownData2 = default(Single);
+            item.UnknownData3 = default(Single);
+            item.UnknownData4 = default(Single);
+            item.UnknownData5 = default(Single);
+            item.UnknownData6 = default(Single);
             base.Clear(item);
         }
         
@@ -2524,32 +2524,32 @@ namespace Mutagen.Bethesda.Starfield
         #region UnknownData1
         private int _UnknownData1Location => _DATALocation!.Value.Min;
         private bool _UnknownData1_IsSet => _DATALocation.HasValue;
-        public Single UnknownData1 => _UnknownData1_IsSet ? _recordData.Slice(_UnknownData1Location, 4).Float() : default;
+        public Single UnknownData1 => _UnknownData1_IsSet ? _recordData.Slice(_UnknownData1Location, 4).Float() : default(Single);
         #endregion
         #region UnknownData2
         private int _UnknownData2Location => _DATALocation!.Value.Min + 0x4;
         private bool _UnknownData2_IsSet => _DATALocation.HasValue;
-        public Single UnknownData2 => _UnknownData2_IsSet ? _recordData.Slice(_UnknownData2Location, 4).Float() : default;
+        public Single UnknownData2 => _UnknownData2_IsSet ? _recordData.Slice(_UnknownData2Location, 4).Float() : default(Single);
         #endregion
         #region UnknownData3
         private int _UnknownData3Location => _DATALocation!.Value.Min + 0x8;
         private bool _UnknownData3_IsSet => _DATALocation.HasValue;
-        public Single UnknownData3 => _UnknownData3_IsSet ? _recordData.Slice(_UnknownData3Location, 4).Float() : default;
+        public Single UnknownData3 => _UnknownData3_IsSet ? _recordData.Slice(_UnknownData3Location, 4).Float() : default(Single);
         #endregion
         #region UnknownData4
         private int _UnknownData4Location => _DATALocation!.Value.Min + 0xC;
         private bool _UnknownData4_IsSet => _DATALocation.HasValue;
-        public Single UnknownData4 => _UnknownData4_IsSet ? _recordData.Slice(_UnknownData4Location, 4).Float() : default;
+        public Single UnknownData4 => _UnknownData4_IsSet ? _recordData.Slice(_UnknownData4Location, 4).Float() : default(Single);
         #endregion
         #region UnknownData5
         private int _UnknownData5Location => _DATALocation!.Value.Min + 0x10;
         private bool _UnknownData5_IsSet => _DATALocation.HasValue;
-        public Single UnknownData5 => _UnknownData5_IsSet ? _recordData.Slice(_UnknownData5Location, 4).Float() : default;
+        public Single UnknownData5 => _UnknownData5_IsSet ? _recordData.Slice(_UnknownData5Location, 4).Float() : default(Single);
         #endregion
         #region UnknownData6
         private int _UnknownData6Location => _DATALocation!.Value.Min + 0x14;
         private bool _UnknownData6_IsSet => _DATALocation.HasValue;
-        public Single UnknownData6 => _UnknownData6_IsSet ? _recordData.Slice(_UnknownData6Location, 4).Float() : default;
+        public Single UnknownData6 => _UnknownData6_IsSet ? _recordData.Slice(_UnknownData6Location, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

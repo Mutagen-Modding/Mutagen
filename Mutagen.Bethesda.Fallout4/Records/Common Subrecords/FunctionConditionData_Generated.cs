@@ -54,10 +54,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Function
-        public Condition.Function Function { get; set; } = default;
+        public Condition.Function Function { get; set; } = default(Condition.Function);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
         #region ParameterOneRecord
         private readonly IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
-        public Int32 ParameterOneNumber { get; set; } = default;
+        public Int32 ParameterOneNumber { get; set; } = default(Int32);
         #endregion
         #region ParameterOneString
         public String? ParameterOneString { get; set; }
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
-        public Int32 ParameterTwoNumber { get; set; } = default;
+        public Int32 ParameterTwoNumber { get; set; } = default(Int32);
         #endregion
         #region ParameterTwoString
         public String? ParameterTwoString { get; set; }
@@ -922,13 +922,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFunctionConditionData item)
         {
             ClearPartial();
-            item.Function = default;
-            item.Unknown2 = default;
+            item.Function = default(Condition.Function);
+            item.Unknown2 = default(UInt16);
             item.ParameterOneRecord.Clear();
-            item.ParameterOneNumber = default;
+            item.ParameterOneNumber = default(Int32);
             item.ParameterOneString = default;
             item.ParameterTwoRecord.Clear();
-            item.ParameterTwoNumber = default;
+            item.ParameterTwoNumber = default(Int32);
             item.ParameterTwoString = default;
             base.Clear(item);
         }

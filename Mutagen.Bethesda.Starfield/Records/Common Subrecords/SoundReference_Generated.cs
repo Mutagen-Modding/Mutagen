@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Start
-        public Guid Start { get; set; } = default;
+        public Guid Start { get; set; } = default(Guid);
         #endregion
         #region Stop
-        public Guid Stop { get; set; } = default;
+        public Guid Stop { get; set; } = default(Guid);
         #endregion
         #region Condition
         private readonly IFormLink<IConditionRecordGetter> _Condition = new FormLink<IConditionRecordGetter>();
@@ -807,8 +807,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISoundReference item)
         {
             ClearPartial();
-            item.Start = default;
-            item.Stop = default;
+            item.Start = default(Guid);
+            item.Stop = default(Guid);
             item.Condition.Clear();
             item.EventMapping.Clear();
         }

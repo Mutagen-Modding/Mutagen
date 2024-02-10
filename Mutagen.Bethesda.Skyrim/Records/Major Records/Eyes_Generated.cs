@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
         AssetLinkGetter<SkyrimTextureAssetType> IEyesGetter.Icon => this.Icon;
         #endregion
         #region Flags
-        public Eyes.Flag Flags { get; set; } = default;
+        public Eyes.Flag Flags { get; set; } = default(Eyes.Flag);
         #endregion
 
         #region To String
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Name.Clear();
             item.Icon.SetToNull();
-            item.Flags = default;
+            item.Flags = default(Eyes.Flag);
             base.Clear(item);
         }
         

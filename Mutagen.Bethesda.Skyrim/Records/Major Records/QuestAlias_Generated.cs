@@ -54,10 +54,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Type
-        public QuestAlias.TypeEnum Type { get; set; } = default;
+        public QuestAlias.TypeEnum Type { get; set; } = default(QuestAlias.TypeEnum);
         #endregion
         #region Name
         /// <summary>
@@ -2240,8 +2240,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IQuestAlias item)
         {
             ClearPartial();
-            item.ID = default;
-            item.Type = default;
+            item.ID = default(UInt32);
+            item.Type = default(QuestAlias.TypeEnum);
             item.Name = default;
             item.Flags = default;
             item.AliasIDToForceIntoWhenFilled = default;
@@ -3109,7 +3109,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3186,7 +3186,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3205,7 +3205,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Factions.SetTo(
                         rhs.Factions
-                        .Select(r => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3224,7 +3224,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.PackageData.SetTo(
                         rhs.PackageData
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public PackageIdles.Types Type { get; set; } = default;
+        public PackageIdles.Types Type { get; set; } = default(PackageIdles.Types);
         #endregion
         #region TimerSetting
-        public Single TimerSetting { get; set; } = default;
+        public Single TimerSetting { get; set; } = default(Single);
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -849,8 +849,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPackageIdles item)
         {
             ClearPartial();
-            item.Type = default;
-            item.TimerSetting = default;
+            item.Type = default(PackageIdles.Types);
+            item.TimerSetting = default(Single);
             item.Animations.Clear();
         }
         
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Animations.SetTo(
                         rhs.Animations
-                        .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Starfield
         IDestructibleGetter? IContainerGetter.Destructible => this.Destructible;
         #endregion
         #region Flags
-        public Container.Flag Flags { get; set; } = default;
+        public Container.Flag Flags { get; set; } = default(Container.Flag);
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2325,7 +2325,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Model = null;
             item.Items = null;
             item.Destructible = null;
-            item.Flags = default;
+            item.Flags = default(Container.Flag);
             item.Keywords = null;
             item.ForcedLocations = null;
             item.NativeTerminal.Clear();
@@ -3485,7 +3485,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3512,7 +3512,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ForcedLocations = 
                             rhs.ForcedLocations
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -3575,7 +3575,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

@@ -199,10 +199,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Projectile
         private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
@@ -215,13 +215,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IProjectileGetter> IAmmunitionGetter.Projectile => this.Projectile;
         #endregion
         #region Flags
-        public Ammunition.Flag Flags { get; set; } = default;
+        public Ammunition.Flag Flags { get; set; } = default(Ammunition.Flag);
         #endregion
         #region Damage
-        public Single Damage { get; set; } = default;
+        public Single Damage { get; set; } = default(Single);
         #endregion
         #region Health
-        public UInt32 Health { get; set; } = default;
+        public UInt32 Health { get; set; } = default(UInt32);
         #endregion
         #region ShortName
         public TranslatedString? ShortName { get; set; }
@@ -1700,12 +1700,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.PutDownSound.Clear();
             item.Description = default;
             item.Keywords = null;
-            item.Value = default;
-            item.Weight = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
             item.Projectile.Clear();
-            item.Flags = default;
-            item.Damage = default;
-            item.Health = default;
+            item.Flags = default(Ammunition.Flag);
+            item.Damage = default(Single);
+            item.Health = default(UInt32);
             item.ShortName = default;
             item.CasingModel = default;
             item.ModelInfo = default;
@@ -2409,7 +2409,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3028,12 +3028,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region Projectile
@@ -3049,12 +3049,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Damage
         private int _DamageLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Damage_IsSet => _DNAMLocation.HasValue;
-        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default;
+        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default(Single);
         #endregion
         #region Health
         private int _HealthLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _Health_IsSet => _DNAMLocation.HasValue;
-        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default;
+        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default(UInt32);
         #endregion
         #region ShortName
         private int? _ShortNameLocation;

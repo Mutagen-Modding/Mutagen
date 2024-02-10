@@ -46,10 +46,10 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectGetter.DocString => this.DocString;
         #endregion
         #region IsConst
-        public Boolean IsConst { get; set; } = default;
+        public Boolean IsConst { get; set; } = default(Boolean);
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
         #region AutoStateName
         public String AutoStateName { get; set; } = string.Empty;
@@ -1238,8 +1238,8 @@ namespace Mutagen.Bethesda.Pex
             item.Name = default;
             item.ParentClassName = default;
             item.DocString = default;
-            item.IsConst = default;
-            item.RawUserFlags = default;
+            item.IsConst = default(Boolean);
+            item.RawUserFlags = default(UInt32);
             item.AutoStateName = string.Empty;
             item.StructInfos.Clear();
             item.Variables.Clear();

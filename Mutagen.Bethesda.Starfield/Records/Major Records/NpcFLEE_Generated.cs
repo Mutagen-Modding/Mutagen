@@ -82,13 +82,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStarfieldMajorRecordGetter> INpcFLEEGetter.UnknownLink3 => this.UnknownLink3;
         #endregion
         #region UnknownFloat1
-        public Single UnknownFloat1 { get; set; } = default;
+        public Single UnknownFloat1 { get; set; } = default(Single);
         #endregion
         #region UnknownFloat2
-        public Single UnknownFloat2 { get; set; } = default;
+        public Single UnknownFloat2 { get; set; } = default(Single);
         #endregion
         #region UnknownInt
-        public Int32 UnknownInt { get; set; } = default;
+        public Int32 UnknownInt { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -896,9 +896,9 @@ namespace Mutagen.Bethesda.Starfield
             item.UnknownLink1.Clear();
             item.UnknownLink2.Clear();
             item.UnknownLink3.Clear();
-            item.UnknownFloat1 = default;
-            item.UnknownFloat2 = default;
-            item.UnknownInt = default;
+            item.UnknownFloat1 = default(Single);
+            item.UnknownFloat2 = default(Single);
+            item.UnknownInt = default(Int32);
         }
         
         #region Mutagen

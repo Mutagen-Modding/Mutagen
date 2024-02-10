@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectPropertyGetter.DocString => this.DocString;
         #endregion
         #region Flags
-        public PropertyFlags Flags { get; set; } = default;
+        public PropertyFlags Flags { get; set; } = default(PropertyFlags);
         #endregion
         #region AutoVarName
         public String? AutoVarName { get; set; }
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Pex
         IPexObjectFunctionGetter? IPexObjectPropertyGetter.WriteHandler => this.WriteHandler;
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -890,11 +890,11 @@ namespace Mutagen.Bethesda.Pex
             item.Name = default;
             item.TypeName = default;
             item.DocString = default;
-            item.Flags = default;
+            item.Flags = default(PropertyFlags);
             item.AutoVarName = default;
             item.ReadHandler = null;
             item.WriteHandler = null;
-            item.RawUserFlags = default;
+            item.RawUserFlags = default(UInt32);
         }
         
     }

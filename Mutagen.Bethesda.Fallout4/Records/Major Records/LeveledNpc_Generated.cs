@@ -77,13 +77,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region ChanceNone
-        public Byte ChanceNone { get; set; } = default;
+        public Byte ChanceNone { get; set; } = default(Byte);
         #endregion
         #region MaxCount
-        public Byte MaxCount { get; set; } = default;
+        public Byte MaxCount { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public LeveledNpc.Flag Flags { get; set; } = default;
+        public LeveledNpc.Flag Flags { get; set; } = default(LeveledNpc.Flag);
         #endregion
         #region Global
         private readonly IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
@@ -1261,9 +1261,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ChanceNone = default;
-            item.MaxCount = default;
-            item.Flags = default;
+            item.ChanceNone = default(Byte);
+            item.MaxCount = default(Byte);
+            item.Flags = default(LeveledNpc.Flag);
             item.Global.Clear();
             item.Entries = null;
             item.FilterKeywordChances = null;

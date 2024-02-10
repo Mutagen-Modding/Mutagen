@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;
         #endregion
         #region Modifier
-        public Int32 Modifier { get; set; } = default;
+        public Int32 Modifier { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Race.Clear();
-            item.Modifier = default;
+            item.Modifier = default(Int32);
         }
         
         #region Mutagen

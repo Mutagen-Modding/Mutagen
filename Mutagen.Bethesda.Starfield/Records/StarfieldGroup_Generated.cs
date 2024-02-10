@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         #region Type
-        public GroupTypeEnum Type { get; set; } = default;
+        public GroupTypeEnum Type { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region RecordCache
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -778,9 +778,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IStarfieldGroup<T> item)
         {
             ClearPartial();
-            item.Type = default;
-            item.LastModified = default;
-            item.Unknown = default;
+            item.Type = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
+            item.Unknown = default(Int32);
             item.RecordCache.Clear();
         }
         

@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Keywords.SetTo(
                         rhs.Keywords
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region CenterFrequency
-        public Single CenterFrequency { get; set; } = default;
+        public Single CenterFrequency { get; set; } = default(Single);
         #endregion
         #region QValue
-        public Single QValue { get; set; } = default;
+        public Single QValue { get; set; } = default(Single);
         #endregion
         #region Mode
-        public StateVariableFilterAudioEffect.FilterMode Mode { get; set; } = default;
+        public StateVariableFilterAudioEffect.FilterMode Mode { get; set; } = default(StateVariableFilterAudioEffect.FilterMode);
         #endregion
 
         #region To String
@@ -709,9 +709,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IStateVariableFilterAudioEffect item)
         {
             ClearPartial();
-            item.CenterFrequency = default;
-            item.QValue = default;
-            item.Mode = default;
+            item.CenterFrequency = default(Single);
+            item.QValue = default(Single);
+            item.Mode = default(StateVariableFilterAudioEffect.FilterMode);
             base.Clear(item);
         }
         

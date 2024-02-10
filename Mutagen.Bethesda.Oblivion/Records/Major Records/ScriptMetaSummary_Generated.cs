@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region RefCount
-        public UInt32 RefCount { get; set; } = default;
+        public UInt32 RefCount { get; set; } = default(UInt32);
         #endregion
         #region CompiledSize
-        public Int32 CompiledSize { get; protected set; } = default;
+        public Int32 CompiledSize { get; protected set; } = default(Int32);
         #endregion
         #region VariableCount
-        public UInt32 VariableCount { get; set; } = default;
+        public UInt32 VariableCount { get; set; } = default(UInt32);
         #endregion
         #region Type
-        public ScriptFields.ScriptType Type { get; set; } = default;
+        public ScriptFields.ScriptType Type { get; set; } = default(ScriptFields.ScriptType);
         #endregion
 
         #region To String
@@ -827,10 +827,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IScriptMetaSummary item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.RefCount = default;
-            item.VariableCount = default;
-            item.Type = default;
+            item.Unknown = default(Int32);
+            item.RefCount = default(UInt32);
+            item.VariableCount = default(UInt32);
+            item.Type = default(ScriptFields.ScriptType);
         }
         
         #region Mutagen

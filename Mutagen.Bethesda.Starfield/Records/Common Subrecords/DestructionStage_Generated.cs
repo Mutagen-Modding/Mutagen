@@ -56,19 +56,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region HealthPercent
-        public Byte HealthPercent { get; set; } = default;
+        public Byte HealthPercent { get; set; } = default(Byte);
         #endregion
         #region Index
-        public Byte Index { get; set; } = default;
+        public Byte Index { get; set; } = default(Byte);
         #endregion
         #region ModelDamageStage
-        public Byte ModelDamageStage { get; set; } = default;
+        public Byte ModelDamageStage { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Destructible.DestructionStageDataFlag Flags { get; set; } = default;
+        public Destructible.DestructionStageDataFlag Flags { get; set; } = default(Destructible.DestructionStageDataFlag);
         #endregion
         #region SelfDamagePerSecond
-        public Int32 SelfDamagePerSecond { get; set; } = default;
+        public Int32 SelfDamagePerSecond { get; set; } = default(Int32);
         #endregion
         #region Explosion
         private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
@@ -91,10 +91,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IDebrisGetter> IDestructionStageGetter.Debris => this.Debris;
         #endregion
         #region DebrisCount
-        public Int32 DebrisCount { get; set; } = default;
+        public Int32 DebrisCount { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
         #region SequenceName
         public String? SequenceName { get; set; }
@@ -1166,15 +1166,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDestructionStage item)
         {
             ClearPartial();
-            item.HealthPercent = default;
-            item.Index = default;
-            item.ModelDamageStage = default;
-            item.Flags = default;
-            item.SelfDamagePerSecond = default;
+            item.HealthPercent = default(Byte);
+            item.Index = default(Byte);
+            item.ModelDamageStage = default(Byte);
+            item.Flags = default(Destructible.DestructionStageDataFlag);
+            item.SelfDamagePerSecond = default(Int32);
             item.Explosion.Clear();
             item.Debris.Clear();
-            item.DebrisCount = default;
-            item.Unknown = default;
+            item.DebrisCount = default(Int32);
+            item.Unknown = default(Single);
             item.SequenceName = default;
             item.Model = null;
             item.UnusedMaterialSwap = default;
@@ -1906,7 +1906,7 @@ namespace Mutagen.Bethesda.Starfield
         #region SelfDamagePerSecond
         private int _SelfDamagePerSecondLocation => _DSTDLocation!.Value.Min + 0x4;
         private bool _SelfDamagePerSecond_IsSet => _DSTDLocation.HasValue;
-        public Int32 SelfDamagePerSecond => _SelfDamagePerSecond_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SelfDamagePerSecondLocation, 4)) : default;
+        public Int32 SelfDamagePerSecond => _SelfDamagePerSecond_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SelfDamagePerSecondLocation, 4)) : default(Int32);
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DSTDLocation!.Value.Min + 0x8;
@@ -1921,12 +1921,12 @@ namespace Mutagen.Bethesda.Starfield
         #region DebrisCount
         private int _DebrisCountLocation => _DSTDLocation!.Value.Min + 0x10;
         private bool _DebrisCount_IsSet => _DSTDLocation.HasValue;
-        public Int32 DebrisCount => _DebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DebrisCountLocation, 4)) : default;
+        public Int32 DebrisCount => _DebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DebrisCountLocation, 4)) : default(Int32);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DSTDLocation!.Value.Min + 0x14;
         private bool _Unknown_IsSet => _DSTDLocation.HasValue;
-        public Single Unknown => _Unknown_IsSet ? _recordData.Slice(_UnknownLocation, 4).Float() : default;
+        public Single Unknown => _Unknown_IsSet ? _recordData.Slice(_UnknownLocation, 4).Float() : default(Single);
         #endregion
         #region SequenceName
         private int? _SequenceNameLocation;

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPlacedThingGetter> ICellCombinedMeshReferenceGetter.Reference => this.Reference;
         #endregion
         #region CombinedMesh
-        public UInt32 CombinedMesh { get; set; } = default;
+        public UInt32 CombinedMesh { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Reference.Clear();
-            item.CombinedMesh = default;
+            item.CombinedMesh = default(UInt32);
         }
         
         #region Mutagen

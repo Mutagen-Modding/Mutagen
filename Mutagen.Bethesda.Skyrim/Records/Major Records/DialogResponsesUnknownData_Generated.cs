@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;
         #endregion
         #region NEXT
-        public Boolean NEXT { get; set; } = default;
+        public Boolean NEXT { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.SCHR = default;
             item.QNAM.Clear();
-            item.NEXT = default;
+            item.NEXT = default(Boolean);
         }
         
         #region Mutagen
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NEXT
         private int? _NEXTLocation;
-        public Boolean NEXT => _NEXTLocation.HasValue ? true : default;
+        public Boolean NEXT => _NEXTLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

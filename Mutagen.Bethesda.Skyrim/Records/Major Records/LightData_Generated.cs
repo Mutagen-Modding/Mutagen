@@ -51,22 +51,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public LightData.VersioningBreaks Versioning { get; set; } = default;
+        public LightData.VersioningBreaks Versioning { get; set; } = default(LightData.VersioningBreaks);
         #endregion
         #region FovOffset
-        public Single FovOffset { get; set; } = default;
+        public Single FovOffset { get; set; } = default(Single);
         #endregion
         #region FadeOffset
-        public Single FadeOffset { get; set; } = default;
+        public Single FadeOffset { get; set; } = default(Single);
         #endregion
         #region EndDistanceCap
-        public Single EndDistanceCap { get; set; } = default;
+        public Single EndDistanceCap { get; set; } = default(Single);
         #endregion
         #region ShadowDepthBias
-        public Single ShadowDepthBias { get; set; } = default;
+        public Single ShadowDepthBias { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -872,12 +872,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILightData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.FovOffset = default;
-            item.FadeOffset = default;
-            item.EndDistanceCap = default;
-            item.ShadowDepthBias = default;
-            item.Unknown = default;
+            item.Versioning = default(LightData.VersioningBreaks);
+            item.FovOffset = default(Single);
+            item.FadeOffset = default(Single);
+            item.EndDistanceCap = default(Single);
+            item.ShadowDepthBias = default(Single);
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

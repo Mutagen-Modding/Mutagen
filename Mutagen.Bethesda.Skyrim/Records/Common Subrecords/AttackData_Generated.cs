@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region DamageMult
-        public Single DamageMult { get; set; } = default;
+        public Single DamageMult { get; set; } = default(Single);
         #endregion
         #region Chance
-        public Single Chance { get; set; } = default;
+        public Single Chance { get; set; } = default(Single);
         #endregion
         #region Spell
         private readonly IFormLink<ISpellRecordGetter> _Spell = new FormLink<ISpellRecordGetter>();
@@ -68,16 +68,16 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISpellRecordGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
         #region Flags
-        public AttackData.Flag Flags { get; set; } = default;
+        public AttackData.Flag Flags { get; set; } = default(AttackData.Flag);
         #endregion
         #region AttackAngle
-        public Single AttackAngle { get; set; } = default;
+        public Single AttackAngle { get; set; } = default(Single);
         #endregion
         #region StrikeAngle
-        public Single StrikeAngle { get; set; } = default;
+        public Single StrikeAngle { get; set; } = default(Single);
         #endregion
         #region Stagger
-        public Single Stagger { get; set; } = default;
+        public Single Stagger { get; set; } = default(Single);
         #endregion
         #region AttackType
         private readonly IFormLink<IKeywordGetter> _AttackType = new FormLink<IKeywordGetter>();
@@ -90,13 +90,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
         #endregion
         #region Knockdown
-        public Single Knockdown { get; set; } = default;
+        public Single Knockdown { get; set; } = default(Single);
         #endregion
         #region RecoveryTime
-        public Single RecoveryTime { get; set; } = default;
+        public Single RecoveryTime { get; set; } = default(Single);
         #endregion
         #region StaminaMult
-        public Single StaminaMult { get; set; } = default;
+        public Single StaminaMult { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1066,17 +1066,17 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IAttackData item)
         {
             ClearPartial();
-            item.DamageMult = default;
-            item.Chance = default;
+            item.DamageMult = default(Single);
+            item.Chance = default(Single);
             item.Spell.Clear();
-            item.Flags = default;
-            item.AttackAngle = default;
-            item.StrikeAngle = default;
-            item.Stagger = default;
+            item.Flags = default(AttackData.Flag);
+            item.AttackAngle = default(Single);
+            item.StrikeAngle = default(Single);
+            item.Stagger = default(Single);
             item.AttackType.Clear();
-            item.Knockdown = default;
-            item.RecoveryTime = default;
-            item.StaminaMult = default;
+            item.Knockdown = default(Single);
+            item.RecoveryTime = default(Single);
+            item.StaminaMult = default(Single);
         }
         
         #region Mutagen

@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Type
-        public MagicEffect.SoundType Type { get; set; } = default;
+        public MagicEffect.SoundType Type { get; set; } = default(MagicEffect.SoundType);
         #endregion
         #region Sound
         private readonly IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMagicEffectSound item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(MagicEffect.SoundType);
             item.Sound.Clear();
         }
         

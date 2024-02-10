@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Amount
-        public Single Amount { get; set; } = default;
+        public Single Amount { get; set; } = default(Single);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -721,8 +721,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceTint item)
         {
             ClearPartial();
-            item.Amount = default;
-            item.Color = default;
+            item.Amount = default(Single);
+            item.Color = default(Color);
         }
         
         #region Mutagen

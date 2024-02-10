@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Type
-        public SceneAction.TypeEnum Type { get; set; } = default;
+        public SceneAction.TypeEnum Type { get; set; } = default(SceneAction.TypeEnum);
         #endregion
         #region PlaySound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _PlaySound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISceneActionTypicalType item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(SceneAction.TypeEnum);
             item.PlaySound.Clear();
             base.Clear(item);
         }

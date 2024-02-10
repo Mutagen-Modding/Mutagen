@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FormType
-        public UInt32 FormType { get; set; } = default;
+        public UInt32 FormType { get; set; } = default(UInt32);
         #endregion
         #region Links
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ITransientType item)
         {
             ClearPartial();
-            item.FormType = default;
+            item.FormType = default(UInt32);
             item.Links.Clear();
         }
         
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Links.SetTo(
                         rhs.Links
-                        .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FovOnPlayerCamera
-        public Single FovOnPlayerCamera { get; set; } = default;
+        public Single FovOnPlayerCamera { get; set; } = default(Single);
         #endregion
         #region RateOfCameraChange
-        public Single RateOfCameraChange { get; set; } = default;
+        public Single RateOfCameraChange { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISceneCamera item)
         {
             ClearPartial();
-            item.FovOnPlayerCamera = default;
-            item.RateOfCameraChange = default;
+            item.FovOnPlayerCamera = default(Single);
+            item.RateOfCameraChange = default(Single);
         }
         
         #region Mutagen

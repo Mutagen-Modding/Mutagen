@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region DefaultLandHeight
-        public Single DefaultLandHeight { get; set; } = default;
+        public Single DefaultLandHeight { get; set; } = default(Single);
         #endregion
         #region DefaultWaterHeight
-        public Single DefaultWaterHeight { get; set; } = default;
+        public Single DefaultWaterHeight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorldspaceLandDefaults item)
         {
             ClearPartial();
-            item.DefaultLandHeight = default;
-            item.DefaultWaterHeight = default;
+            item.DefaultLandHeight = default(Single);
+            item.DefaultWaterHeight = default(Single);
         }
         
         #region Mutagen

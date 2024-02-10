@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region Loop
-        public SoundDescriptor.LoopType Loop { get; set; } = default;
+        public SoundDescriptor.LoopType Loop { get; set; } = default(SoundDescriptor.LoopType);
         #endregion
         #region Unknown2
-        public Byte Unknown2 { get; set; } = default;
+        public Byte Unknown2 { get; set; } = default(Byte);
         #endregion
         #region RumbleValues
-        public Byte RumbleValues { get; set; } = default;
+        public Byte RumbleValues { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISoundLoopAndRumble item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.Loop = default;
-            item.Unknown2 = default;
-            item.RumbleValues = default;
+            item.Unknown = default(Byte);
+            item.Loop = default(SoundDescriptor.LoopType);
+            item.Unknown2 = default(Byte);
+            item.RumbleValues = default(Byte);
         }
         
         #region Mutagen

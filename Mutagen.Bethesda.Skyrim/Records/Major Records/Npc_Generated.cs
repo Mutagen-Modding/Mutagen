@@ -446,13 +446,13 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 NAM5 { get; set; } = NAM5Default;
         #endregion
         #region Height
-        public Single Height { get; set; } = default;
+        public Single Height { get; set; } = default(Single);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3528,9 +3528,9 @@ namespace Mutagen.Bethesda.Skyrim
             item.CombatStyle.Clear();
             item.GiftFilter.Clear();
             item.NAM5 = Npc.NAM5Default;
-            item.Height = default;
-            item.Weight = default;
-            item.SoundLevel = default;
+            item.Height = default(Single);
+            item.Weight = default(Single);
+            item.SoundLevel = default(SoundLevel);
             item.Sound = null;
             item.DefaultOutfit.Clear();
             item.SleepingOutfit.Clear();
@@ -4888,7 +4888,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
@@ -5077,7 +5077,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5098,7 +5098,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -5161,7 +5161,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.HeadParts.SetTo(
                         rhs.HeadParts
-                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6397,15 +6397,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NAM5
         private int? _NAM5Location;
-        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)) : default;
+        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region Height
         private int? _HeightLocation;
-        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;

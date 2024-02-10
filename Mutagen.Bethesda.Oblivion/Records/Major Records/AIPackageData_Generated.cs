@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public AIPackage.Flag Flags { get; set; } = default;
+        public AIPackage.Flag Flags { get; set; } = default(AIPackage.Flag);
         #endregion
         #region Type
-        public AIPackage.Types Type { get; set; } = default;
+        public AIPackage.Types Type { get; set; } = default(AIPackage.Types);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAIPackageData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Type = default;
+            item.Flags = default(AIPackage.Flag);
+            item.Type = default(AIPackage.Types);
         }
         
         #region Mutagen

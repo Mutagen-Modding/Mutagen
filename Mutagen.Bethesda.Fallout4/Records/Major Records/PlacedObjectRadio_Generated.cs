@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Frequency
-        public Single Frequency { get; set; } = default;
+        public Single Frequency { get; set; } = default(Single);
         #endregion
         #region MinWeakDistance
-        public Single MinWeakDistance { get; set; } = default;
+        public Single MinWeakDistance { get; set; } = default(Single);
         #endregion
         #region MaxWeakDistance
-        public Single MaxWeakDistance { get; set; } = default;
+        public Single MaxWeakDistance { get; set; } = default(Single);
         #endregion
         #region Flags
-        public PlacedObjectRadio.Flag Flags { get; set; } = default;
+        public PlacedObjectRadio.Flag Flags { get; set; } = default(PlacedObjectRadio.Flag);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPlacedObjectRadio item)
         {
             ClearPartial();
-            item.Frequency = default;
-            item.MinWeakDistance = default;
-            item.MaxWeakDistance = default;
-            item.Flags = default;
+            item.Frequency = default(Single);
+            item.MinWeakDistance = default(Single);
+            item.MaxWeakDistance = default(Single);
+            item.Flags = default(PlacedObjectRadio.Flag);
         }
         
         #region Mutagen

@@ -52,25 +52,25 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region DirectionalXPlus
-        public Color DirectionalXPlus { get; set; } = default;
+        public Color DirectionalXPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalXMinus
-        public Color DirectionalXMinus { get; set; } = default;
+        public Color DirectionalXMinus { get; set; } = default(Color);
         #endregion
         #region DirectionalYPlus
-        public Color DirectionalYPlus { get; set; } = default;
+        public Color DirectionalYPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalYMinus
-        public Color DirectionalYMinus { get; set; } = default;
+        public Color DirectionalYMinus { get; set; } = default(Color);
         #endregion
         #region DirectionalZPlus
-        public Color DirectionalZPlus { get; set; } = default;
+        public Color DirectionalZPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalZMinus
-        public Color DirectionalZMinus { get; set; } = default;
+        public Color DirectionalZMinus { get; set; } = default(Color);
         #endregion
         #region Specular
-        public Color Specular { get; set; } = default;
+        public Color Specular { get; set; } = default(Color);
         #endregion
         #region Scale
         public static readonly Single ScaleDefault = 1f;
@@ -931,13 +931,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAmbientColors item)
         {
             ClearPartial();
-            item.DirectionalXPlus = default;
-            item.DirectionalXMinus = default;
-            item.DirectionalYPlus = default;
-            item.DirectionalYMinus = default;
-            item.DirectionalZPlus = default;
-            item.DirectionalZMinus = default;
-            item.Specular = default;
+            item.DirectionalXPlus = default(Color);
+            item.DirectionalXMinus = default(Color);
+            item.DirectionalYPlus = default(Color);
+            item.DirectionalYMinus = default(Color);
+            item.DirectionalZPlus = default(Color);
+            item.DirectionalZMinus = default(Color);
+            item.Specular = default(Color);
             item.Scale = AmbientColors.ScaleDefault;
         }
         

@@ -65,16 +65,16 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IImageSpaceAdapterGetter> IFxSceneActionGetter.REPL => this.REPL;
         #endregion
         #region HNAM
-        public Single HNAM { get; set; } = default;
+        public Single HNAM { get; set; } = default(Single);
         #endregion
         #region VCLR
-        public Single VCLR { get; set; } = default;
+        public Single VCLR { get; set; } = default(Single);
         #endregion
         #region BTXT
-        public Int32 BTXT { get; set; } = default;
+        public Int32 BTXT { get; set; } = default(Int32);
         #endregion
         #region FLMV
-        public Int32 FLMV { get; set; } = default;
+        public Int32 FLMV { get; set; } = default(Int32);
         #endregion
         #region WED0
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1084,10 +1084,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.REPL.Clear();
-            item.HNAM = default;
-            item.VCLR = default;
-            item.BTXT = default;
-            item.FLMV = default;
+            item.HNAM = default(Single);
+            item.VCLR = default(Single);
+            item.BTXT = default(Int32);
+            item.FLMV = default(Int32);
             item.WED0 = null;
             item.Conditions.Clear();
             item.BIPL.Clear();
@@ -1856,19 +1856,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region HNAM
         private int? _HNAMLocation;
-        public Single HNAM => _HNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HNAM => _HNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region VCLR
         private int? _VCLRLocation;
-        public Single VCLR => _VCLRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single VCLR => _VCLRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region BTXT
         private int? _BTXTLocation;
-        public Int32 BTXT => _BTXTLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BTXTLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 BTXT => _BTXTLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BTXTLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region FLMV
         private int? _FLMVLocation;
-        public Int32 FLMV => _FLMVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLMVLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 FLMV => _FLMVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLMVLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         public ISoundReferenceGetter? WED0 { get; private set; }
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();

@@ -52,19 +52,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Speed
-        public Single Speed { get; set; } = default;
+        public Single Speed { get; set; } = default(Single);
         #endregion
         #region Flags
-        public AmmunitionData.Flag Flags { get; set; } = default;
+        public AmmunitionData.Flag Flags { get; set; } = default(AmmunitionData.Flag);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Damage
-        public UInt16 Damage { get; set; } = default;
+        public UInt16 Damage { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -831,11 +831,11 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAmmunitionData item)
         {
             ClearPartial();
-            item.Speed = default;
-            item.Flags = default;
-            item.Value = default;
-            item.Weight = default;
-            item.Damage = default;
+            item.Speed = default(Single);
+            item.Flags = default(AmmunitionData.Flag);
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.Damage = default(UInt16);
         }
         
         #region Mutagen

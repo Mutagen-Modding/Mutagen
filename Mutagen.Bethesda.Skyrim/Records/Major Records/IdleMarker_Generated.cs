@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Animations = 
                             rhs.Animations
-                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     }
                     else

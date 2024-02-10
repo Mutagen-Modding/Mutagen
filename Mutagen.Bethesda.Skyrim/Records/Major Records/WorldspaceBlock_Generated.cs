@@ -55,19 +55,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BlockNumberY
-        public Int16 BlockNumberY { get; set; } = default;
+        public Int16 BlockNumberY { get; set; } = default(Int16);
         #endregion
         #region BlockNumberX
-        public Int16 BlockNumberX { get; set; } = default;
+        public Int16 BlockNumberX { get; set; } = default(Int16);
         #endregion
         #region GroupType
-        public GroupTypeEnum GroupType { get; set; } = default;
+        public GroupTypeEnum GroupType { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1203,11 +1203,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorldspaceBlock item)
         {
             ClearPartial();
-            item.BlockNumberY = default;
-            item.BlockNumberX = default;
-            item.GroupType = default;
-            item.LastModified = default;
-            item.Unknown = default;
+            item.BlockNumberY = default(Int16);
+            item.BlockNumberX = default(Int16);
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
+            item.Unknown = default(Int32);
             item.Items.Clear();
         }
         

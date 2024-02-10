@@ -53,37 +53,37 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public CellLighting.VersioningBreaks Versioning { get; set; } = default;
+        public CellLighting.VersioningBreaks Versioning { get; set; } = default(CellLighting.VersioningBreaks);
         #endregion
         #region AmbientColor
-        public Color AmbientColor { get; set; } = default;
+        public Color AmbientColor { get; set; } = default(Color);
         #endregion
         #region DirectionalColor
-        public Color DirectionalColor { get; set; } = default;
+        public Color DirectionalColor { get; set; } = default(Color);
         #endregion
         #region FogNearColor
-        public Color FogNearColor { get; set; } = default;
+        public Color FogNearColor { get; set; } = default(Color);
         #endregion
         #region FogNear
-        public Single FogNear { get; set; } = default;
+        public Single FogNear { get; set; } = default(Single);
         #endregion
         #region FogFar
-        public Single FogFar { get; set; } = default;
+        public Single FogFar { get; set; } = default(Single);
         #endregion
         #region DirectionalRotationXY
-        public Int32 DirectionalRotationXY { get; set; } = default;
+        public Int32 DirectionalRotationXY { get; set; } = default(Int32);
         #endregion
         #region DirectionalRotationZ
-        public Int32 DirectionalRotationZ { get; set; } = default;
+        public Int32 DirectionalRotationZ { get; set; } = default(Int32);
         #endregion
         #region DirectionalFade
-        public Single DirectionalFade { get; set; } = default;
+        public Single DirectionalFade { get; set; } = default(Single);
         #endregion
         #region FogClipDistance
-        public Single FogClipDistance { get; set; } = default;
+        public Single FogClipDistance { get; set; } = default(Single);
         #endregion
         #region FogPower
-        public Single FogPower { get; set; } = default;
+        public Single FogPower { get; set; } = default(Single);
         #endregion
         #region AmbientColors
         public AmbientColors AmbientColors { get; set; } = new AmbientColors();
@@ -91,19 +91,19 @@ namespace Mutagen.Bethesda.Skyrim
         IAmbientColorsGetter ICellLightingGetter.AmbientColors => AmbientColors;
         #endregion
         #region FogFarColor
-        public Color FogFarColor { get; set; } = default;
+        public Color FogFarColor { get; set; } = default(Color);
         #endregion
         #region FogMax
-        public Single FogMax { get; set; } = default;
+        public Single FogMax { get; set; } = default(Single);
         #endregion
         #region LightFadeBegin
-        public Single LightFadeBegin { get; set; } = default;
+        public Single LightFadeBegin { get; set; } = default(Single);
         #endregion
         #region LightFadeEnd
-        public Single LightFadeEnd { get; set; } = default;
+        public Single LightFadeEnd { get; set; } = default(Single);
         #endregion
         #region Inherits
-        public CellLighting.Inherit Inherits { get; set; } = default;
+        public CellLighting.Inherit Inherits { get; set; } = default(CellLighting.Inherit);
         #endregion
 
         #region To String
@@ -1277,23 +1277,23 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICellLighting item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.AmbientColor = default;
-            item.DirectionalColor = default;
-            item.FogNearColor = default;
-            item.FogNear = default;
-            item.FogFar = default;
-            item.DirectionalRotationXY = default;
-            item.DirectionalRotationZ = default;
-            item.DirectionalFade = default;
-            item.FogClipDistance = default;
-            item.FogPower = default;
+            item.Versioning = default(CellLighting.VersioningBreaks);
+            item.AmbientColor = default(Color);
+            item.DirectionalColor = default(Color);
+            item.FogNearColor = default(Color);
+            item.FogNear = default(Single);
+            item.FogFar = default(Single);
+            item.DirectionalRotationXY = default(Int32);
+            item.DirectionalRotationZ = default(Int32);
+            item.DirectionalFade = default(Single);
+            item.FogClipDistance = default(Single);
+            item.FogPower = default(Single);
             item.AmbientColors.Clear();
-            item.FogFarColor = default;
-            item.FogMax = default;
-            item.LightFadeBegin = default;
-            item.LightFadeEnd = default;
-            item.Inherits = default;
+            item.FogFarColor = default(Color);
+            item.FogMax = default(Single);
+            item.LightFadeBegin = default(Single);
+            item.LightFadeEnd = default(Single);
+            item.Inherits = default(CellLighting.Inherit);
         }
         
         #region Mutagen

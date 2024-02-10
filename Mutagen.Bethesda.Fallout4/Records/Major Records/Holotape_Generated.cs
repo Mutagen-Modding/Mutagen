@@ -197,10 +197,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> IHolotapeGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Data
         public AHolotapeData Data { get; set; } = default!;
@@ -1367,8 +1367,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.Icons = null;
             item.PickUpSound.Clear();
             item.PutDownSound.Clear();
-            item.Value = default;
-            item.Weight = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
             item.Data.Clear();
             base.Clear(item);
         }
@@ -2586,12 +2586,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region DataParse
         public partial ParseResult DataParseCustomParse(

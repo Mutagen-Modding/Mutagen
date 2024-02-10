@@ -84,43 +84,43 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IEffectSequenceGetter> IEffectShaderGetter.EffectSequence => this.EffectSequence;
         #endregion
         #region DNAMFloat1
-        public Single DNAMFloat1 { get; set; } = default;
+        public Single DNAMFloat1 { get; set; } = default(Single);
         #endregion
         #region DNAMColor
-        public Color DNAMColor { get; set; } = default;
+        public Color DNAMColor { get; set; } = default(Color);
         #endregion
         #region DNAMFloat2
-        public Single DNAMFloat2 { get; set; } = default;
+        public Single DNAMFloat2 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat3
-        public Single DNAMFloat3 { get; set; } = default;
+        public Single DNAMFloat3 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat4
-        public Single DNAMFloat4 { get; set; } = default;
+        public Single DNAMFloat4 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat5
-        public Single DNAMFloat5 { get; set; } = default;
+        public Single DNAMFloat5 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat6
-        public Single DNAMFloat6 { get; set; } = default;
+        public Single DNAMFloat6 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat8
-        public Single DNAMFloat8 { get; set; } = default;
+        public Single DNAMFloat8 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat9
-        public Single DNAMFloat9 { get; set; } = default;
+        public Single DNAMFloat9 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat10
-        public Single DNAMFloat10 { get; set; } = default;
+        public Single DNAMFloat10 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat11
-        public Single DNAMFloat11 { get; set; } = default;
+        public Single DNAMFloat11 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat12
-        public Single DNAMFloat12 { get; set; } = default;
+        public Single DNAMFloat12 { get; set; } = default(Single);
         #endregion
         #region DNAMFloat13
-        public Single DNAMFloat13 { get; set; } = default;
+        public Single DNAMFloat13 { get; set; } = default(Single);
         #endregion
         #region DNAMSound
         public SoundReference DNAMSound { get; set; } = new SoundReference();
@@ -128,10 +128,10 @@ namespace Mutagen.Bethesda.Starfield
         ISoundReferenceGetter IEffectShaderGetter.DNAMSound => DNAMSound;
         #endregion
         #region DNAMInt1
-        public Int32 DNAMInt1 { get; set; } = default;
+        public Int32 DNAMInt1 { get; set; } = default(Int32);
         #endregion
         #region DNAMInt2
-        public SByte DNAMInt2 { get; set; } = default;
+        public SByte DNAMInt2 { get; set; } = default(SByte);
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1557,22 +1557,22 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.EffectSequence.Clear();
-            item.DNAMFloat1 = default;
-            item.DNAMColor = default;
-            item.DNAMFloat2 = default;
-            item.DNAMFloat3 = default;
-            item.DNAMFloat4 = default;
-            item.DNAMFloat5 = default;
-            item.DNAMFloat6 = default;
-            item.DNAMFloat8 = default;
-            item.DNAMFloat9 = default;
-            item.DNAMFloat10 = default;
-            item.DNAMFloat11 = default;
-            item.DNAMFloat12 = default;
-            item.DNAMFloat13 = default;
+            item.DNAMFloat1 = default(Single);
+            item.DNAMColor = default(Color);
+            item.DNAMFloat2 = default(Single);
+            item.DNAMFloat3 = default(Single);
+            item.DNAMFloat4 = default(Single);
+            item.DNAMFloat5 = default(Single);
+            item.DNAMFloat6 = default(Single);
+            item.DNAMFloat8 = default(Single);
+            item.DNAMFloat9 = default(Single);
+            item.DNAMFloat10 = default(Single);
+            item.DNAMFloat11 = default(Single);
+            item.DNAMFloat12 = default(Single);
+            item.DNAMFloat13 = default(Single);
             item.DNAMSound.Clear();
-            item.DNAMInt1 = default;
-            item.DNAMInt2 = default;
+            item.DNAMInt1 = default(Int32);
+            item.DNAMInt2 = default(SByte);
             item.Model = null;
             base.Clear(item);
         }
@@ -2778,67 +2778,67 @@ namespace Mutagen.Bethesda.Starfield
         #region DNAMFloat1
         private int _DNAMFloat1Location => _DNAMLocation!.Value.Min;
         private bool _DNAMFloat1_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat1 => _DNAMFloat1_IsSet ? _recordData.Slice(_DNAMFloat1Location, 4).Float() : default;
+        public Single DNAMFloat1 => _DNAMFloat1_IsSet ? _recordData.Slice(_DNAMFloat1Location, 4).Float() : default(Single);
         #endregion
         #region DNAMColor
         private int _DNAMColorLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _DNAMColor_IsSet => _DNAMLocation.HasValue;
-        public Color DNAMColor => _DNAMColor_IsSet ? _recordData.Slice(_DNAMColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color DNAMColor => _DNAMColor_IsSet ? _recordData.Slice(_DNAMColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region DNAMFloat2
         private int _DNAMFloat2Location => _DNAMLocation!.Value.Min + 0x8;
         private bool _DNAMFloat2_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat2 => _DNAMFloat2_IsSet ? _recordData.Slice(_DNAMFloat2Location, 4).Float() : default;
+        public Single DNAMFloat2 => _DNAMFloat2_IsSet ? _recordData.Slice(_DNAMFloat2Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat3
         private int _DNAMFloat3Location => _DNAMLocation!.Value.Min + 0xC;
         private bool _DNAMFloat3_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat3 => _DNAMFloat3_IsSet ? _recordData.Slice(_DNAMFloat3Location, 4).Float() : default;
+        public Single DNAMFloat3 => _DNAMFloat3_IsSet ? _recordData.Slice(_DNAMFloat3Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat4
         private int _DNAMFloat4Location => _DNAMLocation!.Value.Min + 0x10;
         private bool _DNAMFloat4_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat4 => _DNAMFloat4_IsSet ? _recordData.Slice(_DNAMFloat4Location, 4).Float() : default;
+        public Single DNAMFloat4 => _DNAMFloat4_IsSet ? _recordData.Slice(_DNAMFloat4Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat5
         private int _DNAMFloat5Location => _DNAMLocation!.Value.Min + 0x14;
         private bool _DNAMFloat5_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat5 => _DNAMFloat5_IsSet ? _recordData.Slice(_DNAMFloat5Location, 4).Float() : default;
+        public Single DNAMFloat5 => _DNAMFloat5_IsSet ? _recordData.Slice(_DNAMFloat5Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat6
         private int _DNAMFloat6Location => _DNAMLocation!.Value.Min + 0x18;
         private bool _DNAMFloat6_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat6 => _DNAMFloat6_IsSet ? _recordData.Slice(_DNAMFloat6Location, 4).Float() : default;
+        public Single DNAMFloat6 => _DNAMFloat6_IsSet ? _recordData.Slice(_DNAMFloat6Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat8
         private int _DNAMFloat8Location => _DNAMLocation!.Value.Min + 0x1C;
         private bool _DNAMFloat8_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat8 => _DNAMFloat8_IsSet ? _recordData.Slice(_DNAMFloat8Location, 4).Float() : default;
+        public Single DNAMFloat8 => _DNAMFloat8_IsSet ? _recordData.Slice(_DNAMFloat8Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat9
         private int _DNAMFloat9Location => _DNAMLocation!.Value.Min + 0x20;
         private bool _DNAMFloat9_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat9 => _DNAMFloat9_IsSet ? _recordData.Slice(_DNAMFloat9Location, 4).Float() : default;
+        public Single DNAMFloat9 => _DNAMFloat9_IsSet ? _recordData.Slice(_DNAMFloat9Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat10
         private int _DNAMFloat10Location => _DNAMLocation!.Value.Min + 0x24;
         private bool _DNAMFloat10_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat10 => _DNAMFloat10_IsSet ? _recordData.Slice(_DNAMFloat10Location, 4).Float() : default;
+        public Single DNAMFloat10 => _DNAMFloat10_IsSet ? _recordData.Slice(_DNAMFloat10Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat11
         private int _DNAMFloat11Location => _DNAMLocation!.Value.Min + 0x28;
         private bool _DNAMFloat11_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat11 => _DNAMFloat11_IsSet ? _recordData.Slice(_DNAMFloat11Location, 4).Float() : default;
+        public Single DNAMFloat11 => _DNAMFloat11_IsSet ? _recordData.Slice(_DNAMFloat11Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat12
         private int _DNAMFloat12Location => _DNAMLocation!.Value.Min + 0x2C;
         private bool _DNAMFloat12_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat12 => _DNAMFloat12_IsSet ? _recordData.Slice(_DNAMFloat12Location, 4).Float() : default;
+        public Single DNAMFloat12 => _DNAMFloat12_IsSet ? _recordData.Slice(_DNAMFloat12Location, 4).Float() : default(Single);
         #endregion
         #region DNAMFloat13
         private int _DNAMFloat13Location => _DNAMLocation!.Value.Min + 0x30;
         private bool _DNAMFloat13_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat13 => _DNAMFloat13_IsSet ? _recordData.Slice(_DNAMFloat13Location, 4).Float() : default;
+        public Single DNAMFloat13 => _DNAMFloat13_IsSet ? _recordData.Slice(_DNAMFloat13Location, 4).Float() : default(Single);
         #endregion
         #region DNAMSound
         private int _DNAMSoundLocation => _DNAMLocation!.Value.Min + 0x34;
@@ -2849,12 +2849,12 @@ namespace Mutagen.Bethesda.Starfield
         #region DNAMInt1
         private int _DNAMInt1Location => _DNAMLocation!.Value.Min + 0x5C;
         private bool _DNAMInt1_IsSet => _DNAMLocation.HasValue;
-        public Int32 DNAMInt1 => _DNAMInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DNAMInt1Location, 4)) : default;
+        public Int32 DNAMInt1 => _DNAMInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DNAMInt1Location, 4)) : default(Int32);
         #endregion
         #region DNAMInt2
         private int _DNAMInt2Location => _DNAMLocation!.Value.Min + 0x60;
         private bool _DNAMInt2_IsSet => _DNAMLocation.HasValue;
-        public SByte DNAMInt2 => _DNAMInt2_IsSet ? (sbyte)_recordData.Slice(_DNAMInt2Location, 1)[0] : default;
+        public SByte DNAMInt2 => _DNAMInt2_IsSet ? (sbyte)_recordData.Slice(_DNAMInt2Location, 1)[0] : default(SByte);
         #endregion
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(

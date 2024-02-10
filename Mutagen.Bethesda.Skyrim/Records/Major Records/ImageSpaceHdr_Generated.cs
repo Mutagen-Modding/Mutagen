@@ -51,31 +51,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EyeAdaptSpeed
-        public Single EyeAdaptSpeed { get; set; } = default;
+        public Single EyeAdaptSpeed { get; set; } = default(Single);
         #endregion
         #region BloomBlurRadius
-        public Single BloomBlurRadius { get; set; } = default;
+        public Single BloomBlurRadius { get; set; } = default(Single);
         #endregion
         #region BloomThreshold
-        public Single BloomThreshold { get; set; } = default;
+        public Single BloomThreshold { get; set; } = default(Single);
         #endregion
         #region BloomScale
-        public Single BloomScale { get; set; } = default;
+        public Single BloomScale { get; set; } = default(Single);
         #endregion
         #region ReceiveBloomThreshold
-        public Single ReceiveBloomThreshold { get; set; } = default;
+        public Single ReceiveBloomThreshold { get; set; } = default(Single);
         #endregion
         #region White
-        public Single White { get; set; } = default;
+        public Single White { get; set; } = default(Single);
         #endregion
         #region SunlightScale
-        public Single SunlightScale { get; set; } = default;
+        public Single SunlightScale { get; set; } = default(Single);
         #endregion
         #region SkyScale
-        public Single SkyScale { get; set; } = default;
+        public Single SkyScale { get; set; } = default(Single);
         #endregion
         #region EyeAdaptStrength
-        public Single EyeAdaptStrength { get; set; } = default;
+        public Single EyeAdaptStrength { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -972,15 +972,15 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceHdr item)
         {
             ClearPartial();
-            item.EyeAdaptSpeed = default;
-            item.BloomBlurRadius = default;
-            item.BloomThreshold = default;
-            item.BloomScale = default;
-            item.ReceiveBloomThreshold = default;
-            item.White = default;
-            item.SunlightScale = default;
-            item.SkyScale = default;
-            item.EyeAdaptStrength = default;
+            item.EyeAdaptSpeed = default(Single);
+            item.BloomBlurRadius = default(Single);
+            item.BloomThreshold = default(Single);
+            item.BloomScale = default(Single);
+            item.ReceiveBloomThreshold = default(Single);
+            item.White = default(Single);
+            item.SunlightScale = default(Single);
+            item.SkyScale = default(Single);
+            item.EyeAdaptStrength = default(Single);
         }
         
         #region Mutagen

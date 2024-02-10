@@ -2251,7 +2251,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2288,7 +2288,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.AdjacentSnapNodes.SetTo(
                         rhs.AdjacentSnapNodes
-                        .Select(r => (IFormLinkGetter<ISnapTemplateNodeGetter>)new FormLink<ISnapTemplateNodeGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISnapTemplateNodeGetter>)new FormLink<ISnapTemplateNodeGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

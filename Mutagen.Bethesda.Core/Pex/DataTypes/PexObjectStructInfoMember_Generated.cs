@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Pex
         IPexObjectVariableDataGetter? IPexObjectStructInfoMemberGetter.Value => this.Value;
         #endregion
         #region IsConst
-        public Boolean IsConst { get; set; } = default;
+        public Boolean IsConst { get; set; } = default(Boolean);
         #endregion
         #region DocString
         public String? DocString { get; set; }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectStructInfoMemberGetter.DocString => this.DocString;
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -803,9 +803,9 @@ namespace Mutagen.Bethesda.Pex
             item.Name = default;
             item.TypeName = default;
             item.Value = null;
-            item.IsConst = default;
+            item.IsConst = default(Boolean);
             item.DocString = default;
-            item.RawUserFlags = default;
+            item.RawUserFlags = default(UInt32);
         }
         
     }

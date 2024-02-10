@@ -57,34 +57,34 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AmbientColor
-        public Color AmbientColor { get; set; } = default;
+        public Color AmbientColor { get; set; } = default(Color);
         #endregion
         #region DirectionalColor
-        public Color DirectionalColor { get; set; } = default;
+        public Color DirectionalColor { get; set; } = default(Color);
         #endregion
         #region FogNearColor
-        public Color FogNearColor { get; set; } = default;
+        public Color FogNearColor { get; set; } = default(Color);
         #endregion
         #region FogNear
-        public Single FogNear { get; set; } = default;
+        public Single FogNear { get; set; } = default(Single);
         #endregion
         #region FogFar
-        public Single FogFar { get; set; } = default;
+        public Single FogFar { get; set; } = default(Single);
         #endregion
         #region DirectionalRotationXY
-        public Int32 DirectionalRotationXY { get; set; } = default;
+        public Int32 DirectionalRotationXY { get; set; } = default(Int32);
         #endregion
         #region DirectionalRotationZ
-        public Int32 DirectionalRotationZ { get; set; } = default;
+        public Int32 DirectionalRotationZ { get; set; } = default(Int32);
         #endregion
         #region DirectionalFade
-        public Single DirectionalFade { get; set; } = default;
+        public Single DirectionalFade { get; set; } = default(Single);
         #endregion
         #region FogClipDistance
-        public Single FogClipDistance { get; set; } = default;
+        public Single FogClipDistance { get; set; } = default(Single);
         #endregion
         #region FogPower
-        public Single FogPower { get; set; } = default;
+        public Single FogPower { get; set; } = default(Single);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,19 +98,19 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte> ILightingTemplateGetter.Unused => this.Unused;
         #endregion
         #region FogFarColor
-        public Color FogFarColor { get; set; } = default;
+        public Color FogFarColor { get; set; } = default(Color);
         #endregion
         #region FogMax
-        public Single FogMax { get; set; } = default;
+        public Single FogMax { get; set; } = default(Single);
         #endregion
         #region LightFadeStartDistance
-        public Single LightFadeStartDistance { get; set; } = default;
+        public Single LightFadeStartDistance { get; set; } = default(Single);
         #endregion
         #region LightFadeEndDistance
-        public Single LightFadeEndDistance { get; set; } = default;
+        public Single LightFadeEndDistance { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region NearHeightMid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IGodRaysGetter> ILightingTemplateGetter.GodRays => this.GodRays;
         #endregion
         #region DATADataTypeState
-        public LightingTemplate.DATADataType DATADataTypeState { get; set; } = default;
+        public LightingTemplate.DATADataType DATADataTypeState { get; set; } = default(LightingTemplate.DATADataType);
         #endregion
 
         #region To String
@@ -1959,36 +1959,36 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILightingTemplateInternal item)
         {
             ClearPartial();
-            item.AmbientColor = default;
-            item.DirectionalColor = default;
-            item.FogNearColor = default;
-            item.FogNear = default;
-            item.FogFar = default;
-            item.DirectionalRotationXY = default;
-            item.DirectionalRotationZ = default;
-            item.DirectionalFade = default;
-            item.FogClipDistance = default;
-            item.FogPower = default;
+            item.AmbientColor = default(Color);
+            item.DirectionalColor = default(Color);
+            item.FogNearColor = default(Color);
+            item.FogNear = default(Single);
+            item.FogFar = default(Single);
+            item.DirectionalRotationXY = default(Int32);
+            item.DirectionalRotationZ = default(Int32);
+            item.DirectionalFade = default(Single);
+            item.FogClipDistance = default(Single);
+            item.FogPower = default(Single);
             item.Unused = new byte[32];
-            item.FogFarColor = default;
-            item.FogMax = default;
-            item.LightFadeStartDistance = default;
-            item.LightFadeEndDistance = default;
-            item.Unknown = default;
-            item.NearHeightMid = default;
-            item.NearHeightRange = default;
-            item.FogColorHighNear = default;
-            item.FogColorHighFar = default;
-            item.HighDensityScale = default;
-            item.FogNearScale = default;
-            item.FogFarScale = default;
-            item.FogHighNearScale = default;
-            item.FogHighFarScale = default;
-            item.FogHeightMid = default;
-            item.FogHeightRange = default;
+            item.FogFarColor = default(Color);
+            item.FogMax = default(Single);
+            item.LightFadeStartDistance = default(Single);
+            item.LightFadeEndDistance = default(Single);
+            item.Unknown = default(Int32);
+            item.NearHeightMid = default(Single);
+            item.NearHeightRange = default(Single);
+            item.FogColorHighNear = default(Color);
+            item.FogColorHighFar = default(Color);
+            item.HighDensityScale = default(Single);
+            item.FogNearScale = default(Single);
+            item.FogFarScale = default(Single);
+            item.FogHighNearScale = default(Single);
+            item.FogHighFarScale = default(Single);
+            item.FogHeightMid = default(Single);
+            item.FogHeightRange = default(Single);
             item.DirectionalAmbientColors = null;
             item.GodRays.Clear();
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(LightingTemplate.DATADataType);
             base.Clear(item);
         }
         
@@ -3265,52 +3265,52 @@ namespace Mutagen.Bethesda.Fallout4
         #region AmbientColor
         private int _AmbientColorLocation => _DATALocation!.Value.Min;
         private bool _AmbientColor_IsSet => _DATALocation.HasValue;
-        public Color AmbientColor => _AmbientColor_IsSet ? _recordData.Slice(_AmbientColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color AmbientColor => _AmbientColor_IsSet ? _recordData.Slice(_AmbientColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region DirectionalColor
         private int _DirectionalColorLocation => _DATALocation!.Value.Min + 0x4;
         private bool _DirectionalColor_IsSet => _DATALocation.HasValue;
-        public Color DirectionalColor => _DirectionalColor_IsSet ? _recordData.Slice(_DirectionalColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color DirectionalColor => _DirectionalColor_IsSet ? _recordData.Slice(_DirectionalColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogNearColor
         private int _FogNearColorLocation => _DATALocation!.Value.Min + 0x8;
         private bool _FogNearColor_IsSet => _DATALocation.HasValue;
-        public Color FogNearColor => _FogNearColor_IsSet ? _recordData.Slice(_FogNearColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogNearColor => _FogNearColor_IsSet ? _recordData.Slice(_FogNearColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogNear
         private int _FogNearLocation => _DATALocation!.Value.Min + 0xC;
         private bool _FogNear_IsSet => _DATALocation.HasValue;
-        public Single FogNear => _FogNear_IsSet ? _recordData.Slice(_FogNearLocation, 4).Float() : default;
+        public Single FogNear => _FogNear_IsSet ? _recordData.Slice(_FogNearLocation, 4).Float() : default(Single);
         #endregion
         #region FogFar
         private int _FogFarLocation => _DATALocation!.Value.Min + 0x10;
         private bool _FogFar_IsSet => _DATALocation.HasValue;
-        public Single FogFar => _FogFar_IsSet ? _recordData.Slice(_FogFarLocation, 4).Float() : default;
+        public Single FogFar => _FogFar_IsSet ? _recordData.Slice(_FogFarLocation, 4).Float() : default(Single);
         #endregion
         #region DirectionalRotationXY
         private int _DirectionalRotationXYLocation => _DATALocation!.Value.Min + 0x14;
         private bool _DirectionalRotationXY_IsSet => _DATALocation.HasValue;
-        public Int32 DirectionalRotationXY => _DirectionalRotationXY_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationXYLocation, 4)) : default;
+        public Int32 DirectionalRotationXY => _DirectionalRotationXY_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationXYLocation, 4)) : default(Int32);
         #endregion
         #region DirectionalRotationZ
         private int _DirectionalRotationZLocation => _DATALocation!.Value.Min + 0x18;
         private bool _DirectionalRotationZ_IsSet => _DATALocation.HasValue;
-        public Int32 DirectionalRotationZ => _DirectionalRotationZ_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationZLocation, 4)) : default;
+        public Int32 DirectionalRotationZ => _DirectionalRotationZ_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DirectionalRotationZLocation, 4)) : default(Int32);
         #endregion
         #region DirectionalFade
         private int _DirectionalFadeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _DirectionalFade_IsSet => _DATALocation.HasValue;
-        public Single DirectionalFade => _DirectionalFade_IsSet ? _recordData.Slice(_DirectionalFadeLocation, 4).Float() : default;
+        public Single DirectionalFade => _DirectionalFade_IsSet ? _recordData.Slice(_DirectionalFadeLocation, 4).Float() : default(Single);
         #endregion
         #region FogClipDistance
         private int _FogClipDistanceLocation => _DATALocation!.Value.Min + 0x20;
         private bool _FogClipDistance_IsSet => _DATALocation.HasValue;
-        public Single FogClipDistance => _FogClipDistance_IsSet ? _recordData.Slice(_FogClipDistanceLocation, 4).Float() : default;
+        public Single FogClipDistance => _FogClipDistance_IsSet ? _recordData.Slice(_FogClipDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region FogPower
         private int _FogPowerLocation => _DATALocation!.Value.Min + 0x24;
         private bool _FogPower_IsSet => _DATALocation.HasValue;
-        public Single FogPower => _FogPower_IsSet ? _recordData.Slice(_FogPowerLocation, 4).Float() : default;
+        public Single FogPower => _FogPower_IsSet ? _recordData.Slice(_FogPowerLocation, 4).Float() : default(Single);
         #endregion
         #region Unused
         private int _UnusedLocation => _DATALocation!.Value.Min + 0x28;
@@ -3320,82 +3320,82 @@ namespace Mutagen.Bethesda.Fallout4
         #region FogFarColor
         private int _FogFarColorLocation => _DATALocation!.Value.Min + 0x48;
         private bool _FogFarColor_IsSet => _DATALocation.HasValue;
-        public Color FogFarColor => _FogFarColor_IsSet ? _recordData.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogFarColor => _FogFarColor_IsSet ? _recordData.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogMax
         private int _FogMaxLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _FogMax_IsSet => _DATALocation.HasValue;
-        public Single FogMax => _FogMax_IsSet ? _recordData.Slice(_FogMaxLocation, 4).Float() : default;
+        public Single FogMax => _FogMax_IsSet ? _recordData.Slice(_FogMaxLocation, 4).Float() : default(Single);
         #endregion
         #region LightFadeStartDistance
         private int _LightFadeStartDistanceLocation => _DATALocation!.Value.Min + 0x50;
         private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue;
-        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _recordData.Slice(_LightFadeStartDistanceLocation, 4).Float() : default;
+        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _recordData.Slice(_LightFadeStartDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region LightFadeEndDistance
         private int _LightFadeEndDistanceLocation => _DATALocation!.Value.Min + 0x54;
         private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue;
-        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _recordData.Slice(_LightFadeEndDistanceLocation, 4).Float() : default;
+        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _recordData.Slice(_LightFadeEndDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x58;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region NearHeightMid
         private int _NearHeightMidLocation => _DATALocation!.Value.Min + 0x5C;
         private bool _NearHeightMid_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single NearHeightMid => _NearHeightMid_IsSet ? _recordData.Slice(_NearHeightMidLocation, 4).Float() : default;
+        public Single NearHeightMid => _NearHeightMid_IsSet ? _recordData.Slice(_NearHeightMidLocation, 4).Float() : default(Single);
         #endregion
         #region NearHeightRange
         private int _NearHeightRangeLocation => _DATALocation!.Value.Min + 0x60;
         private bool _NearHeightRange_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single NearHeightRange => _NearHeightRange_IsSet ? _recordData.Slice(_NearHeightRangeLocation, 4).Float() : default;
+        public Single NearHeightRange => _NearHeightRange_IsSet ? _recordData.Slice(_NearHeightRangeLocation, 4).Float() : default(Single);
         #endregion
         #region FogColorHighNear
         private int _FogColorHighNearLocation => _DATALocation!.Value.Min + 0x64;
         private bool _FogColorHighNear_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Color FogColorHighNear => _FogColorHighNear_IsSet ? _recordData.Slice(_FogColorHighNearLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogColorHighNear => _FogColorHighNear_IsSet ? _recordData.Slice(_FogColorHighNearLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogColorHighFar
         private int _FogColorHighFarLocation => _DATALocation!.Value.Min + 0x68;
         private bool _FogColorHighFar_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Color FogColorHighFar => _FogColorHighFar_IsSet ? _recordData.Slice(_FogColorHighFarLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogColorHighFar => _FogColorHighFar_IsSet ? _recordData.Slice(_FogColorHighFarLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region HighDensityScale
         private int _HighDensityScaleLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _HighDensityScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single HighDensityScale => _HighDensityScale_IsSet ? _recordData.Slice(_HighDensityScaleLocation, 4).Float() : default;
+        public Single HighDensityScale => _HighDensityScale_IsSet ? _recordData.Slice(_HighDensityScaleLocation, 4).Float() : default(Single);
         #endregion
         #region FogNearScale
         private int _FogNearScaleLocation => _DATALocation!.Value.Min + 0x70;
         private bool _FogNearScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single FogNearScale => _FogNearScale_IsSet ? _recordData.Slice(_FogNearScaleLocation, 4).Float() : default;
+        public Single FogNearScale => _FogNearScale_IsSet ? _recordData.Slice(_FogNearScaleLocation, 4).Float() : default(Single);
         #endregion
         #region FogFarScale
         private int _FogFarScaleLocation => _DATALocation!.Value.Min + 0x74;
         private bool _FogFarScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single FogFarScale => _FogFarScale_IsSet ? _recordData.Slice(_FogFarScaleLocation, 4).Float() : default;
+        public Single FogFarScale => _FogFarScale_IsSet ? _recordData.Slice(_FogFarScaleLocation, 4).Float() : default(Single);
         #endregion
         #region FogHighNearScale
         private int _FogHighNearScaleLocation => _DATALocation!.Value.Min + 0x78;
         private bool _FogHighNearScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single FogHighNearScale => _FogHighNearScale_IsSet ? _recordData.Slice(_FogHighNearScaleLocation, 4).Float() : default;
+        public Single FogHighNearScale => _FogHighNearScale_IsSet ? _recordData.Slice(_FogHighNearScaleLocation, 4).Float() : default(Single);
         #endregion
         #region FogHighFarScale
         private int _FogHighFarScaleLocation => _DATALocation!.Value.Min + 0x7C;
         private bool _FogHighFarScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single FogHighFarScale => _FogHighFarScale_IsSet ? _recordData.Slice(_FogHighFarScaleLocation, 4).Float() : default;
+        public Single FogHighFarScale => _FogHighFarScale_IsSet ? _recordData.Slice(_FogHighFarScaleLocation, 4).Float() : default(Single);
         #endregion
         #region FogHeightMid
         private int _FogHeightMidLocation => _DATALocation!.Value.Min + 0x80;
         private bool _FogHeightMid_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
-        public Single FogHeightMid => _FogHeightMid_IsSet ? _recordData.Slice(_FogHeightMidLocation, 4).Float() : default;
+        public Single FogHeightMid => _FogHeightMid_IsSet ? _recordData.Slice(_FogHeightMidLocation, 4).Float() : default(Single);
         #endregion
         #region FogHeightRange
         private int _FogHeightRangeLocation => _DATALocation!.Value.Min + 0x84;
         private bool _FogHeightRange_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
-        public Single FogHeightRange => _FogHeightRange_IsSet ? _recordData.Slice(_FogHeightRangeLocation, 4).Float() : default;
+        public Single FogHeightRange => _FogHeightRange_IsSet ? _recordData.Slice(_FogHeightRangeLocation, 4).Float() : default(Single);
         #endregion
         public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
         #region GodRays

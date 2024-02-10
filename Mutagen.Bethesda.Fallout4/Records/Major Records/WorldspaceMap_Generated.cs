@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region UsableDimensions
-        public P2Int UsableDimensions { get; set; } = default;
+        public P2Int UsableDimensions { get; set; } = default(P2Int);
         #endregion
         #region NorthwestCellCoords
-        public P2Int16 NorthwestCellCoords { get; set; } = default;
+        public P2Int16 NorthwestCellCoords { get; set; } = default(P2Int16);
         #endregion
         #region SoutheastCellCoords
-        public P2Int16 SoutheastCellCoords { get; set; } = default;
+        public P2Int16 SoutheastCellCoords { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWorldspaceMap item)
         {
             ClearPartial();
-            item.UsableDimensions = default;
-            item.NorthwestCellCoords = default;
-            item.SoutheastCellCoords = default;
+            item.UsableDimensions = default(P2Int);
+            item.NorthwestCellCoords = default(P2Int16);
+            item.SoutheastCellCoords = default(P2Int16);
         }
         
         #region Mutagen

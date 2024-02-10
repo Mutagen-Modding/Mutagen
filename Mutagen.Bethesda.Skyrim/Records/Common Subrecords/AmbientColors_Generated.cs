@@ -52,31 +52,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public AmbientColors.VersioningBreaks Versioning { get; set; } = default;
+        public AmbientColors.VersioningBreaks Versioning { get; set; } = default(AmbientColors.VersioningBreaks);
         #endregion
         #region DirectionalXPlus
-        public Color DirectionalXPlus { get; set; } = default;
+        public Color DirectionalXPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalXMinus
-        public Color DirectionalXMinus { get; set; } = default;
+        public Color DirectionalXMinus { get; set; } = default(Color);
         #endregion
         #region DirectionalYPlus
-        public Color DirectionalYPlus { get; set; } = default;
+        public Color DirectionalYPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalYMinus
-        public Color DirectionalYMinus { get; set; } = default;
+        public Color DirectionalYMinus { get; set; } = default(Color);
         #endregion
         #region DirectionalZPlus
-        public Color DirectionalZPlus { get; set; } = default;
+        public Color DirectionalZPlus { get; set; } = default(Color);
         #endregion
         #region DirectionalZMinus
-        public Color DirectionalZMinus { get; set; } = default;
+        public Color DirectionalZMinus { get; set; } = default(Color);
         #endregion
         #region Specular
-        public Color Specular { get; set; } = default;
+        public Color Specular { get; set; } = default(Color);
         #endregion
         #region Scale
-        public Single Scale { get; set; } = default;
+        public Single Scale { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -974,15 +974,15 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IAmbientColors item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.DirectionalXPlus = default;
-            item.DirectionalXMinus = default;
-            item.DirectionalYPlus = default;
-            item.DirectionalYMinus = default;
-            item.DirectionalZPlus = default;
-            item.DirectionalZMinus = default;
-            item.Specular = default;
-            item.Scale = default;
+            item.Versioning = default(AmbientColors.VersioningBreaks);
+            item.DirectionalXPlus = default(Color);
+            item.DirectionalXMinus = default(Color);
+            item.DirectionalYPlus = default(Color);
+            item.DirectionalYMinus = default(Color);
+            item.DirectionalZPlus = default(Color);
+            item.DirectionalZMinus = default(Color);
+            item.Specular = default(Color);
+            item.Scale = default(Single);
         }
         
         #region Mutagen

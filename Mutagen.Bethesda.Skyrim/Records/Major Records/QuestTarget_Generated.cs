@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
         #endregion
         #region Flags
-        public Quest.TargetFlag Flags { get; set; } = default;
+        public Quest.TargetFlag Flags { get; set; } = default(Quest.TargetFlag);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Target.Clear();
-            item.Flags = default;
+            item.Flags = default(Quest.TargetFlag);
             item.Conditions.Clear();
         }
         

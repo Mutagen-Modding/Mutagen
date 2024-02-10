@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IPlacedObjectGetter> IWorldspaceReferenceGetter.Reference => this.Reference;
         #endregion
         #region Position
-        public P2Int16 Position { get; set; } = default;
+        public P2Int16 Position { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Reference.Clear();
-            item.Position = default;
+            item.Position = default(P2Int16);
         }
         
         #region Mutagen

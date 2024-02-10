@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
-        public Quadrant Quadrant { get; set; } = default;
+        public Quadrant Quadrant { get; set; } = default(Quadrant);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region LayerNumber
-        public UInt16 LayerNumber { get; set; } = default;
+        public UInt16 LayerNumber { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -808,9 +808,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Texture.Clear();
-            item.Quadrant = default;
-            item.Unused = default;
-            item.LayerNumber = default;
+            item.Quadrant = default(Quadrant);
+            item.Unused = default(Byte);
+            item.LayerNumber = default(UInt16);
         }
         
         #region Mutagen

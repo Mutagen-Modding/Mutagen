@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Type
-        public PackageIdles.Types Type { get; set; } = default;
+        public PackageIdles.Types Type { get; set; } = default(PackageIdles.Types);
         #endregion
         #region TimerSetting
         public Single? TimerSetting { get; set; }
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPackageIdles item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(PackageIdles.Types);
             item.TimerSetting = default;
             item.Animations = null;
             item.IDLB = default;
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Animations = 
                             rhs.Animations
-                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     }
                     else

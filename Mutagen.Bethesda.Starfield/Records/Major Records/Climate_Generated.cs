@@ -84,19 +84,19 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region SunriseBegin
-        public TimeOnly SunriseBegin { get; set; } = default;
+        public TimeOnly SunriseBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunriseEnd
-        public TimeOnly SunriseEnd { get; set; } = default;
+        public TimeOnly SunriseEnd { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetBegin
-        public TimeOnly SunsetBegin { get; set; } = default;
+        public TimeOnly SunsetBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetEnd
-        public TimeOnly SunsetEnd { get; set; } = default;
+        public TimeOnly SunsetEnd { get; set; } = default(TimeOnly);
         #endregion
         #region Volatility
-        public Byte Volatility { get; set; } = default;
+        public Byte Volatility { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -1138,11 +1138,11 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Weathers = null;
             item.WeatherSettings = null;
-            item.SunriseBegin = default;
-            item.SunriseEnd = default;
-            item.SunsetBegin = default;
-            item.SunsetEnd = default;
-            item.Volatility = default;
+            item.SunriseBegin = default(TimeOnly);
+            item.SunriseEnd = default(TimeOnly);
+            item.SunsetBegin = default(TimeOnly);
+            item.SunsetEnd = default(TimeOnly);
+            item.Volatility = default(Byte);
             base.Clear(item);
         }
         

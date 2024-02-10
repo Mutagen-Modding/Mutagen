@@ -97,19 +97,19 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region DefaultNumberOfTiles
-        public Single DefaultNumberOfTiles { get; set; } = default;
+        public Single DefaultNumberOfTiles { get; set; } = default(Single);
         #endregion
         #region DefaultNumberOfSlices
-        public UInt16 DefaultNumberOfSlices { get; set; } = default;
+        public UInt16 DefaultNumberOfSlices { get; set; } = default(UInt16);
         #endregion
         #region DefaultNumberOfTilesIsRelativeToLength
-        public Boolean DefaultNumberOfTilesIsRelativeToLength { get; set; } = default;
+        public Boolean DefaultNumberOfTilesIsRelativeToLength { get; set; } = default(Boolean);
         #endregion
         #region DefaultColor
-        public Color DefaultColor { get; set; } = default;
+        public Color DefaultColor { get; set; } = default(Color);
         #endregion
         #region WindSensibility
-        public Single WindSensibility { get; set; } = default;
+        public Single WindSensibility { get; set; } = default(Single);
         #endregion
         #region WindFlexibility
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IMaterialPathGetter> IBendableSplineGetter.MaterialPath => this.MaterialPath;
         #endregion
         #region DNAMDataTypeState
-        public BendableSpline.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public BendableSpline.DNAMDataType DNAMDataTypeState { get; set; } = default(BendableSpline.DNAMDataType);
         #endregion
 
         #region To String
@@ -1274,14 +1274,14 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectBounds = null;
             item.ODTY = default;
             item.Components.Clear();
-            item.DefaultNumberOfTiles = default;
-            item.DefaultNumberOfSlices = default;
-            item.DefaultNumberOfTilesIsRelativeToLength = default;
-            item.DefaultColor = default;
-            item.WindSensibility = default;
-            item.WindFlexibility = default;
+            item.DefaultNumberOfTiles = default(Single);
+            item.DefaultNumberOfSlices = default(UInt16);
+            item.DefaultNumberOfTilesIsRelativeToLength = default(Boolean);
+            item.DefaultColor = default(Color);
+            item.WindSensibility = default(Single);
+            item.WindFlexibility = default(Single);
             item.MaterialPath.Clear();
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(BendableSpline.DNAMDataType);
             base.Clear(item);
         }
         
@@ -2306,32 +2306,32 @@ namespace Mutagen.Bethesda.Starfield
         #region DefaultNumberOfTiles
         private int _DefaultNumberOfTilesLocation => _DNAMLocation!.Value.Min;
         private bool _DefaultNumberOfTiles_IsSet => _DNAMLocation.HasValue;
-        public Single DefaultNumberOfTiles => _DefaultNumberOfTiles_IsSet ? _recordData.Slice(_DefaultNumberOfTilesLocation, 4).Float() : default;
+        public Single DefaultNumberOfTiles => _DefaultNumberOfTiles_IsSet ? _recordData.Slice(_DefaultNumberOfTilesLocation, 4).Float() : default(Single);
         #endregion
         #region DefaultNumberOfSlices
         private int _DefaultNumberOfSlicesLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _DefaultNumberOfSlices_IsSet => _DNAMLocation.HasValue;
-        public UInt16 DefaultNumberOfSlices => _DefaultNumberOfSlices_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfSlicesLocation, 2)) : default;
+        public UInt16 DefaultNumberOfSlices => _DefaultNumberOfSlices_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfSlicesLocation, 2)) : default(UInt16);
         #endregion
         #region DefaultNumberOfTilesIsRelativeToLength
         private int _DefaultNumberOfTilesIsRelativeToLengthLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _DefaultNumberOfTilesIsRelativeToLength_IsSet => _DNAMLocation.HasValue;
-        public Boolean DefaultNumberOfTilesIsRelativeToLength => _DefaultNumberOfTilesIsRelativeToLength_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfTilesIsRelativeToLengthLocation, 2)) >= 1 : default;
+        public Boolean DefaultNumberOfTilesIsRelativeToLength => _DefaultNumberOfTilesIsRelativeToLength_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfTilesIsRelativeToLengthLocation, 2)) >= 1 : default(Boolean);
         #endregion
         #region DefaultColor
         private int _DefaultColorLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _DefaultColor_IsSet => _DNAMLocation.HasValue;
-        public Color DefaultColor => _DefaultColor_IsSet ? _recordData.Slice(_DefaultColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color DefaultColor => _DefaultColor_IsSet ? _recordData.Slice(_DefaultColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region WindSensibility
         private int _WindSensibilityLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _WindSensibility_IsSet => _DNAMLocation.HasValue;
-        public Single WindSensibility => _WindSensibility_IsSet ? _recordData.Slice(_WindSensibilityLocation, 4).Float() : default;
+        public Single WindSensibility => _WindSensibility_IsSet ? _recordData.Slice(_WindSensibilityLocation, 4).Float() : default(Single);
         #endregion
         #region WindFlexibility
         private int _WindFlexibilityLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _WindFlexibility_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(BendableSpline.DNAMDataType.Break0);
-        public Single WindFlexibility => _WindFlexibility_IsSet ? _recordData.Slice(_WindFlexibilityLocation, 4).Float() : default;
+        public Single WindFlexibility => _WindFlexibility_IsSet ? _recordData.Slice(_WindFlexibilityLocation, 4).Float() : default(Single);
         #endregion
         #region MaterialPath
         private int? _MaterialPathLocation;

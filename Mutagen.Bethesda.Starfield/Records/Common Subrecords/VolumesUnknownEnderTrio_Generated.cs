@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown1
-        public Single Unknown1 { get; set; } = default;
+        public Single Unknown1 { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; } = default;
+        public Single Unknown2 { get; set; } = default(Single);
         #endregion
         #region Unknown3
-        public Single Unknown3 { get; set; } = default;
+        public Single Unknown3 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -707,9 +707,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IVolumesUnknownEnderTrio item)
         {
             ClearPartial();
-            item.Unknown1 = default;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
+            item.Unknown1 = default(Single);
+            item.Unknown2 = default(Single);
+            item.Unknown3 = default(Single);
             base.Clear(item);
         }
         

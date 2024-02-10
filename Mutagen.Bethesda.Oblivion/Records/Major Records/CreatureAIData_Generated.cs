@@ -51,25 +51,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Aggression
-        public Byte Aggression { get; set; } = default;
+        public Byte Aggression { get; set; } = default(Byte);
         #endregion
         #region Confidence
-        public Byte Confidence { get; set; } = default;
+        public Byte Confidence { get; set; } = default(Byte);
         #endregion
         #region EnergyLevel
-        public Byte EnergyLevel { get; set; } = default;
+        public Byte EnergyLevel { get; set; } = default(Byte);
         #endregion
         #region Responsibility
-        public Byte Responsibility { get; set; } = default;
+        public Byte Responsibility { get; set; } = default(Byte);
         #endregion
         #region BuySellServices
-        public Npc.BuySellServiceFlag BuySellServices { get; set; } = default;
+        public Npc.BuySellServiceFlag BuySellServices { get; set; } = default(Npc.BuySellServiceFlag);
         #endregion
         #region Teaches
-        public Skill Teaches { get; set; } = default;
+        public Skill Teaches { get; set; } = default(Skill);
         #endregion
         #region MaximumTrainingLevel
-        public Byte MaximumTrainingLevel { get; set; } = default;
+        public Byte MaximumTrainingLevel { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -900,13 +900,13 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICreatureAIData item)
         {
             ClearPartial();
-            item.Aggression = default;
-            item.Confidence = default;
-            item.EnergyLevel = default;
-            item.Responsibility = default;
-            item.BuySellServices = default;
-            item.Teaches = default;
-            item.MaximumTrainingLevel = default;
+            item.Aggression = default(Byte);
+            item.Confidence = default(Byte);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Byte);
+            item.BuySellServices = default(Npc.BuySellServiceFlag);
+            item.Teaches = default(Skill);
+            item.MaximumTrainingLevel = default(Byte);
         }
         
         #region Mutagen

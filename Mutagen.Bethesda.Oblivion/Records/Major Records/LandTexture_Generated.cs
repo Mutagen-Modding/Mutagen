@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.PotentialGrass.SetTo(
                         rhs.PotentialGrass
-                        .Select(r => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

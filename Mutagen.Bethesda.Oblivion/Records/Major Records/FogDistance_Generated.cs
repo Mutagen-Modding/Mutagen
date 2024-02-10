@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DayNear
-        public Single DayNear { get; set; } = default;
+        public Single DayNear { get; set; } = default(Single);
         #endregion
         #region DayFar
-        public Single DayFar { get; set; } = default;
+        public Single DayFar { get; set; } = default(Single);
         #endregion
         #region NightNear
-        public Single NightNear { get; set; } = default;
+        public Single NightNear { get; set; } = default(Single);
         #endregion
         #region NightFar
-        public Single NightFar { get; set; } = default;
+        public Single NightFar { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IFogDistance item)
         {
             ClearPartial();
-            item.DayNear = default;
-            item.DayFar = default;
-            item.NightNear = default;
-            item.NightFar = default;
+            item.DayNear = default(Single);
+            item.DayFar = default(Single);
+            item.NightNear = default(Single);
+            item.NightFar = default(Single);
         }
         
         #region Mutagen

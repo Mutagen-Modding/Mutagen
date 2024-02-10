@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ReverbClass
-        public ReverbClass ReverbClass { get; set; } = default;
+        public ReverbClass ReverbClass { get; set; } = default(ReverbClass);
         #endregion
         #region Descriptor
         private readonly IFormLink<ISoundDescriptorGetter> _Descriptor = new FormLink<ISoundDescriptorGetter>();
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMappingSound item)
         {
             ClearPartial();
-            item.ReverbClass = default;
+            item.ReverbClass = default(ReverbClass);
             item.Descriptor.Clear();
         }
         

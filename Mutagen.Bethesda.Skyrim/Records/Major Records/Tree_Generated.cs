@@ -184,10 +184,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region TrunkFlexibility
-        public Single TrunkFlexibility { get; set; } = default;
+        public Single TrunkFlexibility { get; set; } = default(Single);
         #endregion
         #region BranchFlexibility
-        public Single BranchFlexibility { get; set; } = default;
+        public Single BranchFlexibility { get; set; } = default(Single);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -201,10 +201,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> ITreeGetter.Unknown => this.Unknown;
         #endregion
         #region LeafAmplitude
-        public Single LeafAmplitude { get; set; } = default;
+        public Single LeafAmplitude { get; set; } = default(Single);
         #endregion
         #region LeafFrequency
-        public Single LeafFrequency { get; set; } = default;
+        public Single LeafFrequency { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1388,11 +1388,11 @@ namespace Mutagen.Bethesda.Skyrim
             item.HarvestSound.Clear();
             item.Production = null;
             item.Name = default;
-            item.TrunkFlexibility = default;
-            item.BranchFlexibility = default;
+            item.TrunkFlexibility = default(Single);
+            item.BranchFlexibility = default(Single);
             item.Unknown = new byte[32];
-            item.LeafAmplitude = default;
-            item.LeafFrequency = default;
+            item.LeafAmplitude = default(Single);
+            item.LeafFrequency = default(Single);
             base.Clear(item);
         }
         
@@ -2555,12 +2555,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region TrunkFlexibility
         private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _recordData.Slice(_TrunkFlexibilityLocation, 4).Float() : default;
+        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _recordData.Slice(_TrunkFlexibilityLocation, 4).Float() : default(Single);
         #endregion
         #region BranchFlexibility
         private int _BranchFlexibilityLocation => _CNAMLocation!.Value.Min + 0x4;
         private bool _BranchFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single BranchFlexibility => _BranchFlexibility_IsSet ? _recordData.Slice(_BranchFlexibilityLocation, 4).Float() : default;
+        public Single BranchFlexibility => _BranchFlexibility_IsSet ? _recordData.Slice(_BranchFlexibilityLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown
         private int _UnknownLocation => _CNAMLocation!.Value.Min + 0x8;
@@ -2570,12 +2570,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _CNAMLocation!.Value.Min + 0x28;
         private bool _LeafAmplitude_IsSet => _CNAMLocation.HasValue;
-        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _recordData.Slice(_LeafAmplitudeLocation, 4).Float() : default;
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _recordData.Slice(_LeafAmplitudeLocation, 4).Float() : default(Single);
         #endregion
         #region LeafFrequency
         private int _LeafFrequencyLocation => _CNAMLocation!.Value.Min + 0x2C;
         private bool _LeafFrequency_IsSet => _CNAMLocation.HasValue;
-        public Single LeafFrequency => _LeafFrequency_IsSet ? _recordData.Slice(_LeafFrequencyLocation, 4).Float() : default;
+        public Single LeafFrequency => _LeafFrequency_IsSet ? _recordData.Slice(_LeafFrequencyLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

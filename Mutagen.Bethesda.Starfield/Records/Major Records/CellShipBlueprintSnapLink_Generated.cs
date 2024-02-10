@@ -72,10 +72,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IPlacedObjectGetter> ICellShipBlueprintSnapLinkGetter.LinkedReference => this.LinkedReference;
         #endregion
         #region ParentNode
-        public Int32 ParentNode { get; set; } = default;
+        public Int32 ParentNode { get; set; } = default(Int32);
         #endregion
         #region LinkedNode
-        public Int32 LinkedNode { get; set; } = default;
+        public Int32 LinkedNode { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -809,8 +809,8 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ParentReference.Clear();
             item.LinkedReference.Clear();
-            item.ParentNode = default;
-            item.LinkedNode = default;
+            item.ParentNode = default(Int32);
+            item.LinkedNode = default(Int32);
         }
         
         #region Mutagen

@@ -4138,7 +4138,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.ReferenceCellPersistentReferences = 
                             rhs.ReferenceCellPersistentReferences
-                            .Select(r => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
@@ -4229,7 +4229,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.ReferenceCellUnique = 
                             rhs.ReferenceCellUnique
-                            .Select(r => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<INpcGetter>>();
                     }
                     else
@@ -4320,7 +4320,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.ReferenceCellStaticReferences = 
                             rhs.ReferenceCellStaticReferences
-                            .Select(r => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
@@ -4419,7 +4419,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.ActorCellMarkerReference = 
                             rhs.ActorCellMarkerReference
-                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
@@ -4446,7 +4446,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.LocationCellMarkerReference = 
                             rhs.LocationCellMarkerReference
-                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
@@ -4541,7 +4541,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

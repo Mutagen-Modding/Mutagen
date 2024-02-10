@@ -161,22 +161,22 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Flags
-        public Npc.Flag Flags { get; set; } = default;
+        public Npc.Flag Flags { get; set; } = default(Npc.Flag);
         #endregion
         #region XpValueOffset
-        public Int16 XpValueOffset { get; set; } = default;
+        public Int16 XpValueOffset { get; set; } = default(Int16);
         #endregion
         #region CalcMinLevel
-        public Int16 CalcMinLevel { get; set; } = default;
+        public Int16 CalcMinLevel { get; set; } = default(Int16);
         #endregion
         #region CalcMaxLevel
-        public Int16 CalcMaxLevel { get; set; } = default;
+        public Int16 CalcMaxLevel { get; set; } = default(Int16);
         #endregion
         #region DispositionBase
-        public Int16 DispositionBase { get; set; } = default;
+        public Int16 DispositionBase { get; set; } = default(Int16);
         #endregion
         #region UseTemplateActors
-        public Npc.TemplateActorType UseTemplateActors { get; set; } = default;
+        public Npc.TemplateActorType UseTemplateActors { get; set; } = default(Npc.TemplateActorType);
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -384,25 +384,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Aggression
-        public Npc.AggressionType Aggression { get; set; } = default;
+        public Npc.AggressionType Aggression { get; set; } = default(Npc.AggressionType);
         #endregion
         #region Confidence
-        public Npc.ConfidenceType Confidence { get; set; } = default;
+        public Npc.ConfidenceType Confidence { get; set; } = default(Npc.ConfidenceType);
         #endregion
         #region EnergyLevel
-        public Byte EnergyLevel { get; set; } = default;
+        public Byte EnergyLevel { get; set; } = default(Byte);
         #endregion
         #region Responsibility
-        public Npc.ResponsibilityType Responsibility { get; set; } = default;
+        public Npc.ResponsibilityType Responsibility { get; set; } = default(Npc.ResponsibilityType);
         #endregion
         #region Mood
-        public Npc.MoodType Mood { get; set; } = default;
+        public Npc.MoodType Mood { get; set; } = default(Npc.MoodType);
         #endregion
         #region Assistance
-        public Npc.AssistanceType Assistance { get; set; } = default;
+        public Npc.AssistanceType Assistance { get; set; } = default(Npc.AssistanceType);
         #endregion
         #region UnknownAIDT
-        public Byte UnknownAIDT { get; set; } = default;
+        public Byte UnknownAIDT { get; set; } = default(Byte);
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -549,19 +549,19 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter? INpcGetter.LongName => this.LongName;
         #endregion
         #region CalculatedHealth
-        public UInt16 CalculatedHealth { get; set; } = default;
+        public UInt16 CalculatedHealth { get; set; } = default(UInt16);
         #endregion
         #region CalculatedActionPoints
-        public UInt16 CalculatedActionPoints { get; set; } = default;
+        public UInt16 CalculatedActionPoints { get; set; } = default(UInt16);
         #endregion
         #region FarAwayModelDistance
-        public UInt16 FarAwayModelDistance { get; set; } = default;
+        public UInt16 FarAwayModelDistance { get; set; } = default(UInt16);
         #endregion
         #region GearedUpWeapons
-        public Byte GearedUpWeapons { get; set; } = default;
+        public Byte GearedUpWeapons { get; set; } = default(Byte);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -599,10 +599,10 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? INpcGetter.NAM5 => this.NAM5;
         #endregion
         #region HeightMin
-        public Single HeightMin { get; set; } = default;
+        public Single HeightMin { get; set; } = default(Single);
         #endregion
         #region HeightMax
-        public Single HeightMax { get; set; } = default;
+        public Single HeightMax { get; set; } = default(Single);
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5711,13 +5711,13 @@ namespace Mutagen.Bethesda.Starfield
             item.Transforms = null;
             item.SnapTemplate.Clear();
             item.Components.Clear();
-            item.Flags = default;
-            item.XpValueOffset = default;
+            item.Flags = default(Npc.Flag);
+            item.XpValueOffset = default(Int16);
             item.Level.Clear();
-            item.CalcMinLevel = default;
-            item.CalcMaxLevel = default;
-            item.DispositionBase = default;
-            item.UseTemplateActors = default;
+            item.CalcMinLevel = default(Int16);
+            item.CalcMaxLevel = default(Int16);
+            item.DispositionBase = default(Int16);
+            item.UseTemplateActors = default(Npc.TemplateActorType);
             item.Factions.Clear();
             item.DeathItem.Clear();
             item.Voice.Clear();
@@ -5736,13 +5736,13 @@ namespace Mutagen.Bethesda.Starfield
             item.ForcedLocations = null;
             item.NativeTerminal.Clear();
             item.Items = null;
-            item.Aggression = default;
-            item.Confidence = default;
-            item.EnergyLevel = default;
-            item.Responsibility = default;
-            item.Mood = default;
-            item.Assistance = default;
-            item.UnknownAIDT = default;
+            item.Aggression = default(Npc.AggressionType);
+            item.Confidence = default(Npc.ConfidenceType);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Npc.ResponsibilityType);
+            item.Mood = default(Npc.MoodType);
+            item.Assistance = default(Npc.AssistanceType);
+            item.UnknownAIDT = default(Byte);
             item.Packages.Clear();
             item.FLEE = null;
             item.RDSAs = null;
@@ -5753,16 +5753,16 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.ShortName = default;
             item.LongName = default;
-            item.CalculatedHealth = default;
-            item.CalculatedActionPoints = default;
-            item.FarAwayModelDistance = default;
-            item.GearedUpWeapons = default;
-            item.Unused = default;
+            item.CalculatedHealth = default(UInt16);
+            item.CalculatedActionPoints = default(UInt16);
+            item.FarAwayModelDistance = default(UInt16);
+            item.GearedUpWeapons = default(Byte);
+            item.Unused = default(Byte);
             item.HeadParts.Clear();
             item.CombatStyle.Clear();
             item.NAM5 = default;
-            item.HeightMin = default;
-            item.HeightMax = default;
+            item.HeightMin = default(Single);
+            item.HeightMax = default(Single);
             item.Weight = null;
             item.Sounds = null;
             item.InheritsSoundsFrom.Clear();
@@ -7901,7 +7901,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.ActorEffect.SetTo(
                         rhs.ActorEffect
-                        .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8002,7 +8002,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ForcedLocations = 
                             rhs.ForcedLocations
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -8091,7 +8091,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8170,7 +8170,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -8197,7 +8197,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -8290,7 +8290,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.HeadParts.SetTo(
                         rhs.HeadParts
-                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -10056,22 +10056,22 @@ namespace Mutagen.Bethesda.Starfield
         #region XpValueOffset
         private int _XpValueOffsetLocation => _ACBSLocation!.Value.Min + 0x4;
         private bool _XpValueOffset_IsSet => _ACBSLocation.HasValue;
-        public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XpValueOffsetLocation, 2)) : default;
+        public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XpValueOffsetLocation, 2)) : default(Int16);
         #endregion
         #region CalcMinLevel
         private int _CalcMinLevelLocation => _ACBSLocation!.Value.Min + 0x8;
         private bool _CalcMinLevel_IsSet => _ACBSLocation.HasValue;
-        public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMinLevelLocation, 2)) : default;
+        public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMinLevelLocation, 2)) : default(Int16);
         #endregion
         #region CalcMaxLevel
         private int _CalcMaxLevelLocation => _ACBSLocation!.Value.Min + 0xA;
         private bool _CalcMaxLevel_IsSet => _ACBSLocation.HasValue;
-        public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMaxLevelLocation, 2)) : default;
+        public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMaxLevelLocation, 2)) : default(Int16);
         #endregion
         #region DispositionBase
         private int _DispositionBaseLocation => _ACBSLocation!.Value.Min + 0xC;
         private bool _DispositionBase_IsSet => _ACBSLocation.HasValue;
-        public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DispositionBaseLocation, 2)) : default;
+        public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DispositionBaseLocation, 2)) : default(Int16);
         #endregion
         #region UseTemplateActors
         private int _UseTemplateActorsLocation => _ACBSLocation!.Value.Min + 0xE;
@@ -10208,17 +10208,17 @@ namespace Mutagen.Bethesda.Starfield
         #region CalculatedHealth
         private int _CalculatedHealthLocation => _DNAMLocation!.Value.Min;
         private bool _CalculatedHealth_IsSet => _DNAMLocation.HasValue;
-        public UInt16 CalculatedHealth => _CalculatedHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedHealthLocation, 2)) : default;
+        public UInt16 CalculatedHealth => _CalculatedHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedHealthLocation, 2)) : default(UInt16);
         #endregion
         #region CalculatedActionPoints
         private int _CalculatedActionPointsLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _CalculatedActionPoints_IsSet => _DNAMLocation.HasValue;
-        public UInt16 CalculatedActionPoints => _CalculatedActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedActionPointsLocation, 2)) : default;
+        public UInt16 CalculatedActionPoints => _CalculatedActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedActionPointsLocation, 2)) : default(UInt16);
         #endregion
         #region FarAwayModelDistance
         private int _FarAwayModelDistanceLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _FarAwayModelDistance_IsSet => _DNAMLocation.HasValue;
-        public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FarAwayModelDistanceLocation, 2)) : default;
+        public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FarAwayModelDistanceLocation, 2)) : default(UInt16);
         #endregion
         #region GearedUpWeapons
         private int _GearedUpWeaponsLocation => _DNAMLocation!.Value.Min + 0x6;
@@ -10241,11 +10241,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region HeightMin
         private int? _HeightMinLocation;
-        public Single HeightMin => _HeightMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMinLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HeightMin => _HeightMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMinLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region HeightMax
         private int? _HeightMaxLocation;
-        public Single HeightMax => _HeightMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMaxLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HeightMax => _HeightMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Weight
         private RangeInt32? _WeightLocation;

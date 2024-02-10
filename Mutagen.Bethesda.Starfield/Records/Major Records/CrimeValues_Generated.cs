@@ -51,40 +51,40 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Versioning
-        public CrimeValues.VersioningBreaks Versioning { get; set; } = default;
+        public CrimeValues.VersioningBreaks Versioning { get; set; } = default(CrimeValues.VersioningBreaks);
         #endregion
         #region Arrest
-        public Boolean Arrest { get; set; } = default;
+        public Boolean Arrest { get; set; } = default(Boolean);
         #endregion
         #region AttackOnSight
-        public Boolean AttackOnSight { get; set; } = default;
+        public Boolean AttackOnSight { get; set; } = default(Boolean);
         #endregion
         #region Murder
-        public UInt16 Murder { get; set; } = default;
+        public UInt16 Murder { get; set; } = default(UInt16);
         #endregion
         #region Assault
-        public UInt16 Assault { get; set; } = default;
+        public UInt16 Assault { get; set; } = default(UInt16);
         #endregion
         #region Trespass
-        public UInt16 Trespass { get; set; } = default;
+        public UInt16 Trespass { get; set; } = default(UInt16);
         #endregion
         #region Pickpocket
-        public UInt16 Pickpocket { get; set; } = default;
+        public UInt16 Pickpocket { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region StealMult
-        public Single StealMult { get; set; } = default;
+        public Single StealMult { get; set; } = default(Single);
         #endregion
         #region Escape
-        public UInt16 Escape { get; set; } = default;
+        public UInt16 Escape { get; set; } = default(UInt16);
         #endregion
         #region WerewolfUnused
-        public UInt16 WerewolfUnused { get; set; } = default;
+        public UInt16 WerewolfUnused { get; set; } = default(UInt16);
         #endregion
         #region Unknown2
-        public UInt32 Unknown2 { get; set; } = default;
+        public UInt32 Unknown2 { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -1088,18 +1088,18 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICrimeValues item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Arrest = default;
-            item.AttackOnSight = default;
-            item.Murder = default;
-            item.Assault = default;
-            item.Trespass = default;
-            item.Pickpocket = default;
-            item.Unknown = default;
-            item.StealMult = default;
-            item.Escape = default;
-            item.WerewolfUnused = default;
-            item.Unknown2 = default;
+            item.Versioning = default(CrimeValues.VersioningBreaks);
+            item.Arrest = default(Boolean);
+            item.AttackOnSight = default(Boolean);
+            item.Murder = default(UInt16);
+            item.Assault = default(UInt16);
+            item.Trespass = default(UInt16);
+            item.Pickpocket = default(UInt16);
+            item.Unknown = default(UInt16);
+            item.StealMult = default(Single);
+            item.Escape = default(UInt16);
+            item.WerewolfUnused = default(UInt16);
+            item.Unknown2 = default(UInt32);
         }
         
         #region Mutagen

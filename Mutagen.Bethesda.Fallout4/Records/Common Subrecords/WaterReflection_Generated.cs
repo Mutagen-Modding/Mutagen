@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public WaterReflection.VersioningBreaks Versioning { get; set; } = default;
+        public WaterReflection.VersioningBreaks Versioning { get; set; } = default(WaterReflection.VersioningBreaks);
         #endregion
         #region Water
         private readonly IFormLink<IPlacedObjectGetter> _Water = new FormLink<IPlacedObjectGetter>();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;
         #endregion
         #region Type
-        public WaterReflection.Flag Type { get; set; } = default;
+        public WaterReflection.Flag Type { get; set; } = default(WaterReflection.Flag);
         #endregion
 
         #region To String
@@ -776,9 +776,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWaterReflection item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(WaterReflection.VersioningBreaks);
             item.Water.Clear();
-            item.Type = default;
+            item.Type = default(WaterReflection.Flag);
         }
         
         #region Mutagen

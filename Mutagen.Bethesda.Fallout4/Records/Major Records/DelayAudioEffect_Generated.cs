@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FeedbackPercent
-        public Single FeedbackPercent { get; set; } = default;
+        public Single FeedbackPercent { get; set; } = default(Single);
         #endregion
         #region WetMixPercent
-        public Single WetMixPercent { get; set; } = default;
+        public Single WetMixPercent { get; set; } = default(Single);
         #endregion
         #region Milliseconds
-        public UInt32 Milliseconds { get; set; } = default;
+        public UInt32 Milliseconds { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -709,9 +709,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDelayAudioEffect item)
         {
             ClearPartial();
-            item.FeedbackPercent = default;
-            item.WetMixPercent = default;
-            item.Milliseconds = default;
+            item.FeedbackPercent = default(Single);
+            item.WetMixPercent = default(Single);
+            item.Milliseconds = default(UInt32);
             base.Clear(item);
         }
         

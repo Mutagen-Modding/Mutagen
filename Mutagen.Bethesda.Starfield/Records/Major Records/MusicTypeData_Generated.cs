@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Priority
-        public UInt16 Priority { get; set; } = default;
+        public UInt16 Priority { get; set; } = default(UInt16);
         #endregion
         #region DuckingDecibel
-        public Single DuckingDecibel { get; set; } = default;
+        public Single DuckingDecibel { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMusicTypeData item)
         {
             ClearPartial();
-            item.Priority = default;
-            item.DuckingDecibel = default;
+            item.Priority = default(UInt16);
+            item.DuckingDecibel = default(Single);
         }
         
         #region Mutagen

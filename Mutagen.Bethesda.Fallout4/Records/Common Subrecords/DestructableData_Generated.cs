@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Health
-        public Int32 Health { get; set; } = default;
+        public Int32 Health { get; set; } = default(Int32);
         #endregion
         #region DESTCount
-        public Byte DESTCount { get; set; } = default;
+        public Byte DESTCount { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Destructible.DestructibleFlag Flags { get; set; } = default;
+        public Destructible.DestructibleFlag Flags { get; set; } = default(Destructible.DestructibleFlag);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDestructableData item)
         {
             ClearPartial();
-            item.Health = default;
-            item.DESTCount = default;
-            item.Flags = default;
-            item.Unknown = default;
+            item.Health = default(Int32);
+            item.DESTCount = default(Byte);
+            item.Flags = default(Destructible.DestructibleFlag);
+            item.Unknown = default(Int16);
         }
         
         #region Mutagen

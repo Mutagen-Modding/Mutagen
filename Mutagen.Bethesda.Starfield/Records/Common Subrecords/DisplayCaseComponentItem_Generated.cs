@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IFormListGetter> IDisplayCaseComponentItemGetter.DisplayFilter => this.DisplayFilter;
         #endregion
         #region Unknown1
-        public UInt32 Unknown1 { get; set; } = default;
+        public UInt32 Unknown1 { get; set; } = default(UInt32);
         #endregion
         #region Index
-        public UInt32 Index { get; set; } = default;
+        public UInt32 Index { get; set; } = default(UInt32);
         #endregion
         #region Unknown2
-        public UInt32 Unknown2 { get; set; } = default;
+        public UInt32 Unknown2 { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -801,9 +801,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.DisplayFilter.Clear();
-            item.Unknown1 = default;
-            item.Index = default;
-            item.Unknown2 = default;
+            item.Unknown1 = default(UInt32);
+            item.Index = default(UInt32);
+            item.Unknown2 = default(UInt32);
         }
         
         #region Mutagen

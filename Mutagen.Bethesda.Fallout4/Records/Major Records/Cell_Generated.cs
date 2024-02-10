@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Flags
-        public Cell.Flag Flags { get; set; } = default;
+        public Cell.Flag Flags { get; set; } = default(Cell.Flag);
         #endregion
         #region PreVisFilesTimestamp
         public UInt16? PreVisFilesTimestamp { get; set; }
@@ -413,16 +413,16 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region UnknownGroupData
-        public Int32 UnknownGroupData { get; set; } = default;
+        public Int32 UnknownGroupData { get; set; } = default(Int32);
         #endregion
         #region PersistentTimestamp
-        public Int32 PersistentTimestamp { get; set; } = default;
+        public Int32 PersistentTimestamp { get; set; } = default(Int32);
         #endregion
         #region PersistentUnknownGroupData
-        public Int32 PersistentUnknownGroupData { get; set; } = default;
+        public Int32 PersistentUnknownGroupData { get; set; } = default(Int32);
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -439,10 +439,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region TemporaryTimestamp
-        public Int32 TemporaryTimestamp { get; set; } = default;
+        public Int32 TemporaryTimestamp { get; set; } = default(Int32);
         #endregion
         #region TemporaryUnknownGroupData
-        public Int32 TemporaryUnknownGroupData { get; set; } = default;
+        public Int32 TemporaryUnknownGroupData { get; set; } = default(Int32);
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3367,7 +3367,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Name = default;
-            item.Flags = default;
+            item.Flags = default(Cell.Flag);
             item.PreVisFilesTimestamp = default;
             item.InPreVisFileOf.Clear();
             item.PreCombinedFilesTimestamp = default;
@@ -3400,13 +3400,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.CombinedMeshReferences.Clear();
             item.Landscape = null;
             item.NavigationMeshes.Clear();
-            item.Timestamp = default;
-            item.UnknownGroupData = default;
-            item.PersistentTimestamp = default;
-            item.PersistentUnknownGroupData = default;
+            item.Timestamp = default(Int32);
+            item.UnknownGroupData = default(Int32);
+            item.PersistentTimestamp = default(Int32);
+            item.PersistentUnknownGroupData = default(Int32);
             item.Persistent.Clear();
-            item.TemporaryTimestamp = default;
-            item.TemporaryUnknownGroupData = default;
+            item.TemporaryTimestamp = default(Int32);
+            item.TemporaryUnknownGroupData = default(Int32);
             item.Temporary.Clear();
             base.Clear(item);
         }
@@ -5464,7 +5464,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Regions = 
                             rhs.Regions
-                            .Select(r => (IFormLinkGetter<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IRegionGetter>)new FormLink<IRegionGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IRegionGetter>>();
                     }
                     else
@@ -5624,7 +5624,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.PhysicsReferences = 
                             rhs.PhysicsReferences
-                            .Select(r => (IFormLinkGetter<IPlacedThingGetter>)new FormLink<IPlacedThingGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedThingGetter>)new FormLink<IPlacedThingGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedThingGetter>>();
                     }
                     else

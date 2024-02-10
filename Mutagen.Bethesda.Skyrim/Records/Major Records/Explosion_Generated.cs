@@ -233,16 +233,16 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;
         #endregion
         #region Force
-        public Single Force { get; set; } = default;
+        public Single Force { get; set; } = default(Single);
         #endregion
         #region Damage
-        public Single Damage { get; set; } = default;
+        public Single Damage { get; set; } = default(Single);
         #endregion
         #region Radius
-        public Single Radius { get; set; } = default;
+        public Single Radius { get; set; } = default(Single);
         #endregion
         #region ISRadius
-        public Single ISRadius { get; set; } = default;
+        public Single ISRadius { get; set; } = default(Single);
         #endregion
         #region VerticalOffsetMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region DATADataTypeState
-        public Explosion.DATADataType DATADataTypeState { get; set; } = default;
+        public Explosion.DATADataType DATADataTypeState { get; set; } = default(Explosion.DATADataType);
         #endregion
 
         #region To String
@@ -1720,14 +1720,14 @@ namespace Mutagen.Bethesda.Skyrim
             item.ImpactDataSet.Clear();
             item.PlacedObject.Clear();
             item.SpawnProjectile.Clear();
-            item.Force = default;
-            item.Damage = default;
-            item.Radius = default;
-            item.ISRadius = default;
-            item.VerticalOffsetMult = default;
-            item.Flags = default;
-            item.SoundLevel = default;
-            item.DATADataTypeState = default;
+            item.Force = default(Single);
+            item.Damage = default(Single);
+            item.Radius = default(Single);
+            item.ISRadius = default(Single);
+            item.VerticalOffsetMult = default(Single);
+            item.Flags = default(Explosion.Flag);
+            item.SoundLevel = default(SoundLevel);
+            item.DATADataTypeState = default(Explosion.DATADataType);
             base.Clear(item);
         }
         
@@ -3083,27 +3083,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region Force
         private int _ForceLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Force_IsSet => _DATALocation.HasValue;
-        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default;
+        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default(Single);
         #endregion
         #region Damage
         private int _DamageLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default;
+        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default(Single);
         #endregion
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value.Min + 0x20;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default(Single);
         #endregion
         #region ISRadius
         private int _ISRadiusLocation => _DATALocation!.Value.Min + 0x24;
         private bool _ISRadius_IsSet => _DATALocation.HasValue;
-        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default;
+        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region VerticalOffsetMult
         private int _VerticalOffsetMultLocation => _DATALocation!.Value.Min + 0x28;
         private bool _VerticalOffsetMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break0);
-        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _recordData.Slice(_VerticalOffsetMultLocation, 4).Float() : default;
+        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _recordData.Slice(_VerticalOffsetMultLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x2C;

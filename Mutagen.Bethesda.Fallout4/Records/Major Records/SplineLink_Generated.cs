@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public SplineLink.VersioningBreaks Versioning { get; set; } = default;
+        public SplineLink.VersioningBreaks Versioning { get; set; } = default(SplineLink.VersioningBreaks);
         #endregion
         #region Ref
         private readonly IFormLink<IPlacedSimpleGetter> _Ref = new FormLink<IPlacedSimpleGetter>();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPlacedSimpleGetter> ISplineLinkGetter.Ref => this.Ref;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -776,9 +776,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISplineLink item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(SplineLink.VersioningBreaks);
             item.Ref.Clear();
-            item.Unknown = default;
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

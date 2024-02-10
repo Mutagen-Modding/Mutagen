@@ -103,19 +103,19 @@ namespace Mutagen.Bethesda.Starfield
         Byte? ISurfaceBlockGetter.GNAM => this.GNAM;
         #endregion
         #region HNAM
-        public UInt16 HNAM { get; set; } = default;
+        public UInt16 HNAM { get; set; } = default(UInt16);
         #endregion
         #region INAM
-        public Byte INAM { get; set; } = default;
+        public Byte INAM { get; set; } = default(Byte);
         #endregion
         #region JNAM
-        public Byte JNAM { get; set; } = default;
+        public Byte JNAM { get; set; } = default(Byte);
         #endregion
         #region KNAM
-        public Byte KNAM { get; set; } = default;
+        public Byte KNAM { get; set; } = default(Byte);
         #endregion
         #region WHGT
-        public Single WHGT { get; set; } = default;
+        public Single WHGT { get; set; } = default(Single);
         #endregion
         #region NAM0
         public String? NAM0 { get; set; }
@@ -1514,11 +1514,11 @@ namespace Mutagen.Bethesda.Starfield
             item.ENAM.Clear();
             item.FNAM = default;
             item.GNAM = default;
-            item.HNAM = default;
-            item.INAM = default;
-            item.JNAM = default;
-            item.KNAM = default;
-            item.WHGT = default;
+            item.HNAM = default(UInt16);
+            item.INAM = default(Byte);
+            item.JNAM = default(Byte);
+            item.KNAM = default(Byte);
+            item.WHGT = default(Single);
             item.NAM0 = default;
             item.NAM1 = default;
             item.NAM2 = default;
@@ -2840,7 +2840,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region HNAM
         private int? _HNAMLocation;
-        public UInt16 HNAM => _HNAMLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 HNAM => _HNAMLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region INAM
         private int? _INAMLocation;
@@ -2856,7 +2856,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region WHGT
         private int? _WHGTLocation;
-        public Single WHGT => _WHGTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WHGTLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single WHGT => _WHGTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WHGTLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region NAM0
         private int? _NAM0Location;

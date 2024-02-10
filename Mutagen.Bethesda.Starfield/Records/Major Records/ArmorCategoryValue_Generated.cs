@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Category
-        public Guid Category { get; set; } = default;
+        public Guid Category { get; set; } = default(Guid);
         #endregion
         #region Value
-        public Guid Value { get; set; } = default;
+        public Guid Value { get; set; } = default(Guid);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IArmorCategoryValue item)
         {
             ClearPartial();
-            item.Category = default;
-            item.Value = default;
+            item.Category = default(Guid);
+            item.Value = default(Guid);
         }
         
         #region Mutagen

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Value
-        public Projectile.TypeEnum Value { get; set; } = default;
+        public Projectile.TypeEnum Value { get; set; } = default(Projectile.TypeEnum);
         #endregion
 
         #region To String
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVATSValueProjectileTypeConditionData item)
         {
             ClearPartial();
-            item.Value = default;
+            item.Value = default(Projectile.TypeEnum);
             base.Clear(item);
         }
         

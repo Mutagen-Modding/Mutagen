@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
-        public Quadrant Quadrant { get; set; } = default;
+        public Quadrant Quadrant { get; set; } = default(Quadrant);
         #endregion
         #region LayerNumber
-        public UInt16 LayerNumber { get; set; } = default;
+        public UInt16 LayerNumber { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -772,8 +772,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Texture.Clear();
-            item.Quadrant = default;
-            item.LayerNumber = default;
+            item.Quadrant = default(Quadrant);
+            item.LayerNumber = default(UInt16);
         }
         
         #region Mutagen

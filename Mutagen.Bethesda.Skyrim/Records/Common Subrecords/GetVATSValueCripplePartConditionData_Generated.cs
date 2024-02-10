@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Unused
-        public Int32 Unused { get; set; } = default;
+        public Int32 Unused { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVATSValueCripplePartConditionData item)
         {
             ClearPartial();
-            item.Unused = default;
+            item.Unused = default(Int32);
             base.Clear(item);
         }
         

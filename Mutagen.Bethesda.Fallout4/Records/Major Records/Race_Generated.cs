@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Height
-        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default(Single), default(Single));
         IGenderedItemGetter<Single> IRaceGetter.Height => this.Height;
         #endregion
         #region DefaultWeight
@@ -200,16 +200,16 @@ namespace Mutagen.Bethesda.Fallout4
         IGenderedItemGetter<IRaceWeightGetter> IRaceGetter.DefaultWeight => this.DefaultWeight;
         #endregion
         #region Flags
-        public Race.Flag Flags { get; set; } = default;
+        public Race.Flag Flags { get; set; } = default(Race.Flag);
         #endregion
         #region AccelerationRate
-        public Single AccelerationRate { get; set; } = default;
+        public Single AccelerationRate { get; set; } = default(Single);
         #endregion
         #region DecelerationRate
-        public Single DecelerationRate { get; set; } = default;
+        public Single DecelerationRate { get; set; } = default(Single);
         #endregion
         #region Size
-        public Size Size { get; set; } = default;
+        public Size Size { get; set; } = default(Size);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte> IRaceGetter.Unknown => this.Unknown;
         #endregion
         #region InjuredHealthPercent
-        public Single InjuredHealthPercent { get; set; } = default;
+        public Single InjuredHealthPercent { get; set; } = default(Single);
         #endregion
         #region ShieldBipedObject
         public static readonly BipedObject ShieldBipedObjectDefault = BipedObject.None;
@@ -238,16 +238,16 @@ namespace Mutagen.Bethesda.Fallout4
         public BipedObject BodyBipedObject { get; set; } = BodyBipedObjectDefault;
         #endregion
         #region AimAngleTolerance
-        public Single AimAngleTolerance { get; set; } = default;
+        public Single AimAngleTolerance { get; set; } = default(Single);
         #endregion
         #region FlightRadius
-        public Single FlightRadius { get; set; } = default;
+        public Single FlightRadius { get; set; } = default(Single);
         #endregion
         #region AngularAccelerationRate
-        public Single AngularAccelerationRate { get; set; } = default;
+        public Single AngularAccelerationRate { get; set; } = default(Single);
         #endregion
         #region AngularTolerance
-        public Single AngularTolerance { get; set; } = default;
+        public Single AngularTolerance { get; set; } = default(Single);
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -265,25 +265,25 @@ namespace Mutagen.Bethesda.Fallout4
         public BipedObject PipboyBipedObject { get; set; } = PipboyBipedObjectDefault;
         #endregion
         #region XPValue
-        public Int16 XPValue { get; set; } = default;
+        public Int16 XPValue { get; set; } = default(Int16);
         #endregion
         #region SeverableDebrisScale
-        public Single SeverableDebrisScale { get; set; } = default;
+        public Single SeverableDebrisScale { get; set; } = default(Single);
         #endregion
         #region SeverableDebrisCount
-        public Byte SeverableDebrisCount { get; set; } = default;
+        public Byte SeverableDebrisCount { get; set; } = default(Byte);
         #endregion
         #region SeverableDecalCount
-        public Byte SeverableDecalCount { get; set; } = default;
+        public Byte SeverableDecalCount { get; set; } = default(Byte);
         #endregion
         #region ExplodableDebrisScale
-        public Single ExplodableDebrisScale { get; set; } = default;
+        public Single ExplodableDebrisScale { get; set; } = default(Single);
         #endregion
         #region ExplodableDebrisCount
-        public Byte ExplodableDebrisCount { get; set; } = default;
+        public Byte ExplodableDebrisCount { get; set; } = default(Byte);
         #endregion
         #region ExplodableDecalCount
-        public Byte ExplodableDecalCount { get; set; } = default;
+        public Byte ExplodableDecalCount { get; set; } = default(Byte);
         #endregion
         #region SeverableExplosion
         private readonly IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
@@ -346,13 +346,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.ExplodableImpactDataSet => this.ExplodableImpactDataSet;
         #endregion
         #region OnCrippleDebrisScale
-        public Single OnCrippleDebrisScale { get; set; } = default;
+        public Single OnCrippleDebrisScale { get; set; } = default(Single);
         #endregion
         #region OnCrippleDebrisCount
-        public Byte OnCrippleDebrisCount { get; set; } = default;
+        public Byte OnCrippleDebrisCount { get; set; } = default(Byte);
         #endregion
         #region OnCrippleDecalCount
-        public Byte OnCrippleDecalCount { get; set; } = default;
+        public Byte OnCrippleDecalCount { get; set; } = default(Byte);
         #endregion
         #region OnCrippleExplosion
         private readonly IFormLink<IExplosionGetter> _OnCrippleExplosion = new FormLink<IExplosionGetter>();
@@ -395,10 +395,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableSubsegmentExplosion => this.ExplodableSubsegmentExplosion;
         #endregion
         #region OrientationLimitsPitch
-        public Single OrientationLimitsPitch { get; set; } = default;
+        public Single OrientationLimitsPitch { get; set; } = default(Single);
         #endregion
         #region OrientationLimitsRoll
-        public Single OrientationLimitsRoll { get; set; } = default;
+        public Single OrientationLimitsRoll { get; set; } = default(Single);
         #endregion
         #region SkeletalModel
         public IGenderedItem<SimpleModel?>? SkeletalModel { get; set; }
@@ -432,10 +432,10 @@ namespace Mutagen.Bethesda.Fallout4
         UInt16? IRaceGetter.NumberOfTintsInList => this.NumberOfTintsInList;
         #endregion
         #region FacegenMainClamp
-        public Single FacegenMainClamp { get; set; } = default;
+        public Single FacegenMainClamp { get; set; } = default(Single);
         #endregion
         #region FacegenFaceClamp
-        public Single FacegenFaceClamp { get; set; } = default;
+        public Single FacegenFaceClamp { get; set; } = default(Single);
         #endregion
         #region AttackRace
         private readonly IFormLinkNullable<IRaceGetter> _AttackRace = new FormLinkNullable<IRaceGetter>();
@@ -5350,55 +5350,55 @@ namespace Mutagen.Bethesda.Fallout4
             item.Keywords = null;
             item.Properties = null;
             item.AttachParentSlots = null;
-            item.Height.Male = default;
-            item.Height.Female = default;
+            item.Height.Male = default(Single);
+            item.Height.Female = default(Single);
             item.DefaultWeight.Male.Clear();
             item.DefaultWeight.Female.Clear();
-            item.Flags = default;
-            item.AccelerationRate = default;
-            item.DecelerationRate = default;
-            item.Size = default;
+            item.Flags = default(Race.Flag);
+            item.AccelerationRate = default(Single);
+            item.DecelerationRate = default(Single);
+            item.Size = default(Size);
             item.Unknown = new byte[8];
-            item.InjuredHealthPercent = default;
+            item.InjuredHealthPercent = default(Single);
             item.ShieldBipedObject = Race.ShieldBipedObjectDefault;
             item.BeardBipedObject = Race.BeardBipedObjectDefault;
             item.BodyBipedObject = Race.BodyBipedObjectDefault;
-            item.AimAngleTolerance = default;
-            item.FlightRadius = default;
-            item.AngularAccelerationRate = default;
-            item.AngularTolerance = default;
+            item.AimAngleTolerance = default(Single);
+            item.FlightRadius = default(Single);
+            item.AngularAccelerationRate = default(Single);
+            item.AngularTolerance = default(Single);
             item.Unknown2 = new byte[36];
             item.PipboyBipedObject = Race.PipboyBipedObjectDefault;
-            item.XPValue = default;
-            item.SeverableDebrisScale = default;
-            item.SeverableDebrisCount = default;
-            item.SeverableDecalCount = default;
-            item.ExplodableDebrisScale = default;
-            item.ExplodableDebrisCount = default;
-            item.ExplodableDecalCount = default;
+            item.XPValue = default(Int16);
+            item.SeverableDebrisScale = default(Single);
+            item.SeverableDebrisCount = default(Byte);
+            item.SeverableDecalCount = default(Byte);
+            item.ExplodableDebrisScale = default(Single);
+            item.ExplodableDebrisCount = default(Byte);
+            item.ExplodableDecalCount = default(Byte);
             item.SeverableExplosion.Clear();
             item.SeverableDebris.Clear();
             item.SeverableImpactDataSet.Clear();
             item.ExplodableExplosion.Clear();
             item.ExplodableDebris.Clear();
             item.ExplodableImpactDataSet.Clear();
-            item.OnCrippleDebrisScale = default;
-            item.OnCrippleDebrisCount = default;
-            item.OnCrippleDecalCount = default;
+            item.OnCrippleDebrisScale = default(Single);
+            item.OnCrippleDebrisCount = default(Byte);
+            item.OnCrippleDecalCount = default(Byte);
             item.OnCrippleExplosion.Clear();
             item.OnCrippleDebris.Clear();
             item.OnCrippleImpactDataSet.Clear();
             item.ExplodableSubsegmentExplosion.Clear();
-            item.OrientationLimitsPitch = default;
-            item.OrientationLimitsRoll = default;
+            item.OrientationLimitsPitch = default(Single);
+            item.OrientationLimitsRoll = default(Single);
             item.SkeletalModel = null;
             item.MovementTypeNames.Clear();
             item.Voices.Male = FormLink<IVoiceTypeGetter>.Null;
             item.Voices.Female = FormLink<IVoiceTypeGetter>.Null;
             item.DefaultHairColors = null;
             item.NumberOfTintsInList = default;
-            item.FacegenMainClamp = default;
-            item.FacegenFaceClamp = default;
+            item.FacegenMainClamp = default(Single);
+            item.FacegenFaceClamp = default(Single);
             item.AttackRace.Clear();
             item.Attacks.Clear();
             item.BodyData.Male = null;
@@ -7129,7 +7129,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
@@ -7186,7 +7186,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -7245,7 +7245,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -9311,7 +9311,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get
             {
-                if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
+                if (!_Height_IsSet) return new GenderedItem<Single>(default(Single), default(Single));
                 var data = _recordData.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
@@ -9343,12 +9343,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region AccelerationRate
         private int _AccelerationRateLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x24;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AccelerationRate => _AccelerationRate_IsSet ? _recordData.Slice(_AccelerationRateLocation, 4).Float() : default;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? _recordData.Slice(_AccelerationRateLocation, 4).Float() : default(Single);
         #endregion
         #region DecelerationRate
         private int _DecelerationRateLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x28;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
-        public Single DecelerationRate => _DecelerationRate_IsSet ? _recordData.Slice(_DecelerationRateLocation, 4).Float() : default;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? _recordData.Slice(_DecelerationRateLocation, 4).Float() : default(Single);
         #endregion
         #region Size
         private int _SizeLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x2C;
@@ -9363,7 +9363,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region InjuredHealthPercent
         private int _InjuredHealthPercentLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x38;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
-        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _recordData.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _recordData.Slice(_InjuredHealthPercentLocation, 4).Float() : default(Single);
         #endregion
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x3C;
@@ -9384,22 +9384,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region AimAngleTolerance
         private int _AimAngleToleranceLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x48;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
-        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _recordData.Slice(_AimAngleToleranceLocation, 4).Float() : default;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _recordData.Slice(_AimAngleToleranceLocation, 4).Float() : default(Single);
         #endregion
         #region FlightRadius
         private int _FlightRadiusLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x4C;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
-        public Single FlightRadius => _FlightRadius_IsSet ? _recordData.Slice(_FlightRadiusLocation, 4).Float() : default;
+        public Single FlightRadius => _FlightRadius_IsSet ? _recordData.Slice(_FlightRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region AngularAccelerationRate
         private int _AngularAccelerationRateLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x50;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _recordData.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _recordData.Slice(_AngularAccelerationRateLocation, 4).Float() : default(Single);
         #endregion
         #region AngularTolerance
         private int _AngularToleranceLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x54;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
-        public Single AngularTolerance => _AngularTolerance_IsSet ? _recordData.Slice(_AngularToleranceLocation, 4).Float() : default;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? _recordData.Slice(_AngularToleranceLocation, 4).Float() : default(Single);
         #endregion
         #region Flags2
         private int _Flags2Location => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x58;
@@ -9421,12 +9421,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region XPValue
         private int _XPValueLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x84;
         private bool _XPValue_IsSet => _DATALocation.HasValue;
-        public Int16 XPValue => _XPValue_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XPValueLocation, 2)) : default;
+        public Int16 XPValue => _XPValue_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XPValueLocation, 2)) : default(Int16);
         #endregion
         #region SeverableDebrisScale
         private int _SeverableDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x86;
         private bool _SeverableDebrisScale_IsSet => _DATALocation.HasValue;
-        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
+        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8A;
@@ -9441,7 +9441,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ExplodableDebrisScale
         private int _ExplodableDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8C;
         private bool _ExplodableDebrisScale_IsSet => _DATALocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
+        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region ExplodableDebrisCount
         private int _ExplodableDebrisCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x90;
@@ -9486,7 +9486,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region OnCrippleDebrisScale
         private int _OnCrippleDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0xAA;
         private bool _OnCrippleDebrisScale_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _recordData.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default;
+        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _recordData.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default(Single);
         int OnCrippleDebrisScaleVersioningOffset => BeardBipedObjectVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleDebrisCount
@@ -9528,13 +9528,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region OrientationLimitsPitch
         private int _OrientationLimitsPitchLocation => _DATALocation!.Value.Min + ExplodableSubsegmentExplosionVersioningOffset + 0xC0;
         private bool _OrientationLimitsPitch_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 98;
-        public Single OrientationLimitsPitch => _OrientationLimitsPitch_IsSet ? _recordData.Slice(_OrientationLimitsPitchLocation, 4).Float() : default;
+        public Single OrientationLimitsPitch => _OrientationLimitsPitch_IsSet ? _recordData.Slice(_OrientationLimitsPitchLocation, 4).Float() : default(Single);
         int OrientationLimitsPitchVersioningOffset => ExplodableSubsegmentExplosionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 98 ? -4 : 0);
         #endregion
         #region OrientationLimitsRoll
         private int _OrientationLimitsRollLocation => _DATALocation!.Value.Min + OrientationLimitsPitchVersioningOffset + 0xC4;
         private bool _OrientationLimitsRoll_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 98;
-        public Single OrientationLimitsRoll => _OrientationLimitsRoll_IsSet ? _recordData.Slice(_OrientationLimitsRollLocation, 4).Float() : default;
+        public Single OrientationLimitsRoll => _OrientationLimitsRoll_IsSet ? _recordData.Slice(_OrientationLimitsRollLocation, 4).Float() : default(Single);
         int OrientationLimitsRollVersioningOffset => OrientationLimitsPitchVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 98 ? -4 : 0);
         #endregion
         #region SkeletalModel
@@ -9576,11 +9576,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;

@@ -120,22 +120,22 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
         #endregion
         #region TopicFlags
-        public DialogTopic.TopicFlag TopicFlags { get; set; } = default;
+        public DialogTopic.TopicFlag TopicFlags { get; set; } = default(DialogTopic.TopicFlag);
         #endregion
         #region Category
-        public DialogTopic.CategoryEnum Category { get; set; } = default;
+        public DialogTopic.CategoryEnum Category { get; set; } = default(DialogTopic.CategoryEnum);
         #endregion
         #region Subtype
-        public DialogTopic.SubtypeEnum Subtype { get; set; } = default;
+        public DialogTopic.SubtypeEnum Subtype { get; set; } = default(DialogTopic.SubtypeEnum);
         #endregion
         #region SubtypeName
         public RecordType SubtypeName { get; set; } = RecordType.Null;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1558,12 +1558,12 @@ namespace Mutagen.Bethesda.Skyrim
             item.Priority = DialogTopic.PriorityDefault;
             item.Branch.Clear();
             item.Quest.Clear();
-            item.TopicFlags = default;
-            item.Category = default;
-            item.Subtype = default;
+            item.TopicFlags = default(DialogTopic.TopicFlag);
+            item.Category = default(DialogTopic.CategoryEnum);
+            item.Subtype = default(DialogTopic.SubtypeEnum);
             item.SubtypeName = RecordType.Null;
-            item.Timestamp = default;
-            item.Unknown = default;
+            item.Timestamp = default(Int32);
+            item.Unknown = default(Int32);
             item.Responses.Clear();
             base.Clear(item);
         }
@@ -2916,7 +2916,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Priority
         private int? _PriorityLocation;
-        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Branch
         private int? _BranchLocation;

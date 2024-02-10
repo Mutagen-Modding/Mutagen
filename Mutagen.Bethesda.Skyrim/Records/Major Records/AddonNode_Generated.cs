@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region NodeIndex
-        public Int32 NodeIndex { get; set; } = default;
+        public Int32 NodeIndex { get; set; } = default(Int32);
         #endregion
         #region Sound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -110,10 +110,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound;
         #endregion
         #region MasterParticleSystemCap
-        public UInt16 MasterParticleSystemCap { get; set; } = default;
+        public UInt16 MasterParticleSystemCap { get; set; } = default(UInt16);
         #endregion
         #region AlwaysLoaded
-        public Boolean AlwaysLoaded { get; set; } = default;
+        public Boolean AlwaysLoaded { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -1034,10 +1034,10 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Model = null;
-            item.NodeIndex = default;
+            item.NodeIndex = default(Int32);
             item.Sound.Clear();
-            item.MasterParticleSystemCap = default;
-            item.AlwaysLoaded = default;
+            item.MasterParticleSystemCap = default(UInt16);
+            item.AlwaysLoaded = default(Boolean);
             base.Clear(item);
         }
         
@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IModelGetter? Model { get; private set; }
         #region NodeIndex
         private int? _NodeIndexLocation;
-        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region Sound
         private int? _SoundLocation;
@@ -1949,7 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MasterParticleSystemCap
         private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
         private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;
-        public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_MasterParticleSystemCapLocation, 2)) : default;
+        public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_MasterParticleSystemCapLocation, 2)) : default(UInt16);
         #endregion
         #region AlwaysLoaded
         private int _AlwaysLoadedLocation => _DNAMLocation!.Value.Min + 0x2;

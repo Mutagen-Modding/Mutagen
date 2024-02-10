@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Cover
-        public UInt16 Cover { get; set; } = default;
+        public UInt16 Cover { get; set; } = default(UInt16);
         #endregion
         #region Triangle
-        public UInt16 Triangle { get; set; } = default;
+        public UInt16 Triangle { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavmeshCoverTriangleMap item)
         {
             ClearPartial();
-            item.Cover = default;
-            item.Triangle = default;
+            item.Cover = default(UInt16);
+            item.Triangle = default(UInt16);
         }
         
         #region Mutagen

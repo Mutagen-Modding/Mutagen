@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBoundingGetter? IPlacedObjectGetter.RoomPortal => this.RoomPortal;
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region LightingTemplate
         private readonly IFormLinkNullable<ILightingTemplateGetter> _LightingTemplate = new FormLinkNullable<ILightingTemplateGetter>();
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region IsMultiBoundPrimitive
-        public Boolean IsMultiBoundPrimitive { get; set; } = default;
+        public Boolean IsMultiBoundPrimitive { get; set; } = default(Boolean);
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region IsIgnoredBySandbox
-        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
         #endregion
         #region Owner
         private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.FavorCost => this.FavorCost;
         #endregion
         #region IsOpenByDefault
-        public Boolean IsOpenByDefault { get; set; } = default;
+        public Boolean IsOpenByDefault { get; set; } = default(Boolean);
         #endregion
         #region MapMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3807,11 +3807,11 @@ namespace Mutagen.Bethesda.Skyrim
             item.OcclusionPlane = null;
             item.Portals = null;
             item.RoomPortal = null;
-            item.Unknown = default;
+            item.Unknown = default(Int16);
             item.LightingTemplate.Clear();
             item.ImageSpace.Clear();
             item.LinkedRooms.Clear();
-            item.IsMultiBoundPrimitive = default;
+            item.IsMultiBoundPrimitive = default(Boolean);
             item.RagdollData = default;
             item.RagdollBipedData = default;
             item.Radius = default;
@@ -3841,7 +3841,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.EncounterZone.Clear();
             item.NavigationDoorLink = null;
             item.LocationRefTypes = null;
-            item.IsIgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default(Boolean);
             item.Owner.Clear();
             item.FactionRank = default;
             item.ItemCount = default;
@@ -3853,7 +3853,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Action = default;
             item.HeadTrackingWeight = default;
             item.FavorCost = default;
-            item.IsOpenByDefault = default;
+            item.IsOpenByDefault = default(Boolean);
             item.MapMarker = null;
             item.AttachRef.Clear();
             item.DistantLodData = default;
@@ -5484,7 +5484,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.LinkedRooms.SetTo(
                         rhs.LinkedRooms
-                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5557,7 +5557,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.LitWater.SetTo(
                         rhs.LitWater
-                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5852,7 +5852,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -7093,7 +7093,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region IsMultiBoundPrimitive
         private int? _IsMultiBoundPrimitiveLocation;
-        public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default;
+        public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default(Boolean);
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
@@ -7201,7 +7201,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
-        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Owner
         private int? _OwnerLocation;
@@ -7243,7 +7243,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region IsOpenByDefault
         private int? _IsOpenByDefaultLocation;
-        public Boolean IsOpenByDefault => _IsOpenByDefaultLocation.HasValue ? true : default;
+        public Boolean IsOpenByDefault => _IsOpenByDefaultLocation.HasValue ? true : default(Boolean);
         #endregion
         public IMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef

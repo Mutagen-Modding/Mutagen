@@ -51,31 +51,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public CombatStyleFlight.VersioningBreaks Versioning { get; set; } = default;
+        public CombatStyleFlight.VersioningBreaks Versioning { get; set; } = default(CombatStyleFlight.VersioningBreaks);
         #endregion
         #region HoverChance
-        public Single HoverChance { get; set; } = default;
+        public Single HoverChance { get; set; } = default(Single);
         #endregion
         #region DiveBombChance
-        public Single DiveBombChance { get; set; } = default;
+        public Single DiveBombChance { get; set; } = default(Single);
         #endregion
         #region GroundAttackChance
-        public Single GroundAttackChance { get; set; } = default;
+        public Single GroundAttackChance { get; set; } = default(Single);
         #endregion
         #region HoverTime
-        public Single HoverTime { get; set; } = default;
+        public Single HoverTime { get; set; } = default(Single);
         #endregion
         #region GroundAttackTime
-        public Single GroundAttackTime { get; set; } = default;
+        public Single GroundAttackTime { get; set; } = default(Single);
         #endregion
         #region PerchAttackChance
-        public Single PerchAttackChance { get; set; } = default;
+        public Single PerchAttackChance { get; set; } = default(Single);
         #endregion
         #region PerchAttackTime
-        public Single PerchAttackTime { get; set; } = default;
+        public Single PerchAttackTime { get; set; } = default(Single);
         #endregion
         #region FlyingAttackChance
-        public Single FlyingAttackChance { get; set; } = default;
+        public Single FlyingAttackChance { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -983,15 +983,15 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICombatStyleFlight item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.HoverChance = default;
-            item.DiveBombChance = default;
-            item.GroundAttackChance = default;
-            item.HoverTime = default;
-            item.GroundAttackTime = default;
-            item.PerchAttackChance = default;
-            item.PerchAttackTime = default;
-            item.FlyingAttackChance = default;
+            item.Versioning = default(CombatStyleFlight.VersioningBreaks);
+            item.HoverChance = default(Single);
+            item.DiveBombChance = default(Single);
+            item.GroundAttackChance = default(Single);
+            item.HoverTime = default(Single);
+            item.GroundAttackTime = default(Single);
+            item.PerchAttackChance = default(Single);
+            item.PerchAttackTime = default(Single);
+            item.FlyingAttackChance = default(Single);
         }
         
         #region Mutagen

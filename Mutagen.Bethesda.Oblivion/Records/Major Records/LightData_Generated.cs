@@ -53,20 +53,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public LightData.VersioningBreaks Versioning { get; set; } = default;
+        public LightData.VersioningBreaks Versioning { get; set; } = default(LightData.VersioningBreaks);
         #endregion
         #region Time
         public static readonly Int32 TimeDefault = -1;
         public Int32 Time { get; set; } = TimeDefault;
         #endregion
         #region Radius
-        public UInt32 Radius { get; set; } = default;
+        public UInt32 Radius { get; set; } = default(UInt32);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
         #region Flags
-        public Light.LightFlag Flags { get; set; } = default;
+        public Light.LightFlag Flags { get; set; } = default(Light.LightFlag);
         #endregion
         #region FalloffExponent
         public static readonly Single FalloffExponentDefault = 1;
@@ -77,10 +77,10 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FOV { get; set; } = FOVDefault;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -987,15 +987,15 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILightData item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(LightData.VersioningBreaks);
             item.Time = LightData.TimeDefault;
-            item.Radius = default;
-            item.Color = default;
-            item.Flags = default;
+            item.Radius = default(UInt32);
+            item.Color = default(Color);
+            item.Flags = default(Light.LightFlag);
             item.FalloffExponent = LightData.FalloffExponentDefault;
             item.FOV = LightData.FOVDefault;
-            item.Value = default;
-            item.Weight = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
         }
         
         #region Mutagen

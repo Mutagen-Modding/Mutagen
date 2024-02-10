@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
-        public SByte Rank { get; set; } = default;
+        public SByte Rank { get; set; } = default(SByte);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Faction.Clear();
-            item.Rank = default;
+            item.Rank = default(SByte);
             item.Unused = new byte[3];
         }
         

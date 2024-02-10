@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Name
         /// <summary>
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestLocationAlias item)
         {
             ClearPartial();
-            item.ID = default;
+            item.ID = default(UInt32);
             item.Name = default;
             item.Flags = default;
             item.AliasIDToForceIntoWhenFilled = default;

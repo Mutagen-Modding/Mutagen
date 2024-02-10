@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

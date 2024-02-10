@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
         #endregion
         #region Chance
-        public Int32 Chance { get; set; } = default;
+        public Int32 Chance { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Weather.Clear();
-            item.Chance = default;
+            item.Chance = default(Int32);
         }
         
         #region Mutagen

@@ -102,10 +102,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.AreaSound => this.AreaSound;
         #endregion
         #region ConstantEffectEnchantmentFactor
-        public Single ConstantEffectEnchantmentFactor { get; set; } = default;
+        public Single ConstantEffectEnchantmentFactor { get; set; } = default(Single);
         #endregion
         #region ConstantEffectBarterFactor
-        public Single ConstantEffectBarterFactor { get; set; } = default;
+        public Single ConstantEffectBarterFactor { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -941,8 +941,8 @@ namespace Mutagen.Bethesda.Oblivion
             item.BoltSound.Clear();
             item.HitSound.Clear();
             item.AreaSound.Clear();
-            item.ConstantEffectEnchantmentFactor = default;
-            item.ConstantEffectBarterFactor = default;
+            item.ConstantEffectEnchantmentFactor = default(Single);
+            item.ConstantEffectBarterFactor = default(Single);
         }
         
         #region Mutagen

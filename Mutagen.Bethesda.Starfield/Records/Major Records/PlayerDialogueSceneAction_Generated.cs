@@ -101,10 +101,10 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IPlayerDialogueSceneActionGetter.ATTR => this.ATTR;
         #endregion
         #region ACBS
-        public Boolean ACBS { get; set; } = default;
+        public Boolean ACBS { get; set; } = default(Boolean);
         #endregion
         #region JAIL
-        public Boolean JAIL { get; set; } = default;
+        public Boolean JAIL { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -1018,8 +1018,8 @@ namespace Mutagen.Bethesda.Starfield
             item.DialogueTargetActor = default;
             item.DialogueList.Clear();
             item.ATTR = default;
-            item.ACBS = default;
-            item.JAIL = default;
+            item.ACBS = default(Boolean);
+            item.JAIL = default(Boolean);
             base.Clear(item);
         }
         
@@ -1781,11 +1781,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ACBS
         private int? _ACBSLocation;
-        public Boolean ACBS => _ACBSLocation.HasValue ? true : default;
+        public Boolean ACBS => _ACBSLocation.HasValue ? true : default(Boolean);
         #endregion
         #region JAIL
         private int? _JAILLocation;
-        public Boolean JAIL => _JAILLocation.HasValue ? true : default;
+        public Boolean JAIL => _JAILLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

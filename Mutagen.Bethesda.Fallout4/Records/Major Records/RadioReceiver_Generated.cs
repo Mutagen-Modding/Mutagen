@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public RadioReceiver.VersioningBreaks Versioning { get; set; } = default;
+        public RadioReceiver.VersioningBreaks Versioning { get; set; } = default(RadioReceiver.VersioningBreaks);
         #endregion
         #region SoundModel
         private readonly IFormLink<ISoundOutputModelGetter> _SoundModel = new FormLink<ISoundOutputModelGetter>();
@@ -65,16 +65,16 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundOutputModelGetter> IRadioReceiverGetter.SoundModel => this.SoundModel;
         #endregion
         #region Frequency
-        public Single Frequency { get; set; } = default;
+        public Single Frequency { get; set; } = default(Single);
         #endregion
         #region Volume
-        public Single Volume { get; set; } = default;
+        public Single Volume { get; set; } = default(Single);
         #endregion
         #region StartsActive
-        public Boolean StartsActive { get; set; } = default;
+        public Boolean StartsActive { get; set; } = default(Boolean);
         #endregion
         #region NoSignalStatic
-        public Boolean NoSignalStatic { get; set; } = default;
+        public Boolean NoSignalStatic { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -884,12 +884,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IRadioReceiver item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(RadioReceiver.VersioningBreaks);
             item.SoundModel.Clear();
-            item.Frequency = default;
-            item.Volume = default;
-            item.StartsActive = default;
-            item.NoSignalStatic = default;
+            item.Frequency = default(Single);
+            item.Volume = default(Single);
+            item.StartsActive = default(Boolean);
+            item.NoSignalStatic = default(Boolean);
         }
         
         #region Mutagen

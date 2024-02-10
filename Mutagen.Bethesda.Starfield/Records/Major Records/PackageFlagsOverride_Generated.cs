@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region SetFlags
-        public Package.Flag SetFlags { get; set; } = default;
+        public Package.Flag SetFlags { get; set; } = default(Package.Flag);
         #endregion
         #region ClearFlags
-        public Package.Flag ClearFlags { get; set; } = default;
+        public Package.Flag ClearFlags { get; set; } = default(Package.Flag);
         #endregion
         #region SetInterruptFlags
-        public Package.InterruptFlag SetInterruptFlags { get; set; } = default;
+        public Package.InterruptFlag SetInterruptFlags { get; set; } = default(Package.InterruptFlag);
         #endregion
         #region ClearInterruptFlags
-        public Package.InterruptFlag ClearInterruptFlags { get; set; } = default;
+        public Package.InterruptFlag ClearInterruptFlags { get; set; } = default(Package.InterruptFlag);
         #endregion
         #region PreferredSpeed
-        public Package.Speed PreferredSpeed { get; set; } = default;
+        public Package.Speed PreferredSpeed { get; set; } = default(Package.Speed);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -872,11 +872,11 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPackageFlagsOverride item)
         {
             ClearPartial();
-            item.SetFlags = default;
-            item.ClearFlags = default;
-            item.SetInterruptFlags = default;
-            item.ClearInterruptFlags = default;
-            item.PreferredSpeed = default;
+            item.SetFlags = default(Package.Flag);
+            item.ClearFlags = default(Package.Flag);
+            item.SetInterruptFlags = default(Package.InterruptFlag);
+            item.ClearInterruptFlags = default(Package.InterruptFlag);
+            item.PreferredSpeed = default(Package.Speed);
             item.Unknown = new byte[3];
         }
         

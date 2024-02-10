@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region NodeIndex
-        public Int32 NodeIndex { get; set; } = default;
+        public Int32 NodeIndex { get; set; } = default(Int32);
         #endregion
         #region Light
         private readonly IFormLinkNullable<ILightGetter> _Light = new FormLinkNullable<ILightGetter>();
@@ -140,10 +140,10 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IAddonNodeGetter.PSDF => this.PSDF;
         #endregion
         #region MasterParticleSystemCap
-        public UInt16 MasterParticleSystemCap { get; set; } = default;
+        public UInt16 MasterParticleSystemCap { get; set; } = default(UInt16);
         #endregion
         #region Flags
-        public AddonNode.Flag Flags { get; set; } = default;
+        public AddonNode.Flag Flags { get; set; } = default(AddonNode.Flag);
         #endregion
 
         #region To String
@@ -1236,11 +1236,11 @@ namespace Mutagen.Bethesda.Starfield
             item.ODTY = default;
             item.Components.Clear();
             item.Model = null;
-            item.NodeIndex = default;
+            item.NodeIndex = default(Int32);
             item.Light.Clear();
             item.PSDF = default;
-            item.MasterParticleSystemCap = default;
-            item.Flags = default;
+            item.MasterParticleSystemCap = default(UInt16);
+            item.Flags = default(AddonNode.Flag);
             base.Clear(item);
         }
         
@@ -2286,7 +2286,7 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Model { get; private set; }
         #region NodeIndex
         private int? _NodeIndexLocation;
-        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region Light
         private int? _LightLocation;
@@ -2300,7 +2300,7 @@ namespace Mutagen.Bethesda.Starfield
         #region MasterParticleSystemCap
         private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
         private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;
-        public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_MasterParticleSystemCapLocation, 2)) : default;
+        public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_MasterParticleSystemCapLocation, 2)) : default(UInt16);
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x2;

@@ -57,10 +57,10 @@ namespace Mutagen.Bethesda.Fallout4
         public String Value { get; set; } = string.Empty;
         #endregion
         #region Unused
-        public UInt32 Unused { get; set; } = default;
+        public UInt32 Unused { get; set; } = default(UInt32);
         #endregion
         #region FunctionType
-        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default(ObjectModProperty.FloatFunctionType);
         #endregion
 
         #region To String
@@ -428,8 +428,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Value = string.Empty;
-            item.Unused = default;
-            item.FunctionType = default;
+            item.Unused = default(UInt32);
+            item.FunctionType = default(ObjectModProperty.FloatFunctionType);
             base.Clear(item);
         }
         

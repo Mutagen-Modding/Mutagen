@@ -31,16 +31,16 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region MajorVersion
-        public Byte MajorVersion { get; set; } = default;
+        public Byte MajorVersion { get; set; } = default(Byte);
         #endregion
         #region MinorVersion
-        public Byte MinorVersion { get; set; } = default;
+        public Byte MinorVersion { get; set; } = default(Byte);
         #endregion
         #region GameId
-        public UInt16 GameId { get; set; } = default;
+        public UInt16 GameId { get; set; } = default(UInt16);
         #endregion
         #region CompilationTime
-        public DateTime CompilationTime { get; set; } = default;
+        public DateTime CompilationTime { get; set; } = default(DateTime);
         #endregion
         #region SourceFileName
         public String SourceFileName { get; set; } = string.Empty;
@@ -1090,10 +1090,10 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IPexFile item)
         {
             ClearPartial();
-            item.MajorVersion = default;
-            item.MinorVersion = default;
-            item.GameId = default;
-            item.CompilationTime = default;
+            item.MajorVersion = default(Byte);
+            item.MinorVersion = default(Byte);
+            item.GameId = default(UInt16);
+            item.CompilationTime = default(DateTime);
             item.SourceFileName = string.Empty;
             item.Username = string.Empty;
             item.MachineName = string.Empty;

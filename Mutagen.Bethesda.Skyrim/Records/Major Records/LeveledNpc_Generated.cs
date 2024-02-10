@@ -79,10 +79,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ChanceNone
-        public Byte ChanceNone { get; set; } = default;
+        public Byte ChanceNone { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public LeveledNpc.Flag Flags { get; set; } = default;
+        public LeveledNpc.Flag Flags { get; set; } = default(LeveledNpc.Flag);
         #endregion
         #region Global
         private readonly IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
@@ -1112,8 +1112,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ChanceNone = default;
-            item.Flags = default;
+            item.ChanceNone = default(Byte);
+            item.Flags = default(LeveledNpc.Flag);
             item.Global.Clear();
             item.Entries = null;
             item.Model = null;

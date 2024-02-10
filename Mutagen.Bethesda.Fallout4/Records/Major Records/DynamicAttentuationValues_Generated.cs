@@ -51,40 +51,40 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FadeInDistanceStart
-        public Single FadeInDistanceStart { get; set; } = default;
+        public Single FadeInDistanceStart { get; set; } = default(Single);
         #endregion
         #region FadeInDistanceEnd
-        public Single FadeInDistanceEnd { get; set; } = default;
+        public Single FadeInDistanceEnd { get; set; } = default(Single);
         #endregion
         #region FadeOutDistanceStart
-        public Single FadeOutDistanceStart { get; set; } = default;
+        public Single FadeOutDistanceStart { get; set; } = default(Single);
         #endregion
         #region FadeOutDistanceEnd
-        public Single FadeOutDistanceEnd { get; set; } = default;
+        public Single FadeOutDistanceEnd { get; set; } = default(Single);
         #endregion
         #region FadeInCurveValue1
-        public Byte FadeInCurveValue1 { get; set; } = default;
+        public Byte FadeInCurveValue1 { get; set; } = default(Byte);
         #endregion
         #region FadeInCurveValue2
-        public Byte FadeInCurveValue2 { get; set; } = default;
+        public Byte FadeInCurveValue2 { get; set; } = default(Byte);
         #endregion
         #region FadeInCurveValue3
-        public Byte FadeInCurveValue3 { get; set; } = default;
+        public Byte FadeInCurveValue3 { get; set; } = default(Byte);
         #endregion
         #region FadeInCurveValue4
-        public Byte FadeInCurveValue4 { get; set; } = default;
+        public Byte FadeInCurveValue4 { get; set; } = default(Byte);
         #endregion
         #region FadeOutCurveValue1
-        public Byte FadeOutCurveValue1 { get; set; } = default;
+        public Byte FadeOutCurveValue1 { get; set; } = default(Byte);
         #endregion
         #region FadeOutCurveValue2
-        public Byte FadeOutCurveValue2 { get; set; } = default;
+        public Byte FadeOutCurveValue2 { get; set; } = default(Byte);
         #endregion
         #region FadeOutCurveValue3
-        public Byte FadeOutCurveValue3 { get; set; } = default;
+        public Byte FadeOutCurveValue3 { get; set; } = default(Byte);
         #endregion
         #region FadeOutCurveValue4
-        public Byte FadeOutCurveValue4 { get; set; } = default;
+        public Byte FadeOutCurveValue4 { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -1080,18 +1080,18 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDynamicAttentuationValues item)
         {
             ClearPartial();
-            item.FadeInDistanceStart = default;
-            item.FadeInDistanceEnd = default;
-            item.FadeOutDistanceStart = default;
-            item.FadeOutDistanceEnd = default;
-            item.FadeInCurveValue1 = default;
-            item.FadeInCurveValue2 = default;
-            item.FadeInCurveValue3 = default;
-            item.FadeInCurveValue4 = default;
-            item.FadeOutCurveValue1 = default;
-            item.FadeOutCurveValue2 = default;
-            item.FadeOutCurveValue3 = default;
-            item.FadeOutCurveValue4 = default;
+            item.FadeInDistanceStart = default(Single);
+            item.FadeInDistanceEnd = default(Single);
+            item.FadeOutDistanceStart = default(Single);
+            item.FadeOutDistanceEnd = default(Single);
+            item.FadeInCurveValue1 = default(Byte);
+            item.FadeInCurveValue2 = default(Byte);
+            item.FadeInCurveValue3 = default(Byte);
+            item.FadeInCurveValue4 = default(Byte);
+            item.FadeOutCurveValue1 = default(Byte);
+            item.FadeOutCurveValue2 = default(Byte);
+            item.FadeOutCurveValue3 = default(Byte);
+            item.FadeOutCurveValue4 = default(Byte);
         }
         
         #region Mutagen

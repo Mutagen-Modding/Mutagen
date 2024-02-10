@@ -52,31 +52,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Versioning
-        public WeatherColor.VersioningBreaks Versioning { get; set; } = default;
+        public WeatherColor.VersioningBreaks Versioning { get; set; } = default(WeatherColor.VersioningBreaks);
         #endregion
         #region Sunrise
-        public Color Sunrise { get; set; } = default;
+        public Color Sunrise { get; set; } = default(Color);
         #endregion
         #region Day
-        public Color Day { get; set; } = default;
+        public Color Day { get; set; } = default(Color);
         #endregion
         #region Sunset
-        public Color Sunset { get; set; } = default;
+        public Color Sunset { get; set; } = default(Color);
         #endregion
         #region Night
-        public Color Night { get; set; } = default;
+        public Color Night { get; set; } = default(Color);
         #endregion
         #region EarlySunrise
-        public Color EarlySunrise { get; set; } = default;
+        public Color EarlySunrise { get; set; } = default(Color);
         #endregion
         #region LateSunrise
-        public Color LateSunrise { get; set; } = default;
+        public Color LateSunrise { get; set; } = default(Color);
         #endregion
         #region EarlySunset
-        public Color EarlySunset { get; set; } = default;
+        public Color EarlySunset { get; set; } = default(Color);
         #endregion
         #region LateSunset
-        public Color LateSunset { get; set; } = default;
+        public Color LateSunset { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -974,15 +974,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IWeatherColor item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Sunrise = default;
-            item.Day = default;
-            item.Sunset = default;
-            item.Night = default;
-            item.EarlySunrise = default;
-            item.LateSunrise = default;
-            item.EarlySunset = default;
-            item.LateSunset = default;
+            item.Versioning = default(WeatherColor.VersioningBreaks);
+            item.Sunrise = default(Color);
+            item.Day = default(Color);
+            item.Sunset = default(Color);
+            item.Night = default(Color);
+            item.EarlySunrise = default(Color);
+            item.LateSunrise = default(Color);
+            item.EarlySunset = default(Color);
+            item.LateSunset = default(Color);
         }
         
         #region Mutagen

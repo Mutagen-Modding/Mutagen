@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IKeywordGetter> ILinkedAliasGetter.Keyword => this.Keyword;
         #endregion
         #region AliasID
-        public Int32 AliasID { get; set; } = default;
+        public Int32 AliasID { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Keyword.Clear();
-            item.AliasID = default;
+            item.AliasID = default(Int32);
         }
         
         #region Mutagen

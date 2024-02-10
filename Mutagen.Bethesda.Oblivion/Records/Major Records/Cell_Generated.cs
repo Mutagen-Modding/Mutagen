@@ -189,10 +189,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILandscapeGetter? ICellGetter.Landscape => this.Landscape;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region PersistentTimestamp
-        public Int32 PersistentTimestamp { get; set; } = default;
+        public Int32 PersistentTimestamp { get; set; } = default(Int32);
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region TemporaryTimestamp
-        public Int32 TemporaryTimestamp { get; set; } = default;
+        public Int32 TemporaryTimestamp { get; set; } = default(Int32);
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region VisibleWhenDistantTimestamp
-        public Int32 VisibleWhenDistantTimestamp { get; set; } = default;
+        public Int32 VisibleWhenDistantTimestamp { get; set; } = default(Int32);
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2166,12 +2166,12 @@ namespace Mutagen.Bethesda.Oblivion
             item.GlobalVariable.Clear();
             item.PathGrid = null;
             item.Landscape = null;
-            item.Timestamp = default;
-            item.PersistentTimestamp = default;
+            item.Timestamp = default(Int32);
+            item.PersistentTimestamp = default(Int32);
             item.Persistent.Clear();
-            item.TemporaryTimestamp = default;
+            item.TemporaryTimestamp = default(Int32);
             item.Temporary.Clear();
-            item.VisibleWhenDistantTimestamp = default;
+            item.VisibleWhenDistantTimestamp = default(Int32);
             item.VisibleWhenDistant.Clear();
             base.Clear(item);
         }
@@ -4008,7 +4008,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Regions = 
                             rhs.Regions
-                            .Select(r => (IFormLinkGetter<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IRegionGetter>)new FormLink<IRegionGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IRegionGetter>>();
                     }
                     else

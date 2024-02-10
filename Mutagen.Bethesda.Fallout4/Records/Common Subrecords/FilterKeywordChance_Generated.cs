@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IKeywordGetter> IFilterKeywordChanceGetter.FilterKeyword => this.FilterKeyword;
         #endregion
         #region Chance
-        public Percent Chance { get; set; } = default;
+        public Percent Chance { get; set; } = default(Percent);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.FilterKeyword.Clear();
-            item.Chance = default;
+            item.Chance = default(Percent);
         }
         
         #region Mutagen

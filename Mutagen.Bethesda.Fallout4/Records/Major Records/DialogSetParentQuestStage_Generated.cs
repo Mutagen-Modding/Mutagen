@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region OnBegin
-        public Int16 OnBegin { get; set; } = default;
+        public Int16 OnBegin { get; set; } = default(Int16);
         #endregion
         #region OnEnd
-        public Int16 OnEnd { get; set; } = default;
+        public Int16 OnEnd { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDialogSetParentQuestStage item)
         {
             ClearPartial();
-            item.OnBegin = default;
-            item.OnEnd = default;
+            item.OnBegin = default(Int16);
+            item.OnEnd = default(Int16);
         }
         
         #region Mutagen

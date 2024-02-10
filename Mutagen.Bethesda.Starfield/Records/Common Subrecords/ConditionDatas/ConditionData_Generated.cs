@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region RunOnType
-        public Condition.RunOnType RunOnType { get; set; } = default;
+        public Condition.RunOnType RunOnType { get; set; } = default(Condition.RunOnType);
         #endregion
         #region Reference
         private readonly IFormLink<IStarfieldMajorRecordGetter> _Reference = new FormLink<IStarfieldMajorRecordGetter>();
@@ -72,10 +72,10 @@ namespace Mutagen.Bethesda.Starfield
         public Int32 Unknown3 { get; set; } = Unknown3Default;
         #endregion
         #region UseAliases
-        public Boolean UseAliases { get; set; } = default;
+        public Boolean UseAliases { get; set; } = default(Boolean);
         #endregion
         #region UsePackageData
-        public Boolean UsePackageData { get; set; } = default;
+        public Boolean UsePackageData { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -820,11 +820,11 @@ namespace Mutagen.Bethesda.Starfield
         public virtual void Clear(IConditionData item)
         {
             ClearPartial();
-            item.RunOnType = default;
+            item.RunOnType = default(Condition.RunOnType);
             item.Reference.Clear();
             item.Unknown3 = ConditionData.Unknown3Default;
-            item.UseAliases = default;
-            item.UsePackageData = default;
+            item.UseAliases = default(Boolean);
+            item.UsePackageData = default(Boolean);
         }
         
         #region Mutagen

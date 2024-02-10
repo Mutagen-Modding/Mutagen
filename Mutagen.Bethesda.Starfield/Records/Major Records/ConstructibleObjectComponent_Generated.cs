@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IItemGetter> IConstructibleObjectComponentGetter.Component => this.Component;
         #endregion
         #region Count
-        public UInt32 Count { get; set; } = default;
+        public UInt32 Count { get; set; } = default(UInt32);
         #endregion
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -765,8 +765,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Component.Clear();
-            item.Count = default;
-            item.Unknown = default;
+            item.Count = default(UInt32);
+            item.Unknown = default(UInt32);
         }
         
         #region Mutagen

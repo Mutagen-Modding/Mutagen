@@ -56,10 +56,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Flags
-        public AStoryManagerNode.Flag Flags { get; set; } = default;
+        public AStoryManagerNode.Flag Flags { get; set; } = default(AStoryManagerNode.Flag);
         #endregion
         #region QuestFlags
-        public StoryManagerQuestNode.QuestFlag QuestFlags { get; set; } = default;
+        public StoryManagerQuestNode.QuestFlag QuestFlags { get; set; } = default(StoryManagerQuestNode.QuestFlag);
         #endregion
         #region MaxConcurrentQuests
         public UInt32? MaxConcurrentQuests { get; set; }
@@ -1043,8 +1043,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IStoryManagerQuestNodeInternal item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.QuestFlags = default;
+            item.Flags = default(AStoryManagerNode.Flag);
+            item.QuestFlags = default(StoryManagerQuestNode.QuestFlag);
             item.MaxConcurrentQuests = default;
             item.MaxNumQuestsToRun = default;
             item.HoursUntilReset = default;

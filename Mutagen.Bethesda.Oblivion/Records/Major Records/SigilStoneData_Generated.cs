@@ -52,13 +52,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Uses
-        public Byte Uses { get; set; } = default;
+        public Byte Uses { get; set; } = default(Byte);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -759,9 +759,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISigilStoneData item)
         {
             ClearPartial();
-            item.Uses = default;
-            item.Value = default;
-            item.Weight = default;
+            item.Uses = default(Byte);
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
         }
         
         #region Mutagen

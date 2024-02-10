@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FirstParameter
-        public EquipTypeFlag FirstParameter { get; set; } = default;
+        public EquipTypeFlag FirstParameter { get; set; } = default(EquipTypeFlag);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         String? IGetIsUsedItemEquipTypeConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        public Int32 SecondParameter { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGetIsUsedItemEquipTypeConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default;
+            item.FirstParameter = default(EquipTypeFlag);
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

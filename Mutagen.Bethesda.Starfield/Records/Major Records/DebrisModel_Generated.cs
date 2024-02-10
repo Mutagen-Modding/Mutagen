@@ -55,14 +55,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Percentage
-        public Byte Percentage { get; set; } = default;
+        public Byte Percentage { get; set; } = default(Byte);
         #endregion
         #region ModelFilename
         public AssetLink<StarfieldModelAssetType> ModelFilename { get; set; } = new AssetLink<StarfieldModelAssetType>();
         AssetLinkGetter<StarfieldModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
         #endregion
         #region Flags
-        public DebrisModel.Flag Flags { get; set; } = default;
+        public DebrisModel.Flag Flags { get; set; } = default(DebrisModel.Flag);
         #endregion
         #region TextureFileHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -819,9 +819,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDebrisModel item)
         {
             ClearPartial();
-            item.Percentage = default;
+            item.Percentage = default(Byte);
             item.ModelFilename.SetToNull();
-            item.Flags = default;
+            item.Flags = default(DebrisModel.Flag);
             item.TextureFileHashes = default;
         }
         

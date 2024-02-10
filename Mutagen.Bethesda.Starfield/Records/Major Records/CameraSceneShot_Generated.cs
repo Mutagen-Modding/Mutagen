@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ICameraShotGetter> ICameraSceneShotGetter.CameraShot => this.CameraShot;
         #endregion
         #region ALLA
-        public Int32 ALLA { get; set; } = default;
+        public Int32 ALLA { get; set; } = default(Int32);
         #endregion
         #region REPL
         private readonly IFormLink<IPlacedGetter> _REPL = new FormLink<IPlacedGetter>();
@@ -76,31 +76,31 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IPlacedGetter> ICameraSceneShotGetter.REPL => this.REPL;
         #endregion
         #region HNAM
-        public Int32 HNAM { get; set; } = default;
+        public Int32 HNAM { get; set; } = default(Int32);
         #endregion
         #region VCLR
-        public Int32 VCLR { get; set; } = default;
+        public Int32 VCLR { get; set; } = default(Int32);
         #endregion
         #region LVCR
-        public Int32 LVCR { get; set; } = default;
+        public Int32 LVCR { get; set; } = default(Int32);
         #endregion
         #region BTXT
-        public Boolean BTXT { get; set; } = default;
+        public Boolean BTXT { get; set; } = default(Boolean);
         #endregion
         #region ATXT
-        public Boolean ATXT { get; set; } = default;
+        public Boolean ATXT { get; set; } = default(Boolean);
         #endregion
         #region VTXT
-        public Boolean VTXT { get; set; } = default;
+        public Boolean VTXT { get; set; } = default(Boolean);
         #endregion
         #region AIDT
-        public Boolean AIDT { get; set; } = default;
+        public Boolean AIDT { get; set; } = default(Boolean);
         #endregion
         #region MPCD
-        public Boolean MPCD { get; set; } = default;
+        public Boolean MPCD { get; set; } = default(Boolean);
         #endregion
         #region VNAM
-        public Boolean VNAM { get; set; } = default;
+        public Boolean VNAM { get; set; } = default(Boolean);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1239,17 +1239,17 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.CameraShot.Clear();
-            item.ALLA = default;
+            item.ALLA = default(Int32);
             item.REPL.Clear();
-            item.HNAM = default;
-            item.VCLR = default;
-            item.LVCR = default;
-            item.BTXT = default;
-            item.ATXT = default;
-            item.VTXT = default;
-            item.AIDT = default;
-            item.MPCD = default;
-            item.VNAM = default;
+            item.HNAM = default(Int32);
+            item.VCLR = default(Int32);
+            item.LVCR = default(Int32);
+            item.BTXT = default(Boolean);
+            item.ATXT = default(Boolean);
+            item.VTXT = default(Boolean);
+            item.AIDT = default(Boolean);
+            item.MPCD = default(Boolean);
+            item.VNAM = default(Boolean);
             item.Conditions.Clear();
         }
         
@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ALLA
         private int? _ALLALocation;
-        public Int32 ALLA => _ALLALocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ALLALocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 ALLA => _ALLALocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ALLALocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region REPL
         private int? _REPLLocation;
@@ -1983,39 +1983,39 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region HNAM
         private int? _HNAMLocation;
-        public Int32 HNAM => _HNAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 HNAM => _HNAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region VCLR
         private int? _VCLRLocation;
-        public Int32 VCLR => _VCLRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 VCLR => _VCLRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region LVCR
         private int? _LVCRLocation;
-        public Int32 LVCR => _LVCRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LVCRLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 LVCR => _LVCRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LVCRLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region BTXT
         private int? _BTXTLocation;
-        public Boolean BTXT => _BTXTLocation.HasValue ? true : default;
+        public Boolean BTXT => _BTXTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region ATXT
         private int? _ATXTLocation;
-        public Boolean ATXT => _ATXTLocation.HasValue ? true : default;
+        public Boolean ATXT => _ATXTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region VTXT
         private int? _VTXTLocation;
-        public Boolean VTXT => _VTXTLocation.HasValue ? true : default;
+        public Boolean VTXT => _VTXTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region AIDT
         private int? _AIDTLocation;
-        public Boolean AIDT => _AIDTLocation.HasValue ? true : default;
+        public Boolean AIDT => _AIDTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region MPCD
         private int? _MPCDLocation;
-        public Boolean MPCD => _MPCDLocation.HasValue ? true : default;
+        public Boolean MPCD => _MPCDLocation.HasValue ? true : default(Boolean);
         #endregion
         #region VNAM
         private int? _VNAMLocation;
-        public Boolean VNAM => _VNAMLocation.HasValue ? true : default;
+        public Boolean VNAM => _VNAMLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

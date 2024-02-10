@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Thin
-        public Single Thin { get; set; } = default;
+        public Single Thin { get; set; } = default(Single);
         #endregion
         #region Muscular
-        public Single Muscular { get; set; } = default;
+        public Single Muscular { get; set; } = default(Single);
         #endregion
         #region Fat
-        public Single Fat { get; set; } = default;
+        public Single Fat { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INpcWeight item)
         {
             ClearPartial();
-            item.Thin = default;
-            item.Muscular = default;
-            item.Fat = default;
+            item.Thin = default(Single);
+            item.Muscular = default(Single);
+            item.Fat = default(Single);
         }
         
         #region Mutagen

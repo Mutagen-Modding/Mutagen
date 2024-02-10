@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region PointID
-        public Int32 PointID { get; set; } = default;
+        public Int32 PointID { get; set; } = default(Int32);
         #endregion
         #region Point
-        public P3Float Point { get; set; } = default;
+        public P3Float Point { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IInterCellPoint item)
         {
             ClearPartial();
-            item.PointID = default;
-            item.Point = default;
+            item.PointID = default(Int32);
+            item.Point = default(P3Float);
         }
         
         #region Mutagen

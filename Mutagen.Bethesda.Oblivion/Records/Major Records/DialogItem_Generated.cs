@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Topics.SetTo(
                         rhs.Topics
-                        .Select(r => (IFormLinkGetter<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2160,7 +2160,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Choices.SetTo(
                         rhs.Choices
-                        .Select(r => (IFormLinkGetter<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.LinkFrom.SetTo(
                         rhs.LinkFrom
-                        .Select(r => (IFormLinkGetter<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

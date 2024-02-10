@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region AdvanceAction
-        public AdvanceAction AdvanceAction { get; set; } = default;
+        public AdvanceAction AdvanceAction { get; set; } = default(AdvanceAction);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IEPModSkillUsage_IsAdvanceActionConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondUnusedIntParameter
-        public Int32 SecondUnusedIntParameter { get; set; } = default;
+        public Int32 SecondUnusedIntParameter { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IEPModSkillUsage_IsAdvanceActionConditionData item)
         {
             ClearPartial();
-            item.AdvanceAction = default;
+            item.AdvanceAction = default(AdvanceAction);
             item.FirstUnusedStringParameter = default;
-            item.SecondUnusedIntParameter = default;
+            item.SecondUnusedIntParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

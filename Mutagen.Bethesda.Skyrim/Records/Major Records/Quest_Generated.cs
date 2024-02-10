@@ -108,20 +108,20 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Flags
-        public Quest.Flag Flags { get; set; } = default;
+        public Quest.Flag Flags { get; set; } = default(Quest.Flag);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region QuestFormVersion
         public static readonly Byte QuestFormVersionDefault = byte.MaxValue;
         public Byte QuestFormVersion { get; set; } = QuestFormVersionDefault;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Type
-        public Quest.TypeEnum Type { get; set; } = default;
+        public Quest.TypeEnum Type { get; set; } = default(Quest.TypeEnum);
         #endregion
         #region Event
         public RecordType? Event { get; set; }
@@ -1906,11 +1906,11 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Name = default;
-            item.Flags = default;
-            item.Priority = default;
+            item.Flags = default(Quest.Flag);
+            item.Priority = default(Byte);
             item.QuestFormVersion = Quest.QuestFormVersionDefault;
-            item.Unknown = default;
-            item.Type = default;
+            item.Unknown = default(Int32);
+            item.Type = default(Quest.TypeEnum);
             item.Event = default;
             item.TextDisplayGlobals.Clear();
             item.Filter = default;
@@ -2658,7 +2658,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3411,7 +3411,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region Type
         private int _TypeLocation => _DNAMLocation!.Value.Min + 0x8;

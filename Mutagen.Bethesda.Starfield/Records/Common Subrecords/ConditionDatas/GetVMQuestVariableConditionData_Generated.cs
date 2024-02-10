@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
         String? IGetVMQuestVariableConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondUnusedIntParameter
-        public Int32 SecondUnusedIntParameter { get; set; } = default;
+        public Int32 SecondUnusedIntParameter { get; set; } = default(Int32);
         #endregion
         #region SecondParameter
         public String? SecondParameter { get; set; }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.FirstParameter.Clear();
             item.FirstUnusedStringParameter = default;
-            item.SecondUnusedIntParameter = default;
+            item.SecondUnusedIntParameter = default(Int32);
             item.SecondParameter = default;
             base.Clear(item);
         }

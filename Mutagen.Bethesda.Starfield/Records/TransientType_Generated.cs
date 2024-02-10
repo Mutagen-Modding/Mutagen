@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FormType
-        public UInt32 FormType { get; set; } = default;
+        public UInt32 FormType { get; set; } = default(UInt32);
         #endregion
         #region Links
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ITransientType item)
         {
             ClearPartial();
-            item.FormType = default;
+            item.FormType = default(UInt32);
             item.Links.Clear();
         }
         
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Links.SetTo(
                         rhs.Links
-                        .Select(r => (IFormLinkGetter<IStarfieldMajorRecordGetter>)new FormLink<IStarfieldMajorRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IStarfieldMajorRecordGetter>)new FormLink<IStarfieldMajorRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

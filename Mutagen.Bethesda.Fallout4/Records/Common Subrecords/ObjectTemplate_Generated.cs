@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region IsEditorOnly
-        public Boolean IsEditorOnly { get; set; } = default;
+        public Boolean IsEditorOnly { get; set; } = default(Boolean);
         #endregion
         #region Name
         /// <summary>
@@ -99,13 +99,13 @@ namespace Mutagen.Bethesda.Fallout4
         public Int16 AddonIndex { get; set; } = AddonIndexDefault;
         #endregion
         #region LevelMin
-        public Byte LevelMin { get; set; } = default;
+        public Byte LevelMin { get; set; } = default(Byte);
         #endregion
         #region LevelMax
-        public Byte LevelMax { get; set; } = default;
+        public Byte LevelMax { get; set; } = default(Byte);
         #endregion
         #region Default
-        public Boolean Default { get; set; } = default;
+        public Boolean Default { get; set; } = default(Boolean);
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -134,10 +134,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region MinLevelForRanks
-        public Byte MinLevelForRanks { get; set; } = default;
+        public Byte MinLevelForRanks { get; set; } = default(Byte);
         #endregion
         #region AltLevelsPerTier
-        public Byte AltLevelsPerTier { get; set; } = default;
+        public Byte AltLevelsPerTier { get; set; } = default(Byte);
         #endregion
         #region Includes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -630,15 +630,15 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectTemplate<T> item)
         {
             ClearPartial();
-            item.IsEditorOnly = default;
+            item.IsEditorOnly = default(Boolean);
             item.Name = default;
             item.AddonIndex = ObjectTemplate<T>.AddonIndexDefault;
-            item.LevelMin = default;
-            item.LevelMax = default;
-            item.Default = default;
+            item.LevelMin = default(Byte);
+            item.LevelMax = default(Byte);
+            item.Default = default(Boolean);
             item.Keywords.Clear();
-            item.MinLevelForRanks = default;
-            item.AltLevelsPerTier = default;
+            item.MinLevelForRanks = default(Byte);
+            item.AltLevelsPerTier = default(Byte);
             item.Includes.Clear();
             item.Properties.Clear();
         }
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Keywords.SetTo(
                         rhs.Keywords
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region IsEditorOnly
         private int? _IsEditorOnlyLocation;
-        public Boolean IsEditorOnly => _IsEditorOnlyLocation.HasValue ? true : default;
+        public Boolean IsEditorOnly => _IsEditorOnlyLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Name
         private int? _NameLocation;

@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region StaticAttenuation
-        public Single StaticAttenuation { get; set; } = default;
+        public Single StaticAttenuation { get; set; } = default(Single);
         #endregion
         #region StopTime
-        public Single StopTime { get; set; } = default;
+        public Single StopTime { get; set; } = default(Single);
         public static RangeFloat StopTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
         #region StartTime
-        public Single StartTime { get; set; } = default;
+        public Single StartTime { get; set; } = default(Single);
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
 
@@ -742,9 +742,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISoundDataExtendedInternal item)
         {
             ClearPartial();
-            item.StaticAttenuation = default;
-            item.StopTime = default;
-            item.StartTime = default;
+            item.StaticAttenuation = default(Single);
+            item.StopTime = default(Single);
+            item.StartTime = default(Single);
             base.Clear(item);
         }
         

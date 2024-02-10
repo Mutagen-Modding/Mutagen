@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStarfieldMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
         #endregion
         #region AliasID
-        public Int16 AliasID { get; set; } = default;
+        public Int16 AliasID { get; set; } = default(Int16);
         #endregion
         #region Create
-        public CreateReferenceToObject.CreateEnum Create { get; set; } = default;
+        public CreateReferenceToObject.CreateEnum Create { get; set; } = default(CreateReferenceToObject.CreateEnum);
         #endregion
         #region Level
-        public Level Level { get; set; } = default;
+        public Level Level { get; set; } = default(Level);
         #endregion
 
         #region To String
@@ -814,9 +814,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Object.Clear();
-            item.AliasID = default;
-            item.Create = default;
-            item.Level = default;
+            item.AliasID = default(Int16);
+            item.Create = default(CreateReferenceToObject.CreateEnum);
+            item.Level = default(Level);
         }
         
         #region Mutagen
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Starfield
         #region AliasID
         private int _AliasIDLocation => _ALCALocation!.Value.Min;
         private bool _AliasID_IsSet => _ALCALocation.HasValue;
-        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_AliasIDLocation, 2)) : default;
+        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_AliasIDLocation, 2)) : default(Int16);
         #endregion
         #region Create
         private int _CreateLocation => _ALCALocation!.Value.Min + 0x2;

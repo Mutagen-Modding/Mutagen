@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IDamageTypeGetter> IDamageTypeValueGetter.DamageType => this.DamageType;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region CurveTable
         private readonly IFormLink<ICurveTableGetter> _CurveTable = new FormLink<ICurveTableGetter>();
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.DamageType.Clear();
-            item.Value = default;
+            item.Value = default(UInt32);
             item.CurveTable.Clear();
         }
         

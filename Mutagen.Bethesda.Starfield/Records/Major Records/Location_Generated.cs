@@ -252,13 +252,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IFactionGetter> ILocationGetter.Faction => this.Faction;
         #endregion
         #region UnknownDATA
-        public SByte UnknownDATA { get; set; } = default;
+        public SByte UnknownDATA { get; set; } = default(SByte);
         #endregion
         #region SystemLevel
-        public SByte SystemLevel { get; set; } = default;
+        public SByte SystemLevel { get; set; } = default(SByte);
         #endregion
         #region UnknownDATA2
-        public Int16 UnknownDATA2 { get; set; } = default;
+        public Int16 UnknownDATA2 { get; set; } = default(Int16);
         #endregion
         #region ParentLocation
         private readonly IFormLinkNullable<ILocationGetter> _ParentLocation = new FormLinkNullable<ILocationGetter>();
@@ -2512,9 +2512,9 @@ namespace Mutagen.Bethesda.Starfield
             item.Keywords = null;
             item.Properties2 = null;
             item.Faction.Clear();
-            item.UnknownDATA = default;
-            item.SystemLevel = default;
-            item.UnknownDATA2 = default;
+            item.UnknownDATA = default(SByte);
+            item.SystemLevel = default(SByte);
+            item.UnknownDATA2 = default(Int16);
             item.ParentLocation.Clear();
             item.UnreportedCrimeFaction.Clear();
             item.WorldLocationMarkerRef.Clear();
@@ -3532,7 +3532,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.LocationCellMarkerReference = 
                             rhs.LocationCellMarkerReference
-                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
@@ -3595,7 +3595,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4413,17 +4413,17 @@ namespace Mutagen.Bethesda.Starfield
         #region UnknownDATA
         private int _UnknownDATALocation => _DATALocation!.Value.Min + 0x4;
         private bool _UnknownDATA_IsSet => _DATALocation.HasValue;
-        public SByte UnknownDATA => _UnknownDATA_IsSet ? (sbyte)_recordData.Slice(_UnknownDATALocation, 1)[0] : default;
+        public SByte UnknownDATA => _UnknownDATA_IsSet ? (sbyte)_recordData.Slice(_UnknownDATALocation, 1)[0] : default(SByte);
         #endregion
         #region SystemLevel
         private int _SystemLevelLocation => _DATALocation!.Value.Min + 0x5;
         private bool _SystemLevel_IsSet => _DATALocation.HasValue;
-        public SByte SystemLevel => _SystemLevel_IsSet ? (sbyte)_recordData.Slice(_SystemLevelLocation, 1)[0] : default;
+        public SByte SystemLevel => _SystemLevel_IsSet ? (sbyte)_recordData.Slice(_SystemLevelLocation, 1)[0] : default(SByte);
         #endregion
         #region UnknownDATA2
         private int _UnknownDATA2Location => _DATALocation!.Value.Min + 0x6;
         private bool _UnknownDATA2_IsSet => _DATALocation.HasValue;
-        public Int16 UnknownDATA2 => _UnknownDATA2_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownDATA2Location, 2)) : default;
+        public Int16 UnknownDATA2 => _UnknownDATA2_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownDATA2Location, 2)) : default(Int16);
         #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;

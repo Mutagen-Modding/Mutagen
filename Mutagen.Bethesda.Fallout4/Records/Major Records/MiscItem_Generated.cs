@@ -241,10 +241,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IMessageGetter> IMiscItemGetter.FeaturedItemMessage => this.FeaturedItemMessage;
         #endregion
         #region Value
-        public Int32 Value { get; set; } = default;
+        public Int32 Value { get; set; } = default(Int32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1798,8 +1798,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.PutDownSound.Clear();
             item.Keywords = null;
             item.FeaturedItemMessage.Clear();
-            item.Value = default;
-            item.Weight = default;
+            item.Value = default(Int32);
+            item.Weight = default(Single);
             item.Components = null;
             item.ComponentDisplayIndices = null;
             base.Clear(item);
@@ -2575,7 +2575,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3226,12 +3226,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(Int32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         public IReadOnlyList<IMiscItemComponentGetter>? Components { get; private set; }
         public IReadOnlyList<Byte>? ComponentDisplayIndices { get; private set; }

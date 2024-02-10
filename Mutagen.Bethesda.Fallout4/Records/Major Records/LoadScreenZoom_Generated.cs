@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Min
-        public Single Min { get; set; } = default;
+        public Single Min { get; set; } = default(Single);
         #endregion
         #region Max
-        public Single Max { get; set; } = default;
+        public Single Max { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILoadScreenZoom item)
         {
             ClearPartial();
-            item.Min = default;
-            item.Max = default;
+            item.Min = default(Single);
+            item.Max = default(Single);
         }
         
         #region Mutagen

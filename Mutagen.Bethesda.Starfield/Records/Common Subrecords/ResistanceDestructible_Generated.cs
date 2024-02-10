@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IDamageTypeGetter> IResistanceDestructibleGetter.DamageType => this.DamageType;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -765,8 +765,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.DamageType.Clear();
-            item.Value = default;
-            item.Unknown = default;
+            item.Value = default(UInt32);
+            item.Unknown = default(UInt32);
         }
         
         #region Mutagen

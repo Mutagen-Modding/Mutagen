@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FurnitureEntryType
-        public FurnitureEntryType FurnitureEntryType { get; set; } = default;
+        public FurnitureEntryType FurnitureEntryType { get; set; } = default(FurnitureEntryType);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IIsFurnitureEntryTypeConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondUnusedIntParameter
-        public Int32 SecondUnusedIntParameter { get; set; } = default;
+        public Int32 SecondUnusedIntParameter { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIsFurnitureEntryTypeConditionData item)
         {
             ClearPartial();
-            item.FurnitureEntryType = default;
+            item.FurnitureEntryType = default(FurnitureEntryType);
             item.FirstUnusedStringParameter = default;
-            item.SecondUnusedIntParameter = default;
+            item.SecondUnusedIntParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

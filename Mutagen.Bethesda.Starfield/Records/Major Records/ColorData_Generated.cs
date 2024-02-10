@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IColorData item)
         {
             ClearPartial();
-            item.Color = default;
+            item.Color = default(Color);
             base.Clear(item);
         }
         

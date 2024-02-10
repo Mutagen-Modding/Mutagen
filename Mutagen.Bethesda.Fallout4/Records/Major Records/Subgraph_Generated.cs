@@ -99,10 +99,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Role
-        public Subgraph.SubgraphRole Role { get; set; } = default;
+        public Subgraph.SubgraphRole Role { get; set; } = default(Subgraph.SubgraphRole);
         #endregion
         #region Perspective
-        public Perspective Perspective { get; set; } = default;
+        public Perspective Perspective { get; set; } = default(Perspective);
         #endregion
 
         #region To String
@@ -1116,8 +1116,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.ActorKeywords.Clear();
             item.TargetKeywords.Clear();
             item.AnimationPaths.Clear();
-            item.Role = default;
-            item.Perspective = default;
+            item.Role = default(Subgraph.SubgraphRole);
+            item.Perspective = default(Perspective);
         }
         
         #region Mutagen
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ActorKeywords.SetTo(
                         rhs.ActorKeywords
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.TargetKeywords.SetTo(
                         rhs.TargetKeywords
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

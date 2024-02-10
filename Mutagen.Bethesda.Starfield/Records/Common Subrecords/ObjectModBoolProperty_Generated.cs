@@ -54,13 +54,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Value
-        public Boolean Value { get; set; } = default;
+        public Boolean Value { get; set; } = default(Boolean);
         #endregion
         #region Value2
-        public Boolean Value2 { get; set; } = default;
+        public Boolean Value2 { get; set; } = default(Boolean);
         #endregion
         #region FunctionType
-        public ObjectModProperty.BoolFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.BoolFunctionType FunctionType { get; set; } = default(ObjectModProperty.BoolFunctionType);
         #endregion
 
         #region To String
@@ -427,9 +427,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IObjectModBoolProperty<T> item)
         {
             ClearPartial();
-            item.Value = default;
-            item.Value2 = default;
-            item.FunctionType = default;
+            item.Value = default(Boolean);
+            item.Value2 = default(Boolean);
+            item.FunctionType = default(ObjectModProperty.BoolFunctionType);
             base.Clear(item);
         }
         

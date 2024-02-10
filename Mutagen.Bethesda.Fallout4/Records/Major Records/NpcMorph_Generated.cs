@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Key
-        public UInt32 Key { get; set; } = default;
+        public UInt32 Key { get; set; } = default(UInt32);
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INpcMorph item)
         {
             ClearPartial();
-            item.Key = default;
-            item.Value = default;
+            item.Key = default(UInt32);
+            item.Value = default(Single);
         }
         
         #region Mutagen

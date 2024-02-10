@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetRelativeAngleConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region Axis
-        public Axis Axis { get; set; } = default;
+        public Axis Axis { get; set; } = default(Axis);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Target.Clear();
             item.FirstUnusedStringParameter = default;
-            item.Axis = default;
+            item.Axis = default(Axis);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

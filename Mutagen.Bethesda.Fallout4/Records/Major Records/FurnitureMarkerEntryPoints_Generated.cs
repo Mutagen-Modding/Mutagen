@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Type
-        public Furniture.AnimationType Type { get; set; } = default;
+        public Furniture.AnimationType Type { get; set; } = default(Furniture.AnimationType);
         #endregion
         #region Points
-        public Furniture.EntryPointType Points { get; set; } = default;
+        public Furniture.EntryPointType Points { get; set; } = default(Furniture.EntryPointType);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFurnitureMarkerEntryPoints item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Points = default;
+            item.Type = default(Furniture.AnimationType);
+            item.Points = default(Furniture.EntryPointType);
         }
         
         #region Mutagen

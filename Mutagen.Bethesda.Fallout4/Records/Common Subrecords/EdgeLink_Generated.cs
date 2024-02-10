@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Mesh
         private readonly IFormLink<INavigationMeshGetter> _Mesh = new FormLink<INavigationMeshGetter>();
@@ -65,10 +65,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<INavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
         #endregion
         #region TriangleIndex
-        public Int16 TriangleIndex { get; set; } = default;
+        public Int16 TriangleIndex { get; set; } = default(Int16);
         #endregion
         #region Unknown2
-        public SByte Unknown2 { get; set; } = default;
+        public SByte Unknown2 { get; set; } = default(SByte);
         #endregion
 
         #region To String
@@ -800,10 +800,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IEdgeLink item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.Unknown = default(Int32);
             item.Mesh.Clear();
-            item.TriangleIndex = default;
-            item.Unknown2 = default;
+            item.TriangleIndex = default(Int16);
+            item.Unknown2 = default(SByte);
         }
         
         #region Mutagen

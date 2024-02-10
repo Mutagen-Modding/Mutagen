@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Level
-        public Int16 Level { get; set; } = default;
+        public Int16 Level { get; set; } = default(Int16);
         #endregion
         #region Unused
-        public Int16 Unused { get; set; } = default;
+        public Int16 Unused { get; set; } = default(Int16);
         #endregion
         #region Reference
         private readonly IFormLink<INpcSpawnGetter> _Reference = new FormLink<INpcSpawnGetter>();
@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference;
         #endregion
         #region Count
-        public Int16 Count { get; set; } = default;
+        public Int16 Count { get; set; } = default(Int16);
         #endregion
         #region ChanceNone
-        public Percent ChanceNone { get; set; } = default;
+        public Percent ChanceNone { get; set; } = default(Percent);
         #endregion
         #region Unused2
-        public SByte Unused2 { get; set; } = default;
+        public SByte Unused2 { get; set; } = default(SByte);
         #endregion
 
         #region To String
@@ -879,12 +879,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILeveledNpcEntryData item)
         {
             ClearPartial();
-            item.Level = default;
-            item.Unused = default;
+            item.Level = default(Int16);
+            item.Unused = default(Int16);
             item.Reference.Clear();
-            item.Count = default;
-            item.ChanceNone = default;
-            item.Unused2 = default;
+            item.Count = default(Int16);
+            item.ChanceNone = default(Percent);
+            item.Unused2 = default(SByte);
         }
         
         #region Mutagen

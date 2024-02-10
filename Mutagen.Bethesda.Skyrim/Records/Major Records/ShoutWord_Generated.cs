@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISpellGetter> IShoutWordGetter.Spell => this.Spell;
         #endregion
         #region RecoveryTime
-        public Single RecoveryTime { get; set; } = default;
+        public Single RecoveryTime { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Word.Clear();
             item.Spell.Clear();
-            item.RecoveryTime = default;
+            item.RecoveryTime = default(Single);
         }
         
         #region Mutagen

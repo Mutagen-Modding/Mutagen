@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -723,8 +723,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClothingData item)
         {
             ClearPartial();
-            item.Value = default;
-            item.Weight = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
         }
         
         #region Mutagen

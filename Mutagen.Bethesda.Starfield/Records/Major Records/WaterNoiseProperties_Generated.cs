@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region WindDirection
-        public Single WindDirection { get; set; } = default;
+        public Single WindDirection { get; set; } = default(Single);
         #endregion
         #region WindSpeed
-        public Single WindSpeed { get; set; } = default;
+        public Single WindSpeed { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IWaterNoiseProperties item)
         {
             ClearPartial();
-            item.WindDirection = default;
-            item.WindSpeed = default;
+            item.WindDirection = default(Single);
+            item.WindSpeed = default(Single);
         }
         
         #region Mutagen

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region SpellSource
-        public CastSource SpellSource { get; set; } = default;
+        public CastSource SpellSource { get; set; } = default(CastSource);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetCurrentCastingTypeConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondUnusedIntParameter
-        public Int32 SecondUnusedIntParameter { get; set; } = default;
+        public Int32 SecondUnusedIntParameter { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetCurrentCastingTypeConditionData item)
         {
             ClearPartial();
-            item.SpellSource = default;
+            item.SpellSource = default(CastSource);
             item.FirstUnusedStringParameter = default;
-            item.SecondUnusedIntParameter = default;
+            item.SecondUnusedIntParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

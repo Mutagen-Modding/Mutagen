@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public WaterVelocity.VersioningBreaks Versioning { get; set; } = default;
+        public WaterVelocity.VersioningBreaks Versioning { get; set; } = default(WaterVelocity.VersioningBreaks);
         #endregion
         #region Offset
-        public P3Float Offset { get; set; } = default;
+        public P3Float Offset { get; set; } = default(P3Float);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Angle
-        public P3Float Angle { get; set; } = default;
+        public P3Float Angle { get; set; } = default(P3Float);
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -888,10 +888,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWaterVelocity item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Offset = default;
-            item.Unknown = default;
-            item.Angle = default;
+            item.Versioning = default(WaterVelocity.VersioningBreaks);
+            item.Offset = default(P3Float);
+            item.Unknown = default(Int32);
+            item.Angle = default(P3Float);
             item.Unknown2 = new byte[20];
             item.Unknown3 = new byte[16];
         }

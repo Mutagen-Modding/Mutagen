@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
         #endregion
         #region Index
-        public Int32 Index { get; set; } = default;
+        public Int32 Index { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Name = string.Empty;
             item.NewTexture.Clear();
-            item.Index = default;
+            item.Index = default(Int32);
         }
         
         #region Mutagen

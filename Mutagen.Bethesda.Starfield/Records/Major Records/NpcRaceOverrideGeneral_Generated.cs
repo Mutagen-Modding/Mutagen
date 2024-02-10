@@ -103,13 +103,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IImpactDataSetGetter> INpcRaceOverrideGeneralGetter.UnknownForm3 => this.UnknownForm3;
         #endregion
         #region UnknownFloat
-        public Single UnknownFloat { get; set; } = default;
+        public Single UnknownFloat { get; set; } = default(Single);
         #endregion
         #region UnknownInt16
-        public UInt16 UnknownInt16 { get; set; } = default;
+        public UInt16 UnknownInt16 { get; set; } = default(UInt16);
         #endregion
         #region ActiveOverrides
-        public NpcRaceOverrideGeneral.ActiveOverride ActiveOverrides { get; set; } = default;
+        public NpcRaceOverrideGeneral.ActiveOverride ActiveOverrides { get; set; } = default(NpcRaceOverrideGeneral.ActiveOverride);
         #endregion
 
         #region To String
@@ -1022,9 +1022,9 @@ namespace Mutagen.Bethesda.Starfield
             item.UnknownForm1.Clear();
             item.UnknownForm2.Clear();
             item.UnknownForm3.Clear();
-            item.UnknownFloat = default;
-            item.UnknownInt16 = default;
-            item.ActiveOverrides = default;
+            item.UnknownFloat = default(Single);
+            item.UnknownInt16 = default(UInt16);
+            item.ActiveOverrides = default(NpcRaceOverrideGeneral.ActiveOverride);
         }
         
         #region Mutagen

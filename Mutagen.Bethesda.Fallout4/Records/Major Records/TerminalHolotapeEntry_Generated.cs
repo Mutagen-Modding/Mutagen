@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IHolotapeGetter> ITerminalHolotapeEntryGetter.Holotape => this.Holotape;
         #endregion
         #region Count
-        public Int32 Count { get; set; } = default;
+        public Int32 Count { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Holotape.Clear();
-            item.Count = default;
+            item.Count = default(Int32);
         }
         
         #region Mutagen

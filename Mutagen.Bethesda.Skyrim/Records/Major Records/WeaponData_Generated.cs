@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region AnimationType
-        public WeaponAnimationType AnimationType { get; set; } = default;
+        public WeaponAnimationType AnimationType { get; set; } = default(WeaponAnimationType);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -65,59 +65,59 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IWeaponDataGetter.Unused => this.Unused;
         #endregion
         #region Speed
-        public Single Speed { get; set; } = default;
+        public Single Speed { get; set; } = default(Single);
         #endregion
         #region Reach
-        public Single Reach { get; set; } = default;
+        public Single Reach { get; set; } = default(Single);
         #endregion
         #region Flags
-        public WeaponData.Flag Flags { get; set; } = default;
+        public WeaponData.Flag Flags { get; set; } = default(WeaponData.Flag);
         #endregion
         #region Unused2
-        public Int16 Unused2 { get; set; } = default;
+        public Int16 Unused2 { get; set; } = default(Int16);
         #endregion
         #region SightFOV
-        public Single SightFOV { get; set; } = default;
+        public Single SightFOV { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region BaseVATStoHitChance
-        public Byte BaseVATStoHitChance { get; set; } = default;
+        public Byte BaseVATStoHitChance { get; set; } = default(Byte);
         #endregion
         #region AttackAnimation
         public static readonly WeaponData.AttackAnimationType AttackAnimationDefault = WeaponData.AttackAnimationType.Default;
         public WeaponData.AttackAnimationType AttackAnimation { get; set; } = AttackAnimationDefault;
         #endregion
         #region NumProjectiles
-        public Byte NumProjectiles { get; set; } = default;
+        public Byte NumProjectiles { get; set; } = default(Byte);
         #endregion
         #region EmbeddedWeaponAV
-        public Byte EmbeddedWeaponAV { get; set; } = default;
+        public Byte EmbeddedWeaponAV { get; set; } = default(Byte);
         #endregion
         #region RangeMin
-        public Single RangeMin { get; set; } = default;
+        public Single RangeMin { get; set; } = default(Single);
         #endregion
         #region RangeMax
-        public Single RangeMax { get; set; } = default;
+        public Single RangeMax { get; set; } = default(Single);
         #endregion
         #region OnHit
-        public WeaponData.OnHitType OnHit { get; set; } = default;
+        public WeaponData.OnHitType OnHit { get; set; } = default(WeaponData.OnHitType);
         #endregion
         #region AnimationAttackMult
-        public Single AnimationAttackMult { get; set; } = default;
+        public Single AnimationAttackMult { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
         #region RumbleLeftMotorStrength
-        public Single RumbleLeftMotorStrength { get; set; } = default;
+        public Single RumbleLeftMotorStrength { get; set; } = default(Single);
         #endregion
         #region RumbleRightMotorStrength
-        public Single RumbleRightMotorStrength { get; set; } = default;
+        public Single RumbleRightMotorStrength { get; set; } = default(Single);
         #endregion
         #region RumbleDuration
-        public Single RumbleDuration { get; set; } = default;
+        public Single RumbleDuration { get; set; } = default(Single);
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -136,17 +136,17 @@ namespace Mutagen.Bethesda.Skyrim
         Skill? IWeaponDataGetter.Skill => this.Skill;
         #endregion
         #region Unknown4
-        public Int64 Unknown4 { get; set; } = default;
+        public Int64 Unknown4 { get; set; } = default(Int64);
         #endregion
         #region Resist
         public static readonly ActorValue ResistDefault = ActorValue.None;
         public ActorValue Resist { get; set; } = ResistDefault;
         #endregion
         #region Unknown5
-        public Int32 Unknown5 { get; set; } = default;
+        public Int32 Unknown5 { get; set; } = default(Int32);
         #endregion
         #region Stagger
-        public Single Stagger { get; set; } = default;
+        public Single Stagger { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1604,32 +1604,32 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWeaponData item)
         {
             ClearPartial();
-            item.AnimationType = default;
+            item.AnimationType = default(WeaponAnimationType);
             item.Unused = new byte[3];
-            item.Speed = default;
-            item.Reach = default;
-            item.Flags = default;
-            item.Unused2 = default;
-            item.SightFOV = default;
-            item.Unknown = default;
-            item.BaseVATStoHitChance = default;
+            item.Speed = default(Single);
+            item.Reach = default(Single);
+            item.Flags = default(WeaponData.Flag);
+            item.Unused2 = default(Int16);
+            item.SightFOV = default(Single);
+            item.Unknown = default(Int32);
+            item.BaseVATStoHitChance = default(Byte);
             item.AttackAnimation = WeaponData.AttackAnimationDefault;
-            item.NumProjectiles = default;
-            item.EmbeddedWeaponAV = default;
-            item.RangeMin = default;
-            item.RangeMax = default;
-            item.OnHit = default;
-            item.AnimationAttackMult = default;
-            item.Unknown2 = default;
-            item.RumbleLeftMotorStrength = default;
-            item.RumbleRightMotorStrength = default;
-            item.RumbleDuration = default;
+            item.NumProjectiles = default(Byte);
+            item.EmbeddedWeaponAV = default(Byte);
+            item.RangeMin = default(Single);
+            item.RangeMax = default(Single);
+            item.OnHit = default(WeaponData.OnHitType);
+            item.AnimationAttackMult = default(Single);
+            item.Unknown2 = default(Int32);
+            item.RumbleLeftMotorStrength = default(Single);
+            item.RumbleRightMotorStrength = default(Single);
+            item.RumbleDuration = default(Single);
             item.Unknown3 = new byte[12];
             item.Skill = default;
-            item.Unknown4 = default;
+            item.Unknown4 = default(Int64);
             item.Resist = WeaponData.ResistDefault;
-            item.Unknown5 = default;
-            item.Stagger = default;
+            item.Unknown5 = default(Int32);
+            item.Stagger = default(Single);
         }
         
         #region Mutagen

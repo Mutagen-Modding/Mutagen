@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public MusicTrack.TypeEnum Type { get; set; } = default;
+        public MusicTrack.TypeEnum Type { get; set; } = default(MusicTrack.TypeEnum);
         #endregion
         #region Duration
         public Single? Duration { get; set; }
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IMusicTrackInternal item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(MusicTrack.TypeEnum);
             item.Duration = default;
             item.FadeOut = default;
             item.TrackFilename = default;
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Tracks = 
                             rhs.Tracks
-                            .Select(r => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
                     }
                     else

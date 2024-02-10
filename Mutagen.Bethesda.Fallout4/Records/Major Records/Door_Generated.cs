@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound;
         #endregion
         #region Flags
-        public Door.Flag Flags { get; set; } = default;
+        public Door.Flag Flags { get; set; } = default(Door.Flag);
         #endregion
         #region AlternateTextOpen
         public TranslatedString? AlternateTextOpen { get; set; }
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.OpenSound.Clear();
             item.CloseSound.Clear();
             item.LoopSound.Clear();
-            item.Flags = default;
+            item.Flags = default(Door.Flag);
             item.AlternateTextOpen = default;
             item.AlternateTextClose = default;
             base.Clear(item);
@@ -2279,7 +2279,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

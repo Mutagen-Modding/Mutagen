@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Month
-        public Month Month { get; set; } = default;
+        public Month Month { get; set; } = default(Month);
         #endregion
         #region DayOfWeek
-        public Weekday DayOfWeek { get; set; } = default;
+        public Weekday DayOfWeek { get; set; } = default(Weekday);
         #endregion
         #region Day
-        public Byte Day { get; set; } = default;
+        public Byte Day { get; set; } = default(Byte);
         #endregion
         #region Time
-        public Byte Time { get; set; } = default;
+        public Byte Time { get; set; } = default(Byte);
         #endregion
         #region Duration
-        public Int32 Duration { get; set; } = default;
+        public Int32 Duration { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -828,11 +828,11 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAIPackageSchedule item)
         {
             ClearPartial();
-            item.Month = default;
-            item.DayOfWeek = default;
-            item.Day = default;
-            item.Time = default;
-            item.Duration = default;
+            item.Month = default(Month);
+            item.DayOfWeek = default(Weekday);
+            item.Day = default(Byte);
+            item.Time = default(Byte);
+            item.Duration = default(Int32);
         }
         
         #region Mutagen

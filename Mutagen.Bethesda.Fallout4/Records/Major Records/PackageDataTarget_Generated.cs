@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Type
-        public PackageDataTarget.Types Type { get; set; } = default;
+        public PackageDataTarget.Types Type { get; set; } = default(PackageDataTarget.Types);
         #endregion
 
         #region To String
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPackageDataTarget item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(PackageDataTarget.Types);
             item.Target.Clear();
             base.Clear(item);
         }

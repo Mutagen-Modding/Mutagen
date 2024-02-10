@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Name
         /// <summary>
@@ -2353,7 +2353,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestReferenceAlias item)
         {
             ClearPartial();
-            item.ID = default;
+            item.ID = default(UInt32);
             item.Name = default;
             item.Flags = default;
             item.AliasIDToForceIntoWhenFilled = default;
@@ -3332,7 +3332,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3449,7 +3449,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3468,7 +3468,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Factions.SetTo(
                         rhs.Factions
-                        .Select(r => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3487,7 +3487,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.PackageData.SetTo(
                         rhs.PackageData
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

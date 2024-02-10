@@ -63,10 +63,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination;
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -775,8 +775,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Destination.Clear();
-            item.Position = default;
-            item.Rotation = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
         }
         
         #region Mutagen

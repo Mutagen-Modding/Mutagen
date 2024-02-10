@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public Single Sunrise { get; set; } = default;
+        public Single Sunrise { get; set; } = default(Single);
         #endregion
         #region Day
-        public Single Day { get; set; } = default;
+        public Single Day { get; set; } = default(Single);
         #endregion
         #region Sunset
-        public Single Sunset { get; set; } = default;
+        public Single Sunset { get; set; } = default(Single);
         #endregion
         #region Night
-        public Single Night { get; set; } = default;
+        public Single Night { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -785,10 +785,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWeatherAlpha item)
         {
             ClearPartial();
-            item.Sunrise = default;
-            item.Day = default;
-            item.Sunset = default;
-            item.Night = default;
+            item.Sunrise = default(Single);
+            item.Day = default(Single);
+            item.Sunset = default(Single);
+            item.Night = default(Single);
         }
         
         #region Mutagen

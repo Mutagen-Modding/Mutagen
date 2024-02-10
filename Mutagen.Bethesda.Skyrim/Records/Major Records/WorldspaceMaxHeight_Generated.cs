@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Min
-        public P2Int16 Min { get; set; } = default;
+        public P2Int16 Min { get; set; } = default(P2Int16);
         #endregion
         #region Max
-        public P2Int16 Max { get; set; } = default;
+        public P2Int16 Max { get; set; } = default(P2Int16);
         #endregion
         #region CellData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -764,8 +764,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorldspaceMaxHeight item)
         {
             ClearPartial();
-            item.Min = default;
-            item.Max = default;
+            item.Min = default(P2Int16);
+            item.Max = default(P2Int16);
             item.CellData = Array.Empty<byte>();
         }
         

@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ValueType
-        public Int32 ValueType { get; set; } = default;
+        public Int32 ValueType { get; set; } = default(Int32);
         #endregion
         #region Value
-        public Int32 Value { get; set; } = default;
+        public Int32 Value { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -692,8 +692,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVATSValueUnknownConditionData item)
         {
             ClearPartial();
-            item.ValueType = default;
-            item.Value = default;
+            item.ValueType = default(Int32);
+            item.Value = default(Int32);
             base.Clear(item);
         }
         

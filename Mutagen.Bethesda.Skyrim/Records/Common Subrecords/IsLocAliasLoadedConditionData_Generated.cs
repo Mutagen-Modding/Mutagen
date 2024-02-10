@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LocationAliasIndex
-        public Int32 LocationAliasIndex { get; set; } = default;
+        public Int32 LocationAliasIndex { get; set; } = default(Int32);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IIsLocAliasLoadedConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondUnusedIntParameter
-        public Int32 SecondUnusedIntParameter { get; set; } = default;
+        public Int32 SecondUnusedIntParameter { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIsLocAliasLoadedConditionData item)
         {
             ClearPartial();
-            item.LocationAliasIndex = default;
+            item.LocationAliasIndex = default(Int32);
             item.FirstUnusedStringParameter = default;
-            item.SecondUnusedIntParameter = default;
+            item.SecondUnusedIntParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

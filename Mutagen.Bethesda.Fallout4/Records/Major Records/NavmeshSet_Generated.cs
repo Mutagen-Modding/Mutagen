@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Navmeshes.SetTo(
                         rhs.Navmeshes
-                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

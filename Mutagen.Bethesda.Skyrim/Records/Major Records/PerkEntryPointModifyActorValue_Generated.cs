@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ActorValue
-        public ActorValue ActorValue { get; set; } = default;
+        public ActorValue ActorValue { get; set; } = default(ActorValue);
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Modification
-        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default;
+        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default(PerkEntryPointModifyActorValue.ModificationType);
         #endregion
 
         #region To String
@@ -729,9 +729,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPerkEntryPointModifyActorValue item)
         {
             ClearPartial();
-            item.ActorValue = default;
-            item.Value = default;
-            item.Modification = default;
+            item.ActorValue = default(ActorValue);
+            item.Value = default(Single);
+            item.Modification = default(PerkEntryPointModifyActorValue.ModificationType);
             base.Clear(item);
         }
         

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Starfield
         public String BlendName { get; set; } = string.Empty;
         #endregion
         #region Intensity
-        public Single Intensity { get; set; } = default;
+        public Single Intensity { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.BlendName = string.Empty;
-            item.Intensity = default;
+            item.Intensity = default(Single);
         }
         
         #region Mutagen
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Intensity
         private int? _IntensityLocation;
-        public Single Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

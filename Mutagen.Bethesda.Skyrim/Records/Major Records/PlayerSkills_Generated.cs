@@ -69,22 +69,22 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Health
-        public UInt16 Health { get; set; } = default;
+        public UInt16 Health { get; set; } = default(UInt16);
         #endregion
         #region Magicka
-        public UInt16 Magicka { get; set; } = default;
+        public UInt16 Magicka { get; set; } = default(UInt16);
         #endregion
         #region Stamina
-        public UInt16 Stamina { get; set; } = default;
+        public UInt16 Stamina { get; set; } = default(UInt16);
         #endregion
         #region Unused
-        public UInt16 Unused { get; set; } = default;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
         #region FarAwayModelDistance
-        public Single FarAwayModelDistance { get; set; } = default;
+        public Single FarAwayModelDistance { get; set; } = default(Single);
         #endregion
         #region GearedUpWeapons
-        public Byte GearedUpWeapons { get; set; } = default;
+        public Byte GearedUpWeapons { get; set; } = default(Byte);
         #endregion
         #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1198,12 +1198,12 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.SkillValues.Clear();
             item.SkillOffsets.Clear();
-            item.Health = default;
-            item.Magicka = default;
-            item.Stamina = default;
-            item.Unused = default;
-            item.FarAwayModelDistance = default;
-            item.GearedUpWeapons = default;
+            item.Health = default(UInt16);
+            item.Magicka = default(UInt16);
+            item.Stamina = default(UInt16);
+            item.Unused = default(UInt16);
+            item.FarAwayModelDistance = default(Single);
+            item.GearedUpWeapons = default(Byte);
             item.Unused2 = new byte[3];
         }
         

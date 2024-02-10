@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound;
         #endregion
         #region Flags
-        public Door.Flag Flags { get; set; } = default;
+        public Door.Flag Flags { get; set; } = default(Door.Flag);
         #endregion
 
         #region To String
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.OpenSound.Clear();
             item.CloseSound.Clear();
             item.LoopSound.Clear();
-            item.Flags = default;
+            item.Flags = default(Door.Flag);
             base.Clear(item);
         }
         

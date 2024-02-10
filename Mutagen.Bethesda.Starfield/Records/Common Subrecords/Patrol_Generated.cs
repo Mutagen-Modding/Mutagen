@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region IdleTime
-        public Single IdleTime { get; set; } = default;
+        public Single IdleTime { get; set; } = default(Single);
         #endregion
         #region Idle
         private readonly IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPatrol item)
         {
             ClearPartial();
-            item.IdleTime = default;
+            item.IdleTime = default(Single);
             item.Idle.Clear();
             item.Topics.Clear();
             item.Topic.Clear();
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region IdleTime
         private int? _IdleTimeLocation;
-        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region PatrolScriptMarker
         public partial ParseResult PatrolScriptMarkerCustomParse(

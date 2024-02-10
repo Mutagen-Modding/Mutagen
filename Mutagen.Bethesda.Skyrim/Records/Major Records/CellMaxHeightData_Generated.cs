@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Offset
-        public Single Offset { get; set; } = default;
+        public Single Offset { get; set; } = default(Single);
         #endregion
         #region HeightMap
         public static readonly P2Int HeightMapFixedSize = new P2Int(32, 32);
@@ -799,8 +799,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICellMaxHeightData item)
         {
             ClearPartial();
-            item.Offset = default;
-            item.HeightMap.SetAllTo(default);
+            item.Offset = default(Single);
+            item.HeightMap.SetAllTo(default(Byte));
         }
         
         #region Mutagen
@@ -916,7 +916,8 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
                     }
                 }

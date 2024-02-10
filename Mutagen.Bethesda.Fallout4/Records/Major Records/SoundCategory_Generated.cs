@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Flags
-        public SoundCategory.Flag Flags { get; set; } = default;
+        public SoundCategory.Flag Flags { get; set; } = default(SoundCategory.Flag);
         #endregion
         #region Parent
         private readonly IFormLinkNullable<ISoundCategoryGetter> _Parent = new FormLinkNullable<ISoundCategoryGetter>();
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Name = default;
-            item.Flags = default;
+            item.Flags = default(SoundCategory.Flag);
             item.Parent.Clear();
             item.MenuSlider.Clear();
             item.StaticVolumeMultiplier = default;

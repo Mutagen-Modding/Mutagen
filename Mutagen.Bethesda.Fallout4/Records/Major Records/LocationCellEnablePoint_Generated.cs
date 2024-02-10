@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPlacedGetter> ILocationCellEnablePointGetter.Ref => this.Ref;
         #endregion
         #region Grid
-        public P2Int16 Grid { get; set; } = default;
+        public P2Int16 Grid { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Actor.Clear();
             item.Ref.Clear();
-            item.Grid = default;
+            item.Grid = default(P2Int16);
         }
         
         #region Mutagen

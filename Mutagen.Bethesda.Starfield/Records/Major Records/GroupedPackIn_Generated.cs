@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte> IGroupedPackInGetter.LNAM => this.LNAM;
         #endregion
         #region XGOM
-        public Boolean XGOM { get; set; } = default;
+        public Boolean XGOM { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Starfield
             item.INAM = default;
             item.JNAM.Clear();
             item.LNAM = Array.Empty<byte>();
-            item.XGOM = default;
+            item.XGOM = default(Boolean);
         }
         
         #region Mutagen
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region XGOM
         private int? _XGOMLocation;
-        public Boolean XGOM => _XGOMLocation.HasValue ? true : default;
+        public Boolean XGOM => _XGOMLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

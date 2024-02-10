@@ -55,28 +55,28 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region OuterConeAngleDegrees
-        public Single OuterConeAngleDegrees { get; set; } = default;
+        public Single OuterConeAngleDegrees { get; set; } = default(Single);
         #endregion
         #region InnerConeAngleDegrees
-        public Single InnerConeAngleDegrees { get; set; } = default;
+        public Single InnerConeAngleDegrees { get; set; } = default(Single);
         #endregion
         #region SteeringDegreesPerSec
-        public Single SteeringDegreesPerSec { get; set; } = default;
+        public Single SteeringDegreesPerSec { get; set; } = default(Single);
         #endregion
         #region SnapSteeringMultiplierOuterRing
-        public Single SnapSteeringMultiplierOuterRing { get; set; } = default;
+        public Single SnapSteeringMultiplierOuterRing { get; set; } = default(Single);
         #endregion
         #region SnapSteeringMultiplierInnerRing
-        public Single SnapSteeringMultiplierInnerRing { get; set; } = default;
+        public Single SnapSteeringMultiplierInnerRing { get; set; } = default(Single);
         #endregion
         #region MaxAimAssistDistance
-        public Single MaxAimAssistDistance { get; set; } = default;
+        public Single MaxAimAssistDistance { get; set; } = default(Single);
         #endregion
         #region MeleeAimAssistEnabled
-        public Boolean MeleeAimAssistEnabled { get; set; } = default;
+        public Boolean MeleeAimAssistEnabled { get; set; } = default(Boolean);
         #endregion
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1013,14 +1013,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMeleeAimAssistModelInternal item)
         {
             ClearPartial();
-            item.OuterConeAngleDegrees = default;
-            item.InnerConeAngleDegrees = default;
-            item.SteeringDegreesPerSec = default;
-            item.SnapSteeringMultiplierOuterRing = default;
-            item.SnapSteeringMultiplierInnerRing = default;
-            item.MaxAimAssistDistance = default;
-            item.MeleeAimAssistEnabled = default;
-            item.Unknown = default;
+            item.OuterConeAngleDegrees = default(Single);
+            item.InnerConeAngleDegrees = default(Single);
+            item.SteeringDegreesPerSec = default(Single);
+            item.SnapSteeringMultiplierOuterRing = default(Single);
+            item.SnapSteeringMultiplierInnerRing = default(Single);
+            item.MaxAimAssistDistance = default(Single);
+            item.MeleeAimAssistEnabled = default(Boolean);
+            item.Unknown = default(Single);
             base.Clear(item);
         }
         
@@ -1798,42 +1798,42 @@ namespace Mutagen.Bethesda.Starfield
         #region OuterConeAngleDegrees
         private int _OuterConeAngleDegreesLocation => _SNAMLocation!.Value.Min;
         private bool _OuterConeAngleDegrees_IsSet => _SNAMLocation.HasValue;
-        public Single OuterConeAngleDegrees => _OuterConeAngleDegrees_IsSet ? _recordData.Slice(_OuterConeAngleDegreesLocation, 4).Float() : default;
+        public Single OuterConeAngleDegrees => _OuterConeAngleDegrees_IsSet ? _recordData.Slice(_OuterConeAngleDegreesLocation, 4).Float() : default(Single);
         #endregion
         #region InnerConeAngleDegrees
         private int _InnerConeAngleDegreesLocation => _SNAMLocation!.Value.Min + 0x4;
         private bool _InnerConeAngleDegrees_IsSet => _SNAMLocation.HasValue;
-        public Single InnerConeAngleDegrees => _InnerConeAngleDegrees_IsSet ? _recordData.Slice(_InnerConeAngleDegreesLocation, 4).Float() : default;
+        public Single InnerConeAngleDegrees => _InnerConeAngleDegrees_IsSet ? _recordData.Slice(_InnerConeAngleDegreesLocation, 4).Float() : default(Single);
         #endregion
         #region SteeringDegreesPerSec
         private int _SteeringDegreesPerSecLocation => _SNAMLocation!.Value.Min + 0x8;
         private bool _SteeringDegreesPerSec_IsSet => _SNAMLocation.HasValue;
-        public Single SteeringDegreesPerSec => _SteeringDegreesPerSec_IsSet ? _recordData.Slice(_SteeringDegreesPerSecLocation, 4).Float() : default;
+        public Single SteeringDegreesPerSec => _SteeringDegreesPerSec_IsSet ? _recordData.Slice(_SteeringDegreesPerSecLocation, 4).Float() : default(Single);
         #endregion
         #region SnapSteeringMultiplierOuterRing
         private int _SnapSteeringMultiplierOuterRingLocation => _SNAMLocation!.Value.Min + 0xC;
         private bool _SnapSteeringMultiplierOuterRing_IsSet => _SNAMLocation.HasValue;
-        public Single SnapSteeringMultiplierOuterRing => _SnapSteeringMultiplierOuterRing_IsSet ? _recordData.Slice(_SnapSteeringMultiplierOuterRingLocation, 4).Float() : default;
+        public Single SnapSteeringMultiplierOuterRing => _SnapSteeringMultiplierOuterRing_IsSet ? _recordData.Slice(_SnapSteeringMultiplierOuterRingLocation, 4).Float() : default(Single);
         #endregion
         #region SnapSteeringMultiplierInnerRing
         private int _SnapSteeringMultiplierInnerRingLocation => _SNAMLocation!.Value.Min + 0x10;
         private bool _SnapSteeringMultiplierInnerRing_IsSet => _SNAMLocation.HasValue;
-        public Single SnapSteeringMultiplierInnerRing => _SnapSteeringMultiplierInnerRing_IsSet ? _recordData.Slice(_SnapSteeringMultiplierInnerRingLocation, 4).Float() : default;
+        public Single SnapSteeringMultiplierInnerRing => _SnapSteeringMultiplierInnerRing_IsSet ? _recordData.Slice(_SnapSteeringMultiplierInnerRingLocation, 4).Float() : default(Single);
         #endregion
         #region MaxAimAssistDistance
         private int _MaxAimAssistDistanceLocation => _SNAMLocation!.Value.Min + 0x14;
         private bool _MaxAimAssistDistance_IsSet => _SNAMLocation.HasValue;
-        public Single MaxAimAssistDistance => _MaxAimAssistDistance_IsSet ? _recordData.Slice(_MaxAimAssistDistanceLocation, 4).Float() : default;
+        public Single MaxAimAssistDistance => _MaxAimAssistDistance_IsSet ? _recordData.Slice(_MaxAimAssistDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region MeleeAimAssistEnabled
         private int _MeleeAimAssistEnabledLocation => _SNAMLocation!.Value.Min + 0x18;
         private bool _MeleeAimAssistEnabled_IsSet => _SNAMLocation.HasValue;
-        public Boolean MeleeAimAssistEnabled => _MeleeAimAssistEnabled_IsSet ? _recordData.Slice(_MeleeAimAssistEnabledLocation, 1)[0] >= 1 : default;
+        public Boolean MeleeAimAssistEnabled => _MeleeAimAssistEnabled_IsSet ? _recordData.Slice(_MeleeAimAssistEnabledLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Unknown
         private int _UnknownLocation => _SNAMLocation!.Value.Min + 0x19;
         private bool _Unknown_IsSet => _SNAMLocation.HasValue;
-        public Single Unknown => _Unknown_IsSet ? _recordData.Slice(_UnknownLocation, 4).Float() : default;
+        public Single Unknown => _Unknown_IsSet ? _recordData.Slice(_UnknownLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

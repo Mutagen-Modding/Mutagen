@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Data
-        public Boolean Data { get; set; } = default;
+        public Boolean Data { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IScriptBoolProperty item)
         {
             ClearPartial();
-            item.Data = default;
+            item.Data = default(Boolean);
             base.Clear(item);
         }
         

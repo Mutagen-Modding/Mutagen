@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Items.SetTo(
                         rhs.Items
-                        .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

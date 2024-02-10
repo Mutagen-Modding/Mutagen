@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public Quest.Flag Flags { get; set; } = default;
+        public Quest.Flag Flags { get; set; } = default(Quest.Flag);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IQuestData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Priority = default;
+            item.Flags = default(Quest.Flag);
+            item.Priority = default(Byte);
         }
         
         #region Mutagen

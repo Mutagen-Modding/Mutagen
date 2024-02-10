@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region OnLocalMap
-        public Boolean OnLocalMap { get; set; } = default;
+        public Boolean OnLocalMap { get; set; } = default(Boolean);
         #endregion
         #region LoopingSound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1484,7 +1484,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Destructible = null;
             item.Keywords = null;
             item.Properties = null;
-            item.OnLocalMap = default;
+            item.OnLocalMap = default(Boolean);
             item.LoopingSound.Clear();
             base.Clear(item);
         }
@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2689,7 +2689,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region OnLocalMap
         private int? _OnLocalMapLocation;
-        public Boolean OnLocalMap => _OnLocalMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OnLocalMapLocation.Value, _package.MetaData.Constants)[0] >= 1 : default;
+        public Boolean OnLocalMap => _OnLocalMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OnLocalMapLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean);
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;

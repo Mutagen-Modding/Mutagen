@@ -67,10 +67,10 @@ namespace Mutagen.Bethesda.Starfield
         Int16? ISpeechChallengeGetter.QuestStageOnLoss => this.QuestStageOnLoss;
         #endregion
         #region SRAN
-        public Boolean SRAN { get; set; } = default;
+        public Boolean SRAN { get; set; } = default(Boolean);
         #endregion
         #region SGEN
-        public Boolean SGEN { get; set; } = default;
+        public Boolean SGEN { get; set; } = default(Boolean);
         #endregion
         #region Quest
         private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
@@ -1221,8 +1221,8 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.QuestStageOnWin = default;
             item.QuestStageOnLoss = default;
-            item.SRAN = default;
-            item.SGEN = default;
+            item.SRAN = default(Boolean);
+            item.SGEN = default(Boolean);
             item.Quest.Clear();
             item.Keywords = null;
             item.Scenes = null;
@@ -1711,7 +1711,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -1738,7 +1738,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Scenes = 
                             rhs.Scenes
-                            .Select(r => (IFormLinkGetter<ISceneGetter>)new FormLink<ISceneGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISceneGetter>)new FormLink<ISceneGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISceneGetter>>();
                     }
                     else
@@ -2181,11 +2181,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SRAN
         private int? _SRANLocation;
-        public Boolean SRAN => _SRANLocation.HasValue ? true : default;
+        public Boolean SRAN => _SRANLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SGEN
         private int? _SGENLocation;
-        public Boolean SGEN => _SGENLocation.HasValue ? true : default;
+        public Boolean SGEN => _SGENLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Quest
         private int? _QuestLocation;

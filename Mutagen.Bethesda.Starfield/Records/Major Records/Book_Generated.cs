@@ -251,13 +251,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IMessageGetter> IBookGetter.FeaturedItemMessage => this.FeaturedItemMessage;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Flags
-        public Book.Flag Flags { get; set; } = default;
+        public Book.Flag Flags { get; set; } = default(Book.Flag);
         #endregion
         #region Teaches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -271,13 +271,13 @@ namespace Mutagen.Bethesda.Starfield
         IBookTeachTargetGetter? IBookGetter.Teaches => this.Teaches;
         #endregion
         #region TextOffsetX
-        public UInt32 TextOffsetX { get; set; } = default;
+        public UInt32 TextOffsetX { get; set; } = default(UInt32);
         #endregion
         #region TextOffsetY
-        public UInt32 TextOffsetY { get; set; } = default;
+        public UInt32 TextOffsetY { get; set; } = default(UInt32);
         #endregion
         #region DNAMUnknown
-        public UInt32 DNAMUnknown { get; set; } = default;
+        public UInt32 DNAMUnknown { get; set; } = default(UInt32);
         #endregion
         #region CNAM
         public TranslatedString? CNAM { get; set; }
@@ -2093,13 +2093,13 @@ namespace Mutagen.Bethesda.Starfield
             item.DropdownSound = null;
             item.Keywords = null;
             item.FeaturedItemMessage.Clear();
-            item.Value = default;
-            item.Weight = default;
-            item.Flags = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.Flags = default(Book.Flag);
             item.Teaches = null;
-            item.TextOffsetX = default;
-            item.TextOffsetY = default;
-            item.DNAMUnknown = default;
+            item.TextOffsetX = default(UInt32);
+            item.TextOffsetY = default(UInt32);
+            item.DNAMUnknown = default(UInt32);
             item.CNAM = default;
             item.ENAM = default;
             item.FNAM = default;
@@ -3137,7 +3137,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3931,12 +3931,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region Flags
@@ -3952,17 +3952,17 @@ namespace Mutagen.Bethesda.Starfield
         #region TextOffsetX
         private int _TextOffsetXLocation => _DNAMLocation!.Value.Min + 0x5;
         private bool _TextOffsetX_IsSet => _DNAMLocation.HasValue;
-        public UInt32 TextOffsetX => _TextOffsetX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetXLocation, 4)) : default;
+        public UInt32 TextOffsetX => _TextOffsetX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetXLocation, 4)) : default(UInt32);
         #endregion
         #region TextOffsetY
         private int _TextOffsetYLocation => _DNAMLocation!.Value.Min + 0x9;
         private bool _TextOffsetY_IsSet => _DNAMLocation.HasValue;
-        public UInt32 TextOffsetY => _TextOffsetY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetYLocation, 4)) : default;
+        public UInt32 TextOffsetY => _TextOffsetY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetYLocation, 4)) : default(UInt32);
         #endregion
         #region DNAMUnknown
         private int _DNAMUnknownLocation => _DNAMLocation!.Value.Min + 0xD;
         private bool _DNAMUnknown_IsSet => _DNAMLocation.HasValue;
-        public UInt32 DNAMUnknown => _DNAMUnknown_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_DNAMUnknownLocation, 4)) : default;
+        public UInt32 DNAMUnknown => _DNAMUnknown_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_DNAMUnknownLocation, 4)) : default(UInt32);
         #endregion
         #region CNAM
         private int? _CNAMLocation;

@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IPlacedGetter> ILocationCellEnablePointGetter.Ref => this.Ref;
         #endregion
         #region SetEnableStateToOppositeOfParent
-        public Boolean SetEnableStateToOppositeOfParent { get; set; } = default;
+        public Boolean SetEnableStateToOppositeOfParent { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Actor.Clear();
             item.Ref.Clear();
-            item.SetEnableStateToOppositeOfParent = default;
+            item.SetEnableStateToOppositeOfParent = default(Boolean);
         }
         
         #region Mutagen

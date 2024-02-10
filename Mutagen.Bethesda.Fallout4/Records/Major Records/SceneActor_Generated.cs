@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public SceneActor.Flag Flags { get; set; } = default;
+        public SceneActor.Flag Flags { get; set; } = default(SceneActor.Flag);
         #endregion
         #region BehaviorFlags
-        public SceneActor.BehaviorFlag BehaviorFlags { get; set; } = default;
+        public SceneActor.BehaviorFlag BehaviorFlags { get; set; } = default(SceneActor.BehaviorFlag);
         #endregion
 
         #region To String
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISceneActor item)
         {
             ClearPartial();
-            item.ID = default;
-            item.Flags = default;
-            item.BehaviorFlags = default;
+            item.ID = default(UInt32);
+            item.Flags = default(SceneActor.Flag);
+            item.BehaviorFlags = default(SceneActor.BehaviorFlag);
         }
         
         #region Mutagen
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region ID
         private int? _IDLocation;
-        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Flags
         private int? _FlagsLocation;

@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ForceNames
-        public Boolean ForceNames { get; set; } = default;
+        public Boolean ForceNames { get; set; } = default(Boolean);
         #endregion
         #region Aah_LipBigAah
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFaceFxPhonemes item)
         {
             ClearPartial();
-            item.ForceNames = default;
+            item.ForceNames = default(Boolean);
             item.Aah_LipBigAah = null;
             item.BigAah_LipDST = null;
             item.BMP_LipEee = null;

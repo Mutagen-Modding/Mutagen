@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Head
-        public Single Head { get; set; } = default;
+        public Single Head { get; set; } = default(Single);
         #endregion
         #region UpperTorso
-        public Single UpperTorso { get; set; } = default;
+        public Single UpperTorso { get; set; } = default(Single);
         #endregion
         #region Arms
-        public Single Arms { get; set; } = default;
+        public Single Arms { get; set; } = default(Single);
         #endregion
         #region LowerTorso
-        public Single LowerTorso { get; set; } = default;
+        public Single LowerTorso { get; set; } = default(Single);
         #endregion
         #region Legs
-        public Single Legs { get; set; } = default;
+        public Single Legs { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -821,11 +821,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INpcBodyMorphRegionValues item)
         {
             ClearPartial();
-            item.Head = default;
-            item.UpperTorso = default;
-            item.Arms = default;
-            item.LowerTorso = default;
-            item.Legs = default;
+            item.Head = default(Single);
+            item.UpperTorso = default(Single);
+            item.Arms = default(Single);
+            item.LowerTorso = default(Single);
+            item.Legs = default(Single);
         }
         
         #region Mutagen

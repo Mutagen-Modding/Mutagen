@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Cutoff
-        public Byte Cutoff { get; set; } = default;
+        public Byte Cutoff { get; set; } = default(Byte);
         #endregion
         #region Base
-        public Byte Base { get; set; } = default;
+        public Byte Base { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAlpha item)
         {
             ClearPartial();
-            item.Cutoff = default;
-            item.Base = default;
+            item.Cutoff = default(Byte);
+            item.Base = default(Byte);
         }
         
         #region Mutagen

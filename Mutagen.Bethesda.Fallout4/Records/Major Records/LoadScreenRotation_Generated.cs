@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Min
-        public Int16 Min { get; set; } = default;
+        public Int16 Min { get; set; } = default(Int16);
         #endregion
         #region Max
-        public Int16 Max { get; set; } = default;
+        public Int16 Max { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILoadScreenRotation item)
         {
             ClearPartial();
-            item.Min = default;
-            item.Max = default;
+            item.Min = default(Int16);
+            item.Max = default(Int16);
         }
         
         #region Mutagen

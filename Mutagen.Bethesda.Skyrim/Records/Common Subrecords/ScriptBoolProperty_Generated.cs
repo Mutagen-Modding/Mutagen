@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Data
-        public Boolean Data { get; set; } = default;
+        public Boolean Data { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IScriptBoolProperty item)
         {
             ClearPartial();
-            item.Data = default;
+            item.Data = default(Boolean);
             base.Clear(item);
         }
         

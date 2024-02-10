@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         DialogType? IDialogTopicGetter.DialogType => this.DialogType;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.Quests.Clear();
             item.Name = default;
             item.DialogType = default;
-            item.Timestamp = default;
+            item.Timestamp = default(Int32);
             item.Items.Clear();
             base.Clear(item);
         }
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Quests.SetTo(
                         rhs.Quests
-                        .Select(r => (IFormLinkGetter<IQuestGetter>)new FormLink<IQuestGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IQuestGetter>)new FormLink<IQuestGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

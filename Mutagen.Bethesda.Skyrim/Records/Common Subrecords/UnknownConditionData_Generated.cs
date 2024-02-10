@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Function
-        public Condition.Function Function { get; set; } = default;
+        public Condition.Function Function { get; set; } = default(Condition.Function);
         #endregion
         #region ParameterOne
-        public Int32 ParameterOne { get; set; } = default;
+        public Int32 ParameterOne { get; set; } = default(Int32);
         #endregion
         #region ParameterTwo
-        public Int32 ParameterTwo { get; set; } = default;
+        public Int32 ParameterTwo { get; set; } = default(Int32);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -798,9 +798,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IUnknownConditionData item)
         {
             ClearPartial();
-            item.Function = default;
-            item.ParameterOne = default;
-            item.ParameterTwo = default;
+            item.Function = default(Condition.Function);
+            item.ParameterOne = default(Int32);
+            item.ParameterTwo = default(Int32);
             item.FirstUnusedStringParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);

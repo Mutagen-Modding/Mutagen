@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single? IGlobalFloatGetter.Data => this.Data;
         #endregion
         #region OutputChar
-        public Boolean OutputChar { get; set; } = default;
+        public Boolean OutputChar { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Data = default;
-            item.OutputChar = default;
+            item.OutputChar = default(Boolean);
             base.Clear(item);
         }
         

@@ -98,22 +98,22 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IKeywordGetter> IAnimationSceneItemGetter.FLAV => this.FLAV;
         #endregion
         #region QUAL
-        public Boolean QUAL { get; set; } = default;
+        public Boolean QUAL { get; set; } = default(Boolean);
         #endregion
         #region SPOR
-        public Boolean SPOR { get; set; } = default;
+        public Boolean SPOR { get; set; } = default(Boolean);
         #endregion
         #region OCOR
-        public Boolean OCOR { get; set; } = default;
+        public Boolean OCOR { get; set; } = default(Boolean);
         #endregion
         #region SOFT
-        public Boolean SOFT { get; set; } = default;
+        public Boolean SOFT { get; set; } = default(Boolean);
         #endregion
         #region DOFT
-        public Boolean DOFT { get; set; } = default;
+        public Boolean DOFT { get; set; } = default(Boolean);
         #endregion
         #region LVCR
-        public Single LVCR { get; set; } = default;
+        public Single LVCR { get; set; } = default(Single);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -140,10 +140,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IActionRecordGetter> IAnimationSceneItemGetter.ATAC => this.ATAC;
         #endregion
         #region PLRL
-        public Boolean PLRL { get; set; } = default;
+        public Boolean PLRL { get; set; } = default(Boolean);
         #endregion
         #region SHRT
-        public Boolean SHRT { get; set; } = default;
+        public Boolean SHRT { get; set; } = default(Boolean);
         #endregion
         #region DTGT
         public Int32? DTGT { get; set; }
@@ -151,10 +151,10 @@ namespace Mutagen.Bethesda.Starfield
         Int32? IAnimationSceneItemGetter.DTGT => this.DTGT;
         #endregion
         #region DPLT
-        public Boolean DPLT { get; set; } = default;
+        public Boolean DPLT { get; set; } = default(Boolean);
         #endregion
         #region ACEP
-        public Boolean ACEP { get; set; } = default;
+        public Boolean ACEP { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -1454,19 +1454,19 @@ namespace Mutagen.Bethesda.Starfield
             item.VCLR.Clear();
             item.FLMV.Clear();
             item.FLAV.Clear();
-            item.QUAL = default;
-            item.SPOR = default;
-            item.OCOR = default;
-            item.SOFT = default;
-            item.DOFT = default;
-            item.LVCR = default;
+            item.QUAL = default(Boolean);
+            item.SPOR = default(Boolean);
+            item.OCOR = default(Boolean);
+            item.SOFT = default(Boolean);
+            item.DOFT = default(Boolean);
+            item.LVCR = default(Single);
             item.Conditions.Clear();
             item.ATAC.Clear();
-            item.PLRL = default;
-            item.SHRT = default;
+            item.PLRL = default(Boolean);
+            item.SHRT = default(Boolean);
             item.DTGT = default;
-            item.DPLT = default;
-            item.ACEP = default;
+            item.DPLT = default(Boolean);
+            item.ACEP = default(Boolean);
         }
         
         #region Mutagen
@@ -2342,27 +2342,27 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QUAL
         private int? _QUALLocation;
-        public Boolean QUAL => _QUALLocation.HasValue ? true : default;
+        public Boolean QUAL => _QUALLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SPOR
         private int? _SPORLocation;
-        public Boolean SPOR => _SPORLocation.HasValue ? true : default;
+        public Boolean SPOR => _SPORLocation.HasValue ? true : default(Boolean);
         #endregion
         #region OCOR
         private int? _OCORLocation;
-        public Boolean OCOR => _OCORLocation.HasValue ? true : default;
+        public Boolean OCOR => _OCORLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SOFT
         private int? _SOFTLocation;
-        public Boolean SOFT => _SOFTLocation.HasValue ? true : default;
+        public Boolean SOFT => _SOFTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region DOFT
         private int? _DOFTLocation;
-        public Boolean DOFT => _DOFTLocation.HasValue ? true : default;
+        public Boolean DOFT => _DOFTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region LVCR
         private int? _LVCRLocation;
-        public Single LVCR => _LVCRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LVCRLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single LVCR => _LVCRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LVCRLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region ATAC
@@ -2371,11 +2371,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region PLRL
         private int? _PLRLLocation;
-        public Boolean PLRL => _PLRLLocation.HasValue ? true : default;
+        public Boolean PLRL => _PLRLLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SHRT
         private int? _SHRTLocation;
-        public Boolean SHRT => _SHRTLocation.HasValue ? true : default;
+        public Boolean SHRT => _SHRTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region DTGT
         private int? _DTGTLocation;
@@ -2383,11 +2383,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DPLT
         private int? _DPLTLocation;
-        public Boolean DPLT => _DPLTLocation.HasValue ? true : default;
+        public Boolean DPLT => _DPLTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region ACEP
         private int? _ACEPLocation;
-        public Boolean ACEP => _ACEPLocation.HasValue ? true : default;
+        public Boolean ACEP => _ACEPLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -64,10 +64,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IActorValueInformationGetter> IPerkEntryPointModifyActorValueGetter.ActorValue => this.ActorValue;
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Modification
-        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default;
+        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default(PerkEntryPointModifyActorValue.ModificationType);
         #endregion
 
         #region To String
@@ -748,8 +748,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ActorValue.Clear();
-            item.Value = default;
-            item.Modification = default;
+            item.Value = default(Single);
+            item.Modification = default(PerkEntryPointModifyActorValue.ModificationType);
             base.Clear(item);
         }
         

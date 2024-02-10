@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
-        public EnableParent.Flag Flags { get; set; } = default;
+        public EnableParent.Flag Flags { get; set; } = default(EnableParent.Flag);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Reference.Clear();
-            item.Flags = default;
+            item.Flags = default(EnableParent.Flag);
         }
         
         #region Mutagen

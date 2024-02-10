@@ -164,17 +164,17 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region GridSize
-        public UInt32 GridSize { get; set; } = default;
+        public UInt32 GridSize { get; set; } = default(UInt32);
         public static RangeUInt32 GridSize_Range = new RangeUInt32(UInt32.MinValue, 12);
         #endregion
         #region GridMaxDistance
-        public P2Float GridMaxDistance { get; set; } = default;
+        public P2Float GridMaxDistance { get; set; } = default(P2Float);
         #endregion
         #region GridMin
-        public P3Float GridMin { get; set; } = default;
+        public P3Float GridMin { get; set; } = default(P3Float);
         #endregion
         #region GridMax
-        public P3Float GridMax { get; set; } = default;
+        public P3Float GridMax { get; set; } = default(P3Float);
         #endregion
         #region GridArrays
         public NavmeshGridArray GridArrays { get; set; } = new NavmeshGridArray();
@@ -1758,10 +1758,10 @@ namespace Mutagen.Bethesda.Fallout4
             item.Cover.Clear();
             item.CoverTriangleMappings.Clear();
             item.Waypoints.Clear();
-            item.GridSize = default;
-            item.GridMaxDistance = default;
-            item.GridMin = default;
-            item.GridMax = default;
+            item.GridSize = default(UInt32);
+            item.GridMaxDistance = default(P2Float);
+            item.GridMin = default(P3Float);
+            item.GridMax = default(P3Float);
             item.GridArrays.Clear();
         }
         

@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.WalkForwardFootsteps.SetTo(
                         rhs.WalkForwardFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.RunForwardFootsteps.SetTo(
                         rhs.RunForwardFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1804,7 +1804,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.WalkForwardAlternateFootsteps.SetTo(
                         rhs.WalkForwardAlternateFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.RunForwardAlternateFootsteps.SetTo(
                         rhs.RunForwardAlternateFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.WalkForwardAlternateFootsteps2.SetTo(
                         rhs.WalkForwardAlternateFootsteps2
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

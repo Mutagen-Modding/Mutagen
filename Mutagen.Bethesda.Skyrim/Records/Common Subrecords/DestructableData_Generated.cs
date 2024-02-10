@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Health
-        public Int32 Health { get; set; } = default;
+        public Int32 Health { get; set; } = default(Int32);
         #endregion
         #region DESTCount
-        public Byte DESTCount { get; set; } = default;
+        public Byte DESTCount { get; set; } = default(Byte);
         #endregion
         #region VATSTargetable
-        public Boolean VATSTargetable { get; set; } = default;
+        public Boolean VATSTargetable { get; set; } = default(Boolean);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDestructableData item)
         {
             ClearPartial();
-            item.Health = default;
-            item.DESTCount = default;
-            item.VATSTargetable = default;
-            item.Unknown = default;
+            item.Health = default(Int32);
+            item.DESTCount = default(Byte);
+            item.VATSTargetable = default(Boolean);
+            item.Unknown = default(Int16);
         }
         
         #region Mutagen

@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Branches.SetTo(
                         rhs.Branches
-                        .Select(r => (IFormLinkGetter<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

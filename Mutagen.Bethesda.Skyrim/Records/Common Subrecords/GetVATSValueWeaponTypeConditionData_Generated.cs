@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Value
-        public WeaponAnimationType Value { get; set; } = default;
+        public WeaponAnimationType Value { get; set; } = default(WeaponAnimationType);
         #endregion
 
         #region To String
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVATSValueWeaponTypeConditionData item)
         {
             ClearPartial();
-            item.Value = default;
+            item.Value = default(WeaponAnimationType);
             base.Clear(item);
         }
         

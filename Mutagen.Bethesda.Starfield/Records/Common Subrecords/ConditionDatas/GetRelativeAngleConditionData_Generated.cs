@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
         String? IGetRelativeAngleConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondParameter
-        public Axis SecondParameter { get; set; } = default;
+        public Axis SecondParameter { get; set; } = default(Axis);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.FirstParameter.Clear();
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondParameter = default(Axis);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region First
-        public UInt32 First { get; set; } = default;
+        public UInt32 First { get; set; } = default(UInt32);
         #endregion
         #region Second
-        public UInt32 Second { get; set; } = default;
+        public UInt32 Second { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISurfaceBlockIntItem item)
         {
             ClearPartial();
-            item.First = default;
-            item.Second = default;
+            item.First = default(UInt32);
+            item.Second = default(UInt32);
         }
         
         #region Mutagen

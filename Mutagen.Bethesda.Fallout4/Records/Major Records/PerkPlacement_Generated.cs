@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk;
         #endregion
         #region Rank
-        public Byte Rank { get; set; } = default;
+        public Byte Rank { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Perk.Clear();
-            item.Rank = default;
+            item.Rank = default(Byte);
         }
         
         #region Mutagen

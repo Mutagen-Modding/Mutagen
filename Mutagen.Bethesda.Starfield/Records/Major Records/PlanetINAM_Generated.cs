@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region AtmosHandle
-        public UInt32 AtmosHandle { get; set; } = default;
+        public UInt32 AtmosHandle { get; set; } = default(UInt32);
         #endregion
         #region Unknown1
-        public Int32 Unknown1 { get; set; } = default;
+        public Int32 Unknown1 { get; set; } = default(Int32);
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
         #region Unknown3
-        public Int32 Unknown3 { get; set; } = default;
+        public Int32 Unknown3 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetINAM item)
         {
             ClearPartial();
-            item.AtmosHandle = default;
-            item.Unknown1 = default;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
+            item.AtmosHandle = default(UInt32);
+            item.Unknown1 = default(Int32);
+            item.Unknown2 = default(Int32);
+            item.Unknown3 = default(Int32);
         }
         
         #region Mutagen

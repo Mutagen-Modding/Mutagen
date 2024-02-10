@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region MinDistance
-        public Single MinDistance { get; set; } = default;
+        public Single MinDistance { get; set; } = default(Single);
         #endregion
         #region MaxDistance
-        public Single MaxDistance { get; set; } = default;
+        public Single MaxDistance { get; set; } = default(Single);
         #endregion
         #region Curve
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -844,9 +844,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISoundOutputAttenuation item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.MinDistance = default;
-            item.MaxDistance = default;
+            item.Unknown = default(Int32);
+            item.MinDistance = default(Single);
+            item.MaxDistance = default(Single);
             item.Curve = new byte[5];
             item.Unknown2 = new byte[3];
         }

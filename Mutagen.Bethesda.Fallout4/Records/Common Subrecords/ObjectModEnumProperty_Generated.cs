@@ -54,13 +54,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region EnumIntValue
-        public UInt32 EnumIntValue { get; set; } = default;
+        public UInt32 EnumIntValue { get; set; } = default(UInt32);
         #endregion
         #region Unused
-        public UInt32 Unused { get; set; } = default;
+        public UInt32 Unused { get; set; } = default(UInt32);
         #endregion
         #region FunctionType
-        public ObjectModProperty.EnumFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.EnumFunctionType FunctionType { get; set; } = default(ObjectModProperty.EnumFunctionType);
         #endregion
 
         #region To String
@@ -427,9 +427,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectModEnumProperty<T> item)
         {
             ClearPartial();
-            item.EnumIntValue = default;
-            item.Unused = default;
-            item.FunctionType = default;
+            item.EnumIntValue = default(UInt32);
+            item.Unused = default(UInt32);
+            item.FunctionType = default(ObjectModProperty.EnumFunctionType);
             base.Clear(item);
         }
         

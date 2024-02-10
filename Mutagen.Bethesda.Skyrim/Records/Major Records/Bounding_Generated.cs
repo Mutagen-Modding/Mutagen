@@ -51,25 +51,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Width
-        public Single Width { get; set; } = default;
+        public Single Width { get; set; } = default(Single);
         #endregion
         #region Height
-        public Single Height { get; set; } = default;
+        public Single Height { get; set; } = default(Single);
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region RotationQ1
-        public Single RotationQ1 { get; set; } = default;
+        public Single RotationQ1 { get; set; } = default(Single);
         #endregion
         #region RotationQ2
-        public Single RotationQ2 { get; set; } = default;
+        public Single RotationQ2 { get; set; } = default(Single);
         #endregion
         #region RotationQ3
-        public Single RotationQ3 { get; set; } = default;
+        public Single RotationQ3 { get; set; } = default(Single);
         #endregion
         #region RotationQ4
-        public Single RotationQ4 { get; set; } = default;
+        public Single RotationQ4 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -893,13 +893,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IBounding item)
         {
             ClearPartial();
-            item.Width = default;
-            item.Height = default;
-            item.Position = default;
-            item.RotationQ1 = default;
-            item.RotationQ2 = default;
-            item.RotationQ3 = default;
-            item.RotationQ4 = default;
+            item.Width = default(Single);
+            item.Height = default(Single);
+            item.Position = default(P3Float);
+            item.RotationQ1 = default(Single);
+            item.RotationQ2 = default(Single);
+            item.RotationQ3 = default(Single);
+            item.RotationQ4 = default(Single);
         }
         
         #region Mutagen

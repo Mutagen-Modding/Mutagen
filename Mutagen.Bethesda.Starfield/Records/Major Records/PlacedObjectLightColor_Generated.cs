@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region UnknownColor
-        public Color UnknownColor { get; set; } = default;
+        public Color UnknownColor { get; set; } = default(Color);
         #endregion
         #region Unknown
-        public Int64 Unknown { get; set; } = default;
+        public Int64 Unknown { get; set; } = default(Int64);
         #endregion
 
         #region To String
@@ -721,8 +721,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectLightColor item)
         {
             ClearPartial();
-            item.UnknownColor = default;
-            item.Unknown = default;
+            item.UnknownColor = default(Color);
+            item.Unknown = default(Int64);
         }
         
         #region Mutagen

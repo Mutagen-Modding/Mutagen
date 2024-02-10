@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Items.SetTo(
                         rhs.Items
-                        .Select(r => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

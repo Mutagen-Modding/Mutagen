@@ -60,10 +60,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
+        public UInt16 FormVersion { get; set; } = default(UInt16);
         #endregion
         #region Version2
-        public UInt16 Version2 { get; set; } = default;
+        public UInt16 Version2 { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -1047,9 +1047,9 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(ISkyrimMajorRecordInternal item)
         {
             ClearPartial();
-            item.FormVersion = default;
-            item.Version2 = default;
-            item.SkyrimMajorRecordFlags = default;
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
+            item.SkyrimMajorRecordFlags = default(SkyrimMajorRecord.SkyrimMajorRecordFlag);
             base.Clear(item);
         }
         

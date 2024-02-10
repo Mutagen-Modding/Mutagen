@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Action
-        public ActorValue Action { get; set; } = default;
+        public ActorValue Action { get; set; } = default(ActorValue);
         #endregion
         #region Attribute
-        public ActorValue Attribute { get; set; } = default;
+        public ActorValue Attribute { get; set; } = default(ActorValue);
         #endregion
         #region Specialization
-        public Specialization Specialization { get; set; } = default;
+        public Specialization Specialization { get; set; } = default(Specialization);
         #endregion
         #region UseValueFirst
-        public Single UseValueFirst { get; set; } = default;
+        public Single UseValueFirst { get; set; } = default(Single);
         #endregion
         #region UseValueSecond
-        public Single UseValueSecond { get; set; } = default;
+        public Single UseValueSecond { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -828,11 +828,11 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISkillData item)
         {
             ClearPartial();
-            item.Action = default;
-            item.Attribute = default;
-            item.Specialization = default;
-            item.UseValueFirst = default;
-            item.UseValueSecond = default;
+            item.Action = default(ActorValue);
+            item.Attribute = default(ActorValue);
+            item.Specialization = default(Specialization);
+            item.UseValueFirst = default(Single);
+            item.UseValueSecond = default(Single);
         }
         
         #region Mutagen

@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region ParentNode
-        public UInt32 ParentNode { get; set; } = default;
+        public UInt32 ParentNode { get; set; } = default(UInt32);
         #endregion
         #region LinkedNode
-        public UInt32 LinkedNode { get; set; } = default;
+        public UInt32 LinkedNode { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISnapLinkItem item)
         {
             ClearPartial();
-            item.ParentNode = default;
-            item.LinkedNode = default;
+            item.ParentNode = default(UInt32);
+            item.LinkedNode = default(UInt32);
         }
         
         #region Mutagen

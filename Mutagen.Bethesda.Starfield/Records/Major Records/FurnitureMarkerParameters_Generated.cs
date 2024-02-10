@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Offset
-        public P3Float Offset { get; set; } = default;
+        public P3Float Offset { get; set; } = default(P3Float);
         #endregion
         #region RotationZ
-        public Single RotationZ { get; set; } = default;
+        public Single RotationZ { get; set; } = default(Single);
         #endregion
         #region Keyword
         private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IKeywordGetter> IFurnitureMarkerParametersGetter.Keyword => this.Keyword;
         #endregion
         #region EntryTypes
-        public Furniture.EntryParameterType EntryTypes { get; set; } = default;
+        public Furniture.EntryParameterType EntryTypes { get; set; } = default(Furniture.EntryParameterType);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -844,10 +844,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFurnitureMarkerParameters item)
         {
             ClearPartial();
-            item.Offset = default;
-            item.RotationZ = default;
+            item.Offset = default(P3Float);
+            item.RotationZ = default(Single);
             item.Keyword.Clear();
-            item.EntryTypes = default;
+            item.EntryTypes = default(Furniture.EntryParameterType);
             item.Unknown = new byte[7];
         }
         

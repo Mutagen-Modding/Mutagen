@@ -52,43 +52,43 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region WindSpeed
-        public Byte WindSpeed { get; set; } = default;
+        public Byte WindSpeed { get; set; } = default(Byte);
         #endregion
         #region CloudSpeedLower
-        public Byte CloudSpeedLower { get; set; } = default;
+        public Byte CloudSpeedLower { get; set; } = default(Byte);
         #endregion
         #region CloudSpeedUpper
-        public Byte CloudSpeedUpper { get; set; } = default;
+        public Byte CloudSpeedUpper { get; set; } = default(Byte);
         #endregion
         #region TransDelta
-        public Byte TransDelta { get; set; } = default;
+        public Byte TransDelta { get; set; } = default(Byte);
         #endregion
         #region SunGlare
-        public Byte SunGlare { get; set; } = default;
+        public Byte SunGlare { get; set; } = default(Byte);
         #endregion
         #region SunDamage
-        public Byte SunDamage { get; set; } = default;
+        public Byte SunDamage { get; set; } = default(Byte);
         #endregion
         #region PrecipitationBeginFadeIn
-        public Byte PrecipitationBeginFadeIn { get; set; } = default;
+        public Byte PrecipitationBeginFadeIn { get; set; } = default(Byte);
         #endregion
         #region PrecipitationEndFadeOut
-        public Byte PrecipitationEndFadeOut { get; set; } = default;
+        public Byte PrecipitationEndFadeOut { get; set; } = default(Byte);
         #endregion
         #region ThunderLightningBeginFadeIn
-        public Byte ThunderLightningBeginFadeIn { get; set; } = default;
+        public Byte ThunderLightningBeginFadeIn { get; set; } = default(Byte);
         #endregion
         #region ThunderLightningEndFadeOut
-        public Byte ThunderLightningEndFadeOut { get; set; } = default;
+        public Byte ThunderLightningEndFadeOut { get; set; } = default(Byte);
         #endregion
         #region ThunderLightningFrequency
-        public Byte ThunderLightningFrequency { get; set; } = default;
+        public Byte ThunderLightningFrequency { get; set; } = default(Byte);
         #endregion
         #region Classification
-        public Weather.WeatherClassification Classification { get; set; } = default;
+        public Weather.WeatherClassification Classification { get; set; } = default(Weather.WeatherClassification);
         #endregion
         #region LightningColor
-        public Color LightningColor { get; set; } = default;
+        public Color LightningColor { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -1117,19 +1117,19 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IWeatherData item)
         {
             ClearPartial();
-            item.WindSpeed = default;
-            item.CloudSpeedLower = default;
-            item.CloudSpeedUpper = default;
-            item.TransDelta = default;
-            item.SunGlare = default;
-            item.SunDamage = default;
-            item.PrecipitationBeginFadeIn = default;
-            item.PrecipitationEndFadeOut = default;
-            item.ThunderLightningBeginFadeIn = default;
-            item.ThunderLightningEndFadeOut = default;
-            item.ThunderLightningFrequency = default;
-            item.Classification = default;
-            item.LightningColor = default;
+            item.WindSpeed = default(Byte);
+            item.CloudSpeedLower = default(Byte);
+            item.CloudSpeedUpper = default(Byte);
+            item.TransDelta = default(Byte);
+            item.SunGlare = default(Byte);
+            item.SunDamage = default(Byte);
+            item.PrecipitationBeginFadeIn = default(Byte);
+            item.PrecipitationEndFadeOut = default(Byte);
+            item.ThunderLightningBeginFadeIn = default(Byte);
+            item.ThunderLightningEndFadeOut = default(Byte);
+            item.ThunderLightningFrequency = default(Byte);
+            item.Classification = default(Weather.WeatherClassification);
+            item.LightningColor = default(Color);
         }
         
         #region Mutagen

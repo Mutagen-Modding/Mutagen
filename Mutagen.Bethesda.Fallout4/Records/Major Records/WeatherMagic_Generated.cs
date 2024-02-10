@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public WeatherMagic.VersioningBreaks Versioning { get; set; } = default;
+        public WeatherMagic.VersioningBreaks Versioning { get; set; } = default(WeatherMagic.VersioningBreaks);
         #endregion
         #region OnLightningStrikeSpell
         private readonly IFormLink<ISpellGetter> _OnLightningStrikeSpell = new FormLink<ISpellGetter>();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISpellGetter> IWeatherMagicGetter.OnLightningStrikeSpell => this.OnLightningStrikeSpell;
         #endregion
         #region OnLightningStrikeThreshold
-        public Single OnLightningStrikeThreshold { get; set; } = default;
+        public Single OnLightningStrikeThreshold { get; set; } = default(Single);
         #endregion
         #region OnWeatherActivateSpell
         private readonly IFormLink<ISpellGetter> _OnWeatherActivateSpell = new FormLink<ISpellGetter>();
@@ -78,10 +78,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISpellGetter> IWeatherMagicGetter.OnWeatherActivateSpell => this.OnWeatherActivateSpell;
         #endregion
         #region OnWeatherActivateThreshold
-        public Single OnWeatherActivateThreshold { get; set; } = default;
+        public Single OnWeatherActivateThreshold { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public UInt64 Unknown { get; set; } = default;
+        public UInt64 Unknown { get; set; } = default(UInt64);
         #endregion
 
         #region To String
@@ -891,12 +891,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWeatherMagic item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(WeatherMagic.VersioningBreaks);
             item.OnLightningStrikeSpell.Clear();
-            item.OnLightningStrikeThreshold = default;
+            item.OnLightningStrikeThreshold = default(Single);
             item.OnWeatherActivateSpell.Clear();
-            item.OnWeatherActivateThreshold = default;
-            item.Unknown = default;
+            item.OnWeatherActivateThreshold = default(Single);
+            item.Unknown = default(UInt64);
         }
         
         #region Mutagen

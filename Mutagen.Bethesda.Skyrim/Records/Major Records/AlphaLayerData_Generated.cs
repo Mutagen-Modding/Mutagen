@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Position
-        public UInt16 Position { get; set; } = default;
+        public UInt16 Position { get; set; } = default(UInt16);
         #endregion
         #region Unused
-        public UInt16 Unused { get; set; } = default;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
         #region Opacity
-        public Single Opacity { get; set; } = default;
+        public Single Opacity { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -749,9 +749,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IAlphaLayerData item)
         {
             ClearPartial();
-            item.Position = default;
-            item.Unused = default;
-            item.Opacity = default;
+            item.Position = default(UInt16);
+            item.Unused = default(UInt16);
+            item.Opacity = default(Single);
         }
         
         #region Mutagen

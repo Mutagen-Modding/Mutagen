@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Enabled
-        public Boolean Enabled { get; set; } = default;
+        public Boolean Enabled { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IAAudioEffect item)
         {
             ClearPartial();
-            item.Enabled = default;
+            item.Enabled = default(Boolean);
         }
         
         #region Mutagen

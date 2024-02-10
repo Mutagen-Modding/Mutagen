@@ -55,10 +55,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Slot
-        public TintTemplateOption.TintSlot Slot { get; set; } = default;
+        public TintTemplateOption.TintSlot Slot { get; set; } = default(TintTemplateOption.TintSlot);
         #endregion
         #region Index
-        public UInt16 Index { get; set; } = default;
+        public UInt16 Index { get; set; } = default(UInt16);
         #endregion
         #region Name
         /// <summary>
@@ -1281,8 +1281,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ITintTemplateOption item)
         {
             ClearPartial();
-            item.Slot = default;
-            item.Index = default;
+            item.Slot = default(TintTemplateOption.TintSlot);
+            item.Index = default(UInt16);
             item.Name = default;
             item.Flags = default;
             item.Conditions.Clear();
@@ -2033,7 +2033,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Index
         private int _IndexLocation => _TETILocation!.Value.Min + 0x2;
         private bool _Index_IsSet => _TETILocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default(UInt16);
         #endregion
         #region Name
         private int? _NameLocation;

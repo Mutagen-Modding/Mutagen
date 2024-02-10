@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Animations = 
                             rhs.Animations
-                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     }
                     else

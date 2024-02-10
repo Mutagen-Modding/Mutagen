@@ -51,28 +51,28 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Fov90PlusMinus
-        public Single Fov90PlusMinus { get; set; } = default;
+        public Single Fov90PlusMinus { get; set; } = default(Single);
         #endregion
         #region Fade1PlusMinus
-        public Single Fade1PlusMinus { get; set; } = default;
+        public Single Fade1PlusMinus { get; set; } = default(Single);
         #endregion
         #region EndDistanceCap
-        public Single EndDistanceCap { get; set; } = default;
+        public Single EndDistanceCap { get; set; } = default(Single);
         #endregion
         #region ShadowDepthBias
-        public Single ShadowDepthBias { get; set; } = default;
+        public Single ShadowDepthBias { get; set; } = default(Single);
         #endregion
         #region NearClip
-        public Single NearClip { get; set; } = default;
+        public Single NearClip { get; set; } = default(Single);
         #endregion
         #region VolumetricIntensity
-        public Single VolumetricIntensity { get; set; } = default;
+        public Single VolumetricIntensity { get; set; } = default(Single);
         #endregion
         #region Unknown1
-        public UInt32 Unknown1 { get; set; } = default;
+        public UInt32 Unknown1 { get; set; } = default(UInt32);
         #endregion
         #region Unknown2
-        public UInt32 Unknown2 { get; set; } = default;
+        public UInt32 Unknown2 { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -936,14 +936,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectLighting item)
         {
             ClearPartial();
-            item.Fov90PlusMinus = default;
-            item.Fade1PlusMinus = default;
-            item.EndDistanceCap = default;
-            item.ShadowDepthBias = default;
-            item.NearClip = default;
-            item.VolumetricIntensity = default;
-            item.Unknown1 = default;
-            item.Unknown2 = default;
+            item.Fov90PlusMinus = default(Single);
+            item.Fade1PlusMinus = default(Single);
+            item.EndDistanceCap = default(Single);
+            item.ShadowDepthBias = default(Single);
+            item.NearClip = default(Single);
+            item.VolumetricIntensity = default(Single);
+            item.Unknown1 = default(UInt32);
+            item.Unknown2 = default(UInt32);
         }
         
         #region Mutagen

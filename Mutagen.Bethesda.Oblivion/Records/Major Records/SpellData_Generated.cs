@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public Spell.SpellType Type { get; set; } = default;
+        public Spell.SpellType Type { get; set; } = default(Spell.SpellType);
         #endregion
         #region Cost
-        public UInt32 Cost { get; set; } = default;
+        public UInt32 Cost { get; set; } = default(UInt32);
         #endregion
         #region Level
-        public Spell.SpellLevel Level { get; set; } = default;
+        public Spell.SpellLevel Level { get; set; } = default(Spell.SpellLevel);
         #endregion
         #region Flag
-        public Spell.SpellFlag Flag { get; set; } = default;
+        public Spell.SpellFlag Flag { get; set; } = default(Spell.SpellFlag);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISpellData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Cost = default;
-            item.Level = default;
-            item.Flag = default;
+            item.Type = default(Spell.SpellType);
+            item.Cost = default(UInt32);
+            item.Level = default(Spell.SpellLevel);
+            item.Flag = default(Spell.SpellFlag);
         }
         
         #region Mutagen

@@ -52,38 +52,38 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region MinWidth
-        public Single MinWidth { get; set; } = default;
+        public Single MinWidth { get; set; } = default(Single);
         #endregion
         #region MaxWidth
-        public Single MaxWidth { get; set; } = default;
+        public Single MaxWidth { get; set; } = default(Single);
         #endregion
         #region MinHeight
-        public Single MinHeight { get; set; } = default;
+        public Single MinHeight { get; set; } = default(Single);
         #endregion
         #region MaxHeight
-        public Single MaxHeight { get; set; } = default;
+        public Single MaxHeight { get; set; } = default(Single);
         #endregion
         #region Depth
-        public Single Depth { get; set; } = default;
+        public Single Depth { get; set; } = default(Single);
         #endregion
         #region Shininess
-        public Single Shininess { get; set; } = default;
+        public Single Shininess { get; set; } = default(Single);
         #endregion
         #region ParallaxScale
-        public Single ParallaxScale { get; set; } = default;
+        public Single ParallaxScale { get; set; } = default(Single);
         #endregion
         #region ParallaxPasses
-        public Byte ParallaxPasses { get; set; } = default;
+        public Byte ParallaxPasses { get; set; } = default(Byte);
         public static RangeUInt8 ParallaxPasses_Range = new RangeUInt8(Byte.MinValue, 30);
         #endregion
         #region Flags
-        public Decal.Flag Flags { get; set; } = default;
+        public Decal.Flag Flags { get; set; } = default(Decal.Flag);
         #endregion
         #region AlphaThreshold
-        public UInt16 AlphaThreshold { get; set; } = default;
+        public UInt16 AlphaThreshold { get; set; } = default(UInt16);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -1046,17 +1046,17 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDecal item)
         {
             ClearPartial();
-            item.MinWidth = default;
-            item.MaxWidth = default;
-            item.MinHeight = default;
-            item.MaxHeight = default;
-            item.Depth = default;
-            item.Shininess = default;
-            item.ParallaxScale = default;
-            item.ParallaxPasses = default;
-            item.Flags = default;
-            item.AlphaThreshold = default;
-            item.Color = default;
+            item.MinWidth = default(Single);
+            item.MaxWidth = default(Single);
+            item.MinHeight = default(Single);
+            item.MaxHeight = default(Single);
+            item.Depth = default(Single);
+            item.Shininess = default(Single);
+            item.ParallaxScale = default(Single);
+            item.ParallaxPasses = default(Byte);
+            item.Flags = default(Decal.Flag);
+            item.AlphaThreshold = default(UInt16);
+            item.Color = default(Color);
         }
         
         #region Mutagen

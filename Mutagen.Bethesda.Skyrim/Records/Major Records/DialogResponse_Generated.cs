@@ -53,16 +53,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Emotion
-        public Emotion Emotion { get; set; } = default;
+        public Emotion Emotion { get; set; } = default(Emotion);
         #endregion
         #region EmotionValue
-        public UInt32 EmotionValue { get; set; } = default;
+        public UInt32 EmotionValue { get; set; } = default(UInt32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region ResponseNumber
-        public Byte ResponseNumber { get; set; } = default;
+        public Byte ResponseNumber { get; set; } = default(Byte);
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISoundDescriptorGetter> IDialogResponseGetter.Sound => this.Sound;
         #endregion
         #region Flags
-        public DialogResponse.Flag Flags { get; set; } = default;
+        public DialogResponse.Flag Flags { get; set; } = default(DialogResponse.Flag);
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1172,13 +1172,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDialogResponse item)
         {
             ClearPartial();
-            item.Emotion = default;
-            item.EmotionValue = default;
-            item.Unknown = default;
-            item.ResponseNumber = default;
+            item.Emotion = default(Emotion);
+            item.EmotionValue = default(UInt32);
+            item.Unknown = default(Int32);
+            item.ResponseNumber = default(Byte);
             item.Unknown2 = new byte[3];
             item.Sound.Clear();
-            item.Flags = default;
+            item.Flags = default(DialogResponse.Flag);
             item.Unknown3 = new byte[3];
             item.Text.Clear();
             item.ScriptNotes = string.Empty;
@@ -1845,12 +1845,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region EmotionValue
         private int _EmotionValueLocation => _TRDTLocation!.Value.Min + 0x4;
         private bool _EmotionValue_IsSet => _TRDTLocation.HasValue;
-        public UInt32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_EmotionValueLocation, 4)) : default;
+        public UInt32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_EmotionValueLocation, 4)) : default(UInt32);
         #endregion
         #region Unknown
         private int _UnknownLocation => _TRDTLocation!.Value.Min + 0x8;
         private bool _Unknown_IsSet => _TRDTLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDTLocation!.Value.Min + 0xC;

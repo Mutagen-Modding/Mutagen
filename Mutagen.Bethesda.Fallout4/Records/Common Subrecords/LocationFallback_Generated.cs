@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Type
-        public LocationTargetRadius.LocationType Type { get; set; } = default;
+        public LocationTargetRadius.LocationType Type { get; set; } = default(LocationTargetRadius.LocationType);
         #endregion
         #region Data
-        public Int32 Data { get; set; } = default;
+        public Int32 Data { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -671,8 +671,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILocationFallback item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Data = default;
+            item.Type = default(LocationTargetRadius.LocationType);
+            item.Data = default(Int32);
             base.Clear(item);
         }
         

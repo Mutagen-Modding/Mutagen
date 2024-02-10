@@ -74,10 +74,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
         #endregion
         #region HavokFriction
-        public Byte HavokFriction { get; set; } = default;
+        public Byte HavokFriction { get; set; } = default(Byte);
         #endregion
         #region HavokRestitution
-        public Byte HavokRestitution { get; set; } = default;
+        public Byte HavokRestitution { get; set; } = default(Byte);
         #endregion
         #region QNAM
         public Single? QNAM { get; set; }
@@ -935,8 +935,8 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.MaterialPath = default;
             item.MaterialType.Clear();
-            item.HavokFriction = default;
-            item.HavokRestitution = default;
+            item.HavokFriction = default(Byte);
+            item.HavokRestitution = default(Byte);
             item.QNAM = default;
             base.Clear(item);
         }

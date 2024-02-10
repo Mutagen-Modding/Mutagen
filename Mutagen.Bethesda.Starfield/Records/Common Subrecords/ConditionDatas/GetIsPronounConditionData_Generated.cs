@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FirstParameter
-        public Pronoun FirstParameter { get; set; } = default;
+        public Pronoun FirstParameter { get; set; } = default(Pronoun);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         String? IGetIsPronounConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        public Int32 SecondParameter { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGetIsPronounConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default;
+            item.FirstParameter = default(Pronoun);
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

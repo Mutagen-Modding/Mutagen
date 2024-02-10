@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public AIPackageLocation.LocationType Type { get; set; } = default;
+        public AIPackageLocation.LocationType Type { get; set; } = default(AIPackageLocation.LocationType);
         #endregion
         #region LocationReference
         private readonly IFormLink<IPlacedGetter> _LocationReference = new FormLink<IPlacedGetter>();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
-        public Single Radius { get; set; } = default;
+        public Single Radius { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -771,9 +771,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAIPackageLocation item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(AIPackageLocation.LocationType);
             item.LocationReference.Clear();
-            item.Radius = default;
+            item.Radius = default(Single);
         }
         
         #region Mutagen

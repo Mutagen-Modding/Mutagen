@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Nose
-        public UInt32 Nose { get; set; } = default;
+        public UInt32 Nose { get; set; } = default(UInt32);
         #endregion
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
         #region Eyes
-        public UInt32 Eyes { get; set; } = default;
+        public UInt32 Eyes { get; set; } = default(UInt32);
         #endregion
         #region Mouth
-        public UInt32 Mouth { get; set; } = default;
+        public UInt32 Mouth { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INpcFaceParts item)
         {
             ClearPartial();
-            item.Nose = default;
-            item.Unknown = default;
-            item.Eyes = default;
-            item.Mouth = default;
+            item.Nose = default(UInt32);
+            item.Unknown = default(UInt32);
+            item.Eyes = default(UInt32);
+            item.Mouth = default(UInt32);
         }
         
         #region Mutagen

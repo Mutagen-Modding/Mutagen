@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region NodeID
-        public UInt32 NodeID { get; set; } = default;
+        public UInt32 NodeID { get; set; } = default(UInt32);
         #endregion
         #region Node
         private readonly IFormLink<ISnapTemplateNodeGetter> _Node = new FormLink<ISnapTemplateNodeGetter>();
@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ISnapTemplateNodeGetter> ISnapNodeEntryGetter.Node => this.Node;
         #endregion
         #region Offset
-        public P3Float Offset { get; set; } = default;
+        public P3Float Offset { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Unknown
-        public UInt64 Unknown { get; set; } = default;
+        public UInt64 Unknown { get; set; } = default(UInt64);
         #endregion
 
         #region To String
@@ -843,11 +843,11 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISnapNodeEntry item)
         {
             ClearPartial();
-            item.NodeID = default;
+            item.NodeID = default(UInt32);
             item.Node.Clear();
-            item.Offset = default;
-            item.Rotation = default;
-            item.Unknown = default;
+            item.Offset = default(P3Float);
+            item.Rotation = default(P3Float);
+            item.Unknown = default(UInt64);
         }
         
         #region Mutagen

@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IBodyPartDataGetter> IArmorAddonGetter.BodyPartData => this.BodyPartData;
         #endregion
         #region TintType
-        public TintType TintType { get; set; } = default;
+        public TintType TintType { get; set; } = default(TintType);
         #endregion
         #region TintColorMapping
         public String? TintColorMapping { get; set; }
@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Starfield
             item.FootstepSound.Clear();
             item.ArtObject.Clear();
             item.BodyPartData.Clear();
-            item.TintType = default;
+            item.TintType = default(TintType);
             item.TintColorMapping = default;
             item.TintEntryName = default;
             item.TintEntryValue = default;
@@ -2723,7 +2723,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.AdditionalRaces.SetTo(
                         rhs.AdditionalRaces
-                        .Select(r => (IFormLinkGetter<IRaceGetter>)new FormLink<IRaceGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IRaceGetter>)new FormLink<IRaceGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

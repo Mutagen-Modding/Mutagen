@@ -3102,7 +3102,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3133,7 +3133,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ForcedLocations = 
                             rhs.ForcedLocations
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -3192,7 +3192,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.MaterialSwaps = 
                             rhs.MaterialSwaps
-                            .Select(r => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
                     }
                     else

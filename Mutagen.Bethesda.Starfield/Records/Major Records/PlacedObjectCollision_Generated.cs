@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region CollisionLayer
-        public UInt32 CollisionLayer { get; set; } = default;
+        public UInt32 CollisionLayer { get; set; } = default(UInt32);
         #endregion
         #region MaterialType
         private readonly IFormLink<IMaterialTypeGetter> _MaterialType = new FormLink<IMaterialTypeGetter>();
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectCollision item)
         {
             ClearPartial();
-            item.CollisionLayer = default;
+            item.CollisionLayer = default(UInt32);
             item.MaterialType.Clear();
         }
         

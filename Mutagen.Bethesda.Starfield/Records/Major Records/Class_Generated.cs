@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region BleedoutDefault
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #region DATADataTypeState
-        public Class.DATADataType DATADataTypeState { get; set; } = default;
+        public Class.DATADataType DATADataTypeState { get; set; } = default(Class.DATADataType);
         #endregion
 
         #region To String
@@ -1095,9 +1095,9 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Description.Clear();
             item.Properties = null;
-            item.Unknown = default;
-            item.BleedoutDefault = default;
-            item.DATADataTypeState = default;
+            item.Unknown = default(Int32);
+            item.BleedoutDefault = default(Single);
+            item.DATADataTypeState = default(Class.DATADataType);
             base.Clear(item);
         }
         
@@ -1968,12 +1968,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region BleedoutDefault
         private int _BleedoutDefaultLocation => _DATALocation!.Value.Min + 0x4;
         private bool _BleedoutDefault_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
-        public Single BleedoutDefault => _BleedoutDefault_IsSet ? _recordData.Slice(_BleedoutDefaultLocation, 4).Float() : default;
+        public Single BleedoutDefault => _BleedoutDefault_IsSet ? _recordData.Slice(_BleedoutDefaultLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

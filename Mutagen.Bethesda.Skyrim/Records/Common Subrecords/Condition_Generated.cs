@@ -56,10 +56,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region CompareOperator
-        public CompareOperator CompareOperator { get; set; } = default;
+        public CompareOperator CompareOperator { get; set; } = default(CompareOperator);
         #endregion
         #region Flags
-        public Condition.Flag Flags { get; set; } = default;
+        public Condition.Flag Flags { get; set; } = default(Condition.Flag);
         #endregion
         #region Unknown1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IConditionGetter.Unknown1 => this.Unknown1;
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -836,10 +836,10 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(ICondition item)
         {
             ClearPartial();
-            item.CompareOperator = default;
-            item.Flags = default;
+            item.CompareOperator = default(CompareOperator);
+            item.Flags = default(Condition.Flag);
             item.Unknown1 = new byte[3];
-            item.Unknown2 = default;
+            item.Unknown2 = default(UInt16);
             item.Data.Clear();
         }
         

@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? ILeveledItemGetter.XALG => this.XALG;
         #endregion
         #region ChanceNone
-        public Single ChanceNone { get; set; } = default;
+        public Single ChanceNone { get; set; } = default(Single);
         #endregion
         #region MaxCount
         public Byte? MaxCount { get; set; }
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
         Byte? ILeveledItemGetter.MaxCount => this.MaxCount;
         #endregion
         #region Flags
-        public LeveledItem.Flag Flags { get; set; } = default;
+        public LeveledItem.Flag Flags { get; set; } = default(LeveledItem.Flag);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1959,9 +1959,9 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectPlacementDefaults = null;
             item.Components.Clear();
             item.XALG = default;
-            item.ChanceNone = default;
+            item.ChanceNone = default(Single);
             item.MaxCount = default;
-            item.Flags = default;
+            item.Flags = default(LeveledItem.Flag);
             item.Conditions.Clear();
             item.UseGlobal.Clear();
             item.Entries = null;
@@ -2987,7 +2987,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ForcedLocations = 
                             rhs.ForcedLocations
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -3603,7 +3603,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region MaxCount
         private int? _MaxCountLocation;

@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown1
-        public Int32 Unknown1 { get; set; } = default;
+        public Int32 Unknown1 { get; set; } = default(Int32);
         #endregion
         #region From
-        public P3Float From { get; set; } = default;
+        public P3Float From { get; set; } = default(P3Float);
         #endregion
         #region To
-        public P3Float To { get; set; } = default;
+        public P3Float To { get; set; } = default(P3Float);
         #endregion
         #region UnknownVector
-        public P3Float UnknownVector { get; set; } = default;
+        public P3Float UnknownVector { get; set; } = default(P3Float);
         #endregion
         #region Traversal
         private readonly IFormLinkNullable<ITraversalGetter> _Traversal = new FormLinkNullable<ITraversalGetter>();
@@ -880,10 +880,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ITraversalReference item)
         {
             ClearPartial();
-            item.Unknown1 = default;
-            item.From = default;
-            item.To = default;
-            item.UnknownVector = default;
+            item.Unknown1 = default(Int32);
+            item.From = default(P3Float);
+            item.To = default(P3Float);
+            item.UnknownVector = default(P3Float);
             item.Traversal.Clear();
             item.Unknown = new byte[8];
         }

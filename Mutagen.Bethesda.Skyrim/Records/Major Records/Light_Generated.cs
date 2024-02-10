@@ -183,43 +183,43 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Time
-        public Int32 Time { get; set; } = default;
+        public Int32 Time { get; set; } = default(Int32);
         #endregion
         #region Radius
-        public UInt32 Radius { get; set; } = default;
+        public UInt32 Radius { get; set; } = default(UInt32);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
         #region Flags
-        public Light.Flag Flags { get; set; } = default;
+        public Light.Flag Flags { get; set; } = default(Light.Flag);
         #endregion
         #region FalloffExponent
-        public Single FalloffExponent { get; set; } = default;
+        public Single FalloffExponent { get; set; } = default(Single);
         #endregion
         #region FOV
-        public Single FOV { get; set; } = default;
+        public Single FOV { get; set; } = default(Single);
         #endregion
         #region NearClip
-        public Single NearClip { get; set; } = default;
+        public Single NearClip { get; set; } = default(Single);
         #endregion
         #region FlickerPeriod
-        public Single FlickerPeriod { get; set; } = default;
+        public Single FlickerPeriod { get; set; } = default(Single);
         #endregion
         #region FlickerIntensityAmplitude
-        public Single FlickerIntensityAmplitude { get; set; } = default;
+        public Single FlickerIntensityAmplitude { get; set; } = default(Single);
         #endregion
         #region FlickerMovementAmplitude
-        public Single FlickerMovementAmplitude { get; set; } = default;
+        public Single FlickerMovementAmplitude { get; set; } = default(Single);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region FadeValue
-        public Single FadeValue { get; set; } = default;
+        public Single FadeValue { get; set; } = default(Single);
         #endregion
         #region Sound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1746,19 +1746,19 @@ namespace Mutagen.Bethesda.Skyrim
             item.Destructible = null;
             item.Name = default;
             item.Icons = null;
-            item.Time = default;
-            item.Radius = default;
-            item.Color = default;
-            item.Flags = default;
-            item.FalloffExponent = default;
-            item.FOV = default;
-            item.NearClip = default;
-            item.FlickerPeriod = default;
-            item.FlickerIntensityAmplitude = default;
-            item.FlickerMovementAmplitude = default;
-            item.Value = default;
-            item.Weight = default;
-            item.FadeValue = default;
+            item.Time = default(Int32);
+            item.Radius = default(UInt32);
+            item.Color = default(Color);
+            item.Flags = default(Light.Flag);
+            item.FalloffExponent = default(Single);
+            item.FOV = default(Single);
+            item.NearClip = default(Single);
+            item.FlickerPeriod = default(Single);
+            item.FlickerIntensityAmplitude = default(Single);
+            item.FlickerMovementAmplitude = default(Single);
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.FadeValue = default(Single);
             item.Sound.Clear();
             item.Lens.Clear();
             base.Clear(item);
@@ -3172,17 +3172,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region Time
         private int _TimeLocation => _DATALocation!.Value.Min;
         private bool _Time_IsSet => _DATALocation.HasValue;
-        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_TimeLocation, 4)) : default;
+        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_TimeLocation, 4)) : default(Int32);
         #endregion
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadiusLocation, 4)) : default;
+        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadiusLocation, 4)) : default(UInt32);
         #endregion
         #region Color
         private int _ColorLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Color_IsSet => _DATALocation.HasValue;
-        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color Color => _Color_IsSet ? _recordData.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
@@ -3192,46 +3192,46 @@ namespace Mutagen.Bethesda.Skyrim
         #region FalloffExponent
         private int _FalloffExponentLocation => _DATALocation!.Value.Min + 0x10;
         private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
-        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : default;
+        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : default(Single);
         #endregion
         #region FOV
         private int _FOVLocation => _DATALocation!.Value.Min + 0x14;
         private bool _FOV_IsSet => _DATALocation.HasValue;
-        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : default;
+        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : default(Single);
         #endregion
         #region NearClip
         private int _NearClipLocation => _DATALocation!.Value.Min + 0x18;
         private bool _NearClip_IsSet => _DATALocation.HasValue;
-        public Single NearClip => _NearClip_IsSet ? _recordData.Slice(_NearClipLocation, 4).Float() : default;
+        public Single NearClip => _NearClip_IsSet ? _recordData.Slice(_NearClipLocation, 4).Float() : default(Single);
         #endregion
         #region FlickerPeriod
         private int _FlickerPeriodLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _FlickerPeriod_IsSet => _DATALocation.HasValue;
-        public Single FlickerPeriod => _FlickerPeriod_IsSet ? _recordData.Slice(_FlickerPeriodLocation, 4).Float() : default;
+        public Single FlickerPeriod => _FlickerPeriod_IsSet ? _recordData.Slice(_FlickerPeriodLocation, 4).Float() : default(Single);
         #endregion
         #region FlickerIntensityAmplitude
         private int _FlickerIntensityAmplitudeLocation => _DATALocation!.Value.Min + 0x20;
         private bool _FlickerIntensityAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? _recordData.Slice(_FlickerIntensityAmplitudeLocation, 4).Float() : default;
+        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? _recordData.Slice(_FlickerIntensityAmplitudeLocation, 4).Float() : default(Single);
         #endregion
         #region FlickerMovementAmplitude
         private int _FlickerMovementAmplitudeLocation => _DATALocation!.Value.Min + 0x24;
         private bool _FlickerMovementAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? _recordData.Slice(_FlickerMovementAmplitudeLocation, 4).Float() : default;
+        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? _recordData.Slice(_FlickerMovementAmplitudeLocation, 4).Float() : default(Single);
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region FadeValue
         private int? _FadeValueLocation;
-        public Single FadeValue => _FadeValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeValueLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FadeValue => _FadeValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeValueLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Sound
         private int? _SoundLocation;

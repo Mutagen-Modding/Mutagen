@@ -55,13 +55,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region DNAM
-        public Boolean DNAM { get; set; } = default;
+        public Boolean DNAM { get; set; } = default(Boolean);
         #endregion
         #region NVCI
-        public Boolean NVCI { get; set; } = default;
+        public Boolean NVCI { get; set; } = default(Boolean);
         #endregion
         #region ALLA
-        public Int32 ALLA { get; set; } = default;
+        public Int32 ALLA { get; set; } = default(Int32);
         #endregion
         #region REPL
         private readonly IFormLink<IPlacedGetter> _REPL = new FormLink<IPlacedGetter>();
@@ -74,16 +74,16 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IPlacedGetter> IMoveSceneActionGetter.REPL => this.REPL;
         #endregion
         #region HNAM
-        public Single HNAM { get; set; } = default;
+        public Single HNAM { get; set; } = default(Single);
         #endregion
         #region VCLR
-        public Single VCLR { get; set; } = default;
+        public Single VCLR { get; set; } = default(Single);
         #endregion
         #region VNML
-        public Single VNML { get; set; } = default;
+        public Single VNML { get; set; } = default(Single);
         #endregion
         #region FLMV
-        public Int32 FLMV { get; set; } = default;
+        public Int32 FLMV { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -945,14 +945,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMoveSceneAction item)
         {
             ClearPartial();
-            item.DNAM = default;
-            item.NVCI = default;
-            item.ALLA = default;
+            item.DNAM = default(Boolean);
+            item.NVCI = default(Boolean);
+            item.ALLA = default(Int32);
             item.REPL.Clear();
-            item.HNAM = default;
-            item.VCLR = default;
-            item.VNML = default;
-            item.FLMV = default;
+            item.HNAM = default(Single);
+            item.VCLR = default(Single);
+            item.VNML = default(Single);
+            item.FLMV = default(Int32);
             base.Clear(item);
         }
         
@@ -1584,15 +1584,15 @@ namespace Mutagen.Bethesda.Starfield
 
         #region DNAM
         private int? _DNAMLocation;
-        public Boolean DNAM => _DNAMLocation.HasValue ? true : default;
+        public Boolean DNAM => _DNAMLocation.HasValue ? true : default(Boolean);
         #endregion
         #region NVCI
         private int? _NVCILocation;
-        public Boolean NVCI => _NVCILocation.HasValue ? true : default;
+        public Boolean NVCI => _NVCILocation.HasValue ? true : default(Boolean);
         #endregion
         #region ALLA
         private int? _ALLALocation;
-        public Int32 ALLA => _ALLALocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ALLALocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 ALLA => _ALLALocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ALLALocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region REPL
         private int? _REPLLocation;
@@ -1600,19 +1600,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region HNAM
         private int? _HNAMLocation;
-        public Single HNAM => _HNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HNAM => _HNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region VCLR
         private int? _VCLRLocation;
-        public Single VCLR => _VCLRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single VCLR => _VCLRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VCLRLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region VNML
         private int? _VNMLLocation;
-        public Single VNML => _VNMLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNMLLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single VNML => _VNMLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNMLLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region FLMV
         private int? _FLMVLocation;
-        public Int32 FLMV => _FLMVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLMVLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 FLMV => _FLMVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLMVLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

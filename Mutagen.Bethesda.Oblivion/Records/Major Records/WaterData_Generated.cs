@@ -52,85 +52,85 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public WaterData.VersioningBreaks Versioning { get; set; } = default;
+        public WaterData.VersioningBreaks Versioning { get; set; } = default(WaterData.VersioningBreaks);
         #endregion
         #region WindVelocity
-        public Single WindVelocity { get; set; } = default;
+        public Single WindVelocity { get; set; } = default(Single);
         #endregion
         #region WindDirection
-        public Single WindDirection { get; set; } = default;
+        public Single WindDirection { get; set; } = default(Single);
         #endregion
         #region WaveAmplitude
-        public Single WaveAmplitude { get; set; } = default;
+        public Single WaveAmplitude { get; set; } = default(Single);
         #endregion
         #region WaveFrequency
-        public Single WaveFrequency { get; set; } = default;
+        public Single WaveFrequency { get; set; } = default(Single);
         #endregion
         #region SunPower
-        public Single SunPower { get; set; } = default;
+        public Single SunPower { get; set; } = default(Single);
         #endregion
         #region ReflectivityAmount
-        public Single ReflectivityAmount { get; set; } = default;
+        public Single ReflectivityAmount { get; set; } = default(Single);
         #endregion
         #region FresnelAmount
-        public Single FresnelAmount { get; set; } = default;
+        public Single FresnelAmount { get; set; } = default(Single);
         #endregion
         #region ScrollXSpeed
-        public Single ScrollXSpeed { get; set; } = default;
+        public Single ScrollXSpeed { get; set; } = default(Single);
         #endregion
         #region ScrollYSpeed
-        public Single ScrollYSpeed { get; set; } = default;
+        public Single ScrollYSpeed { get; set; } = default(Single);
         #endregion
         #region FogDistanceNearPlane
-        public Single FogDistanceNearPlane { get; set; } = default;
+        public Single FogDistanceNearPlane { get; set; } = default(Single);
         #endregion
         #region FogDistanceFarPlane
-        public Single FogDistanceFarPlane { get; set; } = default;
+        public Single FogDistanceFarPlane { get; set; } = default(Single);
         #endregion
         #region ShallowColor
-        public Color ShallowColor { get; set; } = default;
+        public Color ShallowColor { get; set; } = default(Color);
         #endregion
         #region DeepColor
-        public Color DeepColor { get; set; } = default;
+        public Color DeepColor { get; set; } = default(Color);
         #endregion
         #region ReflectionColor
-        public Color ReflectionColor { get; set; } = default;
+        public Color ReflectionColor { get; set; } = default(Color);
         #endregion
         #region TextureBlend
-        public Byte TextureBlend { get; set; } = default;
+        public Byte TextureBlend { get; set; } = default(Byte);
         #endregion
         #region RainSimulatorForce
-        public Single RainSimulatorForce { get; set; } = default;
+        public Single RainSimulatorForce { get; set; } = default(Single);
         #endregion
         #region RainSimulatorVelocity
-        public Single RainSimulatorVelocity { get; set; } = default;
+        public Single RainSimulatorVelocity { get; set; } = default(Single);
         #endregion
         #region RainSimulatorFalloff
-        public Single RainSimulatorFalloff { get; set; } = default;
+        public Single RainSimulatorFalloff { get; set; } = default(Single);
         #endregion
         #region RainSimulatorDampner
-        public Single RainSimulatorDampner { get; set; } = default;
+        public Single RainSimulatorDampner { get; set; } = default(Single);
         #endregion
         #region RainSimulatorStartingSize
-        public Single RainSimulatorStartingSize { get; set; } = default;
+        public Single RainSimulatorStartingSize { get; set; } = default(Single);
         #endregion
         #region DisplacementSimulatorForce
-        public Single DisplacementSimulatorForce { get; set; } = default;
+        public Single DisplacementSimulatorForce { get; set; } = default(Single);
         #endregion
         #region DisplacementSimulatorVelocity
-        public Single DisplacementSimulatorVelocity { get; set; } = default;
+        public Single DisplacementSimulatorVelocity { get; set; } = default(Single);
         #endregion
         #region DisplacementSimulatorFalloff
-        public Single DisplacementSimulatorFalloff { get; set; } = default;
+        public Single DisplacementSimulatorFalloff { get; set; } = default(Single);
         #endregion
         #region DisplacementSimulatorDampner
-        public Single DisplacementSimulatorDampner { get; set; } = default;
+        public Single DisplacementSimulatorDampner { get; set; } = default(Single);
         #endregion
         #region DisplacementSimulatorStartingSize
-        public Single DisplacementSimulatorStartingSize { get; set; } = default;
+        public Single DisplacementSimulatorStartingSize { get; set; } = default(Single);
         #endregion
         #region Damage
-        public UInt16 Damage { get; set; } = default;
+        public UInt16 Damage { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -1632,33 +1632,33 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IWaterData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.WindVelocity = default;
-            item.WindDirection = default;
-            item.WaveAmplitude = default;
-            item.WaveFrequency = default;
-            item.SunPower = default;
-            item.ReflectivityAmount = default;
-            item.FresnelAmount = default;
-            item.ScrollXSpeed = default;
-            item.ScrollYSpeed = default;
-            item.FogDistanceNearPlane = default;
-            item.FogDistanceFarPlane = default;
-            item.ShallowColor = default;
-            item.DeepColor = default;
-            item.ReflectionColor = default;
-            item.TextureBlend = default;
-            item.RainSimulatorForce = default;
-            item.RainSimulatorVelocity = default;
-            item.RainSimulatorFalloff = default;
-            item.RainSimulatorDampner = default;
-            item.RainSimulatorStartingSize = default;
-            item.DisplacementSimulatorForce = default;
-            item.DisplacementSimulatorVelocity = default;
-            item.DisplacementSimulatorFalloff = default;
-            item.DisplacementSimulatorDampner = default;
-            item.DisplacementSimulatorStartingSize = default;
-            item.Damage = default;
+            item.Versioning = default(WaterData.VersioningBreaks);
+            item.WindVelocity = default(Single);
+            item.WindDirection = default(Single);
+            item.WaveAmplitude = default(Single);
+            item.WaveFrequency = default(Single);
+            item.SunPower = default(Single);
+            item.ReflectivityAmount = default(Single);
+            item.FresnelAmount = default(Single);
+            item.ScrollXSpeed = default(Single);
+            item.ScrollYSpeed = default(Single);
+            item.FogDistanceNearPlane = default(Single);
+            item.FogDistanceFarPlane = default(Single);
+            item.ShallowColor = default(Color);
+            item.DeepColor = default(Color);
+            item.ReflectionColor = default(Color);
+            item.TextureBlend = default(Byte);
+            item.RainSimulatorForce = default(Single);
+            item.RainSimulatorVelocity = default(Single);
+            item.RainSimulatorFalloff = default(Single);
+            item.RainSimulatorDampner = default(Single);
+            item.RainSimulatorStartingSize = default(Single);
+            item.DisplacementSimulatorForce = default(Single);
+            item.DisplacementSimulatorVelocity = default(Single);
+            item.DisplacementSimulatorFalloff = default(Single);
+            item.DisplacementSimulatorDampner = default(Single);
+            item.DisplacementSimulatorStartingSize = default(Single);
+            item.Damage = default(UInt16);
         }
         
         #region Mutagen

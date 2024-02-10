@@ -146,19 +146,19 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IProjectileGetter.Destructible => this.Destructible;
         #endregion
         #region Flags
-        public Projectile.Flag Flags { get; set; } = default;
+        public Projectile.Flag Flags { get; set; } = default(Projectile.Flag);
         #endregion
         #region Type
-        public Projectile.TypeEnum Type { get; set; } = default;
+        public Projectile.TypeEnum Type { get; set; } = default(Projectile.TypeEnum);
         #endregion
         #region Gravity
-        public Single Gravity { get; set; } = default;
+        public Single Gravity { get; set; } = default(Single);
         #endregion
         #region Speed
-        public Single Speed { get; set; } = default;
+        public Single Speed { get; set; } = default(Single);
         #endregion
         #region Range
-        public Single Range { get; set; } = default;
+        public Single Range { get; set; } = default(Single);
         #endregion
         #region Light
         private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
@@ -181,13 +181,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash;
         #endregion
         #region TracerChance
-        public Single TracerChance { get; set; } = default;
+        public Single TracerChance { get; set; } = default(Single);
         #endregion
         #region ExplosionAltTriggerProximity
-        public Single ExplosionAltTriggerProximity { get; set; } = default;
+        public Single ExplosionAltTriggerProximity { get; set; } = default(Single);
         #endregion
         #region ExplosionAltTriggerTimer
-        public Single ExplosionAltTriggerTimer { get; set; } = default;
+        public Single ExplosionAltTriggerTimer { get; set; } = default(Single);
         #endregion
         #region Explosion
         private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
@@ -210,13 +210,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.Sound => this.Sound;
         #endregion
         #region MuzzleFlashDuration
-        public Single MuzzleFlashDuration { get; set; } = default;
+        public Single MuzzleFlashDuration { get; set; } = default(Single);
         #endregion
         #region FadeDuration
-        public Single FadeDuration { get; set; } = default;
+        public Single FadeDuration { get; set; } = default(Single);
         #endregion
         #region ImpactForce
-        public Single ImpactForce { get; set; } = default;
+        public Single ImpactForce { get; set; } = default(Single);
         #endregion
         #region CountdownSound
         private readonly IFormLink<ISoundDescriptorGetter> _CountdownSound = new FormLink<ISoundDescriptorGetter>();
@@ -249,16 +249,16 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
         #endregion
         #region ConeSpread
-        public Single ConeSpread { get; set; } = default;
+        public Single ConeSpread { get; set; } = default(Single);
         #endregion
         #region CollisionRadius
-        public Single CollisionRadius { get; set; } = default;
+        public Single CollisionRadius { get; set; } = default(Single);
         #endregion
         #region Lifetime
-        public Single Lifetime { get; set; } = default;
+        public Single Lifetime { get; set; } = default(Single);
         #endregion
         #region RelaunchInterval
-        public Single RelaunchInterval { get; set; } = default;
+        public Single RelaunchInterval { get; set; } = default(Single);
         #endregion
         #region DecalData
         private readonly IFormLink<ITextureSetGetter> _DecalData = new FormLink<ITextureSetGetter>();
@@ -296,10 +296,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IProjectileGetter.TextureFilesHashes => this.TextureFilesHashes;
         #endregion
         #region SoundLevel
-        public UInt32 SoundLevel { get; set; } = default;
+        public UInt32 SoundLevel { get; set; } = default(UInt32);
         #endregion
         #region DATADataTypeState
-        public Projectile.DATADataType DATADataTypeState { get; set; } = default;
+        public Projectile.DATADataType DATADataTypeState { get; set; } = default(Projectile.DATADataType);
         #endregion
 
         #region To String
@@ -2114,34 +2114,34 @@ namespace Mutagen.Bethesda.Skyrim
             item.Name = default;
             item.Model = null;
             item.Destructible = null;
-            item.Flags = default;
-            item.Type = default;
-            item.Gravity = default;
-            item.Speed = default;
-            item.Range = default;
+            item.Flags = default(Projectile.Flag);
+            item.Type = default(Projectile.TypeEnum);
+            item.Gravity = default(Single);
+            item.Speed = default(Single);
+            item.Range = default(Single);
             item.Light.Clear();
             item.MuzzleFlash.Clear();
-            item.TracerChance = default;
-            item.ExplosionAltTriggerProximity = default;
-            item.ExplosionAltTriggerTimer = default;
+            item.TracerChance = default(Single);
+            item.ExplosionAltTriggerProximity = default(Single);
+            item.ExplosionAltTriggerTimer = default(Single);
             item.Explosion.Clear();
             item.Sound.Clear();
-            item.MuzzleFlashDuration = default;
-            item.FadeDuration = default;
-            item.ImpactForce = default;
+            item.MuzzleFlashDuration = default(Single);
+            item.FadeDuration = default(Single);
+            item.ImpactForce = default(Single);
             item.CountdownSound.Clear();
             item.DisaleSound.Clear();
             item.DefaultWeaponSource.Clear();
-            item.ConeSpread = default;
-            item.CollisionRadius = default;
-            item.Lifetime = default;
-            item.RelaunchInterval = default;
+            item.ConeSpread = default(Single);
+            item.CollisionRadius = default(Single);
+            item.Lifetime = default(Single);
+            item.RelaunchInterval = default(Single);
             item.DecalData.Clear();
             item.CollisionLayer.Clear();
             item.MuzzleFlashModel.SetToNull();
             item.TextureFilesHashes = default;
-            item.SoundLevel = default;
-            item.DATADataTypeState = default;
+            item.SoundLevel = default(UInt32);
+            item.DATADataTypeState = default(Projectile.DATADataType);
             base.Clear(item);
         }
         
@@ -3699,17 +3699,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region Gravity
         private int _GravityLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Gravity_IsSet => _DATALocation.HasValue;
-        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default;
+        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default(Single);
         #endregion
         #region Speed
         private int _SpeedLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Speed_IsSet => _DATALocation.HasValue;
-        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default;
+        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default(Single);
         #endregion
         #region Range
         private int _RangeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Range_IsSet => _DATALocation.HasValue;
-        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default(Single);
         #endregion
         #region Light
         private int _LightLocation => _DATALocation!.Value.Min + 0x10;
@@ -3724,17 +3724,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region TracerChance
         private int _TracerChanceLocation => _DATALocation!.Value.Min + 0x18;
         private bool _TracerChance_IsSet => _DATALocation.HasValue;
-        public Single TracerChance => _TracerChance_IsSet ? _recordData.Slice(_TracerChanceLocation, 4).Float() : default;
+        public Single TracerChance => _TracerChance_IsSet ? _recordData.Slice(_TracerChanceLocation, 4).Float() : default(Single);
         #endregion
         #region ExplosionAltTriggerProximity
         private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _ExplosionAltTriggerProximity_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default(Single);
         #endregion
         #region ExplosionAltTriggerTimer
         private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ExplosionAltTriggerTimer_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default(Single);
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value.Min + 0x24;
@@ -3749,17 +3749,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _MuzzleFlashDuration_IsSet => _DATALocation.HasValue;
-        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
+        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default(Single);
         #endregion
         #region FadeDuration
         private int _FadeDurationLocation => _DATALocation!.Value.Min + 0x30;
         private bool _FadeDuration_IsSet => _DATALocation.HasValue;
-        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default;
+        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default(Single);
         #endregion
         #region ImpactForce
         private int _ImpactForceLocation => _DATALocation!.Value.Min + 0x34;
         private bool _ImpactForce_IsSet => _DATALocation.HasValue;
-        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default;
+        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default(Single);
         #endregion
         #region CountdownSound
         private int _CountdownSoundLocation => _DATALocation!.Value.Min + 0x38;
@@ -3779,22 +3779,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region ConeSpread
         private int _ConeSpreadLocation => _DATALocation!.Value.Min + 0x44;
         private bool _ConeSpread_IsSet => _DATALocation.HasValue;
-        public Single ConeSpread => _ConeSpread_IsSet ? _recordData.Slice(_ConeSpreadLocation, 4).Float() : default;
+        public Single ConeSpread => _ConeSpread_IsSet ? _recordData.Slice(_ConeSpreadLocation, 4).Float() : default(Single);
         #endregion
         #region CollisionRadius
         private int _CollisionRadiusLocation => _DATALocation!.Value.Min + 0x48;
         private bool _CollisionRadius_IsSet => _DATALocation.HasValue;
-        public Single CollisionRadius => _CollisionRadius_IsSet ? _recordData.Slice(_CollisionRadiusLocation, 4).Float() : default;
+        public Single CollisionRadius => _CollisionRadius_IsSet ? _recordData.Slice(_CollisionRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region Lifetime
         private int _LifetimeLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default;
+        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default(Single);
         #endregion
         #region RelaunchInterval
         private int _RelaunchIntervalLocation => _DATALocation!.Value.Min + 0x50;
         private bool _RelaunchInterval_IsSet => _DATALocation.HasValue;
-        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _recordData.Slice(_RelaunchIntervalLocation, 4).Float() : default;
+        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _recordData.Slice(_RelaunchIntervalLocation, 4).Float() : default(Single);
         #endregion
         #region DecalData
         private int _DecalDataLocation => _DATALocation!.Value.Min + 0x54;
@@ -3816,7 +3816,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public UInt32 SoundLevel => _SoundLevelLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 SoundLevel => _SoundLevelLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

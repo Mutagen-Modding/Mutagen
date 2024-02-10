@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Flags
-        public Quest.Flag Flags { get; set; } = default;
+        public Quest.Flag Flags { get; set; } = default(Quest.Flag);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte> IQuestDataGetter.Unused => this.Unused;
         #endregion
         #region Type
-        public Quest.TypeEnum Type { get; set; } = default;
+        public Quest.TypeEnum Type { get; set; } = default(Quest.TypeEnum);
         #endregion
 
         #region To String
@@ -800,10 +800,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Priority = default;
+            item.Flags = default(Quest.Flag);
+            item.Priority = default(Byte);
             item.Unused = new byte[3];
-            item.Type = default;
+            item.Type = default(Quest.TypeEnum);
         }
         
         #region Mutagen

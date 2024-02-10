@@ -54,13 +54,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Value2
-        public Single Value2 { get; set; } = default;
+        public Single Value2 { get; set; } = default(Single);
         #endregion
         #region FunctionType
-        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default(ObjectModProperty.FloatFunctionType);
         #endregion
 
         #region To String
@@ -427,9 +427,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectModFloatProperty<T> item)
         {
             ClearPartial();
-            item.Value = default;
-            item.Value2 = default;
-            item.FunctionType = default;
+            item.Value = default(Single);
+            item.Value2 = default(Single);
+            item.FunctionType = default(ObjectModProperty.FloatFunctionType);
             base.Clear(item);
         }
         

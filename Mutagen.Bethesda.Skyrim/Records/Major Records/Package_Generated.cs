@@ -71,40 +71,40 @@ namespace Mutagen.Bethesda.Skyrim
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
-        public Package.Flag Flags { get; set; } = default;
+        public Package.Flag Flags { get; set; } = default(Package.Flag);
         #endregion
         #region Type
-        public Package.Types Type { get; set; } = default;
+        public Package.Types Type { get; set; } = default(Package.Types);
         #endregion
         #region InterruptOverride
-        public Package.Interrupt InterruptOverride { get; set; } = default;
+        public Package.Interrupt InterruptOverride { get; set; } = default(Package.Interrupt);
         #endregion
         #region PreferredSpeed
-        public Package.Speed PreferredSpeed { get; set; } = default;
+        public Package.Speed PreferredSpeed { get; set; } = default(Package.Speed);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region InteruptFlags
-        public Package.InterruptFlag InteruptFlags { get; set; } = default;
+        public Package.InterruptFlag InteruptFlags { get; set; } = default(Package.InterruptFlag);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
         #region ScheduleMonth
-        public SByte ScheduleMonth { get; set; } = default;
+        public SByte ScheduleMonth { get; set; } = default(SByte);
         #endregion
         #region ScheduleDayOfWeek
-        public Package.DayOfWeek ScheduleDayOfWeek { get; set; } = default;
+        public Package.DayOfWeek ScheduleDayOfWeek { get; set; } = default(Package.DayOfWeek);
         #endregion
         #region ScheduleDate
-        public Byte ScheduleDate { get; set; } = default;
+        public Byte ScheduleDate { get; set; } = default(Byte);
         #endregion
         #region ScheduleHour
-        public SByte ScheduleHour { get; set; } = default;
+        public SByte ScheduleHour { get; set; } = default(SByte);
         #endregion
         #region ScheduleMinute
-        public SByte ScheduleMinute { get; set; } = default;
+        public SByte ScheduleMinute { get; set; } = default(SByte);
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IPackageGetter.Unknown3 => this.Unknown3;
         #endregion
         #region ScheduleDurationInMinutes
-        public Int32 ScheduleDurationInMinutes { get; set; } = default;
+        public Int32 ScheduleDurationInMinutes { get; set; } = default(Int32);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;
         #endregion
         #region DataInputVersion
-        public Int32 DataInputVersion { get; set; } = default;
+        public Int32 DataInputVersion { get; set; } = default(Int32);
         #endregion
         #region Data
         private readonly Dictionary<SByte, APackageData> _Data = new Dictionary<SByte, APackageData>();
@@ -2148,27 +2148,27 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.Flags = default;
-            item.Type = default;
-            item.InterruptOverride = default;
-            item.PreferredSpeed = default;
-            item.Unknown = default;
-            item.InteruptFlags = default;
-            item.Unknown2 = default;
-            item.ScheduleMonth = default;
-            item.ScheduleDayOfWeek = default;
-            item.ScheduleDate = default;
-            item.ScheduleHour = default;
-            item.ScheduleMinute = default;
+            item.Flags = default(Package.Flag);
+            item.Type = default(Package.Types);
+            item.InterruptOverride = default(Package.Interrupt);
+            item.PreferredSpeed = default(Package.Speed);
+            item.Unknown = default(Byte);
+            item.InteruptFlags = default(Package.InterruptFlag);
+            item.Unknown2 = default(UInt16);
+            item.ScheduleMonth = default(SByte);
+            item.ScheduleDayOfWeek = default(Package.DayOfWeek);
+            item.ScheduleDate = default(Byte);
+            item.ScheduleHour = default(SByte);
+            item.ScheduleMinute = default(SByte);
             item.Unknown3 = new byte[3];
-            item.ScheduleDurationInMinutes = default;
+            item.ScheduleDurationInMinutes = default(Int32);
             item.Conditions.Clear();
             item.Unknown4 = default;
             item.IdleAnimations = null;
             item.CombatStyle.Clear();
             item.OwnerQuest.Clear();
             item.PackageTemplate.Clear();
-            item.DataInputVersion = default;
+            item.DataInputVersion = default(Int32);
             item.Data.Clear();
             item.XnamMarker = Array.Empty<byte>();
             item.ProcedureTree.Clear();
@@ -3898,13 +3898,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown2
         private int _Unknown2Location => _PKDTLocation!.Value.Min + 0xA;
         private bool _Unknown2_IsSet => _PKDTLocation.HasValue;
-        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
+        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default(UInt16);
         #endregion
         private RangeInt32? _PSDTLocation;
         #region ScheduleMonth
         private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
         private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_recordData.Slice(_ScheduleMonthLocation, 1)[0] : default;
+        public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_recordData.Slice(_ScheduleMonthLocation, 1)[0] : default(SByte);
         #endregion
         #region ScheduleDayOfWeek
         private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value.Min + 0x1;
@@ -3919,12 +3919,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region ScheduleHour
         private int _ScheduleHourLocation => _PSDTLocation!.Value.Min + 0x3;
         private bool _ScheduleHour_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_recordData.Slice(_ScheduleHourLocation, 1)[0] : default;
+        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_recordData.Slice(_ScheduleHourLocation, 1)[0] : default(SByte);
         #endregion
         #region ScheduleMinute
         private int _ScheduleMinuteLocation => _PSDTLocation!.Value.Min + 0x4;
         private bool _ScheduleMinute_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_recordData.Slice(_ScheduleMinuteLocation, 1)[0] : default;
+        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_recordData.Slice(_ScheduleMinuteLocation, 1)[0] : default(SByte);
         #endregion
         #region Unknown3
         private int _Unknown3Location => _PSDTLocation!.Value.Min + 0x5;
@@ -3934,7 +3934,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ScheduleDurationInMinutes
         private int _ScheduleDurationInMinutesLocation => _PSDTLocation!.Value.Min + 0x8;
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
-        public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
+        public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default(Int32);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Unknown4

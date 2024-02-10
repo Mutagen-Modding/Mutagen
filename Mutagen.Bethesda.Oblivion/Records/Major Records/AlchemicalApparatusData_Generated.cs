@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public AlchemicalApparatus.ApparatusType Type { get; set; } = default;
+        public AlchemicalApparatus.ApparatusType Type { get; set; } = default(AlchemicalApparatus.ApparatusType);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Quality
-        public Single Quality { get; set; } = default;
+        public Single Quality { get; set; } = default(Single);
         public static RangeFloat Quality_Range = new RangeFloat(0f, 255f);
         #endregion
 
@@ -796,10 +796,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAlchemicalApparatusData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Value = default;
-            item.Weight = default;
-            item.Quality = default;
+            item.Type = default(AlchemicalApparatus.ApparatusType);
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.Quality = default(Single);
         }
         
         #region Mutagen

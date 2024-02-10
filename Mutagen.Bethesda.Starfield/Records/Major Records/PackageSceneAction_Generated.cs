@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
         #region Count
-        public UInt32 Count { get; set; } = default;
+        public UInt32 Count { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Item.Clear();
-            item.Count = default;
+            item.Count = default(UInt32);
         }
         
         #region Mutagen

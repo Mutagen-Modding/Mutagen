@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Type
-        public MagicEffectSound.SoundType Type { get; set; } = default;
+        public MagicEffectSound.SoundType Type { get; set; } = default(MagicEffectSound.SoundType);
         #endregion
         #region Sound
         public SoundReference Sound { get; set; } = new SoundReference();
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMagicEffectSound item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(MagicEffectSound.SoundType);
             item.Sound.Clear();
         }
         

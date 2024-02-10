@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region VariableType
-        public VariableType VariableType { get; set; } = default;
+        public VariableType VariableType { get; set; } = default(VariableType);
         #endregion
         #region StringValue
         public String? StringValue { get; set; }
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IPexObjectVariableData item)
         {
             ClearPartial();
-            item.VariableType = default;
+            item.VariableType = default(VariableType);
             item.StringValue = default;
             item.IntValue = default;
             item.FloatValue = default;

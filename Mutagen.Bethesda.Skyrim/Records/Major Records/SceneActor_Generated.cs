@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Flags
         public SceneActor.Flag? Flags { get; set; }
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISceneActor item)
         {
             ClearPartial();
-            item.ID = default;
+            item.ID = default(UInt32);
             item.Flags = default;
             item.BehaviorFlags = default;
         }
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ID
         private int? _IDLocation;
-        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Flags
         private int? _FlagsLocation;

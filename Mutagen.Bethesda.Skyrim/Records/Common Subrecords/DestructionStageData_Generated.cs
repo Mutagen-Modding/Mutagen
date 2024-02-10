@@ -52,19 +52,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region HealthPercent
-        public Byte HealthPercent { get; set; } = default;
+        public Byte HealthPercent { get; set; } = default(Byte);
         #endregion
         #region Index
-        public Byte Index { get; set; } = default;
+        public Byte Index { get; set; } = default(Byte);
         #endregion
         #region ModelDamageStage
-        public Byte ModelDamageStage { get; set; } = default;
+        public Byte ModelDamageStage { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public DestructionStageData.Flag Flags { get; set; } = default;
+        public DestructionStageData.Flag Flags { get; set; } = default(DestructionStageData.Flag);
         #endregion
         #region SelfDamagePerSecond
-        public Int32 SelfDamagePerSecond { get; set; } = default;
+        public Int32 SelfDamagePerSecond { get; set; } = default(Int32);
         #endregion
         #region Explosion
         private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;
         #endregion
         #region DebrisCount
-        public Int32 DebrisCount { get; set; } = default;
+        public Int32 DebrisCount { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -958,14 +958,14 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDestructionStageData item)
         {
             ClearPartial();
-            item.HealthPercent = default;
-            item.Index = default;
-            item.ModelDamageStage = default;
-            item.Flags = default;
-            item.SelfDamagePerSecond = default;
+            item.HealthPercent = default(Byte);
+            item.Index = default(Byte);
+            item.ModelDamageStage = default(Byte);
+            item.Flags = default(DestructionStageData.Flag);
+            item.SelfDamagePerSecond = default(Int32);
             item.Explosion.Clear();
             item.Debris.Clear();
-            item.DebrisCount = default;
+            item.DebrisCount = default(Int32);
         }
         
         #region Mutagen

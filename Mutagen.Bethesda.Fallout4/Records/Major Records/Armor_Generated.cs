@@ -289,22 +289,22 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Value
-        public Int32 Value { get; set; } = default;
+        public Int32 Value { get; set; } = default(Int32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Health
-        public UInt32 Health { get; set; } = default;
+        public UInt32 Health { get; set; } = default(UInt32);
         #endregion
         #region ArmorRating
-        public UInt16 ArmorRating { get; set; } = default;
+        public UInt16 ArmorRating { get; set; } = default(UInt16);
         #endregion
         #region BaseAddonIndex
-        public UInt16 BaseAddonIndex { get; set; } = default;
+        public UInt16 BaseAddonIndex { get; set; } = default(UInt16);
         #endregion
         #region StaggerRating
-        public Byte StaggerRating { get; set; } = default;
+        public Byte StaggerRating { get; set; } = default(Byte);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2526,12 +2526,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.Description = default;
             item.InstanceNaming.Clear();
             item.Armatures.Clear();
-            item.Value = default;
-            item.Weight = default;
-            item.Health = default;
-            item.ArmorRating = default;
-            item.BaseAddonIndex = default;
-            item.StaggerRating = default;
+            item.Value = default(Int32);
+            item.Weight = default(Single);
+            item.Health = default(UInt32);
+            item.ArmorRating = default(UInt16);
+            item.BaseAddonIndex = default(UInt16);
+            item.StaggerRating = default(Byte);
             item.Unused = new byte[3];
             item.Resistances = null;
             item.TemplateArmor.Clear();
@@ -3536,7 +3536,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3659,7 +3659,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4471,28 +4471,28 @@ namespace Mutagen.Bethesda.Fallout4
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(Int32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region Health
         private int _HealthLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Health_IsSet => _DATALocation.HasValue;
-        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default;
+        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default(UInt32);
         #endregion
         private RangeInt32? _FNAMLocation;
         #region ArmorRating
         private int _ArmorRatingLocation => _FNAMLocation!.Value.Min;
         private bool _ArmorRating_IsSet => _FNAMLocation.HasValue;
-        public UInt16 ArmorRating => _ArmorRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ArmorRatingLocation, 2)) : default;
+        public UInt16 ArmorRating => _ArmorRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ArmorRatingLocation, 2)) : default(UInt16);
         #endregion
         #region BaseAddonIndex
         private int _BaseAddonIndexLocation => _FNAMLocation!.Value.Min + 0x2;
         private bool _BaseAddonIndex_IsSet => _FNAMLocation.HasValue;
-        public UInt16 BaseAddonIndex => _BaseAddonIndex_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseAddonIndexLocation, 2)) : default;
+        public UInt16 BaseAddonIndex => _BaseAddonIndex_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseAddonIndexLocation, 2)) : default(UInt16);
         #endregion
         #region StaggerRating
         private int _StaggerRatingLocation => _FNAMLocation!.Value.Min + 0x4;

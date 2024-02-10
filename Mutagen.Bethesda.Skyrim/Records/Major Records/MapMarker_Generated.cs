@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public MapMarker.Flag Flags { get; set; } = default;
+        public MapMarker.Flag Flags { get; set; } = default(MapMarker.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Type
-        public MapMarker.MarkerType Type { get; set; } = default;
+        public MapMarker.MarkerType Type { get; set; } = default(MapMarker.MarkerType);
         #endregion
 
         #region To String
@@ -813,9 +813,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IMapMarker item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(MapMarker.Flag);
             item.Name = default;
-            item.Type = default;
+            item.Type = default(MapMarker.MarkerType);
         }
         
         #region Mutagen

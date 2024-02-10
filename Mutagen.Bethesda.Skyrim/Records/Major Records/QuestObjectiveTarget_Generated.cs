@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region AliasID
-        public Int32 AliasID { get; set; } = default;
+        public Int32 AliasID { get; set; } = default(Int32);
         #endregion
         #region Flags
-        public Quest.TargetFlag Flags { get; set; } = default;
+        public Quest.TargetFlag Flags { get; set; } = default(Quest.TargetFlag);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -848,8 +848,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IQuestObjectiveTarget item)
         {
             ClearPartial();
-            item.AliasID = default;
-            item.Flags = default;
+            item.AliasID = default(Int32);
+            item.Flags = default(Quest.TargetFlag);
             item.Conditions.Clear();
         }
         
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AliasID
         private int _AliasIDLocation => _QSTALocation!.Value.Min;
         private bool _AliasID_IsSet => _QSTALocation.HasValue;
-        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default;
+        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default(Int32);
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;

@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public FurnitureMarkerParameters.VersioningBreaks Versioning { get; set; } = default;
+        public FurnitureMarkerParameters.VersioningBreaks Versioning { get; set; } = default(FurnitureMarkerParameters.VersioningBreaks);
         #endregion
         #region Enabled
-        public Boolean Enabled { get; set; } = default;
+        public Boolean Enabled { get; set; } = default(Boolean);
         #endregion
         #region Offset
-        public P3Float Offset { get; set; } = default;
+        public P3Float Offset { get; set; } = default(P3Float);
         #endregion
         #region RotationZ
-        public Single RotationZ { get; set; } = default;
+        public Single RotationZ { get; set; } = default(Single);
         #endregion
         #region Keyword
         private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IKeywordGetter> IFurnitureMarkerParametersGetter.Keyword => this.Keyword;
         #endregion
         #region EntryTypes
-        public Furniture.EntryParameterType EntryTypes { get; set; } = default;
+        public Furniture.EntryParameterType EntryTypes { get; set; } = default(Furniture.EntryParameterType);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -922,12 +922,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IFurnitureMarkerParameters item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Enabled = default;
-            item.Offset = default;
-            item.RotationZ = default;
+            item.Versioning = default(FurnitureMarkerParameters.VersioningBreaks);
+            item.Enabled = default(Boolean);
+            item.Offset = default(P3Float);
+            item.RotationZ = default(Single);
             item.Keyword.Clear();
-            item.EntryTypes = default;
+            item.EntryTypes = default(Furniture.EntryParameterType);
             item.Unknown = new byte[3];
         }
         

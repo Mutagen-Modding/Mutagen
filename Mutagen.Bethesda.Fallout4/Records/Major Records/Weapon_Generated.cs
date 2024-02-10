@@ -365,31 +365,31 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IAmmunitionGetter> IWeaponGetter.Ammo => this.Ammo;
         #endregion
         #region Speed
-        public Single Speed { get; set; } = default;
+        public Single Speed { get; set; } = default(Single);
         #endregion
         #region ReloadSpeed
-        public Single ReloadSpeed { get; set; } = default;
+        public Single ReloadSpeed { get; set; } = default(Single);
         #endregion
         #region Reach
-        public Single Reach { get; set; } = default;
+        public Single Reach { get; set; } = default(Single);
         #endregion
         #region MinRange
-        public Single MinRange { get; set; } = default;
+        public Single MinRange { get; set; } = default(Single);
         #endregion
         #region MaxRange
-        public Single MaxRange { get; set; } = default;
+        public Single MaxRange { get; set; } = default(Single);
         #endregion
         #region AttackDelay
-        public Single AttackDelay { get; set; } = default;
+        public Single AttackDelay { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
         #region DamageOutOfRangeMult
-        public Single DamageOutOfRangeMult { get; set; } = default;
+        public Single DamageOutOfRangeMult { get; set; } = default(Single);
         #endregion
         #region OnHit
-        public Weapon.HitBehavior OnHit { get; set; } = default;
+        public Weapon.HitBehavior OnHit { get; set; } = default(Weapon.HitBehavior);
         #endregion
         #region Skill
         private readonly IFormLink<IActorValueInformationGetter> _Skill = new FormLink<IActorValueInformationGetter>();
@@ -412,28 +412,28 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IActorValueInformationGetter> IWeaponGetter.Resist => this.Resist;
         #endregion
         #region Flags
-        public Weapon.Flag Flags { get; set; } = default;
+        public Weapon.Flag Flags { get; set; } = default(Weapon.Flag);
         #endregion
         #region Capacity
-        public UInt16 Capacity { get; set; } = default;
+        public UInt16 Capacity { get; set; } = default(UInt16);
         #endregion
         #region AnimationType
-        public Weapon.AnimationTypes AnimationType { get; set; } = default;
+        public Weapon.AnimationTypes AnimationType { get; set; } = default(Weapon.AnimationTypes);
         #endregion
         #region SecondaryDamage
-        public Single SecondaryDamage { get; set; } = default;
+        public Single SecondaryDamage { get; set; } = default(Single);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region BaseDamage
-        public UInt16 BaseDamage { get; set; } = default;
+        public UInt16 BaseDamage { get; set; } = default(UInt16);
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region AttackSound
         private readonly IFormLink<ISoundDescriptorGetter> _AttackSound = new FormLink<ISoundDescriptorGetter>();
@@ -516,28 +516,28 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundDescriptorGetter> IWeaponGetter.FastEquipSound => this.FastEquipSound;
         #endregion
         #region AccuracyBonus
-        public Byte AccuracyBonus { get; set; } = default;
+        public Byte AccuracyBonus { get; set; } = default(Byte);
         #endregion
         #region AnimationAttackSeconds
-        public Single AnimationAttackSeconds { get; set; } = default;
+        public Single AnimationAttackSeconds { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
         #region ActionPointCost
-        public Single ActionPointCost { get; set; } = default;
+        public Single ActionPointCost { get; set; } = default(Single);
         #endregion
         #region FullPowerSeconds
-        public Single FullPowerSeconds { get; set; } = default;
+        public Single FullPowerSeconds { get; set; } = default(Single);
         #endregion
         #region MinPowerPerShot
-        public Single MinPowerPerShot { get; set; } = default;
+        public Single MinPowerPerShot { get; set; } = default(Single);
         #endregion
         #region Stagger
-        public Stagger Stagger { get; set; } = default;
+        public Stagger Stagger { get; set; } = default(Stagger);
         #endregion
         #region Unknown3
-        public Int32 Unknown3 { get; set; } = default;
+        public Int32 Unknown3 { get; set; } = default(Int32);
         #endregion
         #region ExtraData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -551,10 +551,10 @@ namespace Mutagen.Bethesda.Fallout4
         IWeaponExtraDataGetter? IWeaponGetter.ExtraData => this.ExtraData;
         #endregion
         #region CritDamageMult
-        public Single CritDamageMult { get; set; } = default;
+        public Single CritDamageMult { get; set; } = default(Single);
         #endregion
         #region CritChargeBonus
-        public Single CritChargeBonus { get; set; } = default;
+        public Single CritChargeBonus { get; set; } = default(Single);
         #endregion
         #region CritEffect
         private readonly IFormLink<ISpellGetter> _CritEffect = new FormLink<ISpellGetter>();
@@ -4143,25 +4143,25 @@ namespace Mutagen.Bethesda.Fallout4
             item.FirstPersonModel = null;
             item.MO4F = default;
             item.Ammo.Clear();
-            item.Speed = default;
-            item.ReloadSpeed = default;
-            item.Reach = default;
-            item.MinRange = default;
-            item.MaxRange = default;
-            item.AttackDelay = default;
-            item.Unknown = default;
-            item.DamageOutOfRangeMult = default;
-            item.OnHit = default;
+            item.Speed = default(Single);
+            item.ReloadSpeed = default(Single);
+            item.Reach = default(Single);
+            item.MinRange = default(Single);
+            item.MaxRange = default(Single);
+            item.AttackDelay = default(Single);
+            item.Unknown = default(Single);
+            item.DamageOutOfRangeMult = default(Single);
+            item.OnHit = default(Weapon.HitBehavior);
             item.Skill.Clear();
             item.Resist.Clear();
-            item.Flags = default;
-            item.Capacity = default;
-            item.AnimationType = default;
-            item.SecondaryDamage = default;
-            item.Weight = default;
-            item.Value = default;
-            item.BaseDamage = default;
-            item.SoundLevel = default;
+            item.Flags = default(Weapon.Flag);
+            item.Capacity = default(UInt16);
+            item.AnimationType = default(Weapon.AnimationTypes);
+            item.SecondaryDamage = default(Single);
+            item.Weight = default(Single);
+            item.Value = default(UInt32);
+            item.BaseDamage = default(UInt16);
+            item.SoundLevel = default(SoundLevel);
             item.AttackSound.Clear();
             item.Attack2dSound.Clear();
             item.AttackLoopSound.Clear();
@@ -4170,17 +4170,17 @@ namespace Mutagen.Bethesda.Fallout4
             item.EquipSound.Clear();
             item.UnequipSound.Clear();
             item.FastEquipSound.Clear();
-            item.AccuracyBonus = default;
-            item.AnimationAttackSeconds = default;
-            item.Unknown2 = default;
-            item.ActionPointCost = default;
-            item.FullPowerSeconds = default;
-            item.MinPowerPerShot = default;
-            item.Stagger = default;
-            item.Unknown3 = default;
+            item.AccuracyBonus = default(Byte);
+            item.AnimationAttackSeconds = default(Single);
+            item.Unknown2 = default(UInt16);
+            item.ActionPointCost = default(Single);
+            item.FullPowerSeconds = default(Single);
+            item.MinPowerPerShot = default(Single);
+            item.Stagger = default(Stagger);
+            item.Unknown3 = default(Int32);
             item.ExtraData = null;
-            item.CritDamageMult = default;
-            item.CritChargeBonus = default;
+            item.CritDamageMult = default(Single);
+            item.CritChargeBonus = default(Single);
             item.CritEffect.Clear();
             item.ImpactDataSet.Clear();
             item.NpcAddAmmoList.Clear();
@@ -5716,7 +5716,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -5751,7 +5751,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -7115,42 +7115,42 @@ namespace Mutagen.Bethesda.Fallout4
         #region Speed
         private int _SpeedLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Speed_IsSet => _DNAMLocation.HasValue;
-        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default;
+        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default(Single);
         #endregion
         #region ReloadSpeed
         private int _ReloadSpeedLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _ReloadSpeed_IsSet => _DNAMLocation.HasValue;
-        public Single ReloadSpeed => _ReloadSpeed_IsSet ? _recordData.Slice(_ReloadSpeedLocation, 4).Float() : default;
+        public Single ReloadSpeed => _ReloadSpeed_IsSet ? _recordData.Slice(_ReloadSpeedLocation, 4).Float() : default(Single);
         #endregion
         #region Reach
         private int _ReachLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _Reach_IsSet => _DNAMLocation.HasValue;
-        public Single Reach => _Reach_IsSet ? _recordData.Slice(_ReachLocation, 4).Float() : default;
+        public Single Reach => _Reach_IsSet ? _recordData.Slice(_ReachLocation, 4).Float() : default(Single);
         #endregion
         #region MinRange
         private int _MinRangeLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _MinRange_IsSet => _DNAMLocation.HasValue;
-        public Single MinRange => _MinRange_IsSet ? _recordData.Slice(_MinRangeLocation, 4).Float() : default;
+        public Single MinRange => _MinRange_IsSet ? _recordData.Slice(_MinRangeLocation, 4).Float() : default(Single);
         #endregion
         #region MaxRange
         private int _MaxRangeLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _MaxRange_IsSet => _DNAMLocation.HasValue;
-        public Single MaxRange => _MaxRange_IsSet ? _recordData.Slice(_MaxRangeLocation, 4).Float() : default;
+        public Single MaxRange => _MaxRange_IsSet ? _recordData.Slice(_MaxRangeLocation, 4).Float() : default(Single);
         #endregion
         #region AttackDelay
         private int _AttackDelayLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _AttackDelay_IsSet => _DNAMLocation.HasValue;
-        public Single AttackDelay => _AttackDelay_IsSet ? _recordData.Slice(_AttackDelayLocation, 4).Float() : default;
+        public Single AttackDelay => _AttackDelay_IsSet ? _recordData.Slice(_AttackDelayLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public Single Unknown => _Unknown_IsSet ? _recordData.Slice(_UnknownLocation, 4).Float() : default;
+        public Single Unknown => _Unknown_IsSet ? _recordData.Slice(_UnknownLocation, 4).Float() : default(Single);
         #endregion
         #region DamageOutOfRangeMult
         private int _DamageOutOfRangeMultLocation => _DNAMLocation!.Value.Min + 0x20;
         private bool _DamageOutOfRangeMult_IsSet => _DNAMLocation.HasValue;
-        public Single DamageOutOfRangeMult => _DamageOutOfRangeMult_IsSet ? _recordData.Slice(_DamageOutOfRangeMultLocation, 4).Float() : default;
+        public Single DamageOutOfRangeMult => _DamageOutOfRangeMult_IsSet ? _recordData.Slice(_DamageOutOfRangeMultLocation, 4).Float() : default(Single);
         #endregion
         #region OnHit
         private int _OnHitLocation => _DNAMLocation!.Value.Min + 0x24;
@@ -7175,7 +7175,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Capacity
         private int _CapacityLocation => _DNAMLocation!.Value.Min + 0x34;
         private bool _Capacity_IsSet => _DNAMLocation.HasValue;
-        public UInt16 Capacity => _Capacity_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CapacityLocation, 2)) : default;
+        public UInt16 Capacity => _Capacity_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CapacityLocation, 2)) : default(UInt16);
         #endregion
         #region AnimationType
         private int _AnimationTypeLocation => _DNAMLocation!.Value.Min + 0x36;
@@ -7185,22 +7185,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region SecondaryDamage
         private int _SecondaryDamageLocation => _DNAMLocation!.Value.Min + 0x37;
         private bool _SecondaryDamage_IsSet => _DNAMLocation.HasValue;
-        public Single SecondaryDamage => _SecondaryDamage_IsSet ? _recordData.Slice(_SecondaryDamageLocation, 4).Float() : default;
+        public Single SecondaryDamage => _SecondaryDamage_IsSet ? _recordData.Slice(_SecondaryDamageLocation, 4).Float() : default(Single);
         #endregion
         #region Weight
         private int _WeightLocation => _DNAMLocation!.Value.Min + 0x3B;
         private bool _Weight_IsSet => _DNAMLocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region Value
         private int _ValueLocation => _DNAMLocation!.Value.Min + 0x3F;
         private bool _Value_IsSet => _DNAMLocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region BaseDamage
         private int _BaseDamageLocation => _DNAMLocation!.Value.Min + 0x43;
         private bool _BaseDamage_IsSet => _DNAMLocation.HasValue;
-        public UInt16 BaseDamage => _BaseDamage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseDamageLocation, 2)) : default;
+        public UInt16 BaseDamage => _BaseDamage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseDamageLocation, 2)) : default(UInt16);
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DNAMLocation!.Value.Min + 0x45;
@@ -7255,27 +7255,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region AnimationAttackSeconds
         private int _AnimationAttackSecondsLocation => _DNAMLocation!.Value.Min + 0x6A;
         private bool _AnimationAttackSeconds_IsSet => _DNAMLocation.HasValue;
-        public Single AnimationAttackSeconds => _AnimationAttackSeconds_IsSet ? _recordData.Slice(_AnimationAttackSecondsLocation, 4).Float() : default;
+        public Single AnimationAttackSeconds => _AnimationAttackSeconds_IsSet ? _recordData.Slice(_AnimationAttackSecondsLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DNAMLocation!.Value.Min + 0x6E;
         private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
-        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
+        public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default(UInt16);
         #endregion
         #region ActionPointCost
         private int _ActionPointCostLocation => _DNAMLocation!.Value.Min + 0x70;
         private bool _ActionPointCost_IsSet => _DNAMLocation.HasValue;
-        public Single ActionPointCost => _ActionPointCost_IsSet ? _recordData.Slice(_ActionPointCostLocation, 4).Float() : default;
+        public Single ActionPointCost => _ActionPointCost_IsSet ? _recordData.Slice(_ActionPointCostLocation, 4).Float() : default(Single);
         #endregion
         #region FullPowerSeconds
         private int _FullPowerSecondsLocation => _DNAMLocation!.Value.Min + 0x74;
         private bool _FullPowerSeconds_IsSet => _DNAMLocation.HasValue;
-        public Single FullPowerSeconds => _FullPowerSeconds_IsSet ? _recordData.Slice(_FullPowerSecondsLocation, 4).Float() : default;
+        public Single FullPowerSeconds => _FullPowerSeconds_IsSet ? _recordData.Slice(_FullPowerSecondsLocation, 4).Float() : default(Single);
         #endregion
         #region MinPowerPerShot
         private int _MinPowerPerShotLocation => _DNAMLocation!.Value.Min + 0x78;
         private bool _MinPowerPerShot_IsSet => _DNAMLocation.HasValue;
-        public Single MinPowerPerShot => _MinPowerPerShot_IsSet ? _recordData.Slice(_MinPowerPerShotLocation, 4).Float() : default;
+        public Single MinPowerPerShot => _MinPowerPerShot_IsSet ? _recordData.Slice(_MinPowerPerShotLocation, 4).Float() : default(Single);
         #endregion
         #region Stagger
         private int _StaggerLocation => _DNAMLocation!.Value.Min + 0x7C;
@@ -7285,7 +7285,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown3
         private int _Unknown3Location => _DNAMLocation!.Value.Min + 0x80;
         private bool _Unknown3_IsSet => _DNAMLocation.HasValue;
-        public Int32 Unknown3 => _Unknown3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Unknown3Location, 4)) : default;
+        public Int32 Unknown3 => _Unknown3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Unknown3Location, 4)) : default(Int32);
         #endregion
         #region ExtraData
         private RangeInt32? _ExtraDataLocation;
@@ -7295,12 +7295,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region CritDamageMult
         private int _CritDamageMultLocation => _CRDTLocation!.Value.Min;
         private bool _CritDamageMult_IsSet => _CRDTLocation.HasValue;
-        public Single CritDamageMult => _CritDamageMult_IsSet ? _recordData.Slice(_CritDamageMultLocation, 4).Float() : default;
+        public Single CritDamageMult => _CritDamageMult_IsSet ? _recordData.Slice(_CritDamageMultLocation, 4).Float() : default(Single);
         #endregion
         #region CritChargeBonus
         private int _CritChargeBonusLocation => _CRDTLocation!.Value.Min + 0x4;
         private bool _CritChargeBonus_IsSet => _CRDTLocation.HasValue;
-        public Single CritChargeBonus => _CritChargeBonus_IsSet ? _recordData.Slice(_CritChargeBonusLocation, 4).Float() : default;
+        public Single CritChargeBonus => _CritChargeBonus_IsSet ? _recordData.Slice(_CritChargeBonusLocation, 4).Float() : default(Single);
         #endregion
         #region CritEffect
         private int _CritEffectLocation => _CRDTLocation!.Value.Min + 0x8;

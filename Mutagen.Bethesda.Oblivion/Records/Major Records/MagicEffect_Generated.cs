@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.CounterEffects = 
                             rhs.CounterEffects
-                            .Select(r => (IEDIDLinkGetter<IMagicEffectGetter>)new EDIDLink<IMagicEffectGetter>(r.EDID))
+                                .Select(b => (IEDIDLinkGetter<IMagicEffectGetter>)new EDIDLink<IMagicEffectGetter>(b.EDID))
                             .ToExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>();
                     }
                     else

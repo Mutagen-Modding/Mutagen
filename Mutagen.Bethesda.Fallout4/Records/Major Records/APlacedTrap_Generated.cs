@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? IAPlacedTrapGetter.AmmoCount => this.AmmoCount;
         #endregion
         #region IsLinkedRefTransient
-        public Boolean IsLinkedRefTransient { get; set; } = default;
+        public Boolean IsLinkedRefTransient { get; set; } = default(Boolean);
         #endregion
         #region Layer
         private readonly IFormLinkNullable<ILayerGetter> _Layer = new FormLinkNullable<ILayerGetter>();
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IPlacedObjectGetter> IAPlacedTrapGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
         #region IsIgnoredBySandbox
-        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -301,10 +301,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Comments
         public String? Comments { get; set; }
@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.UnknownReference.Clear();
             item.XATP = default;
             item.AmmoCount = default;
-            item.IsLinkedRefTransient = default;
+            item.IsLinkedRefTransient = default(Boolean);
             item.Layer.Clear();
             item.MaterialSwap.Clear();
             item.ReferenceGroup.Clear();
@@ -2292,13 +2292,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.FactionRank = default;
             item.Emittance.Clear();
             item.MultiBoundReference.Clear();
-            item.IsIgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default(Boolean);
             item.LocationRefTypes = null;
             item.LocationReference.Clear();
             item.Scale = default;
             item.DistantLodData = null;
-            item.Position = default;
-            item.Rotation = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
             item.Comments = default;
             base.Clear(item);
         }
@@ -3351,7 +3351,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -4113,7 +4113,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
-        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default;
+        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Layer
         private int? _LayerLocation;
@@ -4150,7 +4150,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
-        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region LocationReference
@@ -4166,12 +4166,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Position
         private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default(P3Float);
         #endregion
         #region Rotation
         private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
         #endregion
         #region Comments
         private int? _CommentsLocation;

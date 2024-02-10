@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public Quest.Flag Flags { get; set; } = default;
+        public Quest.Flag Flags { get; set; } = default(Quest.Flag);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region DelayTime
-        public Single DelayTime { get; set; } = default;
+        public Single DelayTime { get; set; } = default(Single);
         #endregion
         #region Type
-        public Quest.TypeEnum Type { get; set; } = default;
+        public Quest.TypeEnum Type { get; set; } = default(Quest.TypeEnum);
         #endregion
 
         #region To String
@@ -828,11 +828,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IQuestData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Priority = default;
-            item.Unused = default;
-            item.DelayTime = default;
-            item.Type = default;
+            item.Flags = default(Quest.Flag);
+            item.Priority = default(Byte);
+            item.Unused = default(Byte);
+            item.DelayTime = default(Single);
+            item.Type = default(Quest.TypeEnum);
         }
         
         #region Mutagen

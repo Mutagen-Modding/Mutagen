@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavmeshParentGetter.Parent => this.Parent;
         #endregion
         #region Coordinates
-        public P2Int16 Coordinates { get; set; } = default;
+        public P2Int16 Coordinates { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Parent.Clear();
-            item.Coordinates = default;
+            item.Coordinates = default(P2Int16);
             base.Clear(item);
         }
         

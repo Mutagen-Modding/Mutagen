@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Index
-        public UInt32 Index { get; set; } = default;
+        public UInt32 Index { get; set; } = default(UInt32);
         #endregion
         #region Label
         public TranslatedString? Label { get; set; }
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFaceDial item)
         {
             ClearPartial();
-            item.Index = default;
+            item.Index = default(UInt32);
             item.Label = default;
         }
         
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Index
         private int? _IndexLocation;
-        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Label
         private int? _LabelLocation;

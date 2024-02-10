@@ -87,18 +87,18 @@ namespace Mutagen.Bethesda.Oblivion
         ISkillBoostGetter IRaceDataGetter.SkillBoost6 => SkillBoost6;
         #endregion
         #region Unused
-        public Int32 Unused { get; set; } = default;
+        public Int32 Unused { get; set; } = default(Int32);
         #endregion
         #region Height
-        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default(Single), default(Single));
         IGenderedItemGetter<Single> IRaceDataGetter.Height => this.Height;
         #endregion
         #region Weight
-        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default(Single), default(Single));
         IGenderedItemGetter<Single> IRaceDataGetter.Weight => this.Weight;
         #endregion
         #region Flags
-        public Race.Flag Flags { get; set; } = default;
+        public Race.Flag Flags { get; set; } = default(Race.Flag);
         #endregion
 
         #region To String
@@ -1105,12 +1105,12 @@ namespace Mutagen.Bethesda.Oblivion
             item.SkillBoost4.Clear();
             item.SkillBoost5.Clear();
             item.SkillBoost6.Clear();
-            item.Unused = default;
-            item.Height.Male = default;
-            item.Height.Female = default;
-            item.Weight.Male = default;
-            item.Weight.Female = default;
-            item.Flags = default;
+            item.Unused = default(Int32);
+            item.Height.Male = default(Single);
+            item.Height.Female = default(Single);
+            item.Weight.Male = default(Single);
+            item.Weight.Female = default(Single);
+            item.Flags = default(Race.Flag);
         }
         
         #region Mutagen

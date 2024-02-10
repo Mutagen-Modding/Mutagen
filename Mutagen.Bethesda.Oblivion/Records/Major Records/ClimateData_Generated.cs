@@ -51,25 +51,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SunriseBegin
-        public TimeOnly SunriseBegin { get; set; } = default;
+        public TimeOnly SunriseBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunriseEnd
-        public TimeOnly SunriseEnd { get; set; } = default;
+        public TimeOnly SunriseEnd { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetBegin
-        public TimeOnly SunsetBegin { get; set; } = default;
+        public TimeOnly SunsetBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetEnd
-        public TimeOnly SunsetEnd { get; set; } = default;
+        public TimeOnly SunsetEnd { get; set; } = default(TimeOnly);
         #endregion
         #region Volatility
-        public Byte Volatility { get; set; } = default;
+        public Byte Volatility { get; set; } = default(Byte);
         #endregion
         #region Phase
-        public Climate.MoonPhase Phase { get; set; } = default;
+        public Climate.MoonPhase Phase { get; set; } = default(Climate.MoonPhase);
         #endregion
         #region PhaseLength
-        public Byte PhaseLength { get; set; } = default;
+        public Byte PhaseLength { get; set; } = default(Byte);
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 63);
         #endregion
 
@@ -901,13 +901,13 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClimateData item)
         {
             ClearPartial();
-            item.SunriseBegin = default;
-            item.SunriseEnd = default;
-            item.SunsetBegin = default;
-            item.SunsetEnd = default;
-            item.Volatility = default;
-            item.Phase = default;
-            item.PhaseLength = default;
+            item.SunriseBegin = default(TimeOnly);
+            item.SunriseEnd = default(TimeOnly);
+            item.SunsetBegin = default(TimeOnly);
+            item.SunsetEnd = default(TimeOnly);
+            item.Volatility = default(Byte);
+            item.Phase = default(Climate.MoonPhase);
+            item.PhaseLength = default(Byte);
         }
         
         #region Mutagen

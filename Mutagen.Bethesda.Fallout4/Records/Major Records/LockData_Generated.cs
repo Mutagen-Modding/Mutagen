@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Level
-        public LockLevel Level { get; set; } = default;
+        public LockLevel Level { get; set; } = default(LockLevel);
         #endregion
         #region Key
         private readonly IFormLink<IKeyGetter> _Key = new FormLink<IKeyGetter>();
@@ -65,10 +65,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IKeyGetter> ILockDataGetter.Key => this.Key;
         #endregion
         #region Flags
-        public LockData.Flag Flags { get; set; } = default;
+        public LockData.Flag Flags { get; set; } = default(LockData.Flag);
         #endregion
         #region Unused
-        public Int32 Unused { get; set; } = default;
+        public Int32 Unused { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -807,10 +807,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILockData item)
         {
             ClearPartial();
-            item.Level = default;
+            item.Level = default(LockLevel);
             item.Key.Clear();
-            item.Flags = default;
-            item.Unused = default;
+            item.Flags = default(LockData.Flag);
+            item.Unused = default(Int32);
         }
         
         #region Mutagen

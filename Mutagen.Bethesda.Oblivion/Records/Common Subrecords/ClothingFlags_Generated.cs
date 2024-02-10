@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BipedFlags
-        public BipedFlag BipedFlags { get; set; } = default;
+        public BipedFlag BipedFlags { get; set; } = default(BipedFlag);
         #endregion
         #region GeneralFlags
-        public EquipmentFlag GeneralFlags { get; set; } = default;
+        public EquipmentFlag GeneralFlags { get; set; } = default(EquipmentFlag);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClothingFlags item)
         {
             ClearPartial();
-            item.BipedFlags = default;
-            item.GeneralFlags = default;
+            item.BipedFlags = default(BipedFlag);
+            item.GeneralFlags = default(EquipmentFlag);
         }
         
         #region Mutagen

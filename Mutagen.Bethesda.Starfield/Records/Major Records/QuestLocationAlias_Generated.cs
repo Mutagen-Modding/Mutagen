@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Name
         /// <summary>
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestLocationAlias item)
         {
             ClearPartial();
-            item.ID = default;
+            item.ID = default(UInt32);
             item.Name = string.Empty;
             item.Flags = default;
             item.ALFG = default;
@@ -2478,7 +2478,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ID
         private int? _IDLocation;
-        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Name
         private int? _NameLocation;

@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IKeywordGetter> IFilterKeywordChanceGetter.Keyword => this.Keyword;
         #endregion
         #region Chance
-        public Percent Chance { get; set; } = default;
+        public Percent Chance { get; set; } = default(Percent);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -765,8 +765,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Keyword.Clear();
-            item.Chance = default;
-            item.Unknown = default;
+            item.Chance = default(Percent);
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

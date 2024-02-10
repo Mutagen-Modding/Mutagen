@@ -122,19 +122,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region NavmeshGridDivisor
-        public UInt32 NavmeshGridDivisor { get; set; } = default;
+        public UInt32 NavmeshGridDivisor { get; set; } = default(UInt32);
         #endregion
         #region MaxDistanceX
-        public Single MaxDistanceX { get; set; } = default;
+        public Single MaxDistanceX { get; set; } = default(Single);
         #endregion
         #region MaxDistanceY
-        public Single MaxDistanceY { get; set; } = default;
+        public Single MaxDistanceY { get; set; } = default(Single);
         #endregion
         #region Min
-        public P3Float Min { get; set; } = default;
+        public P3Float Min { get; set; } = default(P3Float);
         #endregion
         #region Max
-        public P3Float Max { get; set; } = default;
+        public P3Float Max { get; set; } = default(P3Float);
         #endregion
         #region NavmeshGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1455,11 +1455,11 @@ namespace Mutagen.Bethesda.Skyrim
             item.Triangles.Clear();
             item.EdgeLinks.Clear();
             item.DoorTriangles.Clear();
-            item.NavmeshGridDivisor = default;
-            item.MaxDistanceX = default;
-            item.MaxDistanceY = default;
-            item.Min = default;
-            item.Max = default;
+            item.NavmeshGridDivisor = default(UInt32);
+            item.MaxDistanceX = default(Single);
+            item.MaxDistanceY = default(Single);
+            item.Min = default(P3Float);
+            item.Max = default(P3Float);
             item.NavmeshGrid = Array.Empty<byte>();
         }
         

@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region RawOwnerData
-        public UInt32 RawOwnerData { get; set; } = default;
+        public UInt32 RawOwnerData { get; set; } = default(UInt32);
         #endregion
         #region RawVariableData
-        public UInt32 RawVariableData { get; set; } = default;
+        public UInt32 RawVariableData { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -671,8 +671,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INoOwner item)
         {
             ClearPartial();
-            item.RawOwnerData = default;
-            item.RawVariableData = default;
+            item.RawOwnerData = default(UInt32);
+            item.RawVariableData = default(UInt32);
             base.Clear(item);
         }
         

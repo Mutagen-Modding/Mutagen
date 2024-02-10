@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Items = 
                             rhs.Items
-                            .Select(r => (IFormLinkGetter<IOutfitTargetGetter>)new FormLink<IOutfitTargetGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IOutfitTargetGetter>)new FormLink<IOutfitTargetGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IOutfitTargetGetter>>();
                     }
                     else

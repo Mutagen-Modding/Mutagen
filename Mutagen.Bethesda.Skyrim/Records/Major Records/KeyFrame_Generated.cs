@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Time
-        public Single Time { get; set; } = default;
+        public Single Time { get; set; } = default(Single);
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IKeyFrame item)
         {
             ClearPartial();
-            item.Time = default;
-            item.Value = default;
+            item.Time = default(Single);
+            item.Value = default(Single);
         }
         
         #region Mutagen

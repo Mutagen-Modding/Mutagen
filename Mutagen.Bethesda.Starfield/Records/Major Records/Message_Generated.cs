@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region INAM
-        public Int32 INAM { get; set; } = default;
+        public Int32 INAM { get; set; } = default(Int32);
         #endregion
         #region OwnerQuest
         private readonly IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IQuestGetter> IMessageGetter.OwnerQuest => this.OwnerQuest;
         #endregion
         #region Flags
-        public Message.Flag Flags { get; set; } = default;
+        public Message.Flag Flags { get; set; } = default(Message.Flag);
         #endregion
         #region DisplayTime
         public UInt32? DisplayTime { get; set; }
@@ -1210,9 +1210,9 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Description.Clear();
             item.Name = default;
-            item.INAM = default;
+            item.INAM = default(Int32);
             item.OwnerQuest.Clear();
-            item.Flags = default;
+            item.Flags = default(Message.Flag);
             item.DisplayTime = default;
             item.BNAM = default;
             item.ShortTitle = default;
@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public Int32 INAM => _INAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 INAM => _INAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;

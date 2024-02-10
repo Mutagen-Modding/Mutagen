@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public Book.BookFlag Flags { get; set; } = default;
+        public Book.BookFlag Flags { get; set; } = default(Book.BookFlag);
         #endregion
         #region Teaches
-        public Skill Teaches { get; set; } = default;
+        public Skill Teaches { get; set; } = default(Skill);
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IBookData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Teaches = default;
-            item.Value = default;
-            item.Weight = default;
+            item.Flags = default(Book.BookFlag);
+            item.Teaches = default(Skill);
+            item.Value = default(Single);
+            item.Weight = default(Single);
         }
         
         #region Mutagen

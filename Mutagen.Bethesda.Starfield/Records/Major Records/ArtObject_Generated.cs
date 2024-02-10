@@ -170,10 +170,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Type
-        public ArtObject.TypeEnum Type { get; set; } = default;
+        public ArtObject.TypeEnum Type { get; set; } = default(ArtObject.TypeEnum);
         #endregion
         #region DNAMUnknown
-        public UInt32 DNAMUnknown { get; set; } = default;
+        public UInt32 DNAMUnknown { get; set; } = default(UInt32);
         #endregion
         #region EffectShader
         private readonly IFormLinkNullable<IEffectShaderGetter> _EffectShader = new FormLinkNullable<IEffectShaderGetter>();
@@ -1436,8 +1436,8 @@ namespace Mutagen.Bethesda.Starfield
             item.Components.Clear();
             item.Keywords = null;
             item.Model = null;
-            item.Type = default;
-            item.DNAMUnknown = default;
+            item.Type = default(ArtObject.TypeEnum);
+            item.DNAMUnknown = default(UInt32);
             item.EffectShader.Clear();
             base.Clear(item);
         }
@@ -2151,7 +2151,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2695,7 +2695,7 @@ namespace Mutagen.Bethesda.Starfield
         #region DNAMUnknown
         private int _DNAMUnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _DNAMUnknown_IsSet => _DNAMLocation.HasValue;
-        public UInt32 DNAMUnknown => _DNAMUnknown_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_DNAMUnknownLocation, 4)) : default;
+        public UInt32 DNAMUnknown => _DNAMUnknown_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_DNAMUnknownLocation, 4)) : default(UInt32);
         #endregion
         #region EffectShader
         private int? _EffectShaderLocation;

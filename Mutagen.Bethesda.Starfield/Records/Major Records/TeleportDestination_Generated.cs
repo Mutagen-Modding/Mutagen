@@ -63,13 +63,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door;
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Flags
-        public TeleportDestination.Flag Flags { get; set; } = default;
+        public TeleportDestination.Flag Flags { get; set; } = default(TeleportDestination.Flag);
         #endregion
         #region TransitionInterior
         private readonly IFormLink<ICellGetter> _TransitionInterior = new FormLink<ICellGetter>();
@@ -854,9 +854,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Door.Clear();
-            item.Position = default;
-            item.Rotation = default;
-            item.Flags = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+            item.Flags = default(TeleportDestination.Flag);
             item.TransitionInterior.Clear();
         }
         

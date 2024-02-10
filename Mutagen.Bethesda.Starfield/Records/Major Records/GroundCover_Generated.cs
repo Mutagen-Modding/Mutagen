@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.LandscapeTextures.SetTo(
                         rhs.LandscapeTextures
-                        .Select(r => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

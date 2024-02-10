@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IGrassGetter> IRegionGrassGetter.Grass => this.Grass;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Grass.Clear();
-            item.Unknown = default;
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
         #region X
-        public Single X { get; set; } = default;
+        public Single X { get; set; } = default(Single);
         #endregion
         #region Y
-        public Single Y { get; set; } = default;
+        public Single Y { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -749,9 +749,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INeckFatAdjustmentsScale item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.X = default;
-            item.Y = default;
+            item.Unknown = default(UInt32);
+            item.X = default(Single);
+            item.Y = default(Single);
         }
         
         #region Mutagen

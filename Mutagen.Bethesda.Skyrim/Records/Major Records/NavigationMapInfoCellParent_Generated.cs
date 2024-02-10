@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Unused
-        public Int32 Unused { get; set; } = default;
+        public Int32 Unused { get; set; } = default(Int32);
         #endregion
         #region ParentCell
         private readonly IFormLink<ICellGetter> _ParentCell = new FormLink<ICellGetter>();
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INavigationMapInfoCellParent item)
         {
             ClearPartial();
-            item.Unused = default;
+            item.Unused = default(Int32);
             item.ParentCell.Clear();
             base.Clear(item);
         }

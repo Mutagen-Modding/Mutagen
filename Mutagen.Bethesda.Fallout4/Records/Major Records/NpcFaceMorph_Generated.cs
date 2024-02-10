@@ -57,19 +57,19 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? INpcFaceMorphGetter.Index => this.Index;
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Scale
-        public Single Scale { get; set; } = default;
+        public Single Scale { get; set; } = default(Single);
         #endregion
         #region Unknown1
-        public Single Unknown1 { get; set; } = default;
+        public Single Unknown1 { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; } = default;
+        public Single Unknown2 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -871,11 +871,11 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Index = default;
-            item.Position = default;
-            item.Rotation = default;
-            item.Scale = default;
-            item.Unknown1 = default;
-            item.Unknown2 = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+            item.Scale = default(Single);
+            item.Unknown1 = default(Single);
+            item.Unknown2 = default(Single);
         }
         
         #region Mutagen
@@ -1365,27 +1365,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region Position
         private int _PositionLocation => _FMRSLocation!.Value.Min;
         private bool _Position_IsSet => _FMRSLocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default(P3Float);
         #endregion
         #region Rotation
         private int _RotationLocation => _FMRSLocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _FMRSLocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
         #endregion
         #region Scale
         private int _ScaleLocation => _FMRSLocation!.Value.Min + 0x18;
         private bool _Scale_IsSet => _FMRSLocation.HasValue;
-        public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default;
+        public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown1
         private int _Unknown1Location => _FMRSLocation!.Value.Min + 0x1C;
         private bool _Unknown1_IsSet => _FMRSLocation.HasValue;
-        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default;
+        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default(Single);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _FMRSLocation!.Value.Min + 0x20;
         private bool _Unknown2_IsSet => _FMRSLocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default;
+        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

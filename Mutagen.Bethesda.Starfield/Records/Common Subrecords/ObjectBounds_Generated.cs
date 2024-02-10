@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region First
-        public P3Float First { get; set; } = default;
+        public P3Float First { get; set; } = default(P3Float);
         #endregion
         #region Second
-        public P3Float Second { get; set; } = default;
+        public P3Float Second { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IObjectBounds item)
         {
             ClearPartial();
-            item.First = default;
-            item.Second = default;
+            item.First = default(P3Float);
+            item.Second = default(P3Float);
         }
         
         #region Mutagen

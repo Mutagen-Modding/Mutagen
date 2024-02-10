@@ -55,52 +55,52 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ConeOfFireMinAngle
-        public Single ConeOfFireMinAngle { get; set; } = default;
+        public Single ConeOfFireMinAngle { get; set; } = default(Single);
         #endregion
         #region ConeOfFireMaxAngle
-        public Single ConeOfFireMaxAngle { get; set; } = default;
+        public Single ConeOfFireMaxAngle { get; set; } = default(Single);
         #endregion
         #region ConeOfFireIncreasePerShot
-        public Single ConeOfFireIncreasePerShot { get; set; } = default;
+        public Single ConeOfFireIncreasePerShot { get; set; } = default(Single);
         #endregion
         #region ConeOfFireIncreasePerSec
-        public Single ConeOfFireIncreasePerSec { get; set; } = default;
+        public Single ConeOfFireIncreasePerSec { get; set; } = default(Single);
         #endregion
         #region ConeOfFireDecreaseDelayMilliseconds
-        public UInt32 ConeOfFireDecreaseDelayMilliseconds { get; set; } = default;
+        public UInt32 ConeOfFireDecreaseDelayMilliseconds { get; set; } = default(UInt32);
         #endregion
         #region ConeOfFireSneakMult
-        public Single ConeOfFireSneakMult { get; set; } = default;
+        public Single ConeOfFireSneakMult { get; set; } = default(Single);
         #endregion
         #region RecoilDiminishSpringForce
-        public Single RecoilDiminishSpringForce { get; set; } = default;
+        public Single RecoilDiminishSpringForce { get; set; } = default(Single);
         #endregion
         #region RecoilDiminishSightsMult
-        public Single RecoilDiminishSightsMult { get; set; } = default;
+        public Single RecoilDiminishSightsMult { get; set; } = default(Single);
         #endregion
         #region RecoilMaxPerShot
-        public Single RecoilMaxPerShot { get; set; } = default;
+        public Single RecoilMaxPerShot { get; set; } = default(Single);
         #endregion
         #region RecoilMinPerShot
-        public Single RecoilMinPerShot { get; set; } = default;
+        public Single RecoilMinPerShot { get; set; } = default(Single);
         #endregion
         #region RecoilHipMult
-        public Single RecoilHipMult { get; set; } = default;
+        public Single RecoilHipMult { get; set; } = default(Single);
         #endregion
         #region RunawayRecoilShots
-        public UInt32 RunawayRecoilShots { get; set; } = default;
+        public UInt32 RunawayRecoilShots { get; set; } = default(UInt32);
         #endregion
         #region RecoilArc
-        public Single RecoilArc { get; set; } = default;
+        public Single RecoilArc { get; set; } = default(Single);
         #endregion
         #region RecoilArcRotate
-        public Single RecoilArcRotate { get; set; } = default;
+        public Single RecoilArcRotate { get; set; } = default(Single);
         #endregion
         #region ConeOfFireIronSightsMult
-        public Single ConeOfFireIronSightsMult { get; set; } = default;
+        public Single ConeOfFireIronSightsMult { get; set; } = default(Single);
         #endregion
         #region BaseStability
-        public Single BaseStability { get; set; } = default;
+        public Single BaseStability { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1301,22 +1301,22 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAimModelInternal item)
         {
             ClearPartial();
-            item.ConeOfFireMinAngle = default;
-            item.ConeOfFireMaxAngle = default;
-            item.ConeOfFireIncreasePerShot = default;
-            item.ConeOfFireIncreasePerSec = default;
-            item.ConeOfFireDecreaseDelayMilliseconds = default;
-            item.ConeOfFireSneakMult = default;
-            item.RecoilDiminishSpringForce = default;
-            item.RecoilDiminishSightsMult = default;
-            item.RecoilMaxPerShot = default;
-            item.RecoilMinPerShot = default;
-            item.RecoilHipMult = default;
-            item.RunawayRecoilShots = default;
-            item.RecoilArc = default;
-            item.RecoilArcRotate = default;
-            item.ConeOfFireIronSightsMult = default;
-            item.BaseStability = default;
+            item.ConeOfFireMinAngle = default(Single);
+            item.ConeOfFireMaxAngle = default(Single);
+            item.ConeOfFireIncreasePerShot = default(Single);
+            item.ConeOfFireIncreasePerSec = default(Single);
+            item.ConeOfFireDecreaseDelayMilliseconds = default(UInt32);
+            item.ConeOfFireSneakMult = default(Single);
+            item.RecoilDiminishSpringForce = default(Single);
+            item.RecoilDiminishSightsMult = default(Single);
+            item.RecoilMaxPerShot = default(Single);
+            item.RecoilMinPerShot = default(Single);
+            item.RecoilHipMult = default(Single);
+            item.RunawayRecoilShots = default(UInt32);
+            item.RecoilArc = default(Single);
+            item.RecoilArcRotate = default(Single);
+            item.ConeOfFireIronSightsMult = default(Single);
+            item.BaseStability = default(Single);
             base.Clear(item);
         }
         
@@ -2244,82 +2244,82 @@ namespace Mutagen.Bethesda.Fallout4
         #region ConeOfFireMinAngle
         private int _ConeOfFireMinAngleLocation => _DNAMLocation!.Value.Min;
         private bool _ConeOfFireMinAngle_IsSet => _DNAMLocation.HasValue;
-        public Single ConeOfFireMinAngle => _ConeOfFireMinAngle_IsSet ? _recordData.Slice(_ConeOfFireMinAngleLocation, 4).Float() : default;
+        public Single ConeOfFireMinAngle => _ConeOfFireMinAngle_IsSet ? _recordData.Slice(_ConeOfFireMinAngleLocation, 4).Float() : default(Single);
         #endregion
         #region ConeOfFireMaxAngle
         private int _ConeOfFireMaxAngleLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _ConeOfFireMaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single ConeOfFireMaxAngle => _ConeOfFireMaxAngle_IsSet ? _recordData.Slice(_ConeOfFireMaxAngleLocation, 4).Float() : default;
+        public Single ConeOfFireMaxAngle => _ConeOfFireMaxAngle_IsSet ? _recordData.Slice(_ConeOfFireMaxAngleLocation, 4).Float() : default(Single);
         #endregion
         #region ConeOfFireIncreasePerShot
         private int _ConeOfFireIncreasePerShotLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _ConeOfFireIncreasePerShot_IsSet => _DNAMLocation.HasValue;
-        public Single ConeOfFireIncreasePerShot => _ConeOfFireIncreasePerShot_IsSet ? _recordData.Slice(_ConeOfFireIncreasePerShotLocation, 4).Float() : default;
+        public Single ConeOfFireIncreasePerShot => _ConeOfFireIncreasePerShot_IsSet ? _recordData.Slice(_ConeOfFireIncreasePerShotLocation, 4).Float() : default(Single);
         #endregion
         #region ConeOfFireIncreasePerSec
         private int _ConeOfFireIncreasePerSecLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _ConeOfFireIncreasePerSec_IsSet => _DNAMLocation.HasValue;
-        public Single ConeOfFireIncreasePerSec => _ConeOfFireIncreasePerSec_IsSet ? _recordData.Slice(_ConeOfFireIncreasePerSecLocation, 4).Float() : default;
+        public Single ConeOfFireIncreasePerSec => _ConeOfFireIncreasePerSec_IsSet ? _recordData.Slice(_ConeOfFireIncreasePerSecLocation, 4).Float() : default(Single);
         #endregion
         #region ConeOfFireDecreaseDelayMilliseconds
         private int _ConeOfFireDecreaseDelayMillisecondsLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _ConeOfFireDecreaseDelayMilliseconds_IsSet => _DNAMLocation.HasValue;
-        public UInt32 ConeOfFireDecreaseDelayMilliseconds => _ConeOfFireDecreaseDelayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ConeOfFireDecreaseDelayMillisecondsLocation, 4)) : default;
+        public UInt32 ConeOfFireDecreaseDelayMilliseconds => _ConeOfFireDecreaseDelayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ConeOfFireDecreaseDelayMillisecondsLocation, 4)) : default(UInt32);
         #endregion
         #region ConeOfFireSneakMult
         private int _ConeOfFireSneakMultLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _ConeOfFireSneakMult_IsSet => _DNAMLocation.HasValue;
-        public Single ConeOfFireSneakMult => _ConeOfFireSneakMult_IsSet ? _recordData.Slice(_ConeOfFireSneakMultLocation, 4).Float() : default;
+        public Single ConeOfFireSneakMult => _ConeOfFireSneakMult_IsSet ? _recordData.Slice(_ConeOfFireSneakMultLocation, 4).Float() : default(Single);
         #endregion
         #region RecoilDiminishSpringForce
         private int _RecoilDiminishSpringForceLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _RecoilDiminishSpringForce_IsSet => _DNAMLocation.HasValue;
-        public Single RecoilDiminishSpringForce => _RecoilDiminishSpringForce_IsSet ? _recordData.Slice(_RecoilDiminishSpringForceLocation, 4).Float() : default;
+        public Single RecoilDiminishSpringForce => _RecoilDiminishSpringForce_IsSet ? _recordData.Slice(_RecoilDiminishSpringForceLocation, 4).Float() : default(Single);
         #endregion
         #region RecoilDiminishSightsMult
         private int _RecoilDiminishSightsMultLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _RecoilDiminishSightsMult_IsSet => _DNAMLocation.HasValue;
-        public Single RecoilDiminishSightsMult => _RecoilDiminishSightsMult_IsSet ? _recordData.Slice(_RecoilDiminishSightsMultLocation, 4).Float() : default;
+        public Single RecoilDiminishSightsMult => _RecoilDiminishSightsMult_IsSet ? _recordData.Slice(_RecoilDiminishSightsMultLocation, 4).Float() : default(Single);
         #endregion
         #region RecoilMaxPerShot
         private int _RecoilMaxPerShotLocation => _DNAMLocation!.Value.Min + 0x20;
         private bool _RecoilMaxPerShot_IsSet => _DNAMLocation.HasValue;
-        public Single RecoilMaxPerShot => _RecoilMaxPerShot_IsSet ? _recordData.Slice(_RecoilMaxPerShotLocation, 4).Float() : default;
+        public Single RecoilMaxPerShot => _RecoilMaxPerShot_IsSet ? _recordData.Slice(_RecoilMaxPerShotLocation, 4).Float() : default(Single);
         #endregion
         #region RecoilMinPerShot
         private int _RecoilMinPerShotLocation => _DNAMLocation!.Value.Min + 0x24;
         private bool _RecoilMinPerShot_IsSet => _DNAMLocation.HasValue;
-        public Single RecoilMinPerShot => _RecoilMinPerShot_IsSet ? _recordData.Slice(_RecoilMinPerShotLocation, 4).Float() : default;
+        public Single RecoilMinPerShot => _RecoilMinPerShot_IsSet ? _recordData.Slice(_RecoilMinPerShotLocation, 4).Float() : default(Single);
         #endregion
         #region RecoilHipMult
         private int _RecoilHipMultLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _RecoilHipMult_IsSet => _DNAMLocation.HasValue;
-        public Single RecoilHipMult => _RecoilHipMult_IsSet ? _recordData.Slice(_RecoilHipMultLocation, 4).Float() : default;
+        public Single RecoilHipMult => _RecoilHipMult_IsSet ? _recordData.Slice(_RecoilHipMultLocation, 4).Float() : default(Single);
         #endregion
         #region RunawayRecoilShots
         private int _RunawayRecoilShotsLocation => _DNAMLocation!.Value.Min + 0x2C;
         private bool _RunawayRecoilShots_IsSet => _DNAMLocation.HasValue;
-        public UInt32 RunawayRecoilShots => _RunawayRecoilShots_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RunawayRecoilShotsLocation, 4)) : default;
+        public UInt32 RunawayRecoilShots => _RunawayRecoilShots_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RunawayRecoilShotsLocation, 4)) : default(UInt32);
         #endregion
         #region RecoilArc
         private int _RecoilArcLocation => _DNAMLocation!.Value.Min + 0x30;
         private bool _RecoilArc_IsSet => _DNAMLocation.HasValue;
-        public Single RecoilArc => _RecoilArc_IsSet ? _recordData.Slice(_RecoilArcLocation, 4).Float() : default;
+        public Single RecoilArc => _RecoilArc_IsSet ? _recordData.Slice(_RecoilArcLocation, 4).Float() : default(Single);
         #endregion
         #region RecoilArcRotate
         private int _RecoilArcRotateLocation => _DNAMLocation!.Value.Min + 0x34;
         private bool _RecoilArcRotate_IsSet => _DNAMLocation.HasValue;
-        public Single RecoilArcRotate => _RecoilArcRotate_IsSet ? _recordData.Slice(_RecoilArcRotateLocation, 4).Float() : default;
+        public Single RecoilArcRotate => _RecoilArcRotate_IsSet ? _recordData.Slice(_RecoilArcRotateLocation, 4).Float() : default(Single);
         #endregion
         #region ConeOfFireIronSightsMult
         private int _ConeOfFireIronSightsMultLocation => _DNAMLocation!.Value.Min + 0x38;
         private bool _ConeOfFireIronSightsMult_IsSet => _DNAMLocation.HasValue;
-        public Single ConeOfFireIronSightsMult => _ConeOfFireIronSightsMult_IsSet ? _recordData.Slice(_ConeOfFireIronSightsMultLocation, 4).Float() : default;
+        public Single ConeOfFireIronSightsMult => _ConeOfFireIronSightsMult_IsSet ? _recordData.Slice(_ConeOfFireIronSightsMultLocation, 4).Float() : default(Single);
         #endregion
         #region BaseStability
         private int _BaseStabilityLocation => _DNAMLocation!.Value.Min + 0x3C;
         private bool _BaseStability_IsSet => _DNAMLocation.HasValue;
-        public Single BaseStability => _BaseStability_IsSet ? _recordData.Slice(_BaseStabilityLocation, 4).Float() : default;
+        public Single BaseStability => _BaseStability_IsSet ? _recordData.Slice(_BaseStabilityLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

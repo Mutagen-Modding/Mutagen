@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FirstParameter
-        public Int32 FirstParameter { get; set; } = default;
+        public Int32 FirstParameter { get; set; } = default(Int32);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IIsInSameCurrentLocationAsAliasConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default;
+            item.FirstParameter = default(Int32);
             item.FirstUnusedStringParameter = default;
             item.SecondParameter.Clear();
             item.SecondUnusedStringParameter = default;

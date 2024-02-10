@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IAObjectModificationGetter> IObjectModIncludeGetter.Mod => this.Mod;
         #endregion
         #region MinimumLevel
-        public Byte MinimumLevel { get; set; } = default;
+        public Byte MinimumLevel { get; set; } = default(Byte);
         #endregion
         #region Optional
-        public Boolean Optional { get; set; } = default;
+        public Boolean Optional { get; set; } = default(Boolean);
         #endregion
         #region DoNotUseAll
-        public Boolean DoNotUseAll { get; set; } = default;
+        public Boolean DoNotUseAll { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -801,9 +801,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Mod.Clear();
-            item.MinimumLevel = default;
-            item.Optional = default;
-            item.DoNotUseAll = default;
+            item.MinimumLevel = default(Byte);
+            item.Optional = default(Boolean);
+            item.DoNotUseAll = default(Boolean);
         }
         
         #region Mutagen

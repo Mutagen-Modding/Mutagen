@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Data
-        public Int32 Data { get; set; } = default;
+        public Int32 Data { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPackageTargetUnknown item)
         {
             ClearPartial();
-            item.Data = default;
+            item.Data = default(Int32);
             base.Clear(item);
         }
         

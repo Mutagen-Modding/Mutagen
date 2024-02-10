@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
         #endregion
         #region IsIgnoredBySandbox
-        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MultiboundReference => this.MultiboundReference;
         #endregion
         #region IsIgnoredBySandbox2
-        public Boolean IsIgnoredBySandbox2 { get; set; } = default;
+        public Boolean IsIgnoredBySandbox2 { get; set; } = default(Boolean);
         #endregion
         #region Scale
         public Single? Scale { get; set; }
@@ -2195,7 +2195,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.LinkedReferenceColor = null;
             item.PersistentLocation.Clear();
             item.LocationReference.Clear();
-            item.IsIgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default(Boolean);
             item.LocationRefTypes = null;
             item.HeadTrackingWeight = default;
             item.Horse.Clear();
@@ -2205,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.FactionRank = default;
             item.Emittance.Clear();
             item.MultiboundReference.Clear();
-            item.IsIgnoredBySandbox2 = default;
+            item.IsIgnoredBySandbox2 = default(Boolean);
             item.Scale = default;
             item.Placement = null;
             base.Clear(item);
@@ -3285,7 +3285,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -4088,7 +4088,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
-        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region HeadTrackingWeight
@@ -4125,7 +4125,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region IsIgnoredBySandbox2
         private int? _IsIgnoredBySandbox2Location;
-        public Boolean IsIgnoredBySandbox2 => _IsIgnoredBySandbox2Location.HasValue ? true : default;
+        public Boolean IsIgnoredBySandbox2 => _IsIgnoredBySandbox2Location.HasValue ? true : default(Boolean);
         #endregion
         #region Scale
         private int? _ScaleLocation;

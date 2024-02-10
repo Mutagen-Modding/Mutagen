@@ -53,19 +53,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region PercentFrequencyShift
-        public Percent PercentFrequencyShift { get; set; } = default;
+        public Percent PercentFrequencyShift { get; set; } = default(Percent);
         #endregion
         #region PercentFrequencyVariance
-        public Percent PercentFrequencyVariance { get; set; } = default;
+        public Percent PercentFrequencyVariance { get; set; } = default(Percent);
         #endregion
         #region Priority
-        public SByte Priority { get; set; } = default;
+        public SByte Priority { get; set; } = default(SByte);
         #endregion
         #region Variance
-        public SByte Variance { get; set; } = default;
+        public SByte Variance { get; set; } = default(SByte);
         #endregion
         #region StaticAttenuation
-        public Single StaticAttenuation { get; set; } = default;
+        public Single StaticAttenuation { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -779,11 +779,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundDescriptorStandardData item)
         {
             ClearPartial();
-            item.PercentFrequencyShift = default;
-            item.PercentFrequencyVariance = default;
-            item.Priority = default;
-            item.Variance = default;
-            item.StaticAttenuation = default;
+            item.PercentFrequencyShift = default(Percent);
+            item.PercentFrequencyVariance = default(Percent);
+            item.Priority = default(SByte);
+            item.Variance = default(SByte);
+            item.StaticAttenuation = default(Single);
             base.Clear(item);
         }
         

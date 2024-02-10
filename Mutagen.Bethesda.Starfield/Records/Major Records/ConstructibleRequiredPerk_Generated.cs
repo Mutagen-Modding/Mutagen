@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IPerkGetter> IConstructibleRequiredPerkGetter.Perk => this.Perk;
         #endregion
         #region Rank
-        public UInt32 Rank { get; set; } = default;
+        public UInt32 Rank { get; set; } = default(UInt32);
         #endregion
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -765,8 +765,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Perk.Clear();
-            item.Rank = default;
-            item.Unknown = default;
+            item.Rank = default(UInt32);
+            item.Unknown = default(UInt32);
         }
         
         #region Mutagen

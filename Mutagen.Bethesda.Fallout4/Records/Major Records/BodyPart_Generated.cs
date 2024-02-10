@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Fallout4
         public String VatsTarget { get; set; } = string.Empty;
         #endregion
         #region DamageMult
-        public Single DamageMult { get; set; } = default;
+        public Single DamageMult { get; set; } = default(Single);
         #endregion
         #region ExplodableDebris
         private readonly IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion;
         #endregion
         #region ExplodableDebrisScale
-        public Single ExplodableDebrisScale { get; set; } = default;
+        public Single ExplodableDebrisScale { get; set; } = default(Single);
         #endregion
         #region SeverableDebris
         private readonly IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
@@ -142,25 +142,25 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.SeverableExplosion => this.SeverableExplosion;
         #endregion
         #region SeverableDebrisScale
-        public Single SeverableDebrisScale { get; set; } = default;
+        public Single SeverableDebrisScale { get; set; } = default(Single);
         #endregion
         #region CutMin
-        public Single CutMin { get; set; } = default;
+        public Single CutMin { get; set; } = default(Single);
         #endregion
         #region CutMax
-        public Single CutMax { get; set; } = default;
+        public Single CutMax { get; set; } = default(Single);
         #endregion
         #region CutRadius
-        public Single CutRadius { get; set; } = default;
+        public Single CutRadius { get; set; } = default(Single);
         #endregion
         #region GoreEffectsLocalRotateX
-        public Single GoreEffectsLocalRotateX { get; set; } = default;
+        public Single GoreEffectsLocalRotateX { get; set; } = default(Single);
         #endregion
         #region GoreEffectsLocalRotateY
-        public Single GoreEffectsLocalRotateY { get; set; } = default;
+        public Single GoreEffectsLocalRotateY { get; set; } = default(Single);
         #endregion
         #region CutTesselation
-        public Single CutTesselation { get; set; } = default;
+        public Single CutTesselation { get; set; } = default(Single);
         #endregion
         #region SeverableImpactData
         private readonly IFormLink<IImpactDataSetGetter> _SeverableImpactData = new FormLink<IImpactDataSetGetter>();
@@ -183,16 +183,16 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.ExplodableImpactData => this.ExplodableImpactData;
         #endregion
         #region ExplodableLimbReplacementScale
-        public Single ExplodableLimbReplacementScale { get; set; } = default;
+        public Single ExplodableLimbReplacementScale { get; set; } = default(Single);
         #endregion
         #region Flags
-        public BodyPart.Flag Flags { get; set; } = default;
+        public BodyPart.Flag Flags { get; set; } = default(BodyPart.Flag);
         #endregion
         #region Type
-        public BodyPart.PartType Type { get; set; } = default;
+        public BodyPart.PartType Type { get; set; } = default(BodyPart.PartType);
         #endregion
         #region HealthPercent
-        public Percent HealthPercent { get; set; } = default;
+        public Percent HealthPercent { get; set; } = default(Percent);
         #endregion
         #region ActorValue
         private readonly IFormLink<IActorValueInformationGetter> _ActorValue = new FormLink<IActorValueInformationGetter>();
@@ -205,28 +205,28 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IActorValueInformationGetter> IBodyPartGetter.ActorValue => this.ActorValue;
         #endregion
         #region ToHitChance
-        public Percent ToHitChance { get; set; } = default;
+        public Percent ToHitChance { get; set; } = default(Percent);
         #endregion
         #region ExplosionChance
-        public Percent ExplosionChance { get; set; } = default;
+        public Percent ExplosionChance { get; set; } = default(Percent);
         #endregion
         #region NonLethalDismembermentChance
-        public Percent NonLethalDismembermentChance { get; set; } = default;
+        public Percent NonLethalDismembermentChance { get; set; } = default(Percent);
         #endregion
         #region SeverableDebrisCount
-        public Byte SeverableDebrisCount { get; set; } = default;
+        public Byte SeverableDebrisCount { get; set; } = default(Byte);
         #endregion
         #region ExplodableDebrisCount
-        public Byte ExplodableDebrisCount { get; set; } = default;
+        public Byte ExplodableDebrisCount { get; set; } = default(Byte);
         #endregion
         #region SeverableDecalCount
-        public Byte SeverableDecalCount { get; set; } = default;
+        public Byte SeverableDecalCount { get; set; } = default(Byte);
         #endregion
         #region ExplodableDecalCount
-        public Byte ExplodableDecalCount { get; set; } = default;
+        public Byte ExplodableDecalCount { get; set; } = default(Byte);
         #endregion
         #region GeometrySegmentIndex
-        public Byte GeometrySegmentIndex { get; set; } = default;
+        public Byte GeometrySegmentIndex { get; set; } = default(Byte);
         #endregion
         #region OnCrippleArtObject
         private readonly IFormLink<IArtObjectGetter> _OnCrippleArtObject = new FormLink<IArtObjectGetter>();
@@ -269,13 +269,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.OnCrippleImpactData => this.OnCrippleImpactData;
         #endregion
         #region OnCrippleDebrisScale
-        public Single OnCrippleDebrisScale { get; set; } = default;
+        public Single OnCrippleDebrisScale { get; set; } = default(Single);
         #endregion
         #region OnCrippleDebrisCount
-        public Byte OnCrippleDebrisCount { get; set; } = default;
+        public Byte OnCrippleDebrisCount { get; set; } = default(Byte);
         #endregion
         #region OnCrippleDecalCount
-        public Byte OnCrippleDecalCount { get; set; } = default;
+        public Byte OnCrippleDecalCount { get; set; } = default(Byte);
         #endregion
         #region LimbReplacementModel
         public String LimbReplacementModel { get; set; } = string.Empty;
@@ -2619,41 +2619,41 @@ namespace Mutagen.Bethesda.Fallout4
             item.Name = default;
             item.PartNode = string.Empty;
             item.VatsTarget = string.Empty;
-            item.DamageMult = default;
+            item.DamageMult = default(Single);
             item.ExplodableDebris.Clear();
             item.ExplodableExplosion.Clear();
-            item.ExplodableDebrisScale = default;
+            item.ExplodableDebrisScale = default(Single);
             item.SeverableDebris.Clear();
             item.SeverableExplosion.Clear();
-            item.SeverableDebrisScale = default;
-            item.CutMin = default;
-            item.CutMax = default;
-            item.CutRadius = default;
-            item.GoreEffectsLocalRotateX = default;
-            item.GoreEffectsLocalRotateY = default;
-            item.CutTesselation = default;
+            item.SeverableDebrisScale = default(Single);
+            item.CutMin = default(Single);
+            item.CutMax = default(Single);
+            item.CutRadius = default(Single);
+            item.GoreEffectsLocalRotateX = default(Single);
+            item.GoreEffectsLocalRotateY = default(Single);
+            item.CutTesselation = default(Single);
             item.SeverableImpactData.Clear();
             item.ExplodableImpactData.Clear();
-            item.ExplodableLimbReplacementScale = default;
-            item.Flags = default;
-            item.Type = default;
-            item.HealthPercent = default;
+            item.ExplodableLimbReplacementScale = default(Single);
+            item.Flags = default(BodyPart.Flag);
+            item.Type = default(BodyPart.PartType);
+            item.HealthPercent = default(Percent);
             item.ActorValue.Clear();
-            item.ToHitChance = default;
-            item.ExplosionChance = default;
-            item.NonLethalDismembermentChance = default;
-            item.SeverableDebrisCount = default;
-            item.ExplodableDebrisCount = default;
-            item.SeverableDecalCount = default;
-            item.ExplodableDecalCount = default;
-            item.GeometrySegmentIndex = default;
+            item.ToHitChance = default(Percent);
+            item.ExplosionChance = default(Percent);
+            item.NonLethalDismembermentChance = default(Percent);
+            item.SeverableDebrisCount = default(Byte);
+            item.ExplodableDebrisCount = default(Byte);
+            item.SeverableDecalCount = default(Byte);
+            item.ExplodableDecalCount = default(Byte);
+            item.GeometrySegmentIndex = default(Byte);
             item.OnCrippleArtObject.Clear();
             item.OnCrippleDebris.Clear();
             item.OnCrippleExplosion.Clear();
             item.OnCrippleImpactData.Clear();
-            item.OnCrippleDebrisScale = default;
-            item.OnCrippleDebrisCount = default;
-            item.OnCrippleDecalCount = default;
+            item.OnCrippleDebrisScale = default(Single);
+            item.OnCrippleDebrisCount = default(Byte);
+            item.OnCrippleDecalCount = default(Byte);
             item.LimbReplacementModel = string.Empty;
             item.GoreTargetBone = string.Empty;
             item.TextureFilesHashes = default;
@@ -4163,7 +4163,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DamageMult
         private int _DamageMultLocation => _BPNDLocation!.Value.Min;
         private bool _DamageMult_IsSet => _BPNDLocation.HasValue;
-        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default;
+        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default(Single);
         #endregion
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _BPNDLocation!.Value.Min + 0x4;
@@ -4178,7 +4178,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ExplodableDebrisScale
         private int _ExplodableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0xC;
         private bool _ExplodableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
+        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region SeverableDebris
         private int _SeverableDebrisLocation => _BPNDLocation!.Value.Min + 0x10;
@@ -4193,37 +4193,37 @@ namespace Mutagen.Bethesda.Fallout4
         #region SeverableDebrisScale
         private int _SeverableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x18;
         private bool _SeverableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
+        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region CutMin
         private int _CutMinLocation => _BPNDLocation!.Value.Min + 0x1C;
         private bool _CutMin_IsSet => _BPNDLocation.HasValue;
-        public Single CutMin => _CutMin_IsSet ? _recordData.Slice(_CutMinLocation, 4).Float() : default;
+        public Single CutMin => _CutMin_IsSet ? _recordData.Slice(_CutMinLocation, 4).Float() : default(Single);
         #endregion
         #region CutMax
         private int _CutMaxLocation => _BPNDLocation!.Value.Min + 0x20;
         private bool _CutMax_IsSet => _BPNDLocation.HasValue;
-        public Single CutMax => _CutMax_IsSet ? _recordData.Slice(_CutMaxLocation, 4).Float() : default;
+        public Single CutMax => _CutMax_IsSet ? _recordData.Slice(_CutMaxLocation, 4).Float() : default(Single);
         #endregion
         #region CutRadius
         private int _CutRadiusLocation => _BPNDLocation!.Value.Min + 0x24;
         private bool _CutRadius_IsSet => _BPNDLocation.HasValue;
-        public Single CutRadius => _CutRadius_IsSet ? _recordData.Slice(_CutRadiusLocation, 4).Float() : default;
+        public Single CutRadius => _CutRadius_IsSet ? _recordData.Slice(_CutRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region GoreEffectsLocalRotateX
         private int _GoreEffectsLocalRotateXLocation => _BPNDLocation!.Value.Min + 0x28;
         private bool _GoreEffectsLocalRotateX_IsSet => _BPNDLocation.HasValue;
-        public Single GoreEffectsLocalRotateX => _GoreEffectsLocalRotateX_IsSet ? _recordData.Slice(_GoreEffectsLocalRotateXLocation, 4).Float() * 57.2958f : default;
+        public Single GoreEffectsLocalRotateX => _GoreEffectsLocalRotateX_IsSet ? _recordData.Slice(_GoreEffectsLocalRotateXLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region GoreEffectsLocalRotateY
         private int _GoreEffectsLocalRotateYLocation => _BPNDLocation!.Value.Min + 0x2C;
         private bool _GoreEffectsLocalRotateY_IsSet => _BPNDLocation.HasValue;
-        public Single GoreEffectsLocalRotateY => _GoreEffectsLocalRotateY_IsSet ? _recordData.Slice(_GoreEffectsLocalRotateYLocation, 4).Float() * 57.2958f : default;
+        public Single GoreEffectsLocalRotateY => _GoreEffectsLocalRotateY_IsSet ? _recordData.Slice(_GoreEffectsLocalRotateYLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region CutTesselation
         private int _CutTesselationLocation => _BPNDLocation!.Value.Min + 0x30;
         private bool _CutTesselation_IsSet => _BPNDLocation.HasValue;
-        public Single CutTesselation => _CutTesselation_IsSet ? _recordData.Slice(_CutTesselationLocation, 4).Float() : default;
+        public Single CutTesselation => _CutTesselation_IsSet ? _recordData.Slice(_CutTesselationLocation, 4).Float() : default(Single);
         #endregion
         #region SeverableImpactData
         private int _SeverableImpactDataLocation => _BPNDLocation!.Value.Min + 0x34;
@@ -4238,7 +4238,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ExplodableLimbReplacementScale
         private int _ExplodableLimbReplacementScaleLocation => _BPNDLocation!.Value.Min + 0x3C;
         private bool _ExplodableLimbReplacementScale_IsSet => _BPNDLocation.HasValue;
-        public Single ExplodableLimbReplacementScale => _ExplodableLimbReplacementScale_IsSet ? _recordData.Slice(_ExplodableLimbReplacementScaleLocation, 4).Float() : default;
+        public Single ExplodableLimbReplacementScale => _ExplodableLimbReplacementScale_IsSet ? _recordData.Slice(_ExplodableLimbReplacementScaleLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _BPNDLocation!.Value.Min + 0x40;
@@ -4253,7 +4253,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region HealthPercent
         private int _HealthPercentLocation => _BPNDLocation!.Value.Min + 0x42;
         private bool _HealthPercent_IsSet => _BPNDLocation.HasValue;
-        public Percent HealthPercent => _HealthPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_HealthPercentLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent HealthPercent => _HealthPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_HealthPercentLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region ActorValue
         private int _ActorValueLocation => _BPNDLocation!.Value.Min + 0x43;
@@ -4263,17 +4263,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region ToHitChance
         private int _ToHitChanceLocation => _BPNDLocation!.Value.Min + 0x47;
         private bool _ToHitChance_IsSet => _BPNDLocation.HasValue;
-        public Percent ToHitChance => _ToHitChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ToHitChanceLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ToHitChance => _ToHitChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ToHitChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region ExplosionChance
         private int _ExplosionChanceLocation => _BPNDLocation!.Value.Min + 0x48;
         private bool _ExplosionChance_IsSet => _BPNDLocation.HasValue;
-        public Percent ExplosionChance => _ExplosionChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ExplosionChanceLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ExplosionChance => _ExplosionChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ExplosionChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region NonLethalDismembermentChance
         private int _NonLethalDismembermentChanceLocation => _BPNDLocation!.Value.Min + 0x49;
         private bool _NonLethalDismembermentChance_IsSet => _BPNDLocation.HasValue;
-        public Percent NonLethalDismembermentChance => _NonLethalDismembermentChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_NonLethalDismembermentChanceLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent NonLethalDismembermentChance => _NonLethalDismembermentChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_NonLethalDismembermentChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _BPNDLocation!.Value.Min + 0x4A;
@@ -4323,7 +4323,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region OnCrippleDebrisScale
         private int _OnCrippleDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x5F;
         private bool _OnCrippleDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _recordData.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default;
+        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _recordData.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region OnCrippleDebrisCount
         private int _OnCrippleDebrisCountLocation => _BPNDLocation!.Value.Min + 0x63;

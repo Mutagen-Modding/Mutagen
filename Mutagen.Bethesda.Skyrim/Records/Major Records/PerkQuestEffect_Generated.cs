@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest;
         #endregion
         #region Stage
-        public Byte Stage { get; set; } = default;
+        public Byte Stage { get; set; } = default(Byte);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Quest.Clear();
-            item.Stage = default;
+            item.Stage = default(Byte);
             item.Unknown = new byte[3];
             base.Clear(item);
         }

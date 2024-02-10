@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Flags
-        public ScriptEntry.Flag Flags { get; set; } = default;
+        public ScriptEntry.Flag Flags { get; set; } = default(ScriptEntry.Flag);
         #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.Flags = default;
+            item.Flags = default(ScriptEntry.Flag);
             item.Properties.Clear();
         }
         

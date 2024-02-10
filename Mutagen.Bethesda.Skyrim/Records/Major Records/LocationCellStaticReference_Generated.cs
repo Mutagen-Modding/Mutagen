@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IComplexLocationGetter> ILocationCellStaticReferenceGetter.Location => this.Location;
         #endregion
         #region Grid
-        public P2Int16 Grid { get; set; } = default;
+        public P2Int16 Grid { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.LocationRefType.Clear();
             item.Marker.Clear();
             item.Location.Clear();
-            item.Grid = default;
+            item.Grid = default(P2Int16);
         }
         
         #region Mutagen

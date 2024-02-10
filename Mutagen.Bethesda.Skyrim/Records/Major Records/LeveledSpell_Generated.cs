@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         Byte? ILeveledSpellGetter.ChanceNone => this.ChanceNone;
         #endregion
         #region Flags
-        public LeveledSpell.Flag Flags { get; set; } = default;
+        public LeveledSpell.Flag Flags { get; set; } = default(LeveledSpell.Flag);
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ChanceNone = default;
-            item.Flags = default;
+            item.Flags = default(LeveledSpell.Flag);
             item.Entries = null;
             base.Clear(item);
         }

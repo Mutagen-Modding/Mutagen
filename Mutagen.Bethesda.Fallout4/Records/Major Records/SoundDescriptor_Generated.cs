@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Descriptors.SetTo(
                         rhs.Descriptors
-                        .Select(r => (IFormLinkGetter<ISoundDescriptorGetter>)new FormLink<ISoundDescriptorGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISoundDescriptorGetter>)new FormLink<ISoundDescriptorGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

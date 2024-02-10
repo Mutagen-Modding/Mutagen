@@ -74,34 +74,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region LeftWalk
-        public Single LeftWalk { get; set; } = default;
+        public Single LeftWalk { get; set; } = default(Single);
         #endregion
         #region LeftRun
-        public Single LeftRun { get; set; } = default;
+        public Single LeftRun { get; set; } = default(Single);
         #endregion
         #region RightWalk
-        public Single RightWalk { get; set; } = default;
+        public Single RightWalk { get; set; } = default(Single);
         #endregion
         #region RightRun
-        public Single RightRun { get; set; } = default;
+        public Single RightRun { get; set; } = default(Single);
         #endregion
         #region ForwardWalk
-        public Single ForwardWalk { get; set; } = default;
+        public Single ForwardWalk { get; set; } = default(Single);
         #endregion
         #region ForwardRun
-        public Single ForwardRun { get; set; } = default;
+        public Single ForwardRun { get; set; } = default(Single);
         #endregion
         #region BackWalk
-        public Single BackWalk { get; set; } = default;
+        public Single BackWalk { get; set; } = default(Single);
         #endregion
         #region BackRun
-        public Single BackRun { get; set; } = default;
+        public Single BackRun { get; set; } = default(Single);
         #endregion
         #region RotateInPlaceWalk
-        public Single RotateInPlaceWalk { get; set; } = default;
+        public Single RotateInPlaceWalk { get; set; } = default(Single);
         #endregion
         #region RotateInPlaceRun
-        public Single RotateInPlaceRun { get; set; } = default;
+        public Single RotateInPlaceRun { get; set; } = default(Single);
         #endregion
         #region RotateWhileMovingRun
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAnimationChangeThresholdsGetter? IMovementTypeGetter.AnimationChangeThresholds => this.AnimationChangeThresholds;
         #endregion
         #region SPEDDataTypeState
-        public MovementType.SPEDDataType SPEDDataTypeState { get; set; } = default;
+        public MovementType.SPEDDataType SPEDDataTypeState { get; set; } = default(MovementType.SPEDDataType);
         #endregion
 
         #region To String
@@ -1288,19 +1288,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Name = default;
-            item.LeftWalk = default;
-            item.LeftRun = default;
-            item.RightWalk = default;
-            item.RightRun = default;
-            item.ForwardWalk = default;
-            item.ForwardRun = default;
-            item.BackWalk = default;
-            item.BackRun = default;
-            item.RotateInPlaceWalk = default;
-            item.RotateInPlaceRun = default;
-            item.RotateWhileMovingRun = default;
+            item.LeftWalk = default(Single);
+            item.LeftRun = default(Single);
+            item.RightWalk = default(Single);
+            item.RightRun = default(Single);
+            item.ForwardWalk = default(Single);
+            item.ForwardRun = default(Single);
+            item.BackWalk = default(Single);
+            item.BackRun = default(Single);
+            item.RotateInPlaceWalk = default(Single);
+            item.RotateInPlaceRun = default(Single);
+            item.RotateWhileMovingRun = default(Single);
             item.AnimationChangeThresholds = null;
-            item.SPEDDataTypeState = default;
+            item.SPEDDataTypeState = default(MovementType.SPEDDataType);
             base.Clear(item);
         }
         
@@ -2292,57 +2292,57 @@ namespace Mutagen.Bethesda.Skyrim
         #region LeftWalk
         private int _LeftWalkLocation => _SPEDLocation!.Value.Min;
         private bool _LeftWalk_IsSet => _SPEDLocation.HasValue;
-        public Single LeftWalk => _LeftWalk_IsSet ? _recordData.Slice(_LeftWalkLocation, 4).Float() : default;
+        public Single LeftWalk => _LeftWalk_IsSet ? _recordData.Slice(_LeftWalkLocation, 4).Float() : default(Single);
         #endregion
         #region LeftRun
         private int _LeftRunLocation => _SPEDLocation!.Value.Min + 0x4;
         private bool _LeftRun_IsSet => _SPEDLocation.HasValue;
-        public Single LeftRun => _LeftRun_IsSet ? _recordData.Slice(_LeftRunLocation, 4).Float() : default;
+        public Single LeftRun => _LeftRun_IsSet ? _recordData.Slice(_LeftRunLocation, 4).Float() : default(Single);
         #endregion
         #region RightWalk
         private int _RightWalkLocation => _SPEDLocation!.Value.Min + 0x8;
         private bool _RightWalk_IsSet => _SPEDLocation.HasValue;
-        public Single RightWalk => _RightWalk_IsSet ? _recordData.Slice(_RightWalkLocation, 4).Float() : default;
+        public Single RightWalk => _RightWalk_IsSet ? _recordData.Slice(_RightWalkLocation, 4).Float() : default(Single);
         #endregion
         #region RightRun
         private int _RightRunLocation => _SPEDLocation!.Value.Min + 0xC;
         private bool _RightRun_IsSet => _SPEDLocation.HasValue;
-        public Single RightRun => _RightRun_IsSet ? _recordData.Slice(_RightRunLocation, 4).Float() : default;
+        public Single RightRun => _RightRun_IsSet ? _recordData.Slice(_RightRunLocation, 4).Float() : default(Single);
         #endregion
         #region ForwardWalk
         private int _ForwardWalkLocation => _SPEDLocation!.Value.Min + 0x10;
         private bool _ForwardWalk_IsSet => _SPEDLocation.HasValue;
-        public Single ForwardWalk => _ForwardWalk_IsSet ? _recordData.Slice(_ForwardWalkLocation, 4).Float() : default;
+        public Single ForwardWalk => _ForwardWalk_IsSet ? _recordData.Slice(_ForwardWalkLocation, 4).Float() : default(Single);
         #endregion
         #region ForwardRun
         private int _ForwardRunLocation => _SPEDLocation!.Value.Min + 0x14;
         private bool _ForwardRun_IsSet => _SPEDLocation.HasValue;
-        public Single ForwardRun => _ForwardRun_IsSet ? _recordData.Slice(_ForwardRunLocation, 4).Float() : default;
+        public Single ForwardRun => _ForwardRun_IsSet ? _recordData.Slice(_ForwardRunLocation, 4).Float() : default(Single);
         #endregion
         #region BackWalk
         private int _BackWalkLocation => _SPEDLocation!.Value.Min + 0x18;
         private bool _BackWalk_IsSet => _SPEDLocation.HasValue;
-        public Single BackWalk => _BackWalk_IsSet ? _recordData.Slice(_BackWalkLocation, 4).Float() : default;
+        public Single BackWalk => _BackWalk_IsSet ? _recordData.Slice(_BackWalkLocation, 4).Float() : default(Single);
         #endregion
         #region BackRun
         private int _BackRunLocation => _SPEDLocation!.Value.Min + 0x1C;
         private bool _BackRun_IsSet => _SPEDLocation.HasValue;
-        public Single BackRun => _BackRun_IsSet ? _recordData.Slice(_BackRunLocation, 4).Float() : default;
+        public Single BackRun => _BackRun_IsSet ? _recordData.Slice(_BackRunLocation, 4).Float() : default(Single);
         #endregion
         #region RotateInPlaceWalk
         private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value.Min + 0x20;
         private bool _RotateInPlaceWalk_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _recordData.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default;
+        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _recordData.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region RotateInPlaceRun
         private int _RotateInPlaceRunLocation => _SPEDLocation!.Value.Min + 0x24;
         private bool _RotateInPlaceRun_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _recordData.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default;
+        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _recordData.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region RotateWhileMovingRun
         private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value.Min + 0x28;
         private bool _RotateWhileMovingRun_IsSet => _SPEDLocation.HasValue && !SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0);
-        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _recordData.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default;
+        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _recordData.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default(Single);
         #endregion
         #region AnimationChangeThresholds
         private RangeInt32? _AnimationChangeThresholdsLocation;

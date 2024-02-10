@@ -53,16 +53,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region InputGain
-        public Single InputGain { get; set; } = default;
+        public Single InputGain { get; set; } = default(Single);
         #endregion
         #region OutputGain
-        public Single OutputGain { get; set; } = default;
+        public Single OutputGain { get; set; } = default(Single);
         #endregion
         #region UpperThreshold
-        public Single UpperThreshold { get; set; } = default;
+        public Single UpperThreshold { get; set; } = default(Single);
         #endregion
         #region LowerThreshold
-        public Single LowerThreshold { get; set; } = default;
+        public Single LowerThreshold { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -745,10 +745,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IOverdriveAudioEffect item)
         {
             ClearPartial();
-            item.InputGain = default;
-            item.OutputGain = default;
-            item.UpperThreshold = default;
-            item.LowerThreshold = default;
+            item.InputGain = default(Single);
+            item.OutputGain = default(Single);
+            item.UpperThreshold = default(Single);
+            item.LowerThreshold = default(Single);
             base.Clear(item);
         }
         

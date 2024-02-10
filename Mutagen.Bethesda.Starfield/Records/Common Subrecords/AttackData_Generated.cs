@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region DamageMult
-        public Single DamageMult { get; set; } = default;
+        public Single DamageMult { get; set; } = default(Single);
         #endregion
         #region Chance
-        public Single Chance { get; set; } = default;
+        public Single Chance { get; set; } = default(Single);
         #endregion
         #region Spell
         private readonly IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
@@ -68,31 +68,31 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ISpellGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
         #region Flags
-        public AttackData.Flag Flags { get; set; } = default;
+        public AttackData.Flag Flags { get; set; } = default(AttackData.Flag);
         #endregion
         #region AttackAngle
-        public Single AttackAngle { get; set; } = default;
+        public Single AttackAngle { get; set; } = default(Single);
         #endregion
         #region StrikeAngle
-        public Single StrikeAngle { get; set; } = default;
+        public Single StrikeAngle { get; set; } = default(Single);
         #endregion
         #region Stagger
-        public Single Stagger { get; set; } = default;
+        public Single Stagger { get; set; } = default(Single);
         #endregion
         #region Knockdown
-        public Single Knockdown { get; set; } = default;
+        public Single Knockdown { get; set; } = default(Single);
         #endregion
         #region RecoveryTime
-        public Single RecoveryTime { get; set; } = default;
+        public Single RecoveryTime { get; set; } = default(Single);
         #endregion
         #region ActionPointsMult
-        public Single ActionPointsMult { get; set; } = default;
+        public Single ActionPointsMult { get; set; } = default(Single);
         #endregion
         #region StaggerOffset
-        public Int32 StaggerOffset { get; set; } = default;
+        public Int32 StaggerOffset { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -1095,18 +1095,18 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAttackData item)
         {
             ClearPartial();
-            item.DamageMult = default;
-            item.Chance = default;
+            item.DamageMult = default(Single);
+            item.Chance = default(Single);
             item.Spell.Clear();
-            item.Flags = default;
-            item.AttackAngle = default;
-            item.StrikeAngle = default;
-            item.Stagger = default;
-            item.Knockdown = default;
-            item.RecoveryTime = default;
-            item.ActionPointsMult = default;
-            item.StaggerOffset = default;
-            item.Unknown = default;
+            item.Flags = default(AttackData.Flag);
+            item.AttackAngle = default(Single);
+            item.StrikeAngle = default(Single);
+            item.Stagger = default(Single);
+            item.Knockdown = default(Single);
+            item.RecoveryTime = default(Single);
+            item.ActionPointsMult = default(Single);
+            item.StaggerOffset = default(Int32);
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

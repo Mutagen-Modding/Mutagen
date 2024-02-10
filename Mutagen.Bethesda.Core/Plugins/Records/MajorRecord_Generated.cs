@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #endregion
 
         #region MajorRecordFlagsRaw
-        public Int32 MajorRecordFlagsRaw { get; set; } = default;
+        public Int32 MajorRecordFlagsRaw { get; set; } = default(Int32);
         #endregion
         #region FormKey
         public FormKey FormKey { get; protected set; } = FormKey.Null;
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #endregion
         #region VersionControl
-        public UInt32 VersionControl { get; set; } = default;
+        public UInt32 VersionControl { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -1099,8 +1099,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual void Clear(IMajorRecordInternal item)
         {
             ClearPartial();
-            item.MajorRecordFlagsRaw = default;
-            item.VersionControl = default;
+            item.MajorRecordFlagsRaw = default(Int32);
+            item.VersionControl = default(UInt32);
             item.EditorID = default;
         }
         

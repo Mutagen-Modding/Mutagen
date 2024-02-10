@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Versioning
-        public NavmeshGeometry.VersioningBreaks Versioning { get; set; } = default;
+        public NavmeshGeometry.VersioningBreaks Versioning { get; set; } = default(NavmeshGeometry.VersioningBreaks);
         #endregion
         #region NavmeshVersion
         public static readonly UInt32 NavmeshVersionDefault = 15;
@@ -167,17 +167,17 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region GridSize
-        public UInt32 GridSize { get; set; } = default;
+        public UInt32 GridSize { get; set; } = default(UInt32);
         public static RangeUInt32 GridSize_Range = new RangeUInt32(UInt32.MinValue, 12);
         #endregion
         #region GridMaxDistance
-        public P2Float GridMaxDistance { get; set; } = default;
+        public P2Float GridMaxDistance { get; set; } = default(P2Float);
         #endregion
         #region GridMin
-        public P3Float GridMin { get; set; } = default;
+        public P3Float GridMin { get; set; } = default(P3Float);
         #endregion
         #region GridMax
-        public P3Float GridMax { get; set; } = default;
+        public P3Float GridMax { get; set; } = default(P3Float);
         #endregion
         #region GridArrays
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Unknown3
-        public Int32 Unknown3 { get; set; } = default;
+        public Int32 Unknown3 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavmeshGeometry item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(NavmeshGeometry.VersioningBreaks);
             item.NavmeshVersion = NavmeshGeometry.NavmeshVersionDefault;
             item.CrcHash = NavmeshGeometry.CrcHashDefault;
             item.Parent.Clear();
@@ -1903,12 +1903,12 @@ namespace Mutagen.Bethesda.Starfield
             item.Cover.Clear();
             item.CoverTriangleMappings.Clear();
             item.Waypoints.Clear();
-            item.GridSize = default;
-            item.GridMaxDistance = default;
-            item.GridMin = default;
-            item.GridMax = default;
+            item.GridSize = default(UInt32);
+            item.GridMaxDistance = default(P2Float);
+            item.GridMin = default(P3Float);
+            item.GridMax = default(P3Float);
             item.GridArrays.Clear();
-            item.Unknown3 = default;
+            item.Unknown3 = default(Int32);
         }
         
         #region Mutagen

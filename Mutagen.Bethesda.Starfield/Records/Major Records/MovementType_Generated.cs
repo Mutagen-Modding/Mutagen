@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Starfield
         UInt32? IMovementTypeGetter.INTV => this.INTV;
         #endregion
         #region BOLV
-        public Boolean BOLV { get; set; } = default;
+        public Boolean BOLV { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Starfield
             item.FlightAngleGain = default;
             item.KNAM = default;
             item.INTV = default;
-            item.BOLV = default;
+            item.BOLV = default(Boolean);
             base.Clear(item);
         }
         
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BOLV
         private int? _BOLVLocation;
-        public Boolean BOLV => _BOLVLocation.HasValue ? true : default;
+        public Boolean BOLV => _BOLVLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

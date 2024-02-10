@@ -272,13 +272,13 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public Ingestible.Flag Flags { get; set; } = default;
+        public Ingestible.Flag Flags { get; set; } = default(Ingestible.Flag);
         #endregion
         #region Addiction
         private readonly IFormLink<ISpellGetter> _Addiction = new FormLink<ISpellGetter>();
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ISpellGetter> IIngestibleGetter.Addiction => this.Addiction;
         #endregion
         #region AddictionChance
-        public Single AddictionChance { get; set; } = default;
+        public Single AddictionChance { get; set; } = default(Single);
         #endregion
         #region ConsumeSound
         public SoundReference ConsumeSound { get; set; } = new SoundReference();
@@ -2244,11 +2244,11 @@ namespace Mutagen.Bethesda.Starfield
             item.Description.Clear();
             item.Resources = null;
             item.ComponentDisplayIndices = null;
-            item.Weight = default;
-            item.Value = default;
-            item.Flags = default;
+            item.Weight = default(Single);
+            item.Value = default(UInt32);
+            item.Flags = default(Ingestible.Flag);
             item.Addiction.Clear();
-            item.AddictionChance = default;
+            item.AddictionChance = default(Single);
             item.ConsumeSound.Clear();
             item.AddictionName = default;
             item.Effects.Clear();
@@ -3216,7 +3216,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4148,13 +4148,13 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<Byte>? ComponentDisplayIndices { get; private set; }
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         private RangeInt32? _ENITLocation;
         #region Value
         private int _ValueLocation => _ENITLocation!.Value.Min;
         private bool _Value_IsSet => _ENITLocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value.Min + 0x4;
@@ -4169,7 +4169,7 @@ namespace Mutagen.Bethesda.Starfield
         #region AddictionChance
         private int _AddictionChanceLocation => _ENITLocation!.Value.Min + 0xC;
         private bool _AddictionChance_IsSet => _ENITLocation.HasValue;
-        public Single AddictionChance => _AddictionChance_IsSet ? _recordData.Slice(_AddictionChanceLocation, 4).Float() : default;
+        public Single AddictionChance => _AddictionChance_IsSet ? _recordData.Slice(_AddictionChanceLocation, 4).Float() : default(Single);
         #endregion
         #region ConsumeSound
         private int _ConsumeSoundLocation => _ENITLocation!.Value.Min + 0x10;

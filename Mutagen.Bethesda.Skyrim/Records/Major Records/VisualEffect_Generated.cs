@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;
         #endregion
         #region Flags
-        public VisualEffect.Flag Flags { get; set; } = default;
+        public VisualEffect.Flag Flags { get; set; } = default(VisualEffect.Flag);
         #endregion
 
         #region To String
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.EffectArt.Clear();
             item.Shader.Clear();
-            item.Flags = default;
+            item.Flags = default(VisualEffect.Flag);
             base.Clear(item);
         }
         

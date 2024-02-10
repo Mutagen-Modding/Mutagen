@@ -51,26 +51,26 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public ImageSpaceDepthOfField.VersioningBreaks Versioning { get; set; } = default;
+        public ImageSpaceDepthOfField.VersioningBreaks Versioning { get; set; } = default(ImageSpaceDepthOfField.VersioningBreaks);
         #endregion
         #region Strength
-        public Single Strength { get; set; } = default;
+        public Single Strength { get; set; } = default(Single);
         #endregion
         #region Distance
-        public Single Distance { get; set; } = default;
+        public Single Distance { get; set; } = default(Single);
         #endregion
         #region Range
-        public Single Range { get; set; } = default;
+        public Single Range { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region BlurRadius
-        public Byte BlurRadius { get; set; } = default;
+        public Byte BlurRadius { get; set; } = default(Byte);
         public static RangeUInt8 BlurRadius_Range = new RangeUInt8(0, 7);
         #endregion
         #region Sky
-        public Boolean Sky { get; set; } = default;
+        public Boolean Sky { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -909,13 +909,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceDepthOfField item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Strength = default;
-            item.Distance = default;
-            item.Range = default;
-            item.Unknown = default;
-            item.BlurRadius = default;
-            item.Sky = default;
+            item.Versioning = default(ImageSpaceDepthOfField.VersioningBreaks);
+            item.Strength = default(Single);
+            item.Distance = default(Single);
+            item.Range = default(Single);
+            item.Unknown = default(Int16);
+            item.BlurRadius = default(Byte);
+            item.Sky = default(Boolean);
         }
         
         #region Mutagen

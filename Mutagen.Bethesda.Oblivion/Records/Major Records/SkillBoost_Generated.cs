@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        public ActorValue Skill { get; set; } = default;
+        public ActorValue Skill { get; set; } = default(ActorValue);
         #endregion
         #region Boost
-        public SByte Boost { get; set; } = default;
+        public SByte Boost { get; set; } = default(SByte);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ISkillBoost item)
         {
             ClearPartial();
-            item.Skill = default;
-            item.Boost = default;
+            item.Skill = default(ActorValue);
+            item.Boost = default(SByte);
         }
         
         #region Mutagen

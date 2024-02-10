@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
         String? ICollisionLayerGetter.Context => this.Context;
         #endregion
         #region Index
-        public UInt32 Index { get; set; } = default;
+        public UInt32 Index { get; set; } = default(UInt32);
         #endregion
         #region DebugColor
         public Color? DebugColor { get; set; }
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Starfield
         Color? ICollisionLayerGetter.DebugColor => this.DebugColor;
         #endregion
         #region Flags
-        public CollisionLayer.Flag Flags { get; set; } = default;
+        public CollisionLayer.Flag Flags { get; set; } = default(CollisionLayer.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -1049,9 +1049,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Context = default;
-            item.Index = default;
+            item.Index = default(UInt32);
             item.DebugColor = default;
-            item.Flags = default;
+            item.Flags = default(CollisionLayer.Flag);
             item.Name = string.Empty;
             item.CollidesWith = null;
             base.Clear(item);
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.CollidesWith = 
                             rhs.CollidesWith
-                            .Select(r => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ICollisionLayerGetter>>();
                     }
                     else
@@ -1891,7 +1891,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Index
         private int? _IndexLocation;
-        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region DebugColor
         private int? _DebugColorLocation;

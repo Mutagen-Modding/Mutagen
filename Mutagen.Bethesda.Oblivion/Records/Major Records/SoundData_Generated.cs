@@ -54,10 +54,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region FrequencyAdjustment
-        public SByte FrequencyAdjustment { get; set; } = default;
+        public SByte FrequencyAdjustment { get; set; } = default(SByte);
         #endregion
         #region Flags
-        public SoundData.Flag Flags { get; set; } = default;
+        public SoundData.Flag Flags { get; set; } = default(SoundData.Flag);
         #endregion
 
         #region To String
@@ -807,10 +807,10 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Clear(ISoundDataInternal item)
         {
             ClearPartial();
-            item.MinimumAttenuationDistance = default;
-            item.MaximumAttenuationDistance = default;
-            item.FrequencyAdjustment = default;
-            item.Flags = default;
+            item.MinimumAttenuationDistance = default(UInt16);
+            item.MaximumAttenuationDistance = default(UInt16);
+            item.FrequencyAdjustment = default(SByte);
+            item.Flags = default(SoundData.Flag);
         }
         
         #region Mutagen

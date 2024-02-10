@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region Target
-        public InstanceNamingRule.PropertyTarget Target { get; set; } = default;
+        public InstanceNamingRule.PropertyTarget Target { get; set; } = default(InstanceNamingRule.PropertyTarget);
         #endregion
         #region Operation
-        public InstanceNamingRule.Operations Operation { get; set; } = default;
+        public InstanceNamingRule.Operations Operation { get; set; } = default(InstanceNamingRule.Operations);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IInstanceNamingRuleProperties item)
         {
             ClearPartial();
-            item.Value = default;
-            item.Target = default;
-            item.Operation = default;
+            item.Value = default(Single);
+            item.Target = default(InstanceNamingRule.PropertyTarget);
+            item.Operation = default(InstanceNamingRule.Operations);
         }
         
         #region Mutagen

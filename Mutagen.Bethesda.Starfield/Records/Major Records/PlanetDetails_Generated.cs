@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown1
-        public Int32 Unknown1 { get; set; } = default;
+        public Int32 Unknown1 { get; set; } = default(Int32);
         #endregion
         #region SpectralClass
         public String SpectralClass { get; set; } = string.Empty;
@@ -78,49 +78,49 @@ namespace Mutagen.Bethesda.Starfield
         public String Special { get; set; } = string.Empty;
         #endregion
         #region Perihelion
-        public Double Perihelion { get; set; } = default;
+        public Double Perihelion { get; set; } = default(Double);
         #endregion
         #region Stardust
-        public Double Stardust { get; set; } = default;
+        public Double Stardust { get; set; } = default(Double);
         #endregion
         #region Density
-        public Single Density { get; set; } = default;
+        public Single Density { get; set; } = default(Single);
         #endregion
         #region Heat
-        public Single Heat { get; set; } = default;
+        public Single Heat { get; set; } = default(Single);
         #endregion
         #region Hydro
-        public Single Hydro { get; set; } = default;
+        public Single Hydro { get; set; } = default(Single);
         #endregion
         #region InnerHz
-        public Single InnerHz { get; set; } = default;
+        public Single InnerHz { get; set; } = default(Single);
         #endregion
         #region OuterHz
-        public Single OuterHz { get; set; } = default;
+        public Single OuterHz { get; set; } = default(Single);
         #endregion
         #region PerihelionAngle
-        public Single PerihelionAngle { get; set; } = default;
+        public Single PerihelionAngle { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
         #region StartAngleInDegrees
-        public Single StartAngleInDegrees { get; set; } = default;
+        public Single StartAngleInDegrees { get; set; } = default(Single);
         #endregion
         #region YearLengthInDays
-        public Single YearLengthInDays { get; set; } = default;
+        public Single YearLengthInDays { get; set; } = default(Single);
         #endregion
         #region Asteroids
-        public UInt32 Asteroids { get; set; } = default;
+        public UInt32 Asteroids { get; set; } = default(UInt32);
         #endregion
         #region Geostationary
-        public Boolean Geostationary { get; set; } = default;
+        public Boolean Geostationary { get; set; } = default(Boolean);
         #endregion
         #region Unknown3
-        public Int32 Unknown3 { get; set; } = default;
+        public Int32 Unknown3 { get; set; } = default(Int32);
         #endregion
         #region Rings
-        public Boolean Rings { get; set; } = default;
+        public Boolean Rings { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetDetails item)
         {
             ClearPartial();
-            item.Unknown1 = default;
+            item.Unknown1 = default(Int32);
             item.SpectralClass = string.Empty;
             item.CatalogueId = string.Empty;
             item.Life = string.Empty;
@@ -1521,21 +1521,21 @@ namespace Mutagen.Bethesda.Starfield
             item.Type = string.Empty;
             item.SettledStar = string.Empty;
             item.Special = string.Empty;
-            item.Perihelion = default;
-            item.Stardust = default;
-            item.Density = default;
-            item.Heat = default;
-            item.Hydro = default;
-            item.InnerHz = default;
-            item.OuterHz = default;
-            item.PerihelionAngle = default;
-            item.Unknown2 = default;
-            item.StartAngleInDegrees = default;
-            item.YearLengthInDays = default;
-            item.Asteroids = default;
-            item.Geostationary = default;
-            item.Unknown3 = default;
-            item.Rings = default;
+            item.Perihelion = default(Double);
+            item.Stardust = default(Double);
+            item.Density = default(Single);
+            item.Heat = default(Single);
+            item.Hydro = default(Single);
+            item.InnerHz = default(Single);
+            item.OuterHz = default(Single);
+            item.PerihelionAngle = default(Single);
+            item.Unknown2 = default(Int32);
+            item.StartAngleInDegrees = default(Single);
+            item.YearLengthInDays = default(Single);
+            item.Asteroids = default(UInt32);
+            item.Geostationary = default(Boolean);
+            item.Unknown3 = default(Int32);
+            item.Rings = default(Boolean);
         }
         
         #region Mutagen

@@ -77,34 +77,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Action
-        public CameraShot.ActionType Action { get; set; } = default;
+        public CameraShot.ActionType Action { get; set; } = default(CameraShot.ActionType);
         #endregion
         #region Location
-        public CameraShot.LocationType Location { get; set; } = default;
+        public CameraShot.LocationType Location { get; set; } = default(CameraShot.LocationType);
         #endregion
         #region Target
-        public CameraShot.LocationType Target { get; set; } = default;
+        public CameraShot.LocationType Target { get; set; } = default(CameraShot.LocationType);
         #endregion
         #region Flags
-        public CameraShot.Flag Flags { get; set; } = default;
+        public CameraShot.Flag Flags { get; set; } = default(CameraShot.Flag);
         #endregion
         #region TimeMultiplierPlayer
-        public Single TimeMultiplierPlayer { get; set; } = default;
+        public Single TimeMultiplierPlayer { get; set; } = default(Single);
         #endregion
         #region TimeMultiplierTarget
-        public Single TimeMultiplierTarget { get; set; } = default;
+        public Single TimeMultiplierTarget { get; set; } = default(Single);
         #endregion
         #region TimeMultiplierGlobal
-        public Single TimeMultiplierGlobal { get; set; } = default;
+        public Single TimeMultiplierGlobal { get; set; } = default(Single);
         #endregion
         #region MaxTime
-        public Single MaxTime { get; set; } = default;
+        public Single MaxTime { get; set; } = default(Single);
         #endregion
         #region MinTime
-        public Single MinTime { get; set; } = default;
+        public Single MinTime { get; set; } = default(Single);
         #endregion
         #region TargetPercentBetweenActors
-        public Single TargetPercentBetweenActors { get; set; } = default;
+        public Single TargetPercentBetweenActors { get; set; } = default(Single);
         #endregion
         #region NearTargetDistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region DATADataTypeState
-        public CameraShot.DATADataType DATADataTypeState { get; set; } = default;
+        public CameraShot.DATADataType DATADataTypeState { get; set; } = default(CameraShot.DATADataType);
         #endregion
 
         #region To String
@@ -1298,19 +1298,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Model = null;
-            item.Action = default;
-            item.Location = default;
-            item.Target = default;
-            item.Flags = default;
-            item.TimeMultiplierPlayer = default;
-            item.TimeMultiplierTarget = default;
-            item.TimeMultiplierGlobal = default;
-            item.MaxTime = default;
-            item.MinTime = default;
-            item.TargetPercentBetweenActors = default;
-            item.NearTargetDistance = default;
+            item.Action = default(CameraShot.ActionType);
+            item.Location = default(CameraShot.LocationType);
+            item.Target = default(CameraShot.LocationType);
+            item.Flags = default(CameraShot.Flag);
+            item.TimeMultiplierPlayer = default(Single);
+            item.TimeMultiplierTarget = default(Single);
+            item.TimeMultiplierGlobal = default(Single);
+            item.MaxTime = default(Single);
+            item.MinTime = default(Single);
+            item.TargetPercentBetweenActors = default(Single);
+            item.NearTargetDistance = default(Single);
             item.ImageSpaceModifier.Clear();
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(CameraShot.DATADataType);
             base.Clear(item);
         }
         
@@ -2367,37 +2367,37 @@ namespace Mutagen.Bethesda.Skyrim
         #region TimeMultiplierPlayer
         private int _TimeMultiplierPlayerLocation => _DATALocation!.Value.Min + 0x10;
         private bool _TimeMultiplierPlayer_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _recordData.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default;
+        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _recordData.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default(Single);
         #endregion
         #region TimeMultiplierTarget
         private int _TimeMultiplierTargetLocation => _DATALocation!.Value.Min + 0x14;
         private bool _TimeMultiplierTarget_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _recordData.Slice(_TimeMultiplierTargetLocation, 4).Float() : default;
+        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _recordData.Slice(_TimeMultiplierTargetLocation, 4).Float() : default(Single);
         #endregion
         #region TimeMultiplierGlobal
         private int _TimeMultiplierGlobalLocation => _DATALocation!.Value.Min + 0x18;
         private bool _TimeMultiplierGlobal_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _recordData.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default;
+        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _recordData.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default(Single);
         #endregion
         #region MaxTime
         private int _MaxTimeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _MaxTime_IsSet => _DATALocation.HasValue;
-        public Single MaxTime => _MaxTime_IsSet ? _recordData.Slice(_MaxTimeLocation, 4).Float() : default;
+        public Single MaxTime => _MaxTime_IsSet ? _recordData.Slice(_MaxTimeLocation, 4).Float() : default(Single);
         #endregion
         #region MinTime
         private int _MinTimeLocation => _DATALocation!.Value.Min + 0x20;
         private bool _MinTime_IsSet => _DATALocation.HasValue;
-        public Single MinTime => _MinTime_IsSet ? _recordData.Slice(_MinTimeLocation, 4).Float() : default;
+        public Single MinTime => _MinTime_IsSet ? _recordData.Slice(_MinTimeLocation, 4).Float() : default(Single);
         #endregion
         #region TargetPercentBetweenActors
         private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value.Min + 0x24;
         private bool _TargetPercentBetweenActors_IsSet => _DATALocation.HasValue;
-        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _recordData.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default;
+        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _recordData.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default(Single);
         #endregion
         #region NearTargetDistance
         private int _NearTargetDistanceLocation => _DATALocation!.Value.Min + 0x28;
         private bool _NearTargetDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(CameraShot.DATADataType.Break0);
-        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _recordData.Slice(_NearTargetDistanceLocation, 4).Float() : default;
+        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _recordData.Slice(_NearTargetDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;

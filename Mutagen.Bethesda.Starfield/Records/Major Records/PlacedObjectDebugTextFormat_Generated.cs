@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Size
-        public UInt32 Size { get; set; } = default;
+        public UInt32 Size { get; set; } = default(UInt32);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -721,8 +721,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectDebugTextFormat item)
         {
             ClearPartial();
-            item.Size = default;
-            item.Color = default;
+            item.Size = default(UInt32);
+            item.Color = default(Color);
         }
         
         #region Mutagen

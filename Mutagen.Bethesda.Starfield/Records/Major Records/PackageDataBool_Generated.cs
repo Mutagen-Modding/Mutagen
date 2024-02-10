@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Data
-        public Boolean Data { get; set; } = default;
+        public Boolean Data { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPackageDataBool item)
         {
             ClearPartial();
-            item.Data = default;
+            item.Data = default(Boolean);
             base.Clear(item);
         }
         

@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Starfield
         IVolumesMatrixGetter IVolumesComponentItemGetter.Matrix4 => Matrix4;
         #endregion
         #region Unknown1
-        public Single Unknown1 { get; set; } = default;
+        public Single Unknown1 { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; } = default;
+        public Single Unknown2 { get; set; } = default(Single);
         #endregion
         #region Unknown3
-        public Single Unknown3 { get; set; } = default;
+        public Single Unknown3 { get; set; } = default(Single);
         #endregion
         #region Ender
         public AVolumesUnknownEnder Ender { get; set; } = default!;
@@ -969,9 +969,9 @@ namespace Mutagen.Bethesda.Starfield
             item.Matrix2.Clear();
             item.Matrix3.Clear();
             item.Matrix4.Clear();
-            item.Unknown1 = default;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
+            item.Unknown1 = default(Single);
+            item.Unknown2 = default(Single);
+            item.Unknown3 = default(Single);
             item.Ender.Clear();
         }
         

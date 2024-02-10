@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region TintType
-        public TintType TintType { get; set; } = default;
+        public TintType TintType { get; set; } = default(TintType);
         #endregion
         #region TintGroup
         public String TintGroup { get; set; } = string.Empty;
@@ -64,10 +64,10 @@ namespace Mutagen.Bethesda.Starfield
         public String TintTexture { get; set; } = string.Empty;
         #endregion
         #region TintColor
-        public Color TintColor { get; set; } = default;
+        public Color TintColor { get; set; } = default(Color);
         #endregion
         #region TintIntensity
-        public UInt32 TintIntensity { get; set; } = default;
+        public UInt32 TintIntensity { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -874,12 +874,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcTint item)
         {
             ClearPartial();
-            item.TintType = default;
+            item.TintType = default(TintType);
             item.TintGroup = string.Empty;
             item.TintName = string.Empty;
             item.TintTexture = string.Empty;
-            item.TintColor = default;
-            item.TintIntensity = default;
+            item.TintColor = default(Color);
+            item.TintIntensity = default(UInt32);
         }
         
         #region Mutagen
@@ -1402,11 +1402,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TintColor
         private int? _TintColorLocation;
-        public Color TintColor => _TintColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color TintColor => _TintColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region TintIntensity
         private int? _TintIntensityLocation;
-        public UInt32 TintIntensity => _TintIntensityLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintIntensityLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 TintIntensity => _TintIntensityLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintIntensityLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Stage
-        public UInt16 Stage { get; set; } = default;
+        public UInt16 Stage { get; set; } = default(UInt16);
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IQuestStage item)
         {
             ClearPartial();
-            item.Stage = default;
+            item.Stage = default(UInt16);
             item.LogEntries.Clear();
         }
         
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Stage
         private int? _StageLocation;
-        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StageLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StageLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = Array.Empty<ILogEntryGetter>();
         partial void CustomFactoryEnd(

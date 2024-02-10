@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public PerkScriptFlag.Flag Flags { get; set; } = default;
+        public PerkScriptFlag.Flag Flags { get; set; } = default(PerkScriptFlag.Flag);
         #endregion
         #region FragmentIndex
-        public UInt16 FragmentIndex { get; set; } = default;
+        public UInt16 FragmentIndex { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPerkScriptFlag item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.FragmentIndex = default;
+            item.Flags = default(PerkScriptFlag.Flag);
+            item.FragmentIndex = default(UInt16);
         }
         
         #region Mutagen

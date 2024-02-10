@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public ConstructibleCreatedObjectCount.VersioningBreaks Versioning { get; set; } = default;
+        public ConstructibleCreatedObjectCount.VersioningBreaks Versioning { get; set; } = default(ConstructibleCreatedObjectCount.VersioningBreaks);
         #endregion
         #region Count
-        public UInt16 Count { get; set; } = default;
+        public UInt16 Count { get; set; } = default(UInt16);
         #endregion
         #region Priority
-        public UInt16 Priority { get; set; } = default;
+        public UInt16 Priority { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -757,9 +757,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IConstructibleCreatedObjectCount item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Count = default;
-            item.Priority = default;
+            item.Versioning = default(ConstructibleCreatedObjectCount.VersioningBreaks);
+            item.Count = default(UInt16);
+            item.Priority = default(UInt16);
         }
         
         #region Mutagen

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target;
         #endregion
         #region Flags
-        public QuestTarget.Flag Flags { get; set; } = default;
+        public QuestTarget.Flag Flags { get; set; } = default(QuestTarget.Flag);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Target.Clear();
-            item.Flags = default;
+            item.Flags = default(QuestTarget.Flag);
         }
         
         #region Mutagen

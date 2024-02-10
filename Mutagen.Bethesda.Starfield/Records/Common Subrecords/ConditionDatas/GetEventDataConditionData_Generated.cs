@@ -54,10 +54,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Function
-        public GetEventDataConditionData.EventFunction Function { get; set; } = default;
+        public GetEventDataConditionData.EventFunction Function { get; set; } = default(GetEventDataConditionData.EventFunction);
         #endregion
         #region Member
-        public GetEventDataConditionData.EventMember Member { get; set; } = default;
+        public GetEventDataConditionData.EventMember Member { get; set; } = default(GetEventDataConditionData.EventMember);
         #endregion
         #region Record
         private readonly IFormLink<IStarfieldMajorRecordGetter> _Record = new FormLink<IStarfieldMajorRecordGetter>();
@@ -813,8 +813,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGetEventDataConditionData item)
         {
             ClearPartial();
-            item.Function = default;
-            item.Member = default;
+            item.Function = default(GetEventDataConditionData.EventFunction);
+            item.Member = default(GetEventDataConditionData.EventMember);
             item.Record.Clear();
             item.FirstUnusedStringParameter = default;
             item.SecondUnusedStringParameter = default;

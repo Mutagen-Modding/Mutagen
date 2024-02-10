@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.RacePresets.SetTo(
                         rhs.RacePresets
-                        .Select(r => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2100,7 +2100,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.AvailableHairColors.SetTo(
                         rhs.AvailableHairColors
-                        .Select(r => (IFormLinkGetter<IColorRecordGetter>)new FormLink<IColorRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IColorRecordGetter>)new FormLink<IColorRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.FaceDetails.SetTo(
                         rhs.FaceDetails
-                        .Select(r => (IFormLinkGetter<ITextureSetGetter>)new FormLink<ITextureSetGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ITextureSetGetter>)new FormLink<ITextureSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

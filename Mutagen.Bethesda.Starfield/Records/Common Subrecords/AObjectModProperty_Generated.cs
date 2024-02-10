@@ -56,10 +56,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Property
-        public T Property { get; set; } = default;
+        public T Property { get; set; } = default(T);
         #endregion
         #region Step
-        public Single Step { get; set; } = default;
+        public Single Step { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -442,8 +442,8 @@ namespace Mutagen.Bethesda.Starfield
         public virtual void Clear(IAObjectModProperty<T> item)
         {
             ClearPartial();
-            item.Property = default;
-            item.Step = default;
+            item.Property = default(T);
+            item.Step = default(Single);
         }
         
         #region Mutagen

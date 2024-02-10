@@ -304,10 +304,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.ActorValue3 => this.ActorValue3;
         #endregion
         #region UnkownFloat1
-        public Single UnkownFloat1 { get; set; } = default;
+        public Single UnkownFloat1 { get; set; } = default(Single);
         #endregion
         #region UnkownFloat2
-        public Single UnkownFloat2 { get; set; } = default;
+        public Single UnkownFloat2 { get; set; } = default(Single);
         #endregion
         #region Archetype
         public AMagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
@@ -315,28 +315,28 @@ namespace Mutagen.Bethesda.Starfield
         IAMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
         #region UnkownFloat3
-        public Single UnkownFloat3 { get; set; } = default;
+        public Single UnkownFloat3 { get; set; } = default(Single);
         #endregion
         #region UnkownInt1
-        public UInt32 UnkownInt1 { get; set; } = default;
+        public UInt32 UnkownInt1 { get; set; } = default(UInt32);
         #endregion
         #region UnkownFloat4
-        public Single UnkownFloat4 { get; set; } = default;
+        public Single UnkownFloat4 { get; set; } = default(Single);
         #endregion
         #region UnkownInt2
-        public UInt32 UnkownInt2 { get; set; } = default;
+        public UInt32 UnkownInt2 { get; set; } = default(UInt32);
         #endregion
         #region CastType
-        public CastType CastType { get; set; } = default;
+        public CastType CastType { get; set; } = default(CastType);
         #endregion
         #region TargetType
-        public TargetType TargetType { get; set; } = default;
+        public TargetType TargetType { get; set; } = default(TargetType);
         #endregion
         #region UnkownInt3
-        public UInt32 UnkownInt3 { get; set; } = default;
+        public UInt32 UnkownInt3 { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public MagicEffect.Flag Flags { get; set; } = default;
+        public MagicEffect.Flag Flags { get; set; } = default(MagicEffect.Flag);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2487,17 +2487,17 @@ namespace Mutagen.Bethesda.Starfield
             item.Projectile.Clear();
             item.ResistValue.Clear();
             item.ActorValue3.Clear();
-            item.UnkownFloat1 = default;
-            item.UnkownFloat2 = default;
+            item.UnkownFloat1 = default(Single);
+            item.UnkownFloat2 = default(Single);
             item.Archetype.Clear();
-            item.UnkownFloat3 = default;
-            item.UnkownInt1 = default;
-            item.UnkownFloat4 = default;
-            item.UnkownInt2 = default;
-            item.CastType = default;
-            item.TargetType = default;
-            item.UnkownInt3 = default;
-            item.Flags = default;
+            item.UnkownFloat3 = default(Single);
+            item.UnkownInt1 = default(UInt32);
+            item.UnkownFloat4 = default(Single);
+            item.UnkownInt2 = default(UInt32);
+            item.CastType = default(CastType);
+            item.TargetType = default(TargetType);
+            item.UnkownInt3 = default(UInt32);
+            item.Flags = default(MagicEffect.Flag);
             item.Unknown = new byte[22];
             item.Sounds.Clear();
             item.Description = default;
@@ -3337,7 +3337,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4274,12 +4274,12 @@ namespace Mutagen.Bethesda.Starfield
         #region UnkownFloat1
         private int _UnkownFloat1Location => _DATALocation!.Value.Min + 0x48;
         private bool _UnkownFloat1_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat1 => _UnkownFloat1_IsSet ? _recordData.Slice(_UnkownFloat1Location, 4).Float() : default;
+        public Single UnkownFloat1 => _UnkownFloat1_IsSet ? _recordData.Slice(_UnkownFloat1Location, 4).Float() : default(Single);
         #endregion
         #region UnkownFloat2
         private int _UnkownFloat2Location => _DATALocation!.Value.Min + 0x4C;
         private bool _UnkownFloat2_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat2 => _UnkownFloat2_IsSet ? _recordData.Slice(_UnkownFloat2Location, 4).Float() : default;
+        public Single UnkownFloat2 => _UnkownFloat2_IsSet ? _recordData.Slice(_UnkownFloat2Location, 4).Float() : default(Single);
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x50;
@@ -4289,22 +4289,22 @@ namespace Mutagen.Bethesda.Starfield
         #region UnkownFloat3
         private int _UnkownFloat3Location => _DATALocation!.Value.Min + 0x54;
         private bool _UnkownFloat3_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat3 => _UnkownFloat3_IsSet ? _recordData.Slice(_UnkownFloat3Location, 4).Float() : default;
+        public Single UnkownFloat3 => _UnkownFloat3_IsSet ? _recordData.Slice(_UnkownFloat3Location, 4).Float() : default(Single);
         #endregion
         #region UnkownInt1
         private int _UnkownInt1Location => _DATALocation!.Value.Min + 0x58;
         private bool _UnkownInt1_IsSet => _DATALocation.HasValue;
-        public UInt32 UnkownInt1 => _UnkownInt1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt1Location, 4)) : default;
+        public UInt32 UnkownInt1 => _UnkownInt1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt1Location, 4)) : default(UInt32);
         #endregion
         #region UnkownFloat4
         private int _UnkownFloat4Location => _DATALocation!.Value.Min + 0x5C;
         private bool _UnkownFloat4_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat4 => _UnkownFloat4_IsSet ? _recordData.Slice(_UnkownFloat4Location, 4).Float() : default;
+        public Single UnkownFloat4 => _UnkownFloat4_IsSet ? _recordData.Slice(_UnkownFloat4Location, 4).Float() : default(Single);
         #endregion
         #region UnkownInt2
         private int _UnkownInt2Location => _DATALocation!.Value.Min + 0x60;
         private bool _UnkownInt2_IsSet => _DATALocation.HasValue;
-        public UInt32 UnkownInt2 => _UnkownInt2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt2Location, 4)) : default;
+        public UInt32 UnkownInt2 => _UnkownInt2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt2Location, 4)) : default(UInt32);
         #endregion
         #region CastType
         private int _CastTypeLocation => _DATALocation!.Value.Min + 0x64;
@@ -4319,7 +4319,7 @@ namespace Mutagen.Bethesda.Starfield
         #region UnkownInt3
         private int _UnkownInt3Location => _DATALocation!.Value.Min + 0x66;
         private bool _UnkownInt3_IsSet => _DATALocation.HasValue;
-        public UInt32 UnkownInt3 => _UnkownInt3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt3Location, 4)) : default;
+        public UInt32 UnkownInt3 => _UnkownInt3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt3Location, 4)) : default(UInt32);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x6A;

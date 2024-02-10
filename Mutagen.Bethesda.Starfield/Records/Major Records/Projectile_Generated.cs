@@ -197,19 +197,19 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IProjectileGetter.Unused => this.Unused;
         #endregion
         #region Flags
-        public Projectile.Flag Flags { get; set; } = default;
+        public Projectile.Flag Flags { get; set; } = default(Projectile.Flag);
         #endregion
         #region Type
-        public Projectile.TypeEnum Type { get; set; } = default;
+        public Projectile.TypeEnum Type { get; set; } = default(Projectile.TypeEnum);
         #endregion
         #region Gravity
-        public Single Gravity { get; set; } = default;
+        public Single Gravity { get; set; } = default(Single);
         #endregion
         #region Speed
-        public Single Speed { get; set; } = default;
+        public Single Speed { get; set; } = default(Single);
         #endregion
         #region Range
-        public Single Range { get; set; } = default;
+        public Single Range { get; set; } = default(Single);
         #endregion
         #region Light
         private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
@@ -232,10 +232,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash;
         #endregion
         #region ExplosionAltTriggerProximity
-        public Single ExplosionAltTriggerProximity { get; set; } = default;
+        public Single ExplosionAltTriggerProximity { get; set; } = default(Single);
         #endregion
         #region ExplosionAltTriggerTimer
-        public Single ExplosionAltTriggerTimer { get; set; } = default;
+        public Single ExplosionAltTriggerTimer { get; set; } = default(Single);
         #endregion
         #region Explosion
         private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
@@ -248,13 +248,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IExplosionGetter> IProjectileGetter.Explosion => this.Explosion;
         #endregion
         #region MuzzleFlashDuration
-        public Single MuzzleFlashDuration { get; set; } = default;
+        public Single MuzzleFlashDuration { get; set; } = default(Single);
         #endregion
         #region FadeDuration
-        public Single FadeDuration { get; set; } = default;
+        public Single FadeDuration { get; set; } = default(Single);
         #endregion
         #region ImpactForce
-        public Single ImpactForce { get; set; } = default;
+        public Single ImpactForce { get; set; } = default(Single);
         #endregion
         #region DefaultWeaponSource
         private readonly IFormLink<IWeaponGetter> _DefaultWeaponSource = new FormLink<IWeaponGetter>();
@@ -267,16 +267,16 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
         #endregion
         #region ConeSpread
-        public Single ConeSpread { get; set; } = default;
+        public Single ConeSpread { get; set; } = default(Single);
         #endregion
         #region CollisionRadius
-        public Single CollisionRadius { get; set; } = default;
+        public Single CollisionRadius { get; set; } = default(Single);
         #endregion
         #region Lifetime
-        public Single Lifetime { get; set; } = default;
+        public Single Lifetime { get; set; } = default(Single);
         #endregion
         #region RelaunchInterval
-        public Single RelaunchInterval { get; set; } = default;
+        public Single RelaunchInterval { get; set; } = default(Single);
         #endregion
         #region DecalData
         private readonly IFormLink<ITextureSetGetter> _DecalData = new FormLink<ITextureSetGetter>();
@@ -299,37 +299,37 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;
         #endregion
         #region TracerFrequency
-        public Byte TracerFrequency { get; set; } = default;
+        public Byte TracerFrequency { get; set; } = default(Byte);
         #endregion
         #region UnknownPROD1
-        public UInt32 UnknownPROD1 { get; set; } = default;
+        public UInt32 UnknownPROD1 { get; set; } = default(UInt32);
         #endregion
         #region UnknownPRODString1
         public String UnknownPRODString1 { get; set; } = string.Empty;
         #endregion
         #region UnknownPROD2
-        public Single UnknownPROD2 { get; set; } = default;
+        public Single UnknownPROD2 { get; set; } = default(Single);
         #endregion
         #region UnknownPROD3
-        public UInt32 UnknownPROD3 { get; set; } = default;
+        public UInt32 UnknownPROD3 { get; set; } = default(UInt32);
         #endregion
         #region UnknownPROD4
-        public Byte UnknownPROD4 { get; set; } = default;
+        public Byte UnknownPROD4 { get; set; } = default(Byte);
         #endregion
         #region UnknownPRODString2
         public String UnknownPRODString2 { get; set; } = string.Empty;
         #endregion
         #region UnknownPROD5
-        public Single UnknownPROD5 { get; set; } = default;
+        public Single UnknownPROD5 { get; set; } = default(Single);
         #endregion
         #region UnknownPROD6
-        public Single UnknownPROD6 { get; set; } = default;
+        public Single UnknownPROD6 { get; set; } = default(Single);
         #endregion
         #region UnknownPROD7
-        public Single UnknownPROD7 { get; set; } = default;
+        public Single UnknownPROD7 { get; set; } = default(Single);
         #endregion
         #region UnknownPROD8
-        public Single UnknownPROD8 { get; set; } = default;
+        public Single UnknownPROD8 { get; set; } = default(Single);
         #endregion
         #region MuzzleFlashModel
         public String MuzzleFlashModel { get; set; } = string.Empty;
@@ -2795,37 +2795,37 @@ namespace Mutagen.Bethesda.Starfield
             item.Model = null;
             item.Destructible = null;
             item.Unused = default;
-            item.Flags = default;
-            item.Type = default;
-            item.Gravity = default;
-            item.Speed = default;
-            item.Range = default;
+            item.Flags = default(Projectile.Flag);
+            item.Type = default(Projectile.TypeEnum);
+            item.Gravity = default(Single);
+            item.Speed = default(Single);
+            item.Range = default(Single);
             item.Light.Clear();
             item.MuzzleFlash.Clear();
-            item.ExplosionAltTriggerProximity = default;
-            item.ExplosionAltTriggerTimer = default;
+            item.ExplosionAltTriggerProximity = default(Single);
+            item.ExplosionAltTriggerTimer = default(Single);
             item.Explosion.Clear();
-            item.MuzzleFlashDuration = default;
-            item.FadeDuration = default;
-            item.ImpactForce = default;
+            item.MuzzleFlashDuration = default(Single);
+            item.FadeDuration = default(Single);
+            item.ImpactForce = default(Single);
             item.DefaultWeaponSource.Clear();
-            item.ConeSpread = default;
-            item.CollisionRadius = default;
-            item.Lifetime = default;
-            item.RelaunchInterval = default;
+            item.ConeSpread = default(Single);
+            item.CollisionRadius = default(Single);
+            item.Lifetime = default(Single);
+            item.RelaunchInterval = default(Single);
             item.DecalData.Clear();
             item.CollisionLayer.Clear();
-            item.TracerFrequency = default;
-            item.UnknownPROD1 = default;
+            item.TracerFrequency = default(Byte);
+            item.UnknownPROD1 = default(UInt32);
             item.UnknownPRODString1 = string.Empty;
-            item.UnknownPROD2 = default;
-            item.UnknownPROD3 = default;
-            item.UnknownPROD4 = default;
+            item.UnknownPROD2 = default(Single);
+            item.UnknownPROD3 = default(UInt32);
+            item.UnknownPROD4 = default(Byte);
             item.UnknownPRODString2 = string.Empty;
-            item.UnknownPROD5 = default;
-            item.UnknownPROD6 = default;
-            item.UnknownPROD7 = default;
-            item.UnknownPROD8 = default;
+            item.UnknownPROD5 = default(Single);
+            item.UnknownPROD6 = default(Single);
+            item.UnknownPROD7 = default(Single);
+            item.UnknownPROD8 = default(Single);
             item.MuzzleFlashModel = string.Empty;
             item.FLLD = default;
             item.ActiveSound = null;
@@ -5001,17 +5001,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Gravity
         private int _GravityLocation => _PRODLocation!.Value.Min + 0x4;
         private bool _Gravity_IsSet => _PRODLocation.HasValue;
-        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default;
+        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default(Single);
         #endregion
         #region Speed
         private int _SpeedLocation => _PRODLocation!.Value.Min + 0x8;
         private bool _Speed_IsSet => _PRODLocation.HasValue;
-        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default;
+        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default(Single);
         #endregion
         #region Range
         private int _RangeLocation => _PRODLocation!.Value.Min + 0xC;
         private bool _Range_IsSet => _PRODLocation.HasValue;
-        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default(Single);
         #endregion
         #region Light
         private int _LightLocation => _PRODLocation!.Value.Min + 0x10;
@@ -5026,12 +5026,12 @@ namespace Mutagen.Bethesda.Starfield
         #region ExplosionAltTriggerProximity
         private int _ExplosionAltTriggerProximityLocation => _PRODLocation!.Value.Min + 0x18;
         private bool _ExplosionAltTriggerProximity_IsSet => _PRODLocation.HasValue;
-        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default(Single);
         #endregion
         #region ExplosionAltTriggerTimer
         private int _ExplosionAltTriggerTimerLocation => _PRODLocation!.Value.Min + 0x1C;
         private bool _ExplosionAltTriggerTimer_IsSet => _PRODLocation.HasValue;
-        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default(Single);
         #endregion
         #region Explosion
         private int _ExplosionLocation => _PRODLocation!.Value.Min + 0x20;
@@ -5041,17 +5041,17 @@ namespace Mutagen.Bethesda.Starfield
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _PRODLocation!.Value.Min + 0x24;
         private bool _MuzzleFlashDuration_IsSet => _PRODLocation.HasValue;
-        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
+        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default(Single);
         #endregion
         #region FadeDuration
         private int _FadeDurationLocation => _PRODLocation!.Value.Min + 0x28;
         private bool _FadeDuration_IsSet => _PRODLocation.HasValue;
-        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default;
+        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default(Single);
         #endregion
         #region ImpactForce
         private int _ImpactForceLocation => _PRODLocation!.Value.Min + 0x2C;
         private bool _ImpactForce_IsSet => _PRODLocation.HasValue;
-        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default;
+        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default(Single);
         #endregion
         #region DefaultWeaponSource
         private int _DefaultWeaponSourceLocation => _PRODLocation!.Value.Min + 0x30;
@@ -5061,22 +5061,22 @@ namespace Mutagen.Bethesda.Starfield
         #region ConeSpread
         private int _ConeSpreadLocation => _PRODLocation!.Value.Min + 0x34;
         private bool _ConeSpread_IsSet => _PRODLocation.HasValue;
-        public Single ConeSpread => _ConeSpread_IsSet ? _recordData.Slice(_ConeSpreadLocation, 4).Float() : default;
+        public Single ConeSpread => _ConeSpread_IsSet ? _recordData.Slice(_ConeSpreadLocation, 4).Float() : default(Single);
         #endregion
         #region CollisionRadius
         private int _CollisionRadiusLocation => _PRODLocation!.Value.Min + 0x38;
         private bool _CollisionRadius_IsSet => _PRODLocation.HasValue;
-        public Single CollisionRadius => _CollisionRadius_IsSet ? _recordData.Slice(_CollisionRadiusLocation, 4).Float() : default;
+        public Single CollisionRadius => _CollisionRadius_IsSet ? _recordData.Slice(_CollisionRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region Lifetime
         private int _LifetimeLocation => _PRODLocation!.Value.Min + 0x3C;
         private bool _Lifetime_IsSet => _PRODLocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default;
+        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default(Single);
         #endregion
         #region RelaunchInterval
         private int _RelaunchIntervalLocation => _PRODLocation!.Value.Min + 0x40;
         private bool _RelaunchInterval_IsSet => _PRODLocation.HasValue;
-        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _recordData.Slice(_RelaunchIntervalLocation, 4).Float() : default;
+        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _recordData.Slice(_RelaunchIntervalLocation, 4).Float() : default(Single);
         #endregion
         #region DecalData
         private int _DecalDataLocation => _PRODLocation!.Value.Min + 0x44;
@@ -5096,7 +5096,7 @@ namespace Mutagen.Bethesda.Starfield
         #region UnknownPROD1
         private int _UnknownPROD1Location => _PRODLocation!.Value.Min + 0x4D;
         private bool _UnknownPROD1_IsSet => _PRODLocation.HasValue;
-        public UInt32 UnknownPROD1 => _UnknownPROD1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownPROD1Location, 4)) : default;
+        public UInt32 UnknownPROD1 => _UnknownPROD1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownPROD1Location, 4)) : default(UInt32);
         #endregion
         #region UnknownPRODString1
         private int _UnknownPRODString1Location => _PRODLocation!.Value.Min + 0x51;
@@ -5107,12 +5107,12 @@ namespace Mutagen.Bethesda.Starfield
         #region UnknownPROD2
         private int _UnknownPROD2Location => UnknownPRODString1EndingPos;
         private bool _UnknownPROD2_IsSet => _PRODLocation.HasValue;
-        public Single UnknownPROD2 => _UnknownPROD2_IsSet ? _recordData.Slice(_UnknownPROD2Location, 4).Float() : default;
+        public Single UnknownPROD2 => _UnknownPROD2_IsSet ? _recordData.Slice(_UnknownPROD2Location, 4).Float() : default(Single);
         #endregion
         #region UnknownPROD3
         private int _UnknownPROD3Location => UnknownPRODString1EndingPos + 0x4;
         private bool _UnknownPROD3_IsSet => _PRODLocation.HasValue;
-        public UInt32 UnknownPROD3 => _UnknownPROD3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownPROD3Location, 4)) : default;
+        public UInt32 UnknownPROD3 => _UnknownPROD3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownPROD3Location, 4)) : default(UInt32);
         #endregion
         #region UnknownPROD4
         private int _UnknownPROD4Location => UnknownPRODString1EndingPos + 0x8;
@@ -5128,22 +5128,22 @@ namespace Mutagen.Bethesda.Starfield
         #region UnknownPROD5
         private int _UnknownPROD5Location => UnknownPRODString2EndingPos;
         private bool _UnknownPROD5_IsSet => _PRODLocation.HasValue;
-        public Single UnknownPROD5 => _UnknownPROD5_IsSet ? _recordData.Slice(_UnknownPROD5Location, 4).Float() : default;
+        public Single UnknownPROD5 => _UnknownPROD5_IsSet ? _recordData.Slice(_UnknownPROD5Location, 4).Float() : default(Single);
         #endregion
         #region UnknownPROD6
         private int _UnknownPROD6Location => UnknownPRODString2EndingPos + 0x4;
         private bool _UnknownPROD6_IsSet => _PRODLocation.HasValue;
-        public Single UnknownPROD6 => _UnknownPROD6_IsSet ? _recordData.Slice(_UnknownPROD6Location, 4).Float() : default;
+        public Single UnknownPROD6 => _UnknownPROD6_IsSet ? _recordData.Slice(_UnknownPROD6Location, 4).Float() : default(Single);
         #endregion
         #region UnknownPROD7
         private int _UnknownPROD7Location => UnknownPRODString2EndingPos + 0x8;
         private bool _UnknownPROD7_IsSet => _PRODLocation.HasValue;
-        public Single UnknownPROD7 => _UnknownPROD7_IsSet ? _recordData.Slice(_UnknownPROD7Location, 4).Float() : default;
+        public Single UnknownPROD7 => _UnknownPROD7_IsSet ? _recordData.Slice(_UnknownPROD7Location, 4).Float() : default(Single);
         #endregion
         #region UnknownPROD8
         private int _UnknownPROD8Location => UnknownPRODString2EndingPos + 0xC;
         private bool _UnknownPROD8_IsSet => _PRODLocation.HasValue;
-        public Single UnknownPROD8 => _UnknownPROD8_IsSet ? _recordData.Slice(_UnknownPROD8Location, 4).Float() : default;
+        public Single UnknownPROD8 => _UnknownPROD8_IsSet ? _recordData.Slice(_UnknownPROD8Location, 4).Float() : default(Single);
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;

@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Level
-        public Int16 Level { get; set; } = default;
+        public Int16 Level { get; set; } = default(Int16);
         #endregion
         #region Unused
-        public Int16 Unused { get; set; } = default;
+        public Int16 Unused { get; set; } = default(Int16);
         #endregion
         #region Reference
         private readonly IFormLink<IItemGetter> _Reference = new FormLink<IItemGetter>();
@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IItemGetter> ILeveledItemEntryGetter.Reference => this.Reference;
         #endregion
         #region Count
-        public Int16 Count { get; set; } = default;
+        public Int16 Count { get; set; } = default(Int16);
         #endregion
         #region ChanceNone
-        public Percent ChanceNone { get; set; } = default;
+        public Percent ChanceNone { get; set; } = default(Percent);
         #endregion
         #region Unused2
-        public SByte Unused2 { get; set; } = default;
+        public SByte Unused2 { get; set; } = default(SByte);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1000,12 +1000,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILeveledItemEntry item)
         {
             ClearPartial();
-            item.Level = default;
-            item.Unused = default;
+            item.Level = default(Int16);
+            item.Unused = default(Int16);
             item.Reference.Clear();
-            item.Count = default;
-            item.ChanceNone = default;
-            item.Unused2 = default;
+            item.Count = default(Int16);
+            item.ChanceNone = default(Percent);
+            item.Unused2 = default(SByte);
             item.Conditions.Clear();
         }
         
@@ -1553,12 +1553,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Level
         private int _LevelLocation => _LVLOLocation!.Value.Min;
         private bool _Level_IsSet => _LVLOLocation.HasValue;
-        public Int16 Level => _Level_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_LevelLocation, 2)) : default;
+        public Int16 Level => _Level_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_LevelLocation, 2)) : default(Int16);
         #endregion
         #region Unused
         private int _UnusedLocation => _LVLOLocation!.Value.Min + 0x2;
         private bool _Unused_IsSet => _LVLOLocation.HasValue;
-        public Int16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default;
+        public Int16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default(Int16);
         #endregion
         #region Reference
         private int _ReferenceLocation => _LVLOLocation!.Value.Min + 0x4;
@@ -1568,17 +1568,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Count
         private int _CountLocation => _LVLOLocation!.Value.Min + 0x8;
         private bool _Count_IsSet => _LVLOLocation.HasValue;
-        public Int16 Count => _Count_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CountLocation, 2)) : default;
+        public Int16 Count => _Count_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CountLocation, 2)) : default(Int16);
         #endregion
         #region ChanceNone
         private int _ChanceNoneLocation => _LVLOLocation!.Value.Min + 0xA;
         private bool _ChanceNone_IsSet => _LVLOLocation.HasValue;
-        public Percent ChanceNone => _ChanceNone_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ChanceNoneLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ChanceNone => _ChanceNone_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ChanceNoneLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region Unused2
         private int _Unused2Location => _LVLOLocation!.Value.Min + 0xB;
         private bool _Unused2_IsSet => _LVLOLocation.HasValue;
-        public SByte Unused2 => _Unused2_IsSet ? (sbyte)_recordData.Slice(_Unused2Location, 1)[0] : default;
+        public SByte Unused2 => _Unused2_IsSet ? (sbyte)_recordData.Slice(_Unused2Location, 1)[0] : default(SByte);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

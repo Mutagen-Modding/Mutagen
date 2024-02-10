@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region ID
-        public UInt32 ID { get; set; } = default;
+        public UInt32 ID { get; set; } = default(UInt32);
         #endregion
         #region Name
         /// <summary>
@@ -2635,7 +2635,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestReferenceAlias item)
         {
             ClearPartial();
-            item.ID = default;
+            item.ID = default(UInt32);
             item.Name = string.Empty;
             item.Flags = default;
             item.ALFG = default;
@@ -3773,7 +3773,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3890,7 +3890,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3909,7 +3909,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Factions.SetTo(
                         rhs.Factions
-                        .Select(r => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFactionGetter>)new FormLink<IFactionGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3928,7 +3928,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.PackageData.SetTo(
                         rhs.PackageData
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4629,7 +4629,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ID
         private int? _IDLocation;
-        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 ID => _IDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Name
         private int? _NameLocation;

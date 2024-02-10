@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? ILeveledBaseFormGetter.ODTY => this.ODTY;
         #endregion
         #region ChanceNone
-        public Single ChanceNone { get; set; } = default;
+        public Single ChanceNone { get; set; } = default(Single);
         #endregion
         #region MaxCount
         public Byte? MaxCount { get; set; }
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Starfield
         Byte? ILeveledBaseFormGetter.MaxCount => this.MaxCount;
         #endregion
         #region Flags
-        public LeveledItem.Flag Flags { get; set; } = default;
+        public LeveledItem.Flag Flags { get; set; } = default(LeveledItem.Flag);
         #endregion
         #region UseGlobal
         private readonly IFormLinkNullable<IGlobalGetter> _UseGlobal = new FormLinkNullable<IGlobalGetter>();
@@ -1383,9 +1383,9 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.ODTY = default;
-            item.ChanceNone = default;
+            item.ChanceNone = default(Single);
             item.MaxCount = default;
-            item.Flags = default;
+            item.Flags = default(LeveledItem.Flag);
             item.UseGlobal.Clear();
             item.Conditions.Clear();
             item.Entries = null;
@@ -2565,7 +2565,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region MaxCount
         private int? _MaxCountLocation;

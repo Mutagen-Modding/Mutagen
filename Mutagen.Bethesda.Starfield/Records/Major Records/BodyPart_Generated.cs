@@ -96,16 +96,16 @@ namespace Mutagen.Bethesda.Starfield
         public String VatsTarget { get; set; } = string.Empty;
         #endregion
         #region DamageMult
-        public Single DamageMult { get; set; } = default;
+        public Single DamageMult { get; set; } = default(Single);
         #endregion
         #region Flags
-        public BodyPart.Flag Flags { get; set; } = default;
+        public BodyPart.Flag Flags { get; set; } = default(BodyPart.Flag);
         #endregion
         #region Type
-        public BodyPart.PartType Type { get; set; } = default;
+        public BodyPart.PartType Type { get; set; } = default(BodyPart.PartType);
         #endregion
         #region HealthPercent
-        public Percent HealthPercent { get; set; } = default;
+        public Percent HealthPercent { get; set; } = default(Percent);
         #endregion
         #region ActorValue
         private readonly IFormLink<IActorValueInformationGetter> _ActorValue = new FormLink<IActorValueInformationGetter>();
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IActorValueInformationGetter> IBodyPartGetter.ActorValue => this.ActorValue;
         #endregion
         #region ToHitChance
-        public Percent ToHitChance { get; set; } = default;
+        public Percent ToHitChance { get; set; } = default(Percent);
         #endregion
         #region OnCrippleArtObject
         private readonly IFormLink<IArtObjectGetter> _OnCrippleArtObject = new FormLink<IArtObjectGetter>();
@@ -161,13 +161,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.OnCrippleImpactData => this.OnCrippleImpactData;
         #endregion
         #region OnCrippleDebrisScale
-        public Single OnCrippleDebrisScale { get; set; } = default;
+        public Single OnCrippleDebrisScale { get; set; } = default(Single);
         #endregion
         #region OnCrippleDebrisCount
-        public Byte OnCrippleDebrisCount { get; set; } = default;
+        public Byte OnCrippleDebrisCount { get; set; } = default(Byte);
         #endregion
         #region OnCrippleDecalCount
-        public Byte OnCrippleDecalCount { get; set; } = default;
+        public Byte OnCrippleDecalCount { get; set; } = default(Byte);
         #endregion
         #region GoreTargetBone
         public String GoreTargetBone { get; set; } = string.Empty;
@@ -1571,19 +1571,19 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.PartNode = string.Empty;
             item.VatsTarget = string.Empty;
-            item.DamageMult = default;
-            item.Flags = default;
-            item.Type = default;
-            item.HealthPercent = default;
+            item.DamageMult = default(Single);
+            item.Flags = default(BodyPart.Flag);
+            item.Type = default(BodyPart.PartType);
+            item.HealthPercent = default(Percent);
             item.ActorValue.Clear();
-            item.ToHitChance = default;
+            item.ToHitChance = default(Percent);
             item.OnCrippleArtObject.Clear();
             item.OnCrippleDebris.Clear();
             item.OnCrippleExplosion.Clear();
             item.OnCrippleImpactData.Clear();
-            item.OnCrippleDebrisScale = default;
-            item.OnCrippleDebrisCount = default;
-            item.OnCrippleDecalCount = default;
+            item.OnCrippleDebrisScale = default(Single);
+            item.OnCrippleDebrisCount = default(Byte);
+            item.OnCrippleDecalCount = default(Byte);
             item.GoreTargetBone = string.Empty;
             item.HitReactionStart = default;
             item.HitReactionEnd = default;
@@ -2503,7 +2503,7 @@ namespace Mutagen.Bethesda.Starfield
         #region DamageMult
         private int _DamageMultLocation => _BPD2Location!.Value.Min;
         private bool _DamageMult_IsSet => _BPD2Location.HasValue;
-        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default;
+        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _BPD2Location!.Value.Min + 0x4;
@@ -2518,7 +2518,7 @@ namespace Mutagen.Bethesda.Starfield
         #region HealthPercent
         private int _HealthPercentLocation => _BPD2Location!.Value.Min + 0x6;
         private bool _HealthPercent_IsSet => _BPD2Location.HasValue;
-        public Percent HealthPercent => _HealthPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_HealthPercentLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent HealthPercent => _HealthPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_HealthPercentLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region ActorValue
         private int _ActorValueLocation => _BPD2Location!.Value.Min + 0x7;
@@ -2528,7 +2528,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ToHitChance
         private int _ToHitChanceLocation => _BPD2Location!.Value.Min + 0xB;
         private bool _ToHitChance_IsSet => _BPD2Location.HasValue;
-        public Percent ToHitChance => _ToHitChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ToHitChanceLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ToHitChance => _ToHitChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ToHitChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region OnCrippleArtObject
         private int _OnCrippleArtObjectLocation => _BPD2Location!.Value.Min + 0xC;
@@ -2553,7 +2553,7 @@ namespace Mutagen.Bethesda.Starfield
         #region OnCrippleDebrisScale
         private int _OnCrippleDebrisScaleLocation => _BPD2Location!.Value.Min + 0x1C;
         private bool _OnCrippleDebrisScale_IsSet => _BPD2Location.HasValue;
-        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _recordData.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default;
+        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _recordData.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region OnCrippleDebrisCount
         private int _OnCrippleDebrisCountLocation => _BPD2Location!.Value.Min + 0x20;

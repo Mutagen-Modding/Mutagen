@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public IngredientFlag Flags { get; set; } = default;
+        public IngredientFlag Flags { get; set; } = default(IngredientFlag);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IIngredientData item)
         {
             ClearPartial();
-            item.Value = default;
-            item.Flags = default;
+            item.Value = default(UInt32);
+            item.Flags = default(IngredientFlag);
         }
         
         #region Mutagen

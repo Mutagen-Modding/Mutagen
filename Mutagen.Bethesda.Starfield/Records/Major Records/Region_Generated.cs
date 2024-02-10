@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region MapColor
-        public Color MapColor { get; set; } = default;
+        public Color MapColor { get; set; } = default(Color);
         #endregion
         #region RegionAreas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IRegionInternal item)
         {
             ClearPartial();
-            item.MapColor = default;
+            item.MapColor = default(Color);
             item.RegionAreas.Clear();
             item.Weather = null;
             item.Sounds = null;
@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region MapColor
         private int? _MapColorLocation;
-        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = Array.Empty<IRegionAreaGetter>();
         #region RegionAreaLogic

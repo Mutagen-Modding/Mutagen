@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Starfield
         P3Float? IPlacedObjectGetter.ConstrainedDecal => this.ConstrainedDecal;
         #endregion
         #region IsIgnoredBySandbox
-        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region IsLinkedRefTransient
-        public Boolean IsLinkedRefTransient { get; set; } = default;
+        public Boolean IsLinkedRefTransient { get; set; } = default(Boolean);
         #endregion
         #region SnapLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region NumTraversalFluffBytes
-        public UInt32 NumTraversalFluffBytes { get; set; } = default;
+        public UInt32 NumTraversalFluffBytes { get; set; } = default(UInt32);
         #endregion
         #region NavigationDoorLink
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Starfield
         INavigationDoorLinkGetter? IPlacedObjectGetter.NavigationDoorLink => this.NavigationDoorLink;
         #endregion
         #region IsActivationPoint
-        public Boolean IsActivationPoint { get; set; } = default;
+        public Boolean IsActivationPoint { get; set; } = default(Boolean);
         #endregion
         #region Scale
         public Single? Scale { get; set; }
@@ -741,13 +741,13 @@ namespace Mutagen.Bethesda.Starfield
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion
         #region OpenByDefault
-        public Boolean OpenByDefault { get; set; } = default;
+        public Boolean OpenByDefault { get; set; } = default(Boolean);
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Comments
         public String? Comments { get; set; }
@@ -4884,7 +4884,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ProjectedDecal = null;
             item.ProjectedDecalReferences = null;
             item.ConstrainedDecal = default;
-            item.IsIgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default(Boolean);
             item.FactionRank = default;
             item.LightGobo = null;
             item.Collision = null;
@@ -4903,7 +4903,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Layer.Clear();
             item.LightRoundedness = null;
             item.LinkedReferences.Clear();
-            item.IsLinkedRefTransient = default;
+            item.IsLinkedRefTransient = default(Boolean);
             item.SnapLinks = null;
             item.EncounterZone.Clear();
             item.GeometryDirtinessScale = default;
@@ -4920,13 +4920,13 @@ namespace Mutagen.Bethesda.Starfield
             item.TimeOfDay.Clear();
             item.EnableParent = null;
             item.Traversals = null;
-            item.NumTraversalFluffBytes = default;
+            item.NumTraversalFluffBytes = default(UInt32);
             item.NavigationDoorLink = null;
-            item.IsActivationPoint = default;
+            item.IsActivationPoint = default(Boolean);
             item.Scale = default;
-            item.OpenByDefault = default;
-            item.Position = default;
-            item.Rotation = default;
+            item.OpenByDefault = default(Boolean);
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
             item.Comments = default;
             base.Clear(item);
         }
@@ -7153,7 +7153,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -7180,7 +7180,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.LayeredMaterialSwaps = 
                             rhs.LayeredMaterialSwaps
-                            .Select(r => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
                     }
                     else
@@ -7245,7 +7245,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ProjectedDecalReferences = 
                             rhs.ProjectedDecalReferences
-                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
@@ -9240,7 +9240,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
-        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default(Boolean);
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -9298,7 +9298,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
-        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default;
+        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<ISnapLinkGetter>? SnapLinks { get; private set; }
         #region EncounterZone
@@ -9368,7 +9368,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region IsActivationPoint
         private int? _IsActivationPointLocation;
-        public Boolean IsActivationPoint => _IsActivationPointLocation.HasValue ? true : default;
+        public Boolean IsActivationPoint => _IsActivationPointLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Scale
         private int? _ScaleLocation;
@@ -9376,18 +9376,18 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region OpenByDefault
         private int? _OpenByDefaultLocation;
-        public Boolean OpenByDefault => _OpenByDefaultLocation.HasValue ? true : default;
+        public Boolean OpenByDefault => _OpenByDefaultLocation.HasValue ? true : default(Boolean);
         #endregion
         private RangeInt32? _DATALocation;
         #region Position
         private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default(P3Float);
         #endregion
         #region Rotation
         private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
         #endregion
         #region Comments
         private int? _CommentsLocation;

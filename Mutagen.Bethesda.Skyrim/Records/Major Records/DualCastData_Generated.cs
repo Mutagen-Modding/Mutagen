@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IImpactDataSetGetter> IDualCastDataGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region InheritScale
-        public DualCastData.InheritScaleType InheritScale { get; set; } = default;
+        public DualCastData.InheritScaleType InheritScale { get; set; } = default(DualCastData.InheritScaleType);
         #endregion
 
         #region To String
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.EffectShader.Clear();
             item.HitEffectArt.Clear();
             item.ImpactDataSet.Clear();
-            item.InheritScale = default;
+            item.InheritScale = default(DualCastData.InheritScaleType);
             base.Clear(item);
         }
         

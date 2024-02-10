@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region UsableDimensions
-        public P2Int UsableDimensions { get; set; } = default;
+        public P2Int UsableDimensions { get; set; } = default(P2Int);
         #endregion
         #region CellCoordinatesNWCell
-        public P2Int16 CellCoordinatesNWCell { get; set; } = default;
+        public P2Int16 CellCoordinatesNWCell { get; set; } = default(P2Int16);
         #endregion
         #region CellCoordinatesSECell
-        public P2Int16 CellCoordinatesSECell { get; set; } = default;
+        public P2Int16 CellCoordinatesSECell { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IMapData item)
         {
             ClearPartial();
-            item.UsableDimensions = default;
-            item.CellCoordinatesNWCell = default;
-            item.CellCoordinatesSECell = default;
+            item.UsableDimensions = default(P2Int);
+            item.CellCoordinatesNWCell = default(P2Int16);
+            item.CellCoordinatesSECell = default(P2Int16);
         }
         
         #region Mutagen

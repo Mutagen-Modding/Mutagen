@@ -62,19 +62,19 @@ namespace Mutagen.Bethesda.Oblivion
         IEDIDLinkGetter<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect;
         #endregion
         #region Magnitude
-        public UInt32 Magnitude { get; set; } = default;
+        public UInt32 Magnitude { get; set; } = default(UInt32);
         #endregion
         #region Area
-        public UInt32 Area { get; set; } = default;
+        public UInt32 Area { get; set; } = default(UInt32);
         #endregion
         #region Duration
-        public UInt32 Duration { get; set; } = default;
+        public UInt32 Duration { get; set; } = default(UInt32);
         #endregion
         #region Type
-        public Effect.EffectType Type { get; set; } = default;
+        public Effect.EffectType Type { get; set; } = default(Effect.EffectType);
         #endregion
         #region ActorValue
-        public ActorValueExtended ActorValue { get; set; } = default;
+        public ActorValueExtended ActorValue { get; set; } = default(ActorValueExtended);
         #endregion
 
         #region To String
@@ -880,11 +880,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.MagicEffect.Clear();
-            item.Magnitude = default;
-            item.Area = default;
-            item.Duration = default;
-            item.Type = default;
-            item.ActorValue = default;
+            item.Magnitude = default(UInt32);
+            item.Area = default(UInt32);
+            item.Duration = default(UInt32);
+            item.Type = default(Effect.EffectType);
+            item.ActorValue = default(ActorValueExtended);
         }
         
         #region Mutagen

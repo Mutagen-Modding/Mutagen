@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Fallout4
         IAColorRecordDataGetter IColorRecordGetter.Data => Data;
         #endregion
         #region Flags
-        public ColorRecord.Flag Flags { get; set; } = default;
+        public ColorRecord.Flag Flags { get; set; } = default(ColorRecord.Flag);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Name = default;
             item.Data.Clear();
-            item.Flags = default;
+            item.Flags = default(ColorRecord.Flag);
             item.Conditions.Clear();
             base.Clear(item);
         }

@@ -51,28 +51,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Strength
-        public Byte Strength { get; set; } = default;
+        public Byte Strength { get; set; } = default(Byte);
         #endregion
         #region Intelligence
-        public Byte Intelligence { get; set; } = default;
+        public Byte Intelligence { get; set; } = default(Byte);
         #endregion
         #region Willpower
-        public Byte Willpower { get; set; } = default;
+        public Byte Willpower { get; set; } = default(Byte);
         #endregion
         #region Agility
-        public Byte Agility { get; set; } = default;
+        public Byte Agility { get; set; } = default(Byte);
         #endregion
         #region Speed
-        public Byte Speed { get; set; } = default;
+        public Byte Speed { get; set; } = default(Byte);
         #endregion
         #region Endurance
-        public Byte Endurance { get; set; } = default;
+        public Byte Endurance { get; set; } = default(Byte);
         #endregion
         #region Personality
-        public Byte Personality { get; set; } = default;
+        public Byte Personality { get; set; } = default(Byte);
         #endregion
         #region Luck
-        public Byte Luck { get; set; } = default;
+        public Byte Luck { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -929,14 +929,14 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IRaceStats item)
         {
             ClearPartial();
-            item.Strength = default;
-            item.Intelligence = default;
-            item.Willpower = default;
-            item.Agility = default;
-            item.Speed = default;
-            item.Endurance = default;
-            item.Personality = default;
-            item.Luck = default;
+            item.Strength = default(Byte);
+            item.Intelligence = default(Byte);
+            item.Willpower = default(Byte);
+            item.Agility = default(Byte);
+            item.Speed = default(Byte);
+            item.Endurance = default(Byte);
+            item.Personality = default(Byte);
+            item.Luck = default(Byte);
         }
         
         #region Mutagen

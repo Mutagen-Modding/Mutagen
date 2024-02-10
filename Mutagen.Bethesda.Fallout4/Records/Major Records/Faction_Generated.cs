@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Flags
-        public Faction.FactionFlag Flags { get; set; } = default;
+        public Faction.FactionFlag Flags { get; set; } = default(Faction.FactionFlag);
         #endregion
         #region ExteriorJailMarker
         private readonly IFormLinkNullable<IPlacedObjectGetter> _ExteriorJailMarker = new FormLinkNullable<IPlacedObjectGetter>();
@@ -1711,7 +1711,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Name = default;
             item.Relations.Clear();
-            item.Flags = default;
+            item.Flags = default(Faction.FactionFlag);
             item.ExteriorJailMarker.Clear();
             item.FollowerWaitMarker.Clear();
             item.StolenGoodsContainer.Clear();

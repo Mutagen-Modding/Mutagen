@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region TypeChar
-        public Char TypeChar { get; set; } = default;
+        public Char TypeChar { get; set; } = default(Char);
         #endregion
         #region Data
         public Single? Data { get; set; }
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGlobalUnknownInternal item)
         {
             ClearPartial();
-            item.TypeChar = default;
+            item.TypeChar = default(Char);
             item.Data = default;
             base.Clear(item);
         }

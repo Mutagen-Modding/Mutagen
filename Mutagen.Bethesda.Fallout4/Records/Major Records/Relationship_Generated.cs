@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<INpcGetter> IRelationshipGetter.Child => this.Child;
         #endregion
         #region Rank
-        public Relationship.RankType Rank { get; set; } = default;
+        public Relationship.RankType Rank { get; set; } = default(Relationship.RankType);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Relationship.Flag Flags { get; set; } = default;
+        public Relationship.Flag Flags { get; set; } = default(Relationship.Flag);
         #endregion
         #region AssociationType
         private readonly IFormLink<IAssociationTypeGetter> _AssociationType = new FormLink<IAssociationTypeGetter>();
@@ -969,9 +969,9 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Parent.Clear();
             item.Child.Clear();
-            item.Rank = default;
-            item.Unknown = default;
-            item.Flags = default;
+            item.Rank = default(Relationship.RankType);
+            item.Unknown = default(Byte);
+            item.Flags = default(Relationship.Flag);
             item.AssociationType.Clear();
             base.Clear(item);
         }

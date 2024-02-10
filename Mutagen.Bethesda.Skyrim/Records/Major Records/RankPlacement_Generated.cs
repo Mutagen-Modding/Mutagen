@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
-        public SByte Rank { get; set; } = default;
+        public SByte Rank { get; set; } = default(SByte);
         #endregion
         #region Fluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Faction.Clear();
-            item.Rank = default;
+            item.Rank = default(SByte);
             item.Fluff = new byte[3];
         }
         

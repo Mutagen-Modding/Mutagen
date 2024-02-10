@@ -2531,7 +2531,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2686,7 +2686,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => (IFormLinkGetter<IHairGetter>)new FormLink<IHairGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IHairGetter>)new FormLink<IHairGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IHairGetter>>();
                     }
                     else
@@ -2713,7 +2713,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => (IFormLinkGetter<IEyeGetter>)new FormLink<IEyeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IEyeGetter>)new FormLink<IEyeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IEyeGetter>>();
                     }
                     else

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
         #endregion
         #region Chance
-        public Int32 Chance { get; set; } = default;
+        public Int32 Chance { get; set; } = default(Int32);
         #endregion
         #region Global
         private readonly IFormLink<IGlobalGetter> _Global = new FormLink<IGlobalGetter>();
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Weather.Clear();
-            item.Chance = default;
+            item.Chance = default(Int32);
             item.Global.Clear();
         }
         

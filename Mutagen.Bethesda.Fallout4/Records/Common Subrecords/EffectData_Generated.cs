@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Magnitude
-        public Single Magnitude { get; set; } = default;
+        public Single Magnitude { get; set; } = default(Single);
         #endregion
         #region Area
-        public Int32 Area { get; set; } = default;
+        public Int32 Area { get; set; } = default(Int32);
         #endregion
         #region Duration
-        public Int32 Duration { get; set; } = default;
+        public Int32 Duration { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IEffectData item)
         {
             ClearPartial();
-            item.Magnitude = default;
-            item.Area = default;
-            item.Duration = default;
+            item.Magnitude = default(Single);
+            item.Area = default(Int32);
+            item.Duration = default(Int32);
         }
         
         #region Mutagen

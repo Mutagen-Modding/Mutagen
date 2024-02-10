@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region RunOnTabIndex
-        public Byte RunOnTabIndex { get; set; } = default;
+        public Byte RunOnTabIndex { get; set; } = default(Byte);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPerkCondition item)
         {
             ClearPartial();
-            item.RunOnTabIndex = default;
+            item.RunOnTabIndex = default(Byte);
             item.Conditions.Clear();
         }
         

@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public SoundOutputModel.Flag Flags { get; set; } = default;
+        public SoundOutputModel.Flag Flags { get; set; } = default(SoundOutputModel.Flag);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region ReverbSendPercent
-        public Percent ReverbSendPercent { get; set; } = default;
+        public Percent ReverbSendPercent { get; set; } = default(Percent);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISoundOutputData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Unknown = default;
-            item.ReverbSendPercent = default;
+            item.Flags = default(SoundOutputModel.Flag);
+            item.Unknown = default(UInt16);
+            item.ReverbSendPercent = default(Percent);
         }
         
         #region Mutagen

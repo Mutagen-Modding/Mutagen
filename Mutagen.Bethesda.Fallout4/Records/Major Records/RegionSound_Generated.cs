@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
         #region Flags
-        public RegionSound.Flag Flags { get; set; } = default;
+        public RegionSound.Flag Flags { get; set; } = default(RegionSound.Flag);
         #endregion
         #region Chance
-        public Single Chance { get; set; } = default;
+        public Single Chance { get; set; } = default(Single);
         public static RangeFloat Chance_Range = new RangeFloat(0f, 100f);
         #endregion
 
@@ -766,8 +766,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Sound.Clear();
-            item.Flags = default;
-            item.Chance = default;
+            item.Flags = default(RegionSound.Flag);
+            item.Chance = default(Single);
         }
         
         #region Mutagen

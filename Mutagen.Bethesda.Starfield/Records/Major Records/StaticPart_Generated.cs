@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStaticTargetGetter> IStaticPartGetter.Static => this.Static;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Placements
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Static.Clear();
-            item.Unknown = default;
+            item.Unknown = default(Int32);
             item.Placements = null;
         }
         
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown
         private int _UnknownLocation => _ONAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _ONAMLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         public IReadOnlyList<IStaticPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(

@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Flags
-        public Cell.Flag Flags { get; set; } = default;
+        public Cell.Flag Flags { get; set; } = default(Cell.Flag);
         #endregion
         #region Grid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region IsLinkedRefTransient
-        public Boolean IsLinkedRefTransient { get; set; } = default;
+        public Boolean IsLinkedRefTransient { get; set; } = default(Boolean);
         #endregion
         #region EnvironmentMap
         public String? EnvironmentMap { get; set; }
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region NumTraversalFluffBytes
-        public UInt32 NumTraversalFluffBytes { get; set; } = default;
+        public UInt32 NumTraversalFluffBytes { get; set; } = default(UInt32);
         #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -380,16 +380,16 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region UnknownGroupData
-        public Int32 UnknownGroupData { get; set; } = default;
+        public Int32 UnknownGroupData { get; set; } = default(Int32);
         #endregion
         #region PersistentTimestamp
-        public Int32 PersistentTimestamp { get; set; } = default;
+        public Int32 PersistentTimestamp { get; set; } = default(Int32);
         #endregion
         #region PersistentUnknownGroupData
-        public Int32 PersistentUnknownGroupData { get; set; } = default;
+        public Int32 PersistentUnknownGroupData { get; set; } = default(Int32);
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -406,10 +406,10 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region TemporaryTimestamp
-        public Int32 TemporaryTimestamp { get; set; } = default;
+        public Int32 TemporaryTimestamp { get; set; } = default(Int32);
         #endregion
         #region TemporaryUnknownGroupData
-        public Int32 TemporaryUnknownGroupData { get; set; } = default;
+        public Int32 TemporaryUnknownGroupData { get; set; } = default(Int32);
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3308,7 +3308,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.Name = default;
-            item.Flags = default;
+            item.Flags = default(Cell.Flag);
             item.Grid = null;
             item.Lighting = null;
             item.MHDT = default;
@@ -3333,18 +3333,18 @@ namespace Mutagen.Bethesda.Starfield
             item.TimeOfDay.Clear();
             item.EncounterLocation.Clear();
             item.LinkedReferences.Clear();
-            item.IsLinkedRefTransient = default;
+            item.IsLinkedRefTransient = default(Boolean);
             item.EnvironmentMap = default;
             item.Traversals = null;
-            item.NumTraversalFluffBytes = default;
+            item.NumTraversalFluffBytes = default(UInt32);
             item.NavigationMeshes.Clear();
-            item.Timestamp = default;
-            item.UnknownGroupData = default;
-            item.PersistentTimestamp = default;
-            item.PersistentUnknownGroupData = default;
+            item.Timestamp = default(Int32);
+            item.UnknownGroupData = default(Int32);
+            item.PersistentTimestamp = default(Int32);
+            item.PersistentUnknownGroupData = default(Int32);
             item.Persistent.Clear();
-            item.TemporaryTimestamp = default;
-            item.TemporaryUnknownGroupData = default;
+            item.TemporaryTimestamp = default(Int32);
+            item.TemporaryUnknownGroupData = default(Int32);
             item.Temporary.Clear();
             base.Clear(item);
         }
@@ -6627,7 +6627,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
-        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default;
+        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);
         #endregion
         #region EnvironmentMap
         private int? _EnvironmentMapLocation;

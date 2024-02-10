@@ -51,25 +51,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public Npc.NpcFlag Flags { get; set; } = default;
+        public Npc.NpcFlag Flags { get; set; } = default(Npc.NpcFlag);
         #endregion
         #region BaseSpellPoints
-        public UInt16 BaseSpellPoints { get; set; } = default;
+        public UInt16 BaseSpellPoints { get; set; } = default(UInt16);
         #endregion
         #region Fatigue
-        public UInt16 Fatigue { get; set; } = default;
+        public UInt16 Fatigue { get; set; } = default(UInt16);
         #endregion
         #region BarterGold
-        public UInt16 BarterGold { get; set; } = default;
+        public UInt16 BarterGold { get; set; } = default(UInt16);
         #endregion
         #region LevelOffset
-        public Int16 LevelOffset { get; set; } = default;
+        public Int16 LevelOffset { get; set; } = default(Int16);
         #endregion
         #region CalcMin
-        public UInt16 CalcMin { get; set; } = default;
+        public UInt16 CalcMin { get; set; } = default(UInt16);
         #endregion
         #region CalcMax
-        public UInt16 CalcMax { get; set; } = default;
+        public UInt16 CalcMax { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -900,13 +900,13 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(INpcConfiguration item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.BaseSpellPoints = default;
-            item.Fatigue = default;
-            item.BarterGold = default;
-            item.LevelOffset = default;
-            item.CalcMin = default;
-            item.CalcMax = default;
+            item.Flags = default(Npc.NpcFlag);
+            item.BaseSpellPoints = default(UInt16);
+            item.Fatigue = default(UInt16);
+            item.BarterGold = default(UInt16);
+            item.LevelOffset = default(Int16);
+            item.CalcMin = default(UInt16);
+            item.CalcMax = default(UInt16);
         }
         
         #region Mutagen

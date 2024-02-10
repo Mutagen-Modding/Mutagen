@@ -51,25 +51,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region StartHour
-        public UInt16 StartHour { get; set; } = default;
+        public UInt16 StartHour { get; set; } = default(UInt16);
         #endregion
         #region EndHour
-        public UInt16 EndHour { get; set; } = default;
+        public UInt16 EndHour { get; set; } = default(UInt16);
         #endregion
         #region Radius
-        public UInt16 Radius { get; set; } = default;
+        public UInt16 Radius { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region OnlyBuysStolenItems
-        public Boolean OnlyBuysStolenItems { get; set; } = default;
+        public Boolean OnlyBuysStolenItems { get; set; } = default(Boolean);
         #endregion
         #region NotSellBuy
-        public Boolean NotSellBuy { get; set; } = default;
+        public Boolean NotSellBuy { get; set; } = default(Boolean);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -900,13 +900,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IVendorValues item)
         {
             ClearPartial();
-            item.StartHour = default;
-            item.EndHour = default;
-            item.Radius = default;
-            item.Unknown = default;
-            item.OnlyBuysStolenItems = default;
-            item.NotSellBuy = default;
-            item.Unknown2 = default;
+            item.StartHour = default(UInt16);
+            item.EndHour = default(UInt16);
+            item.Radius = default(UInt16);
+            item.Unknown = default(UInt16);
+            item.OnlyBuysStolenItems = default(Boolean);
+            item.NotSellBuy = default(Boolean);
+            item.Unknown2 = default(UInt16);
         }
         
         #region Mutagen

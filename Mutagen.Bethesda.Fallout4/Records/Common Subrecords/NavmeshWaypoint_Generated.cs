@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Location
-        public P3Float Location { get; set; } = default;
+        public P3Float Location { get; set; } = default(P3Float);
         #endregion
         #region TriangleIndex
-        public Int16 TriangleIndex { get; set; } = default;
+        public Int16 TriangleIndex { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -749,9 +749,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INavmeshWaypoint item)
         {
             ClearPartial();
-            item.Location = default;
-            item.TriangleIndex = default;
-            item.Unknown = default;
+            item.Location = default(P3Float);
+            item.TriangleIndex = default(Int16);
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

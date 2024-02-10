@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBoundingGetter? IPlacedObjectGetter.OcclusionPlane => this.OcclusionPlane;
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region LightingTemplate
         private readonly IFormLinkNullable<ILightingTemplateGetter> _LightingTemplate = new FormLinkNullable<ILightingTemplateGetter>();
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region IsMultiBoundPrimitive
-        public Boolean IsMultiBoundPrimitive { get; set; } = default;
+        public Boolean IsMultiBoundPrimitive { get; set; } = default(Boolean);
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.AcousticRestriction => this.AcousticRestriction;
         #endregion
         #region IsActivationPoint
-        public Boolean IsActivationPoint { get; set; } = default;
+        public Boolean IsActivationPoint { get; set; } = default(Boolean);
         #endregion
         #region AmmoCount
         public UInt32? AmmoCount { get; set; }
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? IPlacedObjectGetter.AmmoCount => this.AmmoCount;
         #endregion
         #region IsLinkedRefTransient
-        public Boolean IsLinkedRefTransient { get; set; } = default;
+        public Boolean IsLinkedRefTransient { get; set; } = default(Boolean);
         #endregion
         #region Layer
         private readonly IFormLinkNullable<ILayerGetter> _Layer = new FormLinkNullable<ILayerGetter>();
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region IsIgnoredBySandbox
-        public Boolean IsIgnoredBySandbox { get; set; } = default;
+        public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
         #endregion
         #region Ownership
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single? IPlacedObjectGetter.FavorCost => this.FavorCost;
         #endregion
         #region OpenByDefault
-        public Boolean OpenByDefault { get; set; } = default;
+        public Boolean OpenByDefault { get; set; } = default(Boolean);
         #endregion
         #region MapMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -717,10 +717,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region Comments
         public String? Comments { get; set; }
@@ -4601,11 +4601,11 @@ namespace Mutagen.Bethesda.Fallout4
             item.RoomPortal = null;
             item.XORD = default;
             item.OcclusionPlane = null;
-            item.Unknown = default;
+            item.Unknown = default(Int16);
             item.LightingTemplate.Clear();
             item.ImageSpace.Clear();
             item.LinkedRooms.Clear();
-            item.IsMultiBoundPrimitive = default;
+            item.IsMultiBoundPrimitive = default(Boolean);
             item.RagdollData = null;
             item.RagdollBipedRotation = default;
             item.Radius = default;
@@ -4619,9 +4619,9 @@ namespace Mutagen.Bethesda.Fallout4
             item.XWCN = default;
             item.WaterVelocity = null;
             item.AcousticRestriction.Clear();
-            item.IsActivationPoint = default;
+            item.IsActivationPoint = default(Boolean);
             item.AmmoCount = default;
-            item.IsLinkedRefTransient = default;
+            item.IsLinkedRefTransient = default(Boolean);
             item.Layer.Clear();
             item.MaterialSwap.Clear();
             item.ReferenceGroup.Clear();
@@ -4640,7 +4640,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.LocationReference.Clear();
             item.LocationRefType.Clear();
             item.LocationRefTypes = null;
-            item.IsIgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default(Boolean);
             item.Ownership = null;
             item.FactionRank = default;
             item.ItemCount = default;
@@ -4651,7 +4651,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Action = default;
             item.HeadTrackingWeight = default;
             item.FavorCost = default;
-            item.OpenByDefault = default;
+            item.OpenByDefault = default(Boolean);
             item.MapMarker = null;
             item.AttachRef.Clear();
             item.SplineConnections.Clear();
@@ -4663,8 +4663,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.CurrentZoneCell.Clear();
             item.Scale = default;
             item.DistantLodData = null;
-            item.Position = default;
-            item.Rotation = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
             item.Comments = default;
             base.Clear(item);
         }
@@ -6502,7 +6502,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.LinkedRooms.SetTo(
                         rhs.LinkedRooms
-                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6595,7 +6595,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.LitWater.SetTo(
                         rhs.LitWater
-                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6929,7 +6929,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -8491,7 +8491,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region IsMultiBoundPrimitive
         private int? _IsMultiBoundPrimitiveLocation;
-        public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default;
+        public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
         #region RagdollBipedRotation
@@ -8541,7 +8541,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region IsActivationPoint
         private int? _IsActivationPointLocation;
-        public Boolean IsActivationPoint => _IsActivationPointLocation.HasValue ? true : default;
+        public Boolean IsActivationPoint => _IsActivationPointLocation.HasValue ? true : default(Boolean);
         #endregion
         #region AmmoCount
         private int? _AmmoCountLocation;
@@ -8549,7 +8549,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
-        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default;
+        public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);
         #endregion
         #region Layer
         private int? _LayerLocation;
@@ -8619,7 +8619,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
-        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default(Boolean);
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region FactionRank
@@ -8654,7 +8654,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region OpenByDefault
         private int? _OpenByDefaultLocation;
-        public Boolean OpenByDefault => _OpenByDefaultLocation.HasValue ? true : default;
+        public Boolean OpenByDefault => _OpenByDefaultLocation.HasValue ? true : default(Boolean);
         #endregion
         public IPlacedObjectMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef
@@ -8695,12 +8695,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Position
         private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default(P3Float);
         #endregion
         #region Rotation
         private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
         #endregion
         #region Comments
         private int? _CommentsLocation;

@@ -244,11 +244,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region MaxAngle
-        public Single MaxAngle { get; set; } = default;
+        public Single MaxAngle { get; set; } = default(Single);
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region UnknownDNAMFloat
-        public Single UnknownDNAMFloat { get; set; } = default;
+        public Single UnknownDNAMFloat { get; set; } = default(Single);
         #endregion
         #region LeafAmplitude
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Starfield
         INavmeshGeometryGetter? IStaticGetter.NavmeshGeometry => this.NavmeshGeometry;
         #endregion
         #region DNAMDataTypeState
-        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default(Static.DNAMDataType);
         #endregion
 
         #region To String
@@ -1952,13 +1952,13 @@ namespace Mutagen.Bethesda.Starfield
             item.Model = null;
             item.Properties = null;
             item.Name = default;
-            item.MaxAngle = default;
-            item.UnknownDNAMFloat = default;
-            item.LeafAmplitude = default;
-            item.LeafFrequency = default;
+            item.MaxAngle = default(Single);
+            item.UnknownDNAMFloat = default(Single);
+            item.LeafAmplitude = default(Single);
+            item.LeafFrequency = default(Single);
             item.AmbientSound = null;
             item.NavmeshGeometry = null;
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(Static.DNAMDataType);
             base.Clear(item);
         }
         
@@ -2849,7 +2849,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ForcedLocations = 
                             rhs.ForcedLocations
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -3629,22 +3629,22 @@ namespace Mutagen.Bethesda.Starfield
         #region MaxAngle
         private int _MaxAngleLocation => _DNAMLocation!.Value.Min;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default;
+        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default(Single);
         #endregion
         #region UnknownDNAMFloat
         private int _UnknownDNAMFloatLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _UnknownDNAMFloat_IsSet => _DNAMLocation.HasValue;
-        public Single UnknownDNAMFloat => _UnknownDNAMFloat_IsSet ? _recordData.Slice(_UnknownDNAMFloatLocation, 4).Float() : default;
+        public Single UnknownDNAMFloat => _UnknownDNAMFloat_IsSet ? _recordData.Slice(_UnknownDNAMFloatLocation, 4).Float() : default(Single);
         #endregion
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _LeafAmplitude_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _recordData.Slice(_LeafAmplitudeLocation, 4).Float() : default;
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _recordData.Slice(_LeafAmplitudeLocation, 4).Float() : default(Single);
         #endregion
         #region LeafFrequency
         private int _LeafFrequencyLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _LeafFrequency_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public Single LeafFrequency => _LeafFrequency_IsSet ? _recordData.Slice(_LeafFrequencyLocation, 4).Float() : default;
+        public Single LeafFrequency => _LeafFrequency_IsSet ? _recordData.Slice(_LeafFrequencyLocation, 4).Float() : default(Single);
         #endregion
         public ISoundReferenceGetter? AmbientSound { get; private set; }
         #region NavmeshGeometry

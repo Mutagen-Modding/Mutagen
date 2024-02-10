@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Index
-        public UInt32 Index { get; set; } = default;
+        public UInt32 Index { get; set; } = default(UInt32);
         #endregion
         #region LandTexture
         private readonly IFormLink<ILandscapeTextureGetter> _LandTexture = new FormLink<ILandscapeTextureGetter>();
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBiomeLandItem item)
         {
             ClearPartial();
-            item.Index = default;
+            item.Index = default(UInt32);
             item.LandTexture.Clear();
             item.GroundCover.Clear();
         }

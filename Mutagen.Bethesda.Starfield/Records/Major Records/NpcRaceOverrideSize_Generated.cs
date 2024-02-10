@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Size
-        public Size Size { get; set; } = default;
+        public Size Size { get; set; } = default(Size);
         #endregion
 
         #region To String
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcRaceOverrideSize item)
         {
             ClearPartial();
-            item.Size = default;
+            item.Size = default(Size);
         }
         
         #region Mutagen

@@ -53,19 +53,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public SkyrimModHeader.HeaderFlag Flags { get; set; } = default;
+        public SkyrimModHeader.HeaderFlag Flags { get; set; } = default(SkyrimModHeader.HeaderFlag);
         #endregion
         #region FormID
-        public UInt32 FormID { get; set; } = default;
+        public UInt32 FormID { get; set; } = default(UInt32);
         #endregion
         #region Version
-        public Int32 Version { get; set; } = default;
+        public Int32 Version { get; set; } = default(Int32);
         #endregion
         #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
+        public UInt16 FormVersion { get; set; } = default(UInt16);
         #endregion
         #region Version2
-        public UInt16 Version2 { get; set; } = default;
+        public UInt16 Version2 { get; set; } = default(UInt16);
         #endregion
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
@@ -1362,11 +1362,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISkyrimModHeader item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.FormID = default;
-            item.Version = default;
-            item.FormVersion = default;
-            item.Version2 = default;
+            item.Flags = default(SkyrimModHeader.HeaderFlag);
+            item.FormID = default(UInt32);
+            item.Version = default(Int32);
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
             item.Stats.Clear();
             item.TypeOffsets = default;
             item.Deleted = default;
@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
                     }
                     else

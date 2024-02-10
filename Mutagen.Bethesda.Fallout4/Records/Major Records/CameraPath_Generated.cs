@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Zoom
-        public CameraPath.Flags Zoom { get; set; } = default;
+        public CameraPath.Flags Zoom { get; set; } = default(CameraPath.Flags);
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Conditions.Clear();
             item.RelatedPaths.Clear();
-            item.Zoom = default;
+            item.Zoom = default(CameraPath.Flags);
             item.Shots.Clear();
             base.Clear(item);
         }
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.RelatedPaths.SetTo(
                         rhs.RelatedPaths
-                        .Select(r => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Shots.SetTo(
                         rhs.Shots
-                        .Select(r => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

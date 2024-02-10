@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? ITimerSceneActionGetter.MinSeconds => this.MinSeconds;
         #endregion
         #region HNAM
-        public Boolean HNAM { get; set; } = default;
+        public Boolean HNAM { get; set; } = default(Boolean);
         #endregion
         #region SCQS
         public Int16? SCQS { get; set; }
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.MaxSeconds = default;
             item.MinSeconds = default;
-            item.HNAM = default;
+            item.HNAM = default(Boolean);
             item.SCQS = default;
             item.INTV = default;
             base.Clear(item);
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region HNAM
         private int? _HNAMLocation;
-        public Boolean HNAM => _HNAMLocation.HasValue ? true : default;
+        public Boolean HNAM => _HNAMLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SCQS
         private int? _SCQSLocation;

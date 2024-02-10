@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IFactionGetter> IFactionOwnerGetter.Faction => this.Faction;
         #endregion
         #region RequiredRank
-        public Int32 RequiredRank { get; set; } = default;
+        public Int32 RequiredRank { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Faction.Clear();
-            item.RequiredRank = default;
+            item.RequiredRank = default(Int32);
             base.Clear(item);
         }
         

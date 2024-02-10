@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.RelatedIdles.SetTo(
                         rhs.RelatedIdles
-                        .Select(r => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

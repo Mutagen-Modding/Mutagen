@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? ITextureSetGetter.DODT => this.DODT;
         #endregion
         #region Flags
-        public TextureSet.Flag Flags { get; set; } = default;
+        public TextureSet.Flag Flags { get; set; } = default(TextureSet.Flag);
         #endregion
         #region Material
         public String? Material { get; set; }
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Starfield
             item.TX17 = default;
             item.TX19 = default;
             item.DODT = default;
-            item.Flags = default;
+            item.Flags = default(TextureSet.Flag);
             item.Material = default;
             base.Clear(item);
         }

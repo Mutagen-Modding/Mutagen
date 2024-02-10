@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? IAcousticSpaceGetter.FLTV => this.FLTV;
         #endregion
         #region IsInterior
-        public Boolean IsInterior { get; set; } = default;
+        public Boolean IsInterior { get; set; } = default(Boolean);
         #endregion
         #region BOLV
         public Boolean? BOLV { get; set; }
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Starfield
             item.EnvironmentType.Clear();
             item.AEAR = default;
             item.FLTV = default;
-            item.IsInterior = default;
+            item.IsInterior = default(Boolean);
             item.BOLV = default;
             item.DEVT = default;
             item.ASDF = default;
@@ -2582,7 +2582,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region IsInterior
         private int? _IsInteriorLocation;
-        public Boolean IsInterior => _IsInteriorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IsInteriorLocation.Value, _package.MetaData.Constants)[0] >= 1 : default;
+        public Boolean IsInterior => _IsInteriorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IsInteriorLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean);
         #endregion
         #region BOLV
         private int? _BOLVLocation;

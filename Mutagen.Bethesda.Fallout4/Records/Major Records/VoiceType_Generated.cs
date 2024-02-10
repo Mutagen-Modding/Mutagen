@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public VoiceType.Flag Flags { get; set; } = default;
+        public VoiceType.Flag Flags { get; set; } = default(VoiceType.Flag);
         #endregion
 
         #region To String
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IVoiceTypeInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(VoiceType.Flag);
             base.Clear(item);
         }
         

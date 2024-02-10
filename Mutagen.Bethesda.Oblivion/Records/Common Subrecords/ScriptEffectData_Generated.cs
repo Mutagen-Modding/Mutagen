@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default;
+        public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default(ScriptEffectData.VersioningBreaks);
         #endregion
         #region Script
         private readonly IFormLink<IScriptGetter> _Script = new FormLink<IScriptGetter>();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IScriptGetter> IScriptEffectDataGetter.Script => this.Script;
         #endregion
         #region MagicSchool
-        public MagicSchool MagicSchool { get; set; } = default;
+        public MagicSchool MagicSchool { get; set; } = default(MagicSchool);
         #endregion
         #region VisualEffect
         private readonly IEDIDLink<IMagicEffectGetter> _VisualEffect = new EDIDLink<IMagicEffectGetter>();
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEDIDLinkGetter<IMagicEffectGetter> IScriptEffectDataGetter.VisualEffect => this.VisualEffect;
         #endregion
         #region Flags
-        public ScriptEffect.Flag Flags { get; set; } = default;
+        public ScriptEffect.Flag Flags { get; set; } = default(ScriptEffect.Flag);
         #endregion
 
         #region To String
@@ -856,11 +856,11 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IScriptEffectData item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(ScriptEffectData.VersioningBreaks);
             item.Script.Clear();
-            item.MagicSchool = default;
+            item.MagicSchool = default(MagicSchool);
             item.VisualEffect.Clear();
-            item.Flags = default;
+            item.Flags = default(ScriptEffect.Flag);
         }
         
         #region Mutagen

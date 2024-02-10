@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Data
-        public Single Data { get; set; } = default;
+        public Single Data { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IScriptFloatProperty item)
         {
             ClearPartial();
-            item.Data = default;
+            item.Data = default(Single);
             base.Clear(item);
         }
         

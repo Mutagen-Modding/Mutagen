@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Type
-        public ActorValueModulation.TypeEnum Type { get; set; } = default;
+        public ActorValueModulation.TypeEnum Type { get; set; } = default(ActorValueModulation.TypeEnum);
         #endregion
         #region YNAM
         public String? YNAM { get; set; }
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.Type = default;
+            item.Type = default(ActorValueModulation.TypeEnum);
             item.YNAM = default;
             item.Name = string.Empty;
             item.Entries = null;

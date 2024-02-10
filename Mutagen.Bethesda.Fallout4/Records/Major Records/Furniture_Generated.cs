@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region BenchType
-        public Furniture.BenchTypes BenchType { get; set; } = default;
+        public Furniture.BenchTypes BenchType { get; set; } = default(Furniture.BenchTypes);
         #endregion
         #region UsesSkill
         public Skill? UsesSkill { get; set; }
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
         INavmeshGeometryGetter? IFurnitureGetter.NavmeshGeometry => this.NavmeshGeometry;
         #endregion
         #region WBDTDataTypeState
-        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default;
+        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default(Furniture.WBDTDataType);
         #endregion
 
         #region To String
@@ -2643,7 +2643,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Flags = default;
             item.Conditions = null;
             item.Items = null;
-            item.BenchType = default;
+            item.BenchType = default(Furniture.BenchTypes);
             item.UsesSkill = default;
             item.AssociatedForm.Clear();
             item.EnabledEntryPoints = default;
@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.AttachParentSlots = null;
             item.ObjectTemplates = null;
             item.NavmeshGeometry = null;
-            item.WBDTDataTypeState = default;
+            item.WBDTDataTypeState = default(Furniture.WBDTDataType);
             base.Clear(item);
         }
         
@@ -3661,7 +3661,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3891,7 +3891,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

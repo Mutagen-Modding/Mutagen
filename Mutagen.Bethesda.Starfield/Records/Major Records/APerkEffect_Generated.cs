@@ -56,10 +56,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Rank
-        public Byte Rank { get; set; } = default;
+        public Byte Rank { get; set; } = default(Byte);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -836,8 +836,8 @@ namespace Mutagen.Bethesda.Starfield
         public virtual void Clear(IAPerkEffect item)
         {
             ClearPartial();
-            item.Rank = default;
-            item.Priority = default;
+            item.Rank = default(Byte);
+            item.Priority = default(Byte);
             item.Conditions.Clear();
         }
         

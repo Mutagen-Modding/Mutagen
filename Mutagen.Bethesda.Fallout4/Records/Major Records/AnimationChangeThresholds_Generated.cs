@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Directional
-        public Single Directional { get; set; } = default;
+        public Single Directional { get; set; } = default(Single);
         #endregion
         #region MovementSpeed
-        public Single MovementSpeed { get; set; } = default;
+        public Single MovementSpeed { get; set; } = default(Single);
         #endregion
         #region RotationSpeed
-        public Single RotationSpeed { get; set; } = default;
+        public Single RotationSpeed { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAnimationChangeThresholds item)
         {
             ClearPartial();
-            item.Directional = default;
-            item.MovementSpeed = default;
-            item.RotationSpeed = default;
+            item.Directional = default(Single);
+            item.MovementSpeed = default(Single);
+            item.RotationSpeed = default(Single);
         }
         
         #region Mutagen

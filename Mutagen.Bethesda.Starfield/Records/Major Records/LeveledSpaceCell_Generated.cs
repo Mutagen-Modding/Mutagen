@@ -56,13 +56,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region ChanceNone
-        public Single ChanceNone { get; set; } = default;
+        public Single ChanceNone { get; set; } = default(Single);
         #endregion
         #region MaxCount
-        public Byte MaxCount { get; set; } = default;
+        public Byte MaxCount { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public LeveledNpc.Flag Flags { get; set; } = default;
+        public LeveledNpc.Flag Flags { get; set; } = default(LeveledNpc.Flag);
         #endregion
         #region UseGlobal
         private readonly IFormLinkNullable<IGlobalGetter> _UseGlobal = new FormLinkNullable<IGlobalGetter>();
@@ -1004,9 +1004,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILeveledSpaceCellInternal item)
         {
             ClearPartial();
-            item.ChanceNone = default;
-            item.MaxCount = default;
-            item.Flags = default;
+            item.ChanceNone = default(Single);
+            item.MaxCount = default(Byte);
+            item.Flags = default(LeveledNpc.Flag);
             item.UseGlobal.Clear();
             item.Entries = null;
             base.Clear(item);
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region MaxCount
         private int? _MaxCountLocation;

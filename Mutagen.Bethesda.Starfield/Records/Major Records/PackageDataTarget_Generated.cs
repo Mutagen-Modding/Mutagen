@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Type
-        public PackageDataTarget.Types Type { get; set; } = default;
+        public PackageDataTarget.Types Type { get; set; } = default(PackageDataTarget.Types);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPackageDataTarget item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(PackageDataTarget.Types);
             item.Target.Clear();
             item.Conditions.Clear();
             base.Clear(item);

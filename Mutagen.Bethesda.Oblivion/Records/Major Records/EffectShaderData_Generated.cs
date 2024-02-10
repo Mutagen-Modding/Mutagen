@@ -52,175 +52,175 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public EffectShaderData.VersioningBreaks Versioning { get; set; } = default;
+        public EffectShaderData.VersioningBreaks Versioning { get; set; } = default(EffectShaderData.VersioningBreaks);
         #endregion
         #region Flags
-        public EffectShader.Flag Flags { get; set; } = default;
+        public EffectShader.Flag Flags { get; set; } = default(EffectShader.Flag);
         #endregion
         #region MembraneShaderSourceBlendMode
-        public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode { get; set; } = default;
+        public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode { get; set; } = default(EffectShader.SourceBlendMode);
         #endregion
         #region MembraneShaderBlendOperation
-        public EffectShader.BlendOperation MembraneShaderBlendOperation { get; set; } = default;
+        public EffectShader.BlendOperation MembraneShaderBlendOperation { get; set; } = default(EffectShader.BlendOperation);
         #endregion
         #region MembraneShaderZTestFunction
-        public EffectShader.ZTestFunction MembraneShaderZTestFunction { get; set; } = default;
+        public EffectShader.ZTestFunction MembraneShaderZTestFunction { get; set; } = default(EffectShader.ZTestFunction);
         #endregion
         #region FillTextureEffectColor
-        public Color FillTextureEffectColor { get; set; } = default;
+        public Color FillTextureEffectColor { get; set; } = default(Color);
         #endregion
         #region FillTextureEffectAlphaFadeInTime
-        public Single FillTextureEffectAlphaFadeInTime { get; set; } = default;
+        public Single FillTextureEffectAlphaFadeInTime { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectFullAlphaTime
-        public Single FillTextureEffectFullAlphaTime { get; set; } = default;
+        public Single FillTextureEffectFullAlphaTime { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectAlphaFadeOutTime
-        public Single FillTextureEffectAlphaFadeOutTime { get; set; } = default;
+        public Single FillTextureEffectAlphaFadeOutTime { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectPersistentAlphaRatio
-        public Single FillTextureEffectPersistentAlphaRatio { get; set; } = default;
+        public Single FillTextureEffectPersistentAlphaRatio { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectAlphaPulseAmplitude
-        public Single FillTextureEffectAlphaPulseAmplitude { get; set; } = default;
+        public Single FillTextureEffectAlphaPulseAmplitude { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectAlphaPulseFrequency
-        public Single FillTextureEffectAlphaPulseFrequency { get; set; } = default;
+        public Single FillTextureEffectAlphaPulseFrequency { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectTextureAnimationSpeedU
-        public Single FillTextureEffectTextureAnimationSpeedU { get; set; } = default;
+        public Single FillTextureEffectTextureAnimationSpeedU { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectTextureAnimationSpeedV
-        public Single FillTextureEffectTextureAnimationSpeedV { get; set; } = default;
+        public Single FillTextureEffectTextureAnimationSpeedV { get; set; } = default(Single);
         #endregion
         #region EdgeEffectFallOff
-        public Single EdgeEffectFallOff { get; set; } = default;
+        public Single EdgeEffectFallOff { get; set; } = default(Single);
         #endregion
         #region EdgeEffectColor
-        public Color EdgeEffectColor { get; set; } = default;
+        public Color EdgeEffectColor { get; set; } = default(Color);
         #endregion
         #region EdgeEffectAlphaFadeInTime
-        public Single EdgeEffectAlphaFadeInTime { get; set; } = default;
+        public Single EdgeEffectAlphaFadeInTime { get; set; } = default(Single);
         #endregion
         #region EdgeEffectFullAlphaTime
-        public Single EdgeEffectFullAlphaTime { get; set; } = default;
+        public Single EdgeEffectFullAlphaTime { get; set; } = default(Single);
         #endregion
         #region EdgeEffectAlphaFadeOutTime
-        public Single EdgeEffectAlphaFadeOutTime { get; set; } = default;
+        public Single EdgeEffectAlphaFadeOutTime { get; set; } = default(Single);
         #endregion
         #region EdgeEffectPersistentAlphaRatio
-        public Single EdgeEffectPersistentAlphaRatio { get; set; } = default;
+        public Single EdgeEffectPersistentAlphaRatio { get; set; } = default(Single);
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
-        public Single EdgeEffectAlphaPulseAmplitude { get; set; } = default;
+        public Single EdgeEffectAlphaPulseAmplitude { get; set; } = default(Single);
         #endregion
         #region EdgeEffectAlphaPulseFrequency
-        public Single EdgeEffectAlphaPulseFrequency { get; set; } = default;
+        public Single EdgeEffectAlphaPulseFrequency { get; set; } = default(Single);
         #endregion
         #region FillTextureEffectFullAlphaRatio
-        public Single FillTextureEffectFullAlphaRatio { get; set; } = default;
+        public Single FillTextureEffectFullAlphaRatio { get; set; } = default(Single);
         #endregion
         #region EdgeEffectFullAlphaRatio
-        public Single EdgeEffectFullAlphaRatio { get; set; } = default;
+        public Single EdgeEffectFullAlphaRatio { get; set; } = default(Single);
         #endregion
         #region MembraneShaderDestBlendMode
-        public EffectShader.SourceBlendMode MembraneShaderDestBlendMode { get; set; } = default;
+        public EffectShader.SourceBlendMode MembraneShaderDestBlendMode { get; set; } = default(EffectShader.SourceBlendMode);
         #endregion
         #region ParticleShaderSourceBlendMode
-        public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode { get; set; } = default;
+        public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode { get; set; } = default(EffectShader.SourceBlendMode);
         #endregion
         #region ParticleShaderBlendOperation
-        public EffectShader.BlendOperation ParticleShaderBlendOperation { get; set; } = default;
+        public EffectShader.BlendOperation ParticleShaderBlendOperation { get; set; } = default(EffectShader.BlendOperation);
         #endregion
         #region ParticleShaderZTestFunction
-        public EffectShader.ZTestFunction ParticleShaderZTestFunction { get; set; } = default;
+        public EffectShader.ZTestFunction ParticleShaderZTestFunction { get; set; } = default(EffectShader.ZTestFunction);
         #endregion
         #region ParticleShaderDestBlendMode
-        public EffectShader.SourceBlendMode ParticleShaderDestBlendMode { get; set; } = default;
+        public EffectShader.SourceBlendMode ParticleShaderDestBlendMode { get; set; } = default(EffectShader.SourceBlendMode);
         #endregion
         #region ParticleShaderParticleBirthRampUpTime
-        public Single ParticleShaderParticleBirthRampUpTime { get; set; } = default;
+        public Single ParticleShaderParticleBirthRampUpTime { get; set; } = default(Single);
         #endregion
         #region ParticleShaderFullParticleBirthTime
-        public Single ParticleShaderFullParticleBirthTime { get; set; } = default;
+        public Single ParticleShaderFullParticleBirthTime { get; set; } = default(Single);
         #endregion
         #region ParticleShaderParticleBirthRampDownTime
-        public Single ParticleShaderParticleBirthRampDownTime { get; set; } = default;
+        public Single ParticleShaderParticleBirthRampDownTime { get; set; } = default(Single);
         #endregion
         #region ParticleShaderFullParticleBirthRatio
-        public Single ParticleShaderFullParticleBirthRatio { get; set; } = default;
+        public Single ParticleShaderFullParticleBirthRatio { get; set; } = default(Single);
         #endregion
         #region ParticleShaderPersistentParticleBirthRatio
-        public Single ParticleShaderPersistentParticleBirthRatio { get; set; } = default;
+        public Single ParticleShaderPersistentParticleBirthRatio { get; set; } = default(Single);
         #endregion
         #region ParticleShaderParticleLifetime
-        public Single ParticleShaderParticleLifetime { get; set; } = default;
+        public Single ParticleShaderParticleLifetime { get; set; } = default(Single);
         #endregion
         #region ParticleShaderParticleLifetimePlusMinus
-        public Single ParticleShaderParticleLifetimePlusMinus { get; set; } = default;
+        public Single ParticleShaderParticleLifetimePlusMinus { get; set; } = default(Single);
         #endregion
         #region ParticleShaderInitialSpeedAlongNormal
-        public Single ParticleShaderInitialSpeedAlongNormal { get; set; } = default;
+        public Single ParticleShaderInitialSpeedAlongNormal { get; set; } = default(Single);
         #endregion
         #region ParticleShaderAccelerationAlongNormal
-        public Single ParticleShaderAccelerationAlongNormal { get; set; } = default;
+        public Single ParticleShaderAccelerationAlongNormal { get; set; } = default(Single);
         #endregion
         #region ParticleShaderInitialVelocity1
-        public Single ParticleShaderInitialVelocity1 { get; set; } = default;
+        public Single ParticleShaderInitialVelocity1 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderInitialVelocity2
-        public Single ParticleShaderInitialVelocity2 { get; set; } = default;
+        public Single ParticleShaderInitialVelocity2 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderInitialVelocity3
-        public Single ParticleShaderInitialVelocity3 { get; set; } = default;
+        public Single ParticleShaderInitialVelocity3 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderAcceleration1
-        public Single ParticleShaderAcceleration1 { get; set; } = default;
+        public Single ParticleShaderAcceleration1 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderAcceleration2
-        public Single ParticleShaderAcceleration2 { get; set; } = default;
+        public Single ParticleShaderAcceleration2 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderAcceleration3
-        public Single ParticleShaderAcceleration3 { get; set; } = default;
+        public Single ParticleShaderAcceleration3 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderScaleKey1
-        public Single ParticleShaderScaleKey1 { get; set; } = default;
+        public Single ParticleShaderScaleKey1 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderScaleKey2
-        public Single ParticleShaderScaleKey2 { get; set; } = default;
+        public Single ParticleShaderScaleKey2 { get; set; } = default(Single);
         #endregion
         #region ParticleShaderScaleKey1Time
-        public Single ParticleShaderScaleKey1Time { get; set; } = default;
+        public Single ParticleShaderScaleKey1Time { get; set; } = default(Single);
         #endregion
         #region ParticleShaderScaleKey2Time
-        public Single ParticleShaderScaleKey2Time { get; set; } = default;
+        public Single ParticleShaderScaleKey2Time { get; set; } = default(Single);
         #endregion
         #region ColorKey1Color
-        public Color ColorKey1Color { get; set; } = default;
+        public Color ColorKey1Color { get; set; } = default(Color);
         #endregion
         #region ColorKey2Color
-        public Color ColorKey2Color { get; set; } = default;
+        public Color ColorKey2Color { get; set; } = default(Color);
         #endregion
         #region ColorKey3Color
-        public Color ColorKey3Color { get; set; } = default;
+        public Color ColorKey3Color { get; set; } = default(Color);
         #endregion
         #region ColorKey1ColorAlpha
-        public Single ColorKey1ColorAlpha { get; set; } = default;
+        public Single ColorKey1ColorAlpha { get; set; } = default(Single);
         #endregion
         #region ColorKey2ColorAlpha
-        public Single ColorKey2ColorAlpha { get; set; } = default;
+        public Single ColorKey2ColorAlpha { get; set; } = default(Single);
         #endregion
         #region ColorKey3ColorAlpha
-        public Single ColorKey3ColorAlpha { get; set; } = default;
+        public Single ColorKey3ColorAlpha { get; set; } = default(Single);
         #endregion
         #region ColorKey1ColorKeyTime
-        public Single ColorKey1ColorKeyTime { get; set; } = default;
+        public Single ColorKey1ColorKeyTime { get; set; } = default(Single);
         #endregion
         #region ColorKey2ColorKeyTime
-        public Single ColorKey2ColorKeyTime { get; set; } = default;
+        public Single ColorKey2ColorKeyTime { get; set; } = default(Single);
         #endregion
         #region ColorKey3ColorKeyTime
-        public Single ColorKey3ColorKeyTime { get; set; } = default;
+        public Single ColorKey3ColorKeyTime { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -2709,63 +2709,63 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IEffectShaderData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Flags = default;
-            item.MembraneShaderSourceBlendMode = default;
-            item.MembraneShaderBlendOperation = default;
-            item.MembraneShaderZTestFunction = default;
-            item.FillTextureEffectColor = default;
-            item.FillTextureEffectAlphaFadeInTime = default;
-            item.FillTextureEffectFullAlphaTime = default;
-            item.FillTextureEffectAlphaFadeOutTime = default;
-            item.FillTextureEffectPersistentAlphaRatio = default;
-            item.FillTextureEffectAlphaPulseAmplitude = default;
-            item.FillTextureEffectAlphaPulseFrequency = default;
-            item.FillTextureEffectTextureAnimationSpeedU = default;
-            item.FillTextureEffectTextureAnimationSpeedV = default;
-            item.EdgeEffectFallOff = default;
-            item.EdgeEffectColor = default;
-            item.EdgeEffectAlphaFadeInTime = default;
-            item.EdgeEffectFullAlphaTime = default;
-            item.EdgeEffectAlphaFadeOutTime = default;
-            item.EdgeEffectPersistentAlphaRatio = default;
-            item.EdgeEffectAlphaPulseAmplitude = default;
-            item.EdgeEffectAlphaPulseFrequency = default;
-            item.FillTextureEffectFullAlphaRatio = default;
-            item.EdgeEffectFullAlphaRatio = default;
-            item.MembraneShaderDestBlendMode = default;
-            item.ParticleShaderSourceBlendMode = default;
-            item.ParticleShaderBlendOperation = default;
-            item.ParticleShaderZTestFunction = default;
-            item.ParticleShaderDestBlendMode = default;
-            item.ParticleShaderParticleBirthRampUpTime = default;
-            item.ParticleShaderFullParticleBirthTime = default;
-            item.ParticleShaderParticleBirthRampDownTime = default;
-            item.ParticleShaderFullParticleBirthRatio = default;
-            item.ParticleShaderPersistentParticleBirthRatio = default;
-            item.ParticleShaderParticleLifetime = default;
-            item.ParticleShaderParticleLifetimePlusMinus = default;
-            item.ParticleShaderInitialSpeedAlongNormal = default;
-            item.ParticleShaderAccelerationAlongNormal = default;
-            item.ParticleShaderInitialVelocity1 = default;
-            item.ParticleShaderInitialVelocity2 = default;
-            item.ParticleShaderInitialVelocity3 = default;
-            item.ParticleShaderAcceleration1 = default;
-            item.ParticleShaderAcceleration2 = default;
-            item.ParticleShaderAcceleration3 = default;
-            item.ParticleShaderScaleKey1 = default;
-            item.ParticleShaderScaleKey2 = default;
-            item.ParticleShaderScaleKey1Time = default;
-            item.ParticleShaderScaleKey2Time = default;
-            item.ColorKey1Color = default;
-            item.ColorKey2Color = default;
-            item.ColorKey3Color = default;
-            item.ColorKey1ColorAlpha = default;
-            item.ColorKey2ColorAlpha = default;
-            item.ColorKey3ColorAlpha = default;
-            item.ColorKey1ColorKeyTime = default;
-            item.ColorKey2ColorKeyTime = default;
-            item.ColorKey3ColorKeyTime = default;
+            item.Versioning = default(EffectShaderData.VersioningBreaks);
+            item.Flags = default(EffectShader.Flag);
+            item.MembraneShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
+            item.MembraneShaderBlendOperation = default(EffectShader.BlendOperation);
+            item.MembraneShaderZTestFunction = default(EffectShader.ZTestFunction);
+            item.FillTextureEffectColor = default(Color);
+            item.FillTextureEffectAlphaFadeInTime = default(Single);
+            item.FillTextureEffectFullAlphaTime = default(Single);
+            item.FillTextureEffectAlphaFadeOutTime = default(Single);
+            item.FillTextureEffectPersistentAlphaRatio = default(Single);
+            item.FillTextureEffectAlphaPulseAmplitude = default(Single);
+            item.FillTextureEffectAlphaPulseFrequency = default(Single);
+            item.FillTextureEffectTextureAnimationSpeedU = default(Single);
+            item.FillTextureEffectTextureAnimationSpeedV = default(Single);
+            item.EdgeEffectFallOff = default(Single);
+            item.EdgeEffectColor = default(Color);
+            item.EdgeEffectAlphaFadeInTime = default(Single);
+            item.EdgeEffectFullAlphaTime = default(Single);
+            item.EdgeEffectAlphaFadeOutTime = default(Single);
+            item.EdgeEffectPersistentAlphaRatio = default(Single);
+            item.EdgeEffectAlphaPulseAmplitude = default(Single);
+            item.EdgeEffectAlphaPulseFrequency = default(Single);
+            item.FillTextureEffectFullAlphaRatio = default(Single);
+            item.EdgeEffectFullAlphaRatio = default(Single);
+            item.MembraneShaderDestBlendMode = default(EffectShader.SourceBlendMode);
+            item.ParticleShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
+            item.ParticleShaderBlendOperation = default(EffectShader.BlendOperation);
+            item.ParticleShaderZTestFunction = default(EffectShader.ZTestFunction);
+            item.ParticleShaderDestBlendMode = default(EffectShader.SourceBlendMode);
+            item.ParticleShaderParticleBirthRampUpTime = default(Single);
+            item.ParticleShaderFullParticleBirthTime = default(Single);
+            item.ParticleShaderParticleBirthRampDownTime = default(Single);
+            item.ParticleShaderFullParticleBirthRatio = default(Single);
+            item.ParticleShaderPersistentParticleBirthRatio = default(Single);
+            item.ParticleShaderParticleLifetime = default(Single);
+            item.ParticleShaderParticleLifetimePlusMinus = default(Single);
+            item.ParticleShaderInitialSpeedAlongNormal = default(Single);
+            item.ParticleShaderAccelerationAlongNormal = default(Single);
+            item.ParticleShaderInitialVelocity1 = default(Single);
+            item.ParticleShaderInitialVelocity2 = default(Single);
+            item.ParticleShaderInitialVelocity3 = default(Single);
+            item.ParticleShaderAcceleration1 = default(Single);
+            item.ParticleShaderAcceleration2 = default(Single);
+            item.ParticleShaderAcceleration3 = default(Single);
+            item.ParticleShaderScaleKey1 = default(Single);
+            item.ParticleShaderScaleKey2 = default(Single);
+            item.ParticleShaderScaleKey1Time = default(Single);
+            item.ParticleShaderScaleKey2Time = default(Single);
+            item.ColorKey1Color = default(Color);
+            item.ColorKey2Color = default(Color);
+            item.ColorKey3Color = default(Color);
+            item.ColorKey1ColorAlpha = default(Single);
+            item.ColorKey2ColorAlpha = default(Single);
+            item.ColorKey3ColorAlpha = default(Single);
+            item.ColorKey1ColorKeyTime = default(Single);
+            item.ColorKey2ColorKeyTime = default(Single);
+            item.ColorKey3ColorKeyTime = default(Single);
         }
         
         #region Mutagen

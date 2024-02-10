@@ -3090,7 +3090,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3230,7 +3230,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.AIPackages.SetTo(
                         rhs.AIPackages
-                        .Select(r => (IFormLinkGetter<IAIPackageGetter>)new FormLink<IAIPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IAIPackageGetter>)new FormLink<IAIPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Level
-        public LockLevel Level { get; set; } = default;
+        public LockLevel Level { get; set; } = default(LockLevel);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IKeyGetter> ILockDataGetter.Key => this.Key;
         #endregion
         #region Flags
-        public LockData.Flag Flags { get; set; } = default;
+        public LockData.Flag Flags { get; set; } = default(LockData.Flag);
         #endregion
         #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -859,10 +859,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILockData item)
         {
             ClearPartial();
-            item.Level = default;
+            item.Level = default(LockLevel);
             item.Unused = new byte[3];
             item.Key.Clear();
-            item.Flags = default;
+            item.Flags = default(LockData.Flag);
             item.Unused2 = new byte[11];
         }
         

@@ -51,25 +51,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public WorldspaceMap.VersioningBreaks Versioning { get; set; } = default;
+        public WorldspaceMap.VersioningBreaks Versioning { get; set; } = default(WorldspaceMap.VersioningBreaks);
         #endregion
         #region UsableDimensions
-        public P2Int UsableDimensions { get; set; } = default;
+        public P2Int UsableDimensions { get; set; } = default(P2Int);
         #endregion
         #region NorthwestCellCoords
-        public P2Int16 NorthwestCellCoords { get; set; } = default;
+        public P2Int16 NorthwestCellCoords { get; set; } = default(P2Int16);
         #endregion
         #region SoutheastCellCoords
-        public P2Int16 SoutheastCellCoords { get; set; } = default;
+        public P2Int16 SoutheastCellCoords { get; set; } = default(P2Int16);
         #endregion
         #region CameraMinHeight
-        public Single CameraMinHeight { get; set; } = default;
+        public Single CameraMinHeight { get; set; } = default(Single);
         #endregion
         #region CameraMaxHeight
-        public Single CameraMaxHeight { get; set; } = default;
+        public Single CameraMaxHeight { get; set; } = default(Single);
         #endregion
         #region CameraInitialPitch
-        public Single CameraInitialPitch { get; set; } = default;
+        public Single CameraInitialPitch { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -908,13 +908,13 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorldspaceMap item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.UsableDimensions = default;
-            item.NorthwestCellCoords = default;
-            item.SoutheastCellCoords = default;
-            item.CameraMinHeight = default;
-            item.CameraMaxHeight = default;
-            item.CameraInitialPitch = default;
+            item.Versioning = default(WorldspaceMap.VersioningBreaks);
+            item.UsableDimensions = default(P2Int);
+            item.NorthwestCellCoords = default(P2Int16);
+            item.SoutheastCellCoords = default(P2Int16);
+            item.CameraMinHeight = default(Single);
+            item.CameraMaxHeight = default(Single);
+            item.CameraInitialPitch = default(Single);
         }
         
         #region Mutagen

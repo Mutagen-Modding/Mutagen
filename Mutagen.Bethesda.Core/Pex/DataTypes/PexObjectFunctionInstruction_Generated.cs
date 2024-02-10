@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region OpCode
-        public InstructionOpcode OpCode { get; set; } = default;
+        public InstructionOpcode OpCode { get; set; } = default(InstructionOpcode);
         #endregion
         #region Arguments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IPexObjectFunctionInstruction item)
         {
             ClearPartial();
-            item.OpCode = default;
+            item.OpCode = default(InstructionOpcode);
             item.Arguments.Clear();
         }
         

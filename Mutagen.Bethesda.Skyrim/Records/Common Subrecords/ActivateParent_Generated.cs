@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference;
         #endregion
         #region Delay
-        public Single Delay { get; set; } = default;
+        public Single Delay { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Reference.Clear();
-            item.Delay = default;
+            item.Delay = default(Single);
         }
         
         #region Mutagen

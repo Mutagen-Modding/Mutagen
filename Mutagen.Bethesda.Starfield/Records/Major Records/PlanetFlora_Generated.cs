@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IMiscItemGetter> IPlanetFloraGetter.Resource => this.Resource;
         #endregion
         #region Frequency
-        public Byte Frequency { get; set; } = default;
+        public Byte Frequency { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Model.Clear();
             item.Resource.Clear();
-            item.Frequency = default;
+            item.Frequency = default(Byte);
         }
         
         #region Mutagen

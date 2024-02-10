@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ItemCondition
-        public Single ItemCondition { get; set; } = default;
+        public Single ItemCondition { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Owner.Clear();
-            item.ItemCondition = default;
+            item.ItemCondition = default(Single);
         }
         
         #region Mutagen

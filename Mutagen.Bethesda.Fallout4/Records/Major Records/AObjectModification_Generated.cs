@@ -120,13 +120,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region MaxRank
-        public Byte MaxRank { get; set; } = default;
+        public Byte MaxRank { get; set; } = default(Byte);
         #endregion
         #region LevelTierScaledOffset
-        public Byte LevelTierScaledOffset { get; set; } = default;
+        public Byte LevelTierScaledOffset { get; set; } = default(Byte);
         #endregion
         #region AttachPoint
         private readonly IFormLink<IKeywordGetter> _AttachPoint = new FormLink<IKeywordGetter>();
@@ -1772,9 +1772,9 @@ namespace Mutagen.Bethesda.Fallout4
             item.Name = default;
             item.Description = default;
             item.Model = null;
-            item.Unknown = default;
-            item.MaxRank = default;
-            item.LevelTierScaledOffset = default;
+            item.Unknown = default(UInt16);
+            item.MaxRank = default(Byte);
+            item.LevelTierScaledOffset = default(Byte);
             item.AttachPoint.Clear();
             item.AttachParentSlots.Clear();
             item.Items.Clear();
@@ -2439,7 +2439,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.AttachParentSlots.SetTo(
                         rhs.AttachParentSlots
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2508,7 +2508,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.TargetOmodKeywords = 
                             rhs.TargetOmodKeywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2535,7 +2535,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.FilterKeywords = 
                             rhs.FilterKeywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

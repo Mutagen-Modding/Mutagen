@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Value
-        public GetVATSValueActionConditionData.Action Value { get; set; } = default;
+        public GetVATSValueActionConditionData.Action Value { get; set; } = default(GetVATSValueActionConditionData.Action);
         #endregion
 
         #region To String
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVATSValueActionConditionData item)
         {
             ClearPartial();
-            item.Value = default;
+            item.Value = default(GetVATSValueActionConditionData.Action);
             base.Clear(item);
         }
         

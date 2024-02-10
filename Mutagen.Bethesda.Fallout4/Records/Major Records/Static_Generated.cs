@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region MaxAngle
-        public Single MaxAngle { get; set; } = default;
+        public Single MaxAngle { get; set; } = default(Single);
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region DNAMDataTypeState
-        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default(Static.DNAMDataType);
         #endregion
 
         #region To String
@@ -1625,13 +1625,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.Model = null;
             item.Properties = null;
             item.Name = default;
-            item.MaxAngle = default;
+            item.MaxAngle = default(Single);
             item.Material.Clear();
-            item.LeafAmplitude = default;
-            item.LeafFrequency = default;
+            item.LeafAmplitude = default(Single);
+            item.LeafFrequency = default(Single);
             item.NavmeshGeometry = null;
             item.DistantLods.Clear();
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(Static.DNAMDataType);
             base.Clear(item);
         }
         
@@ -2928,7 +2928,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MaxAngle
         private int _MaxAngleLocation => _DNAMLocation!.Value.Min;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default;
+        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default(Single);
         #endregion
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;
@@ -2938,12 +2938,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _LeafAmplitude_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _recordData.Slice(_LeafAmplitudeLocation, 4).Float() : default;
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _recordData.Slice(_LeafAmplitudeLocation, 4).Float() : default(Single);
         #endregion
         #region LeafFrequency
         private int _LeafFrequencyLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _LeafFrequency_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public Single LeafFrequency => _LeafFrequency_IsSet ? _recordData.Slice(_LeafFrequencyLocation, 4).Float() : default;
+        public Single LeafFrequency => _LeafFrequency_IsSet ? _recordData.Slice(_LeafFrequencyLocation, 4).Float() : default(Single);
         #endregion
         #region NavmeshGeometry
         private int? _NavmeshGeometryLengthOverride;

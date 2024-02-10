@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Negative
-        public Boolean Negative { get; set; } = default;
+        public Boolean Negative { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPerkEntryPointAbsoluteValue item)
         {
             ClearPartial();
-            item.Negative = default;
+            item.Negative = default(Boolean);
             base.Clear(item);
         }
         

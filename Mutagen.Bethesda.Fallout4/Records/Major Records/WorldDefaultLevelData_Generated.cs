@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region NorthwestCellCoords
-        public P2UInt8 NorthwestCellCoords { get; set; } = default;
+        public P2UInt8 NorthwestCellCoords { get; set; } = default(P2UInt8);
         #endregion
         #region NorthwestCellSize
-        public P2UInt8 NorthwestCellSize { get; set; } = default;
+        public P2UInt8 NorthwestCellSize { get; set; } = default(P2UInt8);
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -769,8 +769,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWorldDefaultLevelData item)
         {
             ClearPartial();
-            item.NorthwestCellCoords = default;
-            item.NorthwestCellSize = default;
+            item.NorthwestCellCoords = default(P2UInt8);
+            item.NorthwestCellSize = default(P2UInt8);
             item.Data = default;
         }
         
@@ -1236,12 +1236,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region NorthwestCellCoords
         private int _NorthwestCellCoordsLocation => _WLEVLocation!.Value.Min;
         private bool _NorthwestCellCoords_IsSet => _WLEVLocation.HasValue;
-        public P2UInt8 NorthwestCellCoords => _NorthwestCellCoords_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellCoordsLocation, 2)) : default;
+        public P2UInt8 NorthwestCellCoords => _NorthwestCellCoords_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellCoordsLocation, 2)) : default(P2UInt8);
         #endregion
         #region NorthwestCellSize
         private int _NorthwestCellSizeLocation => _WLEVLocation!.Value.Min + 0x2;
         private bool _NorthwestCellSize_IsSet => _WLEVLocation.HasValue;
-        public P2UInt8 NorthwestCellSize => _NorthwestCellSize_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellSizeLocation, 2)) : default;
+        public P2UInt8 NorthwestCellSize => _NorthwestCellSize_IsSet ? P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_NorthwestCellSizeLocation, 2)) : default(P2UInt8);
         #endregion
         #region Data
         private int? _DataLocation;

@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region LockLevel
-        public Byte LockLevel { get; set; } = default;
+        public Byte LockLevel { get; set; } = default(Byte);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
-        public LockInformation.Flag Flags { get; set; } = default;
+        public LockInformation.Flag Flags { get; set; } = default(LockInformation.Flag);
         #endregion
 
         #region To String
@@ -815,10 +815,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILockInformation item)
         {
             ClearPartial();
-            item.LockLevel = default;
+            item.LockLevel = default(Byte);
             item.Unused = new byte[3];
             item.Key.Clear();
-            item.Flags = default;
+            item.Flags = default(LockInformation.Flag);
         }
         
         #region Mutagen

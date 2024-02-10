@@ -281,13 +281,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region ArmorRating
-        public Single ArmorRating { get; set; } = default;
+        public Single ArmorRating { get; set; } = default(Single);
         #endregion
         #region TemplateArmor
         private readonly IFormLinkNullable<IArmorGetter> _TemplateArmor = new FormLinkNullable<IArmorGetter>();
@@ -2028,9 +2028,9 @@ namespace Mutagen.Bethesda.Skyrim
             item.Keywords = null;
             item.Description = default;
             item.Armature.Clear();
-            item.Value = default;
-            item.Weight = default;
-            item.ArmorRating = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.ArmorRating = default(Single);
             item.TemplateArmor.Clear();
             base.Clear(item);
         }
@@ -2972,7 +2972,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3001,7 +3001,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Armature.SetTo(
                         rhs.Armature
-                        .Select(r => (IFormLinkGetter<IArmorAddonGetter>)new FormLink<IArmorAddonGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IArmorAddonGetter>)new FormLink<IArmorAddonGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3730,16 +3730,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region ArmorRating
         private int? _ArmorRatingLocation;
-        public Single ArmorRating => _ArmorRatingLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRatingLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, multiplier: null, divisor: 100f) : default;
+        public Single ArmorRating => _ArmorRatingLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRatingLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, multiplier: null, divisor: 100f) : default(Single);
         #endregion
         #region TemplateArmor
         private int? _TemplateArmorLocation;

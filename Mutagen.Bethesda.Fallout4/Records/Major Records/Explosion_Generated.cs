@@ -212,43 +212,43 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;
         #endregion
         #region Force
-        public Single Force { get; set; } = default;
+        public Single Force { get; set; } = default(Single);
         #endregion
         #region Damage
-        public Single Damage { get; set; } = default;
+        public Single Damage { get; set; } = default(Single);
         #endregion
         #region InnerRadius
-        public Single InnerRadius { get; set; } = default;
+        public Single InnerRadius { get; set; } = default(Single);
         #endregion
         #region OuterRadius
-        public Single OuterRadius { get; set; } = default;
+        public Single OuterRadius { get; set; } = default(Single);
         #endregion
         #region ISRadius
-        public Single ISRadius { get; set; } = default;
+        public Single ISRadius { get; set; } = default(Single);
         #endregion
         #region VerticalOffsetMult
-        public Single VerticalOffsetMult { get; set; } = default;
+        public Single VerticalOffsetMult { get; set; } = default(Single);
         #endregion
         #region Flags
-        public Explosion.Flag Flags { get; set; } = default;
+        public Explosion.Flag Flags { get; set; } = default(Explosion.Flag);
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region PlacedObjectAutoFadeDelay
-        public Single PlacedObjectAutoFadeDelay { get; set; } = default;
+        public Single PlacedObjectAutoFadeDelay { get; set; } = default(Single);
         #endregion
         #region Stagger
-        public Explosion.StaggerAmount Stagger { get; set; } = default;
+        public Explosion.StaggerAmount Stagger { get; set; } = default(Explosion.StaggerAmount);
         #endregion
         #region SpawnPosition
-        public P3Float SpawnPosition { get; set; } = default;
+        public P3Float SpawnPosition { get; set; } = default(P3Float);
         #endregion
         #region SpawnSpreadDegrees
-        public Single SpawnSpreadDegrees { get; set; } = default;
+        public Single SpawnSpreadDegrees { get; set; } = default(Single);
         #endregion
         #region SpawnCount
-        public UInt32 SpawnCount { get; set; } = default;
+        public UInt32 SpawnCount { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -1788,19 +1788,19 @@ namespace Mutagen.Bethesda.Fallout4
             item.ImpactDataSet.Clear();
             item.PlacedObject.Clear();
             item.SpawnProjectile.Clear();
-            item.Force = default;
-            item.Damage = default;
-            item.InnerRadius = default;
-            item.OuterRadius = default;
-            item.ISRadius = default;
-            item.VerticalOffsetMult = default;
-            item.Flags = default;
-            item.SoundLevel = default;
-            item.PlacedObjectAutoFadeDelay = default;
-            item.Stagger = default;
-            item.SpawnPosition = default;
-            item.SpawnSpreadDegrees = default;
-            item.SpawnCount = default;
+            item.Force = default(Single);
+            item.Damage = default(Single);
+            item.InnerRadius = default(Single);
+            item.OuterRadius = default(Single);
+            item.ISRadius = default(Single);
+            item.VerticalOffsetMult = default(Single);
+            item.Flags = default(Explosion.Flag);
+            item.SoundLevel = default(SoundLevel);
+            item.PlacedObjectAutoFadeDelay = default(Single);
+            item.Stagger = default(Explosion.StaggerAmount);
+            item.SpawnPosition = default(P3Float);
+            item.SpawnSpreadDegrees = default(Single);
+            item.SpawnCount = default(UInt32);
             base.Clear(item);
         }
         
@@ -3111,33 +3111,33 @@ namespace Mutagen.Bethesda.Fallout4
         #region Force
         private int _ForceLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Force_IsSet => _DATALocation.HasValue;
-        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default;
+        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default(Single);
         #endregion
         #region Damage
         private int _DamageLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default;
+        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default(Single);
         #endregion
         #region InnerRadius
         private int _InnerRadiusLocation => _DATALocation!.Value.Min + 0x20;
         private bool _InnerRadius_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 97;
-        public Single InnerRadius => _InnerRadius_IsSet ? _recordData.Slice(_InnerRadiusLocation, 4).Float() : default;
+        public Single InnerRadius => _InnerRadius_IsSet ? _recordData.Slice(_InnerRadiusLocation, 4).Float() : default(Single);
         int InnerRadiusVersioningOffset => _package.FormVersion!.FormVersion!.Value < 97 ? -4 : 0;
         #endregion
         #region OuterRadius
         private int _OuterRadiusLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x24;
         private bool _OuterRadius_IsSet => _DATALocation.HasValue;
-        public Single OuterRadius => _OuterRadius_IsSet ? _recordData.Slice(_OuterRadiusLocation, 4).Float() : default;
+        public Single OuterRadius => _OuterRadius_IsSet ? _recordData.Slice(_OuterRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region ISRadius
         private int _ISRadiusLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x28;
         private bool _ISRadius_IsSet => _DATALocation.HasValue;
-        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default;
+        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region VerticalOffsetMult
         private int _VerticalOffsetMultLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x2C;
         private bool _VerticalOffsetMult_IsSet => _DATALocation.HasValue;
-        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _recordData.Slice(_VerticalOffsetMultLocation, 4).Float() : default;
+        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _recordData.Slice(_VerticalOffsetMultLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x30;
@@ -3152,7 +3152,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region PlacedObjectAutoFadeDelay
         private int _PlacedObjectAutoFadeDelayLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x38;
         private bool _PlacedObjectAutoFadeDelay_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 70;
-        public Single PlacedObjectAutoFadeDelay => _PlacedObjectAutoFadeDelay_IsSet ? _recordData.Slice(_PlacedObjectAutoFadeDelayLocation, 4).Float() : default;
+        public Single PlacedObjectAutoFadeDelay => _PlacedObjectAutoFadeDelay_IsSet ? _recordData.Slice(_PlacedObjectAutoFadeDelayLocation, 4).Float() : default(Single);
         int PlacedObjectAutoFadeDelayVersioningOffset => InnerRadiusVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 70 ? -4 : 0);
         #endregion
         #region Stagger
@@ -3164,19 +3164,19 @@ namespace Mutagen.Bethesda.Fallout4
         #region SpawnPosition
         private int _SpawnPositionLocation => _DATALocation!.Value.Min + StaggerVersioningOffset + 0x40;
         private bool _SpawnPosition_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 112;
-        public P3Float SpawnPosition => _SpawnPosition_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_SpawnPositionLocation, 12)) : default;
+        public P3Float SpawnPosition => _SpawnPosition_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_SpawnPositionLocation, 12)) : default(P3Float);
         int SpawnPositionVersioningOffset => StaggerVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 112 ? -12 : 0);
         #endregion
         #region SpawnSpreadDegrees
         private int _SpawnSpreadDegreesLocation => _DATALocation!.Value.Min + SpawnPositionVersioningOffset + 0x4C;
         private bool _SpawnSpreadDegrees_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 112;
-        public Single SpawnSpreadDegrees => _SpawnSpreadDegrees_IsSet ? _recordData.Slice(_SpawnSpreadDegreesLocation, 4).Float() : default;
+        public Single SpawnSpreadDegrees => _SpawnSpreadDegrees_IsSet ? _recordData.Slice(_SpawnSpreadDegreesLocation, 4).Float() : default(Single);
         int SpawnSpreadDegreesVersioningOffset => SpawnPositionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 112 ? -4 : 0);
         #endregion
         #region SpawnCount
         private int _SpawnCountLocation => _DATALocation!.Value.Min + SpawnSpreadDegreesVersioningOffset + 0x50;
         private bool _SpawnCount_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 112;
-        public UInt32 SpawnCount => _SpawnCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_SpawnCountLocation, 4)) : default;
+        public UInt32 SpawnCount => _SpawnCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_SpawnCountLocation, 4)) : default(UInt32);
         int SpawnCountVersioningOffset => SpawnSpreadDegreesVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 112 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(

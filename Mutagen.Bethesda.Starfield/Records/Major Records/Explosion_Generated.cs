@@ -265,52 +265,52 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IConditionRecordGetter> IExplosionGetter.Condition => this.Condition;
         #endregion
         #region ENAMFloat1
-        public Single ENAMFloat1 { get; set; } = default;
+        public Single ENAMFloat1 { get; set; } = default(Single);
         #endregion
         #region ENAMFloat2
-        public Single ENAMFloat2 { get; set; } = default;
+        public Single ENAMFloat2 { get; set; } = default(Single);
         #endregion
         #region ENAMFloat3
-        public Single ENAMFloat3 { get; set; } = default;
+        public Single ENAMFloat3 { get; set; } = default(Single);
         #endregion
         #region ENAMFloat4
-        public Single ENAMFloat4 { get; set; } = default;
+        public Single ENAMFloat4 { get; set; } = default(Single);
         #endregion
         #region ENAMFloat5
-        public Single ENAMFloat5 { get; set; } = default;
+        public Single ENAMFloat5 { get; set; } = default(Single);
         #endregion
         #region ENAMFloat6
-        public Single ENAMFloat6 { get; set; } = default;
+        public Single ENAMFloat6 { get; set; } = default(Single);
         #endregion
         #region EnamInt1
-        public Int32 EnamInt1 { get; set; } = default;
+        public Int32 EnamInt1 { get; set; } = default(Int32);
         #endregion
         #region EnamInt2
-        public Int32 EnamInt2 { get; set; } = default;
+        public Int32 EnamInt2 { get; set; } = default(Int32);
         #endregion
         #region ENAMFloat7
-        public Single ENAMFloat7 { get; set; } = default;
+        public Single ENAMFloat7 { get; set; } = default(Single);
         #endregion
         #region EnamInt3
-        public Int32 EnamInt3 { get; set; } = default;
+        public Int32 EnamInt3 { get; set; } = default(Int32);
         #endregion
         #region EnamInt4
-        public Int32 EnamInt4 { get; set; } = default;
+        public Int32 EnamInt4 { get; set; } = default(Int32);
         #endregion
         #region ENAMFloat8
-        public Single ENAMFloat8 { get; set; } = default;
+        public Single ENAMFloat8 { get; set; } = default(Single);
         #endregion
         #region ENAMFloat9
-        public Single ENAMFloat9 { get; set; } = default;
+        public Single ENAMFloat9 { get; set; } = default(Single);
         #endregion
         #region ENAMFloat10
-        public Single ENAMFloat10 { get; set; } = default;
+        public Single ENAMFloat10 { get; set; } = default(Single);
         #endregion
         #region EnamInt5
-        public Int32 EnamInt5 { get; set; } = default;
+        public Int32 EnamInt5 { get; set; } = default(Int32);
         #endregion
         #region ENAMFloat11
-        public Single ENAMFloat11 { get; set; } = default;
+        public Single ENAMFloat11 { get; set; } = default(Single);
         #endregion
         #region DamageType
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2355,22 +2355,22 @@ namespace Mutagen.Bethesda.Starfield
             item.PlacedObject.Clear();
             item.SpawnProjectile.Clear();
             item.Condition.Clear();
-            item.ENAMFloat1 = default;
-            item.ENAMFloat2 = default;
-            item.ENAMFloat3 = default;
-            item.ENAMFloat4 = default;
-            item.ENAMFloat5 = default;
-            item.ENAMFloat6 = default;
-            item.EnamInt1 = default;
-            item.EnamInt2 = default;
-            item.ENAMFloat7 = default;
-            item.EnamInt3 = default;
-            item.EnamInt4 = default;
-            item.ENAMFloat8 = default;
-            item.ENAMFloat9 = default;
-            item.ENAMFloat10 = default;
-            item.EnamInt5 = default;
-            item.ENAMFloat11 = default;
+            item.ENAMFloat1 = default(Single);
+            item.ENAMFloat2 = default(Single);
+            item.ENAMFloat3 = default(Single);
+            item.ENAMFloat4 = default(Single);
+            item.ENAMFloat5 = default(Single);
+            item.ENAMFloat6 = default(Single);
+            item.EnamInt1 = default(Int32);
+            item.EnamInt2 = default(Int32);
+            item.ENAMFloat7 = default(Single);
+            item.EnamInt3 = default(Int32);
+            item.EnamInt4 = default(Int32);
+            item.ENAMFloat8 = default(Single);
+            item.ENAMFloat9 = default(Single);
+            item.ENAMFloat10 = default(Single);
+            item.EnamInt5 = default(Int32);
+            item.ENAMFloat11 = default(Single);
             item.DamageType = null;
             base.Clear(item);
         }
@@ -4157,82 +4157,82 @@ namespace Mutagen.Bethesda.Starfield
         #region ENAMFloat1
         private int _ENAMFloat1Location => _ENAMLocation!.Value.Min + 0x64;
         private bool _ENAMFloat1_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat1 => _ENAMFloat1_IsSet ? _recordData.Slice(_ENAMFloat1Location, 4).Float() : default;
+        public Single ENAMFloat1 => _ENAMFloat1_IsSet ? _recordData.Slice(_ENAMFloat1Location, 4).Float() : default(Single);
         #endregion
         #region ENAMFloat2
         private int _ENAMFloat2Location => _ENAMLocation!.Value.Min + 0x68;
         private bool _ENAMFloat2_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat2 => _ENAMFloat2_IsSet ? _recordData.Slice(_ENAMFloat2Location, 4).Float() : default;
+        public Single ENAMFloat2 => _ENAMFloat2_IsSet ? _recordData.Slice(_ENAMFloat2Location, 4).Float() : default(Single);
         #endregion
         #region ENAMFloat3
         private int _ENAMFloat3Location => _ENAMLocation!.Value.Min + 0x6C;
         private bool _ENAMFloat3_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat3 => _ENAMFloat3_IsSet ? _recordData.Slice(_ENAMFloat3Location, 4).Float() : default;
+        public Single ENAMFloat3 => _ENAMFloat3_IsSet ? _recordData.Slice(_ENAMFloat3Location, 4).Float() : default(Single);
         #endregion
         #region ENAMFloat4
         private int _ENAMFloat4Location => _ENAMLocation!.Value.Min + 0x70;
         private bool _ENAMFloat4_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat4 => _ENAMFloat4_IsSet ? _recordData.Slice(_ENAMFloat4Location, 4).Float() : default;
+        public Single ENAMFloat4 => _ENAMFloat4_IsSet ? _recordData.Slice(_ENAMFloat4Location, 4).Float() : default(Single);
         #endregion
         #region ENAMFloat5
         private int _ENAMFloat5Location => _ENAMLocation!.Value.Min + 0x74;
         private bool _ENAMFloat5_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat5 => _ENAMFloat5_IsSet ? _recordData.Slice(_ENAMFloat5Location, 4).Float() : default;
+        public Single ENAMFloat5 => _ENAMFloat5_IsSet ? _recordData.Slice(_ENAMFloat5Location, 4).Float() : default(Single);
         #endregion
         #region ENAMFloat6
         private int _ENAMFloat6Location => _ENAMLocation!.Value.Min + 0x78;
         private bool _ENAMFloat6_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat6 => _ENAMFloat6_IsSet ? _recordData.Slice(_ENAMFloat6Location, 4).Float() : default;
+        public Single ENAMFloat6 => _ENAMFloat6_IsSet ? _recordData.Slice(_ENAMFloat6Location, 4).Float() : default(Single);
         #endregion
         #region EnamInt1
         private int _EnamInt1Location => _ENAMLocation!.Value.Min + 0x7C;
         private bool _EnamInt1_IsSet => _ENAMLocation.HasValue;
-        public Int32 EnamInt1 => _EnamInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt1Location, 4)) : default;
+        public Int32 EnamInt1 => _EnamInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt1Location, 4)) : default(Int32);
         #endregion
         #region EnamInt2
         private int _EnamInt2Location => _ENAMLocation!.Value.Min + 0x80;
         private bool _EnamInt2_IsSet => _ENAMLocation.HasValue;
-        public Int32 EnamInt2 => _EnamInt2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt2Location, 4)) : default;
+        public Int32 EnamInt2 => _EnamInt2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt2Location, 4)) : default(Int32);
         #endregion
         #region ENAMFloat7
         private int _ENAMFloat7Location => _ENAMLocation!.Value.Min + 0x84;
         private bool _ENAMFloat7_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat7 => _ENAMFloat7_IsSet ? _recordData.Slice(_ENAMFloat7Location, 4).Float() : default;
+        public Single ENAMFloat7 => _ENAMFloat7_IsSet ? _recordData.Slice(_ENAMFloat7Location, 4).Float() : default(Single);
         #endregion
         #region EnamInt3
         private int _EnamInt3Location => _ENAMLocation!.Value.Min + 0x88;
         private bool _EnamInt3_IsSet => _ENAMLocation.HasValue;
-        public Int32 EnamInt3 => _EnamInt3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt3Location, 4)) : default;
+        public Int32 EnamInt3 => _EnamInt3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt3Location, 4)) : default(Int32);
         #endregion
         #region EnamInt4
         private int _EnamInt4Location => _ENAMLocation!.Value.Min + 0x8C;
         private bool _EnamInt4_IsSet => _ENAMLocation.HasValue;
-        public Int32 EnamInt4 => _EnamInt4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt4Location, 4)) : default;
+        public Int32 EnamInt4 => _EnamInt4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt4Location, 4)) : default(Int32);
         #endregion
         #region ENAMFloat8
         private int _ENAMFloat8Location => _ENAMLocation!.Value.Min + 0x90;
         private bool _ENAMFloat8_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat8 => _ENAMFloat8_IsSet ? _recordData.Slice(_ENAMFloat8Location, 4).Float() : default;
+        public Single ENAMFloat8 => _ENAMFloat8_IsSet ? _recordData.Slice(_ENAMFloat8Location, 4).Float() : default(Single);
         #endregion
         #region ENAMFloat9
         private int _ENAMFloat9Location => _ENAMLocation!.Value.Min + 0x94;
         private bool _ENAMFloat9_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat9 => _ENAMFloat9_IsSet ? _recordData.Slice(_ENAMFloat9Location, 4).Float() : default;
+        public Single ENAMFloat9 => _ENAMFloat9_IsSet ? _recordData.Slice(_ENAMFloat9Location, 4).Float() : default(Single);
         #endregion
         #region ENAMFloat10
         private int _ENAMFloat10Location => _ENAMLocation!.Value.Min + 0x98;
         private bool _ENAMFloat10_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat10 => _ENAMFloat10_IsSet ? _recordData.Slice(_ENAMFloat10Location, 4).Float() : default;
+        public Single ENAMFloat10 => _ENAMFloat10_IsSet ? _recordData.Slice(_ENAMFloat10Location, 4).Float() : default(Single);
         #endregion
         #region EnamInt5
         private int _EnamInt5Location => _ENAMLocation!.Value.Min + 0x9C;
         private bool _EnamInt5_IsSet => _ENAMLocation.HasValue;
-        public Int32 EnamInt5 => _EnamInt5_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt5Location, 4)) : default;
+        public Int32 EnamInt5 => _EnamInt5_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnamInt5Location, 4)) : default(Int32);
         #endregion
         #region ENAMFloat11
         private int _ENAMFloat11Location => _ENAMLocation!.Value.Min + 0xA0;
         private bool _ENAMFloat11_IsSet => _ENAMLocation.HasValue;
-        public Single ENAMFloat11 => _ENAMFloat11_IsSet ? _recordData.Slice(_ENAMFloat11Location, 4).Float() : default;
+        public Single ENAMFloat11 => _ENAMFloat11_IsSet ? _recordData.Slice(_ENAMFloat11Location, 4).Float() : default(Single);
         #endregion
         public IReadOnlyList<IDamageTypeValueGetter>? DamageType { get; private set; }
         partial void CustomFactoryEnd(

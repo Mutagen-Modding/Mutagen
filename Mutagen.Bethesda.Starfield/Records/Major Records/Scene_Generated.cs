@@ -230,10 +230,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ISceneGetter> ISceneGetter.SCPP => this.SCPP;
         #endregion
         #region DEVT
-        public Boolean DEVT { get; set; } = default;
+        public Boolean DEVT { get; set; } = default(Boolean);
         #endregion
         #region SCSP
-        public Boolean SCSP { get; set; } = default;
+        public Boolean SCSP { get; set; } = default(Boolean);
         #endregion
         #region SPMA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -286,13 +286,13 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? ISceneGetter.SPRW => this.SPRW;
         #endregion
         #region SPRP
-        public Boolean SPRP { get; set; } = default;
+        public Boolean SPRP { get; set; } = default(Boolean);
         #endregion
         #region SPDF
-        public Boolean SPDF { get; set; } = default;
+        public Boolean SPDF { get; set; } = default(Boolean);
         #endregion
         #region SPPQ
-        public Boolean SPPQ { get; set; } = default;
+        public Boolean SPPQ { get; set; } = default(Boolean);
         #endregion
         #region SPKW
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2637,15 +2637,15 @@ namespace Mutagen.Bethesda.Starfield
             item.SCPI = default;
             item.JNAM = default;
             item.SCPP.Clear();
-            item.DEVT = default;
-            item.SCSP = default;
+            item.DEVT = default(Boolean);
+            item.SCSP = default(Boolean);
             item.SPMA = null;
             item.SPEX = null;
             item.SPRK = default;
             item.SPRW = default;
-            item.SPRP = default;
-            item.SPDF = default;
-            item.SPPQ = default;
+            item.SPRP = default(Boolean);
+            item.SPDF = default(Boolean);
+            item.SPPQ = default(Boolean);
             item.SPKW = null;
             item.SPPK = null;
             item.SPKY = null;
@@ -3767,7 +3767,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.SPMA = 
                             rhs.SPMA
-                            .Select(r => (IFormLinkGetter<ISceneGetter>)new FormLink<ISceneGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISceneGetter>)new FormLink<ISceneGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISceneGetter>>();
                     }
                     else
@@ -3794,7 +3794,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.SPEX = 
                             rhs.SPEX
-                            .Select(r => (IFormLinkGetter<ISceneGetter>)new FormLink<ISceneGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISceneGetter>)new FormLink<ISceneGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISceneGetter>>();
                     }
                     else
@@ -3855,7 +3855,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.SPKW = 
                             rhs.SPKW
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3882,7 +3882,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.SPPK = 
                             rhs.SPPK
-                            .Select(r => (IFormLinkGetter<IPerkGetter>)new FormLink<IPerkGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IPerkGetter>)new FormLink<IPerkGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPerkGetter>>();
                     }
                     else
@@ -3909,7 +3909,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.SPKY = 
                             rhs.SPKY
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4699,11 +4699,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DEVT
         private int? _DEVTLocation;
-        public Boolean DEVT => _DEVTLocation.HasValue ? true : default;
+        public Boolean DEVT => _DEVTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SCSP
         private int? _SCSPLocation;
-        public Boolean SCSP => _SCSPLocation.HasValue ? true : default;
+        public Boolean SCSP => _SCSPLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISceneGetter>>? SPMA { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ISceneGetter>>? SPEX { get; private set; }
@@ -4717,15 +4717,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SPRP
         private int? _SPRPLocation;
-        public Boolean SPRP => _SPRPLocation.HasValue ? true : default;
+        public Boolean SPRP => _SPRPLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SPDF
         private int? _SPDFLocation;
-        public Boolean SPDF => _SPDFLocation.HasValue ? true : default;
+        public Boolean SPDF => _SPDFLocation.HasValue ? true : default(Boolean);
         #endregion
         #region SPPQ
         private int? _SPPQLocation;
-        public Boolean SPPQ => _SPPQLocation.HasValue ? true : default;
+        public Boolean SPPQ => _SPPQLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? SPKW { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPerkGetter>>? SPPK { get; private set; }

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IVoiceTypeGetter> IDialogResponseTROTGetter.UnknownVoiceType => this.UnknownVoiceType;
         #endregion
         #region UnknownFloat
-        public Single UnknownFloat { get; set; } = default;
+        public Single UnknownFloat { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.UnknownVoiceType.Clear();
-            item.UnknownFloat = default;
+            item.UnknownFloat = default(Single);
         }
         
         #region Mutagen

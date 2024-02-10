@@ -51,28 +51,28 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Vertices
-        public P3Int16 Vertices { get; set; } = default;
+        public P3Int16 Vertices { get; set; } = default(P3Int16);
         #endregion
         #region EdgeLink_0_1
-        public Int16 EdgeLink_0_1 { get; set; } = default;
+        public Int16 EdgeLink_0_1 { get; set; } = default(Int16);
         #endregion
         #region EdgeLink_1_2
-        public Int16 EdgeLink_1_2 { get; set; } = default;
+        public Int16 EdgeLink_1_2 { get; set; } = default(Int16);
         #endregion
         #region EdgeLink_2_0
-        public Int16 EdgeLink_2_0 { get; set; } = default;
+        public Int16 EdgeLink_2_0 { get; set; } = default(Int16);
         #endregion
         #region Height
-        public Single Height { get; set; } = default;
+        public Single Height { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public NavmeshTriangle.Flag Flags { get; set; } = default;
+        public NavmeshTriangle.Flag Flags { get; set; } = default(NavmeshTriangle.Flag);
         #endregion
         #region CoverFlags
-        public UInt16 CoverFlags { get; set; } = default;
+        public UInt16 CoverFlags { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -929,14 +929,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavmeshTriangle item)
         {
             ClearPartial();
-            item.Vertices = default;
-            item.EdgeLink_0_1 = default;
-            item.EdgeLink_1_2 = default;
-            item.EdgeLink_2_0 = default;
-            item.Height = default;
-            item.Unknown = default;
-            item.Flags = default;
-            item.CoverFlags = default;
+            item.Vertices = default(P3Int16);
+            item.EdgeLink_0_1 = default(Int16);
+            item.EdgeLink_1_2 = default(Int16);
+            item.EdgeLink_2_0 = default(Int16);
+            item.Height = default(Single);
+            item.Unknown = default(Byte);
+            item.Flags = default(NavmeshTriangle.Flag);
+            item.CoverFlags = default(UInt16);
         }
         
         #region Mutagen

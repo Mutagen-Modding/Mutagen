@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Versioning
-        public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
+        public QuestAdapter.VersioningBreaks Versioning { get; set; } = default(QuestAdapter.VersioningBreaks);
         #endregion
         #region ExtraBindDataVersion
         public static readonly Byte ExtraBindDataVersionDefault = 3;
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestAdapter item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(QuestAdapter.VersioningBreaks);
             item.ExtraBindDataVersion = QuestAdapter.ExtraBindDataVersionDefault;
             item.Script.Clear();
             item.Fragments.Clear();

@@ -52,31 +52,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region AmbientColor
-        public Color AmbientColor { get; set; } = default;
+        public Color AmbientColor { get; set; } = default(Color);
         #endregion
         #region DirectionalColor
-        public Color DirectionalColor { get; set; } = default;
+        public Color DirectionalColor { get; set; } = default(Color);
         #endregion
         #region FogColor
-        public Color FogColor { get; set; } = default;
+        public Color FogColor { get; set; } = default(Color);
         #endregion
         #region FogNear
-        public Single FogNear { get; set; } = default;
+        public Single FogNear { get; set; } = default(Single);
         #endregion
         #region FogFar
-        public Single FogFar { get; set; } = default;
+        public Single FogFar { get; set; } = default(Single);
         #endregion
         #region DirectionalRotationXY
-        public Int32 DirectionalRotationXY { get; set; } = default;
+        public Int32 DirectionalRotationXY { get; set; } = default(Int32);
         #endregion
         #region DirectionalRotationZ
-        public Int32 DirectionalRotationZ { get; set; } = default;
+        public Int32 DirectionalRotationZ { get; set; } = default(Int32);
         #endregion
         #region DirectionalFade
-        public Single DirectionalFade { get; set; } = default;
+        public Single DirectionalFade { get; set; } = default(Single);
         #endregion
         #region FogClipDistance
-        public Single FogClipDistance { get; set; } = default;
+        public Single FogClipDistance { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -973,15 +973,15 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICellLighting item)
         {
             ClearPartial();
-            item.AmbientColor = default;
-            item.DirectionalColor = default;
-            item.FogColor = default;
-            item.FogNear = default;
-            item.FogFar = default;
-            item.DirectionalRotationXY = default;
-            item.DirectionalRotationZ = default;
-            item.DirectionalFade = default;
-            item.FogClipDistance = default;
+            item.AmbientColor = default(Color);
+            item.DirectionalColor = default(Color);
+            item.FogColor = default(Color);
+            item.FogNear = default(Single);
+            item.FogFar = default(Single);
+            item.DirectionalRotationXY = default(Int32);
+            item.DirectionalRotationZ = default(Int32);
+            item.DirectionalFade = default(Single);
+            item.FogClipDistance = default(Single);
         }
         
         #region Mutagen

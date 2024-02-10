@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public Enchantment.EnchantmentType Type { get; set; } = default;
+        public Enchantment.EnchantmentType Type { get; set; } = default(Enchantment.EnchantmentType);
         #endregion
         #region ChargeAmount
-        public UInt32 ChargeAmount { get; set; } = default;
+        public UInt32 ChargeAmount { get; set; } = default(UInt32);
         #endregion
         #region EnchantCost
-        public UInt32 EnchantCost { get; set; } = default;
+        public UInt32 EnchantCost { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public Enchantment.Flag Flags { get; set; } = default;
+        public Enchantment.Flag Flags { get; set; } = default(Enchantment.Flag);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IEnchantmentData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.ChargeAmount = default;
-            item.EnchantCost = default;
-            item.Flags = default;
+            item.Type = default(Enchantment.EnchantmentType);
+            item.ChargeAmount = default(UInt32);
+            item.EnchantCost = default(UInt32);
+            item.Flags = default(Enchantment.Flag);
         }
         
         #region Mutagen

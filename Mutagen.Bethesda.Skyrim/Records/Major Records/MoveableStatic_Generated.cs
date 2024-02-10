@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IMoveableStaticGetter.Destructible => this.Destructible;
         #endregion
         #region Flags
-        public MoveableStatic.Flag Flags { get; set; } = default;
+        public MoveableStatic.Flag Flags { get; set; } = default(MoveableStatic.Flag);
         #endregion
         #region LoopingSound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Name = default;
             item.Model = null;
             item.Destructible = null;
-            item.Flags = default;
+            item.Flags = default(MoveableStatic.Flag);
             item.LoopingSound.Clear();
             base.Clear(item);
         }

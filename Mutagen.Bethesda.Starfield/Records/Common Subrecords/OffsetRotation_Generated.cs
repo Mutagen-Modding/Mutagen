@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Offset
-        public P3Float Offset { get; set; } = default;
+        public P3Float Offset { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IOffsetRotation item)
         {
             ClearPartial();
-            item.Offset = default;
-            item.Rotation = default;
+            item.Offset = default(P3Float);
+            item.Rotation = default(P3Float);
         }
         
         #region Mutagen

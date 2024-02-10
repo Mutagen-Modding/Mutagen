@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectArchetype
     {
         #region Type
-        public MagicEffectArchetype.TypeEnum Type { get; set; } = default;
+        public MagicEffectArchetype.TypeEnum Type { get; set; } = default(MagicEffectArchetype.TypeEnum);
         #endregion
         #region Association
         private readonly IFormLink<ISkyrimMajorRecordGetter> _Association = new FormLink<ISkyrimMajorRecordGetter>();
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IMagicEffectArchetype item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(MagicEffectArchetype.TypeEnum);
             item.Association.Clear();
             base.Clear(item);
         }

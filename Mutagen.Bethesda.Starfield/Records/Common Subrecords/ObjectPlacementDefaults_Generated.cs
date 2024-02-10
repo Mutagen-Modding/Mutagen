@@ -51,64 +51,64 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown1
-        public Single Unknown1 { get; set; } = default;
+        public Single Unknown1 { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; } = default;
+        public Single Unknown2 { get; set; } = default(Single);
         #endregion
         #region Unknown3
-        public Single Unknown3 { get; set; } = default;
+        public Single Unknown3 { get; set; } = default(Single);
         #endregion
         #region Unknown4
-        public Single Unknown4 { get; set; } = default;
+        public Single Unknown4 { get; set; } = default(Single);
         #endregion
         #region Unknown5
-        public Single Unknown5 { get; set; } = default;
+        public Single Unknown5 { get; set; } = default(Single);
         #endregion
         #region Unknown6
-        public Single Unknown6 { get; set; } = default;
+        public Single Unknown6 { get; set; } = default(Single);
         #endregion
         #region Unknown7
-        public Single Unknown7 { get; set; } = default;
+        public Single Unknown7 { get; set; } = default(Single);
         #endregion
         #region Unknown8
-        public Single Unknown8 { get; set; } = default;
+        public Single Unknown8 { get; set; } = default(Single);
         #endregion
         #region Unknown9
-        public Single Unknown9 { get; set; } = default;
+        public Single Unknown9 { get; set; } = default(Single);
         #endregion
         #region Unknown10
-        public Single Unknown10 { get; set; } = default;
+        public Single Unknown10 { get; set; } = default(Single);
         #endregion
         #region Unknown11
-        public Single Unknown11 { get; set; } = default;
+        public Single Unknown11 { get; set; } = default(Single);
         #endregion
         #region Unknown12
-        public Single Unknown12 { get; set; } = default;
+        public Single Unknown12 { get; set; } = default(Single);
         #endregion
         #region Unknown13
-        public Single Unknown13 { get; set; } = default;
+        public Single Unknown13 { get; set; } = default(Single);
         #endregion
         #region Unknown14
-        public Single Unknown14 { get; set; } = default;
+        public Single Unknown14 { get; set; } = default(Single);
         #endregion
         #region Unknown15
-        public Single Unknown15 { get; set; } = default;
+        public Single Unknown15 { get; set; } = default(Single);
         #endregion
         #region Unknown16
-        public Single Unknown16 { get; set; } = default;
+        public Single Unknown16 { get; set; } = default(Single);
         #endregion
         #region Unknown17
-        public Single Unknown17 { get; set; } = default;
+        public Single Unknown17 { get; set; } = default(Single);
         #endregion
         #region Unknown18
-        public Single Unknown18 { get; set; } = default;
+        public Single Unknown18 { get; set; } = default(Single);
         #endregion
         #region Unknown19
-        public Single Unknown19 { get; set; } = default;
+        public Single Unknown19 { get; set; } = default(Single);
         #endregion
         #region Unknown20
-        public Single Unknown20 { get; set; } = default;
+        public Single Unknown20 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1368,26 +1368,26 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IObjectPlacementDefaults item)
         {
             ClearPartial();
-            item.Unknown1 = default;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
-            item.Unknown4 = default;
-            item.Unknown5 = default;
-            item.Unknown6 = default;
-            item.Unknown7 = default;
-            item.Unknown8 = default;
-            item.Unknown9 = default;
-            item.Unknown10 = default;
-            item.Unknown11 = default;
-            item.Unknown12 = default;
-            item.Unknown13 = default;
-            item.Unknown14 = default;
-            item.Unknown15 = default;
-            item.Unknown16 = default;
-            item.Unknown17 = default;
-            item.Unknown18 = default;
-            item.Unknown19 = default;
-            item.Unknown20 = default;
+            item.Unknown1 = default(Single);
+            item.Unknown2 = default(Single);
+            item.Unknown3 = default(Single);
+            item.Unknown4 = default(Single);
+            item.Unknown5 = default(Single);
+            item.Unknown6 = default(Single);
+            item.Unknown7 = default(Single);
+            item.Unknown8 = default(Single);
+            item.Unknown9 = default(Single);
+            item.Unknown10 = default(Single);
+            item.Unknown11 = default(Single);
+            item.Unknown12 = default(Single);
+            item.Unknown13 = default(Single);
+            item.Unknown14 = default(Single);
+            item.Unknown15 = default(Single);
+            item.Unknown16 = default(Single);
+            item.Unknown17 = default(Single);
+            item.Unknown18 = default(Single);
+            item.Unknown19 = default(Single);
+            item.Unknown20 = default(Single);
         }
         
         #region Mutagen

@@ -129,19 +129,19 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Trait
-        public Boolean Trait { get; set; } = default;
+        public Boolean Trait { get; set; } = default(Boolean);
         #endregion
         #region Level
-        public Byte Level { get; set; } = default;
+        public Byte Level { get; set; } = default(Byte);
         #endregion
         #region NumRanks
-        public Byte NumRanks { get; set; } = default;
+        public Byte NumRanks { get; set; } = default(Byte);
         #endregion
         #region Playable
-        public Boolean Playable { get; set; } = default;
+        public Boolean Playable { get; set; } = default(Boolean);
         #endregion
         #region Hidden
-        public Boolean Hidden { get; set; } = default;
+        public Boolean Hidden { get; set; } = default(Boolean);
         #endregion
         #region Sound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1510,11 +1510,11 @@ namespace Mutagen.Bethesda.Fallout4
             item.Description.Clear();
             item.Icon = default;
             item.Conditions.Clear();
-            item.Trait = default;
-            item.Level = default;
-            item.NumRanks = default;
-            item.Playable = default;
-            item.Hidden = default;
+            item.Trait = default(Boolean);
+            item.Level = default(Byte);
+            item.NumRanks = default(Byte);
+            item.Playable = default(Boolean);
+            item.Hidden = default(Boolean);
             item.Sound.Clear();
             item.NextPerk.Clear();
             item.Swf = default;
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;
-        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default;
+        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Level
         private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
@@ -2688,12 +2688,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Playable
         private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Playable_IsSet => _DATALocation.HasValue;
-        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default;
+        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Hidden
         private int _HiddenLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Hidden_IsSet => _DATALocation.HasValue;
-        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default;
+        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Sound
         private int? _SoundLocation;

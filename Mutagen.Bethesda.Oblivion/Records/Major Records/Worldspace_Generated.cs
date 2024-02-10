@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICellGetter? IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
         #region SubCellsTimestamp
-        public Int32 SubCellsTimestamp { get; set; } = default;
+        public Int32 SubCellsTimestamp { get; set; } = default(Int32);
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.OffsetData = default;
             item.Road = null;
             item.TopCell = null;
-            item.SubCellsTimestamp = default;
+            item.SubCellsTimestamp = default(Int32);
             item.SubCells.Clear();
             base.Clear(item);
         }

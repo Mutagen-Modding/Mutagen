@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ISceneGetter> IStartSceneGetter.STSCScene => this.STSCScene;
         #endregion
         #region INTTPhaseIndex
-        public UInt16 INTTPhaseIndex { get; set; } = default;
+        public UInt16 INTTPhaseIndex { get; set; } = default(UInt16);
         #endregion
         #region ACTVPhaseIndex
         public UInt16? ACTVPhaseIndex { get; set; }
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.LCEPScene.Clear();
             item.STSCScene.Clear();
-            item.INTTPhaseIndex = default;
+            item.INTTPhaseIndex = default(UInt16);
             item.ACTVPhaseIndex = default;
             item.StartPhaseForScene = default;
             item.Conditions = null;
@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region INTTPhaseIndex
         private int? _INTTPhaseIndexLocation;
-        public UInt16 INTTPhaseIndex => _INTTPhaseIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTTPhaseIndexLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 INTTPhaseIndex => _INTTPhaseIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTTPhaseIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region ACTVPhaseIndex
         private int? _ACTVPhaseIndexLocation;

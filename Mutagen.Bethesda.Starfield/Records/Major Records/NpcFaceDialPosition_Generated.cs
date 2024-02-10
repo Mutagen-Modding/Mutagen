@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Index
-        public UInt32 Index { get; set; } = default;
+        public UInt32 Index { get; set; } = default(UInt32);
         #endregion
         #region Position
-        public Single Position { get; set; } = default;
+        public Single Position { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -725,8 +725,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcFaceDialPosition item)
         {
             ClearPartial();
-            item.Index = default;
-            item.Position = default;
+            item.Index = default(UInt32);
+            item.Position = default(Single);
         }
         
         #region Mutagen
@@ -1125,11 +1125,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Index
         private int? _IndexLocation;
-        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Position
         private int? _PositionLocation;
-        public Single Position => _PositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PositionLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Position => _PositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PositionLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

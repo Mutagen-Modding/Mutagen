@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
-        public EnableParent.Flag Flags { get; set; } = default;
+        public EnableParent.Flag Flags { get; set; } = default(EnableParent.Flag);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Reference.Clear();
-            item.Flags = default;
+            item.Flags = default(EnableParent.Flag);
             item.Unknown = new byte[3];
         }
         

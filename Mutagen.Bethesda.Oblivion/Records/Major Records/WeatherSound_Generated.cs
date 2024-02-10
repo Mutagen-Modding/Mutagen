@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
         #region Type
-        public WeatherSound.SoundType Type { get; set; } = default;
+        public WeatherSound.SoundType Type { get; set; } = default(WeatherSound.SoundType);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Sound.Clear();
-            item.Type = default;
+            item.Type = default(WeatherSound.SoundType);
         }
         
         #region Mutagen

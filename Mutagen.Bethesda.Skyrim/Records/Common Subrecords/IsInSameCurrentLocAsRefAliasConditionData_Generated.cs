@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ReferenceAliasIndex
-        public Int32 ReferenceAliasIndex { get; set; } = default;
+        public Int32 ReferenceAliasIndex { get; set; } = default(Int32);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIsInSameCurrentLocAsRefAliasConditionData item)
         {
             ClearPartial();
-            item.ReferenceAliasIndex = default;
+            item.ReferenceAliasIndex = default(Int32);
             item.FirstUnusedStringParameter = default;
             item.Keyword.Clear();
             item.SecondUnusedStringParameter = default;

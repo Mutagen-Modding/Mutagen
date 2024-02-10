@@ -55,16 +55,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region BlockNumber
-        public Int32 BlockNumber { get; set; } = default;
+        public Int32 BlockNumber { get; set; } = default(Int32);
         #endregion
         #region GroupType
-        public GroupTypeEnum GroupType { get; set; } = default;
+        public GroupTypeEnum GroupType { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region SubBlocks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1167,10 +1167,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ICellBlock item)
         {
             ClearPartial();
-            item.BlockNumber = default;
-            item.GroupType = default;
-            item.LastModified = default;
-            item.Unknown = default;
+            item.BlockNumber = default(Int32);
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
+            item.Unknown = default(Int32);
             item.SubBlocks.Clear();
         }
         

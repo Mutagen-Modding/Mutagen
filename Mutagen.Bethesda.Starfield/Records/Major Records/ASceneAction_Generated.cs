@@ -82,10 +82,10 @@ namespace Mutagen.Bethesda.Starfield
         ASceneAction.Flag? IASceneActionGetter.Flags => this.Flags;
         #endregion
         #region StartPhase
-        public UInt32 StartPhase { get; set; } = default;
+        public UInt32 StartPhase { get; set; } = default(UInt32);
         #endregion
         #region EndPhase
-        public UInt32 EndPhase { get; set; } = default;
+        public UInt32 EndPhase { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -928,8 +928,8 @@ namespace Mutagen.Bethesda.Starfield
             item.AliasID = default;
             item.Index = default;
             item.Flags = default;
-            item.StartPhase = default;
-            item.EndPhase = default;
+            item.StartPhase = default(UInt32);
+            item.EndPhase = default(UInt32);
         }
         
         #region Mutagen
@@ -1494,11 +1494,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region StartPhase
         private int? _StartPhaseLocation;
-        public UInt32 StartPhase => _StartPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartPhaseLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 StartPhase => _StartPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartPhaseLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region EndPhase
         private int? _EndPhaseLocation;
-        public UInt32 EndPhase => _EndPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EndPhaseLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 EndPhase => _EndPhaseLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EndPhaseLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

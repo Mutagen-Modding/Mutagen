@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundCategoryGetter> IAudioCategoryMultiplierGetter.Category => this.Category;
         #endregion
         #region Multiplier
-        public Single Multiplier { get; set; } = default;
+        public Single Multiplier { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Category.Clear();
-            item.Multiplier = default;
+            item.Multiplier = default(Single);
         }
         
         #region Mutagen

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown1
-        public Single Unknown1 { get; set; } = default;
+        public Single Unknown1 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IVolumesUnknownEnderSingle item)
         {
             ClearPartial();
-            item.Unknown1 = default;
+            item.Unknown1 = default(Single);
             base.Clear(item);
         }
         

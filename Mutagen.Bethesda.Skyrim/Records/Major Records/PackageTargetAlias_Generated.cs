@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Alias
-        public Int32 Alias { get; set; } = default;
+        public Int32 Alias { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPackageTargetAlias item)
         {
             ClearPartial();
-            item.Alias = default;
+            item.Alias = default(Int32);
             base.Clear(item);
         }
         

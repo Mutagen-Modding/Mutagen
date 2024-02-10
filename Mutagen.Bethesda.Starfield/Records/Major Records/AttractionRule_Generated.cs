@@ -55,22 +55,22 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Radius
-        public Single Radius { get; set; } = default;
+        public Single Radius { get; set; } = default(Single);
         #endregion
         #region MinDelay
-        public Single MinDelay { get; set; } = default;
+        public Single MinDelay { get; set; } = default(Single);
         #endregion
         #region MaxDelay
-        public Single MaxDelay { get; set; } = default;
+        public Single MaxDelay { get; set; } = default(Single);
         #endregion
         #region RequiresLineOfSight
-        public Boolean RequiresLineOfSight { get; set; } = default;
+        public Boolean RequiresLineOfSight { get; set; } = default(Boolean);
         #endregion
         #region IsCombatTarget
-        public Boolean IsCombatTarget { get; set; } = default;
+        public Boolean IsCombatTarget { get; set; } = default(Boolean);
         #endregion
         #region Unused
-        public UInt16 Unused { get; set; } = default;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -941,12 +941,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAttractionRuleInternal item)
         {
             ClearPartial();
-            item.Radius = default;
-            item.MinDelay = default;
-            item.MaxDelay = default;
-            item.RequiresLineOfSight = default;
-            item.IsCombatTarget = default;
-            item.Unused = default;
+            item.Radius = default(Single);
+            item.MinDelay = default(Single);
+            item.MaxDelay = default(Single);
+            item.RequiresLineOfSight = default(Boolean);
+            item.IsCombatTarget = default(Boolean);
+            item.Unused = default(UInt16);
             base.Clear(item);
         }
         
@@ -1682,32 +1682,32 @@ namespace Mutagen.Bethesda.Starfield
         #region Radius
         private int _RadiusLocation => _AOR2Location!.Value.Min;
         private bool _Radius_IsSet => _AOR2Location.HasValue;
-        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default(Single);
         #endregion
         #region MinDelay
         private int _MinDelayLocation => _AOR2Location!.Value.Min + 0x4;
         private bool _MinDelay_IsSet => _AOR2Location.HasValue;
-        public Single MinDelay => _MinDelay_IsSet ? _recordData.Slice(_MinDelayLocation, 4).Float() : default;
+        public Single MinDelay => _MinDelay_IsSet ? _recordData.Slice(_MinDelayLocation, 4).Float() : default(Single);
         #endregion
         #region MaxDelay
         private int _MaxDelayLocation => _AOR2Location!.Value.Min + 0x8;
         private bool _MaxDelay_IsSet => _AOR2Location.HasValue;
-        public Single MaxDelay => _MaxDelay_IsSet ? _recordData.Slice(_MaxDelayLocation, 4).Float() : default;
+        public Single MaxDelay => _MaxDelay_IsSet ? _recordData.Slice(_MaxDelayLocation, 4).Float() : default(Single);
         #endregion
         #region RequiresLineOfSight
         private int _RequiresLineOfSightLocation => _AOR2Location!.Value.Min + 0xC;
         private bool _RequiresLineOfSight_IsSet => _AOR2Location.HasValue;
-        public Boolean RequiresLineOfSight => _RequiresLineOfSight_IsSet ? _recordData.Slice(_RequiresLineOfSightLocation, 1)[0] >= 1 : default;
+        public Boolean RequiresLineOfSight => _RequiresLineOfSight_IsSet ? _recordData.Slice(_RequiresLineOfSightLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region IsCombatTarget
         private int _IsCombatTargetLocation => _AOR2Location!.Value.Min + 0xD;
         private bool _IsCombatTarget_IsSet => _AOR2Location.HasValue;
-        public Boolean IsCombatTarget => _IsCombatTarget_IsSet ? _recordData.Slice(_IsCombatTargetLocation, 1)[0] >= 1 : default;
+        public Boolean IsCombatTarget => _IsCombatTarget_IsSet ? _recordData.Slice(_IsCombatTargetLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Unused
         private int _UnusedLocation => _AOR2Location!.Value.Min + 0xE;
         private bool _Unused_IsSet => _AOR2Location.HasValue;
-        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default;
+        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default(UInt16);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IActivatorGetter> IStoredTraversalsComponentItemGetter.Activator => this.Activator;
         #endregion
         #region Vector
-        public P3Float Vector { get; set; } = default;
+        public P3Float Vector { get; set; } = default(P3Float);
         #endregion
         #region Traversals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Activator.Clear();
-            item.Vector = default;
+            item.Vector = default(P3Float);
             item.Traversals.Clear();
         }
         

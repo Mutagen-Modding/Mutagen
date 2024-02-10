@@ -55,13 +55,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BlockNumber
-        public Int32 BlockNumber { get; set; } = default;
+        public Int32 BlockNumber { get; set; } = default(Int32);
         #endregion
         #region GroupType
-        public GroupTypeEnum GroupType { get; set; } = default;
+        public GroupTypeEnum GroupType { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1131,9 +1131,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICellSubBlock item)
         {
             ClearPartial();
-            item.BlockNumber = default;
-            item.GroupType = default;
-            item.LastModified = default;
+            item.BlockNumber = default(Int32);
+            item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
             item.Cells.Clear();
         }
         

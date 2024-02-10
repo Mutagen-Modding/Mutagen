@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetWithinDistanceConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region Distance
-        public Single Distance { get; set; } = default;
+        public Single Distance { get; set; } = default(Single);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Target.Clear();
             item.FirstUnusedStringParameter = default;
-            item.Distance = default;
+            item.Distance = default(Single);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

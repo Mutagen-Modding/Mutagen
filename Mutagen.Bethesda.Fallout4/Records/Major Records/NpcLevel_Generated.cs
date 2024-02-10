@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Level
-        public Int16 Level { get; set; } = default;
+        public Int16 Level { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INpcLevel item)
         {
             ClearPartial();
-            item.Level = default;
+            item.Level = default(Int16);
             base.Clear(item);
         }
         

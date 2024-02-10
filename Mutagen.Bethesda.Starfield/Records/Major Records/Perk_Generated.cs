@@ -113,16 +113,16 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter IPerkGetter.Description => this.Description;
         #endregion
         #region Categroy
-        public PerkCategory Categroy { get; set; } = default;
+        public PerkCategory Categroy { get; set; } = default(PerkCategory);
         #endregion
         #region SkillGroup
-        public PerkSkillGroup SkillGroup { get; set; } = default;
+        public PerkSkillGroup SkillGroup { get; set; } = default(PerkSkillGroup);
         #endregion
         #region CrewAssignment
-        public Perk.PerkCrewAssignment CrewAssignment { get; set; } = default;
+        public Perk.PerkCrewAssignment CrewAssignment { get; set; } = default(Perk.PerkCrewAssignment);
         #endregion
         #region Flags
-        public Perk.Flag Flags { get; set; } = default;
+        public Perk.Flag Flags { get; set; } = default(Perk.Flag);
         #endregion
         #region Restriction
         private readonly IFormLinkNullable<IKeywordGetter> _Restriction = new FormLinkNullable<IKeywordGetter>();
@@ -1452,10 +1452,10 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.Name = default;
             item.Description.Clear();
-            item.Categroy = default;
-            item.SkillGroup = default;
-            item.CrewAssignment = default;
-            item.Flags = default;
+            item.Categroy = default(PerkCategory);
+            item.SkillGroup = default(PerkSkillGroup);
+            item.CrewAssignment = default(Perk.PerkCrewAssignment);
+            item.Flags = default(Perk.Flag);
             item.Restriction.Clear();
             item.PerkIcon = default;
             item.Training.Clear();
@@ -2101,7 +2101,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.BackgroundSkills.SetTo(
                         rhs.BackgroundSkills
-                        .Select(r => (IFormLinkGetter<IPerkGetter>)new FormLink<IPerkGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPerkGetter>)new FormLink<IPerkGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

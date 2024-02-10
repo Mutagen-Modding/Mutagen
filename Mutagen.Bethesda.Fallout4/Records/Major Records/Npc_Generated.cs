@@ -118,28 +118,28 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> INpcGetter.AnimationSound => this.AnimationSound;
         #endregion
         #region Flags
-        public Npc.Flag Flags { get; set; } = default;
+        public Npc.Flag Flags { get; set; } = default(Npc.Flag);
         #endregion
         #region XpValueOffset
-        public Int16 XpValueOffset { get; set; } = default;
+        public Int16 XpValueOffset { get; set; } = default(Int16);
         #endregion
         #region CalcMinLevel
-        public Int16 CalcMinLevel { get; set; } = default;
+        public Int16 CalcMinLevel { get; set; } = default(Int16);
         #endregion
         #region CalcMaxLevel
-        public Int16 CalcMaxLevel { get; set; } = default;
+        public Int16 CalcMaxLevel { get; set; } = default(Int16);
         #endregion
         #region DispositionBase
-        public Int16 DispositionBase { get; set; } = default;
+        public Int16 DispositionBase { get; set; } = default(Int16);
         #endregion
         #region UseTemplateActors
-        public Npc.TemplateActorType UseTemplateActors { get; set; } = default;
+        public Npc.TemplateActorType UseTemplateActors { get; set; } = default(Npc.TemplateActorType);
         #endregion
         #region BleedoutOverride
-        public Int16 BleedoutOverride { get; set; } = default;
+        public Int16 BleedoutOverride { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -418,37 +418,37 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Aggression
-        public Npc.AggressionType Aggression { get; set; } = default;
+        public Npc.AggressionType Aggression { get; set; } = default(Npc.AggressionType);
         #endregion
         #region Confidence
-        public Npc.ConfidenceType Confidence { get; set; } = default;
+        public Npc.ConfidenceType Confidence { get; set; } = default(Npc.ConfidenceType);
         #endregion
         #region EnergyLevel
-        public Byte EnergyLevel { get; set; } = default;
+        public Byte EnergyLevel { get; set; } = default(Byte);
         #endregion
         #region Responsibility
-        public Npc.ResponsibilityType Responsibility { get; set; } = default;
+        public Npc.ResponsibilityType Responsibility { get; set; } = default(Npc.ResponsibilityType);
         #endregion
         #region Mood
-        public Npc.MoodType Mood { get; set; } = default;
+        public Npc.MoodType Mood { get; set; } = default(Npc.MoodType);
         #endregion
         #region Assistance
-        public Npc.AssistanceType Assistance { get; set; } = default;
+        public Npc.AssistanceType Assistance { get; set; } = default(Npc.AssistanceType);
         #endregion
         #region AggroRadiusBehaviorEnabled
-        public Boolean AggroRadiusBehaviorEnabled { get; set; } = default;
+        public Boolean AggroRadiusBehaviorEnabled { get; set; } = default(Boolean);
         #endregion
         #region AggroRadiusWarn
-        public UInt32 AggroRadiusWarn { get; set; } = default;
+        public UInt32 AggroRadiusWarn { get; set; } = default(UInt32);
         #endregion
         #region AggroRadiusWarnOrAttack
-        public UInt32 AggroRadiusWarnOrAttack { get; set; } = default;
+        public UInt32 AggroRadiusWarnOrAttack { get; set; } = default(UInt32);
         #endregion
         #region AggroRadiusAttack
-        public UInt32 AggroRadiusAttack { get; set; } = default;
+        public UInt32 AggroRadiusAttack { get; set; } = default(UInt32);
         #endregion
         #region NoSlowApproach
-        public Boolean NoSlowApproach { get; set; } = default;
+        public Boolean NoSlowApproach { get; set; } = default(Boolean);
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -565,19 +565,19 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? INpcGetter.ShortName => this.ShortName;
         #endregion
         #region CalculatedHealth
-        public UInt16 CalculatedHealth { get; set; } = default;
+        public UInt16 CalculatedHealth { get; set; } = default(UInt16);
         #endregion
         #region CalculatedActionPoints
-        public UInt16 CalculatedActionPoints { get; set; } = default;
+        public UInt16 CalculatedActionPoints { get; set; } = default(UInt16);
         #endregion
         #region FarAwayModelDistance
-        public UInt16 FarAwayModelDistance { get; set; } = default;
+        public UInt16 FarAwayModelDistance { get; set; } = default(UInt16);
         #endregion
         #region GearedUpWeapons
-        public Byte GearedUpWeapons { get; set; } = default;
+        public Byte GearedUpWeapons { get; set; } = default(Byte);
         #endregion
         #region Unused
-        public Byte Unused { get; set; } = default;
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? INpcGetter.NAM5 => this.NAM5;
         #endregion
         #region HeightMin
-        public Single HeightMin { get; set; } = default;
+        public Single HeightMin { get; set; } = default(Single);
         #endregion
         #region NAM7
         public Single? NAM7 { get; set; }
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single? INpcGetter.NAM7 => this.NAM7;
         #endregion
         #region HeightMax
-        public Single HeightMax { get; set; } = default;
+        public Single HeightMax { get; set; } = default(Single);
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4
         INpcWeightGetter? INpcGetter.Weight => this.Weight;
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5598,15 +5598,15 @@ namespace Mutagen.Bethesda.Fallout4
             item.ObjectBounds.Clear();
             item.PreviewTransform.Clear();
             item.AnimationSound.Clear();
-            item.Flags = default;
-            item.XpValueOffset = default;
+            item.Flags = default(Npc.Flag);
+            item.XpValueOffset = default(Int16);
             item.Level.Clear();
-            item.CalcMinLevel = default;
-            item.CalcMaxLevel = default;
-            item.DispositionBase = default;
-            item.UseTemplateActors = default;
-            item.BleedoutOverride = default;
-            item.Unknown = default;
+            item.CalcMinLevel = default(Int16);
+            item.CalcMaxLevel = default(Int16);
+            item.DispositionBase = default(Int16);
+            item.UseTemplateActors = default(Npc.TemplateActorType);
+            item.BleedoutOverride = default(Int16);
+            item.Unknown = default(Int16);
             item.Factions.Clear();
             item.DeathItem.Clear();
             item.Voice.Clear();
@@ -5632,17 +5632,17 @@ namespace Mutagen.Bethesda.Fallout4
             item.ForcedLocRefType.Clear();
             item.NativeTerminal.Clear();
             item.Items = null;
-            item.Aggression = default;
-            item.Confidence = default;
-            item.EnergyLevel = default;
-            item.Responsibility = default;
-            item.Mood = default;
-            item.Assistance = default;
-            item.AggroRadiusBehaviorEnabled = default;
-            item.AggroRadiusWarn = default;
-            item.AggroRadiusWarnOrAttack = default;
-            item.AggroRadiusAttack = default;
-            item.NoSlowApproach = default;
+            item.Aggression = default(Npc.AggressionType);
+            item.Confidence = default(Npc.ConfidenceType);
+            item.EnergyLevel = default(Byte);
+            item.Responsibility = default(Npc.ResponsibilityType);
+            item.Mood = default(Npc.MoodType);
+            item.Assistance = default(Npc.AssistanceType);
+            item.AggroRadiusBehaviorEnabled = default(Boolean);
+            item.AggroRadiusWarn = default(UInt32);
+            item.AggroRadiusWarnOrAttack = default(UInt32);
+            item.AggroRadiusAttack = default(UInt32);
+            item.NoSlowApproach = default(Boolean);
             item.Packages.Clear();
             item.Keywords = null;
             item.AttachParentSlots = null;
@@ -5650,22 +5650,22 @@ namespace Mutagen.Bethesda.Fallout4
             item.Class.Clear();
             item.Name = default;
             item.ShortName = default;
-            item.CalculatedHealth = default;
-            item.CalculatedActionPoints = default;
-            item.FarAwayModelDistance = default;
-            item.GearedUpWeapons = default;
-            item.Unused = default;
+            item.CalculatedHealth = default(UInt16);
+            item.CalculatedActionPoints = default(UInt16);
+            item.FarAwayModelDistance = default(UInt16);
+            item.GearedUpWeapons = default(Byte);
+            item.Unused = default(Byte);
             item.HeadParts.Clear();
             item.HairColor.Clear();
             item.FacialHairColor.Clear();
             item.CombatStyle.Clear();
             item.GiftFilter.Clear();
             item.NAM5 = default;
-            item.HeightMin = default;
+            item.HeightMin = default(Single);
             item.NAM7 = default;
-            item.HeightMax = default;
+            item.HeightMax = default(Single);
             item.Weight = null;
-            item.SoundLevel = default;
+            item.SoundLevel = default(SoundLevel);
             item.Sounds = null;
             item.SoundsFinalize = default;
             item.InheritsSoundsFrom.Clear();
@@ -7633,7 +7633,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
@@ -7892,7 +7892,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7913,7 +7913,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -7940,7 +7940,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -8029,7 +8029,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.HeadParts.SetTo(
                         rhs.HeadParts
-                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -9706,22 +9706,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region XpValueOffset
         private int _XpValueOffsetLocation => _ACBSLocation!.Value.Min + 0x4;
         private bool _XpValueOffset_IsSet => _ACBSLocation.HasValue;
-        public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XpValueOffsetLocation, 2)) : default;
+        public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XpValueOffsetLocation, 2)) : default(Int16);
         #endregion
         #region CalcMinLevel
         private int _CalcMinLevelLocation => _ACBSLocation!.Value.Min + 0x8;
         private bool _CalcMinLevel_IsSet => _ACBSLocation.HasValue;
-        public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMinLevelLocation, 2)) : default;
+        public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMinLevelLocation, 2)) : default(Int16);
         #endregion
         #region CalcMaxLevel
         private int _CalcMaxLevelLocation => _ACBSLocation!.Value.Min + 0xA;
         private bool _CalcMaxLevel_IsSet => _ACBSLocation.HasValue;
-        public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMaxLevelLocation, 2)) : default;
+        public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_CalcMaxLevelLocation, 2)) : default(Int16);
         #endregion
         #region DispositionBase
         private int _DispositionBaseLocation => _ACBSLocation!.Value.Min + 0xC;
         private bool _DispositionBase_IsSet => _ACBSLocation.HasValue;
-        public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DispositionBaseLocation, 2)) : default;
+        public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DispositionBaseLocation, 2)) : default(Int16);
         #endregion
         #region UseTemplateActors
         private int _UseTemplateActorsLocation => _ACBSLocation!.Value.Min + 0xE;
@@ -9731,12 +9731,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region BleedoutOverride
         private int _BleedoutOverrideLocation => _ACBSLocation!.Value.Min + 0x10;
         private bool _BleedoutOverride_IsSet => _ACBSLocation.HasValue;
-        public Int16 BleedoutOverride => _BleedoutOverride_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_BleedoutOverrideLocation, 2)) : default;
+        public Int16 BleedoutOverride => _BleedoutOverride_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_BleedoutOverrideLocation, 2)) : default(Int16);
         #endregion
         #region Unknown
         private int _UnknownLocation => _ACBSLocation!.Value.Min + 0x12;
         private bool _Unknown_IsSet => _ACBSLocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(Int16);
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
@@ -9851,27 +9851,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region AggroRadiusBehaviorEnabled
         private int _AggroRadiusBehaviorEnabledLocation => _AIDTLocation!.Value.Min + 0x6;
         private bool _AggroRadiusBehaviorEnabled_IsSet => _AIDTLocation.HasValue;
-        public Boolean AggroRadiusBehaviorEnabled => _AggroRadiusBehaviorEnabled_IsSet ? _recordData.Slice(_AggroRadiusBehaviorEnabledLocation, 2)[0] >= 1 : default;
+        public Boolean AggroRadiusBehaviorEnabled => _AggroRadiusBehaviorEnabled_IsSet ? _recordData.Slice(_AggroRadiusBehaviorEnabledLocation, 2)[0] >= 1 : default(Boolean);
         #endregion
         #region AggroRadiusWarn
         private int _AggroRadiusWarnLocation => _AIDTLocation!.Value.Min + 0x8;
         private bool _AggroRadiusWarn_IsSet => _AIDTLocation.HasValue;
-        public UInt32 AggroRadiusWarn => _AggroRadiusWarn_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnLocation, 4)) : default;
+        public UInt32 AggroRadiusWarn => _AggroRadiusWarn_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnLocation, 4)) : default(UInt32);
         #endregion
         #region AggroRadiusWarnOrAttack
         private int _AggroRadiusWarnOrAttackLocation => _AIDTLocation!.Value.Min + 0xC;
         private bool _AggroRadiusWarnOrAttack_IsSet => _AIDTLocation.HasValue;
-        public UInt32 AggroRadiusWarnOrAttack => _AggroRadiusWarnOrAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnOrAttackLocation, 4)) : default;
+        public UInt32 AggroRadiusWarnOrAttack => _AggroRadiusWarnOrAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusWarnOrAttackLocation, 4)) : default(UInt32);
         #endregion
         #region AggroRadiusAttack
         private int _AggroRadiusAttackLocation => _AIDTLocation!.Value.Min + 0x10;
         private bool _AggroRadiusAttack_IsSet => _AIDTLocation.HasValue;
-        public UInt32 AggroRadiusAttack => _AggroRadiusAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusAttackLocation, 4)) : default;
+        public UInt32 AggroRadiusAttack => _AggroRadiusAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AggroRadiusAttackLocation, 4)) : default(UInt32);
         #endregion
         #region NoSlowApproach
         private int _NoSlowApproachLocation => _AIDTLocation!.Value.Min + 0x14;
         private bool _NoSlowApproach_IsSet => _AIDTLocation.HasValue;
-        public Boolean NoSlowApproach => _NoSlowApproach_IsSet ? _recordData.Slice(_NoSlowApproachLocation, 4)[0] >= 1 : default;
+        public Boolean NoSlowApproach => _NoSlowApproach_IsSet ? _recordData.Slice(_NoSlowApproachLocation, 4)[0] >= 1 : default(Boolean);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Keywords
@@ -9904,17 +9904,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region CalculatedHealth
         private int _CalculatedHealthLocation => _DNAMLocation!.Value.Min;
         private bool _CalculatedHealth_IsSet => _DNAMLocation.HasValue;
-        public UInt16 CalculatedHealth => _CalculatedHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedHealthLocation, 2)) : default;
+        public UInt16 CalculatedHealth => _CalculatedHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedHealthLocation, 2)) : default(UInt16);
         #endregion
         #region CalculatedActionPoints
         private int _CalculatedActionPointsLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _CalculatedActionPoints_IsSet => _DNAMLocation.HasValue;
-        public UInt16 CalculatedActionPoints => _CalculatedActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedActionPointsLocation, 2)) : default;
+        public UInt16 CalculatedActionPoints => _CalculatedActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_CalculatedActionPointsLocation, 2)) : default(UInt16);
         #endregion
         #region FarAwayModelDistance
         private int _FarAwayModelDistanceLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _FarAwayModelDistance_IsSet => _DNAMLocation.HasValue;
-        public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FarAwayModelDistanceLocation, 2)) : default;
+        public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FarAwayModelDistanceLocation, 2)) : default(UInt16);
         #endregion
         #region GearedUpWeapons
         private int _GearedUpWeaponsLocation => _DNAMLocation!.Value.Min + 0x6;
@@ -9949,7 +9949,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region HeightMin
         private int? _HeightMinLocation;
-        public Single HeightMin => _HeightMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMinLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HeightMin => _HeightMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMinLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region NAM7
         private int? _NAM7Location;
@@ -9957,7 +9957,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region HeightMax
         private int? _HeightMaxLocation;
-        public Single HeightMax => _HeightMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMaxLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single HeightMax => _HeightMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Weight
         private RangeInt32? _WeightLocation;

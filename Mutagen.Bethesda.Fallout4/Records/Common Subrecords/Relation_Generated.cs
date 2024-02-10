@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion
         #region Modifier
-        public Int32 Modifier { get; set; } = default;
+        public Int32 Modifier { get; set; } = default(Int32);
         #endregion
         #region Reaction
-        public CombatReaction Reaction { get; set; } = default;
+        public CombatReaction Reaction { get; set; } = default(CombatReaction);
         #endregion
 
         #region To String
@@ -772,8 +772,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Target.Clear();
-            item.Modifier = default;
-            item.Reaction = default;
+            item.Modifier = default(Int32);
+            item.Reaction = default(CombatReaction);
         }
         
         #region Mutagen

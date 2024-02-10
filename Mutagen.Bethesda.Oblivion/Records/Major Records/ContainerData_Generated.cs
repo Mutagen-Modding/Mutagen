@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public Container.ContainerFlag Flags { get; set; } = default;
+        public Container.ContainerFlag Flags { get; set; } = default(Container.ContainerFlag);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IContainerData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Weight = default;
+            item.Flags = default(Container.ContainerFlag);
+            item.Weight = default(Single);
         }
         
         #region Mutagen

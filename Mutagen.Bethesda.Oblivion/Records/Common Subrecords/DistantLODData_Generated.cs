@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Unknown0
-        public Single Unknown0 { get; set; } = default;
+        public Single Unknown0 { get; set; } = default(Single);
         #endregion
         #region Unknown1
-        public Single Unknown1 { get; set; } = default;
+        public Single Unknown1 { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; } = default;
+        public Single Unknown2 { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IDistantLODData item)
         {
             ClearPartial();
-            item.Unknown0 = default;
-            item.Unknown1 = default;
-            item.Unknown2 = default;
+            item.Unknown0 = default(Single);
+            item.Unknown1 = default(Single);
+            item.Unknown2 = default(Single);
         }
         
         #region Mutagen

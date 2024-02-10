@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk;
         #endregion
         #region Rank
-        public Byte Rank { get; set; } = default;
+        public Byte Rank { get; set; } = default(Byte);
         #endregion
         #region Fluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Perk.Clear();
-            item.Rank = default;
+            item.Rank = default(Byte);
             item.Fluff = new byte[3];
         }
         

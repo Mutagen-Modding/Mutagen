@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IQuestGetter> IMessageGetter.Quest => this.Quest;
         #endregion
         #region Flags
-        public Message.Flag Flags { get; set; } = default;
+        public Message.Flag Flags { get; set; } = default(Message.Flag);
         #endregion
         #region DisplayTime
         public UInt32? DisplayTime { get; set; }
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Name = default;
             item.INAM = Array.Empty<byte>();
             item.Quest.Clear();
-            item.Flags = default;
+            item.Flags = default(Message.Flag);
             item.DisplayTime = default;
             item.MenuButtons.Clear();
             base.Clear(item);

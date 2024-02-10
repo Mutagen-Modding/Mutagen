@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FirstUnusedIntParameter
-        public Int32 FirstUnusedIntParameter { get; set; } = default;
+        public Int32 FirstUnusedIntParameter { get; set; } = default(Int32);
         #endregion
         #region GraphVariable
         public String? GraphVariable { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetGraphVariableIntConditionDataGetter.GraphVariable => this.GraphVariable;
         #endregion
         #region SecondUnusedIntParameter
-        public Int32 SecondUnusedIntParameter { get; set; } = default;
+        public Int32 SecondUnusedIntParameter { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetGraphVariableIntConditionData item)
         {
             ClearPartial();
-            item.FirstUnusedIntParameter = default;
+            item.FirstUnusedIntParameter = default(Int32);
             item.GraphVariable = default;
-            item.SecondUnusedIntParameter = default;
+            item.SecondUnusedIntParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

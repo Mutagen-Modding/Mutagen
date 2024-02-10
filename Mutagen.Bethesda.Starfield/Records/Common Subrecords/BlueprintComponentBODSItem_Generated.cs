@@ -59,16 +59,16 @@ namespace Mutagen.Bethesda.Starfield
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Color1
-        public Color Color1 { get; set; } = default;
+        public Color Color1 { get; set; } = default(Color);
         #endregion
         #region Color2
-        public Color Color2 { get; set; } = default;
+        public Color Color2 { get; set; } = default(Color);
         #endregion
         #region Color3
-        public Color Color3 { get; set; } = default;
+        public Color Color3 { get; set; } = default(Color);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -849,10 +849,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.Color1 = default;
-            item.Color2 = default;
-            item.Color3 = default;
-            item.Unknown = default;
+            item.Color1 = default(Color);
+            item.Color2 = default(Color);
+            item.Color3 = default(Color);
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen
@@ -1322,22 +1322,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Color1
         private int _Color1Location => _BODVLocation!.Value.Min;
         private bool _Color1_IsSet => _BODVLocation.HasValue;
-        public Color Color1 => _Color1_IsSet ? _recordData.Slice(_Color1Location, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color Color1 => _Color1_IsSet ? _recordData.Slice(_Color1Location, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region Color2
         private int _Color2Location => _BODVLocation!.Value.Min + 0xC;
         private bool _Color2_IsSet => _BODVLocation.HasValue;
-        public Color Color2 => _Color2_IsSet ? _recordData.Slice(_Color2Location, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color Color2 => _Color2_IsSet ? _recordData.Slice(_Color2Location, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region Color3
         private int _Color3Location => _BODVLocation!.Value.Min + 0x18;
         private bool _Color3_IsSet => _BODVLocation.HasValue;
-        public Color Color3 => _Color3_IsSet ? _recordData.Slice(_Color3Location, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color Color3 => _Color3_IsSet ? _recordData.Slice(_Color3Location, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color);
         #endregion
         #region Unknown
         private int _UnknownLocation => _BODVLocation!.Value.Min + 0x24;
         private bool _Unknown_IsSet => _BODVLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

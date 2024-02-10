@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILodGetter? IStaticGetter.Lod => this.Lod;
         #endregion
         #region DNAMDataTypeState
-        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default(Static.DNAMDataType);
         #endregion
 
         #region To String
@@ -1164,10 +1164,10 @@ namespace Mutagen.Bethesda.Skyrim
             item.Model = null;
             item.MaxAngle = Static.MaxAngleDefault;
             item.Material.Clear();
-            item.Flags = default;
+            item.Flags = default(Static.Flag);
             item.Unused = new byte[3];
             item.Lod = null;
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(Static.DNAMDataType);
             base.Clear(item);
         }
         
@@ -2161,7 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MaxAngle
         private int _MaxAngleLocation => _DNAMLocation!.Value.Min;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default;
+        public Single MaxAngle => _MaxAngle_IsSet ? _recordData.Slice(_MaxAngleLocation, 4).Float() : default(Single);
         #endregion
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;

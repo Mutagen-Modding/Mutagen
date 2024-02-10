@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Enabled
-        public Boolean Enabled { get; set; } = default;
+        public Boolean Enabled { get; set; } = default(Boolean);
         #endregion
         #region DisabledEntryPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IFurnitureMarker item)
         {
             ClearPartial();
-            item.Enabled = default;
+            item.Enabled = default(Boolean);
             item.DisabledEntryPoints = null;
             item.MarkerKeyword.Clear();
             item.EntryPoints = null;

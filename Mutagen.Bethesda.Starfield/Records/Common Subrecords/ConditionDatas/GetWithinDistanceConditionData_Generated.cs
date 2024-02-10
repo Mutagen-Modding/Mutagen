@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
         String? IGetWithinDistanceConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondParameter
-        public Single SecondParameter { get; set; } = default;
+        public Single SecondParameter { get; set; } = default(Single);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.FirstParameter.Clear();
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondParameter = default(Single);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

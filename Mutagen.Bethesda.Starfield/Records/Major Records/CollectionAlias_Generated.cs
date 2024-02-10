@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Starfield
         UInt32? ICollectionAliasGetter.ID => this.ID;
         #endregion
         #region MaxInitialFillCount
-        public Byte MaxInitialFillCount { get; set; } = default;
+        public Byte MaxInitialFillCount { get; set; } = default(Byte);
         #endregion
         #region ALAM
         public Int32? ALAM { get; set; }
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.ID = default;
-            item.MaxInitialFillCount = default;
+            item.MaxInitialFillCount = default(Byte);
             item.ALAM = default;
             item.ReferenceAlias.Clear();
         }

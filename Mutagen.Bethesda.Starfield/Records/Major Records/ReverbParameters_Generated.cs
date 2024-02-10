@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
         Guid? IReverbParametersGetter.AudioBus => this.AudioBus;
         #endregion
         #region ReverbClass
-        public ReverbParameters.Class ReverbClass { get; set; } = default;
+        public ReverbParameters.Class ReverbClass { get; set; } = default(ReverbParameters.Class);
         #endregion
 
         #region To String
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.AudioBus = default;
-            item.ReverbClass = default;
+            item.ReverbClass = default(ReverbParameters.Class);
             base.Clear(item);
         }
         

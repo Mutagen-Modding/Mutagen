@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.MergedTo.SetTo(
                         rhs.MergedTo
-                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1428,7 +1428,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.PreferredMerges.SetTo(
                         rhs.PreferredMerges
-                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

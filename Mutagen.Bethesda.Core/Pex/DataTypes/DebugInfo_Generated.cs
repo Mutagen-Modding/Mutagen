@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #region ModificationTime
-        public DateTime ModificationTime { get; set; } = default;
+        public DateTime ModificationTime { get; set; } = default(DateTime);
         #endregion
         #region Functions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Pex
         public void Clear(IDebugInfo item)
         {
             ClearPartial();
-            item.ModificationTime = default;
+            item.ModificationTime = default(DateTime);
             item.Functions.Clear();
             item.PropertyGroups.Clear();
             item.StructOrders.Clear();

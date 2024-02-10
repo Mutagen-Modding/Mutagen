@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Type
-        public UInt32 Type { get; set; } = default;
+        public UInt32 Type { get; set; } = default(UInt32);
         #endregion
         #region Door
         private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILinkedDoor item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(UInt32);
             item.Door.Clear();
         }
         

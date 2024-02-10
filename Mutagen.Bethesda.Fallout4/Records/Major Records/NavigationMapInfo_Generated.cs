@@ -63,13 +63,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<INavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Point
-        public P3Float Point { get; set; } = default;
+        public P3Float Point { get; set; } = default(P3Float);
         #endregion
         #region UnknownFloat
-        public Single UnknownFloat { get; set; } = default;
+        public Single UnknownFloat { get; set; } = default(Single);
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Fallout4
         IIslandDataGetter? INavigationMapInfoGetter.Island => this.Island;
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
         #region Parent
         public ANavigationMapInfoParent Parent { get; set; } = default!;
@@ -1277,14 +1277,14 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.NavigationMesh.Clear();
-            item.Unknown = default;
-            item.Point = default;
-            item.UnknownFloat = default;
+            item.Unknown = default(Int32);
+            item.Point = default(P3Float);
+            item.UnknownFloat = default(Single);
             item.MergedTo.Clear();
             item.PreferredMerges.Clear();
             item.LinkedDoors.Clear();
             item.Island = null;
-            item.Unknown2 = default;
+            item.Unknown2 = default(Int32);
             item.Parent.Clear();
         }
         
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.MergedTo.SetTo(
                         rhs.MergedTo
-                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.PreferredMerges.SetTo(
                         rhs.PreferredMerges
-                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ActorValue Skill { get; set; } = SkillDefault;
         #endregion
         #region Boost
-        public SByte Boost { get; set; } = default;
+        public SByte Boost { get; set; } = default(SByte);
         #endregion
 
         #region To String
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Skill = SkillBoost.SkillDefault;
-            item.Boost = default;
+            item.Boost = default(SByte);
         }
         
         #region Mutagen

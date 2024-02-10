@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Radius
-        public UInt32 Radius { get; set; } = default;
+        public UInt32 Radius { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Target.Clear();
-            item.Radius = default;
+            item.Radius = default(UInt32);
         }
         
         #region Mutagen

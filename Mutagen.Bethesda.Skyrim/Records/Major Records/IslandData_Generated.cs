@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Min
-        public P3Float Min { get; set; } = default;
+        public P3Float Min { get; set; } = default(P3Float);
         #endregion
         #region Max
-        public P3Float Max { get; set; } = default;
+        public P3Float Max { get; set; } = default(P3Float);
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -941,8 +941,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIslandData item)
         {
             ClearPartial();
-            item.Min = default;
-            item.Max = default;
+            item.Min = default(P3Float);
+            item.Max = default(P3Float);
             item.Triangles.Clear();
             item.Vertices.Clear();
         }

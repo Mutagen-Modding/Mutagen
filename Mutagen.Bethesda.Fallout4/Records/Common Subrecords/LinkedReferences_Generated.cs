@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public LinkedReferences.VersioningBreaks Versioning { get; set; } = default;
+        public LinkedReferences.VersioningBreaks Versioning { get; set; } = default(LinkedReferences.VersioningBreaks);
         #endregion
         #region KeywordOrReference
         private readonly IFormLink<IKeywordLinkedReferenceGetter> _KeywordOrReference = new FormLink<IKeywordLinkedReferenceGetter>();
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILinkedReferences item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(LinkedReferences.VersioningBreaks);
             item.KeywordOrReference.Clear();
             item.Reference.Clear();
         }

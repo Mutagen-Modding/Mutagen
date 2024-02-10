@@ -63,10 +63,10 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? ITerminalMenuItemGetter.ResponseText => this.ResponseText;
         #endregion
         #region Type
-        public TerminalMenuItem.Types Type { get; set; } = default;
+        public TerminalMenuItem.Types Type { get; set; } = default(TerminalMenuItem.Types);
         #endregion
         #region ItemId
-        public UInt16 ItemId { get; set; } = default;
+        public UInt16 ItemId { get; set; } = default(UInt16);
         #endregion
         #region DisplayText
         public TranslatedString? DisplayText { get; set; }
@@ -1051,8 +1051,8 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.ItemText.Clear();
             item.ResponseText = default;
-            item.Type = default;
-            item.ItemId = default;
+            item.Type = default(TerminalMenuItem.Types);
+            item.ItemId = default(UInt16);
             item.DisplayText = default;
             item.ImageFile = default;
             item.Submenu.Clear();
@@ -1700,7 +1700,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ItemId
         private int? _ItemIdLocation;
-        public UInt16 ItemId => _ItemIdLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ItemIdLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 ItemId => _ItemIdLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ItemIdLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region DisplayText
         private int? _DisplayTextLocation;

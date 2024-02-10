@@ -178,10 +178,10 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IContainerGetter.Destructible => this.Destructible;
         #endregion
         #region Flags
-        public Container.Flag Flags { get; set; } = default;
+        public Container.Flag Flags { get; set; } = default(Container.Flag);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region OpenSound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1386,8 +1386,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.Model = null;
             item.Items = null;
             item.Destructible = null;
-            item.Flags = default;
-            item.Weight = default;
+            item.Flags = default(Container.Flag);
+            item.Weight = default(Single);
             item.OpenSound.Clear();
             item.CloseSound.Clear();
             base.Clear(item);
@@ -2613,7 +2613,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;

@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region WindDirection
-        public Single WindDirection { get; set; } = default;
+        public Single WindDirection { get; set; } = default(Single);
         #endregion
         #region WindSpeed
-        public Single WindSpeed { get; set; } = default;
+        public Single WindSpeed { get; set; } = default(Single);
         #endregion
         #region AmplitudeScale
-        public Single AmplitudeScale { get; set; } = default;
+        public Single AmplitudeScale { get; set; } = default(Single);
         #endregion
         #region UvScale
-        public Single UvScale { get; set; } = default;
+        public Single UvScale { get; set; } = default(Single);
         #endregion
         #region NoiseFalloff
-        public Single NoiseFalloff { get; set; } = default;
+        public Single NoiseFalloff { get; set; } = default(Single);
         #endregion
         #region Texture
         public String? Texture { get; set; }
@@ -859,11 +859,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWaterNoiseProperties item)
         {
             ClearPartial();
-            item.WindDirection = default;
-            item.WindSpeed = default;
-            item.AmplitudeScale = default;
-            item.UvScale = default;
-            item.NoiseFalloff = default;
+            item.WindDirection = default(Single);
+            item.WindSpeed = default(Single);
+            item.AmplitudeScale = default(Single);
+            item.UvScale = default(Single);
+            item.NoiseFalloff = default(Single);
             item.Texture = default;
         }
         

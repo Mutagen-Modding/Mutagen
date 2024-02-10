@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region PlayerControlsParameterOne
-        public Int32 PlayerControlsParameterOne { get; set; } = default;
+        public Int32 PlayerControlsParameterOne { get; set; } = default(Int32);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetPlayerControlsDisabledConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region PlayerControlsParameterTwo
-        public Int32 PlayerControlsParameterTwo { get; set; } = default;
+        public Int32 PlayerControlsParameterTwo { get; set; } = default(Int32);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetPlayerControlsDisabledConditionData item)
         {
             ClearPartial();
-            item.PlayerControlsParameterOne = default;
+            item.PlayerControlsParameterOne = default(Int32);
             item.FirstUnusedStringParameter = default;
-            item.PlayerControlsParameterTwo = default;
+            item.PlayerControlsParameterTwo = default(Int32);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

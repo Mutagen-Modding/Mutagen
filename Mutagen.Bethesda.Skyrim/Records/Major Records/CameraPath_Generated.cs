@@ -84,10 +84,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Zoom
-        public CameraPath.ZoomType Zoom { get; set; } = default;
+        public CameraPath.ZoomType Zoom { get; set; } = default(CameraPath.ZoomType);
         #endregion
         #region ZoomMustHaveCameraShots
-        public Boolean ZoomMustHaveCameraShots { get; set; } = default;
+        public Boolean ZoomMustHaveCameraShots { get; set; } = default(Boolean);
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1149,8 +1149,8 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Conditions.Clear();
             item.RelatedPaths.Clear();
-            item.Zoom = default;
-            item.ZoomMustHaveCameraShots = default;
+            item.Zoom = default(CameraPath.ZoomType);
+            item.ZoomMustHaveCameraShots = default(Boolean);
             item.Shots.Clear();
             base.Clear(item);
         }
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.RelatedPaths.SetTo(
                         rhs.RelatedPaths
-                        .Select(r => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1628,7 +1628,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Shots.SetTo(
                         rhs.Shots
-                        .Select(r => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

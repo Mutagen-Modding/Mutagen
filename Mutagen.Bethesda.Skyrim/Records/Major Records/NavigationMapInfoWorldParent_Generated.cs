@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IWorldspaceGetter> INavigationMapInfoWorldParentGetter.ParentWorldspace => this.ParentWorldspace;
         #endregion
         #region ParentWorldspaceCoord
-        public P2Int16 ParentWorldspaceCoord { get; set; } = default;
+        public P2Int16 ParentWorldspaceCoord { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.ParentWorldspace.Clear();
-            item.ParentWorldspaceCoord = default;
+            item.ParentWorldspaceCoord = default(P2Int16);
             base.Clear(item);
         }
         

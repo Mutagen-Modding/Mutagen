@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region CountOrDistance
-        public Int32 CountOrDistance { get; set; } = default;
+        public Int32 CountOrDistance { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual void Clear(IAPackageTarget item)
         {
             ClearPartial();
-            item.CountOrDistance = default;
+            item.CountOrDistance = default(Int32);
         }
         
         #region Mutagen

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Starfield
         public String UnknownString1 { get; set; } = string.Empty;
         #endregion
         #region UnknownByte
-        public Byte UnknownByte { get; set; } = default;
+        public Byte UnknownByte { get; set; } = default(Byte);
         #endregion
         #region UnknownString2
         public String UnknownString2 { get; set; } = string.Empty;
@@ -79,16 +79,16 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region UnknownInt1
-        public Int32 UnknownInt1 { get; set; } = default;
+        public Int32 UnknownInt1 { get; set; } = default(Int32);
         #endregion
         #region UnknownInt2
-        public Int32 UnknownInt2 { get; set; } = default;
+        public Int32 UnknownInt2 { get; set; } = default(Int32);
         #endregion
         #region UnknownInt3
-        public Int32 UnknownInt3 { get; set; } = default;
+        public Int32 UnknownInt3 { get; set; } = default(Int32);
         #endregion
         #region UnknownInt4
-        public Int32 UnknownInt4 { get; set; } = default;
+        public Int32 UnknownInt4 { get; set; } = default(Int32);
         #endregion
         #region UnknownEnding
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1058,14 +1058,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.UnknownString1 = string.Empty;
-            item.UnknownByte = default;
+            item.UnknownByte = default(Byte);
             item.UnknownString2 = string.Empty;
             item.UnknownString3 = string.Empty;
             item.UnknownInts.Clear();
-            item.UnknownInt1 = default;
-            item.UnknownInt2 = default;
-            item.UnknownInt3 = default;
-            item.UnknownInt4 = default;
+            item.UnknownInt1 = default(Int32);
+            item.UnknownInt2 = default(Int32);
+            item.UnknownInt3 = default(Int32);
+            item.UnknownInt4 = default(Int32);
             item.UnknownEnding = Array.Empty<byte>();
             base.Clear(item);
         }
@@ -1746,22 +1746,22 @@ namespace Mutagen.Bethesda.Starfield
         #region UnknownInt1
         private int _UnknownInt1Location => UnknownIntsEndingPos;
         private bool _UnknownInt1_IsSet => _DATALocation.HasValue;
-        public Int32 UnknownInt1 => _UnknownInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt1Location, 4)) : default;
+        public Int32 UnknownInt1 => _UnknownInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt1Location, 4)) : default(Int32);
         #endregion
         #region UnknownInt2
         private int _UnknownInt2Location => UnknownIntsEndingPos + 0x4;
         private bool _UnknownInt2_IsSet => _DATALocation.HasValue;
-        public Int32 UnknownInt2 => _UnknownInt2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt2Location, 4)) : default;
+        public Int32 UnknownInt2 => _UnknownInt2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt2Location, 4)) : default(Int32);
         #endregion
         #region UnknownInt3
         private int _UnknownInt3Location => UnknownIntsEndingPos + 0x8;
         private bool _UnknownInt3_IsSet => _DATALocation.HasValue;
-        public Int32 UnknownInt3 => _UnknownInt3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt3Location, 4)) : default;
+        public Int32 UnknownInt3 => _UnknownInt3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt3Location, 4)) : default(Int32);
         #endregion
         #region UnknownInt4
         private int _UnknownInt4Location => UnknownIntsEndingPos + 0xC;
         private bool _UnknownInt4_IsSet => _DATALocation.HasValue;
-        public Int32 UnknownInt4 => _UnknownInt4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt4Location, 4)) : default;
+        public Int32 UnknownInt4 => _UnknownInt4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownInt4Location, 4)) : default(Int32);
         #endregion
         #region UnknownEnding
         private int _UnknownEndingLocation => UnknownIntsEndingPos + 0x10;

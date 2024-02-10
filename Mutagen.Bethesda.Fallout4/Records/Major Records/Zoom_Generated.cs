@@ -56,10 +56,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FovMult
-        public Single FovMult { get; set; } = default;
+        public Single FovMult { get; set; } = default(Single);
         #endregion
         #region Overlay
-        public Zoom.OverlayType Overlay { get; set; } = default;
+        public Zoom.OverlayType Overlay { get; set; } = default(Zoom.OverlayType);
         #endregion
         #region ImagespaceModifier
         private readonly IFormLink<IImageSpaceAdapterGetter> _ImagespaceModifier = new FormLink<IImageSpaceAdapterGetter>();
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IImageSpaceAdapterGetter> IZoomGetter.ImagespaceModifier => this.ImagespaceModifier;
         #endregion
         #region CameraOffset
-        public P3Float CameraOffset { get; set; } = default;
+        public P3Float CameraOffset { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -881,10 +881,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IZoomInternal item)
         {
             ClearPartial();
-            item.FovMult = default;
-            item.Overlay = default;
+            item.FovMult = default(Single);
+            item.Overlay = default(Zoom.OverlayType);
             item.ImagespaceModifier.Clear();
-            item.CameraOffset = default;
+            item.CameraOffset = default(P3Float);
             base.Clear(item);
         }
         
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region FovMult
         private int _FovMultLocation => _GNAMLocation!.Value.Min;
         private bool _FovMult_IsSet => _GNAMLocation.HasValue;
-        public Single FovMult => _FovMult_IsSet ? _recordData.Slice(_FovMultLocation, 4).Float() : default;
+        public Single FovMult => _FovMult_IsSet ? _recordData.Slice(_FovMultLocation, 4).Float() : default(Single);
         #endregion
         #region Overlay
         private int _OverlayLocation => _GNAMLocation!.Value.Min + 0x4;
@@ -1609,7 +1609,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region CameraOffset
         private int _CameraOffsetLocation => _GNAMLocation!.Value.Min + 0xC;
         private bool _CameraOffset_IsSet => _GNAMLocation.HasValue;
-        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_CameraOffsetLocation, 12)) : default;
+        public P3Float CameraOffset => _CameraOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_CameraOffsetLocation, 12)) : default(P3Float);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

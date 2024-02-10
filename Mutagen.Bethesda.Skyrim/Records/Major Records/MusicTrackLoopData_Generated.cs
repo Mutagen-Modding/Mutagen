@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Begins
-        public Single Begins { get; set; } = default;
+        public Single Begins { get; set; } = default(Single);
         #endregion
         #region Ends
-        public Single Ends { get; set; } = default;
+        public Single Ends { get; set; } = default(Single);
         #endregion
         #region Count
-        public UInt32 Count { get; set; } = default;
+        public UInt32 Count { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IMusicTrackLoopData item)
         {
             ClearPartial();
-            item.Begins = default;
-            item.Ends = default;
-            item.Count = default;
+            item.Begins = default(Single);
+            item.Ends = default(Single);
+            item.Count = default(UInt32);
         }
         
         #region Mutagen

@@ -94,10 +94,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
         #region Playable
-        public Boolean Playable { get; set; } = default;
+        public Boolean Playable { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -888,8 +888,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Name = default;
-            item.Color = default;
-            item.Playable = default;
+            item.Color = default(Color);
+            item.Playable = default(Boolean);
             base.Clear(item);
         }
         
@@ -1602,11 +1602,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Color
         private int? _ColorLocation;
-        public Color Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region Playable
         private int? _PlayableLocation;
-        public Boolean Playable => _PlayableLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayableLocation.Value, _package.MetaData.Constants)) >= 1 : default;
+        public Boolean Playable => _PlayableLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayableLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

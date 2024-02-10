@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Width
-        public Single Width { get; set; } = default;
+        public Single Width { get; set; } = default(Single);
         #endregion
         #region Height
-        public Single Height { get; set; } = default;
+        public Single Height { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IDimensions item)
         {
             ClearPartial();
-            item.Width = default;
-            item.Height = default;
+            item.Width = default(Single);
+            item.Height = default(Single);
         }
         
         #region Mutagen

@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IWorldspaceGetter> INavigationMapInfoWorldspaceParentGetter.Worldspace => this.Worldspace;
         #endregion
         #region Coord
-        public P2Int16 Coord { get; set; } = default;
+        public P2Int16 Coord { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Worldspace.Clear();
-            item.Coord = default;
+            item.Coord = default(P2Int16);
             base.Clear(item);
         }
         

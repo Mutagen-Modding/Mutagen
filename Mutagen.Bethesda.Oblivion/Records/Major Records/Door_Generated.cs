@@ -1681,7 +1681,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     item.RandomTeleportDestinations.SetTo(
                         rhs.RandomTeleportDestinations
-                        .Select(r => (IFormLinkGetter<IPlaceGetter>)new FormLink<IPlaceGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPlaceGetter>)new FormLink<IPlaceGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

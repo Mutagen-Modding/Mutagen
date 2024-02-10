@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
         #endregion
         #region GridPoint
-        public P2Int16 GridPoint { get; set; } = default;
+        public P2Int16 GridPoint { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
             ClearPartial();
             item.Direct.Clear();
             item.Indirect.Clear();
-            item.GridPoint = default;
+            item.GridPoint = default(P2Int16);
         }
         
         #region Mutagen

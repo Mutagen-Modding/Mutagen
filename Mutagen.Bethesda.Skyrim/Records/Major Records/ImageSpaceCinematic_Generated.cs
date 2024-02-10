@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Saturation
-        public Single Saturation { get; set; } = default;
+        public Single Saturation { get; set; } = default(Single);
         #endregion
         #region Brightness
-        public Single Brightness { get; set; } = default;
+        public Single Brightness { get; set; } = default(Single);
         #endregion
         #region Contrast
-        public Single Contrast { get; set; } = default;
+        public Single Contrast { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceCinematic item)
         {
             ClearPartial();
-            item.Saturation = default;
-            item.Brightness = default;
-            item.Contrast = default;
+            item.Saturation = default(Single);
+            item.Brightness = default(Single);
+            item.Contrast = default(Single);
         }
         
         #region Mutagen

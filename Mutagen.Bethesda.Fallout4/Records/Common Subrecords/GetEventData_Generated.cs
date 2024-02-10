@@ -54,10 +54,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region EventFunction
-        public UInt16 EventFunction { get; set; } = default;
+        public UInt16 EventFunction { get; set; } = default(UInt16);
         #endregion
         #region EventMember
-        public UInt16 EventMember { get; set; } = default;
+        public UInt16 EventMember { get; set; } = default(UInt16);
         #endregion
         #region Parameter3
         private readonly IFormLink<IFallout4MajorRecordGetter> _Parameter3 = new FormLink<IFallout4MajorRecordGetter>();
@@ -731,8 +731,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IGetEventData item)
         {
             ClearPartial();
-            item.EventFunction = default;
-            item.EventMember = default;
+            item.EventFunction = default(UInt16);
+            item.EventMember = default(UInt16);
             item.Parameter3.Clear();
             base.Clear(item);
         }

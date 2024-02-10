@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Offset
-        public Single Offset { get; set; } = default;
+        public Single Offset { get; set; } = default(Single);
         #endregion
         #region HeightMap
         public static readonly P2Int HeightMapFixedSize = new P2Int(33, 33);
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Unknown
-        public P3UInt8 Unknown { get; set; } = default;
+        public P3UInt8 Unknown { get; set; } = default(P3UInt8);
         #endregion
 
         #region To String
@@ -835,9 +835,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILandscapeVertexHeightMap item)
         {
             ClearPartial();
-            item.Offset = default;
-            item.HeightMap.SetAllTo(default);
-            item.Unknown = default;
+            item.Offset = default(Single);
+            item.HeightMap.SetAllTo(default(Byte));
+            item.Unknown = default(P3UInt8);
         }
         
         #region Mutagen
@@ -954,7 +954,8 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
                     }
                 }

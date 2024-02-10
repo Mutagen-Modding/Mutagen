@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region GridPosition
-        public P2Int16 GridPosition { get; set; } = default;
+        public P2Int16 GridPosition { get; set; } = default(P2Int16);
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorldspaceGridReference item)
         {
             ClearPartial();
-            item.GridPosition = default;
+            item.GridPosition = default(P2Int16);
             item.References.Clear();
         }
         

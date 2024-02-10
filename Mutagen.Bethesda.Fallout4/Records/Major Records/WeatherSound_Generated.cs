@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
         #region Type
-        public WeatherSound.TypeEnum Type { get; set; } = default;
+        public WeatherSound.TypeEnum Type { get; set; } = default(WeatherSound.TypeEnum);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Sound.Clear();
-            item.Type = default;
+            item.Type = default(WeatherSound.TypeEnum);
         }
         
         #region Mutagen

@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Unused1
-        public Int32 Unused1 { get; set; } = default;
+        public Int32 Unused1 { get; set; } = default(Int32);
         #endregion
         #region Walk
-        public Single Walk { get; set; } = default;
+        public Single Walk { get; set; } = default(Single);
         #endregion
         #region Run
-        public Single Run { get; set; } = default;
+        public Single Run { get; set; } = default(Single);
         #endregion
         #region Unused2
-        public Int32 Unused2 { get; set; } = default;
+        public Int32 Unused2 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -785,10 +785,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMovementRotationData item)
         {
             ClearPartial();
-            item.Unused1 = default;
-            item.Walk = default;
-            item.Run = default;
-            item.Unused2 = default;
+            item.Unused1 = default(Int32);
+            item.Walk = default(Single);
+            item.Run = default(Single);
+            item.Unused2 = default(Int32);
         }
         
         #region Mutagen

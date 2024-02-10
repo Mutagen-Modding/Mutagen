@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FirstParameter
-        public PerkSkillGroup FirstParameter { get; set; } = default;
+        public PerkSkillGroup FirstParameter { get; set; } = default(PerkSkillGroup);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         String? IHasPerkSkillGroupConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondParameter
-        public PerkSkillGroup SecondParameter { get; set; } = default;
+        public PerkSkillGroup SecondParameter { get; set; } = default(PerkSkillGroup);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IHasPerkSkillGroupConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default;
+            item.FirstParameter = default(PerkSkillGroup);
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondParameter = default(PerkSkillGroup);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

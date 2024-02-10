@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Flags
-        public ScenePhaseFragment.Flag Flags { get; set; } = default;
+        public ScenePhaseFragment.Flag Flags { get; set; } = default(ScenePhaseFragment.Flag);
         #endregion
         #region Index
-        public Byte Index { get; set; } = default;
+        public Byte Index { get; set; } = default(Byte);
         #endregion
         #region Unknown
-        public UInt32 Unknown { get; set; } = default;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
         #region ScriptName
         public String ScriptName { get; set; } = string.Empty;
@@ -821,9 +821,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IScenePhaseFragment item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Index = default;
-            item.Unknown = default;
+            item.Flags = default(ScenePhaseFragment.Flag);
+            item.Index = default(Byte);
+            item.Unknown = default(UInt32);
             item.ScriptName = string.Empty;
             item.FragmentName = string.Empty;
         }

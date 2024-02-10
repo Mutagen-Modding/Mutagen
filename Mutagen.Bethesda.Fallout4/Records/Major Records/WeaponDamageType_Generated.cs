@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IDamageTypeGetter> IWeaponDamageTypeGetter.DamageType => this.DamageType;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.DamageType.Clear();
-            item.Value = default;
+            item.Value = default(UInt32);
         }
         
         #region Mutagen

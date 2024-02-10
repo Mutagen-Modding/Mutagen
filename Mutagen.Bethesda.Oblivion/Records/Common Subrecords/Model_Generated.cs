@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public String File { get; set; } = string.Empty;
         #endregion
         #region BoundRadius
-        public Single BoundRadius { get; set; } = default;
+        public Single BoundRadius { get; set; } = default(Single);
         #endregion
         #region Hashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.File = string.Empty;
-            item.BoundRadius = default;
+            item.BoundRadius = default(Single);
             item.Hashes = default;
         }
         
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BoundRadius
         private int? _BoundRadiusLocation;
-        public Single BoundRadius => _BoundRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BoundRadiusLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single BoundRadius => _BoundRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BoundRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region Hashes
         private int? _HashesLocation;

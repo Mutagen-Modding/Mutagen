@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Index
-        public Single Index { get; set; } = default;
+        public Single Index { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IColorRemappingIndex item)
         {
             ClearPartial();
-            item.Index = default;
+            item.Index = default(Single);
             base.Clear(item);
         }
         

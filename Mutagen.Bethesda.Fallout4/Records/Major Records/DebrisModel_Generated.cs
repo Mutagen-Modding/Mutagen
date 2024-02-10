@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Percentage
-        public Byte Percentage { get; set; } = default;
+        public Byte Percentage { get; set; } = default(Byte);
         #endregion
         #region ModelFilename
         public String ModelFilename { get; set; } = string.Empty;
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? IDebrisModelGetter.TextureFileHashes => this.TextureFileHashes;
         #endregion
         #region DATADataTypeState
-        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default;
+        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default(DebrisModel.DATADataType);
         #endregion
 
         #region To String
@@ -859,11 +859,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDebrisModel item)
         {
             ClearPartial();
-            item.Percentage = default;
+            item.Percentage = default(Byte);
             item.ModelFilename = string.Empty;
-            item.Flags = default;
+            item.Flags = default(DebrisModel.Flag);
             item.TextureFileHashes = default;
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(DebrisModel.DATADataType);
         }
         
         #region Mutagen

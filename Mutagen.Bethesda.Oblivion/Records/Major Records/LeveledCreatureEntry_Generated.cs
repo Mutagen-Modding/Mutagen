@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Level
-        public Int16 Level { get; set; } = default;
+        public Int16 Level { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region Reference
         private readonly IFormLink<INpcSpawnGetter> _Reference = new FormLink<INpcSpawnGetter>();
@@ -847,8 +847,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILeveledCreatureEntry item)
         {
             ClearPartial();
-            item.Level = default;
-            item.Unknown = default;
+            item.Level = default(Int16);
+            item.Unknown = default(Int16);
             item.Reference.Clear();
             item.Count = default;
             item.Unknown2 = default;

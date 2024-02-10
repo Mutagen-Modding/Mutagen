@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region RunOnType
-        public Condition.RunOnType RunOnType { get; set; } = default;
+        public Condition.RunOnType RunOnType { get; set; } = default(Condition.RunOnType);
         #endregion
         #region Reference
         private readonly IFormLink<IFallout4MajorRecordGetter> _Reference = new FormLink<IFallout4MajorRecordGetter>();
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IConditionData item)
         {
             ClearPartial();
-            item.RunOnType = default;
+            item.RunOnType = default(Condition.RunOnType);
             item.Reference.Clear();
             item.Unknown3 = ConditionData.Unknown3Default;
         }

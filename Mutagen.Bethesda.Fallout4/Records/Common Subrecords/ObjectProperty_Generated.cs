@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IActorValueInformationGetter> IObjectPropertyGetter.ActorValue => this.ActorValue;
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ActorValue.Clear();
-            item.Value = default;
+            item.Value = default(Single);
         }
         
         #region Mutagen

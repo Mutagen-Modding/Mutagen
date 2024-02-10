@@ -212,10 +212,10 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IAlchemicalApparatusGetter.Description => this.Description;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1413,8 +1413,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.PutDownSound.Clear();
             item.Quality = default;
             item.Description = default;
-            item.Value = default;
-            item.Weight = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
             base.Clear(item);
         }
         
@@ -2692,12 +2692,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(UInt32);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

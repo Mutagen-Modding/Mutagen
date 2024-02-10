@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ArmorValue
-        public Single ArmorValue { get; set; } = default;
+        public Single ArmorValue { get; set; } = default(Single);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Health
-        public UInt32 Health { get; set; } = default;
+        public UInt32 Health { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -795,10 +795,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IArmorData item)
         {
             ClearPartial();
-            item.ArmorValue = default;
-            item.Value = default;
-            item.Health = default;
-            item.Weight = default;
+            item.ArmorValue = default(Single);
+            item.Value = default(UInt32);
+            item.Health = default(UInt32);
+            item.Weight = default(Single);
         }
         
         #region Mutagen

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Type
-        public MusicTrack.TypeEnum Type { get; set; } = default;
+        public MusicTrack.TypeEnum Type { get; set; } = default(MusicTrack.TypeEnum);
         #endregion
         #region Duration
         public Single? Duration { get; set; }
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMusicTrackInternal item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(MusicTrack.TypeEnum);
             item.Duration = default;
             item.FadeOut = default;
             item.MTSH = null;
@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Tracks = 
                             rhs.Tracks
-                            .Select(r => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
                     }
                     else

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region SpellSource
-        public CastSource SpellSource { get; set; } = default;
+        public CastSource SpellSource { get; set; } = default(CastSource);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISpellHasKeywordConditionData item)
         {
             ClearPartial();
-            item.SpellSource = default;
+            item.SpellSource = default(CastSource);
             item.FirstUnusedStringParameter = default;
             item.Keyword.Clear();
             item.SecondUnusedStringParameter = default;

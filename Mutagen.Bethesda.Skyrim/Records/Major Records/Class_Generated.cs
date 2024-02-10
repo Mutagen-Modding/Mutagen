@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IClassGetter.Icon => this.Icon;
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Teaches
         public Skill? Teaches { get; set; }
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         Skill? IClassGetter.Teaches => this.Teaches;
         #endregion
         #region MaxTrainingLevel
-        public Byte MaxTrainingLevel { get; set; } = default;
+        public Byte MaxTrainingLevel { get; set; } = default(Byte);
         #endregion
         #region SkillWeights
         private readonly Dictionary<Skill, Byte> _SkillWeights = new Dictionary<Skill, Byte>();
@@ -110,10 +110,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region BleedoutDefault
-        public Single BleedoutDefault { get; set; } = default;
+        public Single BleedoutDefault { get; set; } = default(Single);
         #endregion
         #region VoicePoints
-        public UInt32 VoicePoints { get; set; } = default;
+        public UInt32 VoicePoints { get; set; } = default(UInt32);
         #endregion
         #region StatWeights
         private readonly Dictionary<BasicStat, Byte> _StatWeights = new Dictionary<BasicStat, Byte>();
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Unknown2
-        public Byte Unknown2 { get; set; } = default;
+        public Byte Unknown2 { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -1385,14 +1385,14 @@ namespace Mutagen.Bethesda.Skyrim
             item.Name.Clear();
             item.Description = string.Empty;
             item.Icon = default;
-            item.Unknown = default;
+            item.Unknown = default(Int32);
             item.Teaches = default;
-            item.MaxTrainingLevel = default;
+            item.MaxTrainingLevel = default(Byte);
             item.SkillWeights.Clear();
-            item.BleedoutDefault = default;
-            item.VoicePoints = default;
+            item.BleedoutDefault = default(Single);
+            item.VoicePoints = default(UInt32);
             item.StatWeights.Clear();
-            item.Unknown2 = default;
+            item.Unknown2 = default(Byte);
             base.Clear(item);
         }
         
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
         #endregion
         #region Teaches
         private int _TeachesLocation => _DATALocation!.Value.Min + 0x4;
@@ -2341,12 +2341,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region BleedoutDefault
         private int _BleedoutDefaultLocation => _DATALocation!.Value.Min + 0x18;
         private bool _BleedoutDefault_IsSet => _DATALocation.HasValue;
-        public Single BleedoutDefault => _BleedoutDefault_IsSet ? _recordData.Slice(_BleedoutDefaultLocation, 4).Float() : default;
+        public Single BleedoutDefault => _BleedoutDefault_IsSet ? _recordData.Slice(_BleedoutDefaultLocation, 4).Float() : default(Single);
         #endregion
         #region VoicePoints
         private int _VoicePointsLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _VoicePoints_IsSet => _DATALocation.HasValue;
-        public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_VoicePointsLocation, 4)) : default;
+        public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_VoicePointsLocation, 4)) : default(UInt32);
         #endregion
         #region StatWeights
         private int _StatWeightsLocation => _DATALocation!.Value.Min + 0x20;

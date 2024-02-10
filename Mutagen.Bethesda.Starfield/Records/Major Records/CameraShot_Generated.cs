@@ -117,46 +117,46 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Action
-        public CameraShot.ActionType Action { get; set; } = default;
+        public CameraShot.ActionType Action { get; set; } = default(CameraShot.ActionType);
         #endregion
         #region Location
-        public CameraShot.LocationType Location { get; set; } = default;
+        public CameraShot.LocationType Location { get; set; } = default(CameraShot.LocationType);
         #endregion
         #region Target
-        public CameraShot.LocationType Target { get; set; } = default;
+        public CameraShot.LocationType Target { get; set; } = default(CameraShot.LocationType);
         #endregion
         #region Flags
-        public CameraShot.Flag Flags { get; set; } = default;
+        public CameraShot.Flag Flags { get; set; } = default(CameraShot.Flag);
         #endregion
         #region TimeMultiplierPlayer
-        public Single TimeMultiplierPlayer { get; set; } = default;
+        public Single TimeMultiplierPlayer { get; set; } = default(Single);
         #endregion
         #region TimeMultiplierTarget
-        public Single TimeMultiplierTarget { get; set; } = default;
+        public Single TimeMultiplierTarget { get; set; } = default(Single);
         #endregion
         #region TimeMultiplierGlobal
-        public Single TimeMultiplierGlobal { get; set; } = default;
+        public Single TimeMultiplierGlobal { get; set; } = default(Single);
         #endregion
         #region MaxTime
-        public Single MaxTime { get; set; } = default;
+        public Single MaxTime { get; set; } = default(Single);
         #endregion
         #region MinTime
-        public Single MinTime { get; set; } = default;
+        public Single MinTime { get; set; } = default(Single);
         #endregion
         #region TargetPercentBetweenActors
-        public Single TargetPercentBetweenActors { get; set; } = default;
+        public Single TargetPercentBetweenActors { get; set; } = default(Single);
         #endregion
         #region NearTargetDistance
-        public Single NearTargetDistance { get; set; } = default;
+        public Single NearTargetDistance { get; set; } = default(Single);
         #endregion
         #region LocationSpring
-        public Single LocationSpring { get; set; } = default;
+        public Single LocationSpring { get; set; } = default(Single);
         #endregion
         #region TargetSpring
-        public Single TargetSpring { get; set; } = default;
+        public Single TargetSpring { get; set; } = default(Single);
         #endregion
         #region RotationOffset
-        public P3Float RotationOffset { get; set; } = default;
+        public P3Float RotationOffset { get; set; } = default(P3Float);
         #endregion
         #region ImageSpaceModifier
         private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
@@ -1691,20 +1691,20 @@ namespace Mutagen.Bethesda.Starfield
             item.Keywords = null;
             item.Context = default;
             item.Conditions.Clear();
-            item.Action = default;
-            item.Location = default;
-            item.Target = default;
-            item.Flags = default;
-            item.TimeMultiplierPlayer = default;
-            item.TimeMultiplierTarget = default;
-            item.TimeMultiplierGlobal = default;
-            item.MaxTime = default;
-            item.MinTime = default;
-            item.TargetPercentBetweenActors = default;
-            item.NearTargetDistance = default;
-            item.LocationSpring = default;
-            item.TargetSpring = default;
-            item.RotationOffset = default;
+            item.Action = default(CameraShot.ActionType);
+            item.Location = default(CameraShot.LocationType);
+            item.Target = default(CameraShot.LocationType);
+            item.Flags = default(CameraShot.Flag);
+            item.TimeMultiplierPlayer = default(Single);
+            item.TimeMultiplierTarget = default(Single);
+            item.TimeMultiplierGlobal = default(Single);
+            item.MaxTime = default(Single);
+            item.MinTime = default(Single);
+            item.TargetPercentBetweenActors = default(Single);
+            item.NearTargetDistance = default(Single);
+            item.LocationSpring = default(Single);
+            item.TargetSpring = default(Single);
+            item.RotationOffset = default(P3Float);
             item.ImageSpaceModifier.Clear();
             item.Animation = default;
             base.Clear(item);
@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3013,52 +3013,52 @@ namespace Mutagen.Bethesda.Starfield
         #region TimeMultiplierPlayer
         private int _TimeMultiplierPlayerLocation => _DATALocation!.Value.Min + 0x10;
         private bool _TimeMultiplierPlayer_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _recordData.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default;
+        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _recordData.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default(Single);
         #endregion
         #region TimeMultiplierTarget
         private int _TimeMultiplierTargetLocation => _DATALocation!.Value.Min + 0x14;
         private bool _TimeMultiplierTarget_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _recordData.Slice(_TimeMultiplierTargetLocation, 4).Float() : default;
+        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _recordData.Slice(_TimeMultiplierTargetLocation, 4).Float() : default(Single);
         #endregion
         #region TimeMultiplierGlobal
         private int _TimeMultiplierGlobalLocation => _DATALocation!.Value.Min + 0x18;
         private bool _TimeMultiplierGlobal_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _recordData.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default;
+        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _recordData.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default(Single);
         #endregion
         #region MaxTime
         private int _MaxTimeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _MaxTime_IsSet => _DATALocation.HasValue;
-        public Single MaxTime => _MaxTime_IsSet ? _recordData.Slice(_MaxTimeLocation, 4).Float() : default;
+        public Single MaxTime => _MaxTime_IsSet ? _recordData.Slice(_MaxTimeLocation, 4).Float() : default(Single);
         #endregion
         #region MinTime
         private int _MinTimeLocation => _DATALocation!.Value.Min + 0x20;
         private bool _MinTime_IsSet => _DATALocation.HasValue;
-        public Single MinTime => _MinTime_IsSet ? _recordData.Slice(_MinTimeLocation, 4).Float() : default;
+        public Single MinTime => _MinTime_IsSet ? _recordData.Slice(_MinTimeLocation, 4).Float() : default(Single);
         #endregion
         #region TargetPercentBetweenActors
         private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value.Min + 0x24;
         private bool _TargetPercentBetweenActors_IsSet => _DATALocation.HasValue;
-        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _recordData.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default;
+        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _recordData.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default(Single);
         #endregion
         #region NearTargetDistance
         private int _NearTargetDistanceLocation => _DATALocation!.Value.Min + 0x28;
         private bool _NearTargetDistance_IsSet => _DATALocation.HasValue;
-        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _recordData.Slice(_NearTargetDistanceLocation, 4).Float() : default;
+        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _recordData.Slice(_NearTargetDistanceLocation, 4).Float() : default(Single);
         #endregion
         #region LocationSpring
         private int _LocationSpringLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _LocationSpring_IsSet => _DATALocation.HasValue;
-        public Single LocationSpring => _LocationSpring_IsSet ? _recordData.Slice(_LocationSpringLocation, 4).Float() : default;
+        public Single LocationSpring => _LocationSpring_IsSet ? _recordData.Slice(_LocationSpringLocation, 4).Float() : default(Single);
         #endregion
         #region TargetSpring
         private int _TargetSpringLocation => _DATALocation!.Value.Min + 0x30;
         private bool _TargetSpring_IsSet => _DATALocation.HasValue;
-        public Single TargetSpring => _TargetSpring_IsSet ? _recordData.Slice(_TargetSpringLocation, 4).Float() : default;
+        public Single TargetSpring => _TargetSpring_IsSet ? _recordData.Slice(_TargetSpringLocation, 4).Float() : default(Single);
         #endregion
         #region RotationOffset
         private int _RotationOffsetLocation => _DATALocation!.Value.Min + 0x34;
         private bool _RotationOffset_IsSet => _DATALocation.HasValue;
-        public P3Float RotationOffset => _RotationOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationOffsetLocation, 12)) : default;
+        public P3Float RotationOffset => _RotationOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationOffsetLocation, 12)) : default(P3Float);
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;

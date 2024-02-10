@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Point
-        public P3Float Point { get; set; } = default;
+        public P3Float Point { get; set; } = default(P3Float);
         #endregion
         #region NumConnectionsFluffBytes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -835,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IRoadPoint item)
         {
             ClearPartial();
-            item.Point = default;
+            item.Point = default(P3Float);
             item.NumConnectionsFluffBytes = new byte[3];
             item.Connections.Clear();
         }

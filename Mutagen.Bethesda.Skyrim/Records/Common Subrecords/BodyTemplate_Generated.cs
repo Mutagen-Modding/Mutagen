@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FirstPersonFlags
-        public BipedObjectFlag FirstPersonFlags { get; set; } = default;
+        public BipedObjectFlag FirstPersonFlags { get; set; } = default(BipedObjectFlag);
         #endregion
         #region Flags
-        public BodyTemplate.Flag Flags { get; set; } = default;
+        public BodyTemplate.Flag Flags { get; set; } = default(BodyTemplate.Flag);
         #endregion
         #region ArmorType
-        public ArmorType ArmorType { get; set; } = default;
+        public ArmorType ArmorType { get; set; } = default(ArmorType);
         #endregion
         #region ActsLike44
-        public Boolean ActsLike44 { get; set; } = default;
+        public Boolean ActsLike44 { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -806,10 +806,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IBodyTemplate item)
         {
             ClearPartial();
-            item.FirstPersonFlags = default;
-            item.Flags = default;
-            item.ArmorType = default;
-            item.ActsLike44 = default;
+            item.FirstPersonFlags = default(BipedObjectFlag);
+            item.Flags = default(BodyTemplate.Flag);
+            item.ArmorType = default(ArmorType);
+            item.ActsLike44 = default(Boolean);
         }
         
         #region Mutagen

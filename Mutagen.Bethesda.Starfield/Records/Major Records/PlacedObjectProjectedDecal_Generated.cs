@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region WidthScale
-        public Single WidthScale { get; set; } = default;
+        public Single WidthScale { get; set; } = default(Single);
         #endregion
         #region HeightScale
-        public Single HeightScale { get; set; } = default;
+        public Single HeightScale { get; set; } = default(Single);
         #endregion
         #region UnknownFloat
-        public Single UnknownFloat { get; set; } = default;
+        public Single UnknownFloat { get; set; } = default(Single);
         #endregion
         #region UnknownInt
-        public UInt32 UnknownInt { get; set; } = default;
+        public UInt32 UnknownInt { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectProjectedDecal item)
         {
             ClearPartial();
-            item.WidthScale = default;
-            item.HeightScale = default;
-            item.UnknownFloat = default;
-            item.UnknownInt = default;
+            item.WidthScale = default(Single);
+            item.HeightScale = default(Single);
+            item.UnknownFloat = default(Single);
+            item.UnknownInt = default(UInt32);
         }
         
         #region Mutagen

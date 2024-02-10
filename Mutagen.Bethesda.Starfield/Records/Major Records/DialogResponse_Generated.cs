@@ -64,10 +64,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IKeywordGetter> IDialogResponseGetter.Emotion => this.Emotion;
         #endregion
         #region WEMFile
-        public UInt32 WEMFile { get; set; } = default;
+        public UInt32 WEMFile { get; set; } = default(UInt32);
         #endregion
         #region TRDAUnknown
-        public Single TRDAUnknown { get; set; } = default;
+        public Single TRDAUnknown { get; set; } = default(Single);
         #endregion
         #region TROTs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -155,16 +155,16 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IDialogResponseGetter.FLAV => this.FLAV;
         #endregion
         #region QUAL
-        public Boolean QUAL { get; set; } = default;
+        public Boolean QUAL { get; set; } = default(Boolean);
         #endregion
         #region DOFT
-        public Boolean DOFT { get; set; } = default;
+        public Boolean DOFT { get; set; } = default(Boolean);
         #endregion
         #region DPLT
-        public Boolean DPLT { get; set; } = default;
+        public Boolean DPLT { get; set; } = default(Boolean);
         #endregion
         #region OCOR
-        public Boolean OCOR { get; set; } = default;
+        public Boolean OCOR { get; set; } = default(Boolean);
         #endregion
         #region LVCR
         public Single? LVCR { get; set; }
@@ -183,10 +183,10 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IDialogResponseGetter.ATAC => this.ATAC;
         #endregion
         #region PLRL
-        public Boolean PLRL { get; set; } = default;
+        public Boolean PLRL { get; set; } = default(Boolean);
         #endregion
         #region XNAM
-        public Boolean XNAM { get; set; } = default;
+        public Boolean XNAM { get; set; } = default(Boolean);
         #endregion
         #region HNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1708,8 +1708,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Emotion.Clear();
-            item.WEMFile = default;
-            item.TRDAUnknown = default;
+            item.WEMFile = default(UInt32);
+            item.TRDAUnknown = default(Single);
             item.TROTs.Clear();
             item.Text.Clear();
             item.ScriptNotes = string.Empty;
@@ -1721,14 +1721,14 @@ namespace Mutagen.Bethesda.Starfield
             item.VCLR.Clear();
             item.FLMV = default;
             item.FLAV = default;
-            item.QUAL = default;
-            item.DOFT = default;
-            item.DPLT = default;
-            item.OCOR = default;
+            item.QUAL = default(Boolean);
+            item.DOFT = default(Boolean);
+            item.DPLT = default(Boolean);
+            item.OCOR = default(Boolean);
             item.LVCR = default;
             item.ATAC = default;
-            item.PLRL = default;
-            item.XNAM = default;
+            item.PLRL = default(Boolean);
+            item.XNAM = default(Boolean);
             item.HNAM = null;
             item.RVSH = null;
         }
@@ -2870,12 +2870,12 @@ namespace Mutagen.Bethesda.Starfield
         #region WEMFile
         private int _WEMFileLocation => _TRDALocation!.Value.Min + 0x4;
         private bool _WEMFile_IsSet => _TRDALocation.HasValue;
-        public UInt32 WEMFile => _WEMFile_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WEMFileLocation, 4)) : default;
+        public UInt32 WEMFile => _WEMFile_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WEMFileLocation, 4)) : default(UInt32);
         #endregion
         #region TRDAUnknown
         private int _TRDAUnknownLocation => _TRDALocation!.Value.Min + 0x8;
         private bool _TRDAUnknown_IsSet => _TRDALocation.HasValue;
-        public Single TRDAUnknown => _TRDAUnknown_IsSet ? _recordData.Slice(_TRDAUnknownLocation, 4).Float() : default;
+        public Single TRDAUnknown => _TRDAUnknown_IsSet ? _recordData.Slice(_TRDAUnknownLocation, 4).Float() : default(Single);
         #endregion
         public IReadOnlyList<IDialogResponseTROTGetter> TROTs { get; private set; } = Array.Empty<IDialogResponseTROTGetter>();
         #region Text
@@ -2920,19 +2920,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region QUAL
         private int? _QUALLocation;
-        public Boolean QUAL => _QUALLocation.HasValue ? true : default;
+        public Boolean QUAL => _QUALLocation.HasValue ? true : default(Boolean);
         #endregion
         #region DOFT
         private int? _DOFTLocation;
-        public Boolean DOFT => _DOFTLocation.HasValue ? true : default;
+        public Boolean DOFT => _DOFTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region DPLT
         private int? _DPLTLocation;
-        public Boolean DPLT => _DPLTLocation.HasValue ? true : default;
+        public Boolean DPLT => _DPLTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region OCOR
         private int? _OCORLocation;
-        public Boolean OCOR => _OCORLocation.HasValue ? true : default;
+        public Boolean OCOR => _OCORLocation.HasValue ? true : default(Boolean);
         #endregion
         #region LVCR
         private int? _LVCRLocation;
@@ -2944,11 +2944,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region PLRL
         private int? _PLRLLocation;
-        public Boolean PLRL => _PLRLLocation.HasValue ? true : default;
+        public Boolean PLRL => _PLRLLocation.HasValue ? true : default(Boolean);
         #endregion
         #region XNAM
         private int? _XNAMLocation;
-        public Boolean XNAM => _XNAMLocation.HasValue ? true : default;
+        public Boolean XNAM => _XNAMLocation.HasValue ? true : default(Boolean);
         #endregion
         public IHnamHnamGetter? HNAM { get; private set; }
         public ISoundReferenceGetter? RVSH { get; private set; }

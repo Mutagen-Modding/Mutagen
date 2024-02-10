@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Start
-        public Color Start { get; set; } = default;
+        public Color Start { get; set; } = default(Color);
         #endregion
         #region End
-        public Color End { get; set; } = default;
+        public Color End { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -721,8 +721,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILinkedReferenceColor item)
         {
             ClearPartial();
-            item.Start = default;
-            item.End = default;
+            item.Start = default(Color);
+            item.End = default(Color);
         }
         
         #region Mutagen

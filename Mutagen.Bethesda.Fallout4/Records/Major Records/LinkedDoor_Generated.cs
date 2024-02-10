@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Door
         private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILinkedDoor item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.Unknown = default(Int32);
             item.Door.Clear();
         }
         

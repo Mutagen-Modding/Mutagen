@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
         #region UnarmedWeapon
         private readonly IFormLink<IWeaponGetter> _UnarmedWeapon = new FormLink<IWeaponGetter>();
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcRaceOverrideUnarmedWeapon item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.Unknown = default(Single);
             item.UnarmedWeapon.Clear();
         }
         

@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Point
-        public P3Float Point { get; set; } = default;
+        public P3Float Point { get; set; } = default(P3Float);
         #endregion
         #region NumConnections
-        public Byte NumConnections { get; set; } = default;
+        public Byte NumConnections { get; set; } = default(Byte);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -871,8 +871,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IPathGridPoint item)
         {
             ClearPartial();
-            item.Point = default;
-            item.NumConnections = default;
+            item.Point = default(P3Float);
+            item.NumConnections = default(Byte);
             item.Unused = new byte[3];
             item.Connections.Clear();
         }

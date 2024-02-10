@@ -94,19 +94,19 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region LoopingSecondsMin
-        public Byte LoopingSecondsMin { get; set; } = default;
+        public Byte LoopingSecondsMin { get; set; } = default(Byte);
         #endregion
         #region LoopingSecondsMax
-        public Byte LoopingSecondsMax { get; set; } = default;
+        public Byte LoopingSecondsMax { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public IdleAnimation.Flag Flags { get; set; } = default;
+        public IdleAnimation.Flag Flags { get; set; } = default(IdleAnimation.Flag);
         #endregion
         #region AnimationGroupSection
-        public Byte AnimationGroupSection { get; set; } = default;
+        public Byte AnimationGroupSection { get; set; } = default(Byte);
         #endregion
         #region ReplayDelay
-        public UInt16 ReplayDelay { get; set; } = default;
+        public UInt16 ReplayDelay { get; set; } = default(UInt16);
         #endregion
         #region AnimationFile
         public String? AnimationFile { get; set; }
@@ -1263,11 +1263,11 @@ namespace Mutagen.Bethesda.Fallout4
             item.BehaviorGraph = default;
             item.AnimationEvent = default;
             item.RelatedIdles.Clear();
-            item.LoopingSecondsMin = default;
-            item.LoopingSecondsMax = default;
-            item.Flags = default;
-            item.AnimationGroupSection = default;
-            item.ReplayDelay = default;
+            item.LoopingSecondsMin = default(Byte);
+            item.LoopingSecondsMax = default(Byte);
+            item.Flags = default(IdleAnimation.Flag);
+            item.AnimationGroupSection = default(Byte);
+            item.ReplayDelay = default(UInt16);
             item.AnimationFile = default;
             base.Clear(item);
         }
@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.RelatedIdles.SetTo(
                         rhs.RelatedIdles
-                        .Select(r => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2250,7 +2250,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ReplayDelay
         private int _ReplayDelayLocation => _DATALocation!.Value.Min + 0x4;
         private bool _ReplayDelay_IsSet => _DATALocation.HasValue;
-        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ReplayDelayLocation, 2)) : default;
+        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ReplayDelayLocation, 2)) : default(UInt16);
         #endregion
         #region AnimationFile
         private int? _AnimationFileLocation;

@@ -51,22 +51,22 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown1
-        public Int32 Unknown1 { get; set; } = default;
+        public Int32 Unknown1 { get; set; } = default(Int32);
         #endregion
         #region SpawnInProjectionOffset
-        public Single SpawnInProjectionOffset { get; set; } = default;
+        public Single SpawnInProjectionOffset { get; set; } = default(Single);
         #endregion
         #region MassComparedToEarth
-        public Int32 MassComparedToEarth { get; set; } = default;
+        public Int32 MassComparedToEarth { get; set; } = default(Int32);
         #endregion
         #region RadiusInKilometers
-        public Single RadiusInKilometers { get; set; } = default;
+        public Single RadiusInKilometers { get; set; } = default(Single);
         #endregion
         #region Gravity
-        public Single Gravity { get; set; } = default;
+        public Single Gravity { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -864,12 +864,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetFNAM item)
         {
             ClearPartial();
-            item.Unknown1 = default;
-            item.SpawnInProjectionOffset = default;
-            item.MassComparedToEarth = default;
-            item.RadiusInKilometers = default;
-            item.Gravity = default;
-            item.Unknown2 = default;
+            item.Unknown1 = default(Int32);
+            item.SpawnInProjectionOffset = default(Single);
+            item.MassComparedToEarth = default(Int32);
+            item.RadiusInKilometers = default(Single);
+            item.Gravity = default(Single);
+            item.Unknown2 = default(Int32);
         }
         
         #region Mutagen

@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectVariableGetter.TypeName => this.TypeName;
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
         #region VariableData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Pex
             ClearPartial();
             item.Name = default;
             item.TypeName = default;
-            item.RawUserFlags = default;
+            item.RawUserFlags = default(UInt32);
             item.VariableData = null;
         }
         

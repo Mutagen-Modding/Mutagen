@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BenchType
-        public WorkbenchData.Type BenchType { get; set; } = default;
+        public WorkbenchData.Type BenchType { get; set; } = default(WorkbenchData.Type);
         #endregion
         #region UsesSkill
         public Skill? UsesSkill { get; set; }
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWorkbenchData item)
         {
             ClearPartial();
-            item.BenchType = default;
+            item.BenchType = default(WorkbenchData.Type);
             item.UsesSkill = default;
         }
         

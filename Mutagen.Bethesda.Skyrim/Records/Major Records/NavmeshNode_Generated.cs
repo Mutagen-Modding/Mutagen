@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<INavigationMeshGetter> INavmeshNodeGetter.NavMesh => this.NavMesh;
         #endregion
         #region NodeIndex
-        public UInt32 NodeIndex { get; set; } = default;
+        public UInt32 NodeIndex { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.NavMesh.Clear();
-            item.NodeIndex = default;
+            item.NodeIndex = default(UInt32);
         }
         
         #region Mutagen

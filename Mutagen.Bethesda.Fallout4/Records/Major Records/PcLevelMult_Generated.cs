@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region LevelMult
-        public Single LevelMult { get; set; } = default;
+        public Single LevelMult { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPcLevelMult item)
         {
             ClearPartial();
-            item.LevelMult = default;
+            item.LevelMult = default(Single);
             base.Clear(item);
         }
         

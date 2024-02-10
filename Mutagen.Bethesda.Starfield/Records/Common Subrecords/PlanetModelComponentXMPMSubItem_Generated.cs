@@ -54,13 +54,13 @@ namespace Mutagen.Bethesda.Starfield
         public String Unknown1 { get; set; } = string.Empty;
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
         #region Unknown3
         public String Unknown3 { get; set; } = string.Empty;
         #endregion
         #region Unknown4
-        public Int32 Unknown4 { get; set; } = default;
+        public Int32 Unknown4 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -786,9 +786,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Unknown1 = string.Empty;
-            item.Unknown2 = default;
+            item.Unknown2 = default(Int32);
             item.Unknown3 = string.Empty;
-            item.Unknown4 = default;
+            item.Unknown4 = default(Int32);
         }
         
         #region Mutagen

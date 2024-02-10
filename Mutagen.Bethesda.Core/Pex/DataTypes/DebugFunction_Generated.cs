@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Pex
         public String FunctionName { get; set; } = string.Empty;
         #endregion
         #region FunctionType
-        public DebugFunctionType FunctionType { get; set; } = default;
+        public DebugFunctionType FunctionType { get; set; } = default(DebugFunctionType);
         #endregion
         #region Instructions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Pex
             item.ObjectName = string.Empty;
             item.StateName = string.Empty;
             item.FunctionName = string.Empty;
-            item.FunctionType = default;
+            item.FunctionType = default(DebugFunctionType);
             item.Instructions.Clear();
         }
         

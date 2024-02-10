@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Value1
-        public UInt32 Value1 { get; set; } = default;
+        public UInt32 Value1 { get; set; } = default(UInt32);
         #endregion
         #region Value2
-        public UInt32 Value2 { get; set; } = default;
+        public UInt32 Value2 { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectModItem item)
         {
             ClearPartial();
-            item.Value1 = default;
-            item.Value2 = default;
+            item.Value1 = default(UInt32);
+            item.Value2 = default(UInt32);
         }
         
         #region Mutagen

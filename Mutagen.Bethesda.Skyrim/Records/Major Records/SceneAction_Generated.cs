@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public SceneAction.TypeEnum Type { get; set; } = default;
+        public SceneAction.TypeEnum Type { get; set; } = default(SceneAction.TypeEnum);
         #endregion
         #region Name
         /// <summary>
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISceneAction item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(SceneAction.TypeEnum);
             item.Name = default;
             item.ActorID = default;
             item.LNAM = default;
@@ -1912,7 +1912,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

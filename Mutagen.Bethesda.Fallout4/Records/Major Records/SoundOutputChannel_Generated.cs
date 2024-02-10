@@ -51,28 +51,28 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region L
-        public Byte L { get; set; } = default;
+        public Byte L { get; set; } = default(Byte);
         #endregion
         #region R
-        public Byte R { get; set; } = default;
+        public Byte R { get; set; } = default(Byte);
         #endregion
         #region C
-        public Byte C { get; set; } = default;
+        public Byte C { get; set; } = default(Byte);
         #endregion
         #region LFE
-        public Byte LFE { get; set; } = default;
+        public Byte LFE { get; set; } = default(Byte);
         #endregion
         #region RL
-        public Byte RL { get; set; } = default;
+        public Byte RL { get; set; } = default(Byte);
         #endregion
         #region RR
-        public Byte RR { get; set; } = default;
+        public Byte RR { get; set; } = default(Byte);
         #endregion
         #region BL
-        public Byte BL { get; set; } = default;
+        public Byte BL { get; set; } = default(Byte);
         #endregion
         #region BR
-        public Byte BR { get; set; } = default;
+        public Byte BR { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -929,14 +929,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundOutputChannel item)
         {
             ClearPartial();
-            item.L = default;
-            item.R = default;
-            item.C = default;
-            item.LFE = default;
-            item.RL = default;
-            item.RR = default;
-            item.BL = default;
-            item.BR = default;
+            item.L = default(Byte);
+            item.R = default(Byte);
+            item.C = default(Byte);
+            item.LFE = default(Byte);
+            item.RL = default(Byte);
+            item.RR = default(Byte);
+            item.BL = default(Byte);
+            item.BR = default(Byte);
         }
         
         #region Mutagen

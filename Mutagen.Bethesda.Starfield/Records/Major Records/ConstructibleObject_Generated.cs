@@ -140,13 +140,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IConstructibleObjectTargetGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
         #endregion
         #region AmountProduced
-        public UInt16 AmountProduced { get; set; } = default;
+        public UInt16 AmountProduced { get; set; } = default(UInt16);
         #endregion
         #region MenuSortOrder
-        public Single MenuSortOrder { get; set; } = default;
+        public Single MenuSortOrder { get; set; } = default(Single);
         #endregion
         #region TNAM
-        public Byte TNAM { get; set; } = default;
+        public Byte TNAM { get; set; } = default(Byte);
         #endregion
         #region CraftingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
         ConstructibleObject.LearnMethodEnum? IConstructibleObjectGetter.LearnMethod => this.LearnMethod;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region MenuArtObject
         private readonly IFormLinkNullable<IArtObjectGetter> _MenuArtObject = new FormLinkNullable<IArtObjectGetter>();
@@ -1909,14 +1909,14 @@ namespace Mutagen.Bethesda.Starfield
             item.ConstructableComponents = null;
             item.RequiredPerks = null;
             item.CreatedObject.Clear();
-            item.AmountProduced = default;
-            item.MenuSortOrder = default;
-            item.TNAM = default;
+            item.AmountProduced = default(UInt16);
+            item.MenuSortOrder = default(Single);
+            item.TNAM = default(Byte);
             item.CraftingSound = null;
             item.PickupSound = null;
             item.DropdownSound = null;
             item.LearnMethod = default;
-            item.Value = default;
+            item.Value = default(UInt32);
             item.MenuArtObject.Clear();
             item.BuildLimit.Clear();
             item.Categories = null;
@@ -2900,7 +2900,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Categories = 
                             rhs.Categories
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3514,11 +3514,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AmountProduced
         private int? _AmountProducedLocation;
-        public UInt16 AmountProduced => _AmountProducedLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmountProducedLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 AmountProduced => _AmountProducedLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmountProducedLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region MenuSortOrder
         private int? _MenuSortOrderLocation;
-        public Single MenuSortOrder => _MenuSortOrderLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuSortOrderLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single MenuSortOrder => _MenuSortOrderLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuSortOrderLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region TNAM
         private int? _TNAMLocation;
@@ -3533,7 +3533,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Value
         private int? _ValueLocation;
-        public UInt32 Value => _ValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 Value => _ValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region MenuArtObject
         private int? _MenuArtObjectLocation;

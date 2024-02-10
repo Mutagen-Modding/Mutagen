@@ -57,10 +57,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EntryPoint
-        public APerkEntryPointEffect.EntryType EntryPoint { get; set; } = default;
+        public APerkEntryPointEffect.EntryType EntryPoint { get; set; } = default(APerkEntryPointEffect.EntryType);
         #endregion
         #region PerkConditionTabCount
-        public Byte PerkConditionTabCount { get; set; } = default;
+        public Byte PerkConditionTabCount { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -683,8 +683,8 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(IAPerkEntryPointEffect item)
         {
             ClearPartial();
-            item.EntryPoint = default;
-            item.PerkConditionTabCount = default;
+            item.EntryPoint = default(APerkEntryPointEffect.EntryType);
+            item.PerkConditionTabCount = default(Byte);
             base.Clear(item);
         }
         

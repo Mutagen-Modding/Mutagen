@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region First
-        public P3Int16 First { get; set; } = default;
+        public P3Int16 First { get; set; } = default(P3Int16);
         #endregion
         #region Second
-        public P3Int16 Second { get; set; } = default;
+        public P3Int16 Second { get; set; } = default(P3Int16);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectBounds item)
         {
             ClearPartial();
-            item.First = default;
-            item.Second = default;
+            item.First = default(P3Int16);
+            item.Second = default(P3Int16);
         }
         
         #region Mutagen

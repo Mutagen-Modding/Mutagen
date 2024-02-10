@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Starfield
         DialogResponses.SubtitlePriorityLevel? IDialogResponsesGetter.SubtitlePriority => this.SubtitlePriority;
         #endregion
         #region COCT
-        public Boolean COCT { get; set; } = default;
+        public Boolean COCT { get; set; } = default(Boolean);
         #endregion
         #region NAM8
         private readonly IFormLinkNullable<IAffinityEventGetter> _NAM8 = new FormLinkNullable<IAffinityEventGetter>();
@@ -1891,7 +1891,7 @@ namespace Mutagen.Bethesda.Starfield
             item.StartScenePhase = default;
             item.ResetGlobal.Clear();
             item.SubtitlePriority = default;
-            item.COCT = default;
+            item.COCT = default(Boolean);
             item.NAM8.Clear();
             item.Perk.Clear();
             item.SpeechChallenge.Clear();
@@ -3481,7 +3481,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region COCT
         private int? _COCTLocation;
-        public Boolean COCT => _COCTLocation.HasValue ? true : default;
+        public Boolean COCT => _COCTLocation.HasValue ? true : default(Boolean);
         #endregion
         #region NAM8
         private int? _NAM8Location;

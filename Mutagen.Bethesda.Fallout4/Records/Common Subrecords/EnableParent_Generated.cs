@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public EnableParent.VersioningBreaks Versioning { get; set; } = default;
+        public EnableParent.VersioningBreaks Versioning { get; set; } = default(EnableParent.VersioningBreaks);
         #endregion
         #region Reference
         private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
-        public EnableParent.Flag Flags { get; set; } = default;
+        public EnableParent.Flag Flags { get; set; } = default(EnableParent.Flag);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -820,9 +820,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IEnableParent item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(EnableParent.VersioningBreaks);
             item.Reference.Clear();
-            item.Flags = default;
+            item.Flags = default(EnableParent.Flag);
             item.Unknown = new byte[3];
         }
         

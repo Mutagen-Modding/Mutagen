@@ -251,10 +251,10 @@ namespace Mutagen.Bethesda.Fallout4
         String? IQuestGetter.SwfFile => this.SwfFile;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region DialogBranches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2663,8 +2663,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.Description = default;
             item.QuestGroup.Clear();
             item.SwfFile = default;
-            item.Timestamp = default;
-            item.Unknown = default;
+            item.Timestamp = default(Int32);
+            item.Unknown = default(Int32);
             item.DialogBranches.Clear();
             item.DialogTopics.Clear();
             item.Scenes.Clear();
@@ -4164,7 +4164,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

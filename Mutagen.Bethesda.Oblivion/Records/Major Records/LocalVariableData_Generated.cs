@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        public Int32 Index { get; set; } = default;
+        public Int32 Index { get; set; } = default(Int32);
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -65,10 +65,10 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte> ILocalVariableDataGetter.Unknown => this.Unknown;
         #endregion
         #region Flags
-        public Script.LocalVariableFlag Flags { get; set; } = default;
+        public Script.LocalVariableFlag Flags { get; set; } = default(Script.LocalVariableFlag);
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -800,10 +800,10 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILocalVariableData item)
         {
             ClearPartial();
-            item.Index = default;
+            item.Index = default(Int32);
             item.Unknown = new byte[12];
-            item.Flags = default;
-            item.Unknown2 = default;
+            item.Flags = default(Script.LocalVariableFlag);
+            item.Unknown2 = default(Int32);
         }
         
         #region Mutagen

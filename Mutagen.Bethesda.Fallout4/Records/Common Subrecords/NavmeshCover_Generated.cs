@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Vertex1
-        public UInt16 Vertex1 { get; set; } = default;
+        public UInt16 Vertex1 { get; set; } = default(UInt16);
         #endregion
         #region Vertex2
-        public UInt16 Vertex2 { get; set; } = default;
+        public UInt16 Vertex2 { get; set; } = default(UInt16);
         #endregion
         #region Data
-        public UInt32 Data { get; set; } = default;
+        public UInt32 Data { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -749,9 +749,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INavmeshCover item)
         {
             ClearPartial();
-            item.Vertex1 = default;
-            item.Vertex2 = default;
-            item.Data = default;
+            item.Vertex1 = default(UInt16);
+            item.Vertex2 = default(UInt16);
+            item.Data = default(UInt32);
         }
         
         #region Mutagen

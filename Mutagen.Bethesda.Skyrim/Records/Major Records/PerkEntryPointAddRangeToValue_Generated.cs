@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region From
-        public Single From { get; set; } = default;
+        public Single From { get; set; } = default(Single);
         #endregion
         #region To
-        public Single To { get; set; } = default;
+        public Single To { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -693,8 +693,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPerkEntryPointAddRangeToValue item)
         {
             ClearPartial();
-            item.From = default;
-            item.To = default;
+            item.From = default(Single);
+            item.To = default(Single);
             base.Clear(item);
         }
         

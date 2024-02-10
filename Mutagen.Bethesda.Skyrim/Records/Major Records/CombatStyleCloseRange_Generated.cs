@@ -51,19 +51,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public CombatStyleCloseRange.VersioningBreaks Versioning { get; set; } = default;
+        public CombatStyleCloseRange.VersioningBreaks Versioning { get; set; } = default(CombatStyleCloseRange.VersioningBreaks);
         #endregion
         #region CircleMult
-        public Single CircleMult { get; set; } = default;
+        public Single CircleMult { get; set; } = default(Single);
         #endregion
         #region FallbackMult
-        public Single FallbackMult { get; set; } = default;
+        public Single FallbackMult { get; set; } = default(Single);
         #endregion
         #region FlankDistance
-        public Single FlankDistance { get; set; } = default;
+        public Single FlankDistance { get; set; } = default(Single);
         #endregion
         #region StalkTime
-        public Single StalkTime { get; set; } = default;
+        public Single StalkTime { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -836,11 +836,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ICombatStyleCloseRange item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.CircleMult = default;
-            item.FallbackMult = default;
-            item.FlankDistance = default;
-            item.StalkTime = default;
+            item.Versioning = default(CombatStyleCloseRange.VersioningBreaks);
+            item.CircleMult = default(Single);
+            item.FallbackMult = default(Single);
+            item.FlankDistance = default(Single);
+            item.StalkTime = default(Single);
         }
         
         #region Mutagen

@@ -347,10 +347,10 @@ namespace Mutagen.Bethesda.Starfield
         String? IQuestGetter.ScriptComment => this.ScriptComment;
         #endregion
         #region Timestamp
-        public Int32 Timestamp { get; set; } = default;
+        public Int32 Timestamp { get; set; } = default(Int32);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region DialogBranches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3257,8 +3257,8 @@ namespace Mutagen.Bethesda.Starfield
             item.MissionBoardInfoPanels.Clear();
             item.Keywords = null;
             item.ScriptComment = default;
-            item.Timestamp = default;
-            item.Unknown = default;
+            item.Timestamp = default(Int32);
+            item.Unknown = default(Int32);
             item.DialogBranches.Clear();
             item.DialogTopics.Clear();
             item.Scenes.Clear();
@@ -5185,7 +5185,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5386,7 +5386,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

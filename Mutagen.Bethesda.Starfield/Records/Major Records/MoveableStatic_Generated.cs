@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region DATA
-        public Byte DATA { get; set; } = default;
+        public Byte DATA { get; set; } = default(Byte);
         #endregion
         #region MSLS
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Destructible = null;
             item.Keywords = null;
             item.Properties = null;
-            item.DATA = default;
+            item.DATA = default(Byte);
             item.MSLS = null;
             item.MSMO = default;
             base.Clear(item);
@@ -3026,7 +3026,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

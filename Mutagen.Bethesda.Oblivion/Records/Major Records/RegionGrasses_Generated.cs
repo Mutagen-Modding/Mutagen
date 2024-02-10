@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Grasses = 
                             rhs.Grasses
-                            .Select(r => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IGrassGetter>>();
                     }
                     else

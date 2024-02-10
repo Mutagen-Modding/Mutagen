@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Point
-        public P2Int Point { get; set; } = default;
+        public P2Int Point { get; set; } = default(P2Int);
         #endregion
         #region Flags
-        public CellGrid.Flag Flags { get; set; } = default;
+        public CellGrid.Flag Flags { get; set; } = default(CellGrid.Flag);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICellGrid item)
         {
             ClearPartial();
-            item.Point = default;
-            item.Flags = default;
+            item.Point = default(P2Int);
+            item.Flags = default(CellGrid.Flag);
         }
         
         #region Mutagen

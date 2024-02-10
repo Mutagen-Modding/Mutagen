@@ -77,20 +77,20 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IRaceGetter> IArmorAddonGetter.Race => this.Race;
         #endregion
         #region Priority
-        public IGenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default, default);
+        public IGenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default(Byte), default(Byte));
         IGenderedItemGetter<Byte> IArmorAddonGetter.Priority => this.Priority;
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region DetectionSoundValue
-        public Byte DetectionSoundValue { get; set; } = default;
+        public Byte DetectionSoundValue { get; set; } = default(Byte);
         #endregion
         #region Unknown2
-        public Byte Unknown2 { get; set; } = default;
+        public Byte Unknown2 { get; set; } = default(Byte);
         #endregion
         #region WeaponAdjust
-        public Single WeaponAdjust { get; set; } = default;
+        public Single WeaponAdjust { get; set; } = default(Single);
         #endregion
         #region WorldModel
         public IGenderedItem<Model?>? WorldModel { get; set; }
@@ -1572,14 +1572,14 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.BodyTemplate = null;
             item.Race.Clear();
-            item.Priority.Male = default;
-            item.Priority.Female = default;
-            item.WeightSliderEnabled.Male = default;
-            item.WeightSliderEnabled.Female = default;
-            item.Unknown = default;
-            item.DetectionSoundValue = default;
-            item.Unknown2 = default;
-            item.WeaponAdjust = default;
+            item.Priority.Male = default(Byte);
+            item.Priority.Female = default(Byte);
+            item.WeightSliderEnabled.Male = default(Boolean);
+            item.WeightSliderEnabled.Female = default(Boolean);
+            item.Unknown = default(UInt16);
+            item.DetectionSoundValue = default(Byte);
+            item.Unknown2 = default(Byte);
+            item.WeaponAdjust = default(Single);
             item.WorldModel = null;
             item.FirstPersonModel = null;
             item.SkinTexture = null;
@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.AdditionalRaces.SetTo(
                         rhs.AdditionalRaces
-                        .Select(r => (IFormLinkGetter<IRaceGetter>)new FormLink<IRaceGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IRaceGetter>)new FormLink<IRaceGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2897,7 +2897,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get
             {
-                if (!_Priority_IsSet) return new GenderedItem<Byte>(default, default);
+                if (!_Priority_IsSet) return new GenderedItem<Byte>(default(Byte), default(Byte));
                 var data = _recordData.Slice(_PriorityLocation);
                 return new GenderedItem<Byte>(
                     data[0],
@@ -2908,7 +2908,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(UInt16);
         #endregion
         #region DetectionSoundValue
         private int _DetectionSoundValueLocation => _DNAMLocation!.Value.Min + 0x6;
@@ -2923,7 +2923,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region WeaponAdjust
         private int _WeaponAdjustLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
-        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _recordData.Slice(_WeaponAdjustLocation, 4).Float() : default;
+        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _recordData.Slice(_WeaponAdjustLocation, 4).Float() : default(Single);
         #endregion
         #region WorldModel
         private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;

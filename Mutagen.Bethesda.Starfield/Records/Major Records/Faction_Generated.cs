@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IKeywordGetter> IFactionGetter.Keyword => this.Keyword;
         #endregion
         #region Flags
-        public Faction.FactionFlag Flags { get; set; } = default;
+        public Faction.FactionFlag Flags { get; set; } = default(Faction.FactionFlag);
         #endregion
         #region SharedCrimeFactionList
         private readonly IFormLinkNullable<IFormListGetter> _SharedCrimeFactionList = new FormLinkNullable<IFormListGetter>();
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Relations.Clear();
             item.Keyword.Clear();
-            item.Flags = default;
+            item.Flags = default(Faction.FactionFlag);
             item.SharedCrimeFactionList.Clear();
             item.CrimeValues = null;
             item.VendorBuySellList.Clear();

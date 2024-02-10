@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FirstPersonFlags
-        public BipedObjectFlag FirstPersonFlags { get; set; } = default;
+        public BipedObjectFlag FirstPersonFlags { get; set; } = default(BipedObjectFlag);
         #endregion
 
         #region To String
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IBodyTemplate item)
         {
             ClearPartial();
-            item.FirstPersonFlags = default;
+            item.FirstPersonFlags = default(BipedObjectFlag);
         }
         
         #region Mutagen

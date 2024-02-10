@@ -51,22 +51,22 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region MinWidth
-        public Single MinWidth { get; set; } = default;
+        public Single MinWidth { get; set; } = default(Single);
         #endregion
         #region MaxWidth
-        public Single MaxWidth { get; set; } = default;
+        public Single MaxWidth { get; set; } = default(Single);
         #endregion
         #region MinHeight
-        public Single MinHeight { get; set; } = default;
+        public Single MinHeight { get; set; } = default(Single);
         #endregion
         #region MaxHeight
-        public Single MaxHeight { get; set; } = default;
+        public Single MaxHeight { get; set; } = default(Single);
         #endregion
         #region Depth
-        public Single Depth { get; set; } = default;
+        public Single Depth { get; set; } = default(Single);
         #endregion
         #region Shininess
-        public Single Shininess { get; set; } = default;
+        public Single Shininess { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -864,12 +864,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDecal item)
         {
             ClearPartial();
-            item.MinWidth = default;
-            item.MaxWidth = default;
-            item.MinHeight = default;
-            item.MaxHeight = default;
-            item.Depth = default;
-            item.Shininess = default;
+            item.MinWidth = default(Single);
+            item.MaxWidth = default(Single);
+            item.MinHeight = default(Single);
+            item.MaxHeight = default(Single);
+            item.Depth = default(Single);
+            item.Shininess = default(Single);
         }
         
         #region Mutagen

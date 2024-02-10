@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
         #endregion
         #region HavokFriction
-        public Byte HavokFriction { get; set; } = default;
+        public Byte HavokFriction { get; set; } = default(Byte);
         #endregion
         #region HavokRestitution
-        public Byte HavokRestitution { get; set; } = default;
+        public Byte HavokRestitution { get; set; } = default(Byte);
         #endregion
         #region TextureSpecularExponent
-        public Byte TextureSpecularExponent { get; set; } = default;
+        public Byte TextureSpecularExponent { get; set; } = default(Byte);
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1085,9 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.TextureSet.Clear();
             item.MaterialType.Clear();
-            item.HavokFriction = default;
-            item.HavokRestitution = default;
-            item.TextureSpecularExponent = default;
+            item.HavokFriction = default(Byte);
+            item.HavokRestitution = default(Byte);
+            item.TextureSpecularExponent = default(Byte);
             item.Grasses.Clear();
             item.Flags = default;
             base.Clear(item);
@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Grasses.SetTo(
                         rhs.Grasses
-                        .Select(r => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

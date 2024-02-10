@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region IdleTime
-        public Single IdleTime { get; set; } = default;
+        public Single IdleTime { get; set; } = default(Single);
         #endregion
         #region Idle
         private readonly IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPatrol item)
         {
             ClearPartial();
-            item.IdleTime = default;
+            item.IdleTime = default(Single);
             item.Idle.Clear();
             item.SCHR = default;
             item.SCTX = default;
@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region IdleTime
         private int? _IdleTimeLocation;
-        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region PatrolScriptMarker
         public partial ParseResult PatrolScriptMarkerCustomParse(

@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region BranchCount
-        public Int32 BranchCount { get; set; } = default;
+        public Int32 BranchCount { get; set; } = default(Int32);
         #endregion
         #region Flags
-        public PackageRoot.Flag Flags { get; set; } = default;
+        public PackageRoot.Flag Flags { get; set; } = default(PackageRoot.Flag);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPackageRoot item)
         {
             ClearPartial();
-            item.BranchCount = default;
-            item.Flags = default;
+            item.BranchCount = default(Int32);
+            item.Flags = default(PackageRoot.Flag);
         }
         
         #region Mutagen

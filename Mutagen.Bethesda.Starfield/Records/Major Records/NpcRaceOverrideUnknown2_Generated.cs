@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcRaceOverrideUnknown2 item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.Unknown = default(Single);
         }
         
         #region Mutagen

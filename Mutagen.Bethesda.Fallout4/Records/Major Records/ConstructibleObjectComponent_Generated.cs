@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IItemGetter> IConstructibleObjectComponentGetter.Component => this.Component;
         #endregion
         #region Count
-        public UInt32 Count { get; set; } = default;
+        public UInt32 Count { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Component.Clear();
-            item.Count = default;
+            item.Count = default(UInt32);
         }
         
         #region Mutagen

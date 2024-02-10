@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public ClassData.VersioningBreaks Versioning { get; set; } = default;
+        public ClassData.VersioningBreaks Versioning { get; set; } = default(ClassData.VersioningBreaks);
         #endregion
         #region PrimaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Specialization
-        public Class.SpecializationFlag Specialization { get; set; } = default;
+        public Class.SpecializationFlag Specialization { get; set; } = default(Class.SpecializationFlag);
         #endregion
         #region SecondaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,10 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        public ClassFlag Flags { get; set; } = default;
+        public ClassFlag Flags { get; set; } = default(ClassFlag);
         #endregion
         #region ClassServices
-        public ClassService ClassServices { get; set; } = default;
+        public ClassService ClassServices { get; set; } = default(ClassService);
         #endregion
         #region Training
         public ClassTraining Training { get; set; } = new ClassTraining();
@@ -1072,12 +1072,12 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClassData item)
         {
             ClearPartial();
-            item.Versioning = default;
+            item.Versioning = default(ClassData.VersioningBreaks);
             item.PrimaryAttributes.Reset();
-            item.Specialization = default;
+            item.Specialization = default(Class.SpecializationFlag);
             item.SecondaryAttributes.Reset();
-            item.Flags = default;
-            item.ClassServices = default;
+            item.Flags = default(ClassFlag);
+            item.ClassServices = default(ClassService);
             item.Training.Clear();
         }
         

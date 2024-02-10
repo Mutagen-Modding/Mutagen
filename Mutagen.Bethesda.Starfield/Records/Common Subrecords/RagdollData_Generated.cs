@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region BoneId
-        public Byte BoneId { get; set; } = default;
+        public Byte BoneId { get; set; } = default(Byte);
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -66,10 +66,10 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte> IRagdollDataGetter.Unused => this.Unused;
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -796,10 +796,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IRagdollData item)
         {
             ClearPartial();
-            item.BoneId = default;
+            item.BoneId = default(Byte);
             item.Unused = new byte[3];
-            item.Position = default;
-            item.Rotation = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
         }
         
         #region Mutagen

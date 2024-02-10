@@ -114,25 +114,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region EnchantmentCost
-        public UInt32 EnchantmentCost { get; set; } = default;
+        public UInt32 EnchantmentCost { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public ObjectEffect.Flag Flags { get; set; } = default;
+        public ObjectEffect.Flag Flags { get; set; } = default(ObjectEffect.Flag);
         #endregion
         #region CastType
-        public CastType CastType { get; set; } = default;
+        public CastType CastType { get; set; } = default(CastType);
         #endregion
         #region EnchantmentAmount
-        public Int32 EnchantmentAmount { get; set; } = default;
+        public Int32 EnchantmentAmount { get; set; } = default(Int32);
         #endregion
         #region TargetType
-        public TargetType TargetType { get; set; } = default;
+        public TargetType TargetType { get; set; } = default(TargetType);
         #endregion
         #region EnchantType
-        public ObjectEffect.EnchantTypeEnum EnchantType { get; set; } = default;
+        public ObjectEffect.EnchantTypeEnum EnchantType { get; set; } = default(ObjectEffect.EnchantTypeEnum);
         #endregion
         #region ChargeTime
-        public Single ChargeTime { get; set; } = default;
+        public Single ChargeTime { get; set; } = default(Single);
         #endregion
         #region BaseEnchantment
         private readonly IFormLink<IObjectEffectGetter> _BaseEnchantment = new FormLink<IObjectEffectGetter>();
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ENITDataTypeState
-        public ObjectEffect.ENITDataType ENITDataTypeState { get; set; } = default;
+        public ObjectEffect.ENITDataType ENITDataTypeState { get; set; } = default(ObjectEffect.ENITDataType);
         #endregion
 
         #region To String
@@ -1393,17 +1393,17 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Name = default;
-            item.EnchantmentCost = default;
-            item.Flags = default;
-            item.CastType = default;
-            item.EnchantmentAmount = default;
-            item.TargetType = default;
-            item.EnchantType = default;
-            item.ChargeTime = default;
+            item.EnchantmentCost = default(UInt32);
+            item.Flags = default(ObjectEffect.Flag);
+            item.CastType = default(CastType);
+            item.EnchantmentAmount = default(Int32);
+            item.TargetType = default(TargetType);
+            item.EnchantType = default(ObjectEffect.EnchantTypeEnum);
+            item.ChargeTime = default(Single);
             item.BaseEnchantment.Clear();
             item.WornRestrictions.Clear();
             item.Effects.Clear();
-            item.ENITDataTypeState = default;
+            item.ENITDataTypeState = default(ObjectEffect.ENITDataType);
             base.Clear(item);
         }
         
@@ -2427,7 +2427,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region EnchantmentCost
         private int _EnchantmentCostLocation => _ENITLocation!.Value.Min;
         private bool _EnchantmentCost_IsSet => _ENITLocation.HasValue;
-        public UInt32 EnchantmentCost => _EnchantmentCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_EnchantmentCostLocation, 4)) : default;
+        public UInt32 EnchantmentCost => _EnchantmentCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_EnchantmentCostLocation, 4)) : default(UInt32);
         #endregion
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value.Min + 0x4;
@@ -2442,7 +2442,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region EnchantmentAmount
         private int _EnchantmentAmountLocation => _ENITLocation!.Value.Min + 0xC;
         private bool _EnchantmentAmount_IsSet => _ENITLocation.HasValue;
-        public Int32 EnchantmentAmount => _EnchantmentAmount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnchantmentAmountLocation, 4)) : default;
+        public Int32 EnchantmentAmount => _EnchantmentAmount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_EnchantmentAmountLocation, 4)) : default(Int32);
         #endregion
         #region TargetType
         private int _TargetTypeLocation => _ENITLocation!.Value.Min + 0x10;
@@ -2457,7 +2457,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ChargeTime
         private int _ChargeTimeLocation => _ENITLocation!.Value.Min + 0x18;
         private bool _ChargeTime_IsSet => _ENITLocation.HasValue;
-        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default;
+        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default(Single);
         #endregion
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value.Min + 0x1C;

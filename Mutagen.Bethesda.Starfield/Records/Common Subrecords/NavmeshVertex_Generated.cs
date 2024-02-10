@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Point
-        public P3Float Point { get; set; } = default;
+        public P3Float Point { get; set; } = default(P3Float);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INavmeshVertex item)
         {
             ClearPartial();
-            item.Point = default;
-            item.Unknown = default;
+            item.Point = default(P3Float);
+            item.Unknown = default(Int32);
         }
         
         #region Mutagen

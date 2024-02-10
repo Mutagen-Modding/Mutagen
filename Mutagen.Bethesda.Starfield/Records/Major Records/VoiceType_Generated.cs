@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Flags
-        public VoiceType.Flag Flags { get; set; } = default;
+        public VoiceType.Flag Flags { get; set; } = default(VoiceType.Flag);
         #endregion
         #region AnimationFaceArchetype
         private readonly IFormLinkNullable<IKeywordGetter> _AnimationFaceArchetype = new FormLinkNullable<IKeywordGetter>();
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IVoiceTypeInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(VoiceType.Flag);
             item.AnimationFaceArchetype.Clear();
             item.PNAM = default;
             base.Clear(item);

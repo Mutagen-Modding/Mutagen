@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ComparisonValue
-        public Single ComparisonValue { get; set; } = default;
+        public Single ComparisonValue { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IConditionFloat item)
         {
             ClearPartial();
-            item.ComparisonValue = default;
+            item.ComparisonValue = default(Single);
             item.Data.Clear();
             base.Clear(item);
         }

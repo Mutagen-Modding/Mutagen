@@ -95,10 +95,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Opacity
-        public Byte Opacity { get; set; } = default;
+        public Byte Opacity { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Water.Flag Flags { get; set; } = default;
+        public Water.Flag Flags { get; set; } = default(Water.Flag);
         #endregion
         #region Material
         private readonly IFormLinkNullable<IMaterialTypeGetter> _Material = new FormLinkNullable<IMaterialTypeGetter>();
@@ -162,100 +162,100 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? IWaterGetter.DATA => this.DATA;
         #endregion
         #region FogDepthAmount
-        public Single FogDepthAmount { get; set; } = default;
+        public Single FogDepthAmount { get; set; } = default(Single);
         #endregion
         #region FogShallowColor
-        public Color FogShallowColor { get; set; } = default;
+        public Color FogShallowColor { get; set; } = default(Color);
         #endregion
         #region FogDeepColor
-        public Color FogDeepColor { get; set; } = default;
+        public Color FogDeepColor { get; set; } = default(Color);
         #endregion
         #region FogColorShallowRange
-        public Single FogColorShallowRange { get; set; } = default;
+        public Single FogColorShallowRange { get; set; } = default(Single);
         #endregion
         #region FogColorDeepRange
-        public Single FogColorDeepRange { get; set; } = default;
+        public Single FogColorDeepRange { get; set; } = default(Single);
         #endregion
         #region FogShallowAlpha
-        public Single FogShallowAlpha { get; set; } = default;
+        public Single FogShallowAlpha { get; set; } = default(Single);
         #endregion
         #region FogDeepAlpha
-        public Single FogDeepAlpha { get; set; } = default;
+        public Single FogDeepAlpha { get; set; } = default(Single);
         #endregion
         #region FogAlphaShallowRange
-        public Single FogAlphaShallowRange { get; set; } = default;
+        public Single FogAlphaShallowRange { get; set; } = default(Single);
         #endregion
         #region FogAlphaDeepRange
-        public Single FogAlphaDeepRange { get; set; } = default;
+        public Single FogAlphaDeepRange { get; set; } = default(Single);
         #endregion
         #region FogUnderwaterColor
-        public Color FogUnderwaterColor { get; set; } = default;
+        public Color FogUnderwaterColor { get; set; } = default(Color);
         #endregion
         #region FogUnderwaterAmount
-        public Single FogUnderwaterAmount { get; set; } = default;
+        public Single FogUnderwaterAmount { get; set; } = default(Single);
         #endregion
         #region FogUnderwaterNear
-        public Single FogUnderwaterNear { get; set; } = default;
+        public Single FogUnderwaterNear { get; set; } = default(Single);
         #endregion
         #region FogUnderwaterFar
-        public Single FogUnderwaterFar { get; set; } = default;
+        public Single FogUnderwaterFar { get; set; } = default(Single);
         #endregion
         #region PhysicalNormalMagnitude
-        public Single PhysicalNormalMagnitude { get; set; } = default;
+        public Single PhysicalNormalMagnitude { get; set; } = default(Single);
         #endregion
         #region PhysicalShallowNormalFalloff
-        public Single PhysicalShallowNormalFalloff { get; set; } = default;
+        public Single PhysicalShallowNormalFalloff { get; set; } = default(Single);
         #endregion
         #region PhysicalDeepNormalFalloff
-        public Single PhysicalDeepNormalFalloff { get; set; } = default;
+        public Single PhysicalDeepNormalFalloff { get; set; } = default(Single);
         #endregion
         #region PhysicalReflectivityAmount
-        public Single PhysicalReflectivityAmount { get; set; } = default;
+        public Single PhysicalReflectivityAmount { get; set; } = default(Single);
         #endregion
         #region PhysicalFresnelAmount
-        public Single PhysicalFresnelAmount { get; set; } = default;
+        public Single PhysicalFresnelAmount { get; set; } = default(Single);
         #endregion
         #region PhysicalSurfaceEffectFalloff
-        public Single PhysicalSurfaceEffectFalloff { get; set; } = default;
+        public Single PhysicalSurfaceEffectFalloff { get; set; } = default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorForce
-        public Single PhysicalDisplacementSimulatorForce { get; set; } = default;
+        public Single PhysicalDisplacementSimulatorForce { get; set; } = default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorVelocity
-        public Single PhysicalDisplacementSimulatorVelocity { get; set; } = default;
+        public Single PhysicalDisplacementSimulatorVelocity { get; set; } = default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorFalloff
-        public Single PhysicalDisplacementSimulatorFalloff { get; set; } = default;
+        public Single PhysicalDisplacementSimulatorFalloff { get; set; } = default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorDampener
-        public Single PhysicalDisplacementSimulatorDampener { get; set; } = default;
+        public Single PhysicalDisplacementSimulatorDampener { get; set; } = default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorStartingSize
-        public Single PhysicalDisplacementSimulatorStartingSize { get; set; } = default;
+        public Single PhysicalDisplacementSimulatorStartingSize { get; set; } = default(Single);
         #endregion
         #region PhysicalReflectionColor
-        public Color PhysicalReflectionColor { get; set; } = default;
+        public Color PhysicalReflectionColor { get; set; } = default(Color);
         #endregion
         #region SpecularSunSpecularPower
-        public Single SpecularSunSpecularPower { get; set; } = default;
+        public Single SpecularSunSpecularPower { get; set; } = default(Single);
         #endregion
         #region SpecularSunSpecularMagnitude
-        public Single SpecularSunSpecularMagnitude { get; set; } = default;
+        public Single SpecularSunSpecularMagnitude { get; set; } = default(Single);
         #endregion
         #region SpecularSunSparklePower
-        public Single SpecularSunSparklePower { get; set; } = default;
+        public Single SpecularSunSparklePower { get; set; } = default(Single);
         #endregion
         #region SpecularSunSparkleMagnitude
-        public Single SpecularSunSparkleMagnitude { get; set; } = default;
+        public Single SpecularSunSparkleMagnitude { get; set; } = default(Single);
         #endregion
         #region SpecularInteriorSpecularRadius
-        public Single SpecularInteriorSpecularRadius { get; set; } = default;
+        public Single SpecularInteriorSpecularRadius { get; set; } = default(Single);
         #endregion
         #region SpecularInteriorSpecularBrightness
-        public Single SpecularInteriorSpecularBrightness { get; set; } = default;
+        public Single SpecularInteriorSpecularBrightness { get; set; } = default(Single);
         #endregion
         #region SpecularInteriorSpecularPower
-        public Single SpecularInteriorSpecularPower { get; set; } = default;
+        public Single SpecularInteriorSpecularPower { get; set; } = default(Single);
         #endregion
         #region SiltAmount
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Fallout4
         P3Float? IWaterGetter.AngularVelocity => this.AngularVelocity;
         #endregion
         #region DNAMDataTypeState
-        public Water.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        public Water.DNAMDataType DNAMDataTypeState { get; set; } = default(Water.DNAMDataType);
         #endregion
 
         #region To String
@@ -2795,57 +2795,57 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Name = default;
-            item.Opacity = default;
-            item.Flags = default;
+            item.Opacity = default(Byte);
+            item.Flags = default(Water.Flag);
             item.Material.Clear();
             item.OpenSound.Clear();
             item.ConsumeSpell.Clear();
             item.ContactSpell.Clear();
             item.ImageSpace.Clear();
             item.DATA = default;
-            item.FogDepthAmount = default;
-            item.FogShallowColor = default;
-            item.FogDeepColor = default;
-            item.FogColorShallowRange = default;
-            item.FogColorDeepRange = default;
-            item.FogShallowAlpha = default;
-            item.FogDeepAlpha = default;
-            item.FogAlphaShallowRange = default;
-            item.FogAlphaDeepRange = default;
-            item.FogUnderwaterColor = default;
-            item.FogUnderwaterAmount = default;
-            item.FogUnderwaterNear = default;
-            item.FogUnderwaterFar = default;
-            item.PhysicalNormalMagnitude = default;
-            item.PhysicalShallowNormalFalloff = default;
-            item.PhysicalDeepNormalFalloff = default;
-            item.PhysicalReflectivityAmount = default;
-            item.PhysicalFresnelAmount = default;
-            item.PhysicalSurfaceEffectFalloff = default;
-            item.PhysicalDisplacementSimulatorForce = default;
-            item.PhysicalDisplacementSimulatorVelocity = default;
-            item.PhysicalDisplacementSimulatorFalloff = default;
-            item.PhysicalDisplacementSimulatorDampener = default;
-            item.PhysicalDisplacementSimulatorStartingSize = default;
-            item.PhysicalReflectionColor = default;
-            item.SpecularSunSpecularPower = default;
-            item.SpecularSunSpecularMagnitude = default;
-            item.SpecularSunSparklePower = default;
-            item.SpecularSunSparkleMagnitude = default;
-            item.SpecularInteriorSpecularRadius = default;
-            item.SpecularInteriorSpecularBrightness = default;
-            item.SpecularInteriorSpecularPower = default;
-            item.SiltAmount = default;
-            item.SiltLightColor = default;
-            item.SiltDarkColor = default;
-            item.ScreenSpaceReflections = default;
+            item.FogDepthAmount = default(Single);
+            item.FogShallowColor = default(Color);
+            item.FogDeepColor = default(Color);
+            item.FogColorShallowRange = default(Single);
+            item.FogColorDeepRange = default(Single);
+            item.FogShallowAlpha = default(Single);
+            item.FogDeepAlpha = default(Single);
+            item.FogAlphaShallowRange = default(Single);
+            item.FogAlphaDeepRange = default(Single);
+            item.FogUnderwaterColor = default(Color);
+            item.FogUnderwaterAmount = default(Single);
+            item.FogUnderwaterNear = default(Single);
+            item.FogUnderwaterFar = default(Single);
+            item.PhysicalNormalMagnitude = default(Single);
+            item.PhysicalShallowNormalFalloff = default(Single);
+            item.PhysicalDeepNormalFalloff = default(Single);
+            item.PhysicalReflectivityAmount = default(Single);
+            item.PhysicalFresnelAmount = default(Single);
+            item.PhysicalSurfaceEffectFalloff = default(Single);
+            item.PhysicalDisplacementSimulatorForce = default(Single);
+            item.PhysicalDisplacementSimulatorVelocity = default(Single);
+            item.PhysicalDisplacementSimulatorFalloff = default(Single);
+            item.PhysicalDisplacementSimulatorDampener = default(Single);
+            item.PhysicalDisplacementSimulatorStartingSize = default(Single);
+            item.PhysicalReflectionColor = default(Color);
+            item.SpecularSunSpecularPower = default(Single);
+            item.SpecularSunSpecularMagnitude = default(Single);
+            item.SpecularSunSparklePower = default(Single);
+            item.SpecularSunSparkleMagnitude = default(Single);
+            item.SpecularInteriorSpecularRadius = default(Single);
+            item.SpecularInteriorSpecularBrightness = default(Single);
+            item.SpecularInteriorSpecularPower = default(Single);
+            item.SiltAmount = default(Single);
+            item.SiltLightColor = default(Color);
+            item.SiltDarkColor = default(Color);
+            item.ScreenSpaceReflections = default(Boolean);
             item.NoiseLayerOne.Clear();
             item.NoiseLayerTwo.Clear();
             item.NoiseLayerThree.Clear();
             item.GNAM = default;
             item.LinearVelocity = default;
             item.AngularVelocity = default;
-            item.DNAMDataTypeState = default;
+            item.DNAMDataTypeState = default(Water.DNAMDataType);
             base.Clear(item);
         }
         
@@ -4758,162 +4758,162 @@ namespace Mutagen.Bethesda.Fallout4
         #region FogDepthAmount
         private int _FogDepthAmountLocation => _DNAMLocation!.Value.Min;
         private bool _FogDepthAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogDepthAmount => _FogDepthAmount_IsSet ? _recordData.Slice(_FogDepthAmountLocation, 4).Float() : default;
+        public Single FogDepthAmount => _FogDepthAmount_IsSet ? _recordData.Slice(_FogDepthAmountLocation, 4).Float() : default(Single);
         #endregion
         #region FogShallowColor
         private int _FogShallowColorLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _FogShallowColor_IsSet => _DNAMLocation.HasValue;
-        public Color FogShallowColor => _FogShallowColor_IsSet ? _recordData.Slice(_FogShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogShallowColor => _FogShallowColor_IsSet ? _recordData.Slice(_FogShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogDeepColor
         private int _FogDeepColorLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _FogDeepColor_IsSet => _DNAMLocation.HasValue;
-        public Color FogDeepColor => _FogDeepColor_IsSet ? _recordData.Slice(_FogDeepColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogDeepColor => _FogDeepColor_IsSet ? _recordData.Slice(_FogDeepColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogColorShallowRange
         private int _FogColorShallowRangeLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _FogColorShallowRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogColorShallowRange => _FogColorShallowRange_IsSet ? _recordData.Slice(_FogColorShallowRangeLocation, 4).Float() : default;
+        public Single FogColorShallowRange => _FogColorShallowRange_IsSet ? _recordData.Slice(_FogColorShallowRangeLocation, 4).Float() : default(Single);
         #endregion
         #region FogColorDeepRange
         private int _FogColorDeepRangeLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _FogColorDeepRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogColorDeepRange => _FogColorDeepRange_IsSet ? _recordData.Slice(_FogColorDeepRangeLocation, 4).Float() : default;
+        public Single FogColorDeepRange => _FogColorDeepRange_IsSet ? _recordData.Slice(_FogColorDeepRangeLocation, 4).Float() : default(Single);
         #endregion
         #region FogShallowAlpha
         private int _FogShallowAlphaLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _FogShallowAlpha_IsSet => _DNAMLocation.HasValue;
-        public Single FogShallowAlpha => _FogShallowAlpha_IsSet ? _recordData.Slice(_FogShallowAlphaLocation, 4).Float() : default;
+        public Single FogShallowAlpha => _FogShallowAlpha_IsSet ? _recordData.Slice(_FogShallowAlphaLocation, 4).Float() : default(Single);
         #endregion
         #region FogDeepAlpha
         private int _FogDeepAlphaLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _FogDeepAlpha_IsSet => _DNAMLocation.HasValue;
-        public Single FogDeepAlpha => _FogDeepAlpha_IsSet ? _recordData.Slice(_FogDeepAlphaLocation, 4).Float() : default;
+        public Single FogDeepAlpha => _FogDeepAlpha_IsSet ? _recordData.Slice(_FogDeepAlphaLocation, 4).Float() : default(Single);
         #endregion
         #region FogAlphaShallowRange
         private int _FogAlphaShallowRangeLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _FogAlphaShallowRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogAlphaShallowRange => _FogAlphaShallowRange_IsSet ? _recordData.Slice(_FogAlphaShallowRangeLocation, 4).Float() : default;
+        public Single FogAlphaShallowRange => _FogAlphaShallowRange_IsSet ? _recordData.Slice(_FogAlphaShallowRangeLocation, 4).Float() : default(Single);
         #endregion
         #region FogAlphaDeepRange
         private int _FogAlphaDeepRangeLocation => _DNAMLocation!.Value.Min + 0x20;
         private bool _FogAlphaDeepRange_IsSet => _DNAMLocation.HasValue;
-        public Single FogAlphaDeepRange => _FogAlphaDeepRange_IsSet ? _recordData.Slice(_FogAlphaDeepRangeLocation, 4).Float() : default;
+        public Single FogAlphaDeepRange => _FogAlphaDeepRange_IsSet ? _recordData.Slice(_FogAlphaDeepRangeLocation, 4).Float() : default(Single);
         #endregion
         #region FogUnderwaterColor
         private int _FogUnderwaterColorLocation => _DNAMLocation!.Value.Min + 0x24;
         private bool _FogUnderwaterColor_IsSet => _DNAMLocation.HasValue;
-        public Color FogUnderwaterColor => _FogUnderwaterColor_IsSet ? _recordData.Slice(_FogUnderwaterColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FogUnderwaterColor => _FogUnderwaterColor_IsSet ? _recordData.Slice(_FogUnderwaterColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region FogUnderwaterAmount
         private int _FogUnderwaterAmountLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _FogUnderwaterAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderwaterAmount => _FogUnderwaterAmount_IsSet ? _recordData.Slice(_FogUnderwaterAmountLocation, 4).Float() : default;
+        public Single FogUnderwaterAmount => _FogUnderwaterAmount_IsSet ? _recordData.Slice(_FogUnderwaterAmountLocation, 4).Float() : default(Single);
         #endregion
         #region FogUnderwaterNear
         private int _FogUnderwaterNearLocation => _DNAMLocation!.Value.Min + 0x2C;
         private bool _FogUnderwaterNear_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderwaterNear => _FogUnderwaterNear_IsSet ? _recordData.Slice(_FogUnderwaterNearLocation, 4).Float() : default;
+        public Single FogUnderwaterNear => _FogUnderwaterNear_IsSet ? _recordData.Slice(_FogUnderwaterNearLocation, 4).Float() : default(Single);
         #endregion
         #region FogUnderwaterFar
         private int _FogUnderwaterFarLocation => _DNAMLocation!.Value.Min + 0x30;
         private bool _FogUnderwaterFar_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderwaterFar => _FogUnderwaterFar_IsSet ? _recordData.Slice(_FogUnderwaterFarLocation, 4).Float() : default;
+        public Single FogUnderwaterFar => _FogUnderwaterFar_IsSet ? _recordData.Slice(_FogUnderwaterFarLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalNormalMagnitude
         private int _PhysicalNormalMagnitudeLocation => _DNAMLocation!.Value.Min + 0x34;
         private bool _PhysicalNormalMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalNormalMagnitude => _PhysicalNormalMagnitude_IsSet ? _recordData.Slice(_PhysicalNormalMagnitudeLocation, 4).Float() : default;
+        public Single PhysicalNormalMagnitude => _PhysicalNormalMagnitude_IsSet ? _recordData.Slice(_PhysicalNormalMagnitudeLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalShallowNormalFalloff
         private int _PhysicalShallowNormalFalloffLocation => _DNAMLocation!.Value.Min + 0x38;
         private bool _PhysicalShallowNormalFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalShallowNormalFalloff => _PhysicalShallowNormalFalloff_IsSet ? _recordData.Slice(_PhysicalShallowNormalFalloffLocation, 4).Float() : default;
+        public Single PhysicalShallowNormalFalloff => _PhysicalShallowNormalFalloff_IsSet ? _recordData.Slice(_PhysicalShallowNormalFalloffLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalDeepNormalFalloff
         private int _PhysicalDeepNormalFalloffLocation => _DNAMLocation!.Value.Min + 0x3C;
         private bool _PhysicalDeepNormalFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDeepNormalFalloff => _PhysicalDeepNormalFalloff_IsSet ? _recordData.Slice(_PhysicalDeepNormalFalloffLocation, 4).Float() : default;
+        public Single PhysicalDeepNormalFalloff => _PhysicalDeepNormalFalloff_IsSet ? _recordData.Slice(_PhysicalDeepNormalFalloffLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalReflectivityAmount
         private int _PhysicalReflectivityAmountLocation => _DNAMLocation!.Value.Min + 0x40;
         private bool _PhysicalReflectivityAmount_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalReflectivityAmount => _PhysicalReflectivityAmount_IsSet ? _recordData.Slice(_PhysicalReflectivityAmountLocation, 4).Float() : default;
+        public Single PhysicalReflectivityAmount => _PhysicalReflectivityAmount_IsSet ? _recordData.Slice(_PhysicalReflectivityAmountLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalFresnelAmount
         private int _PhysicalFresnelAmountLocation => _DNAMLocation!.Value.Min + 0x44;
         private bool _PhysicalFresnelAmount_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalFresnelAmount => _PhysicalFresnelAmount_IsSet ? _recordData.Slice(_PhysicalFresnelAmountLocation, 4).Float() : default;
+        public Single PhysicalFresnelAmount => _PhysicalFresnelAmount_IsSet ? _recordData.Slice(_PhysicalFresnelAmountLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalSurfaceEffectFalloff
         private int _PhysicalSurfaceEffectFalloffLocation => _DNAMLocation!.Value.Min + 0x48;
         private bool _PhysicalSurfaceEffectFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalSurfaceEffectFalloff => _PhysicalSurfaceEffectFalloff_IsSet ? _recordData.Slice(_PhysicalSurfaceEffectFalloffLocation, 4).Float() : default;
+        public Single PhysicalSurfaceEffectFalloff => _PhysicalSurfaceEffectFalloff_IsSet ? _recordData.Slice(_PhysicalSurfaceEffectFalloffLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorForce
         private int _PhysicalDisplacementSimulatorForceLocation => _DNAMLocation!.Value.Min + 0x4C;
         private bool _PhysicalDisplacementSimulatorForce_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorForce => _PhysicalDisplacementSimulatorForce_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorForceLocation, 4).Float() : default;
+        public Single PhysicalDisplacementSimulatorForce => _PhysicalDisplacementSimulatorForce_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorForceLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorVelocity
         private int _PhysicalDisplacementSimulatorVelocityLocation => _DNAMLocation!.Value.Min + 0x50;
         private bool _PhysicalDisplacementSimulatorVelocity_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorVelocity => _PhysicalDisplacementSimulatorVelocity_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorVelocityLocation, 4).Float() : default;
+        public Single PhysicalDisplacementSimulatorVelocity => _PhysicalDisplacementSimulatorVelocity_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorVelocityLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorFalloff
         private int _PhysicalDisplacementSimulatorFalloffLocation => _DNAMLocation!.Value.Min + 0x54;
         private bool _PhysicalDisplacementSimulatorFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorFalloff => _PhysicalDisplacementSimulatorFalloff_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorFalloffLocation, 4).Float() : default;
+        public Single PhysicalDisplacementSimulatorFalloff => _PhysicalDisplacementSimulatorFalloff_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorFalloffLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorDampener
         private int _PhysicalDisplacementSimulatorDampenerLocation => _DNAMLocation!.Value.Min + 0x58;
         private bool _PhysicalDisplacementSimulatorDampener_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorDampener => _PhysicalDisplacementSimulatorDampener_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorDampenerLocation, 4).Float() : default;
+        public Single PhysicalDisplacementSimulatorDampener => _PhysicalDisplacementSimulatorDampener_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorDampenerLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalDisplacementSimulatorStartingSize
         private int _PhysicalDisplacementSimulatorStartingSizeLocation => _DNAMLocation!.Value.Min + 0x5C;
         private bool _PhysicalDisplacementSimulatorStartingSize_IsSet => _DNAMLocation.HasValue;
-        public Single PhysicalDisplacementSimulatorStartingSize => _PhysicalDisplacementSimulatorStartingSize_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorStartingSizeLocation, 4).Float() : default;
+        public Single PhysicalDisplacementSimulatorStartingSize => _PhysicalDisplacementSimulatorStartingSize_IsSet ? _recordData.Slice(_PhysicalDisplacementSimulatorStartingSizeLocation, 4).Float() : default(Single);
         #endregion
         #region PhysicalReflectionColor
         private int _PhysicalReflectionColorLocation => _DNAMLocation!.Value.Min + 0x60;
         private bool _PhysicalReflectionColor_IsSet => _DNAMLocation.HasValue;
-        public Color PhysicalReflectionColor => _PhysicalReflectionColor_IsSet ? _recordData.Slice(_PhysicalReflectionColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color PhysicalReflectionColor => _PhysicalReflectionColor_IsSet ? _recordData.Slice(_PhysicalReflectionColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region SpecularSunSpecularPower
         private int _SpecularSunSpecularPowerLocation => _DNAMLocation!.Value.Min + 0x64;
         private bool _SpecularSunSpecularPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSpecularPower => _SpecularSunSpecularPower_IsSet ? _recordData.Slice(_SpecularSunSpecularPowerLocation, 4).Float() : default;
+        public Single SpecularSunSpecularPower => _SpecularSunSpecularPower_IsSet ? _recordData.Slice(_SpecularSunSpecularPowerLocation, 4).Float() : default(Single);
         #endregion
         #region SpecularSunSpecularMagnitude
         private int _SpecularSunSpecularMagnitudeLocation => _DNAMLocation!.Value.Min + 0x68;
         private bool _SpecularSunSpecularMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? _recordData.Slice(_SpecularSunSpecularMagnitudeLocation, 4).Float() : default;
+        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? _recordData.Slice(_SpecularSunSpecularMagnitudeLocation, 4).Float() : default(Single);
         #endregion
         #region SpecularSunSparklePower
         private int _SpecularSunSparklePowerLocation => _DNAMLocation!.Value.Min + 0x6C;
         private bool _SpecularSunSparklePower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? _recordData.Slice(_SpecularSunSparklePowerLocation, 4).Float() : default;
+        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? _recordData.Slice(_SpecularSunSparklePowerLocation, 4).Float() : default(Single);
         #endregion
         #region SpecularSunSparkleMagnitude
         private int _SpecularSunSparkleMagnitudeLocation => _DNAMLocation!.Value.Min + 0x70;
         private bool _SpecularSunSparkleMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? _recordData.Slice(_SpecularSunSparkleMagnitudeLocation, 4).Float() : default;
+        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? _recordData.Slice(_SpecularSunSparkleMagnitudeLocation, 4).Float() : default(Single);
         #endregion
         #region SpecularInteriorSpecularRadius
         private int _SpecularInteriorSpecularRadiusLocation => _DNAMLocation!.Value.Min + 0x74;
         private bool _SpecularInteriorSpecularRadius_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularInteriorSpecularRadius => _SpecularInteriorSpecularRadius_IsSet ? _recordData.Slice(_SpecularInteriorSpecularRadiusLocation, 4).Float() : default;
+        public Single SpecularInteriorSpecularRadius => _SpecularInteriorSpecularRadius_IsSet ? _recordData.Slice(_SpecularInteriorSpecularRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region SpecularInteriorSpecularBrightness
         private int _SpecularInteriorSpecularBrightnessLocation => _DNAMLocation!.Value.Min + 0x78;
         private bool _SpecularInteriorSpecularBrightness_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularInteriorSpecularBrightness => _SpecularInteriorSpecularBrightness_IsSet ? _recordData.Slice(_SpecularInteriorSpecularBrightnessLocation, 4).Float() : default;
+        public Single SpecularInteriorSpecularBrightness => _SpecularInteriorSpecularBrightness_IsSet ? _recordData.Slice(_SpecularInteriorSpecularBrightnessLocation, 4).Float() : default(Single);
         #endregion
         #region SpecularInteriorSpecularPower
         private int _SpecularInteriorSpecularPowerLocation => _DNAMLocation!.Value.Min + 0x7C;
         private bool _SpecularInteriorSpecularPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularInteriorSpecularPower => _SpecularInteriorSpecularPower_IsSet ? _recordData.Slice(_SpecularInteriorSpecularPowerLocation, 4).Float() : default;
+        public Single SpecularInteriorSpecularPower => _SpecularInteriorSpecularPower_IsSet ? _recordData.Slice(_SpecularInteriorSpecularPowerLocation, 4).Float() : default(Single);
         #endregion
         #region NoiseLayerParsing
         private int _NoiseLayerParsingLocation => _DNAMLocation!.Value.Min + 0x80;
@@ -4925,22 +4925,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region SiltAmount
         private int _SiltAmountLocation => _DNAMLocation!.Value.Min + 0xBC;
         private bool _SiltAmount_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Single SiltAmount => _SiltAmount_IsSet ? _recordData.Slice(_SiltAmountLocation, 4).Float() : default;
+        public Single SiltAmount => _SiltAmount_IsSet ? _recordData.Slice(_SiltAmountLocation, 4).Float() : default(Single);
         #endregion
         #region SiltLightColor
         private int _SiltLightColorLocation => _DNAMLocation!.Value.Min + 0xC0;
         private bool _SiltLightColor_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Color SiltLightColor => _SiltLightColor_IsSet ? _recordData.Slice(_SiltLightColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color SiltLightColor => _SiltLightColor_IsSet ? _recordData.Slice(_SiltLightColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region SiltDarkColor
         private int _SiltDarkColorLocation => _DNAMLocation!.Value.Min + 0xC4;
         private bool _SiltDarkColor_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Color SiltDarkColor => _SiltDarkColor_IsSet ? _recordData.Slice(_SiltDarkColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color SiltDarkColor => _SiltDarkColor_IsSet ? _recordData.Slice(_SiltDarkColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region ScreenSpaceReflections
         private int _ScreenSpaceReflectionsLocation => _DNAMLocation!.Value.Min + 0xC8;
         private bool _ScreenSpaceReflections_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Boolean ScreenSpaceReflections => _ScreenSpaceReflections_IsSet ? _recordData.Slice(_ScreenSpaceReflectionsLocation, 1)[0] >= 1 : default;
+        public Boolean ScreenSpaceReflections => _ScreenSpaceReflections_IsSet ? _recordData.Slice(_ScreenSpaceReflectionsLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region GNAM
         private int? _GNAMLocation;

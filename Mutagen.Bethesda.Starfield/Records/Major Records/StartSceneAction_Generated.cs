@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region HTID
-        public Boolean HTID { get; set; } = default;
+        public Boolean HTID { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.StartScenes.Clear();
-            item.HTID = default;
+            item.HTID = default(Boolean);
             base.Clear(item);
         }
         
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = Array.Empty<IStartSceneGetter>();
         #region HTID
         private int? _HTIDLocation;
-        public Boolean HTID => _HTIDLocation.HasValue ? true : default;
+        public Boolean HTID => _HTIDLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

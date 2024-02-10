@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Type
-        public MagicEffectArchetype.TypeEnum Type { get; set; } = default;
+        public MagicEffectArchetype.TypeEnum Type { get; set; } = default(MagicEffectArchetype.TypeEnum);
         #endregion
         #region Association
         private readonly IFormLink<IStarfieldMajorRecordGetter> _Association = new FormLink<IStarfieldMajorRecordGetter>();
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMagicEffectArchetype item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(MagicEffectArchetype.TypeEnum);
             item.Association.Clear();
             base.Clear(item);
         }

@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Flags
-        public HeadPart.Flag Flags { get; set; } = default;
+        public HeadPart.Flag Flags { get; set; } = default(HeadPart.Flag);
         #endregion
         #region Type
         public HeadPart.TypeEnum? Type { get; set; }
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Components.Clear();
             item.Name = default;
             item.Model = null;
-            item.Flags = default;
+            item.Flags = default(HeadPart.Flag);
             item.Type = default;
             item.ExtraParts.Clear();
             item.NAM2 = default;
@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.ExtraParts.SetTo(
                         rhs.ExtraParts
-                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

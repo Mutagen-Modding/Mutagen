@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Flags
-        public MusicType.Flag Flags { get; set; } = default;
+        public MusicType.Flag Flags { get; set; } = default(MusicType.Flag);
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMusicTypeInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(MusicType.Flag);
             item.Data = null;
             item.FadeDuration = default;
             item.VNAM = default;
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Tracks = 
                             rhs.Tracks
-                            .Select(r => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
                     }
                     else

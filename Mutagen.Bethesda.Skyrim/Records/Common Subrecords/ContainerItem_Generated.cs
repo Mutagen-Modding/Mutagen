@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
         #region Count
-        public Int32 Count { get; set; } = default;
+        public Int32 Count { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Item.Clear();
-            item.Count = default;
+            item.Count = default(Int32);
         }
         
         #region Mutagen

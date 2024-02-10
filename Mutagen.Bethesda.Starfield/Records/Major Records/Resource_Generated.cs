@@ -2007,7 +2007,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2066,7 +2066,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.NextRarities.SetTo(
                         rhs.NextRarities
-                        .Select(r => (IFormLinkGetter<IResourceGetter>)new FormLink<IResourceGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IResourceGetter>)new FormLink<IResourceGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

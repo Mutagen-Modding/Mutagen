@@ -51,37 +51,37 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LeftWalk
-        public Single LeftWalk { get; set; } = default;
+        public Single LeftWalk { get; set; } = default(Single);
         #endregion
         #region LeftRun
-        public Single LeftRun { get; set; } = default;
+        public Single LeftRun { get; set; } = default(Single);
         #endregion
         #region RightWalk
-        public Single RightWalk { get; set; } = default;
+        public Single RightWalk { get; set; } = default(Single);
         #endregion
         #region RightRun
-        public Single RightRun { get; set; } = default;
+        public Single RightRun { get; set; } = default(Single);
         #endregion
         #region ForwardWalk
-        public Single ForwardWalk { get; set; } = default;
+        public Single ForwardWalk { get; set; } = default(Single);
         #endregion
         #region ForwardRun
-        public Single ForwardRun { get; set; } = default;
+        public Single ForwardRun { get; set; } = default(Single);
         #endregion
         #region BackWalk
-        public Single BackWalk { get; set; } = default;
+        public Single BackWalk { get; set; } = default(Single);
         #endregion
         #region BackRun
-        public Single BackRun { get; set; } = default;
+        public Single BackRun { get; set; } = default(Single);
         #endregion
         #region RotateWalk
-        public Single RotateWalk { get; set; } = default;
+        public Single RotateWalk { get; set; } = default(Single);
         #endregion
         #region RotateRun
-        public Single RotateRun { get; set; } = default;
+        public Single RotateRun { get; set; } = default(Single);
         #endregion
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -1044,17 +1044,17 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISpeedOverrides item)
         {
             ClearPartial();
-            item.LeftWalk = default;
-            item.LeftRun = default;
-            item.RightWalk = default;
-            item.RightRun = default;
-            item.ForwardWalk = default;
-            item.ForwardRun = default;
-            item.BackWalk = default;
-            item.BackRun = default;
-            item.RotateWalk = default;
-            item.RotateRun = default;
-            item.Unknown = default;
+            item.LeftWalk = default(Single);
+            item.LeftRun = default(Single);
+            item.RightWalk = default(Single);
+            item.RightRun = default(Single);
+            item.ForwardWalk = default(Single);
+            item.ForwardRun = default(Single);
+            item.BackWalk = default(Single);
+            item.BackRun = default(Single);
+            item.RotateWalk = default(Single);
+            item.RotateRun = default(Single);
+            item.Unknown = default(Single);
         }
         
         #region Mutagen

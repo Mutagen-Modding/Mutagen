@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region TriangleBeforeDoor
-        public Int16 TriangleBeforeDoor { get; set; } = default;
+        public Int16 TriangleBeforeDoor { get; set; } = default(Int16);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Door
         private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
@@ -764,8 +764,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDoorTriangle item)
         {
             ClearPartial();
-            item.TriangleBeforeDoor = default;
-            item.Unknown = default;
+            item.TriangleBeforeDoor = default(Int16);
+            item.Unknown = default(Int32);
             item.Door.Clear();
         }
         

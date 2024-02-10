@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Pex
         String? IPexObjectFunctionGetter.DocString => this.DocString;
         #endregion
         #region Flags
-        public FunctionFlags Flags { get; set; } = default;
+        public FunctionFlags Flags { get; set; } = default(FunctionFlags);
         #endregion
         #region Parameters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Pex
 
         #endregion
         #region RawUserFlags
-        public UInt32 RawUserFlags { get; set; } = default;
+        public UInt32 RawUserFlags { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -1051,11 +1051,11 @@ namespace Mutagen.Bethesda.Pex
             ClearPartial();
             item.ReturnTypeName = default;
             item.DocString = default;
-            item.Flags = default;
+            item.Flags = default(FunctionFlags);
             item.Parameters.Clear();
             item.Locals.Clear();
             item.Instructions.Clear();
-            item.RawUserFlags = default;
+            item.RawUserFlags = default(UInt32);
         }
         
     }

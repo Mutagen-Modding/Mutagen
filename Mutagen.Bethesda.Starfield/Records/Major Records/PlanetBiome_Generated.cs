@@ -63,10 +63,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IBiomeGetter> IPlanetBiomeGetter.Biome => this.Biome;
         #endregion
         #region Percentage
-        public Single Percentage { get; set; } = default;
+        public Single Percentage { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
         #region ResourceGenOverride
         private readonly IFormLink<IStarfieldMajorRecordGetter> _ResourceGenOverride = new FormLink<IStarfieldMajorRecordGetter>();
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Unknown3
-        public Int32 Unknown3 { get; set; } = default;
+        public Int32 Unknown3 { get; set; } = default(Int32);
         #endregion
         #region Flora
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1122,11 +1122,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Biome.Clear();
-            item.Percentage = default;
-            item.Unknown2 = default;
+            item.Percentage = default(Single);
+            item.Unknown2 = default(Int32);
             item.ResourceGenOverride.Clear();
             item.Fauna.Clear();
-            item.Unknown3 = default;
+            item.Unknown3 = default(Int32);
             item.Flora.Clear();
             item.Unknown4 = Array.Empty<byte>();
         }
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Fauna.SetTo(
                         rhs.Fauna
-                        .Select(r => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

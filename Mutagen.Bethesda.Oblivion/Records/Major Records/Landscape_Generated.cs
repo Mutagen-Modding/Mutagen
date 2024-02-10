@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Textures = 
                             rhs.Textures
-                            .Select(r => (IFormLinkGetter<ILandTextureGetter>)new FormLink<ILandTextureGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILandTextureGetter>)new FormLink<ILandTextureGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILandTextureGetter>>();
                     }
                     else

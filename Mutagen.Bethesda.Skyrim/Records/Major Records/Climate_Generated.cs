@@ -102,25 +102,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region SunriseBegin
-        public TimeOnly SunriseBegin { get; set; } = default;
+        public TimeOnly SunriseBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunriseEnd
-        public TimeOnly SunriseEnd { get; set; } = default;
+        public TimeOnly SunriseEnd { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetBegin
-        public TimeOnly SunsetBegin { get; set; } = default;
+        public TimeOnly SunsetBegin { get; set; } = default(TimeOnly);
         #endregion
         #region SunsetEnd
-        public TimeOnly SunsetEnd { get; set; } = default;
+        public TimeOnly SunsetEnd { get; set; } = default(TimeOnly);
         #endregion
         #region Volatility
-        public Byte Volatility { get; set; } = default;
+        public Byte Volatility { get; set; } = default(Byte);
         #endregion
         #region Moons
-        public Climate.Moon Moons { get; set; } = default;
+        public Climate.Moon Moons { get; set; } = default(Climate.Moon);
         #endregion
         #region PhaseLength
-        public Byte PhaseLength { get; set; } = default;
+        public Byte PhaseLength { get; set; } = default(Byte);
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 64);
         #endregion
 
@@ -1255,13 +1255,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.SunTexture = default;
             item.SunGlareTexture = default;
             item.Model = null;
-            item.SunriseBegin = default;
-            item.SunriseEnd = default;
-            item.SunsetBegin = default;
-            item.SunsetEnd = default;
-            item.Volatility = default;
-            item.Moons = default;
-            item.PhaseLength = default;
+            item.SunriseBegin = default(TimeOnly);
+            item.SunriseEnd = default(TimeOnly);
+            item.SunsetBegin = default(TimeOnly);
+            item.SunsetEnd = default(TimeOnly);
+            item.Volatility = default(Byte);
+            item.Moons = default(Climate.Moon);
+            item.PhaseLength = default(Byte);
             base.Clear(item);
         }
         

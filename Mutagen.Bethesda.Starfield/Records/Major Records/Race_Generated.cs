@@ -196,10 +196,10 @@ namespace Mutagen.Bethesda.Starfield
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
         #endregion
         #region FacegenMainClamp
-        public Single FacegenMainClamp { get; set; } = default;
+        public Single FacegenMainClamp { get; set; } = default(Single);
         #endregion
         #region FacegenFaceClamp
-        public Single FacegenFaceClamp { get; set; } = default;
+        public Single FacegenFaceClamp { get; set; } = default(Single);
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3125,8 +3125,8 @@ namespace Mutagen.Bethesda.Starfield
             item.MovementTypeNames.Clear();
             item.Voices.Male = FormLink<IVoiceTypeGetter>.Null;
             item.Voices.Female = FormLink<IVoiceTypeGetter>.Null;
-            item.FacegenMainClamp = default;
-            item.FacegenFaceClamp = default;
+            item.FacegenMainClamp = default(Single);
+            item.FacegenFaceClamp = default(Single);
             item.Attacks.Clear();
             item.BodyData.Male = null;
             item.BodyData.Female = null;
@@ -4247,7 +4247,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.ActorEffect.SetTo(
                         rhs.ActorEffect
-                        .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4276,7 +4276,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -5712,11 +5712,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData

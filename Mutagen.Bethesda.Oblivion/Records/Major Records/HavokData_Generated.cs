@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
-        public HavokData.MaterialType Material { get; set; } = default;
+        public HavokData.MaterialType Material { get; set; } = default(HavokData.MaterialType);
         #endregion
         #region Friction
-        public Byte Friction { get; set; } = default;
+        public Byte Friction { get; set; } = default(Byte);
         #endregion
         #region Restitution
-        public Byte Restitution { get; set; } = default;
+        public Byte Restitution { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IHavokData item)
         {
             ClearPartial();
-            item.Material = default;
-            item.Friction = default;
-            item.Restitution = default;
+            item.Material = default(HavokData.MaterialType);
+            item.Friction = default(Byte);
+            item.Restitution = default(Byte);
         }
         
         #region Mutagen

@@ -52,13 +52,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Damage
-        public UInt16 Damage { get; set; } = default;
+        public UInt16 Damage { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -759,9 +759,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWeaponBasicStats item)
         {
             ClearPartial();
-            item.Value = default;
-            item.Weight = default;
-            item.Damage = default;
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.Damage = default(UInt16);
         }
         
         #region Mutagen

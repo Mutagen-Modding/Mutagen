@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Versioning
-        public DialogItemData.VersioningBreaks Versioning { get; set; } = default;
+        public DialogItemData.VersioningBreaks Versioning { get; set; } = default(DialogItemData.VersioningBreaks);
         #endregion
         #region DialogType
-        public DialogType DialogType { get; set; } = default;
+        public DialogType DialogType { get; set; } = default(DialogType);
         #endregion
         #region Flags
-        public DialogItem.Flag Flags { get; set; } = default;
+        public DialogItem.Flag Flags { get; set; } = default(DialogItem.Flag);
         #endregion
 
         #region To String
@@ -764,9 +764,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IDialogItemData item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.DialogType = default;
-            item.Flags = default;
+            item.Versioning = default(DialogItemData.VersioningBreaks);
+            item.DialogType = default(DialogType);
+            item.Flags = default(DialogItem.Flag);
         }
         
         #region Mutagen

@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region UseMult
-        public Single UseMult { get; set; } = default;
+        public Single UseMult { get; set; } = default(Single);
         #endregion
         #region OffsetMult
-        public Single OffsetMult { get; set; } = default;
+        public Single OffsetMult { get; set; } = default(Single);
         #endregion
         #region ImproveMult
-        public Single ImproveMult { get; set; } = default;
+        public Single ImproveMult { get; set; } = default(Single);
         #endregion
         #region ImproveOffset
-        public Single ImproveOffset { get; set; } = default;
+        public Single ImproveOffset { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IActorValueSkill item)
         {
             ClearPartial();
-            item.UseMult = default;
-            item.OffsetMult = default;
-            item.ImproveMult = default;
-            item.ImproveOffset = default;
+            item.UseMult = default(Single);
+            item.OffsetMult = default(Single);
+            item.ImproveMult = default(Single);
+            item.ImproveOffset = default(Single);
         }
         
         #region Mutagen

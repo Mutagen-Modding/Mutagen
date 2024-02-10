@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region OpenByDefault
-        public Boolean OpenByDefault { get; set; } = default;
+        public Boolean OpenByDefault { get; set; } = default(Boolean);
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.ActionFlags = default;
             item.Count = default;
             item.MapMarker = null;
-            item.OpenByDefault = default;
+            item.OpenByDefault = default(Boolean);
             item.RagdollData = default;
             item.Scale = default;
             item.ContainedSoul.Clear();

@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Slot1
-        public Int32 Slot1 { get; set; } = default;
+        public Int32 Slot1 { get; set; } = default(Int32);
         #endregion
         #region Slot2
-        public Int32 Slot2 { get; set; } = default;
+        public Int32 Slot2 { get; set; } = default(Int32);
         #endregion
         #region Slot3
-        public Int32 Slot3 { get; set; } = default;
+        public Int32 Slot3 { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -719,9 +719,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISpaceshipWeaponBindingsComponent item)
         {
             ClearPartial();
-            item.Slot1 = default;
-            item.Slot2 = default;
-            item.Slot3 = default;
+            item.Slot1 = default(Int32);
+            item.Slot2 = default(Int32);
+            item.Slot3 = default(Int32);
             base.Clear(item);
         }
         
@@ -1209,17 +1209,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Slot1
         private int _Slot1Location => _SHWBLocation!.Value.Min;
         private bool _Slot1_IsSet => _SHWBLocation.HasValue;
-        public Int32 Slot1 => _Slot1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Slot1Location, 4)) : default;
+        public Int32 Slot1 => _Slot1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Slot1Location, 4)) : default(Int32);
         #endregion
         #region Slot2
         private int _Slot2Location => _SHWBLocation!.Value.Min + 0x4;
         private bool _Slot2_IsSet => _SHWBLocation.HasValue;
-        public Int32 Slot2 => _Slot2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Slot2Location, 4)) : default;
+        public Int32 Slot2 => _Slot2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Slot2Location, 4)) : default(Int32);
         #endregion
         #region Slot3
         private int _Slot3Location => _SHWBLocation!.Value.Min + 0x8;
         private bool _Slot3_IsSet => _SHWBLocation.HasValue;
-        public Int32 Slot3 => _Slot3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Slot3Location, 4)) : default;
+        public Int32 Slot3 => _Slot3_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Slot3Location, 4)) : default(Int32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -51,94 +51,94 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Armorer
-        public Byte Armorer { get; set; } = default;
+        public Byte Armorer { get; set; } = default(Byte);
         #endregion
         #region Athletics
-        public Byte Athletics { get; set; } = default;
+        public Byte Athletics { get; set; } = default(Byte);
         #endregion
         #region Blade
-        public Byte Blade { get; set; } = default;
+        public Byte Blade { get; set; } = default(Byte);
         #endregion
         #region Block
-        public Byte Block { get; set; } = default;
+        public Byte Block { get; set; } = default(Byte);
         #endregion
         #region Blunt
-        public Byte Blunt { get; set; } = default;
+        public Byte Blunt { get; set; } = default(Byte);
         #endregion
         #region HandToHand
-        public Byte HandToHand { get; set; } = default;
+        public Byte HandToHand { get; set; } = default(Byte);
         #endregion
         #region HeavyArmor
-        public Byte HeavyArmor { get; set; } = default;
+        public Byte HeavyArmor { get; set; } = default(Byte);
         #endregion
         #region Alchemy
-        public Byte Alchemy { get; set; } = default;
+        public Byte Alchemy { get; set; } = default(Byte);
         #endregion
         #region Alteration
-        public Byte Alteration { get; set; } = default;
+        public Byte Alteration { get; set; } = default(Byte);
         #endregion
         #region Conjuration
-        public Byte Conjuration { get; set; } = default;
+        public Byte Conjuration { get; set; } = default(Byte);
         #endregion
         #region Destruction
-        public Byte Destruction { get; set; } = default;
+        public Byte Destruction { get; set; } = default(Byte);
         #endregion
         #region Illusion
-        public Byte Illusion { get; set; } = default;
+        public Byte Illusion { get; set; } = default(Byte);
         #endregion
         #region Mysticism
-        public Byte Mysticism { get; set; } = default;
+        public Byte Mysticism { get; set; } = default(Byte);
         #endregion
         #region Restoration
-        public Byte Restoration { get; set; } = default;
+        public Byte Restoration { get; set; } = default(Byte);
         #endregion
         #region Acrobatics
-        public Byte Acrobatics { get; set; } = default;
+        public Byte Acrobatics { get; set; } = default(Byte);
         #endregion
         #region LightArmor
-        public Byte LightArmor { get; set; } = default;
+        public Byte LightArmor { get; set; } = default(Byte);
         #endregion
         #region Marksman
-        public Byte Marksman { get; set; } = default;
+        public Byte Marksman { get; set; } = default(Byte);
         #endregion
         #region Mercantile
-        public Byte Mercantile { get; set; } = default;
+        public Byte Mercantile { get; set; } = default(Byte);
         #endregion
         #region Security
-        public Byte Security { get; set; } = default;
+        public Byte Security { get; set; } = default(Byte);
         #endregion
         #region Sneak
-        public Byte Sneak { get; set; } = default;
+        public Byte Sneak { get; set; } = default(Byte);
         #endregion
         #region Speechcraft
-        public Byte Speechcraft { get; set; } = default;
+        public Byte Speechcraft { get; set; } = default(Byte);
         #endregion
         #region Health
-        public UInt32 Health { get; set; } = default;
+        public UInt32 Health { get; set; } = default(UInt32);
         #endregion
         #region Strength
-        public Byte Strength { get; set; } = default;
+        public Byte Strength { get; set; } = default(Byte);
         #endregion
         #region Intelligence
-        public Byte Intelligence { get; set; } = default;
+        public Byte Intelligence { get; set; } = default(Byte);
         #endregion
         #region Willpower
-        public Byte Willpower { get; set; } = default;
+        public Byte Willpower { get; set; } = default(Byte);
         #endregion
         #region Agility
-        public Byte Agility { get; set; } = default;
+        public Byte Agility { get; set; } = default(Byte);
         #endregion
         #region Speed
-        public Byte Speed { get; set; } = default;
+        public Byte Speed { get; set; } = default(Byte);
         #endregion
         #region Endurance
-        public Byte Endurance { get; set; } = default;
+        public Byte Endurance { get; set; } = default(Byte);
         #endregion
         #region Personality
-        public Byte Personality { get; set; } = default;
+        public Byte Personality { get; set; } = default(Byte);
         #endregion
         #region Luck
-        public Byte Luck { get; set; } = default;
+        public Byte Luck { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -1728,36 +1728,36 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(INpcData item)
         {
             ClearPartial();
-            item.Armorer = default;
-            item.Athletics = default;
-            item.Blade = default;
-            item.Block = default;
-            item.Blunt = default;
-            item.HandToHand = default;
-            item.HeavyArmor = default;
-            item.Alchemy = default;
-            item.Alteration = default;
-            item.Conjuration = default;
-            item.Destruction = default;
-            item.Illusion = default;
-            item.Mysticism = default;
-            item.Restoration = default;
-            item.Acrobatics = default;
-            item.LightArmor = default;
-            item.Marksman = default;
-            item.Mercantile = default;
-            item.Security = default;
-            item.Sneak = default;
-            item.Speechcraft = default;
-            item.Health = default;
-            item.Strength = default;
-            item.Intelligence = default;
-            item.Willpower = default;
-            item.Agility = default;
-            item.Speed = default;
-            item.Endurance = default;
-            item.Personality = default;
-            item.Luck = default;
+            item.Armorer = default(Byte);
+            item.Athletics = default(Byte);
+            item.Blade = default(Byte);
+            item.Block = default(Byte);
+            item.Blunt = default(Byte);
+            item.HandToHand = default(Byte);
+            item.HeavyArmor = default(Byte);
+            item.Alchemy = default(Byte);
+            item.Alteration = default(Byte);
+            item.Conjuration = default(Byte);
+            item.Destruction = default(Byte);
+            item.Illusion = default(Byte);
+            item.Mysticism = default(Byte);
+            item.Restoration = default(Byte);
+            item.Acrobatics = default(Byte);
+            item.LightArmor = default(Byte);
+            item.Marksman = default(Byte);
+            item.Mercantile = default(Byte);
+            item.Security = default(Byte);
+            item.Sneak = default(Byte);
+            item.Speechcraft = default(Byte);
+            item.Health = default(UInt32);
+            item.Strength = default(Byte);
+            item.Intelligence = default(Byte);
+            item.Willpower = default(Byte);
+            item.Agility = default(Byte);
+            item.Speed = default(Byte);
+            item.Endurance = default(Byte);
+            item.Personality = default(Byte);
+            item.Luck = default(Byte);
         }
         
         #region Mutagen

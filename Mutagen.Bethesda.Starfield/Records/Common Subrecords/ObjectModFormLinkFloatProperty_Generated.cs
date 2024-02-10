@@ -65,10 +65,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStarfieldMajorRecordGetter> IObjectModFormLinkFloatPropertyGetter<T>.Record => this.Record;
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region FunctionType
-        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.FloatFunctionType FunctionType { get; set; } = default(ObjectModProperty.FloatFunctionType);
         #endregion
 
         #region To String
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Record.Clear();
-            item.Value = default;
-            item.FunctionType = default;
+            item.Value = default(Single);
+            item.FunctionType = default(ObjectModProperty.FloatFunctionType);
             base.Clear(item);
         }
         

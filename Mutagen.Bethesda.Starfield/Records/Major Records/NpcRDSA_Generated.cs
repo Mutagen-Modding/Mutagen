@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region UnknownInt
-        public Int32 UnknownInt { get; set; } = default;
+        public Int32 UnknownInt { get; set; } = default(Int32);
         #endregion
         #region UnknownInt2
-        public Int32 UnknownInt2 { get; set; } = default;
+        public Int32 UnknownInt2 { get; set; } = default(Int32);
         #endregion
         #region UnknownLink1
         private readonly IFormLink<IStarfieldMajorRecordGetter> _UnknownLink1 = new FormLink<IStarfieldMajorRecordGetter>();
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStarfieldMajorRecordGetter> INpcRDSAGetter.UnknownLink1 => this.UnknownLink1;
         #endregion
         #region UnknownInt3
-        public Int32 UnknownInt3 { get; set; } = default;
+        public Int32 UnknownInt3 { get; set; } = default(Int32);
         #endregion
         #region UnknownLink2
         private readonly IFormLink<IStarfieldMajorRecordGetter> _UnknownLink2 = new FormLink<IStarfieldMajorRecordGetter>();
@@ -121,19 +121,19 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStarfieldMajorRecordGetter> INpcRDSAGetter.UnknownLink6 => this.UnknownLink6;
         #endregion
         #region UnknownFloat1
-        public Single UnknownFloat1 { get; set; } = default;
+        public Single UnknownFloat1 { get; set; } = default(Single);
         #endregion
         #region UnknownFloat2
-        public Single UnknownFloat2 { get; set; } = default;
+        public Single UnknownFloat2 { get; set; } = default(Single);
         #endregion
         #region UnknownFloat3
-        public Single UnknownFloat3 { get; set; } = default;
+        public Single UnknownFloat3 { get; set; } = default(Single);
         #endregion
         #region UnknownFloat4
-        public Single UnknownFloat4 { get; set; } = default;
+        public Single UnknownFloat4 { get; set; } = default(Single);
         #endregion
         #region UnknownFloat5
-        public Single UnknownFloat5 { get; set; } = default;
+        public Single UnknownFloat5 { get; set; } = default(Single);
         #endregion
         #region UnknownLink7
         private readonly IFormLink<IStarfieldMajorRecordGetter> _UnknownLink7 = new FormLink<IStarfieldMajorRecordGetter>();
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStarfieldMajorRecordGetter> INpcRDSAGetter.UnknownLink7 => this.UnknownLink7;
         #endregion
         #region UnknownInt4
-        public Int32 UnknownInt4 { get; set; } = default;
+        public Int32 UnknownInt4 { get; set; } = default(Int32);
         #endregion
         #region UnknownLink8
         private readonly IFormLink<IStarfieldMajorRecordGetter> _UnknownLink8 = new FormLink<IStarfieldMajorRecordGetter>();
@@ -159,10 +159,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStarfieldMajorRecordGetter> INpcRDSAGetter.UnknownLink8 => this.UnknownLink8;
         #endregion
         #region UnknownFloat6
-        public Single UnknownFloat6 { get; set; } = default;
+        public Single UnknownFloat6 { get; set; } = default(Single);
         #endregion
         #region UnknownInt5
-        public Int32 UnknownInt5 { get; set; } = default;
+        public Int32 UnknownInt5 { get; set; } = default(Int32);
         #endregion
         #region UnknownLink9
         private readonly IFormLink<IStarfieldMajorRecordGetter> _UnknownLink9 = new FormLink<IStarfieldMajorRecordGetter>();
@@ -1432,25 +1432,25 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcRDSA item)
         {
             ClearPartial();
-            item.UnknownInt = default;
-            item.UnknownInt2 = default;
+            item.UnknownInt = default(Int32);
+            item.UnknownInt2 = default(Int32);
             item.UnknownLink1.Clear();
-            item.UnknownInt3 = default;
+            item.UnknownInt3 = default(Int32);
             item.UnknownLink2.Clear();
             item.UnknownLink3.Clear();
             item.UnknownLink4.Clear();
             item.UnknownLink5.Clear();
             item.UnknownLink6.Clear();
-            item.UnknownFloat1 = default;
-            item.UnknownFloat2 = default;
-            item.UnknownFloat3 = default;
-            item.UnknownFloat4 = default;
-            item.UnknownFloat5 = default;
+            item.UnknownFloat1 = default(Single);
+            item.UnknownFloat2 = default(Single);
+            item.UnknownFloat3 = default(Single);
+            item.UnknownFloat4 = default(Single);
+            item.UnknownFloat5 = default(Single);
             item.UnknownLink7.Clear();
-            item.UnknownInt4 = default;
+            item.UnknownInt4 = default(Int32);
             item.UnknownLink8.Clear();
-            item.UnknownFloat6 = default;
-            item.UnknownInt5 = default;
+            item.UnknownFloat6 = default(Single);
+            item.UnknownInt5 = default(Int32);
             item.UnknownLink9.Clear();
         }
         

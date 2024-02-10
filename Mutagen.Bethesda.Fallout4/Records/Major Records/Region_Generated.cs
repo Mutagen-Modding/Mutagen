@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region MapColor
-        public Color MapColor { get; set; } = default;
+        public Color MapColor { get; set; } = default(Color);
         #endregion
         #region Worldspace
         private readonly IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IRegionInternal item)
         {
             ClearPartial();
-            item.MapColor = default;
+            item.MapColor = default(Color);
             item.Worldspace.Clear();
             item.RegionAreas.Clear();
             item.Objects = null;
@@ -2332,7 +2332,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region MapColor
         private int? _MapColorLocation;
-        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;

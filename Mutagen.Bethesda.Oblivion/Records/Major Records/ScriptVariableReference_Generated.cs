@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
-        public Int32 VariableIndex { get; set; } = default;
+        public Int32 VariableIndex { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IScriptVariableReference item)
         {
             ClearPartial();
-            item.VariableIndex = default;
+            item.VariableIndex = default(Int32);
             base.Clear(item);
         }
         
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region VariableIndex
         private int? _VariableIndexLocation;
-        public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VariableIndexLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VariableIndexLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

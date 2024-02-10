@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.WalkFootsteps.SetTo(
                         rhs.WalkFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.RunFootsteps.SetTo(
                         rhs.RunFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1804,7 +1804,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.SprintFootsteps.SetTo(
                         rhs.SprintFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.SneakFootsteps.SetTo(
                         rhs.SneakFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.SwimFootsteps.SetTo(
                         rhs.SwimFootsteps
-                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

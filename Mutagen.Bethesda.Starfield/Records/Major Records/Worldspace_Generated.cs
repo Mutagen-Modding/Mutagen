@@ -227,10 +227,10 @@ namespace Mutagen.Bethesda.Starfield
         IWorldspaceMapGetter? IWorldspaceGetter.MapData => this.MapData;
         #endregion
         #region WorldMapOffsetScale
-        public Single WorldMapOffsetScale { get; set; } = default;
+        public Single WorldMapOffsetScale { get; set; } = default(Single);
         #endregion
         #region WorldMapCellOffset
-        public P3Float WorldMapCellOffset { get; set; } = default;
+        public P3Float WorldMapCellOffset { get; set; } = default(P3Float);
         #endregion
         #region DistantLodMultiplier
         public Single? DistantLodMultiplier { get; set; }
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? IWorldspaceGetter.DistantLodMultiplier => this.DistantLodMultiplier;
         #endregion
         #region Flags
-        public Worldspace.Flag Flags { get; set; } = default;
+        public Worldspace.Flag Flags { get; set; } = default(Worldspace.Flag);
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -252,10 +252,10 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.FNAM => this.FNAM;
         #endregion
         #region ObjectBoundsMin
-        public P2Float ObjectBoundsMin { get; set; } = default;
+        public P2Float ObjectBoundsMin { get; set; } = default(P2Float);
         #endregion
         #region ObjectBoundsMax
-        public P2Float ObjectBoundsMax { get; set; } = default;
+        public P2Float ObjectBoundsMax { get; set; } = default(P2Float);
         #endregion
         #region Music
         private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
@@ -379,10 +379,10 @@ namespace Mutagen.Bethesda.Starfield
         ICellGetter? IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
         #region SubCellsTimestamp
-        public Int32 SubCellsTimestamp { get; set; } = default;
+        public Int32 SubCellsTimestamp { get; set; } = default(Int32);
         #endregion
         #region SubCellsUnknown
-        public Int32 SubCellsUnknown { get; set; } = default;
+        public Int32 SubCellsUnknown { get; set; } = default(Int32);
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3052,13 +3052,13 @@ namespace Mutagen.Bethesda.Starfield
             item.LodWaterHeight = default;
             item.LandDefaults = null;
             item.MapData = null;
-            item.WorldMapOffsetScale = default;
-            item.WorldMapCellOffset = default;
+            item.WorldMapOffsetScale = default(Single);
+            item.WorldMapCellOffset = default(P3Float);
             item.DistantLodMultiplier = default;
-            item.Flags = default;
+            item.Flags = default(Worldspace.Flag);
             item.FNAM = default;
-            item.ObjectBoundsMin = default;
-            item.ObjectBoundsMax = default;
+            item.ObjectBoundsMin = default(P2Float);
+            item.ObjectBoundsMax = default(P2Float);
             item.Music.Clear();
             item.AmbienceSet.Clear();
             item.EnvironmentMap = default;
@@ -3071,8 +3071,8 @@ namespace Mutagen.Bethesda.Starfield
             item.OffsetData = default;
             item.CellSizeData = default;
             item.TopCell = null;
-            item.SubCellsTimestamp = default;
-            item.SubCellsUnknown = default;
+            item.SubCellsTimestamp = default(Int32);
+            item.SubCellsUnknown = default(Int32);
             item.SubCells.Clear();
             base.Clear(item);
         }
@@ -5380,7 +5380,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.LandscapeTextures.SetTo(
                         rhs.LandscapeTextures
-                        .Select(r => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6382,12 +6382,12 @@ namespace Mutagen.Bethesda.Starfield
         #region WorldMapOffsetScale
         private int _WorldMapOffsetScaleLocation => _ONAMLocation!.Value.Min;
         private bool _WorldMapOffsetScale_IsSet => _ONAMLocation.HasValue;
-        public Single WorldMapOffsetScale => _WorldMapOffsetScale_IsSet ? _recordData.Slice(_WorldMapOffsetScaleLocation, 4).Float() : default;
+        public Single WorldMapOffsetScale => _WorldMapOffsetScale_IsSet ? _recordData.Slice(_WorldMapOffsetScaleLocation, 4).Float() : default(Single);
         #endregion
         #region WorldMapCellOffset
         private int _WorldMapCellOffsetLocation => _ONAMLocation!.Value.Min + 0x4;
         private bool _WorldMapCellOffset_IsSet => _ONAMLocation.HasValue;
-        public P3Float WorldMapCellOffset => _WorldMapCellOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_WorldMapCellOffsetLocation, 12)) : default;
+        public P3Float WorldMapCellOffset => _WorldMapCellOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_WorldMapCellOffsetLocation, 12)) : default(P3Float);
         #endregion
         #region DistantLodMultiplier
         private int? _DistantLodMultiplierLocation;

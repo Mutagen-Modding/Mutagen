@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Flags
-        public HeadPart.Flag Flags { get; set; } = default;
+        public HeadPart.Flag Flags { get; set; } = default(HeadPart.Flag);
         #endregion
         #region Type
         public HeadPart.TypeEnum? Type { get; set; }
@@ -1454,7 +1454,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Flags = default;
+            item.Flags = default(HeadPart.Flag);
             item.Type = default;
             item.ExtraParts.Clear();
             item.Parts.Clear();
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.ExtraParts.SetTo(
                         rhs.ExtraParts
-                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Modification
-        public PerkEntryPointModifyValue.ModificationType Modification { get; set; } = default;
+        public PerkEntryPointModifyValue.ModificationType Modification { get; set; } = default(PerkEntryPointModifyValue.ModificationType);
         #endregion
         #region Value
         public Single? Value { get; set; }
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPerkEntryPointModifyValue item)
         {
             ClearPartial();
-            item.Modification = default;
+            item.Modification = default(PerkEntryPointModifyValue.ModificationType);
             item.Value = default;
             base.Clear(item);
         }

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Flags
-        public PlacedObjectMapMarker.Flag Flags { get; set; } = default;
+        public PlacedObjectMapMarker.Flag Flags { get; set; } = default(PlacedObjectMapMarker.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -81,10 +81,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Type
-        public SByte Type { get; set; } = default;
+        public SByte Type { get; set; } = default(SByte);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region VNAM
         public UInt16? VNAM { get; set; }
@@ -951,10 +951,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlacedObjectMapMarker item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(PlacedObjectMapMarker.Flag);
             item.Name.Clear();
-            item.Type = default;
-            item.Unknown = default;
+            item.Type = default(SByte);
+            item.Unknown = default(Byte);
             item.VNAM = default;
             item.UNAM = default;
             item.VISI = default;
@@ -1510,7 +1510,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Type
         private int _TypeLocation => _TNAMLocation!.Value.Min;
         private bool _Type_IsSet => _TNAMLocation.HasValue;
-        public SByte Type => _Type_IsSet ? (sbyte)_recordData.Slice(_TypeLocation, 1)[0] : default;
+        public SByte Type => _Type_IsSet ? (sbyte)_recordData.Slice(_TypeLocation, 1)[0] : default(SByte);
         #endregion
         #region Unknown
         private int _UnknownLocation => _TNAMLocation!.Value.Min + 0x1;

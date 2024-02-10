@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Type
-        public TargetObjectType Type { get; set; } = default;
+        public TargetObjectType Type { get; set; } = default(TargetObjectType);
         #endregion
 
         #region To String
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPackageTargetObjectType item)
         {
             ClearPartial();
-            item.Type = default;
+            item.Type = default(TargetObjectType);
             base.Clear(item);
         }
         

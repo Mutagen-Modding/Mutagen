@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IActorValueInformationGetter> IObjectPropertyGetter.ActorValue => this.ActorValue;
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single Value { get; set; } = default(Single);
         #endregion
         #region CurveTable
         private readonly IFormLink<ICurveTableGetter> _CurveTable = new FormLink<ICurveTableGetter>();
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.ActorValue.Clear();
-            item.Value = default;
+            item.Value = default(Single);
             item.CurveTable.Clear();
         }
         

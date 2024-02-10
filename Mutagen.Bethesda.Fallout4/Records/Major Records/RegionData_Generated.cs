@@ -57,10 +57,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public RegionData.RegionDataFlag Flags { get; set; } = default;
+        public RegionData.RegionDataFlag Flags { get; set; } = default(RegionData.RegionDataFlag);
         #endregion
         #region Priority
-        public Byte Priority { get; set; } = default;
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -785,8 +785,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IRegionData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Priority = default;
+            item.Flags = default(RegionData.RegionDataFlag);
+            item.Priority = default(Byte);
             item.Icons = null;
         }
         

@@ -55,10 +55,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region CompareOperator
-        public CompareOperator CompareOperator { get; set; } = default;
+        public CompareOperator CompareOperator { get; set; } = default(CompareOperator);
         #endregion
         #region Flags
-        public Condition.Flag Flags { get; set; } = default;
+        public Condition.Flag Flags { get; set; } = default(Condition.Flag);
         #endregion
         #region Unknown1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -761,8 +761,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(ICondition item)
         {
             ClearPartial();
-            item.CompareOperator = default;
-            item.Flags = default;
+            item.CompareOperator = default(CompareOperator);
+            item.Flags = default(Condition.Flag);
             item.Unknown1 = new byte[3];
         }
         

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LocationAliasIndex
-        public Int32 LocationAliasIndex { get; set; } = default;
+        public Int32 LocationAliasIndex { get; set; } = default(Int32);
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetLocAliasRefTypeAliveCountConditionData item)
         {
             ClearPartial();
-            item.LocationAliasIndex = default;
+            item.LocationAliasIndex = default(Int32);
             item.FirstUnusedStringParameter = default;
             item.LocationReferenceType.Clear();
             item.SecondUnusedStringParameter = default;

@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TrainedSkill
-        public Skill TrainedSkill { get; set; } = default;
+        public Skill TrainedSkill { get; set; } = default(Skill);
         #endregion
         #region MaximumTrainingLevel
-        public Byte MaximumTrainingLevel { get; set; } = default;
+        public Byte MaximumTrainingLevel { get; set; } = default(Byte);
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -750,9 +750,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClassTraining item)
         {
             ClearPartial();
-            item.TrainedSkill = default;
-            item.MaximumTrainingLevel = default;
-            item.Unknown = default;
+            item.TrainedSkill = default(Skill);
+            item.MaximumTrainingLevel = default(Byte);
+            item.Unknown = default(Int16);
         }
         
         #region Mutagen

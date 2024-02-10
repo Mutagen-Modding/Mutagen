@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? ITerminalMenuItemGetter.ISET => this.ISET;
         #endregion
         #region ItemId
-        public UInt16 ItemId { get; set; } = default;
+        public UInt16 ItemId { get; set; } = default(UInt16);
         #endregion
         #region Lock
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ItemText.Clear();
             item.ItemShortText = default;
             item.ISET = default;
-            item.ItemId = default;
+            item.ItemId = default(UInt16);
             item.Lock = null;
             item.Submenu.Clear();
             item.DisplayText = default;
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ItemId
         private int? _ItemIdLocation;
-        public UInt16 ItemId => _ItemIdLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ItemIdLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 ItemId => _ItemIdLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ItemIdLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
         #region Lock
         private RangeInt32? _LockLocation;

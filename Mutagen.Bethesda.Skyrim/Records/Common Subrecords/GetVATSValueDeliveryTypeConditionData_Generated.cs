@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Value
-        public TargetType Value { get; set; } = default;
+        public TargetType Value { get; set; } = default(TargetType);
         #endregion
 
         #region To String
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVATSValueDeliveryTypeConditionData item)
         {
             ClearPartial();
-            item.Value = default;
+            item.Value = default(TargetType);
             base.Clear(item);
         }
         

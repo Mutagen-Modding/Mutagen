@@ -61,10 +61,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Type
-        public GroupTypeEnum Type { get; set; } = default;
+        public GroupTypeEnum Type { get; set; } = default(GroupTypeEnum);
         #endregion
         #region LastModified
-        public Int32 LastModified { get; set; } = default;
+        public Int32 LastModified { get; set; } = default(Int32);
         #endregion
         #region Records
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -774,8 +774,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IOblivionListGroup<T> item)
         {
             ClearPartial();
-            item.Type = default;
-            item.LastModified = default;
+            item.Type = default(GroupTypeEnum);
+            item.LastModified = default(Int32);
             item.Records.Clear();
         }
         

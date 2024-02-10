@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Flags
-        public PlacedObjectMapMarker.Flag Flags { get; set; } = default;
+        public PlacedObjectMapMarker.Flag Flags { get; set; } = default(PlacedObjectMapMarker.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -81,10 +81,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Type
-        public PlacedObjectMapMarker.Types Type { get; set; } = default;
+        public PlacedObjectMapMarker.Types Type { get; set; } = default(PlacedObjectMapMarker.Types);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -834,10 +834,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPlacedObjectMapMarker item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(PlacedObjectMapMarker.Flag);
             item.Name.Clear();
-            item.Type = default;
-            item.Unknown = default;
+            item.Type = default(PlacedObjectMapMarker.Types);
+            item.Unknown = default(Byte);
         }
         
         #region Mutagen

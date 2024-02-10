@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Index
-        public UInt16 Index { get; set; } = default;
+        public UInt16 Index { get; set; } = default(UInt16);
         #endregion
         #region Flags
-        public QuestStage.Flag Flags { get; set; } = default;
+        public QuestStage.Flag Flags { get; set; } = default(QuestStage.Flag);
         #endregion
         #region Unknown
-        public Byte Unknown { get; set; } = default;
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -894,9 +894,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestStage item)
         {
             ClearPartial();
-            item.Index = default;
-            item.Flags = default;
-            item.Unknown = default;
+            item.Index = default(UInt16);
+            item.Flags = default(QuestStage.Flag);
+            item.Unknown = default(Byte);
             item.LogEntries.Clear();
         }
         
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Index
         private int _IndexLocation => _INDXLocation!.Value.Min;
         private bool _Index_IsSet => _INDXLocation.HasValue;
-        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default;
+        public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default(UInt16);
         #endregion
         #region Flags
         private int _FlagsLocation => _INDXLocation!.Value.Min + 0x2;

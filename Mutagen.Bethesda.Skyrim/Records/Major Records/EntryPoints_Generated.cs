@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public Furniture.AnimationType Type { get; set; } = default;
+        public Furniture.AnimationType Type { get; set; } = default(Furniture.AnimationType);
         #endregion
         #region Points
-        public Furniture.Entry Points { get; set; } = default;
+        public Furniture.Entry Points { get; set; } = default(Furniture.Entry);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IEntryPoints item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Points = default;
+            item.Type = default(Furniture.AnimationType);
+            item.Points = default(Furniture.Entry);
         }
         
         #region Mutagen

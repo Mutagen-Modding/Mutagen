@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region RaceDataFlags
-        public Race.Flag RaceDataFlags { get; set; } = default;
+        public Race.Flag RaceDataFlags { get; set; } = default(Race.Flag);
         #endregion
         #region OverrideActive
-        public Race.Flag OverrideActive { get; set; } = default;
+        public Race.Flag OverrideActive { get; set; } = default(Race.Flag);
         #endregion
 
         #region To String
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(INpcRaceOverrideFlag item)
         {
             ClearPartial();
-            item.RaceDataFlags = default;
-            item.OverrideActive = default;
+            item.RaceDataFlags = default(Race.Flag);
+            item.OverrideActive = default(Race.Flag);
         }
         
         #region Mutagen

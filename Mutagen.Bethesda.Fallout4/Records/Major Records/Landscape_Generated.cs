@@ -1583,7 +1583,8 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
                     }
                 }
@@ -1603,7 +1604,8 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
                     }
                 }
@@ -2010,7 +2012,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Textures = 
                             rhs.Textures
-                            .Select(r => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>();
                     }
                     else

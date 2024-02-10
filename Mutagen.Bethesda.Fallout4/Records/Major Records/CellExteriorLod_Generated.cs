@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IWorldspaceGetter> ICellExteriorLodGetter.Worldspace => this.Worldspace;
         #endregion
         #region Offset
-        public P3Float Offset { get; set; } = default;
+        public P3Float Offset { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Worldspace.Clear();
-            item.Offset = default;
+            item.Offset = default(P3Float);
         }
         
         #region Mutagen

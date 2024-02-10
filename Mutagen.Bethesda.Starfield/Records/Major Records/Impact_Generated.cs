@@ -91,28 +91,28 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Duration
-        public Single Duration { get; set; } = default;
+        public Single Duration { get; set; } = default(Single);
         #endregion
         #region Orientation
-        public Impact.OrientationType Orientation { get; set; } = default;
+        public Impact.OrientationType Orientation { get; set; } = default(Impact.OrientationType);
         #endregion
         #region AngleThreshold
-        public Single AngleThreshold { get; set; } = default;
+        public Single AngleThreshold { get; set; } = default(Single);
         #endregion
         #region PlacementRadius
-        public Single PlacementRadius { get; set; } = default;
+        public Single PlacementRadius { get; set; } = default(Single);
         #endregion
         #region SoundLevel
-        public SoundLevel SoundLevel { get; set; } = default;
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region NoDecalData
-        public Boolean NoDecalData { get; set; } = default;
+        public Boolean NoDecalData { get; set; } = default(Boolean);
         #endregion
         #region Result
-        public Impact.ResultType Result { get; set; } = default;
+        public Impact.ResultType Result { get; set; } = default(Impact.ResultType);
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default;
+        public Int16 Unknown { get; set; } = default(Int16);
         #endregion
         #region ProjectedDecals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1620,14 +1620,14 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.Model = null;
-            item.Duration = default;
-            item.Orientation = default;
-            item.AngleThreshold = default;
-            item.PlacementRadius = default;
-            item.SoundLevel = default;
-            item.NoDecalData = default;
-            item.Result = default;
-            item.Unknown = default;
+            item.Duration = default(Single);
+            item.Orientation = default(Impact.OrientationType);
+            item.AngleThreshold = default(Single);
+            item.PlacementRadius = default(Single);
+            item.SoundLevel = default(SoundLevel);
+            item.NoDecalData = default(Boolean);
+            item.Result = default(Impact.ResultType);
+            item.Unknown = default(Int16);
             item.ProjectedDecals = null;
             item.HNAM = null;
             item.Decal = null;
@@ -2423,7 +2423,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ProjectedDecals = 
                             rhs.ProjectedDecals
-                            .Select(r => (IFormLinkGetter<IProjectedDecalGetter>)new FormLink<IProjectedDecalGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IProjectedDecalGetter>)new FormLink<IProjectedDecalGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IProjectedDecalGetter>>();
                     }
                     else
@@ -3080,7 +3080,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Duration
         private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;
-        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default;
+        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default(Single);
         #endregion
         #region Orientation
         private int _OrientationLocation => _DATALocation!.Value.Min + 0x4;
@@ -3090,12 +3090,12 @@ namespace Mutagen.Bethesda.Starfield
         #region AngleThreshold
         private int _AngleThresholdLocation => _DATALocation!.Value.Min + 0x8;
         private bool _AngleThreshold_IsSet => _DATALocation.HasValue;
-        public Single AngleThreshold => _AngleThreshold_IsSet ? _recordData.Slice(_AngleThresholdLocation, 4).Float() : default;
+        public Single AngleThreshold => _AngleThreshold_IsSet ? _recordData.Slice(_AngleThresholdLocation, 4).Float() : default(Single);
         #endregion
         #region PlacementRadius
         private int _PlacementRadiusLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PlacementRadius_IsSet => _DATALocation.HasValue;
-        public Single PlacementRadius => _PlacementRadius_IsSet ? _recordData.Slice(_PlacementRadiusLocation, 4).Float() : default;
+        public Single PlacementRadius => _PlacementRadius_IsSet ? _recordData.Slice(_PlacementRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x10;
@@ -3105,7 +3105,7 @@ namespace Mutagen.Bethesda.Starfield
         #region NoDecalData
         private int _NoDecalDataLocation => _DATALocation!.Value.Min + 0x14;
         private bool _NoDecalData_IsSet => _DATALocation.HasValue;
-        public Boolean NoDecalData => _NoDecalData_IsSet ? _recordData.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default;
+        public Boolean NoDecalData => _NoDecalData_IsSet ? _recordData.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region Result
         private int _ResultLocation => _DATALocation!.Value.Min + 0x15;
@@ -3115,7 +3115,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(Int16);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IProjectedDecalGetter>>? ProjectedDecals { get; private set; }
         #region HNAM

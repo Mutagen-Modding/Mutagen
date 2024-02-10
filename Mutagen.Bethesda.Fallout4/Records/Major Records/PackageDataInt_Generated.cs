@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Data
-        public UInt32 Data { get; set; } = default;
+        public UInt32 Data { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPackageDataInt item)
         {
             ClearPartial();
-            item.Data = default;
+            item.Data = default(UInt32);
             base.Clear(item);
         }
         

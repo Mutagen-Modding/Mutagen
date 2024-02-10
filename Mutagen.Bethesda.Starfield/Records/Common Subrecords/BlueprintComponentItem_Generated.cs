@@ -73,13 +73,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IConstructibleObjectGetter> IBlueprintComponentItemGetter.ConstructionObject => this.ConstructionObject;
         #endregion
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region PartID
-        public UInt32 PartID { get; set; } = default;
+        public UInt32 PartID { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -848,9 +848,9 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.BaseItem.Clear();
             item.ConstructionObject.Clear();
-            item.Position = default;
-            item.Rotation = default;
-            item.PartID = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+            item.PartID = default(UInt32);
         }
         
         #region Mutagen

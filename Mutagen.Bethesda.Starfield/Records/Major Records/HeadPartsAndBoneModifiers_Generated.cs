@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.BoneModifiers.SetTo(
                         rhs.BoneModifiers
-                        .Select(r => (IFormLinkGetter<IBoneModifierGetter>)new FormLink<IBoneModifierGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IBoneModifierGetter>)new FormLink<IBoneModifierGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

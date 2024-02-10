@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Flags
-        public DialogResponses.Flag Flags { get; set; } = default;
+        public DialogResponses.Flag Flags { get; set; } = default(DialogResponses.Flag);
         #endregion
         #region ResetHours
-        public Single ResetHours { get; set; } = default;
+        public Single ResetHours { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDialogResponseFlags item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.ResetHours = default;
+            item.Flags = default(DialogResponses.Flag);
+            item.ResetHours = default(Single);
         }
         
         #region Mutagen

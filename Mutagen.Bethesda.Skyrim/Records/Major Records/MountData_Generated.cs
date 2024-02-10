@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MountOffset
-        public P3Float MountOffset { get; set; } = default;
+        public P3Float MountOffset { get; set; } = default(P3Float);
         #endregion
         #region DismountOffset
-        public P3Float DismountOffset { get; set; } = default;
+        public P3Float DismountOffset { get; set; } = default(P3Float);
         #endregion
         #region MountCameraOffset
-        public P3Float MountCameraOffset { get; set; } = default;
+        public P3Float MountCameraOffset { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -749,9 +749,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IMountData item)
         {
             ClearPartial();
-            item.MountOffset = default;
-            item.DismountOffset = default;
-            item.MountCameraOffset = default;
+            item.MountOffset = default(P3Float);
+            item.DismountOffset = default(P3Float);
+            item.MountCameraOffset = default(P3Float);
         }
         
         #region Mutagen

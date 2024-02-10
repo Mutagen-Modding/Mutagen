@@ -65,10 +65,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> IObjectModFormLinkIntPropertyGetter<T>.Record => this.Record;
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region FunctionType
-        public ObjectModProperty.FormLinkFunctionType FunctionType { get; set; } = default;
+        public ObjectModProperty.FormLinkFunctionType FunctionType { get; set; } = default(ObjectModProperty.FormLinkFunctionType);
         #endregion
 
         #region To String
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Record.Clear();
-            item.Value = default;
-            item.FunctionType = default;
+            item.Value = default(UInt32);
+            item.FunctionType = default(ObjectModProperty.FormLinkFunctionType);
             base.Clear(item);
         }
         

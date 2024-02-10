@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region AliasID
-        public Int32 AliasID { get; set; } = default;
+        public Int32 AliasID { get; set; } = default(Int32);
         #endregion
         #region Flags
-        public Quest.TargetFlag Flags { get; set; } = default;
+        public Quest.TargetFlag Flags { get; set; } = default(Quest.TargetFlag);
         #endregion
         #region Keyword
         private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region QSTADataTypeState
-        public QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; set; } = default;
+        public QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; set; } = default(QuestObjectiveTarget.QSTADataType);
         #endregion
 
         #region To String
@@ -933,11 +933,11 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestObjectiveTarget item)
         {
             ClearPartial();
-            item.AliasID = default;
-            item.Flags = default;
+            item.AliasID = default(Int32);
+            item.Flags = default(Quest.TargetFlag);
             item.Keyword.Clear();
             item.Conditions.Clear();
-            item.QSTADataTypeState = default;
+            item.QSTADataTypeState = default(QuestObjectiveTarget.QSTADataType);
         }
         
         #region Mutagen
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Starfield
         #region AliasID
         private int _AliasIDLocation => _QSTALocation!.Value.Min;
         private bool _AliasID_IsSet => _QSTALocation.HasValue;
-        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default;
+        public Int32 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_AliasIDLocation, 4)) : default(Int32);
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;

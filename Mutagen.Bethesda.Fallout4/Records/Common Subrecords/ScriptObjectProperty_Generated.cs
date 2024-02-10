@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Int16 Alias { get; set; } = AliasDefault;
         #endregion
         #region Unused
-        public UInt16 Unused { get; set; } = default;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Object.Clear();
             item.Alias = ScriptObjectProperty.AliasDefault;
-            item.Unused = default;
+            item.Unused = default(UInt16);
             base.Clear(item);
         }
         

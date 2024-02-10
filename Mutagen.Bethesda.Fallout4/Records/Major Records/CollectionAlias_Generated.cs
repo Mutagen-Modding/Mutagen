@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AliasID
-        public Int32 AliasID { get; set; } = default;
+        public Int32 AliasID { get; set; } = default(Int32);
         #endregion
         #region MaxInitialFillCount
         public Byte? MaxInitialFillCount { get; set; }
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ICollectionAlias item)
         {
             ClearPartial();
-            item.AliasID = default;
+            item.AliasID = default(Int32);
             item.MaxInitialFillCount = default;
         }
         
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region AliasID
         private int? _AliasIDLocation;
-        public Int32 AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AliasIDLocation.Value, _package.MetaData.Constants)) : default;
+        public Int32 AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         #region MaxInitialFillCount
         private int? _MaxInitialFillCountLocation;

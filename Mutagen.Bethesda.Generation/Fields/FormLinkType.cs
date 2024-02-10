@@ -163,9 +163,10 @@ public class FormLinkType : ClassType
         sb.AppendLine($"{identifier}.Clear();");
     }
 
-    public override void GenerateCopySetToConverter(StructuredStringBuilder sb)
+    public override string ReturnForCopySetToConverter(Accessor itemAccessor)
     {
-        sb.AppendLine($".Select(r => ({TypeName(getter: false, needsCovariance: true)})new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
+        return
+            $"({TypeName(getter: false, needsCovariance: true)})new {DirectTypeName(getter: false)}({itemAccessor}.{FormIDTypeString})";
     }
 
     public override async Task GenerateForClass(StructuredStringBuilder sb)

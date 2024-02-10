@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Unknown
-        public Int32 Unknown { get; set; } = default;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region Mesh
         private readonly IFormLink<INavigationMeshGetter> _Mesh = new FormLink<INavigationMeshGetter>();
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<INavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
         #endregion
         #region TriangleIndex
-        public Int16 TriangleIndex { get; set; } = default;
+        public Int16 TriangleIndex { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -764,9 +764,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IEdgeLink item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.Unknown = default(Int32);
             item.Mesh.Clear();
-            item.TriangleIndex = default;
+            item.TriangleIndex = default(Int16);
         }
         
         #region Mutagen

@@ -3512,7 +3512,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3543,7 +3543,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Plants = 
                             rhs.Plants
-                            .Select(r => (IFormLinkGetter<IFloraGetter>)new FormLink<IFloraGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IFloraGetter>)new FormLink<IFloraGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IFloraGetter>>();
                     }
                     else
@@ -3600,7 +3600,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.MaterialSwaps.SetTo(
                         rhs.MaterialSwaps
-                        .Select(r => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

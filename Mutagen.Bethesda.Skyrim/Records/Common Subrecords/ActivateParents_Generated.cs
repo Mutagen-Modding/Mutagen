@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public ActivateParents.Flag Flags { get; set; } = default;
+        public ActivateParents.Flag Flags { get; set; } = default(ActivateParents.Flag);
         #endregion
         #region Parents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IActivateParents item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Flags = default(ActivateParents.Flag);
             item.Parents.Clear();
         }
         

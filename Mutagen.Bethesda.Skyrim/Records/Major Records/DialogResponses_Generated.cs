@@ -2464,7 +2464,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.LinkTo.SetTo(
                         rhs.LinkTo
-                        .Select(r => (IFormLinkGetter<IDialogGetter>)new FormLink<IDialogGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IDialogGetter>)new FormLink<IDialogGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

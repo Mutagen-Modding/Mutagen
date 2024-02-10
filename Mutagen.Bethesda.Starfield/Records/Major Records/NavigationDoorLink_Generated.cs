@@ -62,10 +62,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<INavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
         #endregion
         #region TeleportMarkerTriangle
-        public Int16 TeleportMarkerTriangle { get; set; } = default;
+        public Int16 TeleportMarkerTriangle { get; set; } = default(Int16);
         #endregion
         #region Unused
-        public Int16 Unused { get; set; } = default;
+        public Int16 Unused { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -772,8 +772,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.NavMesh.Clear();
-            item.TeleportMarkerTriangle = default;
-            item.Unused = default;
+            item.TeleportMarkerTriangle = default(Int16);
+            item.Unused = default(Int16);
         }
         
         #region Mutagen

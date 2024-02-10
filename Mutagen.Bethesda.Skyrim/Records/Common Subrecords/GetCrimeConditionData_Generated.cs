@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetCrimeConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region CrimeType
-        public CrimeType CrimeType { get; set; } = default;
+        public CrimeType CrimeType { get; set; } = default(CrimeType);
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Criminal.Clear();
             item.FirstUnusedStringParameter = default;
-            item.CrimeType = default;
+            item.CrimeType = default(CrimeType);
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }

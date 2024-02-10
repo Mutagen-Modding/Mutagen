@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Percentage
-        public Byte Percentage { get; set; } = default;
+        public Byte Percentage { get; set; } = default(Byte);
         #endregion
         #region ModelFilename
         public AssetLink<SkyrimModelAssetType> ModelFilename { get; set; } = new AssetLink<SkyrimModelAssetType>();
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDebrisModelGetter.TextureFileHashes => this.TextureFileHashes;
         #endregion
         #region DATADataTypeState
-        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default;
+        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default(DebrisModel.DATADataType);
         #endregion
 
         #region To String
@@ -870,11 +870,11 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IDebrisModel item)
         {
             ClearPartial();
-            item.Percentage = default;
+            item.Percentage = default(Byte);
             item.ModelFilename.SetToNull();
-            item.Flags = default;
+            item.Flags = default(DebrisModel.Flag);
             item.TextureFileHashes = default;
-            item.DATADataTypeState = default;
+            item.DATADataTypeState = default(DebrisModel.DATADataType);
         }
         
         #region Mutagen

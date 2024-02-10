@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region RawContent
-        public UInt32 RawContent { get; set; } = default;
+        public UInt32 RawContent { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IBookTeachesNothing item)
         {
             ClearPartial();
-            item.RawContent = default;
+            item.RawContent = default(UInt32);
             base.Clear(item);
         }
         

@@ -52,28 +52,28 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public Weapon.WeaponType Type { get; set; } = default;
+        public Weapon.WeaponType Type { get; set; } = default(Weapon.WeaponType);
         #endregion
         #region Speed
-        public Single Speed { get; set; } = default;
+        public Single Speed { get; set; } = default(Single);
         #endregion
         #region Reach
-        public Single Reach { get; set; } = default;
+        public Single Reach { get; set; } = default(Single);
         #endregion
         #region Flags
-        public Weapon.WeaponFlag Flags { get; set; } = default;
+        public Weapon.WeaponFlag Flags { get; set; } = default(Weapon.WeaponFlag);
         #endregion
         #region Value
-        public UInt32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default(UInt32);
         #endregion
         #region Health
-        public UInt32 Health { get; set; } = default;
+        public UInt32 Health { get; set; } = default(UInt32);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Damage
-        public UInt16 Damage { get; set; } = default;
+        public UInt16 Damage { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -939,14 +939,14 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IWeaponData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Speed = default;
-            item.Reach = default;
-            item.Flags = default;
-            item.Value = default;
-            item.Health = default;
-            item.Weight = default;
-            item.Damage = default;
+            item.Type = default(Weapon.WeaponType);
+            item.Speed = default(Single);
+            item.Reach = default(Single);
+            item.Flags = default(Weapon.WeaponFlag);
+            item.Value = default(UInt32);
+            item.Health = default(UInt32);
+            item.Weight = default(Single);
+            item.Damage = default(UInt16);
         }
         
         #region Mutagen

@@ -51,25 +51,25 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public PlacedObjectLighting.VersioningBreaks Versioning { get; set; } = default;
+        public PlacedObjectLighting.VersioningBreaks Versioning { get; set; } = default(PlacedObjectLighting.VersioningBreaks);
         #endregion
         #region Fov90PlusMinus
-        public Single Fov90PlusMinus { get; set; } = default;
+        public Single Fov90PlusMinus { get; set; } = default(Single);
         #endregion
         #region Fade1PlusMinus
-        public Single Fade1PlusMinus { get; set; } = default;
+        public Single Fade1PlusMinus { get; set; } = default(Single);
         #endregion
         #region EndDistanceCap
-        public Single EndDistanceCap { get; set; } = default;
+        public Single EndDistanceCap { get; set; } = default(Single);
         #endregion
         #region ShadowDepthBias
-        public Single ShadowDepthBias { get; set; } = default;
+        public Single ShadowDepthBias { get; set; } = default(Single);
         #endregion
         #region NearClip
-        public Single NearClip { get; set; } = default;
+        public Single NearClip { get; set; } = default(Single);
         #endregion
         #region VolumetricIntensity
-        public Single VolumetricIntensity { get; set; } = default;
+        public Single VolumetricIntensity { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -909,13 +909,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPlacedObjectLighting item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.Fov90PlusMinus = default;
-            item.Fade1PlusMinus = default;
-            item.EndDistanceCap = default;
-            item.ShadowDepthBias = default;
-            item.NearClip = default;
-            item.VolumetricIntensity = default;
+            item.Versioning = default(PlacedObjectLighting.VersioningBreaks);
+            item.Fov90PlusMinus = default(Single);
+            item.Fade1PlusMinus = default(Single);
+            item.EndDistanceCap = default(Single);
+            item.ShadowDepthBias = default(Single);
+            item.NearClip = default(Single);
+            item.VolumetricIntensity = default(Single);
         }
         
         #region Mutagen

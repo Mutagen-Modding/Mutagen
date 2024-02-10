@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Clear(IOblivionMajorRecordInternal item)
         {
             ClearPartial();
-            item.OblivionMajorRecordFlags = default;
+            item.OblivionMajorRecordFlags = default(OblivionMajorRecord.OblivionMajorRecordFlag);
             base.Clear(item);
         }
         

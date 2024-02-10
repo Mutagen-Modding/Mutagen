@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Fallout4
         IDecalGetter? ITextureSetGetter.Decal => this.Decal;
         #endregion
         #region Flags
-        public TextureSet.Flag Flags { get; set; } = default;
+        public TextureSet.Flag Flags { get; set; } = default(TextureSet.Flag);
         #endregion
         #region Material
         public String? Material { get; set; }
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Multilayer = default;
             item.SmoothSpec = default;
             item.Decal = null;
-            item.Flags = default;
+            item.Flags = default(TextureSet.Flag);
             item.Material = default;
             base.Clear(item);
         }

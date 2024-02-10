@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region WidthScale
-        public Single WidthScale { get; set; } = default;
+        public Single WidthScale { get; set; } = default(Single);
         #endregion
         #region HeightScale
-        public Single HeightScale { get; set; } = default;
+        public Single HeightScale { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IProjectedDecal item)
         {
             ClearPartial();
-            item.WidthScale = default;
-            item.HeightScale = default;
+            item.WidthScale = default(Single);
+            item.HeightScale = default(Single);
         }
         
         #region Mutagen

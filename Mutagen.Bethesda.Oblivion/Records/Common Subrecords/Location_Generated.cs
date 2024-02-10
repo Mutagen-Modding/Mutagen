@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Position
-        public P3Float Position { get; set; } = default;
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default;
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
 
         #region To String
@@ -716,8 +716,8 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ILocation item)
         {
             ClearPartial();
-            item.Position = default;
-            item.Rotation = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
         }
         
         #region Mutagen

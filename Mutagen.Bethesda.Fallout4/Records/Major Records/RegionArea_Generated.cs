@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region EdgeFallOff
-        public UInt32 EdgeFallOff { get; set; } = default;
+        public UInt32 EdgeFallOff { get; set; } = default(UInt32);
         #endregion
         #region RegionPointListData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IRegionArea item)
         {
             ClearPartial();
-            item.EdgeFallOff = default;
+            item.EdgeFallOff = default(UInt32);
             item.RegionPointListData = null;
             item.Unknown = default;
         }
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region EdgeFallOff
         private int? _EdgeFallOffLocation;
-        public UInt32 EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EdgeFallOffLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EdgeFallOffLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         public IReadOnlyList<P2Float>? RegionPointListData { get; private set; }
         #region Unknown

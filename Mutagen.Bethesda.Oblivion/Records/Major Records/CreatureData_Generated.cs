@@ -51,49 +51,49 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        public Creature.Types Type { get; set; } = default;
+        public Creature.Types Type { get; set; } = default(Creature.Types);
         #endregion
         #region CombatSkill
-        public Byte CombatSkill { get; set; } = default;
+        public Byte CombatSkill { get; set; } = default(Byte);
         #endregion
         #region MagicSkill
-        public Byte MagicSkill { get; set; } = default;
+        public Byte MagicSkill { get; set; } = default(Byte);
         #endregion
         #region StealthSkill
-        public Byte StealthSkill { get; set; } = default;
+        public Byte StealthSkill { get; set; } = default(Byte);
         #endregion
         #region SoulLevel
-        public SoulLevel SoulLevel { get; set; } = default;
+        public SoulLevel SoulLevel { get; set; } = default(SoulLevel);
         #endregion
         #region Health
-        public UInt32 Health { get; set; } = default;
+        public UInt32 Health { get; set; } = default(UInt32);
         #endregion
         #region AttackDamage
-        public UInt16 AttackDamage { get; set; } = default;
+        public UInt16 AttackDamage { get; set; } = default(UInt16);
         #endregion
         #region Strength
-        public Byte Strength { get; set; } = default;
+        public Byte Strength { get; set; } = default(Byte);
         #endregion
         #region Intelligence
-        public Byte Intelligence { get; set; } = default;
+        public Byte Intelligence { get; set; } = default(Byte);
         #endregion
         #region Willpower
-        public Byte Willpower { get; set; } = default;
+        public Byte Willpower { get; set; } = default(Byte);
         #endregion
         #region Agility
-        public Byte Agility { get; set; } = default;
+        public Byte Agility { get; set; } = default(Byte);
         #endregion
         #region Speed
-        public Byte Speed { get; set; } = default;
+        public Byte Speed { get; set; } = default(Byte);
         #endregion
         #region Endurance
-        public Byte Endurance { get; set; } = default;
+        public Byte Endurance { get; set; } = default(Byte);
         #endregion
         #region Personality
-        public Byte Personality { get; set; } = default;
+        public Byte Personality { get; set; } = default(Byte);
         #endregion
         #region Luck
-        public Byte Luck { get; set; } = default;
+        public Byte Luck { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -1188,21 +1188,21 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(ICreatureData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.CombatSkill = default;
-            item.MagicSkill = default;
-            item.StealthSkill = default;
-            item.SoulLevel = default;
-            item.Health = default;
-            item.AttackDamage = default;
-            item.Strength = default;
-            item.Intelligence = default;
-            item.Willpower = default;
-            item.Agility = default;
-            item.Speed = default;
-            item.Endurance = default;
-            item.Personality = default;
-            item.Luck = default;
+            item.Type = default(Creature.Types);
+            item.CombatSkill = default(Byte);
+            item.MagicSkill = default(Byte);
+            item.StealthSkill = default(Byte);
+            item.SoulLevel = default(SoulLevel);
+            item.Health = default(UInt32);
+            item.AttackDamage = default(UInt16);
+            item.Strength = default(Byte);
+            item.Intelligence = default(Byte);
+            item.Willpower = default(Byte);
+            item.Agility = default(Byte);
+            item.Speed = default(Byte);
+            item.Endurance = default(Byte);
+            item.Personality = default(Byte);
+            item.Luck = default(Byte);
         }
         
         #region Mutagen

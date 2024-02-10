@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ObjectType
-        public AIPackageTarget.ObjectTypes ObjectType { get; set; } = default;
+        public AIPackageTarget.ObjectTypes ObjectType { get; set; } = default(AIPackageTarget.ObjectTypes);
         #endregion
         #region Object
-        public Int32 Object { get; set; } = default;
+        public Int32 Object { get; set; } = default(Int32);
         #endregion
         #region Count
-        public Int32 Count { get; set; } = default;
+        public Int32 Count { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IAIPackageTarget item)
         {
             ClearPartial();
-            item.ObjectType = default;
-            item.Object = default;
-            item.Count = default;
+            item.ObjectType = default(AIPackageTarget.ObjectTypes);
+            item.Object = default(Int32);
+            item.Count = default(Int32);
         }
         
         #region Mutagen

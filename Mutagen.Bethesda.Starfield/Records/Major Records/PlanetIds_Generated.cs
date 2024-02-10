@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region StarId
-        public UInt32 StarId { get; set; } = default;
+        public UInt32 StarId { get; set; } = default(UInt32);
         #endregion
         #region PrimaryPlanetId
-        public UInt32 PrimaryPlanetId { get; set; } = default;
+        public UInt32 PrimaryPlanetId { get; set; } = default(UInt32);
         #endregion
         #region PlanetId
-        public UInt32 PlanetId { get; set; } = default;
+        public UInt32 PlanetId { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetIds item)
         {
             ClearPartial();
-            item.StarId = default;
-            item.PrimaryPlanetId = default;
-            item.PlanetId = default;
+            item.StarId = default(UInt32);
+            item.PrimaryPlanetId = default(UInt32);
+            item.PlanetId = default(UInt32);
         }
         
         #region Mutagen

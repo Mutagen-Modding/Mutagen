@@ -136,10 +136,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; } = default;
+        public UInt16 Unknown2 { get; set; } = default(UInt16);
         #endregion
         #region AttachPoint
         private readonly IFormLink<IKeywordGetter> _AttachPoint = new FormLink<IKeywordGetter>();
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Unknown3
-        public UInt32 Unknown3 { get; set; } = default;
+        public UInt32 Unknown3 { get; set; } = default(UInt32);
         #endregion
         #region Includes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1963,11 +1963,11 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Description = default;
             item.Model = null;
-            item.Unknown = default;
-            item.Unknown2 = default;
+            item.Unknown = default(UInt16);
+            item.Unknown2 = default(UInt16);
             item.AttachPoint.Clear();
             item.AttachParentSlots.Clear();
-            item.Unknown3 = default;
+            item.Unknown3 = default(UInt32);
             item.Includes.Clear();
             item.TargetOmodKeywords = null;
             item.FilterKeywords = null;
@@ -2711,7 +2711,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.AttachParentSlots.SetTo(
                         rhs.AttachParentSlots
-                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                            .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2760,7 +2760,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.TargetOmodKeywords = 
                             rhs.TargetOmodKeywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -2787,7 +2787,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.FilterKeywords = 
                             rhs.FilterKeywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else

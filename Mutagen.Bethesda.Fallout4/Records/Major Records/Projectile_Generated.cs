@@ -154,19 +154,19 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? IProjectileGetter.Unused => this.Unused;
         #endregion
         #region Flags
-        public Projectile.Flag Flags { get; set; } = default;
+        public Projectile.Flag Flags { get; set; } = default(Projectile.Flag);
         #endregion
         #region Type
-        public Projectile.TypeEnum Type { get; set; } = default;
+        public Projectile.TypeEnum Type { get; set; } = default(Projectile.TypeEnum);
         #endregion
         #region Gravity
-        public Single Gravity { get; set; } = default;
+        public Single Gravity { get; set; } = default(Single);
         #endregion
         #region Speed
-        public Single Speed { get; set; } = default;
+        public Single Speed { get; set; } = default(Single);
         #endregion
         #region Range
-        public Single Range { get; set; } = default;
+        public Single Range { get; set; } = default(Single);
         #endregion
         #region Light
         private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
@@ -189,10 +189,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash;
         #endregion
         #region ExplosionAltTriggerProximity
-        public Single ExplosionAltTriggerProximity { get; set; } = default;
+        public Single ExplosionAltTriggerProximity { get; set; } = default(Single);
         #endregion
         #region ExplosionAltTriggerTimer
-        public Single ExplosionAltTriggerTimer { get; set; } = default;
+        public Single ExplosionAltTriggerTimer { get; set; } = default(Single);
         #endregion
         #region Explosion
         private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
@@ -215,13 +215,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.Sound => this.Sound;
         #endregion
         #region MuzzleFlashDuration
-        public Single MuzzleFlashDuration { get; set; } = default;
+        public Single MuzzleFlashDuration { get; set; } = default(Single);
         #endregion
         #region FadeDuration
-        public Single FadeDuration { get; set; } = default;
+        public Single FadeDuration { get; set; } = default(Single);
         #endregion
         #region ImpactForce
-        public Single ImpactForce { get; set; } = default;
+        public Single ImpactForce { get; set; } = default(Single);
         #endregion
         #region CountdownSound
         private readonly IFormLink<ISoundDescriptorGetter> _CountdownSound = new FormLink<ISoundDescriptorGetter>();
@@ -254,16 +254,16 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
         #endregion
         #region ConeSpread
-        public Single ConeSpread { get; set; } = default;
+        public Single ConeSpread { get; set; } = default(Single);
         #endregion
         #region CollisionRadius
-        public Single CollisionRadius { get; set; } = default;
+        public Single CollisionRadius { get; set; } = default(Single);
         #endregion
         #region Lifetime
-        public Single Lifetime { get; set; } = default;
+        public Single Lifetime { get; set; } = default(Single);
         #endregion
         #region RelaunchInterval
-        public Single RelaunchInterval { get; set; } = default;
+        public Single RelaunchInterval { get; set; } = default(Single);
         #endregion
         #region DecalData
         private readonly IFormLink<ITextureSetGetter> _DecalData = new FormLink<ITextureSetGetter>();
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;
         #endregion
         #region TracerFrequency
-        public Byte TracerFrequency { get; set; } = default;
+        public Byte TracerFrequency { get; set; } = default(Byte);
         #endregion
         #region VATSProjectile
         private readonly IFormLink<IProjectileGetter> _VATSProjectile = new FormLink<IProjectileGetter>();
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? IProjectileGetter.TextureFilesHashes => this.TextureFilesHashes;
         #endregion
         #region SoundLevel
-        public UInt32 SoundLevel { get; set; } = default;
+        public UInt32 SoundLevel { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -2158,34 +2158,34 @@ namespace Mutagen.Bethesda.Fallout4
             item.Model = null;
             item.Destructible = null;
             item.Unused = default;
-            item.Flags = default;
-            item.Type = default;
-            item.Gravity = default;
-            item.Speed = default;
-            item.Range = default;
+            item.Flags = default(Projectile.Flag);
+            item.Type = default(Projectile.TypeEnum);
+            item.Gravity = default(Single);
+            item.Speed = default(Single);
+            item.Range = default(Single);
             item.Light.Clear();
             item.MuzzleFlash.Clear();
-            item.ExplosionAltTriggerProximity = default;
-            item.ExplosionAltTriggerTimer = default;
+            item.ExplosionAltTriggerProximity = default(Single);
+            item.ExplosionAltTriggerTimer = default(Single);
             item.Explosion.Clear();
             item.Sound.Clear();
-            item.MuzzleFlashDuration = default;
-            item.FadeDuration = default;
-            item.ImpactForce = default;
+            item.MuzzleFlashDuration = default(Single);
+            item.FadeDuration = default(Single);
+            item.ImpactForce = default(Single);
             item.CountdownSound.Clear();
             item.DisaleSound.Clear();
             item.DefaultWeaponSource.Clear();
-            item.ConeSpread = default;
-            item.CollisionRadius = default;
-            item.Lifetime = default;
-            item.RelaunchInterval = default;
+            item.ConeSpread = default(Single);
+            item.CollisionRadius = default(Single);
+            item.Lifetime = default(Single);
+            item.RelaunchInterval = default(Single);
             item.DecalData.Clear();
             item.CollisionLayer.Clear();
-            item.TracerFrequency = default;
+            item.TracerFrequency = default(Byte);
             item.VATSProjectile.Clear();
             item.MuzzleFlashModel = string.Empty;
             item.TextureFilesHashes = default;
-            item.SoundLevel = default;
+            item.SoundLevel = default(UInt32);
             base.Clear(item);
         }
         
@@ -3691,17 +3691,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region Gravity
         private int _GravityLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Gravity_IsSet => _DNAMLocation.HasValue;
-        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default;
+        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default(Single);
         #endregion
         #region Speed
         private int _SpeedLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Speed_IsSet => _DNAMLocation.HasValue;
-        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default;
+        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default(Single);
         #endregion
         #region Range
         private int _RangeLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _Range_IsSet => _DNAMLocation.HasValue;
-        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default(Single);
         #endregion
         #region Light
         private int _LightLocation => _DNAMLocation!.Value.Min + 0x10;
@@ -3716,12 +3716,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region ExplosionAltTriggerProximity
         private int _ExplosionAltTriggerProximityLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _ExplosionAltTriggerProximity_IsSet => _DNAMLocation.HasValue;
-        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default(Single);
         #endregion
         #region ExplosionAltTriggerTimer
         private int _ExplosionAltTriggerTimerLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _ExplosionAltTriggerTimer_IsSet => _DNAMLocation.HasValue;
-        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default(Single);
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DNAMLocation!.Value.Min + 0x20;
@@ -3736,17 +3736,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _MuzzleFlashDuration_IsSet => _DNAMLocation.HasValue;
-        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
+        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default(Single);
         #endregion
         #region FadeDuration
         private int _FadeDurationLocation => _DNAMLocation!.Value.Min + 0x2C;
         private bool _FadeDuration_IsSet => _DNAMLocation.HasValue;
-        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default;
+        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default(Single);
         #endregion
         #region ImpactForce
         private int _ImpactForceLocation => _DNAMLocation!.Value.Min + 0x30;
         private bool _ImpactForce_IsSet => _DNAMLocation.HasValue;
-        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default;
+        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default(Single);
         #endregion
         #region CountdownSound
         private int _CountdownSoundLocation => _DNAMLocation!.Value.Min + 0x34;
@@ -3766,22 +3766,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region ConeSpread
         private int _ConeSpreadLocation => _DNAMLocation!.Value.Min + 0x40;
         private bool _ConeSpread_IsSet => _DNAMLocation.HasValue;
-        public Single ConeSpread => _ConeSpread_IsSet ? _recordData.Slice(_ConeSpreadLocation, 4).Float() : default;
+        public Single ConeSpread => _ConeSpread_IsSet ? _recordData.Slice(_ConeSpreadLocation, 4).Float() : default(Single);
         #endregion
         #region CollisionRadius
         private int _CollisionRadiusLocation => _DNAMLocation!.Value.Min + 0x44;
         private bool _CollisionRadius_IsSet => _DNAMLocation.HasValue;
-        public Single CollisionRadius => _CollisionRadius_IsSet ? _recordData.Slice(_CollisionRadiusLocation, 4).Float() : default;
+        public Single CollisionRadius => _CollisionRadius_IsSet ? _recordData.Slice(_CollisionRadiusLocation, 4).Float() : default(Single);
         #endregion
         #region Lifetime
         private int _LifetimeLocation => _DNAMLocation!.Value.Min + 0x48;
         private bool _Lifetime_IsSet => _DNAMLocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default;
+        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default(Single);
         #endregion
         #region RelaunchInterval
         private int _RelaunchIntervalLocation => _DNAMLocation!.Value.Min + 0x4C;
         private bool _RelaunchInterval_IsSet => _DNAMLocation.HasValue;
-        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _recordData.Slice(_RelaunchIntervalLocation, 4).Float() : default;
+        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _recordData.Slice(_RelaunchIntervalLocation, 4).Float() : default(Single);
         #endregion
         #region DecalData
         private int _DecalDataLocation => _DNAMLocation!.Value.Min + 0x50;
@@ -3813,7 +3813,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public UInt32 SoundLevel => _SoundLevelLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 SoundLevel => _SoundLevelLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

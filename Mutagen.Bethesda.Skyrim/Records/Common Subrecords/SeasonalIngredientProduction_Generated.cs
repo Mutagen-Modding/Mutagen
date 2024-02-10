@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spring
-        public Byte Spring { get; set; } = default;
+        public Byte Spring { get; set; } = default(Byte);
         #endregion
         #region Summer
-        public Byte Summer { get; set; } = default;
+        public Byte Summer { get; set; } = default(Byte);
         #endregion
         #region Fall
-        public Byte Fall { get; set; } = default;
+        public Byte Fall { get; set; } = default(Byte);
         #endregion
         #region Winter
-        public Byte Winter { get; set; } = default;
+        public Byte Winter { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISeasonalIngredientProduction item)
         {
             ClearPartial();
-            item.Spring = default;
-            item.Summer = default;
-            item.Fall = default;
-            item.Winter = default;
+            item.Spring = default(Byte);
+            item.Summer = default(Byte);
+            item.Fall = default(Byte);
+            item.Winter = default(Byte);
         }
         
         #region Mutagen

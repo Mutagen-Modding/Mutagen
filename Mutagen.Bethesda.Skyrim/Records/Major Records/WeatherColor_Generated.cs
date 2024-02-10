@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public Color Sunrise { get; set; } = default;
+        public Color Sunrise { get; set; } = default(Color);
         #endregion
         #region Day
-        public Color Day { get; set; } = default;
+        public Color Day { get; set; } = default(Color);
         #endregion
         #region Sunset
-        public Color Sunset { get; set; } = default;
+        public Color Sunset { get; set; } = default(Color);
         #endregion
         #region Night
-        public Color Night { get; set; } = default;
+        public Color Night { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -786,10 +786,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IWeatherColor item)
         {
             ClearPartial();
-            item.Sunrise = default;
-            item.Day = default;
-            item.Sunset = default;
-            item.Night = default;
+            item.Sunrise = default(Color);
+            item.Day = default(Color);
+            item.Sunset = default(Color);
+            item.Night = default(Color);
         }
         
         #region Mutagen

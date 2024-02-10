@@ -52,10 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Time
-        public Single Time { get; set; } = default;
+        public Single Time { get; set; } = default(Single);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -714,8 +714,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IColorFrame item)
         {
             ClearPartial();
-            item.Time = default;
-            item.Color = default;
+            item.Time = default(Single);
+            item.Color = default(Color);
         }
         
         #region Mutagen

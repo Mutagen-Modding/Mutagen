@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Versioning
-        public SoundRepeat.VersioningBreaks Versioning { get; set; } = default;
+        public SoundRepeat.VersioningBreaks Versioning { get; set; } = default(SoundRepeat.VersioningBreaks);
         #endregion
         #region MinTime
-        public Single MinTime { get; set; } = default;
+        public Single MinTime { get; set; } = default(Single);
         #endregion
         #region MaxTime
-        public Single MaxTime { get; set; } = default;
+        public Single MaxTime { get; set; } = default(Single);
         #endregion
         #region Stackable
-        public Boolean Stackable { get; set; } = default;
+        public Boolean Stackable { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -800,10 +800,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundRepeat item)
         {
             ClearPartial();
-            item.Versioning = default;
-            item.MinTime = default;
-            item.MaxTime = default;
-            item.Stackable = default;
+            item.Versioning = default(SoundRepeat.VersioningBreaks);
+            item.MinTime = default(Single);
+            item.MaxTime = default(Single);
+            item.Stackable = default(Boolean);
         }
         
         #region Mutagen

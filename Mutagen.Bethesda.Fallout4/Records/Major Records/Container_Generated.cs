@@ -186,10 +186,10 @@ namespace Mutagen.Bethesda.Fallout4
         IDestructibleGetter? IContainerGetter.Destructible => this.Destructible;
         #endregion
         #region Flags
-        public Container.Flag Flags { get; set; } = default;
+        public Container.Flag Flags { get; set; } = default(Container.Flag);
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        public Single Weight { get; set; } = default(Single);
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1852,8 +1852,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.Model = null;
             item.Items = null;
             item.Destructible = null;
-            item.Flags = default;
-            item.Weight = default;
+            item.Flags = default(Container.Flag);
+            item.Weight = default(Single);
             item.Keywords = null;
             item.ForcedLocRefType.Clear();
             item.Properties = null;
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -3331,7 +3331,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }

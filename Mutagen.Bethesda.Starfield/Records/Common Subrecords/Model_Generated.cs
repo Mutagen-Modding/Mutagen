@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.MaterialSwaps = 
                             rhs.MaterialSwaps
-                            .Select(r => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
                     }
                     else

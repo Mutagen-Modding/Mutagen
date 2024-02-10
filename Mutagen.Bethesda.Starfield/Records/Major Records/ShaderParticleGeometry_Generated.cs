@@ -55,76 +55,76 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region GravityVelocity
-        public Single GravityVelocity { get; set; } = default;
+        public Single GravityVelocity { get; set; } = default(Single);
         #endregion
         #region Unknown1
-        public Single Unknown1 { get; set; } = default;
+        public Single Unknown1 { get; set; } = default(Single);
         #endregion
         #region RotationVelocity
-        public Single RotationVelocity { get; set; } = default;
+        public Single RotationVelocity { get; set; } = default(Single);
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; } = default;
+        public Single Unknown2 { get; set; } = default(Single);
         #endregion
         #region ParticleSizeX
-        public Single ParticleSizeX { get; set; } = default;
+        public Single ParticleSizeX { get; set; } = default(Single);
         #endregion
         #region Unknown3
-        public Single Unknown3 { get; set; } = default;
+        public Single Unknown3 { get; set; } = default(Single);
         #endregion
         #region ParticleSizeY
-        public Single ParticleSizeY { get; set; } = default;
+        public Single ParticleSizeY { get; set; } = default(Single);
         #endregion
         #region Unknown4
-        public Single Unknown4 { get; set; } = default;
+        public Single Unknown4 { get; set; } = default(Single);
         #endregion
         #region CenterOffsetMin
-        public Single CenterOffsetMin { get; set; } = default;
+        public Single CenterOffsetMin { get; set; } = default(Single);
         #endregion
         #region Unknown5
-        public Single Unknown5 { get; set; } = default;
+        public Single Unknown5 { get; set; } = default(Single);
         #endregion
         #region CenterOffsetMax
-        public Single CenterOffsetMax { get; set; } = default;
+        public Single CenterOffsetMax { get; set; } = default(Single);
         #endregion
         #region Unknown6
-        public Single Unknown6 { get; set; } = default;
+        public Single Unknown6 { get; set; } = default(Single);
         #endregion
         #region InitialRotation
-        public Single InitialRotation { get; set; } = default;
+        public Single InitialRotation { get; set; } = default(Single);
         #endregion
         #region Unknown7
-        public Single Unknown7 { get; set; } = default;
+        public Single Unknown7 { get; set; } = default(Single);
         #endregion
         #region NumSubtexturesX
-        public Single NumSubtexturesX { get; set; } = default;
+        public Single NumSubtexturesX { get; set; } = default(Single);
         #endregion
         #region Unknown8
-        public Single Unknown8 { get; set; } = default;
+        public Single Unknown8 { get; set; } = default(Single);
         #endregion
         #region NumSubtexturesY
-        public Single NumSubtexturesY { get; set; } = default;
+        public Single NumSubtexturesY { get; set; } = default(Single);
         #endregion
         #region Unknown9
-        public Single Unknown9 { get; set; } = default;
+        public Single Unknown9 { get; set; } = default(Single);
         #endregion
         #region Type
-        public ShaderParticleGeometry.ShaderParticleType Type { get; set; } = default;
+        public ShaderParticleGeometry.ShaderParticleType Type { get; set; } = default(ShaderParticleGeometry.ShaderParticleType);
         #endregion
         #region Unknown10
-        public Single Unknown10 { get; set; } = default;
+        public Single Unknown10 { get; set; } = default(Single);
         #endregion
         #region BoxSize
-        public UInt32 BoxSize { get; set; } = default;
+        public UInt32 BoxSize { get; set; } = default(UInt32);
         #endregion
         #region Unknown11
-        public Single Unknown11 { get; set; } = default;
+        public Single Unknown11 { get; set; } = default(Single);
         #endregion
         #region ParticleDensity
-        public Single ParticleDensity { get; set; } = default;
+        public Single ParticleDensity { get; set; } = default(Single);
         #endregion
         #region Unknown12
-        public Single Unknown12 { get; set; } = default;
+        public Single Unknown12 { get; set; } = default(Single);
         #endregion
         #region ParticleTexture
         public String? ParticleTexture { get; set; }
@@ -1628,30 +1628,30 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IShaderParticleGeometryInternal item)
         {
             ClearPartial();
-            item.GravityVelocity = default;
-            item.Unknown1 = default;
-            item.RotationVelocity = default;
-            item.Unknown2 = default;
-            item.ParticleSizeX = default;
-            item.Unknown3 = default;
-            item.ParticleSizeY = default;
-            item.Unknown4 = default;
-            item.CenterOffsetMin = default;
-            item.Unknown5 = default;
-            item.CenterOffsetMax = default;
-            item.Unknown6 = default;
-            item.InitialRotation = default;
-            item.Unknown7 = default;
-            item.NumSubtexturesX = default;
-            item.Unknown8 = default;
-            item.NumSubtexturesY = default;
-            item.Unknown9 = default;
-            item.Type = default;
-            item.Unknown10 = default;
-            item.BoxSize = default;
-            item.Unknown11 = default;
-            item.ParticleDensity = default;
-            item.Unknown12 = default;
+            item.GravityVelocity = default(Single);
+            item.Unknown1 = default(Single);
+            item.RotationVelocity = default(Single);
+            item.Unknown2 = default(Single);
+            item.ParticleSizeX = default(Single);
+            item.Unknown3 = default(Single);
+            item.ParticleSizeY = default(Single);
+            item.Unknown4 = default(Single);
+            item.CenterOffsetMin = default(Single);
+            item.Unknown5 = default(Single);
+            item.CenterOffsetMax = default(Single);
+            item.Unknown6 = default(Single);
+            item.InitialRotation = default(Single);
+            item.Unknown7 = default(Single);
+            item.NumSubtexturesX = default(Single);
+            item.Unknown8 = default(Single);
+            item.NumSubtexturesY = default(Single);
+            item.Unknown9 = default(Single);
+            item.Type = default(ShaderParticleGeometry.ShaderParticleType);
+            item.Unknown10 = default(Single);
+            item.BoxSize = default(UInt32);
+            item.Unknown11 = default(Single);
+            item.ParticleDensity = default(Single);
+            item.Unknown12 = default(Single);
             item.ParticleTexture = default;
             base.Clear(item);
         }
@@ -2768,92 +2768,92 @@ namespace Mutagen.Bethesda.Starfield
         #region GravityVelocity
         private int _GravityVelocityLocation => _DATALocation!.Value.Min;
         private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
-        public Single GravityVelocity => _GravityVelocity_IsSet ? _recordData.Slice(_GravityVelocityLocation, 4).Float() : default;
+        public Single GravityVelocity => _GravityVelocity_IsSet ? _recordData.Slice(_GravityVelocityLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown1
         private int _Unknown1Location => _DATALocation!.Value.Min + 0x4;
         private bool _Unknown1_IsSet => _DATALocation.HasValue;
-        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default;
+        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default(Single);
         #endregion
         #region RotationVelocity
         private int _RotationVelocityLocation => _DATALocation!.Value.Min + 0x8;
         private bool _RotationVelocity_IsSet => _DATALocation.HasValue;
-        public Single RotationVelocity => _RotationVelocity_IsSet ? _recordData.Slice(_RotationVelocityLocation, 4).Float() : default;
+        public Single RotationVelocity => _RotationVelocity_IsSet ? _recordData.Slice(_RotationVelocityLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value.Min + 0xC;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default;
+        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default(Single);
         #endregion
         #region ParticleSizeX
         private int _ParticleSizeXLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ParticleSizeX_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _recordData.Slice(_ParticleSizeXLocation, 4).Float() : default;
+        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _recordData.Slice(_ParticleSizeXLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown3
         private int _Unknown3Location => _DATALocation!.Value.Min + 0x14;
         private bool _Unknown3_IsSet => _DATALocation.HasValue;
-        public Single Unknown3 => _Unknown3_IsSet ? _recordData.Slice(_Unknown3Location, 4).Float() : default;
+        public Single Unknown3 => _Unknown3_IsSet ? _recordData.Slice(_Unknown3Location, 4).Float() : default(Single);
         #endregion
         #region ParticleSizeY
         private int _ParticleSizeYLocation => _DATALocation!.Value.Min + 0x18;
         private bool _ParticleSizeY_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _recordData.Slice(_ParticleSizeYLocation, 4).Float() : default;
+        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _recordData.Slice(_ParticleSizeYLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown4
         private int _Unknown4Location => _DATALocation!.Value.Min + 0x1C;
         private bool _Unknown4_IsSet => _DATALocation.HasValue;
-        public Single Unknown4 => _Unknown4_IsSet ? _recordData.Slice(_Unknown4Location, 4).Float() : default;
+        public Single Unknown4 => _Unknown4_IsSet ? _recordData.Slice(_Unknown4Location, 4).Float() : default(Single);
         #endregion
         #region CenterOffsetMin
         private int _CenterOffsetMinLocation => _DATALocation!.Value.Min + 0x20;
         private bool _CenterOffsetMin_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _recordData.Slice(_CenterOffsetMinLocation, 4).Float() : default;
+        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _recordData.Slice(_CenterOffsetMinLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown5
         private int _Unknown5Location => _DATALocation!.Value.Min + 0x24;
         private bool _Unknown5_IsSet => _DATALocation.HasValue;
-        public Single Unknown5 => _Unknown5_IsSet ? _recordData.Slice(_Unknown5Location, 4).Float() : default;
+        public Single Unknown5 => _Unknown5_IsSet ? _recordData.Slice(_Unknown5Location, 4).Float() : default(Single);
         #endregion
         #region CenterOffsetMax
         private int _CenterOffsetMaxLocation => _DATALocation!.Value.Min + 0x28;
         private bool _CenterOffsetMax_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _recordData.Slice(_CenterOffsetMaxLocation, 4).Float() : default;
+        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _recordData.Slice(_CenterOffsetMaxLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown6
         private int _Unknown6Location => _DATALocation!.Value.Min + 0x2C;
         private bool _Unknown6_IsSet => _DATALocation.HasValue;
-        public Single Unknown6 => _Unknown6_IsSet ? _recordData.Slice(_Unknown6Location, 4).Float() : default;
+        public Single Unknown6 => _Unknown6_IsSet ? _recordData.Slice(_Unknown6Location, 4).Float() : default(Single);
         #endregion
         #region InitialRotation
         private int _InitialRotationLocation => _DATALocation!.Value.Min + 0x30;
         private bool _InitialRotation_IsSet => _DATALocation.HasValue;
-        public Single InitialRotation => _InitialRotation_IsSet ? _recordData.Slice(_InitialRotationLocation, 4).Float() : default;
+        public Single InitialRotation => _InitialRotation_IsSet ? _recordData.Slice(_InitialRotationLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown7
         private int _Unknown7Location => _DATALocation!.Value.Min + 0x34;
         private bool _Unknown7_IsSet => _DATALocation.HasValue;
-        public Single Unknown7 => _Unknown7_IsSet ? _recordData.Slice(_Unknown7Location, 4).Float() : default;
+        public Single Unknown7 => _Unknown7_IsSet ? _recordData.Slice(_Unknown7Location, 4).Float() : default(Single);
         #endregion
         #region NumSubtexturesX
         private int _NumSubtexturesXLocation => _DATALocation!.Value.Min + 0x38;
         private bool _NumSubtexturesX_IsSet => _DATALocation.HasValue;
-        public Single NumSubtexturesX => _NumSubtexturesX_IsSet ? _recordData.Slice(_NumSubtexturesXLocation, 4).Float() : default;
+        public Single NumSubtexturesX => _NumSubtexturesX_IsSet ? _recordData.Slice(_NumSubtexturesXLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown8
         private int _Unknown8Location => _DATALocation!.Value.Min + 0x3C;
         private bool _Unknown8_IsSet => _DATALocation.HasValue;
-        public Single Unknown8 => _Unknown8_IsSet ? _recordData.Slice(_Unknown8Location, 4).Float() : default;
+        public Single Unknown8 => _Unknown8_IsSet ? _recordData.Slice(_Unknown8Location, 4).Float() : default(Single);
         #endregion
         #region NumSubtexturesY
         private int _NumSubtexturesYLocation => _DATALocation!.Value.Min + 0x40;
         private bool _NumSubtexturesY_IsSet => _DATALocation.HasValue;
-        public Single NumSubtexturesY => _NumSubtexturesY_IsSet ? _recordData.Slice(_NumSubtexturesYLocation, 4).Float() : default;
+        public Single NumSubtexturesY => _NumSubtexturesY_IsSet ? _recordData.Slice(_NumSubtexturesYLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown9
         private int _Unknown9Location => _DATALocation!.Value.Min + 0x44;
         private bool _Unknown9_IsSet => _DATALocation.HasValue;
-        public Single Unknown9 => _Unknown9_IsSet ? _recordData.Slice(_Unknown9Location, 4).Float() : default;
+        public Single Unknown9 => _Unknown9_IsSet ? _recordData.Slice(_Unknown9Location, 4).Float() : default(Single);
         #endregion
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min + 0x48;
@@ -2863,27 +2863,27 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown10
         private int _Unknown10Location => _DATALocation!.Value.Min + 0x4C;
         private bool _Unknown10_IsSet => _DATALocation.HasValue;
-        public Single Unknown10 => _Unknown10_IsSet ? _recordData.Slice(_Unknown10Location, 4).Float() : default;
+        public Single Unknown10 => _Unknown10_IsSet ? _recordData.Slice(_Unknown10Location, 4).Float() : default(Single);
         #endregion
         #region BoxSize
         private int _BoxSizeLocation => _DATALocation!.Value.Min + 0x50;
         private bool _BoxSize_IsSet => _DATALocation.HasValue;
-        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BoxSizeLocation, 4)) : default;
+        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BoxSizeLocation, 4)) : default(UInt32);
         #endregion
         #region Unknown11
         private int _Unknown11Location => _DATALocation!.Value.Min + 0x54;
         private bool _Unknown11_IsSet => _DATALocation.HasValue;
-        public Single Unknown11 => _Unknown11_IsSet ? _recordData.Slice(_Unknown11Location, 4).Float() : default;
+        public Single Unknown11 => _Unknown11_IsSet ? _recordData.Slice(_Unknown11Location, 4).Float() : default(Single);
         #endregion
         #region ParticleDensity
         private int _ParticleDensityLocation => _DATALocation!.Value.Min + 0x58;
         private bool _ParticleDensity_IsSet => _DATALocation.HasValue;
-        public Single ParticleDensity => _ParticleDensity_IsSet ? _recordData.Slice(_ParticleDensityLocation, 4).Float() : default;
+        public Single ParticleDensity => _ParticleDensity_IsSet ? _recordData.Slice(_ParticleDensityLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown12
         private int _Unknown12Location => _DATALocation!.Value.Min + 0x5C;
         private bool _Unknown12_IsSet => _DATALocation.HasValue;
-        public Single Unknown12 => _Unknown12_IsSet ? _recordData.Slice(_Unknown12Location, 4).Float() : default;
+        public Single Unknown12 => _Unknown12_IsSet ? _recordData.Slice(_Unknown12Location, 4).Float() : default(Single);
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;

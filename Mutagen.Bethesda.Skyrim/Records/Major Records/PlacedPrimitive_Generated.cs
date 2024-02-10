@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Bounds
-        public P3Float Bounds { get; set; } = default;
+        public P3Float Bounds { get; set; } = default(P3Float);
         #endregion
         #region Color
-        public Color Color { get; set; } = default;
+        public Color Color { get; set; } = default(Color);
         #endregion
         #region Unknown
-        public Single Unknown { get; set; } = default;
+        public Single Unknown { get; set; } = default(Single);
         #endregion
         #region Type
-        public PlacedPrimitive.TypeEnum Type { get; set; } = default;
+        public PlacedPrimitive.TypeEnum Type { get; set; } = default(PlacedPrimitive.TypeEnum);
         #endregion
 
         #region To String
@@ -793,10 +793,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPlacedPrimitive item)
         {
             ClearPartial();
-            item.Bounds = default;
-            item.Color = default;
-            item.Unknown = default;
-            item.Type = default;
+            item.Bounds = default(P3Float);
+            item.Color = default(Color);
+            item.Unknown = default(Single);
+            item.Type = default(PlacedPrimitive.TypeEnum);
         }
         
         #region Mutagen

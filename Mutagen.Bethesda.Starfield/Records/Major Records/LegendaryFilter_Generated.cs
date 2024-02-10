@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Slot
-        public LegendaryItem.StarSlot Slot { get; set; } = default;
+        public LegendaryItem.StarSlot Slot { get; set; } = default(LegendaryItem.StarSlot);
         #endregion
         #region ReferencedModifier
         private readonly IFormLink<IKeywordGetter> _ReferencedModifier = new FormLink<IKeywordGetter>();
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILegendaryFilter item)
         {
             ClearPartial();
-            item.Slot = default;
+            item.Slot = default(LegendaryItem.StarSlot);
             item.ReferencedModifier.Clear();
             item.Keyword.Clear();
         }

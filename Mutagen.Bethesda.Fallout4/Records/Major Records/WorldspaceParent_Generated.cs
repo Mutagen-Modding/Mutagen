@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace;
         #endregion
         #region Flags
-        public WorldspaceParent.Flag Flags { get; set; } = default;
+        public WorldspaceParent.Flag Flags { get; set; } = default(WorldspaceParent.Flag);
         #endregion
 
         #region To String
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Worldspace.Clear();
-            item.Flags = default;
+            item.Flags = default(WorldspaceParent.Flag);
         }
         
         #region Mutagen

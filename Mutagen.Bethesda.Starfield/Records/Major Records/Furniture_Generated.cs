@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IFurnitureGetter.JNAM => this.JNAM;
         #endregion
         #region INAM
-        public Boolean INAM { get; set; } = default;
+        public Boolean INAM { get; set; } = default(Boolean);
         #endregion
         #region MarkerFlags
         public FurnitureMarkerFlags? MarkerFlags { get; set; }
@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IFurnitureGetter.GNAM => this.GNAM;
         #endregion
         #region BenchType
-        public Furniture.BenchTypes BenchType { get; set; } = default;
+        public Furniture.BenchTypes BenchType { get; set; } = default(Furniture.BenchTypes);
         #endregion
         #region UsesSkill
         public Skill? UsesSkill { get; set; }
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region WBDTDataTypeState
-        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default;
+        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default(Furniture.WBDTDataType);
         #endregion
 
         #region To String
@@ -2794,17 +2794,17 @@ namespace Mutagen.Bethesda.Starfield
             item.LoopingSound = null;
             item.Flags = default;
             item.JNAM = default;
-            item.INAM = default;
+            item.INAM = default(Boolean);
             item.MarkerFlags = default;
             item.GNAM = default;
-            item.BenchType = default;
+            item.BenchType = default(Furniture.BenchTypes);
             item.UsesSkill = default;
             item.FurnitureTemplate.Clear();
             item.MarkerEntryPoints.Clear();
             item.MarkerModel = default;
             item.MarkerParameters = null;
             item.MarkerFiles = null;
-            item.WBDTDataTypeState = default;
+            item.WBDTDataTypeState = default(Furniture.WBDTDataType);
             base.Clear(item);
         }
         
@@ -4039,7 +4039,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
@@ -4098,7 +4098,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.ForcedLocations = 
                             rhs.ForcedLocations
-                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                                .Select(b => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
@@ -5170,7 +5170,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public Boolean INAM => _INAMLocation.HasValue ? true : default;
+        public Boolean INAM => _INAMLocation.HasValue ? true : default(Boolean);
         #endregion
         #region MarkerFlags
         private int? _MarkerFlagsLocation;

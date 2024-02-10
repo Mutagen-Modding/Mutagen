@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest;
         #endregion
         #region Stage
-        public UInt16 Stage { get; set; } = default;
+        public UInt16 Stage { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Quest.Clear();
-            item.Stage = default;
+            item.Stage = default(UInt16);
             base.Clear(item);
         }
         
