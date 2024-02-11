@@ -6534,5 +6534,23 @@
     <Compile Include="Records\Major Records\SurfacePatternConfigItem_Generated.cs">
       <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\BlockHeightAdjustmentComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BlockHeightAdjustmentComponentItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\UniqueOverlayListComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\UniqueOverlayListComponentItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\UniquePatternPlacementInfoComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetWorldspace_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

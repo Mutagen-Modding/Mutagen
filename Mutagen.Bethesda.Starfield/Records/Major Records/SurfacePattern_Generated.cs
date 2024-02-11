@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +57,59 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ISurfacePatternGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region SurfacePatternStyle
+        private readonly IFormLink<ISurfacePatternStyleGetter> _SurfacePatternStyle = new FormLink<ISurfacePatternStyleGetter>();
+        public IFormLink<ISurfacePatternStyleGetter> SurfacePatternStyle
+        {
+            get => _SurfacePatternStyle;
+            set => _SurfacePatternStyle.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISurfacePatternStyleGetter> ISurfacePatternGetter.SurfacePatternStyle => this.SurfacePatternStyle;
+        #endregion
+        #region SurfaceBlocks
+        public static readonly P2Int SurfaceBlocksFixedSize = new P2Int(16, 16);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocks = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<SurfaceBlock>.Null);
+        public IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks
+        {
+            get => this._SurfaceBlocks;
+            init => this._SurfaceBlocks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> ISurfacePatternGetter.SurfaceBlocks => _SurfaceBlocks;
+        #endregion
+
+        #endregion
+        #region Worldspaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IWorldspaceGetter>>? _Worldspaces;
+        public ExtendedList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces
+        {
+            get => this._Worldspaces;
+            set => this._Worldspaces = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? ISurfacePatternGetter.Worldspaces => _Worldspaces;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +135,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.SurfacePatternStyle = initialValue;
+                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -88,7 +148,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem SurfacePatternStyle,
+                TItem SurfaceBlocks,
+                TItem Worldspaces)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +162,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.SurfacePatternStyle = SurfacePatternStyle;
+                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(SurfaceBlocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Worldspaces, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +174,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem SurfacePatternStyle;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? SurfaceBlocks;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Worldspaces;
             #endregion
 
             #region Equals
@@ -119,11 +194,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.SurfacePatternStyle, rhs.SurfacePatternStyle)) return false;
+                if (!object.Equals(this.SurfaceBlocks, rhs.SurfaceBlocks)) return false;
+                if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.SurfacePatternStyle);
+                hash.Add(this.SurfaceBlocks);
+                hash.Add(this.Worldspaces);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +217,41 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.SurfacePatternStyle)) return false;
+                if (this.SurfaceBlocks != null)
+                {
+                    if (!eval(this.SurfaceBlocks.Overall)) return false;
+                    if (this.SurfaceBlocks.Specific != null)
+                    {
+                        foreach (var item in this.SurfaceBlocks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Worldspaces != null)
+                {
+                    if (!eval(this.Worldspaces.Overall)) return false;
+                    if (this.Worldspaces.Specific != null)
+                    {
+                        foreach (var item in this.Worldspaces.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +260,41 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.SurfacePatternStyle)) return true;
+                if (this.SurfaceBlocks != null)
+                {
+                    if (eval(this.SurfaceBlocks.Overall)) return true;
+                    if (this.SurfaceBlocks.Specific != null)
+                    {
+                        foreach (var item in this.SurfaceBlocks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Worldspaces != null)
+                {
+                    if (eval(this.Worldspaces.Overall)) return true;
+                    if (this.Worldspaces.Specific != null)
+                    {
+                        foreach (var item in this.Worldspaces.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +310,50 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.SurfacePatternStyle = eval(this.SurfacePatternStyle);
+                if (SurfaceBlocks != null)
+                {
+                    obj.SurfaceBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.SurfaceBlocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (SurfaceBlocks.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.SurfaceBlocks.Specific = l;
+                        foreach (var item in SurfaceBlocks.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Worldspaces != null)
+                {
+                    obj.Worldspaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Worldspaces.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Worldspaces.Specific = l;
+                        foreach (var item in Worldspaces.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +372,71 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SurfacePattern.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.SurfacePatternStyle ?? true)
+                    {
+                        sb.AppendItem(SurfacePatternStyle, "SurfacePatternStyle");
+                    }
+                    if ((printMask?.SurfaceBlocks?.Overall ?? true)
+                        && SurfaceBlocks is {} SurfaceBlocksItem)
+                    {
+                        sb.AppendLine("SurfaceBlocks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SurfaceBlocksItem.Overall);
+                            if (SurfaceBlocksItem.Specific != null)
+                            {
+                                foreach (var subItem in SurfaceBlocksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Worldspaces?.Overall ?? true)
+                        && Worldspaces is {} WorldspacesItem)
+                    {
+                        sb.AppendLine("Worldspaces =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(WorldspacesItem.Overall);
+                            if (WorldspacesItem.Specific != null)
+                            {
+                                foreach (var subItem in WorldspacesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +447,27 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? SurfacePatternStyle;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? SurfaceBlocks;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Worldspaces;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SurfacePattern_FieldIndex enu = (SurfacePattern_FieldIndex)index;
                 switch (enu)
                 {
+                    case SurfacePattern_FieldIndex.Components:
+                        return Components;
+                    case SurfacePattern_FieldIndex.SurfacePatternStyle:
+                        return SurfacePatternStyle;
+                    case SurfacePattern_FieldIndex.SurfaceBlocks:
+                        return SurfaceBlocks;
+                    case SurfacePattern_FieldIndex.Worldspaces:
+                        return Worldspaces;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +478,18 @@ namespace Mutagen.Bethesda.Starfield
                 SurfacePattern_FieldIndex enu = (SurfacePattern_FieldIndex)index;
                 switch (enu)
                 {
+                    case SurfacePattern_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SurfacePattern_FieldIndex.SurfacePatternStyle:
+                        this.SurfacePatternStyle = ex;
+                        break;
+                    case SurfacePattern_FieldIndex.SurfaceBlocks:
+                        this.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SurfacePattern_FieldIndex.Worldspaces:
+                        this.Worldspaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +501,18 @@ namespace Mutagen.Bethesda.Starfield
                 SurfacePattern_FieldIndex enu = (SurfacePattern_FieldIndex)index;
                 switch (enu)
                 {
+                    case SurfacePattern_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case SurfacePattern_FieldIndex.SurfacePatternStyle:
+                        this.SurfacePatternStyle = (Exception?)obj;
+                        break;
+                    case SurfacePattern_FieldIndex.SurfaceBlocks:
+                        this.SurfaceBlocks = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
+                        break;
+                    case SurfacePattern_FieldIndex.Worldspaces:
+                        this.Worldspaces = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +522,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (SurfacePatternStyle != null) return true;
+                if (SurfaceBlocks != null) return true;
+                if (Worldspaces != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +552,67 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(SurfacePatternStyle, "SurfacePatternStyle");
+                }
+                if (SurfaceBlocks is {} SurfaceBlocksItem)
+                {
+                    sb.AppendLine("SurfaceBlocks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SurfaceBlocksItem.Overall);
+                        if (SurfaceBlocksItem.Specific != null)
+                        {
+                            foreach (var subItem in SurfaceBlocksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Worldspaces is {} WorldspacesItem)
+                {
+                    sb.AppendLine("Worldspaces =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(WorldspacesItem.Overall);
+                        if (WorldspacesItem.Specific != null)
+                        {
+                            foreach (var subItem in WorldspacesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +621,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.SurfacePatternStyle = this.SurfacePatternStyle.Combine(rhs.SurfacePatternStyle);
+                ret.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Overall, rhs.SurfaceBlocks?.Overall), Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Specific, rhs.SurfaceBlocks?.Specific));
+                ret.Worldspaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), Noggog.ExceptionExt.Combine(this.Worldspaces?.Specific, rhs.Worldspaces?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +646,34 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool SurfacePatternStyle;
+            public bool SurfaceBlocks;
+            public bool Worldspaces;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.SurfacePatternStyle = defaultOn;
+                this.SurfaceBlocks = defaultOn;
+                this.Worldspaces = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((SurfacePatternStyle, null));
+                ret.Add((SurfaceBlocks, null));
+                ret.Add((Worldspaces, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +685,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SurfacePattern_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfacePatternCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SurfacePatternSetterCommon.Instance.RemapLinks(this, mapping);
         public SurfacePattern(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +736,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ISurfacePattern);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SurfacePatternCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SurfacePatternSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SurfacePatternSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SurfacePatternSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +819,16 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISurfacePattern :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISurfacePatternInternal>,
         IStarfieldMajorRecordInternal,
         ISurfacePatternGetter
     {
+        new ExtendedList<AComponent> Components { get; }
+        new IFormLink<ISurfacePatternStyleGetter> SurfacePatternStyle { get; set; }
+        new IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; }
+        new ExtendedList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; set; }
     }
 
     public partial interface ISurfacePatternInternal :
@@ -440,11 +841,17 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SFPT)]
     public partial interface ISurfacePatternGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISurfacePatternGetter>,
         IMapsToGetter<ISurfacePatternGetter>
     {
         static new ILoquiRegistration StaticRegistration => SurfacePattern_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle { get; }
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; }
+        IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; }
 
     }
 
@@ -621,6 +1028,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        SurfacePatternStyle = 8,
+        SurfaceBlocks = 9,
+        Worldspaces = 10,
     }
     #endregion
 
@@ -631,9 +1042,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(SurfacePattern.Mask<>);
 
@@ -663,8 +1074,17 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SFPT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SFPT);
+            var all = RecordCollection.Factory(
+                RecordTypes.SFPT,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.CNAM,
+                RecordTypes.BNAM,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SurfacePatternBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1126,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISurfacePatternInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.SurfacePatternStyle.Clear();
+            item.SurfaceBlocks.SetAllTo(FormLink<SurfaceBlock>.Null);
+            item.Worldspaces = null;
             base.Clear(item);
         }
         
@@ -723,6 +1147,34 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISurfacePattern obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.SurfacePatternStyle.Relink(mapping);
+            obj.SurfaceBlocks.RemapLinks(mapping);
+            obj.Worldspaces?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISurfacePattern obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ISurfacePattern obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +1242,19 @@ namespace Mutagen.Bethesda.Starfield
             SurfacePattern.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.SurfacePatternStyle = item.SurfacePatternStyle.Equals(rhs.SurfacePatternStyle);
+            ret.SurfaceBlocks = item.SurfaceBlocks.Array2dEqualsHelper(
+                rhs.SurfaceBlocks,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Worldspaces = item.Worldspaces.CollectionEqualsHelper(
+                rhs.Worldspaces,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1304,54 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.SurfacePatternStyle ?? true)
+            {
+                sb.AppendItem(item.SurfacePatternStyle.FormKey, "SurfacePatternStyle");
+            }
+            if (printMask?.SurfaceBlocks?.Overall ?? true)
+            {
+                sb.AppendLine("SurfaceBlocks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SurfaceBlocks)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Worldspaces?.Overall ?? true)
+                && item.Worldspaces is {} WorldspacesItem)
+            {
+                sb.AppendLine("Worldspaces =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in WorldspacesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static SurfacePattern_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1402,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SurfacePattern_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.SurfacePatternStyle) ?? true))
+            {
+                if (!lhs.SurfacePatternStyle.Equals(rhs.SurfacePatternStyle)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.SurfaceBlocks) ?? true))
+            {
+                if (!lhs.SurfaceBlocks.SequenceEqualNullable(rhs.SurfaceBlocks)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Worldspaces) ?? true))
+            {
+                if (!lhs.Worldspaces.SequenceEqualNullable(rhs.Worldspaces)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1446,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISurfacePatternGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            hash.Add(item.SurfacePatternStyle);
+            hash.Add(item.SurfaceBlocks);
+            hash.Add(item.Worldspaces);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1478,40 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield return FormLinkInformation.Factory(obj.SurfacePatternStyle);
+            foreach (var item in obj.SurfaceBlocks)
+            {
+                yield return FormLinkInformation.Factory(item.Value);
+            }
+            if (obj.Worldspaces is {} WorldspacesItem)
+            {
+                foreach (var item in WorldspacesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISurfacePatternGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +1587,81 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.SurfacePatternStyle) ?? true))
+            {
+                item.SurfacePatternStyle.SetTo(rhs.SurfacePatternStyle.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.SurfaceBlocks) ?? true))
+            {
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.SurfaceBlocks);
+                try
+                {
+                    item.SurfaceBlocks.SetTo(
+                        rhs.SurfaceBlocks
+                            .Select(b => new KeyValuePair<P2Int, IFormLinkGetter<ISurfaceBlockGetter>>(b.Key, (IFormLinkGetter<ISurfaceBlockGetter>)new FormLink<ISurfaceBlockGetter>(b.Value.FormKey)))
+                        , FormLink<SurfaceBlock>.Null);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Worldspaces) ?? true))
+            {
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.Worldspaces);
+                try
+                {
+                    if ((rhs.Worldspaces != null))
+                    {
+                        item.Worldspaces = 
+                            rhs.Worldspaces
+                                .Select(b => (IFormLinkGetter<IWorldspaceGetter>)new FormLink<IWorldspaceGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IWorldspaceGetter>>();
+                    }
+                    else
+                    {
+                        item.Worldspaces = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1810,52 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SurfacePatternBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISurfacePatternGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.SurfacePatternStyle,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Write(
+                writer: writer,
+                items: item.SurfaceBlocks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfaceBlockGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IWorldspaceGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Worldspaces,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IWorldspaceGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ISurfacePatternGetter item,
@@ -1184,10 +1872,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1927,66 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SurfacePatternBinaryCreateTranslation Instance = new SurfacePatternBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SFPT;
+        public static ParseResult FillBinaryRecordTypes(
+            ISurfacePatternInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)SurfacePattern_FieldIndex.Components;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SurfacePatternStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SurfacePattern_FieldIndex.SurfacePatternStyle;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SurfaceBlocks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Parse(
+                            reader: frame,
+                            size: SurfacePattern.SurfaceBlocksFixedSize,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)SurfacePattern_FieldIndex.SurfaceBlocks;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Worldspaces = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IWorldspaceGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IWorldspaceGetter>>();
+                    return (int)SurfacePattern_FieldIndex.Worldspaces;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2019,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfacePatternCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SurfacePatternCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SurfacePatternBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2035,16 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISurfacePattern);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region SurfacePatternStyle
+        private int? _SurfacePatternStyleLocation;
+        public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => _SurfacePatternStyleLocation.HasValue ? new FormLink<ISurfacePatternStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatternStyleLocation.Value, _package.MetaData.Constants)))) : FormLink<ISurfacePatternStyleGetter>.Null;
+        #endregion
+        #region SurfaceBlocks
+        private static IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocksEmpty = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<SurfaceBlock>.Null);
+        public IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; private set; } = _SurfaceBlocksEmpty;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2102,66 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)SurfacePattern_FieldIndex.Components;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _SurfacePatternStyleLocation = (stream.Position - offset);
+                    return (int)SurfacePattern_FieldIndex.SurfacePatternStyle;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.SurfaceBlocks = BinaryOverlayArray2d.Factory<IFormLinkGetter<ISurfaceBlockGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 4,
+                        size: SurfacePattern.SurfaceBlocksFixedSize,
+                        getter: (s, p) => new FormLink<ISurfaceBlockGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)SurfacePattern_FieldIndex.SurfaceBlocks;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IWorldspaceGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IWorldspaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)SurfacePattern_FieldIndex.Worldspaces;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

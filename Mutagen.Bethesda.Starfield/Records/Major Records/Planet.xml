@@ -3,7 +3,7 @@
   <Object name="Planet" recordType="PNDT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Components" refName="AComponent" />
-      <ByteArray name="CNAM" recordType="CNAM" unknown="true" />
+      <RefList name="Worldspaces" refName="PlanetWorldspace" recordType="CNAM" nullable="False" />
       <RefList name="Biomes" refName="PlanetBiome" />
       <FormLink name="SurfaceTree" refName="SurfaceTree" recordType="FNAM" />
       <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
@@ -97,6 +97,13 @@
       <Int32 name="Unknown1" />
       <Int32 name="Unknown2" />
       <Int32 name="Unknown3" />
+    </Fields>
+  </Object>
+  <Object name="PlanetWorldspace" objType="Subrecord" >
+    <Fields>
+      <Double name="Longitude" />
+      <Double name="Latitude" />
+      <FormLink name="Planet" refName="Planet" />
     </Fields>
   </Object>
 </Loqui>

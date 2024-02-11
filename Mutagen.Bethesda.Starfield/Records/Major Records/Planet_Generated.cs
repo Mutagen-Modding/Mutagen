@@ -72,16 +72,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region CNAM
+        #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CNAM;
-        public MemorySlice<Byte>? CNAM
+        private ExtendedList<PlanetWorldspace> _Worldspaces = new ExtendedList<PlanetWorldspace>();
+        public ExtendedList<PlanetWorldspace> Worldspaces
         {
-            get => this._CNAM;
-            set => this._CNAM = value;
+            get => this._Worldspaces;
+            init => this._Worldspaces = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.CNAM => this.CNAM;
+        IReadOnlyList<IPlanetWorldspaceGetter> IPlanetGetter.Worldspaces => _Worldspaces;
+        #endregion
+
         #endregion
         #region Biomes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -281,7 +284,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.CNAM = initialValue;
+                this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>());
                 this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
                 this.SurfaceTree = initialValue;
                 this.GNAM = initialValue;
@@ -310,7 +313,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Components,
-                TItem CNAM,
+                TItem Worldspaces,
                 TItem Biomes,
                 TItem SurfaceTree,
                 TItem GNAM,
@@ -338,7 +341,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.CNAM = CNAM;
+                this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>(Worldspaces, Enumerable.Empty<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>());
                 this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(Biomes, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
                 this.SurfaceTree = SurfaceTree;
                 this.GNAM = GNAM;
@@ -368,7 +371,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
-            public TItem CNAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>? Worldspaces;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>? Biomes;
             public TItem SurfaceTree;
             public TItem GNAM;
@@ -400,7 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
-                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 if (!object.Equals(this.Biomes, rhs.Biomes)) return false;
                 if (!object.Equals(this.SurfaceTree, rhs.SurfaceTree)) return false;
                 if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
@@ -424,7 +427,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.Components);
-                hash.Add(this.CNAM);
+                hash.Add(this.Worldspaces);
                 hash.Add(this.Biomes);
                 hash.Add(this.SurfaceTree);
                 hash.Add(this.GNAM);
@@ -464,7 +467,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.CNAM)) return false;
+                if (this.Worldspaces != null)
+                {
+                    if (!eval(this.Worldspaces.Overall)) return false;
+                    if (this.Worldspaces.Specific != null)
+                    {
+                        foreach (var item in this.Worldspaces.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (this.Biomes != null)
                 {
                     if (!eval(this.Biomes.Overall)) return false;
@@ -529,7 +543,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.CNAM)) return true;
+                if (this.Worldspaces != null)
+                {
+                    if (eval(this.Worldspaces.Overall)) return true;
+                    if (this.Worldspaces.Specific != null)
+                    {
+                        foreach (var item in this.Worldspaces.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (this.Biomes != null)
                 {
                     if (eval(this.Biomes.Overall)) return true;
@@ -604,7 +629,21 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.CNAM = eval(this.CNAM);
+                if (Worldspaces != null)
+                {
+                    obj.Worldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>());
+                    if (Worldspaces.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>();
+                        obj.Worldspaces.Specific = l;
+                        foreach (var item in Worldspaces.Specific)
+                        {
+                            MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 if (Biomes != null)
                 {
                     obj.Biomes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetBiome.Mask<R>?>>?>(eval(this.Biomes.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetBiome.Mask<R>?>>());
@@ -673,9 +712,24 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.CNAM ?? true)
+                    if ((printMask?.Worldspaces?.Overall ?? true)
+                        && Worldspaces is {} WorldspacesItem)
                     {
-                        sb.AppendItem(CNAM, "CNAM");
+                        sb.AppendLine("Worldspaces =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(WorldspacesItem.Overall);
+                            if (WorldspacesItem.Specific != null)
+                            {
+                                foreach (var subItem in WorldspacesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.Biomes?.Overall ?? true)
                         && Biomes is {} BiomesItem)
@@ -772,7 +826,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
-            public Exception? CNAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>? Worldspaces;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>? Biomes;
             public Exception? SurfaceTree;
             public Exception? GNAM;
@@ -800,8 +854,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case Planet_FieldIndex.Components:
                         return Components;
-                    case Planet_FieldIndex.CNAM:
-                        return CNAM;
+                    case Planet_FieldIndex.Worldspaces:
+                        return Worldspaces;
                     case Planet_FieldIndex.Biomes:
                         return Biomes;
                     case Planet_FieldIndex.SurfaceTree:
@@ -849,8 +903,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
-                    case Planet_FieldIndex.CNAM:
-                        this.CNAM = ex;
+                    case Planet_FieldIndex.Worldspaces:
+                        this.Worldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>(ex, null);
                         break;
                     case Planet_FieldIndex.Biomes:
                         this.Biomes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>(ex, null);
@@ -917,8 +971,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
-                    case Planet_FieldIndex.CNAM:
-                        this.CNAM = (Exception?)obj;
+                    case Planet_FieldIndex.Worldspaces:
+                        this.Worldspaces = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>)obj;
                         break;
                     case Planet_FieldIndex.Biomes:
                         this.Biomes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>)obj;
@@ -981,7 +1035,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Components != null) return true;
-                if (CNAM != null) return true;
+                if (Worldspaces != null) return true;
                 if (Biomes != null) return true;
                 if (SurfaceTree != null) return true;
                 if (GNAM != null) return true;
@@ -1043,8 +1097,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (Worldspaces is {} WorldspacesItem)
                 {
-                    sb.AppendItem(CNAM, "CNAM");
+                    sb.AppendLine("Worldspaces =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(WorldspacesItem.Overall);
+                        if (WorldspacesItem.Specific != null)
+                        {
+                            foreach (var subItem in WorldspacesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 if (Biomes is {} BiomesItem)
                 {
@@ -1113,7 +1182,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
-                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
+                ret.Worldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), Noggog.ExceptionExt.Combine(this.Worldspaces?.Specific, rhs.Worldspaces?.Specific));
                 ret.Biomes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Biomes?.Overall, rhs.Biomes?.Overall), Noggog.ExceptionExt.Combine(this.Biomes?.Specific, rhs.Biomes?.Specific));
                 ret.SurfaceTree = this.SurfaceTree.Combine(rhs.SurfaceTree);
                 ret.GNAM = this.GNAM.Combine(rhs.GNAM);
@@ -1154,7 +1223,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public AComponent.TranslationMask? Components;
-            public bool CNAM;
+            public PlanetWorldspace.TranslationMask? Worldspaces;
             public PlanetBiome.TranslationMask? Biomes;
             public bool SurfaceTree;
             public bool GNAM;
@@ -1180,7 +1249,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.CNAM = defaultOn;
                 this.SurfaceTree = defaultOn;
                 this.GNAM = defaultOn;
                 this.Name = defaultOn;
@@ -1201,7 +1269,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
-                ret.Add((CNAM, null));
+                ret.Add((Worldspaces == null ? DefaultOn : !Worldspaces.GetCrystal().CopyNothing, Worldspaces?.GetCrystal()));
                 ret.Add((Biomes == null ? DefaultOn : !Biomes.GetCrystal().CopyNothing, Biomes?.GetCrystal()));
                 ret.Add((SurfaceTree, null));
                 ret.Add((GNAM, null));
@@ -1374,7 +1442,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<AComponent> Components { get; }
-        new MemorySlice<Byte>? CNAM { get; set; }
+        new ExtendedList<PlanetWorldspace> Worldspaces { get; }
         new ExtendedList<PlanetBiome> Biomes { get; }
         new IFormLinkNullable<ISurfaceTreeGetter> SurfaceTree { get; set; }
         new MemorySlice<Byte>? GNAM { get; set; }
@@ -1417,7 +1485,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => Planet_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
-        ReadOnlyMemorySlice<Byte>? CNAM { get; }
+        IReadOnlyList<IPlanetWorldspaceGetter> Worldspaces { get; }
         IReadOnlyList<IPlanetBiomeGetter> Biomes { get; }
         IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree { get; }
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
@@ -1617,7 +1685,7 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Components = 7,
-        CNAM = 8,
+        Worldspaces = 8,
         Biomes = 9,
         SurfaceTree = 10,
         GNAM = 11,
@@ -1744,7 +1812,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.CNAM = default;
+            item.Worldspaces.Clear();
             item.Biomes.Clear();
             item.SurfaceTree.Clear();
             item.GNAM = default;
@@ -1780,6 +1848,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
+            obj.Worldspaces.RemapLinks(mapping);
             obj.Biomes.RemapLinks(mapping);
             obj.SurfaceTree.Relink(mapping);
         }
@@ -1877,7 +1946,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.CNAM = MemorySliceExt.SequenceEqual(item.CNAM, rhs.CNAM);
+            ret.Worldspaces = item.Worldspaces.CollectionEqualsHelper(
+                rhs.Worldspaces,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Biomes = item.Biomes.CollectionEqualsHelper(
                 rhs.Biomes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1977,10 +2049,19 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.CNAM ?? true)
-                && item.CNAM is {} CNAMItem)
+            if (printMask?.Worldspaces?.Overall ?? true)
             {
-                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendLine("Worldspaces =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Worldspaces)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if (printMask?.Biomes?.Overall ?? true)
             {
@@ -2129,9 +2210,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.Components)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.CNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Worldspaces) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
+                if (!lhs.Worldspaces.SequenceEqual(rhs.Worldspaces, (l, r) => ((PlanetWorldspaceCommon)((IPlanetWorldspaceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.Worldspaces)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Biomes) ?? true))
             {
@@ -2246,10 +2327,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Components);
-            if (item.CNAM is {} CNAMItem)
-            {
-                hash.Add(CNAMItem);
-            }
+            hash.Add(item.Worldspaces);
             hash.Add(item.Biomes);
             hash.Add(item.SurfaceTree);
             if (item.GNAM is {} GNAMItem)
@@ -2343,6 +2421,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Worldspaces.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2469,15 +2551,28 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.CNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.Worldspaces) ?? true))
             {
-                if(rhs.CNAM is {} CNAMrhs)
+                errorMask?.PushIndex((int)Planet_FieldIndex.Worldspaces);
+                try
                 {
-                    item.CNAM = CNAMrhs.ToArray();
+                    item.Worldspaces.SetTo(
+                        rhs.Worldspaces
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CNAM = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.Biomes) ?? true))
@@ -2866,10 +2961,18 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlanetWorldspaceGetter>.Instance.Write(
                 writer: writer,
-                item: item.CNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+                items: item.Worldspaces,
+                recordType: translationParams.ConvertToCustom(RecordTypes.CNAM),
+                transl: (MutagenWriter subWriter, IPlanetWorldspaceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PlanetWorldspaceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlanetBiomeGetter>.Instance.Write(
                 writer: writer,
                 items: item.Biomes,
@@ -3062,8 +3165,11 @@ namespace Mutagen.Bethesda.Starfield
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.CNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                        return new ParseResult((int)Planet_FieldIndex.CNAM, nextRecordType);
+                        item.Worldspaces.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetWorldspace>.Instance.Parse(
+                                reader: frame.SpawnWithLength(contentLength),
+                                transl: PlanetWorldspace.TryCreateFromBinary));
+                        return new ParseResult((int)Planet_FieldIndex.Worldspaces, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
                     {
@@ -3079,8 +3185,11 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.CNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                                return new ParseResult((int)Planet_FieldIndex.CNAM, nextRecordType);
+                                item.Worldspaces.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetWorldspace>.Instance.Parse(
+                                        reader: frame.SpawnWithLength(contentLength),
+                                        transl: PlanetWorldspace.TryCreateFromBinary));
+                                return new ParseResult((int)Planet_FieldIndex.Worldspaces, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                                 item.BodyType = EnumBinaryTranslation<Planet.BodyTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -3299,10 +3408,7 @@ namespace Mutagen.Bethesda.Starfield
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
-        #region CNAM
-        private int? _CNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<IPlanetWorldspaceGetter> Worldspaces { get; private set; } = Array.Empty<IPlanetWorldspaceGetter>();
         public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = Array.Empty<IPlanetBiomeGetter>();
         #region SurfaceTree
         private int? _SurfaceTreeLocation;
@@ -3455,8 +3561,15 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
                     {
-                        _CNAMLocation = (stream.Position - offset);
-                        return new ParseResult((int)Planet_FieldIndex.CNAM, type);
+                        var subMeta = stream.ReadSubrecordHeader();
+                        var subLen = finalPos - stream.Position;
+                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
+                            mem: stream.RemainingMemory.Slice(0, subLen),
+                            package: _package,
+                            itemLength: 20,
+                            getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
+                        stream.Position += subLen;
+                        return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
                     {
@@ -3469,8 +3582,15 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                _CNAMLocation = (stream.Position - offset);
-                                return new ParseResult((int)Planet_FieldIndex.CNAM, type);
+                                var subMeta = stream.ReadSubrecordHeader();
+                                var subLen = finalPos - stream.Position;
+                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
+                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                    package: _package,
+                                    itemLength: 20,
+                                    getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
+                                stream.Position += subLen;
+                                return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                             }
                             case 1:
                             {

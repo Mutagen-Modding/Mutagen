@@ -464,4 +464,39 @@
       <ByteArray name="DATA" recordType="DATA" />
     </Fields>
   </Object>
+  <Object name="BlockHeightAdjustmentComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="DAT2" nullable="False">
+        <RefDirect refName="BlockHeightAdjustmentComponentItem" />
+      </Array2D>
+    </Fields>
+  </Object>
+  <Object name="BlockHeightAdjustmentComponentItem" objType="Subrecord">
+    <Fields>
+      <Float name="Float1" />
+      <Float name="Float2" />
+    </Fields>
+  </Object>
+  <Object name="UniqueOverlayListComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Worldspaces" refName="UniqueOverlayListComponentItem" recordType="DATA" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="UniqueOverlayListComponentItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="Worldspace" refName="Worldspace" />
+      <P2Float name="Grid" swapCoords="true" />
+    </Fields>
+  </Object>
+  <Object name="UniquePatternPlacementInfoComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <Data>
+        <Fields>
+          <FormLink name="Planet" refName="Planet" />
+          <Double name="Longitude" />
+          <Double name="Latitude" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
 </Loqui>

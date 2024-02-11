@@ -2,6 +2,14 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SurfacePattern" recordType="SFPT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <FormLink name="SurfacePatternStyle" refName="SurfacePatternStyle" recordType="CNAM" nullable="false" />
+      <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="BNAM" nullable="False">
+        <FormLink refName="SurfaceBlock" />
+      </Array2D>
+      <List name="Worldspaces" recordType="DNAM" >
+        <FormLink refName="Worldspace" />
+      </List>
     </Fields>
   </Object>
 </Loqui>

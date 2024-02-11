@@ -2043,6 +2043,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "BlockCellHeightGridComponent":
                 case "IBlockCellHeightGridComponentGetter":
                 case "IBlockCellHeightGridComponent":
+                case "BlockHeightAdjustmentComponent":
+                case "IBlockHeightAdjustmentComponentGetter":
+                case "IBlockHeightAdjustmentComponent":
+                case "UniqueOverlayListComponent":
+                case "IUniqueOverlayListComponentGetter":
+                case "IUniqueOverlayListComponent":
+                case "UniquePatternPlacementInfoComponent":
+                case "IUniquePatternPlacementInfoComponentGetter":
+                case "IUniquePatternPlacementInfoComponent":
                     break;
                 case "DialogResponses":
                 case "IDialogResponsesGetter":

@@ -65,6 +65,9 @@ public partial class AComponent
         BGSSpacePhysicsComponent,
         BGSBlockEditorMetaData_Component,
         BGSBlockCellHeighGrid_Component,
+        BlockHeightAdjustment_Component,
+        UniqueOverlayList_Component,
+        UniquePatternPlacementInfo_Component
     }
 
     public static bool TryCreateFromBinary(
@@ -193,6 +196,12 @@ public partial class AComponent
                 return BlockEditorMetaDataComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSBlockCellHeighGrid_Component:
                 return BlockCellHeightGridComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BlockHeightAdjustment_Component:
+                return BlockHeightAdjustmentComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.UniqueOverlayList_Component:
+                return UniqueOverlayListComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.UniquePatternPlacementInfo_Component:
+                return UniquePatternPlacementInfoComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -289,6 +298,9 @@ partial class AComponentBinaryWriteTranslation
             ISpacePhysicsComponentGetter _ => AComponent.ComponentType.BGSSpacePhysicsComponent,
             IBlockEditorMetaDataComponentGetter _ => AComponent.ComponentType.BGSBlockEditorMetaData_Component,
             IBlockCellHeightGridComponentGetter _ => AComponent.ComponentType.BGSBlockCellHeighGrid_Component,
+            IBlockHeightAdjustmentComponentGetter _ => AComponent.ComponentType.BlockHeightAdjustment_Component,
+            IUniqueOverlayListComponentGetter _ => AComponent.ComponentType.UniqueOverlayList_Component,
+            IUniquePatternPlacementInfoComponentGetter _ => AComponent.ComponentType.UniquePatternPlacementInfo_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -415,6 +427,12 @@ partial class AComponentBinaryOverlay
                 return BlockEditorMetaDataComponentBinaryOverlay.BlockEditorMetaDataComponentFactory(stream, package);
             case AComponent.ComponentType.BGSBlockCellHeighGrid_Component:
                 return BlockCellHeightGridComponentBinaryOverlay.BlockCellHeightGridComponentFactory(stream, package);
+            case AComponent.ComponentType.BlockHeightAdjustment_Component:
+                return BlockHeightAdjustmentComponentBinaryOverlay.BlockHeightAdjustmentComponentFactory(stream, package);
+            case AComponent.ComponentType.UniqueOverlayList_Component:
+                return UniqueOverlayListComponentBinaryOverlay.UniqueOverlayListComponentFactory(stream, package);
+            case AComponent.ComponentType.UniquePatternPlacementInfo_Component:
+                return UniquePatternPlacementInfoComponentBinaryOverlay.UniquePatternPlacementInfoComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }
