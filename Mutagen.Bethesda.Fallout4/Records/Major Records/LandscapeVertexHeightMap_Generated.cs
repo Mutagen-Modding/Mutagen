@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region HeightMap
         public static readonly P2Int HeightMapFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33);
+        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33, default(Byte));
         public IArray2d<Byte> HeightMap
         {
             get => this._HeightMap;

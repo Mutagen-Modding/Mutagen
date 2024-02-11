@@ -69,16 +69,7 @@ internal static class BinaryOverlayArray2d
 
         public IArray2d<T> ShallowClone()
         {
-            var ret = new Array2d<T>(Width, Height);
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    ret[x, y] = this[x, y];
-                }
-            }
-
-            return ret;
+            return new Array2d<T>(this);
         }
     }
 }

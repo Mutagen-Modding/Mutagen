@@ -86,7 +86,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
     }
 
-    public override void GenerateForTranslate(StructuredStringBuilder sb, TypeGeneration field, string retAccessor, string rhsAccessor, bool indexed)
+    public override void GenerateForTranslate(StructuredStringBuilder sb, TypeGeneration field, string retAccessor, string rhsAccessor, string? index)
     {
         if (!field.IntegrateField) return;
         var gendered = field as GenderedType;
@@ -96,7 +96,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
             using (var args = sb.Call(
                        $"{retAccessor} = GenderedItem.TranslateHelper"))
             {
-                args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}");
+                args.Add($"{rhsAccessor}{(index != null ? ".Value" : null)}");
                 args.Add($"eval");
                 if (loqui != null)
                 {

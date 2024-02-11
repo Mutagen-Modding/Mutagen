@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region HeightMap
         public static readonly P2Int HeightMapFixedSize = new P2Int(32, 32);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(32, 32);
+        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(32, 32, default(Byte));
         public IArray2d<Byte> HeightMap
         {
             get => this._HeightMap;

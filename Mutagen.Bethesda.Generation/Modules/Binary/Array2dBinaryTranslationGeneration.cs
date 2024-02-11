@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins;
@@ -61,7 +64,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                 await args.Add(async (gen) =>
                 {
                     var listTranslMask = this.MaskModule.GetMaskModule(arr2d.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(arr2d.SubTypeGeneration);
-                    gen.AppendLine($"transl: ({nameof(MutagenWriter)} subWriter, {typeName} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
+                    gen.AppendLine($"transl: ({nameof(MutagenWriter)} subWriter, {typeName} subItem{(needsMasters ? $", {nameof(TypedWriteParams)} conv" : null)}) =>");
                     using (gen.CurlyBrace())
                     {
                         var major = loqui != null && await loqui.TargetObjectGeneration.IsMajorRecord();
@@ -347,27 +350,25 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
             typeName = arr2d.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
         }
         
-        if (arr2d.SubTypeGeneration is LoquiType)
+        if (typeGen.Nullable)
         {
-            throw new NotImplementedException();
+            sb.AppendLine($"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} {{ get; private set; }}");
+        }
+        else if (typeGen.GetFieldData().HasTrigger)
+        {
+            sb.AppendLine($"private static {arr2d.ListTypeName(getter: true, internalInterface: true)} _{typeGen.Name}Empty = new Array2d<{arr2d.SubTypeGeneration.TypeName(getter: true)}>({arr2d.FixedSize.Value.X}, {arr2d.FixedSize.Value.Y}, {arr2d.SubTypeGeneration.GetDefault(getter: false)});");
+            sb.AppendLine($"public {arr2d.ListTypeName(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }} = _{typeGen.Name}Empty;");
         }
         else
         {
-            if (typeGen.Nullable)
+            using (var args = sb.Call(
+                       $"public {arr2d.ListTypeName(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlayArray2d.Factory<{typeName}>"))
             {
-                sb.AppendLine($"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}");
-            }
-            else
-            {
-                using (var args = sb.Call(
-                           $"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayArray2d.Factory<{typeName}>"))
-                {
-                    args.Add($"mem: {structDataAccessor}.Slice({passedLength})");
-                    args.Add($"package: _package");
-                    args.Add($"itemLength: {subLen.Value}");
-                    args.Add($"size: {objGen.Name}.{typeGen.Name}FixedSize");
-                    args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, arr2d.SubTypeGeneration, "s", "p")}");
-                }
+                args.Add($"mem: {structDataAccessor}.Slice({passedLength})");
+                args.Add($"package: _package");
+                args.Add($"itemLength: {subLen.Value}");
+                args.Add($"size: {objGen.Name}.{typeGen.Name}FixedSize");
+                args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, arr2d.SubTypeGeneration, "s", "p")}");
             }
         }
     }
@@ -382,16 +383,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             throw new ArgumentException();
         }
-        string typeName;
-        LoquiType loqui = arr2d.SubTypeGeneration as LoquiType;
-        if (loqui != null)
-        {
-            typeName = this.Module.BinaryOverlayClassName(loqui);
-        }
-        else
-        {
-            typeName = arr2d.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
-        }
+        string typeName = arr2d.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
 
         string dataAccess;
         if (arr2d.GetFieldData().HasTrigger)

@@ -165,6 +165,13 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                             continue;
                         }
 
+                        string itemAccess = "item";
+
+                        if (cont is Array2dType)
+                        {
+                            itemAccess = "item.Value";
+                        }
+
                         if (field.Nullable)
                         {
                             sb.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
@@ -174,7 +181,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                             sb.AppendLines(subFg);
                             using (sb.CurlyBrace())
                             {
-                                sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(item);");
+                                sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}({itemAccess});");
                             }
                         }
                     }
