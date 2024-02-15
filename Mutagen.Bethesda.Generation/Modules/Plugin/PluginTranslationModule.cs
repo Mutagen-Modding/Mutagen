@@ -1362,7 +1362,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 sb.AppendLine($"var overflowHeader = {streamAccessor}.ReadSubrecord();");
                 sb.AppendLine(
-                    $"return {nameof(ParseResult)}.{nameof(ParseResult.OverrideLength)}(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
+                    $"return {nameof(ParseResult)}.{nameof(ParseResult.OverrideLength)}(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
             }
         }
     }

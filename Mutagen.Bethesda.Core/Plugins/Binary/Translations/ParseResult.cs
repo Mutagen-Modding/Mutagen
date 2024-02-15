@@ -58,8 +58,8 @@ internal readonly struct ParseResult
 
     public static ParseResult Stop => new ParseResult();
 
-    public static ParseResult OverrideLength(uint length) => new ParseResult(
-        parsedIndex: null,
+    public static ParseResult OverrideLength(PreviousParse lastParsed, uint length) => new ParseResult(
+        parsedIndex: lastParsed.ParsedIndex,
         keepParsing: true,
         dupParse: null,
         lengthOverride: checked((int)length));

@@ -3855,7 +3855,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4128,7 +4128,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

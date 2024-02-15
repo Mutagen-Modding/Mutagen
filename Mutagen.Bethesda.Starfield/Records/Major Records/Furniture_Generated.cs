@@ -5023,7 +5023,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 case RecordTypeInts.STOP: // End Marker
                 {
@@ -5511,7 +5511,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = stream.ReadSubrecord();
-                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 case RecordTypeInts.STOP: // End Marker
                 {
