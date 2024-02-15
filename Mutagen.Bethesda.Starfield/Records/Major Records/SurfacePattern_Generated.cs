@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Starfield
         #region SurfaceBlocks
         public static readonly P2Int SurfaceBlocksFixedSize = new P2Int(16, 16);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocks = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<SurfaceBlock>.Null);
+        private IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocks = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<ISurfaceBlockGetter>.Null);
         public IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks
         {
             get => this._SurfaceBlocks;
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.SurfacePatternStyle.Clear();
-            item.SurfaceBlocks.SetAllTo(FormLink<SurfaceBlock>.Null);
+            item.SurfaceBlocks.SetAllTo(FormLink<ISurfaceBlockGetter>.Null);
             item.Worldspaces = null;
             base.Clear(item);
         }
@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.SurfaceBlocks.SetTo(
                         rhs.SurfaceBlocks
                             .Select(b => new KeyValuePair<P2Int, IFormLinkGetter<ISurfaceBlockGetter>>(b.Key, (IFormLinkGetter<ISurfaceBlockGetter>)new FormLink<ISurfaceBlockGetter>(b.Value.FormKey)))
-                        , FormLink<SurfaceBlock>.Null);
+                        , FormLink<ISurfaceBlockGetter>.Null);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1957,7 +1957,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SurfaceBlocks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Parse(
                             reader: frame,
@@ -2041,7 +2040,7 @@ namespace Mutagen.Bethesda.Starfield
         public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => _SurfacePatternStyleLocation.HasValue ? new FormLink<ISurfacePatternStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatternStyleLocation.Value, _package.MetaData.Constants)))) : FormLink<ISurfacePatternStyleGetter>.Null;
         #endregion
         #region SurfaceBlocks
-        private static IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocksEmpty = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<SurfaceBlock>.Null);
+        private static IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocksEmpty = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<ISurfaceBlockGetter>.Null);
         public IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; private set; } = _SurfaceBlocksEmpty;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; private set; }

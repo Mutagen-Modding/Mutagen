@@ -209,7 +209,7 @@ public class FormLinkType : ClassType
 
     public override string GetDefault(bool getter)
     {
-        if (this.Nullable) return $"FormLinkNullable<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
-        return $"FormLink<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
+        if (this.Nullable) return $"FormLinkNullable<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>.Null";
+        return $"FormLink<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>.Null";
     }
 }

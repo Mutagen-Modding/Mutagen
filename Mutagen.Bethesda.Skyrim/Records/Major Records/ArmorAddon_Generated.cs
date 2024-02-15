@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Skyrim
                         femaleMarker: RecordTypes.NAM1,
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
-                        fallback: FormLinkNullable<TextureSet>.Null);
+                        fallback: FormLinkNullable<ITextureSetGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
@@ -2727,7 +2727,7 @@ namespace Mutagen.Bethesda.Skyrim
                         femaleMarker: RecordTypes.NAM3,
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
-                        fallback: FormLinkNullable<FormList>.Null);
+                        fallback: FormLinkNullable<IFormListGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:
@@ -3012,7 +3012,7 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.NAM1,
                         stream: stream,
                         creator: static (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
-                        fallback: FormLinkNullable<TextureSet>.Null);
+                        fallback: FormLinkNullable<ITextureSetGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
@@ -3024,7 +3024,7 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.NAM3,
                         stream: stream,
                         creator: static (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
-                        fallback: FormLinkNullable<FormList>.Null);
+                        fallback: FormLinkNullable<IFormListGetter>.Null);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:

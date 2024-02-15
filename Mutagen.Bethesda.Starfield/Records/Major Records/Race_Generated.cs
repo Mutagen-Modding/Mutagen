@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region Voices
-        public IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
+        public IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
         #endregion
         #region FacegenMainClamp
