@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
-        public AssetLinkGetter<SkyrimModelAssetType>? CameraPath => _CameraPathLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimModelAssetType>? CameraPath => _CameraPathLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimModelAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

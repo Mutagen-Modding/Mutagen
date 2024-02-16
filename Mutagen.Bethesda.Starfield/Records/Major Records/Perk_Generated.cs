@@ -2630,7 +2630,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region PerkIcon
         private int? _PerkIconLocation;
-        public AssetLinkGetter<StarfieldTextureAssetType>? PerkIcon => _PerkIconLocation.HasValue ? new AssetLinkGetter<StarfieldTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkIconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<StarfieldTextureAssetType>? PerkIcon => _PerkIconLocation.HasValue ? new AssetLinkGetter<StarfieldTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkIconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<StarfieldTextureAssetType>?);
         #endregion
         #region Training
         private int? _TrainingLocation;

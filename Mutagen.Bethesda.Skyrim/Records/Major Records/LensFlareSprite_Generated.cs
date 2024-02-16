@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Texture
         private int? _TextureLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? Texture => _TextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? Texture => _TextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

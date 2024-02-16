@@ -3162,7 +3162,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ModelFilename
         private int? _ModelFilenameLocation;
-        public AssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimModelAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

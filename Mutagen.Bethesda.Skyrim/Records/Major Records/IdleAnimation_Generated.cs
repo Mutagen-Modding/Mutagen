@@ -2194,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Filename
         private int? _FilenameLocation;
-        public AssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimBehaviorAssetType>?);
         #endregion
         #region AnimationEvent
         private int? _AnimationEventLocation;

@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;

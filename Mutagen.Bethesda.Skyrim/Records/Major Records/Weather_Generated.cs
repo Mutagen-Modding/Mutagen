@@ -60,10 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region CloudTextures
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IAssetLink<SkyrimTextureAssetType>[] _CloudTextures = new IAssetLink<SkyrimTextureAssetType>[29];
-        public IAssetLink<SkyrimTextureAssetType>[] CloudTextures
+        private IAssetLink<SkyrimTextureAssetType>?[] _CloudTextures = new IAssetLink<SkyrimTextureAssetType>?[29];
+        public IAssetLink<SkyrimTextureAssetType>?[] CloudTextures
         {
             get => this._CloudTextures;
             init => this._CloudTextures = value;

@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region MaterialPath
         private int? _MaterialPathLocation;
-        public AssetLinkGetter<StarfieldMaterialAssetType>? MaterialPath => _MaterialPathLocation.HasValue ? new AssetLinkGetter<StarfieldMaterialAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<StarfieldMaterialAssetType>? MaterialPath => _MaterialPathLocation.HasValue ? new AssetLinkGetter<StarfieldMaterialAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<StarfieldMaterialAssetType>?);
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;

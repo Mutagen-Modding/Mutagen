@@ -2380,11 +2380,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;

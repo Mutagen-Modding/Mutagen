@@ -25,7 +25,10 @@ public class AssetLinkType : StringType
 
     public override string GetDefault(bool getter)
     {
-        if (Nullable) return "null";
+        if (Nullable)
+        {
+            return $"default({TypeName(getter: getter)}{NullChar})";
+        }
         if (getter)
         {
             return $"AssetLinkGetter<{AssetTypeString}>.Null";

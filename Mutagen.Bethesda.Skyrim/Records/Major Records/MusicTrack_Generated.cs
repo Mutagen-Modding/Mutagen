@@ -2447,11 +2447,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
-        public AssetLinkGetter<SkyrimMusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimMusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimMusicAssetType>?);
         #endregion
         #region FinaleFilename
         private int? _FinaleFilenameLocation;
-        public AssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimMusicAssetType>?);
         #endregion
         #region LoopData
         private RangeInt32? _LoopDataLocation;

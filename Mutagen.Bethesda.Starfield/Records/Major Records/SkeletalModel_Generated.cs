@@ -1436,11 +1436,11 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Model { get; private set; }
         #region Rig
         private int? _RigLocation;
-        public AssetLinkGetter<StarfieldRigAssetType>? Rig => _RigLocation.HasValue ? new AssetLinkGetter<StarfieldRigAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RigLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<StarfieldRigAssetType>? Rig => _RigLocation.HasValue ? new AssetLinkGetter<StarfieldRigAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RigLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<StarfieldRigAssetType>?);
         #endregion
         #region AnimationText
         private int? _AnimationTextLocation;
-        public AssetLinkGetter<StarfieldAnimationTextAssetType>? AnimationText => _AnimationTextLocation.HasValue ? new AssetLinkGetter<StarfieldAnimationTextAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<StarfieldAnimationTextAssetType>? AnimationText => _AnimationTextLocation.HasValue ? new AssetLinkGetter<StarfieldAnimationTextAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<StarfieldAnimationTextAssetType>?);
         #endregion
         #region DNAM
         private int? _DNAMLocation;

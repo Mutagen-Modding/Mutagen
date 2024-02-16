@@ -2302,7 +2302,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
-        public AssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<SkyrimTextureAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
