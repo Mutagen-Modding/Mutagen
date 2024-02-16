@@ -404,7 +404,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
 
                     if (data.OverflowRecordType.HasValue)
                     {
-                        sb.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
+                        OverflowGenerationHelper.GenerateWrapperOverflowMember(sb, typeGen);
                     }
                     sb.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
                     using (sb.Line())
@@ -626,16 +626,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 sb.AppendLine($"_{typeGen.Name}Type = type;");
             }
-            if (data.OverflowRecordType.HasValue
-                && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
-            {
-                sb.AppendLine($"_{typeGen.Name}LengthOverride = lastParsed.{nameof(PreviousParse.LengthOverride)};");
-                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.LengthOverride)}.HasValue)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine($"stream.Position += lastParsed.{nameof(PreviousParse.LengthOverride)}.Value;");
-                }
-            }
+            OverflowGenerationHelper.GenerateWrapperOverflowParse(sb, typeGen, data);
         }
         else
         {

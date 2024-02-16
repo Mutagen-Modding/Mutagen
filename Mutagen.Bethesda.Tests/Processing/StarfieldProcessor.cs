@@ -58,6 +58,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.ZOOM, ProcessZooms);
         AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
         AddDynamicProcessing(RecordTypes.SFPT, ProcessSurfacePatterns);
+        AddDynamicProcessing(RecordTypes.SFTR, ProcessSurfaceTree);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -275,6 +276,9 @@ public class StarfieldProcessor : Processor
                 case "Blueprint_Component":
                     ProcessBlueprintComponent(majorFrame, bfcb, fileOffset);
                     break;
+                case "SurfaceTreePatternSwapInfo_Component":
+                    SurfaceTreePatternSwapInfoComponent(majorFrame, bfcb, fileOffset);
+                    break;
             }
         }
     }
@@ -310,6 +314,24 @@ public class StarfieldProcessor : Processor
 
             int loc = 0;
             ProcessColorFloats(bodv, fileOffset, ref loc, alpha: false, amount: 3);
+        }
+    }
+
+    private void SurfaceTreePatternSwapInfoComponent(
+        MajorRecordFrame majorFrame,
+        SubrecordPinFrame bfcb,
+        long fileOffset)
+    {
+        var data = majorFrame.TryFindSubrecordAfter(bfcb, RecordTypes.DATA);
+        if (data != null)
+        {
+            var count = BinaryPrimitives.ReadInt32LittleEndian(data.Value.Content);
+            int refLoc = 4;
+            for (int i = 0; i < count; i++)
+            {
+                ProcessFormIDOverflows(data.Value, fileOffset, ref refLoc, 1);
+                refLoc += 4;
+            }
         }
     }
 
@@ -1242,6 +1264,16 @@ public class StarfieldProcessor : Processor
         long fileOffset)
     {
         foreach (var bnam in majorFrame.FindEnumerateSubrecords(RecordTypes.BNAM))
+        {
+            ProcessFormIDOverflows(bnam, fileOffset);
+        }
+    }
+
+    private void ProcessSurfaceTree(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var bnam in majorFrame.FindEnumerateSubrecords(RecordTypes.ENAM))
         {
             ProcessFormIDOverflows(bnam, fileOffset);
         }

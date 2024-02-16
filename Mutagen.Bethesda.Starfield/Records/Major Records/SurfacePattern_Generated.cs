@@ -1957,6 +1957,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SurfaceBlocks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Parse(
                             reader: frame,

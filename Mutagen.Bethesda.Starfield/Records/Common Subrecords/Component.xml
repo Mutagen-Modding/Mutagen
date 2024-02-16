@@ -499,4 +499,15 @@
       </Data>
     </Fields>
   </Object>
+  <Object name="SurfaceTreePatternSwapInfoComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Patterns" refName="SurfaceTreePatternSwapInfoComponentItem" recordType="DATA" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="SurfaceTreePatternSwapInfoComponentItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="SurfacePattern" refName="SurfacePattern" />
+      <Int32 name="Unknown" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>

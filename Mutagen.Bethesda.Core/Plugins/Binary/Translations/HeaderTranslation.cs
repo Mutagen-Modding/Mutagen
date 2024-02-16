@@ -318,6 +318,12 @@ public static class HeaderTranslation
         return span.Slice(loc + subMeta.HeaderLength, subMeta.ContentLength);
     }
 
+    public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, int loc, GameConstants meta, TypedParseParams translationParams)
+    {
+        var subMeta = meta.SubrecordHeader(span.Slice(loc));
+        return span.Slice(loc + subMeta.HeaderLength, translationParams.LengthOverride ?? subMeta.ContentLength);
+    }
+
     public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta, TypedParseParams translationParams = default)
     {
         var subMeta = meta.SubrecordHeader(span);

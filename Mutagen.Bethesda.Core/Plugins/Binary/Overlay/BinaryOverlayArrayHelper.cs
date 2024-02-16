@@ -1,6 +1,8 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
@@ -25,5 +27,20 @@ internal static class BinaryOverlayArrayHelper
         int amount)
     {
         return mem.Span.Slice(0, amount * 4).AsFloatSpan().ToArray();
+    }
+
+    public static ReadOnlyMemorySlice<IFormLinkGetter<TMajorGetter>> FormLinkSliceFromFixedSize<TMajorGetter>(
+        ReadOnlyMemorySlice<byte> mem,
+        int amount,
+        IReadOnlyMasterReferenceCollection masterReferences)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        var intSpan = mem.Span.Slice(0, amount * 4).AsUInt32Span();
+        var ret = new IFormLinkGetter<TMajorGetter>[intSpan.Length];
+        for (int i = 0; i < intSpan.Length; i++)
+        {
+            ret[i] = new FormLink<TMajorGetter>(FormKey.Factory(masterReferences, intSpan[i]));
+        }
+        return ret;
     }
 }

@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +57,73 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ISurfaceTreeGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region CNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _CNAM = new byte[0];
+        public MemorySlice<Byte> CNAM
+        {
+            get => _CNAM;
+            set => this._CNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> ISurfaceTreeGetter.CNAM => this.CNAM;
+        #endregion
+        #region DNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _DNAM = new byte[0];
+        public MemorySlice<Byte> DNAM
+        {
+            get => _DNAM;
+            set => this._DNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> ISurfaceTreeGetter.DNAM => this.DNAM;
+        #endregion
+        #region SurfacePatterns
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IFormLinkGetter<ISurfacePatternGetter>[] _SurfacePatterns = ArrayExt.Create(65536, FormLink<ISurfacePatternGetter>.Null);
+        public IFormLinkGetter<ISurfacePatternGetter>[] SurfacePatterns
+        {
+            get => this._SurfacePatterns;
+            init => this._SurfacePatterns = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> ISurfaceTreeGetter.SurfacePatterns => _SurfacePatterns;
+        #endregion
+
+        #endregion
+        #region SurfacePatterns2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IFormLinkGetter<ISurfacePatternGetter>[] _SurfacePatterns2 = ArrayExt.Create(65536, FormLink<ISurfacePatternGetter>.Null);
+        public IFormLinkGetter<ISurfacePatternGetter>[] SurfacePatterns2
+        {
+            get => this._SurfacePatterns2;
+            init => this._SurfacePatterns2 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> ISurfaceTreeGetter.SurfacePatterns2 => _SurfacePatterns2;
+        #endregion
+
+        #endregion
+        #region Filter
+        public String Filter { get; set; } = string.Empty;
+        #endregion
 
         #region To String
 
@@ -79,6 +149,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.CNAM = initialValue;
+                this.DNAM = initialValue;
+                this.SurfacePatterns = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfacePatterns2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Filter = initialValue;
             }
 
             public Mask(
@@ -88,7 +164,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem CNAM,
+                TItem DNAM,
+                TItem SurfacePatterns,
+                TItem SurfacePatterns2,
+                TItem Filter)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +180,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.CNAM = CNAM;
+                this.DNAM = DNAM;
+                this.SurfacePatterns = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SurfacePatterns, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfacePatterns2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SurfacePatterns2, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Filter = Filter;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +194,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem CNAM;
+            public TItem DNAM;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SurfacePatterns;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SurfacePatterns2;
+            public TItem Filter;
             #endregion
 
             #region Equals
@@ -119,11 +216,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
+                if (!object.Equals(this.SurfacePatterns, rhs.SurfacePatterns)) return false;
+                if (!object.Equals(this.SurfacePatterns2, rhs.SurfacePatterns2)) return false;
+                if (!object.Equals(this.Filter, rhs.Filter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.CNAM);
+                hash.Add(this.DNAM);
+                hash.Add(this.SurfacePatterns);
+                hash.Add(this.SurfacePatterns2);
+                hash.Add(this.Filter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +243,43 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.CNAM)) return false;
+                if (!eval(this.DNAM)) return false;
+                if (this.SurfacePatterns != null)
+                {
+                    if (!eval(this.SurfacePatterns.Overall)) return false;
+                    if (this.SurfacePatterns.Specific != null)
+                    {
+                        foreach (var item in this.SurfacePatterns.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SurfacePatterns2 != null)
+                {
+                    if (!eval(this.SurfacePatterns2.Overall)) return false;
+                    if (this.SurfacePatterns2.Specific != null)
+                    {
+                        foreach (var item in this.SurfacePatterns2.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Filter)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +288,43 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.CNAM)) return true;
+                if (eval(this.DNAM)) return true;
+                if (this.SurfacePatterns != null)
+                {
+                    if (eval(this.SurfacePatterns.Overall)) return true;
+                    if (this.SurfacePatterns.Specific != null)
+                    {
+                        foreach (var item in this.SurfacePatterns.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.SurfacePatterns2 != null)
+                {
+                    if (eval(this.SurfacePatterns2.Overall)) return true;
+                    if (this.SurfacePatterns2.Specific != null)
+                    {
+                        foreach (var item in this.SurfacePatterns2.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Filter)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +340,52 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.CNAM = eval(this.CNAM);
+                obj.DNAM = eval(this.DNAM);
+                if (SurfacePatterns != null)
+                {
+                    obj.SurfacePatterns = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SurfacePatterns.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SurfacePatterns.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SurfacePatterns.Specific = l;
+                        foreach (var item in SurfacePatterns.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (SurfacePatterns2 != null)
+                {
+                    obj.SurfacePatterns2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SurfacePatterns2.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SurfacePatterns2.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SurfacePatterns2.Specific = l;
+                        foreach (var item in SurfacePatterns2.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Filter = eval(this.Filter);
             }
             #endregion
 
@@ -175,6 +404,79 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SurfaceTree.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.CNAM ?? true)
+                    {
+                        sb.AppendItem(CNAM, "CNAM");
+                    }
+                    if (printMask?.DNAM ?? true)
+                    {
+                        sb.AppendItem(DNAM, "DNAM");
+                    }
+                    if ((printMask?.SurfacePatterns?.Overall ?? true)
+                        && SurfacePatterns is {} SurfacePatternsItem)
+                    {
+                        sb.AppendLine("SurfacePatterns =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SurfacePatternsItem.Overall);
+                            if (SurfacePatternsItem.Specific != null)
+                            {
+                                foreach (var subItem in SurfacePatternsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.SurfacePatterns2?.Overall ?? true)
+                        && SurfacePatterns2 is {} SurfacePatterns2Item)
+                    {
+                        sb.AppendLine("SurfacePatterns2 =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SurfacePatterns2Item.Overall);
+                            if (SurfacePatterns2Item.Specific != null)
+                            {
+                                foreach (var subItem in SurfacePatterns2Item.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Filter ?? true)
+                    {
+                        sb.AppendItem(Filter, "Filter");
+                    }
                 }
             }
             #endregion
@@ -185,12 +487,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? CNAM;
+            public Exception? DNAM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SurfacePatterns;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SurfacePatterns2;
+            public Exception? Filter;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SurfaceTree_FieldIndex enu = (SurfaceTree_FieldIndex)index;
                 switch (enu)
                 {
+                    case SurfaceTree_FieldIndex.Components:
+                        return Components;
+                    case SurfaceTree_FieldIndex.CNAM:
+                        return CNAM;
+                    case SurfaceTree_FieldIndex.DNAM:
+                        return DNAM;
+                    case SurfaceTree_FieldIndex.SurfacePatterns:
+                        return SurfacePatterns;
+                    case SurfaceTree_FieldIndex.SurfacePatterns2:
+                        return SurfacePatterns2;
+                    case SurfaceTree_FieldIndex.Filter:
+                        return Filter;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +524,24 @@ namespace Mutagen.Bethesda.Starfield
                 SurfaceTree_FieldIndex enu = (SurfaceTree_FieldIndex)index;
                 switch (enu)
                 {
+                    case SurfaceTree_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SurfaceTree_FieldIndex.CNAM:
+                        this.CNAM = ex;
+                        break;
+                    case SurfaceTree_FieldIndex.DNAM:
+                        this.DNAM = ex;
+                        break;
+                    case SurfaceTree_FieldIndex.SurfacePatterns:
+                        this.SurfacePatterns = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SurfaceTree_FieldIndex.SurfacePatterns2:
+                        this.SurfacePatterns2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SurfaceTree_FieldIndex.Filter:
+                        this.Filter = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +553,24 @@ namespace Mutagen.Bethesda.Starfield
                 SurfaceTree_FieldIndex enu = (SurfaceTree_FieldIndex)index;
                 switch (enu)
                 {
+                    case SurfaceTree_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case SurfaceTree_FieldIndex.CNAM:
+                        this.CNAM = (Exception?)obj;
+                        break;
+                    case SurfaceTree_FieldIndex.DNAM:
+                        this.DNAM = (Exception?)obj;
+                        break;
+                    case SurfaceTree_FieldIndex.SurfacePatterns:
+                        this.SurfacePatterns = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SurfaceTree_FieldIndex.SurfacePatterns2:
+                        this.SurfacePatterns2 = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SurfaceTree_FieldIndex.Filter:
+                        this.Filter = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +580,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (CNAM != null) return true;
+                if (DNAM != null) return true;
+                if (SurfacePatterns != null) return true;
+                if (SurfacePatterns2 != null) return true;
+                if (Filter != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +612,73 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                {
+                    sb.AppendItem(DNAM, "DNAM");
+                }
+                if (SurfacePatterns is {} SurfacePatternsItem)
+                {
+                    sb.AppendLine("SurfacePatterns =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SurfacePatternsItem.Overall);
+                        if (SurfacePatternsItem.Specific != null)
+                        {
+                            foreach (var subItem in SurfacePatternsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (SurfacePatterns2 is {} SurfacePatterns2Item)
+                {
+                    sb.AppendLine("SurfacePatterns2 =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SurfacePatterns2Item.Overall);
+                        if (SurfacePatterns2Item.Specific != null)
+                        {
+                            foreach (var subItem in SurfacePatterns2Item.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Filter, "Filter");
+                }
             }
             #endregion
 
@@ -255,6 +687,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
+                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
+                ret.SurfacePatterns = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SurfacePatterns?.Overall, rhs.SurfacePatterns?.Overall), Noggog.ExceptionExt.Combine(this.SurfacePatterns?.Specific, rhs.SurfacePatterns?.Specific));
+                ret.SurfacePatterns2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SurfacePatterns2?.Overall, rhs.SurfacePatterns2?.Overall), Noggog.ExceptionExt.Combine(this.SurfacePatterns2?.Specific, rhs.SurfacePatterns2?.Specific));
+                ret.Filter = this.Filter.Combine(rhs.Filter);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +714,40 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool CNAM;
+            public bool DNAM;
+            public bool SurfacePatterns;
+            public bool SurfacePatterns2;
+            public bool Filter;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.CNAM = defaultOn;
+                this.DNAM = defaultOn;
+                this.SurfacePatterns = defaultOn;
+                this.SurfacePatterns2 = defaultOn;
+                this.Filter = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((CNAM, null));
+                ret.Add((DNAM, null));
+                ret.Add((SurfacePatterns, null));
+                ret.Add((SurfacePatterns2, null));
+                ret.Add((Filter, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +759,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SurfaceTree_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SurfaceTreeSetterCommon.Instance.RemapLinks(this, mapping);
         public SurfaceTree(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +810,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ISurfaceTree);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SurfaceTreeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SurfaceTreeSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SurfaceTreeSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SurfaceTreeSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +893,18 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISurfaceTree :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISurfaceTreeInternal>,
         IStarfieldMajorRecordInternal,
         ISurfaceTreeGetter
     {
+        new ExtendedList<AComponent> Components { get; }
+        new MemorySlice<Byte> CNAM { get; set; }
+        new MemorySlice<Byte> DNAM { get; set; }
+        new IFormLinkGetter<ISurfacePatternGetter>[] SurfacePatterns { get; }
+        new IFormLinkGetter<ISurfacePatternGetter>[] SurfacePatterns2 { get; }
+        new String Filter { get; set; }
     }
 
     public partial interface ISurfaceTreeInternal :
@@ -440,11 +917,19 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SFTR)]
     public partial interface ISurfaceTreeGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISurfaceTreeGetter>,
         IMapsToGetter<ISurfaceTreeGetter>
     {
         static new ILoquiRegistration StaticRegistration => SurfaceTree_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        ReadOnlyMemorySlice<Byte> CNAM { get; }
+        ReadOnlyMemorySlice<Byte> DNAM { get; }
+        ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns { get; }
+        ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns2 { get; }
+        String Filter { get; }
 
     }
 
@@ -621,6 +1106,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        CNAM = 8,
+        DNAM = 9,
+        SurfacePatterns = 10,
+        SurfacePatterns2 = 11,
+        Filter = 12,
     }
     #endregion
 
@@ -631,9 +1122,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SurfaceTree.Mask<>);
 
@@ -663,8 +1154,19 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SFTR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SFTR);
+            var all = RecordCollection.Factory(
+                RecordTypes.SFTR,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.CNAM,
+                RecordTypes.DNAM,
+                RecordTypes.ENAM,
+                RecordTypes.XXXX,
+                RecordTypes.NAM1);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SurfaceTreeBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1208,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISurfaceTreeInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.CNAM = Array.Empty<byte>();
+            item.DNAM = Array.Empty<byte>();
+            item.SurfacePatterns.Fill(FormLink<ISurfacePatternGetter>.Null);
+            item.SurfacePatterns2.Fill(FormLink<ISurfacePatternGetter>.Null);
+            item.Filter = string.Empty;
             base.Clear(item);
         }
         
@@ -723,6 +1231,33 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISurfaceTree obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.SurfacePatterns.RemapLinks(mapping);
+            obj.SurfacePatterns2.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISurfaceTree obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ISurfaceTree obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +1325,23 @@ namespace Mutagen.Bethesda.Starfield
             SurfaceTree.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CNAM = MemoryExtensions.SequenceEqual(item.CNAM.Span, rhs.CNAM.Span);
+            ret.DNAM = MemoryExtensions.SequenceEqual(item.DNAM.Span, rhs.DNAM.Span);
+            ret.SurfacePatterns = EqualsMaskHelper.SpanEqualsHelper<IFormLinkGetter<ISurfacePatternGetter>>(
+                item.SurfacePatterns,
+                rhs.SurfacePatterns,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.SurfacePatterns2 = EqualsMaskHelper.SpanEqualsHelper<IFormLinkGetter<ISurfacePatternGetter>>(
+                item.SurfacePatterns2,
+                rhs.SurfacePatterns2,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Filter = string.Equals(item.Filter, rhs.Filter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1391,60 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.CNAM ?? true)
+            {
+                sb.AppendLine($"CNAM => {SpanExt.ToHexString(item.CNAM)}");
+            }
+            if (printMask?.DNAM ?? true)
+            {
+                sb.AppendLine($"DNAM => {SpanExt.ToHexString(item.DNAM)}");
+            }
+            if (printMask?.SurfacePatterns?.Overall ?? true)
+            {
+                sb.AppendLine("SurfacePatterns =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SurfacePatterns)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.SurfacePatterns2?.Overall ?? true)
+            {
+                sb.AppendLine("SurfacePatterns2 =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SurfacePatterns2)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.Filter ?? true)
+            {
+                sb.AppendItem(item.Filter, "Filter");
+            }
         }
         
         public static SurfaceTree_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1495,30 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SurfaceTree_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.CNAM) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.CNAM.Span, rhs.CNAM.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.DNAM) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.DNAM.Span, rhs.DNAM.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.SurfacePatterns) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual<IFormLinkGetter<ISurfacePatternGetter>>(lhs.SurfacePatterns.Span!, rhs.SurfacePatterns.Span!)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.SurfacePatterns2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual<IFormLinkGetter<ISurfacePatternGetter>>(lhs.SurfacePatterns2.Span!, rhs.SurfacePatterns2.Span!)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.Filter) ?? true))
+            {
+                if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1547,12 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISurfaceTreeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            hash.Add(item.CNAM);
+            hash.Add(item.DNAM);
+            hash.Add(item.SurfacePatterns);
+            hash.Add(item.SurfacePatterns2);
+            hash.Add(item.Filter);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1581,36 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.SurfacePatterns)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.SurfacePatterns2)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISurfaceTreeGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +1686,50 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)SurfaceTree_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.CNAM) ?? true))
+            {
+                item.CNAM = rhs.CNAM.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.DNAM) ?? true))
+            {
+                item.DNAM = rhs.DNAM.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.SurfacePatterns) ?? true))
+            {
+                item.SurfacePatterns.SetTo(rhs.SurfacePatterns.Select(x => new FormLink<ISurfacePatternGetter>(x.FormKey)));
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.SurfacePatterns2) ?? true))
+            {
+                item.SurfacePatterns2.SetTo(rhs.SurfacePatterns2.Select(x => new FormLink<ISurfacePatternGetter>(x.FormKey)));
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTree_FieldIndex.Filter) ?? true))
+            {
+                item.Filter = rhs.Filter;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1878,63 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SurfaceTreeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISurfaceTreeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.CNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Write(
+                writer: writer,
+                items: item.SurfacePatterns,
+                recordType: translationParams.ConvertToCustom(RecordTypes.ENAM),
+                overflowRecord: RecordTypes.XXXX,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfacePatternGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Write(
+                writer: writer,
+                items: item.SurfacePatterns2,
+                recordType: translationParams.ConvertToCustom(RecordTypes.ENAM),
+                overflowRecord: RecordTypes.XXXX,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfacePatternGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Filter,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             ISurfaceTreeGetter item,
@@ -1184,10 +1951,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2006,113 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SurfaceTreeBinaryCreateTranslation Instance = new SurfaceTreeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SFTR;
+        public static ParseResult FillBinaryRecordTypes(
+            ISurfaceTreeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)SurfaceTree_FieldIndex.Components;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SurfaceTree_FieldIndex.CNAM;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SurfaceTree_FieldIndex.DNAM;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SurfaceTree_FieldIndex.DNAM)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SurfacePatterns.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Parse(
+                                reader: frame,
+                                amount: 65536,
+                                transl: FormLinkBinaryTranslation.Instance.Parse));
+                        return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SurfaceTree_FieldIndex.SurfacePatterns)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SurfacePatterns2.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Parse(
+                                reader: frame,
+                                amount: 65536,
+                                transl: FormLinkBinaryTranslation.Instance.Parse));
+                        return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns2, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SurfacePatterns.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Parse(
+                                        reader: frame,
+                                        amount: 65536,
+                                        transl: FormLinkBinaryTranslation.Instance.Parse));
+                                return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SurfacePatterns2.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISurfacePatternGetter>>.Instance.Parse(
+                                        reader: frame,
+                                        amount: 65536,
+                                        transl: FormLinkBinaryTranslation.Instance.Parse));
+                                return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns2, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Filter = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)SurfaceTree_FieldIndex.Filter;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2145,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreeCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SurfaceTreeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SurfaceTreeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2161,31 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISurfaceTree);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region CNAM
+        private int? _CNAMLocation;
+        public ReadOnlyMemorySlice<Byte> CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        #region DNAM
+        private int? _DNAMLocation;
+        public ReadOnlyMemorySlice<Byte> DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        #region SurfacePatterns
+        private int? _SurfacePatternsLengthOverride;
+        private int? _SurfacePatternsLocation;
+        private readonly static ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> _defaultSurfacePatterns = ArrayExt.Create(65536, FormLink<ISurfacePatternGetter>.Null);
+        public ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns => _SurfacePatternsLocation.HasValue ? BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize<ISurfacePatternGetter>(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatternsLocation.Value, _package.MetaData.Constants, TypedParseParams.FromLengthOverride(_SurfacePatternsLengthOverride)), amount: 65536, masterReferences: _package.MetaData.MasterReferences) : _defaultSurfacePatterns;
+        #endregion
+        #region SurfacePatterns2
+        private int? _SurfacePatterns2LengthOverride;
+        private int? _SurfacePatterns2Location;
+        private readonly static ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> _defaultSurfacePatterns2 = ArrayExt.Create(65536, FormLink<ISurfacePatternGetter>.Null);
+        public ReadOnlyMemorySlice<IFormLinkGetter<ISurfacePatternGetter>> SurfacePatterns2 => _SurfacePatterns2Location.HasValue ? BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize<ISurfacePatternGetter>(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfacePatterns2Location.Value, _package.MetaData.Constants, TypedParseParams.FromLengthOverride(_SurfacePatterns2LengthOverride)), amount: 65536, masterReferences: _package.MetaData.MasterReferences) : _defaultSurfacePatterns2;
+        #endregion
+        #region Filter
+        private int? _FilterLocation;
+        public String Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2243,110 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)SurfaceTree_FieldIndex.Components;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CNAMLocation = (stream.Position - offset);
+                    return (int)SurfaceTree_FieldIndex.CNAM;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = (stream.Position - offset);
+                    return (int)SurfaceTree_FieldIndex.DNAM;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SurfaceTree_FieldIndex.DNAM)
+                    {
+                        _SurfacePatternsLocation = (stream.Position - offset);
+                        _SurfacePatternsLengthOverride = lastParsed.LengthOverride;
+                        if (lastParsed.LengthOverride.HasValue)
+                        {
+                            stream.Position += lastParsed.LengthOverride.Value;
+                        }
+                        return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SurfaceTree_FieldIndex.SurfacePatterns)
+                    {
+                        _SurfacePatterns2Location = (stream.Position - offset);
+                        _SurfacePatterns2LengthOverride = lastParsed.LengthOverride;
+                        if (lastParsed.LengthOverride.HasValue)
+                        {
+                            stream.Position += lastParsed.LengthOverride.Value;
+                        }
+                        return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns2, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _SurfacePatternsLocation = (stream.Position - offset);
+                                _SurfacePatternsLengthOverride = lastParsed.LengthOverride;
+                                if (lastParsed.LengthOverride.HasValue)
+                                {
+                                    stream.Position += lastParsed.LengthOverride.Value;
+                                }
+                                return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns, type);
+                            }
+                            case 1:
+                            {
+                                _SurfacePatterns2Location = (stream.Position - offset);
+                                _SurfacePatterns2LengthOverride = lastParsed.LengthOverride;
+                                if (lastParsed.LengthOverride.HasValue)
+                                {
+                                    stream.Position += lastParsed.LengthOverride.Value;
+                                }
+                                return new ParseResult((int)SurfaceTree_FieldIndex.SurfacePatterns2, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _FilterLocation = (stream.Position - offset);
+                    return (int)SurfaceTree_FieldIndex.Filter;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

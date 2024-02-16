@@ -67,7 +67,8 @@ public partial class AComponent
         BGSBlockCellHeighGrid_Component,
         BlockHeightAdjustment_Component,
         UniqueOverlayList_Component,
-        UniquePatternPlacementInfo_Component
+        UniquePatternPlacementInfo_Component,
+        SurfaceTreePatternSwapInfo_Component
     }
 
     public static bool TryCreateFromBinary(
@@ -202,6 +203,8 @@ public partial class AComponent
                 return UniqueOverlayListComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.UniquePatternPlacementInfo_Component:
                 return UniquePatternPlacementInfoComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.SurfaceTreePatternSwapInfo_Component:
+                return SurfaceTreePatternSwapInfoComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -301,6 +304,7 @@ partial class AComponentBinaryWriteTranslation
             IBlockHeightAdjustmentComponentGetter _ => AComponent.ComponentType.BlockHeightAdjustment_Component,
             IUniqueOverlayListComponentGetter _ => AComponent.ComponentType.UniqueOverlayList_Component,
             IUniquePatternPlacementInfoComponentGetter _ => AComponent.ComponentType.UniquePatternPlacementInfo_Component,
+            ISurfaceTreePatternSwapInfoComponentGetter _ => AComponent.ComponentType.SurfaceTreePatternSwapInfo_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -433,6 +437,8 @@ partial class AComponentBinaryOverlay
                 return UniqueOverlayListComponentBinaryOverlay.UniqueOverlayListComponentFactory(stream, package);
             case AComponent.ComponentType.UniquePatternPlacementInfo_Component:
                 return UniquePatternPlacementInfoComponentBinaryOverlay.UniquePatternPlacementInfoComponentFactory(stream, package);
+            case AComponent.ComponentType.SurfaceTreePatternSwapInfo_Component:
+                return SurfaceTreePatternSwapInfoComponentBinaryOverlay.SurfaceTreePatternSwapInfoComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

@@ -933,6 +933,44 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
  
     public void Write( 
         MutagenWriter writer, 
+        ReadOnlyMemorySlice<T>? items, 
+        RecordType recordType, 
+        RecordType overflowRecord, 
+        BinaryMasterWriteDelegate<T> transl, 
+        TypedWriteParams translationParams = default) 
+    { 
+        if (items == null) return; 
+        try 
+        { 
+            try 
+            { 
+                using (HeaderExport.Subrecord( 
+                           writer, 
+                           recordType,  
+                           overflowRecord: overflowRecord, 
+                           out var writerToUse)) 
+                { 
+                    foreach (var item in items) 
+                    { 
+                        transl(writerToUse, item, translationParams); 
+                    } 
+                } 
+            } 
+            catch (OverflowException overflow) 
+            { 
+                throw new OverflowException( 
+                    $"{recordType} List<{typeof(T)}> had an overflow with {items?.Length} items.", 
+                    overflow); 
+            } 
+        } 
+        catch (Exception ex) 
+        { 
+            throw SubrecordException.Enrich(ex, recordType); 
+        } 
+    } 
+ 
+    public void Write( 
+        MutagenWriter writer, 
         IReadOnlyList<T>? items, 
         RecordType recordType, 
         BinaryMasterWriteDelegate<T> transl, 

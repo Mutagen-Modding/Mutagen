@@ -3852,9 +3852,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SurfaceTree</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter> SurfaceTree(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter> SurfaceTree(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISurfaceTreeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3864,9 +3864,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SurfaceTree</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter> SurfaceTree(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter> SurfaceTree(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISurfaceTreeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISurfaceTree, ISurfaceTreeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

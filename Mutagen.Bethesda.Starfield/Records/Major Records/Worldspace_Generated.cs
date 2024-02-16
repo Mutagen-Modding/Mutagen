@@ -3336,6 +3336,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "UniquePatternPlacementInfoComponent":
                 case "IUniquePatternPlacementInfoComponentGetter":
                 case "IUniquePatternPlacementInfoComponent":
+                case "SurfaceTreePatternSwapInfoComponent":
+                case "ISurfaceTreePatternSwapInfoComponentGetter":
+                case "ISurfaceTreePatternSwapInfoComponent":
                     break;
                 case "WorldspaceGridReference":
                 case "IWorldspaceGridReferenceGetter":
