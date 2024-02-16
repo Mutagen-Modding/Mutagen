@@ -7637,7 +7637,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NAM4
         private int? _NAM4Location;
-        public ReadOnlyMemorySlice<Single>? NAM4 => _NAM4Location.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM4Location.Value, _package.MetaData.Constants), amount: 32) : default;
+        private readonly static ReadOnlyMemorySlice<Single> _defaultNAM4 = ArrayExt.Create(32, default(Single));
+        public ReadOnlyMemorySlice<Single>? NAM4 => _NAM4Location.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM4Location.Value, _package.MetaData.Constants), amount: 32) : _defaultNAM4;
         #endregion
         private RangeInt32? _FNAMLocation;
         #region FogDistanceDayNear

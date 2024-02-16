@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Pex
         #endregion
         #region UserFlags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String[] _UserFlags = new String[32];
-        public String[] UserFlags
+        private String?[] _UserFlags = new String?[32];
+        public String?[] UserFlags
         {
             get => this._UserFlags;
             init => this._UserFlags = value;

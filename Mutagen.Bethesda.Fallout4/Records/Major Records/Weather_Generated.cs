@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region CloudTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String[] _CloudTextures = new String[29];
-        public String[] CloudTextures
+        private String?[] _CloudTextures = new String?[29];
+        public String?[] CloudTextures
         {
             get => this._CloudTextures;
             init => this._CloudTextures = value;
@@ -8152,7 +8152,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region NAM4
         private int? _NAM4Location;
-        public ReadOnlyMemorySlice<Single>? NAM4 => _NAM4Location.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM4Location.Value, _package.MetaData.Constants), amount: 32) : default;
+        private readonly static ReadOnlyMemorySlice<Single> _defaultNAM4 = ArrayExt.Create(32, default(Single));
+        public ReadOnlyMemorySlice<Single>? NAM4 => _NAM4Location.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM4Location.Value, _package.MetaData.Constants), amount: 32) : _defaultNAM4;
         #endregion
         private RangeInt32? _FNAMLocation;
         public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
