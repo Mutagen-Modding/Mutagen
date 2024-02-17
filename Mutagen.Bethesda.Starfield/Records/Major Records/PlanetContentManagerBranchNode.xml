@@ -2,6 +2,22 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlanetContentManagerBranchNode" recordType="PCBN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <Int32 name="NAM1" recordType="NAM1" nullable="False" />
+      <Int32 name="NAM2" recordType="NAM2" nullable="False" />
+      <FormLink name="CountCurve" refName="CurveTable" recordType="NAM3" />
+      <FormLink name="DistributionCurve" refName="CurveTable" recordType="NAM4" />
+      <Bool name="NAM5" recordType="NAM5" byteLength="1" nullable="False" />
+      <List name="Nodes">
+        <FormLink recordType="PCCB" >
+          <Interface>IPlanetNode</Interface>
+        </FormLink>
+      </List>
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <List name="Keywords" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
     </Fields>
+    <LinkInterface>IPlanetNode</LinkInterface>
   </Object>
 </Loqui>

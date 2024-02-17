@@ -426,6 +426,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlanetContentManagerContentNode :
         ILoquiObjectSetter<IPlanetContentManagerContentNodeInternal>,
         IPlanetContentManagerContentNodeGetter,
+        IPlanetNode,
         IStarfieldMajorRecordInternal
     {
     }
@@ -442,7 +443,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IPlanetContentManagerContentNodeGetter>,
-        IMapsToGetter<IPlanetContentManagerContentNodeGetter>
+        IMapsToGetter<IPlanetContentManagerContentNodeGetter>,
+        IPlanetNodeGetter
     {
         static new ILoquiRegistration StaticRegistration => PlanetContentManagerContentNode_Registration.Instance;
 

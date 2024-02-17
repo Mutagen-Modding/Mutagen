@@ -3,5 +3,6 @@
   <Object name="PlanetContentManagerContentNode" recordType="PCCN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IPlanetNode</LinkInterface>
   </Object>
 </Loqui>

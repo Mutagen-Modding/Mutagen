@@ -457,6 +457,17 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ITraversalTarget),
                 Getter: typeof(ITraversalTargetGetter)));
         dict[typeof(ITraversalTargetGetter)] = dict[typeof(ITraversalTarget)] with { Setter = false };
+        dict[typeof(IPlanetNode)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                PlanetContentManagerBranchNode_Registration.Instance,
+                PlanetContentManagerContentNode_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPlanetNode),
+                Getter: typeof(IPlanetNodeGetter)));
+        dict[typeof(IPlanetNodeGetter)] = dict[typeof(IPlanetNode)] with { Setter = false };
         dict[typeof(ISpellRecord)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

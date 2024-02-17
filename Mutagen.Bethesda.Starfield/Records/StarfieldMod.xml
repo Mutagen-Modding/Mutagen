@@ -145,6 +145,7 @@
       <Group name="SurfaceBlocks" refName="SurfaceBlock" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
+      <Group name="PlanetContentManagerBranchNodes" refName="PlanetContentManagerBranchNode" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="SurfacePatternConfigs" refName="SurfacePatternConfig" />
       <Group name="SurfacePatterns" refName="SurfacePattern" />

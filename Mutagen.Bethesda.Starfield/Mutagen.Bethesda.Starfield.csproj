@@ -6562,5 +6562,6 @@
       <DependentUpon>SnapTemplateBehavior.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IBaseObject_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlanetNode_Generated.cs" />
   </ItemGroup>
 </Project>
