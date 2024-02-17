@@ -68,7 +68,9 @@ public partial class AComponent
         BlockHeightAdjustment_Component,
         UniqueOverlayList_Component,
         UniquePatternPlacementInfo_Component,
-        SurfaceTreePatternSwapInfo_Component
+        SurfaceTreePatternSwapInfo_Component,
+        BGSOrbitedDataComponent_Component,
+        BGSStarDataComponent_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -205,6 +207,10 @@ public partial class AComponent
                 return UniquePatternPlacementInfoComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.SurfaceTreePatternSwapInfo_Component:
                 return SurfaceTreePatternSwapInfoComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSOrbitedDataComponent_Component:
+                return OrbitedDataComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSStarDataComponent_Component:
+                return StarDataComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -305,6 +311,8 @@ partial class AComponentBinaryWriteTranslation
             IUniqueOverlayListComponentGetter _ => AComponent.ComponentType.UniqueOverlayList_Component,
             IUniquePatternPlacementInfoComponentGetter _ => AComponent.ComponentType.UniquePatternPlacementInfo_Component,
             ISurfaceTreePatternSwapInfoComponentGetter _ => AComponent.ComponentType.SurfaceTreePatternSwapInfo_Component,
+            IOrbitedDataComponentGetter _ => AComponent.ComponentType.BGSOrbitedDataComponent_Component,
+            IStarDataComponentGetter _ => AComponent.ComponentType.BGSStarDataComponent_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -439,6 +447,10 @@ partial class AComponentBinaryOverlay
                 return UniquePatternPlacementInfoComponentBinaryOverlay.UniquePatternPlacementInfoComponentFactory(stream, package);
             case AComponent.ComponentType.SurfaceTreePatternSwapInfo_Component:
                 return SurfaceTreePatternSwapInfoComponentBinaryOverlay.SurfaceTreePatternSwapInfoComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSOrbitedDataComponent_Component:
+                return OrbitedDataComponentBinaryOverlay.OrbitedDataComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSStarDataComponent_Component:
+                return StarDataComponentBinaryOverlay.StarDataComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

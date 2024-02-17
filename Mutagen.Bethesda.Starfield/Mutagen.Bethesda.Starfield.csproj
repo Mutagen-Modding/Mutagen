@@ -5044,11 +5044,11 @@
     <Compile Include="Records\Major Records\Furniture_Generated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GalaxyStarData_Generated.cs">
-      <DependentUpon>GalaxyStarData.xml</DependentUpon>
+    <Compile Include="Records\Major Records\Star_Generated.cs">
+      <DependentUpon>Star.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GalaxySunPreset_Generated.cs">
-      <DependentUpon>GalaxySunPreset.xml</DependentUpon>
+    <Compile Include="Records\Major Records\SunPreset_Generated.cs">
+      <DependentUpon>SunPreset.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting_Generated.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -6564,5 +6564,11 @@
     <Compile Include="Interfaces\Link\IBaseObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlanetNode_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlanetContentTarget_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\OrbitedDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\StarDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

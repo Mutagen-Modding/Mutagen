@@ -510,4 +510,25 @@
       <Int32 name="Unknown" unknown="true" />
     </Fields>
   </Object>
+  <Object name="OrbitedDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <UInt64 name="Unknown1" />
+      <Float name="MassInSm" divisor="1.98847E30" multiplier="2" />
+      <Float name="RadiusInKm" />
+      <Float name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="StarDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <String name="CatalogueId" binaryType="PrependLengthUShort" />
+      <String name="SpectralClass" binaryType="PrependLengthUShort" />
+      <Float name="Magnitude" />
+      <Float name="MassInSm" divisor="1.98847E30" multiplier="2" />
+      <Float name="InnerHabitableZone" />
+      <Float name="OuterHabitableZone" />
+      <UInt32 name="HIP" />
+      <UInt32 name="Radius" />
+      <UInt32 name="TemperatureInK" />
+    </Fields>
+  </Object>
 </Loqui>

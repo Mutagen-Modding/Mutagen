@@ -40,14 +40,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class GalaxyStarData :
+    public partial class SunPreset :
         StarfieldMajorRecord,
-        IEquatable<IGalaxyStarDataGetter>,
-        IGalaxyStarDataInternal,
-        ILoquiObjectSetter<GalaxyStarData>
+        IEquatable<ISunPresetGetter>,
+        ILoquiObjectSetter<SunPreset>,
+        ISunPresetInternal
     {
         #region Ctor
-        protected GalaxyStarData()
+        protected SunPreset()
         {
             CustomCtor();
         }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GalaxyStarDataMixIn.Print(
+            SunPresetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new GalaxyStarData.Mask<R>();
+                var ret = new SunPreset.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -163,16 +163,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(GalaxyStarData.Mask<bool>? printMask = null)
+            public string Print(SunPreset.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, GalaxyStarData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SunPreset.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(GalaxyStarData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(SunPreset.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                GalaxyStarData_FieldIndex enu = (GalaxyStarData_FieldIndex)index;
+                SunPreset_FieldIndex enu = (SunPreset_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                GalaxyStarData_FieldIndex enu = (GalaxyStarData_FieldIndex)index;
+                SunPreset_FieldIndex enu = (SunPreset_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                GalaxyStarData_FieldIndex enu = (GalaxyStarData_FieldIndex)index;
+                SunPreset_FieldIndex enu = (SunPreset_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -295,8 +295,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = GalaxyStarData_Registration.TriggeringRecordType;
-        public GalaxyStarData(
+        public static readonly RecordType GrupRecordType = SunPreset_Registration.TriggeringRecordType;
+        public SunPreset(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private GalaxyStarData(
+        private SunPreset(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal GalaxyStarData(
+        internal SunPreset(
             FormKey formKey,
             ushort formVersion)
         {
@@ -323,14 +323,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public GalaxyStarData(IStarfieldMod mod)
+        public SunPreset(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public GalaxyStarData(IStarfieldMod mod, string editorID)
+        public SunPreset(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -340,10 +340,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<GalaxyStarData>.ToString(this);
+            return MajorRecordPrinter<SunPreset>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IGalaxyStarData);
+        protected override Type LinkType => typeof(ISunPreset);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -352,16 +352,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGalaxyStarDataGetter rhs) return false;
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ISunPresetGetter rhs) return false;
+            return ((SunPresetCommon)((ISunPresetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGalaxyStarDataGetter? obj)
+        public bool Equals(ISunPresetGetter? obj)
         {
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((SunPresetCommon)((ISunPresetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SunPresetCommon)((ISunPresetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -369,23 +369,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GalaxyStarDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SunPresetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GalaxyStarDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SunPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static GalaxyStarData CreateFromBinary(
+        public new static SunPreset CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new GalaxyStarData();
-            ((GalaxyStarDataSetterCommon)((IGalaxyStarDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SunPreset();
+            ((SunPresetSetterCommon)((ISunPresetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out GalaxyStarData item,
+            out SunPreset item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -411,82 +411,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((GalaxyStarDataSetterCommon)((IGalaxyStarDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SunPresetSetterCommon)((ISunPresetGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new GalaxyStarData GetNew()
+        internal static new SunPreset GetNew()
         {
-            return new GalaxyStarData();
+            return new SunPreset();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IGalaxyStarData :
-        IGalaxyStarDataGetter,
-        ILoquiObjectSetter<IGalaxyStarDataInternal>,
-        IStarfieldMajorRecordInternal
-    {
-    }
-
-    public partial interface IGalaxyStarDataInternal :
+    public partial interface ISunPreset :
+        ILoquiObjectSetter<ISunPresetInternal>,
         IStarfieldMajorRecordInternal,
-        IGalaxyStarData,
-        IGalaxyStarDataGetter
+        ISunPresetGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.STDT)]
-    public partial interface IGalaxyStarDataGetter :
+    public partial interface ISunPresetInternal :
+        IStarfieldMajorRecordInternal,
+        ISunPreset,
+        ISunPresetGetter
+    {
+    }
+
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SUNP)]
+    public partial interface ISunPresetGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IGalaxyStarDataGetter>,
-        IMapsToGetter<IGalaxyStarDataGetter>
+        ILoquiObject<ISunPresetGetter>,
+        IMapsToGetter<ISunPresetGetter>
     {
-        static new ILoquiRegistration StaticRegistration => GalaxyStarData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SunPreset_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class GalaxyStarDataMixIn
+    public static partial class SunPresetMixIn
     {
-        public static void Clear(this IGalaxyStarDataInternal item)
+        public static void Clear(this ISunPresetInternal item)
         {
-            ((GalaxyStarDataSetterCommon)((IGalaxyStarDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SunPresetSetterCommon)((ISunPresetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static GalaxyStarData.Mask<bool> GetEqualsMask(
-            this IGalaxyStarDataGetter item,
-            IGalaxyStarDataGetter rhs,
+        public static SunPreset.Mask<bool> GetEqualsMask(
+            this ISunPresetGetter item,
+            ISunPresetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IGalaxyStarDataGetter item,
+            this ISunPresetGetter item,
             string? name = null,
-            GalaxyStarData.Mask<bool>? printMask = null)
+            SunPreset.Mask<bool>? printMask = null)
         {
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).Print(
+            return ((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IGalaxyStarDataGetter item,
+            this ISunPresetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            GalaxyStarData.Mask<bool>? printMask = null)
+            SunPreset.Mask<bool>? printMask = null)
         {
-            ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).Print(
+            ((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -494,39 +494,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IGalaxyStarDataGetter item,
-            IGalaxyStarDataGetter rhs,
-            GalaxyStarData.TranslationMask? equalsMask = null)
+            this ISunPresetGetter item,
+            ISunPresetGetter rhs,
+            SunPreset.TranslationMask? equalsMask = null)
         {
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).Equals(
+            return ((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IGalaxyStarDataInternal lhs,
-            IGalaxyStarDataGetter rhs,
-            out GalaxyStarData.ErrorMask errorMask,
-            GalaxyStarData.TranslationMask? copyMask = null)
+            this ISunPresetInternal lhs,
+            ISunPresetGetter rhs,
+            out SunPreset.ErrorMask errorMask,
+            SunPreset.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SunPresetSetterTranslationCommon)((ISunPresetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = GalaxyStarData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SunPreset.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IGalaxyStarDataInternal lhs,
-            IGalaxyStarDataGetter rhs,
+            this ISunPresetInternal lhs,
+            ISunPresetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SunPresetSetterTranslationCommon)((ISunPresetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -534,55 +534,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static GalaxyStarData DeepCopy(
-            this IGalaxyStarDataGetter item,
-            GalaxyStarData.TranslationMask? copyMask = null)
+        public static SunPreset DeepCopy(
+            this ISunPresetGetter item,
+            SunPreset.TranslationMask? copyMask = null)
         {
-            return ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SunPresetSetterTranslationCommon)((ISunPresetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static GalaxyStarData DeepCopy(
-            this IGalaxyStarDataGetter item,
-            out GalaxyStarData.ErrorMask errorMask,
-            GalaxyStarData.TranslationMask? copyMask = null)
+        public static SunPreset DeepCopy(
+            this ISunPresetGetter item,
+            out SunPreset.ErrorMask errorMask,
+            SunPreset.TranslationMask? copyMask = null)
         {
-            return ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SunPresetSetterTranslationCommon)((ISunPresetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static GalaxyStarData DeepCopy(
-            this IGalaxyStarDataGetter item,
+        public static SunPreset DeepCopy(
+            this ISunPresetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SunPresetSetterTranslationCommon)((ISunPresetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static GalaxyStarData Duplicate(
-            this IGalaxyStarDataGetter item,
+        public static SunPreset Duplicate(
+            this ISunPresetGetter item,
             FormKey formKey,
-            GalaxyStarData.TranslationMask? copyMask = null)
+            SunPreset.TranslationMask? copyMask = null)
         {
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).Duplicate(
+            return ((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static GalaxyStarData Duplicate(
-            this IGalaxyStarDataGetter item,
+        public static SunPreset Duplicate(
+            this ISunPresetGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).Duplicate(
+            return ((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -592,11 +592,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IGalaxyStarDataInternal item,
+            this ISunPresetInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((GalaxyStarDataSetterCommon)((IGalaxyStarDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SunPresetSetterCommon)((ISunPresetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum GalaxyStarData_FieldIndex
+    internal enum SunPreset_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -625,9 +625,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class GalaxyStarData_Registration : ILoquiRegistration
+    internal partial class SunPreset_Registration : ILoquiRegistration
     {
-        public static readonly GalaxyStarData_Registration Instance = new GalaxyStarData_Registration();
+        public static readonly SunPreset_Registration Instance = new SunPreset_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -635,23 +635,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(GalaxyStarData.Mask<>);
+        public static readonly Type MaskType = typeof(SunPreset.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GalaxyStarData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SunPreset.ErrorMask);
 
-        public static readonly Type ClassType = typeof(GalaxyStarData);
+        public static readonly Type ClassType = typeof(SunPreset);
 
-        public static readonly Type GetterType = typeof(IGalaxyStarDataGetter);
+        public static readonly Type GetterType = typeof(ISunPresetGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGalaxyStarData);
+        public static readonly Type SetterType = typeof(ISunPreset);
 
-        public static readonly Type? InternalSetterType = typeof(IGalaxyStarDataInternal);
+        public static readonly Type? InternalSetterType = typeof(ISunPresetInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.GalaxyStarData";
+        public const string FullName = "Mutagen.Bethesda.Starfield.SunPreset";
 
-        public const string Name = "GalaxyStarData";
+        public const string Name = "SunPreset";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -659,14 +659,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.STDT;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SUNP;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.STDT);
+            var all = RecordCollection.Factory(RecordTypes.SUNP);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(GalaxyStarDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SunPresetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -697,13 +697,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class GalaxyStarDataSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class SunPresetSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly GalaxyStarDataSetterCommon Instance = new GalaxyStarDataSetterCommon();
+        public new static readonly SunPresetSetterCommon Instance = new SunPresetSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IGalaxyStarDataInternal item)
+        public void Clear(ISunPresetInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -711,16 +711,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IGalaxyStarDataInternal)item);
+            Clear(item: (ISunPresetInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGalaxyStarDataInternal)item);
+            Clear(item: (ISunPresetInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IGalaxyStarData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ISunPreset obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -729,16 +729,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGalaxyStarDataInternal item,
+            ISunPresetInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IGalaxyStarDataInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ISunPresetInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GalaxyStarDataBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: GalaxyStarDataBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: SunPresetBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SunPresetBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (GalaxyStarData)item,
+                item: (SunPreset)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (GalaxyStarData)item,
+                item: (SunPreset)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -766,17 +766,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class GalaxyStarDataCommon : StarfieldMajorRecordCommon
+    internal partial class SunPresetCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly GalaxyStarDataCommon Instance = new GalaxyStarDataCommon();
+        public new static readonly SunPresetCommon Instance = new SunPresetCommon();
 
-        public GalaxyStarData.Mask<bool> GetEqualsMask(
-            IGalaxyStarDataGetter item,
-            IGalaxyStarDataGetter rhs,
+        public SunPreset.Mask<bool> GetEqualsMask(
+            ISunPresetGetter item,
+            ISunPresetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GalaxyStarData.Mask<bool>(false);
-            ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SunPreset.Mask<bool>(false);
+            ((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -785,18 +785,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IGalaxyStarDataGetter item,
-            IGalaxyStarDataGetter rhs,
-            GalaxyStarData.Mask<bool> ret,
+            ISunPresetGetter item,
+            ISunPresetGetter rhs,
+            SunPreset.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IGalaxyStarDataGetter item,
+            ISunPresetGetter item,
             string? name = null,
-            GalaxyStarData.Mask<bool>? printMask = null)
+            SunPreset.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -808,18 +808,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IGalaxyStarDataGetter item,
+            ISunPresetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            GalaxyStarData.Mask<bool>? printMask = null)
+            SunPreset.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"GalaxyStarData =>");
+                sb.AppendLine($"SunPreset =>");
             }
             else
             {
-                sb.AppendLine($"{name} (GalaxyStarData) =>");
+                sb.AppendLine($"{name} (SunPreset) =>");
             }
             using (sb.Brace())
             {
@@ -831,9 +831,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IGalaxyStarDataGetter item,
+            ISunPresetGetter item,
             StructuredStringBuilder sb,
-            GalaxyStarData.Mask<bool>? printMask = null)
+            SunPreset.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -841,41 +841,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static GalaxyStarData_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static SunPreset_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new GalaxyStarData_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new SunPreset_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (GalaxyStarData_FieldIndex)((int)index);
+                    return (SunPreset_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -883,8 +883,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGalaxyStarDataGetter? lhs,
-            IGalaxyStarDataGetter? rhs,
+            ISunPresetGetter? lhs,
+            ISunPresetGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -898,8 +898,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGalaxyStarDataGetter?)lhs,
-                rhs: rhs as IGalaxyStarDataGetter,
+                lhs: (ISunPresetGetter?)lhs,
+                rhs: rhs as ISunPresetGetter,
                 equalsMask: equalsMask);
         }
         
@@ -909,12 +909,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGalaxyStarDataGetter?)lhs,
-                rhs: rhs as IGalaxyStarDataGetter,
+                lhs: (ISunPresetGetter?)lhs,
+                rhs: rhs as ISunPresetGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IGalaxyStarDataGetter item)
+        public virtual int GetHashCode(ISunPresetGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -923,12 +923,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IGalaxyStarDataGetter)item);
+            return GetHashCode(item: (ISunPresetGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IGalaxyStarDataGetter)item);
+            return GetHashCode(item: (ISunPresetGetter)item);
         }
         
         #endregion
@@ -936,11 +936,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return GalaxyStarData.GetNew();
+            return SunPreset.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGalaxyStarDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISunPresetGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -950,12 +950,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public GalaxyStarData Duplicate(
-            IGalaxyStarDataGetter item,
+        public SunPreset Duplicate(
+            ISunPresetGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new GalaxyStarData(formKey, item.FormVersion);
+            var newRec = new SunPreset(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGalaxyStarDataGetter)item,
+                item: (ISunPresetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGalaxyStarDataGetter)item,
+                item: (ISunPresetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -987,14 +987,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class GalaxyStarDataSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class SunPresetSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly GalaxyStarDataSetterTranslationCommon Instance = new GalaxyStarDataSetterTranslationCommon();
+        public new static readonly SunPresetSetterTranslationCommon Instance = new SunPresetSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IGalaxyStarDataInternal item,
-            IGalaxyStarDataGetter rhs,
+            ISunPresetInternal item,
+            ISunPresetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1008,8 +1008,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IGalaxyStarData item,
-            IGalaxyStarDataGetter rhs,
+            ISunPreset item,
+            ISunPresetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1030,8 +1030,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGalaxyStarDataInternal)item,
-                rhs: (IGalaxyStarDataGetter)rhs,
+                item: (ISunPresetInternal)item,
+                rhs: (ISunPresetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1045,8 +1045,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGalaxyStarData)item,
-                rhs: (IGalaxyStarDataGetter)rhs,
+                item: (ISunPreset)item,
+                rhs: (ISunPresetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1060,8 +1060,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGalaxyStarDataInternal)item,
-                rhs: (IGalaxyStarDataGetter)rhs,
+                item: (ISunPresetInternal)item,
+                rhs: (ISunPresetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1075,8 +1075,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGalaxyStarData)item,
-                rhs: (IGalaxyStarDataGetter)rhs,
+                item: (ISunPreset)item,
+                rhs: (ISunPresetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1084,12 +1084,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public GalaxyStarData DeepCopy(
-            IGalaxyStarDataGetter item,
-            GalaxyStarData.TranslationMask? copyMask = null)
+        public SunPreset DeepCopy(
+            ISunPresetGetter item,
+            SunPreset.TranslationMask? copyMask = null)
         {
-            GalaxyStarData ret = (GalaxyStarData)((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).GetNew();
-            ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SunPreset ret = (SunPreset)((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).GetNew();
+            ((SunPresetSetterTranslationCommon)((ISunPresetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1098,30 +1098,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public GalaxyStarData DeepCopy(
-            IGalaxyStarDataGetter item,
-            out GalaxyStarData.ErrorMask errorMask,
-            GalaxyStarData.TranslationMask? copyMask = null)
+        public SunPreset DeepCopy(
+            ISunPresetGetter item,
+            out SunPreset.ErrorMask errorMask,
+            SunPreset.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            GalaxyStarData ret = (GalaxyStarData)((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).GetNew();
-            ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SunPreset ret = (SunPreset)((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).GetNew();
+            ((SunPresetSetterTranslationCommon)((ISunPresetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = GalaxyStarData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SunPreset.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public GalaxyStarData DeepCopy(
-            IGalaxyStarDataGetter item,
+        public SunPreset DeepCopy(
+            ISunPresetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            GalaxyStarData ret = (GalaxyStarData)((GalaxyStarDataCommon)((IGalaxyStarDataGetter)item).CommonInstance()!).GetNew();
-            ((GalaxyStarDataSetterTranslationCommon)((IGalaxyStarDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SunPreset ret = (SunPreset)((SunPresetCommon)((ISunPresetGetter)item).CommonInstance()!).GetNew();
+            ((SunPresetSetterTranslationCommon)((ISunPresetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1137,21 +1137,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class GalaxyStarData
+    public partial class SunPreset
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GalaxyStarData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => GalaxyStarData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SunPreset_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SunPreset_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GalaxyStarDataCommon.Instance;
+        protected override object CommonInstance() => SunPresetCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return GalaxyStarDataSetterCommon.Instance;
+            return SunPresetSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GalaxyStarDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SunPresetSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1162,20 +1162,20 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class GalaxyStarDataBinaryWriteTranslation :
+    public partial class SunPresetBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GalaxyStarDataBinaryWriteTranslation Instance = new();
+        public new static readonly SunPresetBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IGalaxyStarDataGetter item,
+            ISunPresetGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.STDT)))
+                record: translationParams.ConvertToCustom(RecordTypes.SUNP)))
             {
                 try
                 {
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IGalaxyStarDataGetter)item,
+                item: (ISunPresetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGalaxyStarDataGetter)item,
+                item: (ISunPresetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1225,25 +1225,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGalaxyStarDataGetter)item,
+                item: (ISunPresetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class GalaxyStarDataBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class SunPresetBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly GalaxyStarDataBinaryCreateTranslation Instance = new GalaxyStarDataBinaryCreateTranslation();
+        public new static readonly SunPresetBinaryCreateTranslation Instance = new SunPresetBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.STDT;
+        public override RecordType RecordType => RecordTypes.SUNP;
     }
 
 }
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class GalaxyStarDataBinaryTranslationMixIn
+    public static class SunPresetBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1252,35 +1252,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class GalaxyStarDataBinaryOverlay :
+    internal partial class SunPresetBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IGalaxyStarDataGetter
+        ISunPresetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GalaxyStarData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => GalaxyStarData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SunPreset_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SunPreset_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GalaxyStarDataCommon.Instance;
+        protected override object CommonInstance() => SunPresetCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GalaxyStarDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SunPresetSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GalaxyStarDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SunPresetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GalaxyStarDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SunPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGalaxyStarData);
+        protected override Type LinkType => typeof(ISunPreset);
 
 
         partial void CustomFactoryEnd(
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected GalaxyStarDataBinaryOverlay(
+        protected SunPresetBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IGalaxyStarDataGetter GalaxyStarDataFactory(
+        public static ISunPresetGetter SunPresetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new GalaxyStarDataBinaryOverlay(
+            var ret = new SunPresetBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1329,12 +1329,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IGalaxyStarDataGetter GalaxyStarDataFactory(
+        public static ISunPresetGetter SunPresetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return GalaxyStarDataFactory(
+            return SunPresetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GalaxyStarDataMixIn.Print(
+            SunPresetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<GalaxyStarData>.ToString(this);
+            return MajorRecordPrinter<SunPreset>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1366,16 +1366,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGalaxyStarDataGetter rhs) return false;
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ISunPresetGetter rhs) return false;
+            return ((SunPresetCommon)((ISunPresetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGalaxyStarDataGetter? obj)
+        public bool Equals(ISunPresetGetter? obj)
         {
-            return ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((SunPresetCommon)((ISunPresetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GalaxyStarDataCommon)((IGalaxyStarDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SunPresetCommon)((ISunPresetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

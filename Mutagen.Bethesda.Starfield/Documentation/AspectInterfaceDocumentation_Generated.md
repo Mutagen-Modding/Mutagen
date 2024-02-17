@@ -82,6 +82,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoundMarker
 - SpeechChallenge
 - Spell
+- Star
 - Terminal
 - Weapon
 - Weather
@@ -235,6 +236,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptVariableListProperty
 - ScriptVariableProperty
 - Spell
+- Star
 - StartSceneAction
 - Static
 - StaticCollection
@@ -798,6 +800,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeyworded
 - INamed
 - IObjectBounded
+### Star
+- IKeyworded
+- INamed
 ### StartSceneAction
 - INamed
 ### Static
