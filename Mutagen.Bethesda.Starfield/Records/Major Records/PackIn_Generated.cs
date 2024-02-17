@@ -1683,6 +1683,7 @@ namespace Mutagen.Bethesda.Starfield
         INamedRequired,
         IObjectBounded,
         IPackInGetter,
+        IPlanetContentTarget,
         IScripted,
         IStarfieldMajorRecordInternal,
         ITranslatedNamed,
@@ -1749,6 +1750,7 @@ namespace Mutagen.Bethesda.Starfield
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
+        IPlanetContentTargetGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

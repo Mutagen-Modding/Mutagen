@@ -358,6 +358,18 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ILeveledPackInTarget),
                 Getter: typeof(ILeveledPackInTargetGetter)));
         dict[typeof(ILeveledPackInTargetGetter)] = dict[typeof(ILeveledPackInTarget)] with { Setter = false };
+        dict[typeof(IPlanetContentTarget)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                LeveledPackIn_Registration.Instance,
+                PackIn_Registration.Instance,
+                Worldspace_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPlanetContentTarget),
+                Getter: typeof(IPlanetContentTargetGetter)));
+        dict[typeof(IPlanetContentTargetGetter)] = dict[typeof(IPlanetContentTarget)] with { Setter = false };
         dict[typeof(IEmittance)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

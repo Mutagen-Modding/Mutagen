@@ -72,6 +72,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ObjectTemplate
 - PackIn
 - PlanetContentManagerBranchNode
+- PlanetContentManagerContentNode
 - Quest
 - QuestReferenceAlias
 - Race
@@ -706,6 +707,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Planet
 - INamed
 ### PlanetContentManagerBranchNode
+- IKeyworded
+### PlanetContentManagerContentNode
 - IKeyworded
 ### PlanetModelComponent
 - IModeled

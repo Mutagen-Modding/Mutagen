@@ -2330,6 +2330,7 @@ namespace Mutagen.Bethesda.Starfield
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
+        IPlanetContentTarget,
         IStarfieldMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
@@ -2399,6 +2400,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IWorldspaceGetter>,
         INamedGetter,
         INamedRequiredGetter,
+        IPlanetContentTargetGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

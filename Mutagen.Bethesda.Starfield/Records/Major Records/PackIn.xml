@@ -32,5 +32,6 @@
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>ILeveledPackInTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IPlanetContentTarget</LinkInterface>
   </Object>
 </Loqui>

@@ -436,6 +436,7 @@ public partial class RecordTypes
     public static readonly RecordType INTM = new(0x4D544E49);
     public static readonly RecordType INTT = new(0x54544E49);
     public static readonly RecordType INTV = new(0x56544E49);
+    public static readonly RecordType IOVR = new(0x52564F49);
     public static readonly RecordType IPCT = new(0x54435049);
     public static readonly RecordType IPDS = new(0x53445049);
     public static readonly RecordType IRES = new(0x53455249);

@@ -434,6 +434,7 @@ public partial class RecordTypeInts
     public const int INTM = 0x4D544E49;
     public const int INTT = 0x54544E49;
     public const int INTV = 0x56544E49;
+    public const int IOVR = 0x52564F49;
     public const int IPCT = 0x54435049;
     public const int IPDS = 0x53445049;
     public const int IRES = 0x53455249;

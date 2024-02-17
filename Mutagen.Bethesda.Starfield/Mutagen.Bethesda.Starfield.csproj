@@ -6563,5 +6563,6 @@
     </Compile>
     <Compile Include="Interfaces\Link\IBaseObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlanetNode_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlanetContentTarget_Generated.cs" />
   </ItemGroup>
 </Project>

@@ -21,6 +21,7 @@
     </Fields>
     <LinkInterface>ILeveledPackInTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IPlanetContentTarget</LinkInterface>
   </Object>
   <Object name="LeveledPackInEntry" objType="Subrecord">
     <Fields>

@@ -107,6 +107,7 @@ namespace Mutagen.Bethesda.Starfield
                     ObjectTemplate_Registration.Instance,
                     PackIn_Registration.Instance,
                     PlanetContentManagerBranchNode_Registration.Instance,
+                    PlanetContentManagerContentNode_Registration.Instance,
                     Quest_Registration.Instance,
                     QuestReferenceAlias_Registration.Instance,
                     Race_Registration.Instance,

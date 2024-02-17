@@ -1319,6 +1319,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ILeveledPackInInternal>,
         IModeled,
         IObjectBounded,
+        IPlanetContentTarget,
         IScripted,
         IStarfieldMajorRecordInternal
     {
@@ -1367,6 +1368,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<ILeveledPackInGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
+        IPlanetContentTargetGetter,
         IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledPackIn_Registration.Instance;
