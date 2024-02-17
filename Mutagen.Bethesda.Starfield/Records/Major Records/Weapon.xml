@@ -234,6 +234,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IBindableEquipment</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="WeaponDamageType" objType="Subrecord">
     <Fields>

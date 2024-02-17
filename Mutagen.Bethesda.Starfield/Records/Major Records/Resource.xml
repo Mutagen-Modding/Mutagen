@@ -21,5 +21,6 @@
       </FormLink>
       <FormLink name="Interval" refName="Global" recordType="NAM3" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

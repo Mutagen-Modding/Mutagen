@@ -20,6 +20,7 @@
     </Fields>
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>INpcTemplateTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="LeveledNpcEntry" objType="Subrecord" >
     <Fields>

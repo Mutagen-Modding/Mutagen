@@ -45,6 +45,7 @@
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="FurnitureMarkerEntryPoints" objType="Subrecord" recordType="FNPR">
     <Fields>

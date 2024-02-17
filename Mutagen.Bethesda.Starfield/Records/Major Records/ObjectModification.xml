@@ -26,6 +26,7 @@
       <String name="Filter" recordType="FLTR" />
     </Fields>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
     <AdditionalContainedRecordType>NONE</AdditionalContainedRecordType>
     <AdditionalContainedRecordType>AA00</AdditionalContainedRecordType>
     <AdditionalContainedRecordType>AA01</AdditionalContainedRecordType>

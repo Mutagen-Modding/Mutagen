@@ -7,5 +7,6 @@
       <Float name="OBSV" recordType="OBSV" unknown="true" />
       <Float name="OCCV" recordType="OCCV" unknown="true" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

@@ -1531,6 +1531,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IConstructibleObject :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructibleObjectGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
@@ -1569,6 +1570,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IConstructibleObjectGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IConstructibleObjectGetter>,

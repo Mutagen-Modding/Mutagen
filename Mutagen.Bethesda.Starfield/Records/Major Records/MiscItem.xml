@@ -32,5 +32,6 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

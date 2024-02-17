@@ -2294,6 +2294,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IProjectile :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         ILoquiObjectSetter<IProjectileInternal>,
         IModeled,
@@ -2374,6 +2375,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IProjectileGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IProjectileGetter>,

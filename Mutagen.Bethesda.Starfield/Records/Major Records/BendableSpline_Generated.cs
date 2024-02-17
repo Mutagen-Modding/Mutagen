@@ -933,6 +933,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IBendableSpline :
         IAssetLinkContainer,
+        IBaseObject,
         IBendableSplineGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IBendableSplineInternal>,
@@ -966,6 +967,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IBendableSplineGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IBendableSplineGetter>,

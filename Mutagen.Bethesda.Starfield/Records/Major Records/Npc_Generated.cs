@@ -5005,6 +5005,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface INpc :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -5135,6 +5136,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface INpcGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,

@@ -44,5 +44,6 @@
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

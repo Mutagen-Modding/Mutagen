@@ -1059,6 +1059,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IArtObject :
         IArtObjectGetter,
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IArtObjectInternal>,
@@ -1099,6 +1100,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IArtObjectGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,

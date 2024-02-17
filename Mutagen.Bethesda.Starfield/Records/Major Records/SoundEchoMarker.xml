@@ -9,6 +9,7 @@
       <RefList name="Markers" refName="EchoMarker" itemMarkerType="ECHO" itemEndMarkerType="ECHE" />
       <RefDirect name="DefaultStartMarker" refName="EchoMarker" markerType="ECHD" endMarkerType="ECHE" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="EchoMarker" objType="Subrecord" >
     <Fields>

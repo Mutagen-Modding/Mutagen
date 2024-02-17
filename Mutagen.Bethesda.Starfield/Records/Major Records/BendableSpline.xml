@@ -18,5 +18,6 @@
       </Data>
       <FormLink name="MaterialPath" refName="MaterialPath" recordType="MNAM" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

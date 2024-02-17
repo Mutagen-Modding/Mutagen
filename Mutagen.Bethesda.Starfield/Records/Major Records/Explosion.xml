@@ -45,5 +45,6 @@
       </Data>
       <RefList name="DamageType" refName="DamageTypeValue" recordType="DAMA" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

@@ -952,6 +952,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IStaticCollection :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         ILoquiObjectSetter<IStaticCollectionInternal>,
         IModeled,
@@ -993,6 +994,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IStaticCollectionGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IStaticCollectionGetter>,

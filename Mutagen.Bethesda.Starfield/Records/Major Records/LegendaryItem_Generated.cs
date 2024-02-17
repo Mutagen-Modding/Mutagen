@@ -1038,6 +1038,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ILegendaryItem :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         IItem,
         ILegendaryItemGetter,
@@ -1074,6 +1075,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILegendaryItemGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IItemGetter,

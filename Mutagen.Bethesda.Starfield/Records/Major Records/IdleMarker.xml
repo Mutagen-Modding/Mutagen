@@ -17,5 +17,6 @@
       <FormLink name="AnimationFlavor" refName="Keyword" recordType="QNAM" />
       <FormLink name="PNAM" refName="Keyword" recordType="PNAM" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

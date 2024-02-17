@@ -1448,6 +1448,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IHazard :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         IHazardGetter,
         ILoquiObjectSetter<IHazardInternal>,
@@ -1503,6 +1504,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IHazardGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IHazardGetter>,

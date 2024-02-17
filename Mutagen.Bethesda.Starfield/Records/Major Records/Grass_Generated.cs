@@ -742,6 +742,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IGrass :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         IGrassGetter,
         ILoquiObjectSetter<IGrassInternal>,
@@ -773,6 +774,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IGrassGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IGrassGetter>,

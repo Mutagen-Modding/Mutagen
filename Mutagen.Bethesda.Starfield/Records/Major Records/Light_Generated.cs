@@ -1234,6 +1234,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ILight :
         IAssetLinkContainer,
+        IBaseObject,
         IEmittance,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1288,6 +1289,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILightGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IEmittanceGetter,
         IFormLinkContainerGetter,

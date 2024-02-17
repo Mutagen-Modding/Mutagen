@@ -1085,6 +1085,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IResource :
+        IBaseObject,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IResourceInternal>,
@@ -1125,6 +1126,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.IRES)]
     public partial interface IResourceGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,

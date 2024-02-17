@@ -31,5 +31,6 @@
       </Data>
       <RefList name="Conditions" refName="Condition" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

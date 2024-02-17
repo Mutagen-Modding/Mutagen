@@ -29,5 +29,6 @@
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>
     <LinkInterface>IEffectRecord</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

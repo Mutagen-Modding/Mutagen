@@ -8,5 +8,6 @@
       <RefDirect name="Model" refName="Model" />
       <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

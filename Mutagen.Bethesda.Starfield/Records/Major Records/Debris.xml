@@ -4,6 +4,7 @@
     <Fields>
       <RefList name="Models" refName="DebrisModel" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="DebrisModel" objType="Subrecord">
     <Fields>

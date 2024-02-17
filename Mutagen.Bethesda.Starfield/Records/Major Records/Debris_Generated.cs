@@ -555,6 +555,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IDebris :
         IAssetLinkContainer,
+        IBaseObject,
         IDebrisGetter,
         ILoquiObjectSetter<IDebrisInternal>,
         IStarfieldMajorRecordInternal
@@ -573,6 +574,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IDebrisGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>

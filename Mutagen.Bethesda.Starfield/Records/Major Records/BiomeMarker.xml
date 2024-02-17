@@ -16,5 +16,6 @@
       <FormLink name="LNA2" refName="StarfieldMajorRecord" recordType="LNA2" nullable="false" />
     </Fields>
     <LinkInterface>INpcTemplateTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

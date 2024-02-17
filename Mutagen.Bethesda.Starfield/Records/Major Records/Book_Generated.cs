@@ -1622,6 +1622,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IBook :
         IAssetLinkContainer,
+        IBaseObject,
         IBookGetter,
         IConstructible,
         IFormLinkContainer,
@@ -1692,6 +1693,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IBookGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,

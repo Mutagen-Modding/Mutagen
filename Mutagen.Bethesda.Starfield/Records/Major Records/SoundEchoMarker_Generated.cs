@@ -763,6 +763,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISoundEchoMarker :
+        IBaseObject,
         IFormLinkContainer,
         ILoquiObjectSetter<ISoundEchoMarkerInternal>,
         IObjectBounded,
@@ -790,6 +791,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SECH)]
     public partial interface ISoundEchoMarkerGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISoundEchoMarkerGetter>,

@@ -16,5 +16,6 @@
         </Fields>
       </Data>
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

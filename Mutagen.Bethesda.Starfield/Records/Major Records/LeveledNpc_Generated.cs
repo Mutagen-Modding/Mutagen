@@ -1344,6 +1344,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ILeveledNpc :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         ILeveledNpcGetter,
         ILoquiObjectSetter<ILeveledNpcInternal>,
@@ -1391,6 +1392,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILeveledNpcGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

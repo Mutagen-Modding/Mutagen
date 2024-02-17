@@ -2520,6 +2520,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IWater :
+        IBaseObject,
         IFormLinkContainer,
         ILoquiObjectSetter<IWaterInternal>,
         INamed,
@@ -2601,6 +2602,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.WATR)]
     public partial interface IWaterGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWaterGetter>,

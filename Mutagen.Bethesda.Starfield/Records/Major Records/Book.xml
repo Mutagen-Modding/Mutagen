@@ -41,6 +41,7 @@
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="BookTeachTarget" abstract="true" objType="Subrecord" />
   <Object name="BookActorValue" objType="Subrecord" baseClass="BookTeachTarget">

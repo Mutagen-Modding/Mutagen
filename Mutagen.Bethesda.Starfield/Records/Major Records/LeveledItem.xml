@@ -28,6 +28,7 @@
     <LinkInterface>IResourceTarget</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="LeveledItemEntry" objType="Subrecord">
     <Fields>

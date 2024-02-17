@@ -20,5 +20,6 @@
       </Data>
       <FormLink name="EffectShader" refName="EffectShader" recordType="ENAM" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

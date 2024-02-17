@@ -12,6 +12,7 @@
       </Data>
       <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
+    <LinkInterface>IEffectRecord</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
-  <LinkInterface>IEffectRecord</LinkInterface>
 </Loqui>

@@ -31,5 +31,6 @@
     </Fields>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>ILeveledPackInTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

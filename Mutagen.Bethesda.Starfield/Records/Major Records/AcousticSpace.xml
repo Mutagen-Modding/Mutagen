@@ -17,5 +17,6 @@
       <ByteArray name="DEVT" recordType="DEVT" />
       <ByteArray name="ASDF" recordType="ASDF" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

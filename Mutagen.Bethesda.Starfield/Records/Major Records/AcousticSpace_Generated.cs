@@ -1011,6 +1011,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IAcousticSpace :
         IAcousticSpaceGetter,
+        IBaseObject,
         IFormLinkContainer,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
         IObjectBounded,
@@ -1045,6 +1046,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.ASPC)]
     public partial interface IAcousticSpaceGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAcousticSpaceGetter>,

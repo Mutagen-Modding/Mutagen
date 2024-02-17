@@ -1388,6 +1388,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAObjectModification :
         IAObjectModificationGetter,
         IAssetLinkContainer,
+        IBaseObject,
         IConstructibleObjectTarget,
         IFormLinkContainer,
         ILoquiObjectSetter<IAObjectModificationInternal>,
@@ -1438,6 +1439,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAObjectModificationGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,

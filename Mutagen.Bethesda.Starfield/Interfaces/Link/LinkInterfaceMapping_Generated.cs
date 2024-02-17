@@ -19,6 +19,61 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
     public StarfieldLinkInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IBaseObject)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                AcousticSpace_Registration.Instance,
+                Activator_Registration.Instance,
+                AddonNode_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                ArtObject_Registration.Instance,
+                AudioOcclusionPrimitive_Registration.Instance,
+                BendableSpline_Registration.Instance,
+                BiomeMarker_Registration.Instance,
+                Book_Registration.Instance,
+                ConstructibleObject_Registration.Instance,
+                Container_Registration.Instance,
+                Debris_Registration.Instance,
+                Door_Registration.Instance,
+                Explosion_Registration.Instance,
+                Flora_Registration.Instance,
+                FormList_Registration.Instance,
+                Furniture_Registration.Instance,
+                GenericBaseForm_Registration.Instance,
+                Grass_Registration.Instance,
+                Hazard_Registration.Instance,
+                IdleMarker_Registration.Instance,
+                Ingestible_Registration.Instance,
+                LegendaryItem_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                LeveledNpc_Registration.Instance,
+                LeveledPackIn_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Npc_Registration.Instance,
+                ObjectEffect_Registration.Instance,
+                AObjectModification_Registration.Instance,
+                PackIn_Registration.Instance,
+                ProjectedDecal_Registration.Instance,
+                Projectile_Registration.Instance,
+                Resource_Registration.Instance,
+                SoundEchoMarker_Registration.Instance,
+                SoundMarker_Registration.Instance,
+                Spell_Registration.Instance,
+                Static_Registration.Instance,
+                StaticCollection_Registration.Instance,
+                Terminal_Registration.Instance,
+                TextureSet_Registration.Instance,
+                Water_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IBaseObject),
+                Getter: typeof(IBaseObjectGetter)));
+        dict[typeof(IBaseObjectGetter)] = dict[typeof(IBaseObject)] with { Setter = false };
         dict[typeof(IIdleRelation)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -324,6 +379,17 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ILocationRecord),
                 Getter: typeof(ILocationRecordGetter)));
         dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
+        dict[typeof(IEffectRecord)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                ObjectEffect_Registration.Instance,
+                Spell_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IEffectRecord),
+                Getter: typeof(IEffectRecordGetter)));
+        dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
         dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -401,16 +467,6 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ISpellRecord),
                 Getter: typeof(ISpellRecordGetter)));
         dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
-        dict[typeof(IEffectRecord)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                Spell_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IEffectRecord),
-                Getter: typeof(IEffectRecordGetter)));
-        dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
         dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

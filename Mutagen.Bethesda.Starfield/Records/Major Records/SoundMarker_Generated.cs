@@ -803,6 +803,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISoundMarker :
+        IBaseObject,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISoundMarkerInternal>,
@@ -835,6 +836,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SOUN)]
     public partial interface ISoundMarkerGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,

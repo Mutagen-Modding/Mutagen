@@ -1296,6 +1296,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISpell :
+        IBaseObject,
         IEffectRecord,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1348,6 +1349,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SPEL)]
     public partial interface ISpellGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IEffectRecordGetter,
         IFormLinkContainerGetter,

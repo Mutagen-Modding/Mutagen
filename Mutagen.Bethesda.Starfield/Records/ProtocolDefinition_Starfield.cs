@@ -1177,6 +1177,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             SnapParentNodeEntry_Registration.Instance,
             SnapTemplate_Registration.Instance,
             SnapTemplateBehavior_Registration.Instance,
+            SnapTemplateBehaviorItem_Registration.Instance,
             SnapTemplateNode_Registration.Instance,
             SnapTemplateRnamTraversal_Registration.Instance,
             SoundEchoMarker_Registration.Instance,

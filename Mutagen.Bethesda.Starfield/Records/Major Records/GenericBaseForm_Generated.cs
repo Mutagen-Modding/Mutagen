@@ -1089,6 +1089,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IGenericBaseForm :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IExternalBaseTemplate,
         IFormLinkContainer,
@@ -1128,6 +1129,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IGenericBaseFormGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IExternalBaseTemplateGetter,

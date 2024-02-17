@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [Spell]
+    /// Implemented by: [ObjectEffect, Spell]
     /// </summary>
     public partial interface IEffectRecord :
         IEffectRecordGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [Spell]
+    /// Implemented by: [ObjectEffect, Spell]
     /// </summary>
     public partial interface IEffectRecordGetter : IStarfieldMajorRecordGetter
     {

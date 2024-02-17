@@ -600,6 +600,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IAudioOcclusionPrimitive :
         IAudioOcclusionPrimitiveGetter,
+        IBaseObject,
         ILoquiObjectSetter<IAudioOcclusionPrimitiveInternal>,
         IObjectBounded,
         IStarfieldMajorRecordInternal
@@ -623,6 +624,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.AOPF)]
     public partial interface IAudioOcclusionPrimitiveGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         ILoquiObject<IAudioOcclusionPrimitiveGetter>,
         IMapsToGetter<IAudioOcclusionPrimitiveGetter>,

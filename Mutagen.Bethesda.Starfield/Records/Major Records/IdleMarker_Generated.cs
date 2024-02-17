@@ -976,6 +976,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IIdleMarker :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         IIdleMarkerGetter,
         IKeyworded<IKeywordGetter>,
@@ -1019,6 +1020,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IIdleMarkerGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,

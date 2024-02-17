@@ -65,6 +65,7 @@
       <FormLink name="SedimentCurve" refName="Curve3D" recordType="QNAM" />
       <FormLink name="YelowMatterCurve" refName="Curve3D" recordType="UNAM" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="WaterNoiseProperties" objType="Subrecord">
     <Fields>

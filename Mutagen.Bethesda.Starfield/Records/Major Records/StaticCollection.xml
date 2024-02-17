@@ -11,6 +11,7 @@
       <String name="Filter" recordType="FLTR" />
       <RefList name="Parts" refName="StaticPart" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="StaticPart" objType="Subrecord">
     <Fields>

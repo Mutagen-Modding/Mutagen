@@ -2274,6 +2274,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IFurniture :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IFormLinkContainer,
         IFurnitureGetter,
@@ -2353,6 +2354,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFurnitureGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,

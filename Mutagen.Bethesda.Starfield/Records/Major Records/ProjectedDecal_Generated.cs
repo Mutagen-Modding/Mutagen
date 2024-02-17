@@ -1018,6 +1018,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IProjectedDecal :
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         IItem,
         ILoquiObjectSetter<IProjectedDecalInternal>,
@@ -1054,6 +1055,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IProjectedDecalGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IItemGetter,

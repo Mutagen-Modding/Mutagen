@@ -13,6 +13,7 @@
       <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="LegendaryMod" objType="Subrecord">
     <Fields>

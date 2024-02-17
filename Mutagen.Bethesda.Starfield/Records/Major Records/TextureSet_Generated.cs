@@ -854,6 +854,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ITextureSet :
+        IBaseObject,
         IExplodeSpawn,
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
@@ -889,6 +890,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.TXST)]
     public partial interface ITextureSetGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         ILoquiObject<ITextureSetGetter>,

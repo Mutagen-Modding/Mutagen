@@ -882,6 +882,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAddonNode :
         IAddonNodeGetter,
         IAssetLinkContainer,
+        IBaseObject,
         IFormLinkContainer,
         ILoquiObjectSetter<IAddonNodeInternal>,
         IModeled,
@@ -916,6 +917,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAddonNodeGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAddonNodeGetter>,

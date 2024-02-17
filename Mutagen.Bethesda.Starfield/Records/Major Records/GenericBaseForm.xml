@@ -26,5 +26,6 @@
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IExternalBaseTemplate</LinkInterface>
     <LinkInterface>ILeveledBaseFormTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

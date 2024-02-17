@@ -1744,6 +1744,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ITerminal :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1809,6 +1810,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ITerminalGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,

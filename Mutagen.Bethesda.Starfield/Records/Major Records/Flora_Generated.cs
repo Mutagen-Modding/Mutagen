@@ -1962,6 +1962,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IFlora :
         IAssetLinkContainer,
+        IBaseObject,
         IFloraGetter,
         IFormLinkContainer,
         IItem,
@@ -2032,6 +2033,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFloraGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

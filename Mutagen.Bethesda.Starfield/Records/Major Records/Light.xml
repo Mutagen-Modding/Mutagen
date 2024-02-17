@@ -21,5 +21,6 @@
       <Float name="FVLD" recordType="FVLD" />
     </Fields>
     <LinkInterface>IEmittance</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

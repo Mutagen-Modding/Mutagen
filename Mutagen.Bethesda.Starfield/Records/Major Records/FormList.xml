@@ -11,6 +11,7 @@
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="FormListConditionalEntry" objType="Subrecord" >
     <Fields>

@@ -1892,6 +1892,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IExplosion :
         IAssetLinkContainer,
+        IBaseObject,
         IExplosionGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IExplosionInternal>,
@@ -1959,6 +1960,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IExplosionGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IExplosionGetter>,

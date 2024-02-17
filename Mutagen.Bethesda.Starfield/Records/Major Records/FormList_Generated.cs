@@ -845,6 +845,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IFormList :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IFormLinkContainer,
         IFormListGetter,
@@ -876,6 +877,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFormListGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,

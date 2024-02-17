@@ -424,6 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IDoor :
+        IBaseObject,
         IDoorGetter,
         ILoquiObjectSetter<IDoorInternal>,
         IStarfieldMajorRecordInternal,
@@ -441,6 +442,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.DOOR)]
     public partial interface IDoorGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         ILoquiObject<IDoorGetter>,
         IMapsToGetter<IDoorGetter>,

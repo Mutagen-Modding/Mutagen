@@ -6558,5 +6558,9 @@
     <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponentItem_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SnapTemplateBehaviorItem_Generated.cs">
+      <DependentUpon>SnapTemplateBehavior.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IBaseObject_Generated.cs" />
   </ItemGroup>
 </Project>

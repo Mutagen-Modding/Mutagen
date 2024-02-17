@@ -1276,6 +1276,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAmmunition :
         IAmmunitionGetter,
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IFormLinkContainer,
         IItem,
@@ -1338,6 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAmmunitionGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,

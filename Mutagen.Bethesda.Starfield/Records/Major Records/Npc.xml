@@ -134,6 +134,7 @@
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>INpcTemplateTarget</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="TemplateActors" objType="Subrecord" recordType="TPTA">
     <Fields>

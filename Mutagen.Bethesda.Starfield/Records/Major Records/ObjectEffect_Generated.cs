@@ -749,6 +749,8 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IObjectEffect :
+        IBaseObject,
+        IEffectRecord,
         IFormLinkContainer,
         ILoquiObjectSetter<IObjectEffectInternal>,
         INamed,
@@ -782,7 +784,9 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.ENCH)]
     public partial interface IObjectEffectGetter :
         IStarfieldMajorRecordGetter,
+        IBaseObjectGetter,
         IBinaryItem,
+        IEffectRecordGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IObjectEffectGetter>,
         IMapsToGetter<IObjectEffectGetter>,

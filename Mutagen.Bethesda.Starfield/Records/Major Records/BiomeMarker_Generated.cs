@@ -1039,6 +1039,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IBiomeMarker :
         IAssetLinkContainer,
+        IBaseObject,
         IBiomeMarkerGetter,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1084,6 +1085,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IBiomeMarkerGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

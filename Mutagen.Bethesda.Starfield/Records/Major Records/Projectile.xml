@@ -54,5 +54,6 @@
       <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" recordType="VNAM" />
       <FormLink name="CurveTable" refName="CurveTable" recordType="NAM3" />
     </Fields>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
 </Loqui>

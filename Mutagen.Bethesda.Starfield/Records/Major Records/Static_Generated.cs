@@ -1524,6 +1524,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IStatic :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IFormLinkContainer,
         IItem,
@@ -1580,6 +1581,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IStaticGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,

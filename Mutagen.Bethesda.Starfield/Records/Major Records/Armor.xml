@@ -74,6 +74,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IBindableEquipment</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="ArmorMorph" objType="Subrecord" >
     <Fields>

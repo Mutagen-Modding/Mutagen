@@ -1772,6 +1772,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IIngestible :
         IAssetLinkContainer,
+        IBaseObject,
         IConstructible,
         IFormLinkContainer,
         IIngestibleGetter,
@@ -1840,6 +1841,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IIngestibleGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
+        IBaseObjectGetter,
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,
