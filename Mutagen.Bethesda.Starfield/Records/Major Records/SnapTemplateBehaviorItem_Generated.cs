@@ -56,14 +56,14 @@ namespace Mutagen.Bethesda.Starfield
         public Int32 ENAM { get; set; } = default(Int32);
         #endregion
         #region BaseObject
-        private readonly IFormLink<IKeywordGetter> _BaseObject = new FormLink<IKeywordGetter>();
-        public IFormLink<IKeywordGetter> BaseObject
+        private readonly IFormLink<IBaseObjectGetter> _BaseObject = new FormLink<IBaseObjectGetter>();
+        public IFormLink<IBaseObjectGetter> BaseObject
         {
             get => _BaseObject;
             set => _BaseObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IKeywordGetter> ISnapTemplateBehaviorItemGetter.BaseObject => this.BaseObject;
+        IFormLinkGetter<IBaseObjectGetter> ISnapTemplateBehaviorItemGetter.BaseObject => this.BaseObject;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Starfield
         ISnapTemplateBehaviorItemGetter
     {
         new Int32 ENAM { get; set; }
-        new IFormLink<IKeywordGetter> BaseObject { get; set; }
+        new IFormLink<IBaseObjectGetter> BaseObject { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
         new IFormLink<ISnapTemplateNodeGetter> SnapTemplateNode { get; set; }
         new IFormLink<IKeywordGetter> Keyword { get; set; }
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SnapTemplateBehaviorItem_Registration.Instance;
         Int32 ENAM { get; }
-        IFormLinkGetter<IKeywordGetter> BaseObject { get; }
+        IFormLinkGetter<IBaseObjectGetter> BaseObject { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
         IFormLinkGetter<ISnapTemplateNodeGetter> SnapTemplateNode { get; }
         IFormLinkGetter<IKeywordGetter> Keyword { get; }
@@ -1498,7 +1498,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BaseObject
         private int? _BaseObjectLocation;
-        public IFormLinkGetter<IKeywordGetter> BaseObject => _BaseObjectLocation.HasValue ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IBaseObjectGetter> BaseObject => _BaseObjectLocation.HasValue ? new FormLink<IBaseObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<IBaseObjectGetter>.Null;
         #endregion
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region SnapTemplateNode

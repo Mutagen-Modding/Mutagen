@@ -9,7 +9,9 @@
   <Object name="SnapTemplateBehaviorItem" objType="Subrecord">
     <Fields>
       <Int32 name="ENAM" recordType="ENAM" unknown="true" nullable="False" />
-      <FormLink name="BaseObject" refName="Keyword" recordType="PNAM" nullable="false" />
+      <FormLink name="BaseObject"  recordType="PNAM" nullable="false" >
+        <Interface>IBaseObject</Interface>
+      </FormLink>
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
       <FormLink name="SnapTemplateNode" refName="SnapTemplateNode" recordType="UNAM" nullable="false" />
       <FormLink name="Keyword" refName="Keyword" recordType="VNAM" nullable="false" />

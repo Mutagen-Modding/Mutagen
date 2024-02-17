@@ -3516,9 +3516,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SnapTemplateBehavior</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter> SnapTemplateBehavior(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter> SnapTemplateBehavior(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISnapTemplateBehaviorGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3528,9 +3528,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SnapTemplateBehavior</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter> SnapTemplateBehavior(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter> SnapTemplateBehavior(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISnapTemplateBehaviorGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISnapTemplateBehavior, ISnapTemplateBehaviorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
