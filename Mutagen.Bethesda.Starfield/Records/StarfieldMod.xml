@@ -149,6 +149,7 @@
       <Group name="SurfacePatternConfigs" refName="SurfacePatternConfig" />
       <Group name="SurfacePatterns" refName="SurfacePattern" />
       <Group name="SurfaceTrees" refName="SurfaceTree" />
+      <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
       <Group name="TerminalMenus" refName="TerminalMenu" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />

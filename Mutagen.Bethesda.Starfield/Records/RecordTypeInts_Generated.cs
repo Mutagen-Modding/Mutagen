@@ -643,6 +643,7 @@ public partial class RecordTypeInts
     public const int PBAV = 0x56414250;
     public const int PBEA = 0x41454250;
     public const int PCBN = 0x4E424350;
+    public const int PCCB = 0x42434350;
     public const int PCCC = 0x43434350;
     public const int PCCN = 0x4E434350;
     public const int PCMT = 0x544D4350;

@@ -645,6 +645,7 @@ public partial class RecordTypes
     public static readonly RecordType PBAV = new(0x56414250);
     public static readonly RecordType PBEA = new(0x41454250);
     public static readonly RecordType PCBN = new(0x4E424350);
+    public static readonly RecordType PCCB = new(0x42434350);
     public static readonly RecordType PCCC = new(0x43434350);
     public static readonly RecordType PCCN = new(0x4E434350);
     public static readonly RecordType PCMT = new(0x544D4350);
