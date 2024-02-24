@@ -33,6 +33,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ALocationTarget_Registration.Instance,
             AMagicEffectArchetype_Registration.Instance,
             AmbienceSet_Registration.Instance,
+            AmbienceSound_Registration.Instance,
             AmbientColors_Registration.Instance,
             Ammunition_Registration.Instance,
             ANavmeshParent_Registration.Instance,

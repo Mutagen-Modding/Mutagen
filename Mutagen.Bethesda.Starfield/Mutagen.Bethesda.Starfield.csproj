@@ -6580,5 +6580,8 @@
       <DependentUpon>ResearchProject.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IResearchResourceTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\AmbienceSound_Generated.cs">
+      <DependentUpon>AmbienceSet.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

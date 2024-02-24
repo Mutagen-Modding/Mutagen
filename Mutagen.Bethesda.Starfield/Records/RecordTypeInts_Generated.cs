@@ -120,8 +120,11 @@ public partial class RecordTypeInts
     public const int ARMO = 0x4F4D5241;
     public const int ARRT = 0x54525241;
     public const int ARTO = 0x4F545241;
+    public const int ASAE = 0x45415341;
+    public const int ASAS = 0x53415341;
     public const int ASDF = 0x46445341;
     public const int ASLS = 0x534C5341;
+    public const int ASMB = 0x424D5341;
     public const int ASPC = 0x43505341;
     public const int ASSU = 0x55535341;
     public const int ATAC = 0x43415441;

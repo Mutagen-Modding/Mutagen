@@ -122,8 +122,11 @@ public partial class RecordTypes
     public static readonly RecordType ARMO = new(0x4F4D5241);
     public static readonly RecordType ARRT = new(0x54525241);
     public static readonly RecordType ARTO = new(0x4F545241);
+    public static readonly RecordType ASAE = new(0x45415341);
+    public static readonly RecordType ASAS = new(0x53415341);
     public static readonly RecordType ASDF = new(0x46445341);
     public static readonly RecordType ASLS = new(0x534C5341);
+    public static readonly RecordType ASMB = new(0x424D5341);
     public static readonly RecordType ASPC = new(0x43505341);
     public static readonly RecordType ASSU = new(0x55535341);
     public static readonly RecordType ATAC = new(0x43415441);

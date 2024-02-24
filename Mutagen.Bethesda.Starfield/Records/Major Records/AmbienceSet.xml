@@ -2,6 +2,19 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AmbienceSet" recordType="AMBS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Sounds" refName="AmbienceSound" counterRecType="ASAS" />
+      <Bool name="ASMB" recordType="ASMB" byteLength="1" />
+      <RefDirect name="Walla" refName="SoundReference" recordType="WED0" />
+    </Fields>
+  </Object>
+  <Object name="AmbienceSound" recordType="ASAE" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Sound" refName="SoundReference" />
+      <UInt64 name="Unknown1" />
+      <Guid name="Variation" />
+      <Bool name="Unknown2" byteLength="1" />
+      <Float name="Unknown3" />
+      <Int32 name="Unknown4" />
     </Fields>
   </Object>
 </Loqui>

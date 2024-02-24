@@ -203,6 +203,7 @@ namespace Mutagen.Bethesda.Starfield
             _Stars_Object = new StarfieldGroup<Star>(this);
             _WWiseEventDatas_Object = new StarfieldGroup<WWiseEventData>(this);
             _ResearchProjects_Object = new StarfieldGroup<ResearchProject>(this);
+            _AmbienceSets_Object = new StarfieldGroup<AmbienceSet>(this);
             _AimOpticalSightMarkers_Object = new StarfieldGroup<AimOpticalSightMarker>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatternConfigs_Object = new StarfieldGroup<SurfacePatternConfig>(this);
@@ -1226,6 +1227,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IResearchProjectGetter> IStarfieldModGetter.ResearchProjects => _ResearchProjects_Object;
         #endregion
+        #region AmbienceSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<AmbienceSet> _AmbienceSets_Object;
+        public StarfieldGroup<AmbienceSet> AmbienceSets => _AmbienceSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IAmbienceSetGetter> IStarfieldModGetter.AmbienceSets => _AmbienceSets_Object;
+        #endregion
         #region AimOpticalSightMarkers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AimOpticalSightMarker> _AimOpticalSightMarkers_Object;
@@ -1479,6 +1487,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Stars = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.WWiseEventDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ResearchProjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.AmbienceSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimOpticalSightMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternConfigs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1636,6 +1645,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Stars,
                 TItem WWiseEventDatas,
                 TItem ResearchProjects,
+                TItem AmbienceSets,
                 TItem AimOpticalSightMarkers,
                 TItem SurfacePatternStyles,
                 TItem SurfacePatternConfigs,
@@ -1791,6 +1801,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Stars = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Stars, new StarfieldGroup.Mask<TItem>(Stars));
                 this.WWiseEventDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(WWiseEventDatas, new StarfieldGroup.Mask<TItem>(WWiseEventDatas));
                 this.ResearchProjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ResearchProjects, new StarfieldGroup.Mask<TItem>(ResearchProjects));
+                this.AmbienceSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AmbienceSets, new StarfieldGroup.Mask<TItem>(AmbienceSets));
                 this.AimOpticalSightMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimOpticalSightMarkers, new StarfieldGroup.Mask<TItem>(AimOpticalSightMarkers));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
                 this.SurfacePatternConfigs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternConfigs, new StarfieldGroup.Mask<TItem>(SurfacePatternConfigs));
@@ -1956,6 +1967,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Stars { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? WWiseEventDatas { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ResearchProjects { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AmbienceSets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimOpticalSightMarkers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternConfigs { get; set; }
@@ -2122,6 +2134,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Stars, rhs.Stars)) return false;
                 if (!object.Equals(this.WWiseEventDatas, rhs.WWiseEventDatas)) return false;
                 if (!object.Equals(this.ResearchProjects, rhs.ResearchProjects)) return false;
+                if (!object.Equals(this.AmbienceSets, rhs.AmbienceSets)) return false;
                 if (!object.Equals(this.AimOpticalSightMarkers, rhs.AimOpticalSightMarkers)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 if (!object.Equals(this.SurfacePatternConfigs, rhs.SurfacePatternConfigs)) return false;
@@ -2281,6 +2294,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Stars);
                 hash.Add(this.WWiseEventDatas);
                 hash.Add(this.ResearchProjects);
+                hash.Add(this.AmbienceSets);
                 hash.Add(this.AimOpticalSightMarkers);
                 hash.Add(this.SurfacePatternStyles);
                 hash.Add(this.SurfacePatternConfigs);
@@ -3018,6 +3032,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ResearchProjects.Overall)) return false;
                     if (this.ResearchProjects.Specific != null && !this.ResearchProjects.Specific.All(eval)) return false;
+                }
+                if (AmbienceSets != null)
+                {
+                    if (!eval(this.AmbienceSets.Overall)) return false;
+                    if (this.AmbienceSets.Specific != null && !this.AmbienceSets.Specific.All(eval)) return false;
                 }
                 if (AimOpticalSightMarkers != null)
                 {
@@ -3796,6 +3815,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ResearchProjects.Overall)) return true;
                     if (this.ResearchProjects.Specific != null && this.ResearchProjects.Specific.Any(eval)) return true;
                 }
+                if (AmbienceSets != null)
+                {
+                    if (eval(this.AmbienceSets.Overall)) return true;
+                    if (this.AmbienceSets.Specific != null && this.AmbienceSets.Specific.Any(eval)) return true;
+                }
                 if (AimOpticalSightMarkers != null)
                 {
                     if (eval(this.AimOpticalSightMarkers.Overall)) return true;
@@ -4004,6 +4028,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Stars = this.Stars == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Stars.Overall), this.Stars.Specific?.Translate(eval));
                 obj.WWiseEventDatas = this.WWiseEventDatas == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.WWiseEventDatas.Overall), this.WWiseEventDatas.Specific?.Translate(eval));
                 obj.ResearchProjects = this.ResearchProjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ResearchProjects.Overall), this.ResearchProjects.Specific?.Translate(eval));
+                obj.AmbienceSets = this.AmbienceSets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AmbienceSets.Overall), this.AmbienceSets.Specific?.Translate(eval));
                 obj.AimOpticalSightMarkers = this.AimOpticalSightMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimOpticalSightMarkers.Overall), this.AimOpticalSightMarkers.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
                 obj.SurfacePatternConfigs = this.SurfacePatternConfigs == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternConfigs.Overall), this.SurfacePatternConfigs.Specific?.Translate(eval));
@@ -4608,6 +4633,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ResearchProjects?.Print(sb);
                     }
+                    if (printMask?.AmbienceSets?.Overall ?? true)
+                    {
+                        AmbienceSets?.Print(sb);
+                    }
                     if (printMask?.AimOpticalSightMarkers?.Overall ?? true)
                     {
                         AimOpticalSightMarkers?.Print(sb);
@@ -4816,6 +4845,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Star.ErrorMask>?>? Stars;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseEventData.ErrorMask>?>? WWiseEventDatas;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ResearchProject.ErrorMask>?>? ResearchProjects;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AmbienceSet.ErrorMask>?>? AmbienceSets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimOpticalSightMarker.ErrorMask>?>? AimOpticalSightMarkers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternConfig.ErrorMask>?>? SurfacePatternConfigs;
@@ -5122,6 +5152,8 @@ namespace Mutagen.Bethesda.Starfield
                         return WWiseEventDatas;
                     case StarfieldMod_FieldIndex.ResearchProjects:
                         return ResearchProjects;
+                    case StarfieldMod_FieldIndex.AmbienceSets:
+                        return AmbienceSets;
                     case StarfieldMod_FieldIndex.AimOpticalSightMarkers:
                         return AimOpticalSightMarkers;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
@@ -5583,6 +5615,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ResearchProjects:
                         this.ResearchProjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ResearchProject.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.AmbienceSets:
+                        this.AmbienceSets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AmbienceSet.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AimOpticalSightMarkers:
                         this.AimOpticalSightMarkers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AimOpticalSightMarker.ErrorMask>?>(ex, null);
@@ -6056,6 +6091,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ResearchProjects:
                         this.ResearchProjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ResearchProject.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.AmbienceSets:
+                        this.AmbienceSets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AmbienceSet.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AimOpticalSightMarkers:
                         this.AimOpticalSightMarkers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AimOpticalSightMarker.ErrorMask>?>?)obj;
                         break;
@@ -6238,6 +6276,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Stars != null) return true;
                 if (WWiseEventDatas != null) return true;
                 if (ResearchProjects != null) return true;
+                if (AmbienceSets != null) return true;
                 if (AimOpticalSightMarkers != null) return true;
                 if (SurfacePatternStyles != null) return true;
                 if (SurfacePatternConfigs != null) return true;
@@ -6417,6 +6456,7 @@ namespace Mutagen.Bethesda.Starfield
                 Stars?.Print(sb);
                 WWiseEventDatas?.Print(sb);
                 ResearchProjects?.Print(sb);
+                AmbienceSets?.Print(sb);
                 AimOpticalSightMarkers?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
                 SurfacePatternConfigs?.Print(sb);
@@ -6579,6 +6619,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Stars = this.Stars.Combine(rhs.Stars, (l, r) => l.Combine(r));
                 ret.WWiseEventDatas = this.WWiseEventDatas.Combine(rhs.WWiseEventDatas, (l, r) => l.Combine(r));
                 ret.ResearchProjects = this.ResearchProjects.Combine(rhs.ResearchProjects, (l, r) => l.Combine(r));
+                ret.AmbienceSets = this.AmbienceSets.Combine(rhs.AmbienceSets, (l, r) => l.Combine(r));
                 ret.AimOpticalSightMarkers = this.AimOpticalSightMarkers.Combine(rhs.AimOpticalSightMarkers, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 ret.SurfacePatternConfigs = this.SurfacePatternConfigs.Combine(rhs.SurfacePatternConfigs, (l, r) => l.Combine(r));
@@ -6756,6 +6797,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Star.TranslationMask>? Stars;
             public StarfieldGroup.TranslationMask<WWiseEventData.TranslationMask>? WWiseEventDatas;
             public StarfieldGroup.TranslationMask<ResearchProject.TranslationMask>? ResearchProjects;
+            public StarfieldGroup.TranslationMask<AmbienceSet.TranslationMask>? AmbienceSets;
             public StarfieldGroup.TranslationMask<AimOpticalSightMarker.TranslationMask>? AimOpticalSightMarkers;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             public StarfieldGroup.TranslationMask<SurfacePatternConfig.TranslationMask>? SurfacePatternConfigs;
@@ -6934,6 +6976,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Stars != null ? Stars.OnOverall : DefaultOn, Stars?.GetCrystal()));
                 ret.Add((WWiseEventDatas != null ? WWiseEventDatas.OnOverall : DefaultOn, WWiseEventDatas?.GetCrystal()));
                 ret.Add((ResearchProjects != null ? ResearchProjects.OnOverall : DefaultOn, ResearchProjects?.GetCrystal()));
+                ret.Add((AmbienceSets != null ? AmbienceSets.OnOverall : DefaultOn, AmbienceSets?.GetCrystal()));
                 ret.Add((AimOpticalSightMarkers != null ? AimOpticalSightMarkers.OnOverall : DefaultOn, AimOpticalSightMarkers?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
                 ret.Add((SurfacePatternConfigs != null ? SurfacePatternConfigs.OnOverall : DefaultOn, SurfacePatternConfigs?.GetCrystal()));
@@ -7133,6 +7176,7 @@ namespace Mutagen.Bethesda.Starfield
             _Stars_Object = new StarfieldGroup<Star>(this);
             _WWiseEventDatas_Object = new StarfieldGroup<WWiseEventData>(this);
             _ResearchProjects_Object = new StarfieldGroup<ResearchProject>(this);
+            _AmbienceSets_Object = new StarfieldGroup<AmbienceSet>(this);
             _AimOpticalSightMarkers_Object = new StarfieldGroup<AimOpticalSightMarker>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatternConfigs_Object = new StarfieldGroup<SurfacePatternConfig>(this);
@@ -7724,6 +7768,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ResearchProjects.RecordCache.Set(rhsMod.ResearchProjects.RecordCache.Items);
             }
+            if (mask?.AmbienceSets ?? true)
+            {
+                this.AmbienceSets.RecordCache.Set(rhsMod.AmbienceSets.RecordCache.Items);
+            }
             if (mask?.AimOpticalSightMarkers ?? true)
             {
                 this.AimOpticalSightMarkers.RecordCache.Set(rhsMod.AimOpticalSightMarkers.RecordCache.Items);
@@ -7917,6 +7965,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Stars.RecordCache.Count > 0 ? 1 : default(uint);
             count += WWiseEventDatas.RecordCache.Count > 0 ? 1 : default(uint);
             count += ResearchProjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AmbienceSets.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimOpticalSightMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternConfigs.RecordCache.Count > 0 ? 1 : default(uint);
@@ -8344,6 +8393,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Star> Stars { get; }
         new StarfieldGroup<WWiseEventData> WWiseEventDatas { get; }
         new StarfieldGroup<ResearchProject> ResearchProjects { get; }
+        new StarfieldGroup<AmbienceSet> AmbienceSets { get; }
         new StarfieldGroup<AimOpticalSightMarker> AimOpticalSightMarkers { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
         new StarfieldGroup<SurfacePatternConfig> SurfacePatternConfigs { get; }
@@ -8517,6 +8567,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IStarGetter> Stars { get; }
         IStarfieldGroupGetter<IWWiseEventDataGetter> WWiseEventDatas { get; }
         IStarfieldGroupGetter<IResearchProjectGetter> ResearchProjects { get; }
+        IStarfieldGroupGetter<IAmbienceSetGetter> AmbienceSets { get; }
         IStarfieldGroupGetter<IAimOpticalSightMarkerGetter> AimOpticalSightMarkers { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
         IStarfieldGroupGetter<ISurfacePatternConfigGetter> SurfacePatternConfigs { get; }
@@ -9253,16 +9304,17 @@ namespace Mutagen.Bethesda.Starfield
         Stars = 141,
         WWiseEventDatas = 142,
         ResearchProjects = 143,
-        AimOpticalSightMarkers = 144,
-        SurfacePatternStyles = 145,
-        SurfacePatternConfigs = 146,
-        SurfacePatterns = 147,
-        SurfaceTrees = 148,
-        PlanetContentManagerTrees = 149,
-        SnapTemplateBehaviors = 150,
-        TerminalMenus = 151,
-        LegendaryItems = 152,
-        ActorValueModulations = 153,
+        AmbienceSets = 144,
+        AimOpticalSightMarkers = 145,
+        SurfacePatternStyles = 146,
+        SurfacePatternConfigs = 147,
+        SurfacePatterns = 148,
+        SurfaceTrees = 149,
+        PlanetContentManagerTrees = 150,
+        SnapTemplateBehaviors = 151,
+        TerminalMenus = 152,
+        LegendaryItems = 153,
+        ActorValueModulations = 154,
     }
     #endregion
 
@@ -9273,9 +9325,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 154;
+        public const ushort AdditionalFieldCount = 155;
 
-        public const ushort FieldCount = 154;
+        public const ushort FieldCount = 155;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -9484,6 +9536,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Stars.Clear();
             item.WWiseEventDatas.Clear();
             item.ResearchProjects.Clear();
+            item.AmbienceSets.Clear();
             item.AimOpticalSightMarkers.Clear();
             item.SurfacePatternStyles.Clear();
             item.SurfacePatternConfigs.Clear();
@@ -9616,6 +9669,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Stars.RemapLinks(mapping);
             obj.WWiseEventDatas.RemapLinks(mapping);
             obj.ResearchProjects.RemapLinks(mapping);
+            obj.AmbienceSets.RemapLinks(mapping);
             obj.AimOpticalSightMarkers.RemapLinks(mapping);
             obj.SurfacePatternConfigs.RemapLinks(mapping);
             obj.SurfacePatterns.RemapLinks(mapping);
@@ -9802,6 +9856,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Stars.Remove(keys);
             obj.WWiseEventDatas.Remove(keys);
             obj.ResearchProjects.Remove(keys);
+            obj.AmbienceSets.Remove(keys);
             obj.AimOpticalSightMarkers.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
             obj.SurfacePatternConfigs.Remove(keys);
@@ -11012,6 +11067,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IResearchProject":
                 case "IResearchProjectInternal":
                     obj.ResearchProjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AmbienceSet":
+                case "IAmbienceSetGetter":
+                case "IAmbienceSet":
+                case "IAmbienceSetInternal":
+                    obj.AmbienceSets.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -12287,6 +12350,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Stars = MaskItemExt.Factory(item.Stars.GetEqualsMask(rhs.Stars, include), include);
             ret.WWiseEventDatas = MaskItemExt.Factory(item.WWiseEventDatas.GetEqualsMask(rhs.WWiseEventDatas, include), include);
             ret.ResearchProjects = MaskItemExt.Factory(item.ResearchProjects.GetEqualsMask(rhs.ResearchProjects, include), include);
+            ret.AmbienceSets = MaskItemExt.Factory(item.AmbienceSets.GetEqualsMask(rhs.AmbienceSets, include), include);
             ret.AimOpticalSightMarkers = MaskItemExt.Factory(item.AimOpticalSightMarkers.GetEqualsMask(rhs.AimOpticalSightMarkers, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
             ret.SurfacePatternConfigs = MaskItemExt.Factory(item.SurfacePatternConfigs.GetEqualsMask(rhs.SurfacePatternConfigs, include), include);
@@ -12916,6 +12980,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.ResearchProjects?.Overall ?? true)
             {
                 item.ResearchProjects?.Print(sb, "ResearchProjects");
+            }
+            if (printMask?.AmbienceSets?.Overall ?? true)
+            {
+                item.AmbienceSets?.Print(sb, "AmbienceSets");
             }
             if (printMask?.AimOpticalSightMarkers?.Overall ?? true)
             {
@@ -14118,6 +14186,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isResearchProjectsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AmbienceSets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AmbienceSets, rhs.AmbienceSets, out var lhsAmbienceSets, out var rhsAmbienceSets, out var isAmbienceSetsEqual))
+                {
+                    if (!object.Equals(lhsAmbienceSets, rhsAmbienceSets)) return false;
+                }
+                else if (!isAmbienceSetsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimOpticalSightMarkers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AimOpticalSightMarkers, rhs.AimOpticalSightMarkers, out var lhsAimOpticalSightMarkers, out var rhsAimOpticalSightMarkers, out var isAimOpticalSightMarkersEqual))
@@ -14348,6 +14424,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Stars);
             hash.Add(item.WWiseEventDatas);
             hash.Add(item.ResearchProjects);
+            hash.Add(item.AmbienceSets);
             hash.Add(item.AimOpticalSightMarkers);
             hash.Add(item.SurfacePatternStyles);
             hash.Add(item.SurfacePatternConfigs);
@@ -15090,6 +15167,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IResearchProject":
                 case "IResearchProjectInternal":
                     return obj.ResearchProjects;
+                case "AmbienceSet":
+                case "IAmbienceSetGetter":
+                case "IAmbienceSet":
+                case "IAmbienceSetInternal":
+                    return obj.AmbienceSets;
                 case "AimOpticalSightMarker":
                 case "IAimOpticalSightMarkerGetter":
                 case "IAimOpticalSightMarker":
@@ -15166,7 +15248,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[153];
+            Stream[] outputStreams = new Stream[154];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -15311,16 +15393,17 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Stars, 140, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.WWiseEventDatas, 141, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ResearchProjects, 142, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimOpticalSightMarkers, 143, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 144, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 145, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 146, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 147, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 148, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 149, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 150, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 151, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 152, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AmbienceSets, 143, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimOpticalSightMarkers, 144, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 145, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 146, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 147, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 148, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 149, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 150, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 151, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 152, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 153, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -15842,6 +15925,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ResearchProjects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AmbienceSets.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -16464,6 +16551,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ResearchProjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AmbienceSets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -17816,6 +17907,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IResearchProject":
                 case "IResearchProjectInternal":
                     foreach (var item in obj.ResearchProjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AmbienceSet":
+                case "IAmbienceSetGetter":
+                case "IAmbienceSet":
+                case "IAmbienceSetInternal":
+                    foreach (var item in obj.AmbienceSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -19343,6 +19443,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.ResearchProjects,
                 groupGetter: (m) => m.ResearchProjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AmbienceSet, IAmbienceSetGetter>(
+                srcGroup: obj.AmbienceSets,
+                type: typeof(IAmbienceSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AmbienceSets,
+                groupGetter: (m) => m.AmbienceSets))
             {
                 yield return item;
             }
@@ -21451,6 +21560,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.ResearchProjects,
                         groupGetter: (m) => m.ResearchProjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AmbienceSet":
+                case "IAmbienceSetGetter":
+                case "IAmbienceSet":
+                case "IAmbienceSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AmbienceSet, IAmbienceSetGetter>(
+                        srcGroup: obj.AmbienceSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AmbienceSets,
+                        groupGetter: (m) => m.AmbienceSets))
                     {
                         yield return item;
                     }
@@ -25200,6 +25323,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AmbienceSets) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AmbienceSets);
+                try
+                {
+                    item.AmbienceSets.DeepCopyIn(
+                        rhs: rhs.AmbienceSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AmbienceSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AimOpticalSightMarkers) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AimOpticalSightMarkers);
@@ -25633,6 +25776,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Stars;
         public bool WWiseEventDatas;
         public bool ResearchProjects;
+        public bool AmbienceSets;
         public bool AimOpticalSightMarkers;
         public bool SurfacePatternStyles;
         public bool SurfacePatternConfigs;
@@ -25791,6 +25935,7 @@ namespace Mutagen.Bethesda.Starfield
             Stars = defaultValue;
             WWiseEventDatas = defaultValue;
             ResearchProjects = defaultValue;
+            AmbienceSets = defaultValue;
             AimOpticalSightMarkers = defaultValue;
             SurfacePatternStyles = defaultValue;
             SurfacePatternConfigs = defaultValue;
@@ -27429,6 +27574,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ResearchProjectsItem).BinaryWriteTranslator).Write<IResearchProjectGetter>(
                         item: ResearchProjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AmbienceSets ?? true)
+            {
+                var AmbienceSetsItem = item.AmbienceSets;
+                if (AmbienceSetsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AmbienceSetsItem).BinaryWriteTranslator).Write<IAmbienceSetGetter>(
+                        item: AmbienceSetsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -29605,6 +29761,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.ResearchProjects;
                 }
+                case RecordTypeInts.AMBS:
+                {
+                    if (importMask?.AmbienceSets ?? true)
+                    {
+                        item.AmbienceSets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.AmbienceSets;
+                }
                 case RecordTypeInts.AOPS:
                 {
                     if (importMask?.AimOpticalSightMarkers ?? true)
@@ -30631,6 +30801,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IResearchProjectGetter>? _ResearchProjects => _ResearchProjectsLocations != null ? StarfieldGroupBinaryOverlay<IResearchProjectGetter>.StarfieldGroupFactory(_stream, _ResearchProjectsLocations, _package) : default;
         public IStarfieldGroupGetter<IResearchProjectGetter> ResearchProjects => _ResearchProjects ?? new StarfieldGroup<ResearchProject>(this);
         #endregion
+        #region AmbienceSets
+        private List<RangeInt64>? _AmbienceSetsLocations;
+        private IStarfieldGroupGetter<IAmbienceSetGetter>? _AmbienceSets => _AmbienceSetsLocations != null ? StarfieldGroupBinaryOverlay<IAmbienceSetGetter>.StarfieldGroupFactory(_stream, _AmbienceSetsLocations, _package) : default;
+        public IStarfieldGroupGetter<IAmbienceSetGetter> AmbienceSets => _AmbienceSets ?? new StarfieldGroup<AmbienceSet>(this);
+        #endregion
         #region AimOpticalSightMarkers
         private List<RangeInt64>? _AimOpticalSightMarkersLocations;
         private IStarfieldGroupGetter<IAimOpticalSightMarkerGetter>? _AimOpticalSightMarkers => _AimOpticalSightMarkersLocations != null ? StarfieldGroupBinaryOverlay<IAimOpticalSightMarkerGetter>.StarfieldGroupFactory(_stream, _AimOpticalSightMarkersLocations, _package) : default;
@@ -31631,6 +31806,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ResearchProjectsLocations ??= new();
                     _ResearchProjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ResearchProjects;
+                }
+                case RecordTypeInts.AMBS:
+                {
+                    _AmbienceSetsLocations ??= new();
+                    _AmbienceSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.AmbienceSets;
                 }
                 case RecordTypeInts.AOPS:
                 {
