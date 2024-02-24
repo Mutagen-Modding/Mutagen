@@ -150,6 +150,7 @@
       <Group name="Stars" refName="Star" />
       <Group name="WWiseEventDatas" refName="WWiseEventData" />
       <Group name="ResearchProjects" refName="ResearchProject" />
+      <Group name="AimOpticalSightMarkers" refName="AimOpticalSightMarker" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="SurfacePatternConfigs" refName="SurfacePatternConfig" />
       <Group name="SurfacePatterns" refName="SurfacePattern" />

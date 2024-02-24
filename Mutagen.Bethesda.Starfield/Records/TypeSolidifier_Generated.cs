@@ -252,9 +252,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AimOpticalSightMarker</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter> AimOpticalSightMarker(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter> AimOpticalSightMarker(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAimOpticalSightMarkerGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -264,9 +264,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on AimOpticalSightMarker</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter> AimOpticalSightMarker(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter> AimOpticalSightMarker(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAimOpticalSightMarkerGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAimOpticalSightMarker, IAimOpticalSightMarkerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
