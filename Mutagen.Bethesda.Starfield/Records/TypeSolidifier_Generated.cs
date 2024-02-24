@@ -4212,9 +4212,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on WWiseEventData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter> WWiseEventData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter> WWiseEventData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWWiseEventDataGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4224,9 +4224,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on WWiseEventData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter> WWiseEventData(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter> WWiseEventData(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IWWiseEventDataGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWWiseEventData, IWWiseEventDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

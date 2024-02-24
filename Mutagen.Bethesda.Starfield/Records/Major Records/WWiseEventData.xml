@@ -2,6 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="WWiseEventData" recordType="WWED" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Guid name="Start" recordType="WSED" />
+      <FormLink name="Condition" recordType="CNAM" refName="ConditionRecord" />
+      <Guid name="End" recordType="WTED" />
     </Fields>
   </Object>
 </Loqui>

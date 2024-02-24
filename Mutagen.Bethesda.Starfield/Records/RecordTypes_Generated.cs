@@ -998,6 +998,7 @@ public partial class RecordTypes
     public static readonly RecordType WRSP = new(0x50535257);
     public static readonly RecordType WSCP = new(0x50435357);
     public static readonly RecordType WSDM = new(0x4D445357);
+    public static readonly RecordType WSED = new(0x44455357);
     public static readonly RecordType WSLM = new(0x4D4C5357);
     public static readonly RecordType WSLT = new(0x544C5357);
     public static readonly RecordType WSLV = new(0x564C5357);
@@ -1006,6 +1007,7 @@ public partial class RecordTypes
     public static readonly RecordType WSTG = new(0x47545357);
     public static readonly RecordType WSTS = new(0x53545357);
     public static readonly RecordType WSWL = new(0x4C575357);
+    public static readonly RecordType WTED = new(0x44455457);
     public static readonly RecordType WTFM = new(0x4D465457);
     public static readonly RecordType WTHR = new(0x52485457);
     public static readonly RecordType WTHS = new(0x53485457);

@@ -996,6 +996,7 @@ public partial class RecordTypeInts
     public const int WRSP = 0x50535257;
     public const int WSCP = 0x50435357;
     public const int WSDM = 0x4D445357;
+    public const int WSED = 0x44455357;
     public const int WSLM = 0x4D4C5357;
     public const int WSLT = 0x544C5357;
     public const int WSLV = 0x564C5357;
@@ -1004,6 +1005,7 @@ public partial class RecordTypeInts
     public const int WSTG = 0x47545357;
     public const int WSTS = 0x53545357;
     public const int WSWL = 0x4C575357;
+    public const int WTED = 0x44455457;
     public const int WTFM = 0x4D465457;
     public const int WTHR = 0x52485457;
     public const int WTHS = 0x53485457;

@@ -201,6 +201,7 @@ namespace Mutagen.Bethesda.Starfield
             _PlanetContentManagerBranchNodes_Object = new StarfieldGroup<PlanetContentManagerBranchNode>(this);
             _PlanetContentManagerContentNodes_Object = new StarfieldGroup<PlanetContentManagerContentNode>(this);
             _Stars_Object = new StarfieldGroup<Star>(this);
+            _WWiseEventDatas_Object = new StarfieldGroup<WWiseEventData>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatternConfigs_Object = new StarfieldGroup<SurfacePatternConfig>(this);
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
@@ -1209,6 +1210,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IStarGetter> IStarfieldModGetter.Stars => _Stars_Object;
         #endregion
+        #region WWiseEventDatas
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<WWiseEventData> _WWiseEventDatas_Object;
+        public StarfieldGroup<WWiseEventData> WWiseEventDatas => _WWiseEventDatas_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IWWiseEventDataGetter> IStarfieldModGetter.WWiseEventDatas => _WWiseEventDatas_Object;
+        #endregion
         #region SurfacePatternStyles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<SurfacePatternStyle> _SurfacePatternStyles_Object;
@@ -1453,6 +1461,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PlanetContentManagerBranchNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.PlanetContentManagerContentNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Stars = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.WWiseEventDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternConfigs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1607,6 +1616,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem PlanetContentManagerBranchNodes,
                 TItem PlanetContentManagerContentNodes,
                 TItem Stars,
+                TItem WWiseEventDatas,
                 TItem SurfacePatternStyles,
                 TItem SurfacePatternConfigs,
                 TItem SurfacePatterns,
@@ -1759,6 +1769,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PlanetContentManagerBranchNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PlanetContentManagerBranchNodes, new StarfieldGroup.Mask<TItem>(PlanetContentManagerBranchNodes));
                 this.PlanetContentManagerContentNodes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PlanetContentManagerContentNodes, new StarfieldGroup.Mask<TItem>(PlanetContentManagerContentNodes));
                 this.Stars = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Stars, new StarfieldGroup.Mask<TItem>(Stars));
+                this.WWiseEventDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(WWiseEventDatas, new StarfieldGroup.Mask<TItem>(WWiseEventDatas));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
                 this.SurfacePatternConfigs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternConfigs, new StarfieldGroup.Mask<TItem>(SurfacePatternConfigs));
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatterns, new StarfieldGroup.Mask<TItem>(SurfacePatterns));
@@ -1921,6 +1932,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PlanetContentManagerBranchNodes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PlanetContentManagerContentNodes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Stars { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? WWiseEventDatas { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternConfigs { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatterns { get; set; }
@@ -2084,6 +2096,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.PlanetContentManagerBranchNodes, rhs.PlanetContentManagerBranchNodes)) return false;
                 if (!object.Equals(this.PlanetContentManagerContentNodes, rhs.PlanetContentManagerContentNodes)) return false;
                 if (!object.Equals(this.Stars, rhs.Stars)) return false;
+                if (!object.Equals(this.WWiseEventDatas, rhs.WWiseEventDatas)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 if (!object.Equals(this.SurfacePatternConfigs, rhs.SurfacePatternConfigs)) return false;
                 if (!object.Equals(this.SurfacePatterns, rhs.SurfacePatterns)) return false;
@@ -2240,6 +2253,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.PlanetContentManagerBranchNodes);
                 hash.Add(this.PlanetContentManagerContentNodes);
                 hash.Add(this.Stars);
+                hash.Add(this.WWiseEventDatas);
                 hash.Add(this.SurfacePatternStyles);
                 hash.Add(this.SurfacePatternConfigs);
                 hash.Add(this.SurfacePatterns);
@@ -2966,6 +2980,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Stars.Overall)) return false;
                     if (this.Stars.Specific != null && !this.Stars.Specific.All(eval)) return false;
+                }
+                if (WWiseEventDatas != null)
+                {
+                    if (!eval(this.WWiseEventDatas.Overall)) return false;
+                    if (this.WWiseEventDatas.Specific != null && !this.WWiseEventDatas.Specific.All(eval)) return false;
                 }
                 if (SurfacePatternStyles != null)
                 {
@@ -3729,6 +3748,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Stars.Overall)) return true;
                     if (this.Stars.Specific != null && this.Stars.Specific.Any(eval)) return true;
                 }
+                if (WWiseEventDatas != null)
+                {
+                    if (eval(this.WWiseEventDatas.Overall)) return true;
+                    if (this.WWiseEventDatas.Specific != null && this.WWiseEventDatas.Specific.Any(eval)) return true;
+                }
                 if (SurfacePatternStyles != null)
                 {
                     if (eval(this.SurfacePatternStyles.Overall)) return true;
@@ -3930,6 +3954,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.PlanetContentManagerBranchNodes = this.PlanetContentManagerBranchNodes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PlanetContentManagerBranchNodes.Overall), this.PlanetContentManagerBranchNodes.Specific?.Translate(eval));
                 obj.PlanetContentManagerContentNodes = this.PlanetContentManagerContentNodes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PlanetContentManagerContentNodes.Overall), this.PlanetContentManagerContentNodes.Specific?.Translate(eval));
                 obj.Stars = this.Stars == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Stars.Overall), this.Stars.Specific?.Translate(eval));
+                obj.WWiseEventDatas = this.WWiseEventDatas == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.WWiseEventDatas.Overall), this.WWiseEventDatas.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
                 obj.SurfacePatternConfigs = this.SurfacePatternConfigs == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternConfigs.Overall), this.SurfacePatternConfigs.Specific?.Translate(eval));
                 obj.SurfacePatterns = this.SurfacePatterns == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatterns.Overall), this.SurfacePatterns.Specific?.Translate(eval));
@@ -4525,6 +4550,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Stars?.Print(sb);
                     }
+                    if (printMask?.WWiseEventDatas?.Overall ?? true)
+                    {
+                        WWiseEventDatas?.Print(sb);
+                    }
                     if (printMask?.SurfacePatternStyles?.Overall ?? true)
                     {
                         SurfacePatternStyles?.Print(sb);
@@ -4727,6 +4756,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PlanetContentManagerBranchNode.ErrorMask>?>? PlanetContentManagerBranchNodes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PlanetContentManagerContentNode.ErrorMask>?>? PlanetContentManagerContentNodes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Star.ErrorMask>?>? Stars;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseEventData.ErrorMask>?>? WWiseEventDatas;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternConfig.ErrorMask>?>? SurfacePatternConfigs;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePattern.ErrorMask>?>? SurfacePatterns;
@@ -5028,6 +5058,8 @@ namespace Mutagen.Bethesda.Starfield
                         return PlanetContentManagerContentNodes;
                     case StarfieldMod_FieldIndex.Stars:
                         return Stars;
+                    case StarfieldMod_FieldIndex.WWiseEventDatas:
+                        return WWiseEventDatas;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         return SurfacePatternStyles;
                     case StarfieldMod_FieldIndex.SurfacePatternConfigs:
@@ -5481,6 +5513,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Stars:
                         this.Stars = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Star.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.WWiseEventDatas:
+                        this.WWiseEventDatas = new MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseEventData.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         this.SurfacePatternStyles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>(ex, null);
@@ -5945,6 +5980,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Stars:
                         this.Stars = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Star.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.WWiseEventDatas:
+                        this.WWiseEventDatas = (MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseEventData.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         this.SurfacePatternStyles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>?)obj;
                         break;
@@ -6122,6 +6160,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (PlanetContentManagerBranchNodes != null) return true;
                 if (PlanetContentManagerContentNodes != null) return true;
                 if (Stars != null) return true;
+                if (WWiseEventDatas != null) return true;
                 if (SurfacePatternStyles != null) return true;
                 if (SurfacePatternConfigs != null) return true;
                 if (SurfacePatterns != null) return true;
@@ -6298,6 +6337,7 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetContentManagerBranchNodes?.Print(sb);
                 PlanetContentManagerContentNodes?.Print(sb);
                 Stars?.Print(sb);
+                WWiseEventDatas?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
                 SurfacePatternConfigs?.Print(sb);
                 SurfacePatterns?.Print(sb);
@@ -6457,6 +6497,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.PlanetContentManagerBranchNodes = this.PlanetContentManagerBranchNodes.Combine(rhs.PlanetContentManagerBranchNodes, (l, r) => l.Combine(r));
                 ret.PlanetContentManagerContentNodes = this.PlanetContentManagerContentNodes.Combine(rhs.PlanetContentManagerContentNodes, (l, r) => l.Combine(r));
                 ret.Stars = this.Stars.Combine(rhs.Stars, (l, r) => l.Combine(r));
+                ret.WWiseEventDatas = this.WWiseEventDatas.Combine(rhs.WWiseEventDatas, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 ret.SurfacePatternConfigs = this.SurfacePatternConfigs.Combine(rhs.SurfacePatternConfigs, (l, r) => l.Combine(r));
                 ret.SurfacePatterns = this.SurfacePatterns.Combine(rhs.SurfacePatterns, (l, r) => l.Combine(r));
@@ -6631,6 +6672,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<PlanetContentManagerBranchNode.TranslationMask>? PlanetContentManagerBranchNodes;
             public StarfieldGroup.TranslationMask<PlanetContentManagerContentNode.TranslationMask>? PlanetContentManagerContentNodes;
             public StarfieldGroup.TranslationMask<Star.TranslationMask>? Stars;
+            public StarfieldGroup.TranslationMask<WWiseEventData.TranslationMask>? WWiseEventDatas;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             public StarfieldGroup.TranslationMask<SurfacePatternConfig.TranslationMask>? SurfacePatternConfigs;
             public StarfieldGroup.TranslationMask<SurfacePattern.TranslationMask>? SurfacePatterns;
@@ -6806,6 +6848,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((PlanetContentManagerBranchNodes != null ? PlanetContentManagerBranchNodes.OnOverall : DefaultOn, PlanetContentManagerBranchNodes?.GetCrystal()));
                 ret.Add((PlanetContentManagerContentNodes != null ? PlanetContentManagerContentNodes.OnOverall : DefaultOn, PlanetContentManagerContentNodes?.GetCrystal()));
                 ret.Add((Stars != null ? Stars.OnOverall : DefaultOn, Stars?.GetCrystal()));
+                ret.Add((WWiseEventDatas != null ? WWiseEventDatas.OnOverall : DefaultOn, WWiseEventDatas?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
                 ret.Add((SurfacePatternConfigs != null ? SurfacePatternConfigs.OnOverall : DefaultOn, SurfacePatternConfigs?.GetCrystal()));
                 ret.Add((SurfacePatterns != null ? SurfacePatterns.OnOverall : DefaultOn, SurfacePatterns?.GetCrystal()));
@@ -7002,6 +7045,7 @@ namespace Mutagen.Bethesda.Starfield
             _PlanetContentManagerBranchNodes_Object = new StarfieldGroup<PlanetContentManagerBranchNode>(this);
             _PlanetContentManagerContentNodes_Object = new StarfieldGroup<PlanetContentManagerContentNode>(this);
             _Stars_Object = new StarfieldGroup<Star>(this);
+            _WWiseEventDatas_Object = new StarfieldGroup<WWiseEventData>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatternConfigs_Object = new StarfieldGroup<SurfacePatternConfig>(this);
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
@@ -7584,6 +7628,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Stars.RecordCache.Set(rhsMod.Stars.RecordCache.Items);
             }
+            if (mask?.WWiseEventDatas ?? true)
+            {
+                this.WWiseEventDatas.RecordCache.Set(rhsMod.WWiseEventDatas.RecordCache.Items);
+            }
             if (mask?.SurfacePatternStyles ?? true)
             {
                 this.SurfacePatternStyles.RecordCache.Set(rhsMod.SurfacePatternStyles.RecordCache.Items);
@@ -7771,6 +7819,7 @@ namespace Mutagen.Bethesda.Starfield
             count += PlanetContentManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += PlanetContentManagerContentNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Stars.RecordCache.Count > 0 ? 1 : default(uint);
+            count += WWiseEventDatas.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternConfigs.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatterns.RecordCache.Count > 0 ? 1 : default(uint);
@@ -8195,6 +8244,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<PlanetContentManagerBranchNode> PlanetContentManagerBranchNodes { get; }
         new StarfieldGroup<PlanetContentManagerContentNode> PlanetContentManagerContentNodes { get; }
         new StarfieldGroup<Star> Stars { get; }
+        new StarfieldGroup<WWiseEventData> WWiseEventDatas { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
         new StarfieldGroup<SurfacePatternConfig> SurfacePatternConfigs { get; }
         new StarfieldGroup<SurfacePattern> SurfacePatterns { get; }
@@ -8365,6 +8415,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IPlanetContentManagerBranchNodeGetter> PlanetContentManagerBranchNodes { get; }
         IStarfieldGroupGetter<IPlanetContentManagerContentNodeGetter> PlanetContentManagerContentNodes { get; }
         IStarfieldGroupGetter<IStarGetter> Stars { get; }
+        IStarfieldGroupGetter<IWWiseEventDataGetter> WWiseEventDatas { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
         IStarfieldGroupGetter<ISurfacePatternConfigGetter> SurfacePatternConfigs { get; }
         IStarfieldGroupGetter<ISurfacePatternGetter> SurfacePatterns { get; }
@@ -9098,15 +9149,16 @@ namespace Mutagen.Bethesda.Starfield
         PlanetContentManagerBranchNodes = 139,
         PlanetContentManagerContentNodes = 140,
         Stars = 141,
-        SurfacePatternStyles = 142,
-        SurfacePatternConfigs = 143,
-        SurfacePatterns = 144,
-        SurfaceTrees = 145,
-        PlanetContentManagerTrees = 146,
-        SnapTemplateBehaviors = 147,
-        TerminalMenus = 148,
-        LegendaryItems = 149,
-        ActorValueModulations = 150,
+        WWiseEventDatas = 142,
+        SurfacePatternStyles = 143,
+        SurfacePatternConfigs = 144,
+        SurfacePatterns = 145,
+        SurfaceTrees = 146,
+        PlanetContentManagerTrees = 147,
+        SnapTemplateBehaviors = 148,
+        TerminalMenus = 149,
+        LegendaryItems = 150,
+        ActorValueModulations = 151,
     }
     #endregion
 
@@ -9117,9 +9169,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 151;
+        public const ushort AdditionalFieldCount = 152;
 
-        public const ushort FieldCount = 151;
+        public const ushort FieldCount = 152;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -9326,6 +9378,7 @@ namespace Mutagen.Bethesda.Starfield
             item.PlanetContentManagerBranchNodes.Clear();
             item.PlanetContentManagerContentNodes.Clear();
             item.Stars.Clear();
+            item.WWiseEventDatas.Clear();
             item.SurfacePatternStyles.Clear();
             item.SurfacePatternConfigs.Clear();
             item.SurfacePatterns.Clear();
@@ -9455,6 +9508,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.PlanetContentManagerBranchNodes.RemapLinks(mapping);
             obj.PlanetContentManagerContentNodes.RemapLinks(mapping);
             obj.Stars.RemapLinks(mapping);
+            obj.WWiseEventDatas.RemapLinks(mapping);
             obj.SurfacePatternConfigs.RemapLinks(mapping);
             obj.SurfacePatterns.RemapLinks(mapping);
             obj.SurfaceTrees.RemapLinks(mapping);
@@ -9638,6 +9692,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.PlanetContentManagerBranchNodes.Remove(keys);
             obj.PlanetContentManagerContentNodes.Remove(keys);
             obj.Stars.Remove(keys);
+            obj.WWiseEventDatas.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
             obj.SurfacePatternConfigs.Remove(keys);
             obj.SurfacePatterns.Remove(keys);
@@ -10831,6 +10886,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStar":
                 case "IStarInternal":
                     obj.Stars.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "WWiseEventData":
+                case "IWWiseEventDataGetter":
+                case "IWWiseEventData":
+                case "IWWiseEventDataInternal":
+                    obj.WWiseEventDatas.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -12091,6 +12154,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.PlanetContentManagerBranchNodes = MaskItemExt.Factory(item.PlanetContentManagerBranchNodes.GetEqualsMask(rhs.PlanetContentManagerBranchNodes, include), include);
             ret.PlanetContentManagerContentNodes = MaskItemExt.Factory(item.PlanetContentManagerContentNodes.GetEqualsMask(rhs.PlanetContentManagerContentNodes, include), include);
             ret.Stars = MaskItemExt.Factory(item.Stars.GetEqualsMask(rhs.Stars, include), include);
+            ret.WWiseEventDatas = MaskItemExt.Factory(item.WWiseEventDatas.GetEqualsMask(rhs.WWiseEventDatas, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
             ret.SurfacePatternConfigs = MaskItemExt.Factory(item.SurfacePatternConfigs.GetEqualsMask(rhs.SurfacePatternConfigs, include), include);
             ret.SurfacePatterns = MaskItemExt.Factory(item.SurfacePatterns.GetEqualsMask(rhs.SurfacePatterns, include), include);
@@ -12711,6 +12775,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Stars?.Overall ?? true)
             {
                 item.Stars?.Print(sb, "Stars");
+            }
+            if (printMask?.WWiseEventDatas?.Overall ?? true)
+            {
+                item.WWiseEventDatas?.Print(sb, "WWiseEventDatas");
             }
             if (printMask?.SurfacePatternStyles?.Overall ?? true)
             {
@@ -13893,6 +13961,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isStarsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WWiseEventDatas) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WWiseEventDatas, rhs.WWiseEventDatas, out var lhsWWiseEventDatas, out var rhsWWiseEventDatas, out var isWWiseEventDatasEqual))
+                {
+                    if (!object.Equals(lhsWWiseEventDatas, rhsWWiseEventDatas)) return false;
+                }
+                else if (!isWWiseEventDatasEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfacePatternStyles) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SurfacePatternStyles, rhs.SurfacePatternStyles, out var lhsSurfacePatternStyles, out var rhsSurfacePatternStyles, out var isSurfacePatternStylesEqual))
@@ -14113,6 +14189,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.PlanetContentManagerBranchNodes);
             hash.Add(item.PlanetContentManagerContentNodes);
             hash.Add(item.Stars);
+            hash.Add(item.WWiseEventDatas);
             hash.Add(item.SurfacePatternStyles);
             hash.Add(item.SurfacePatternConfigs);
             hash.Add(item.SurfacePatterns);
@@ -14844,6 +14921,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStar":
                 case "IStarInternal":
                     return obj.Stars;
+                case "WWiseEventData":
+                case "IWWiseEventDataGetter":
+                case "IWWiseEventData":
+                case "IWWiseEventDataInternal":
+                    return obj.WWiseEventDatas;
                 case "SurfacePatternStyle":
                 case "ISurfacePatternStyleGetter":
                 case "ISurfacePatternStyle":
@@ -14915,7 +14997,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[150];
+            Stream[] outputStreams = new Stream[151];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -15058,15 +15140,16 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerBranchNodes, 138, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerContentNodes, 139, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Stars, 140, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 141, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 142, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 143, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 144, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 145, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 146, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 147, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 148, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 149, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.WWiseEventDatas, 141, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 142, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 143, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 144, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 145, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 146, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 147, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 148, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 149, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 150, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -15580,6 +15663,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Stars.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WWiseEventDatas.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -16190,6 +16277,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Stars.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WWiseEventDatas.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -17520,6 +17611,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStar":
                 case "IStarInternal":
                     foreach (var item in obj.Stars.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WWiseEventData":
+                case "IWWiseEventDataGetter":
+                case "IWWiseEventData":
+                case "IWWiseEventDataInternal":
+                    foreach (var item in obj.WWiseEventDatas.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -19020,6 +19120,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Stars,
                 groupGetter: (m) => m.Stars))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WWiseEventData, IWWiseEventDataGetter>(
+                srcGroup: obj.WWiseEventDatas,
+                type: typeof(IWWiseEventDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.WWiseEventDatas,
+                groupGetter: (m) => m.WWiseEventDatas))
             {
                 yield return item;
             }
@@ -21091,6 +21200,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Stars,
                         groupGetter: (m) => m.Stars))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WWiseEventData":
+                case "IWWiseEventDataGetter":
+                case "IWWiseEventData":
+                case "IWWiseEventDataInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WWiseEventData, IWWiseEventDataGetter>(
+                        srcGroup: obj.WWiseEventDatas,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.WWiseEventDatas,
+                        groupGetter: (m) => m.WWiseEventDatas))
                     {
                         yield return item;
                     }
@@ -24786,6 +24909,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WWiseEventDatas) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.WWiseEventDatas);
+                try
+                {
+                    item.WWiseEventDatas.DeepCopyIn(
+                        rhs: rhs.WWiseEventDatas,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.WWiseEventDatas));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfacePatternStyles) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SurfacePatternStyles);
@@ -25197,6 +25340,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool PlanetContentManagerBranchNodes;
         public bool PlanetContentManagerContentNodes;
         public bool Stars;
+        public bool WWiseEventDatas;
         public bool SurfacePatternStyles;
         public bool SurfacePatternConfigs;
         public bool SurfacePatterns;
@@ -25352,6 +25496,7 @@ namespace Mutagen.Bethesda.Starfield
             PlanetContentManagerBranchNodes = defaultValue;
             PlanetContentManagerContentNodes = defaultValue;
             Stars = defaultValue;
+            WWiseEventDatas = defaultValue;
             SurfacePatternStyles = defaultValue;
             SurfacePatternConfigs = defaultValue;
             SurfacePatterns = defaultValue;
@@ -26967,6 +27112,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)StarsItem).BinaryWriteTranslator).Write<IStarGetter>(
                         item: StarsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.WWiseEventDatas ?? true)
+            {
+                var WWiseEventDatasItem = item.WWiseEventDatas;
+                if (WWiseEventDatasItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WWiseEventDatasItem).BinaryWriteTranslator).Write<IWWiseEventDataGetter>(
+                        item: WWiseEventDatasItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -29104,6 +29260,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Stars;
                 }
+                case RecordTypeInts.WWED:
+                {
+                    if (importMask?.WWiseEventDatas ?? true)
+                    {
+                        item.WWiseEventDatas.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.WWiseEventDatas;
+                }
                 case RecordTypeInts.PTST:
                 {
                     if (importMask?.SurfacePatternStyles ?? true)
@@ -30106,6 +30276,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IStarGetter>? _Stars => _StarsLocations != null ? StarfieldGroupBinaryOverlay<IStarGetter>.StarfieldGroupFactory(_stream, _StarsLocations, _package) : default;
         public IStarfieldGroupGetter<IStarGetter> Stars => _Stars ?? new StarfieldGroup<Star>(this);
         #endregion
+        #region WWiseEventDatas
+        private List<RangeInt64>? _WWiseEventDatasLocations;
+        private IStarfieldGroupGetter<IWWiseEventDataGetter>? _WWiseEventDatas => _WWiseEventDatasLocations != null ? StarfieldGroupBinaryOverlay<IWWiseEventDataGetter>.StarfieldGroupFactory(_stream, _WWiseEventDatasLocations, _package) : default;
+        public IStarfieldGroupGetter<IWWiseEventDataGetter> WWiseEventDatas => _WWiseEventDatas ?? new StarfieldGroup<WWiseEventData>(this);
+        #endregion
         #region SurfacePatternStyles
         private List<RangeInt64>? _SurfacePatternStylesLocations;
         private IStarfieldGroupGetter<ISurfacePatternStyleGetter>? _SurfacePatternStyles => _SurfacePatternStylesLocations != null ? StarfieldGroupBinaryOverlay<ISurfacePatternStyleGetter>.StarfieldGroupFactory(_stream, _SurfacePatternStylesLocations, _package) : default;
@@ -31089,6 +31264,12 @@ namespace Mutagen.Bethesda.Starfield
                     _StarsLocations ??= new();
                     _StarsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Stars;
+                }
+                case RecordTypeInts.WWED:
+                {
+                    _WWiseEventDatasLocations ??= new();
+                    _WWiseEventDatasLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.WWiseEventDatas;
                 }
                 case RecordTypeInts.PTST:
                 {

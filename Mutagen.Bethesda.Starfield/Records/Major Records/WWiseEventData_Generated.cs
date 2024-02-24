@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Start
+        public Guid? Start { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Guid? IWWiseEventDataGetter.Start => this.Start;
+        #endregion
+        #region Condition
+        private readonly IFormLinkNullable<IConditionRecordGetter> _Condition = new FormLinkNullable<IConditionRecordGetter>();
+        public IFormLinkNullable<IConditionRecordGetter> Condition
+        {
+            get => _Condition;
+            set => _Condition.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IConditionRecordGetter> IWWiseEventDataGetter.Condition => this.Condition;
+        #endregion
+        #region End
+        public Guid? End { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Guid? IWWiseEventDataGetter.End => this.End;
+        #endregion
 
         #region To String
 
@@ -79,6 +100,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Start = initialValue;
+                this.Condition = initialValue;
+                this.End = initialValue;
             }
 
             public Mask(
@@ -88,7 +112,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Start,
+                TItem Condition,
+                TItem End)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +125,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Start = Start;
+                this.Condition = Condition;
+                this.End = End;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +136,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Start;
+            public TItem Condition;
+            public TItem End;
             #endregion
 
             #region Equals
@@ -119,11 +155,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Start, rhs.Start)) return false;
+                if (!object.Equals(this.Condition, rhs.Condition)) return false;
+                if (!object.Equals(this.End, rhs.End)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Start);
+                hash.Add(this.Condition);
+                hash.Add(this.End);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +176,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Start)) return false;
+                if (!eval(this.Condition)) return false;
+                if (!eval(this.End)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +187,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Start)) return true;
+                if (eval(this.Condition)) return true;
+                if (eval(this.End)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +205,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Start = eval(this.Start);
+                obj.Condition = eval(this.Condition);
+                obj.End = eval(this.End);
             }
             #endregion
 
@@ -175,6 +226,18 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(WWiseEventData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Start ?? true)
+                    {
+                        sb.AppendItem(Start, "Start");
+                    }
+                    if (printMask?.Condition ?? true)
+                    {
+                        sb.AppendItem(Condition, "Condition");
+                    }
+                    if (printMask?.End ?? true)
+                    {
+                        sb.AppendItem(End, "End");
+                    }
                 }
             }
             #endregion
@@ -185,12 +248,24 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Start;
+            public Exception? Condition;
+            public Exception? End;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 WWiseEventData_FieldIndex enu = (WWiseEventData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WWiseEventData_FieldIndex.Start:
+                        return Start;
+                    case WWiseEventData_FieldIndex.Condition:
+                        return Condition;
+                    case WWiseEventData_FieldIndex.End:
+                        return End;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +276,15 @@ namespace Mutagen.Bethesda.Starfield
                 WWiseEventData_FieldIndex enu = (WWiseEventData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WWiseEventData_FieldIndex.Start:
+                        this.Start = ex;
+                        break;
+                    case WWiseEventData_FieldIndex.Condition:
+                        this.Condition = ex;
+                        break;
+                    case WWiseEventData_FieldIndex.End:
+                        this.End = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +296,15 @@ namespace Mutagen.Bethesda.Starfield
                 WWiseEventData_FieldIndex enu = (WWiseEventData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WWiseEventData_FieldIndex.Start:
+                        this.Start = (Exception?)obj;
+                        break;
+                    case WWiseEventData_FieldIndex.Condition:
+                        this.Condition = (Exception?)obj;
+                        break;
+                    case WWiseEventData_FieldIndex.End:
+                        this.End = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +314,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Start != null) return true;
+                if (Condition != null) return true;
+                if (End != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +343,15 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Start, "Start");
+                }
+                {
+                    sb.AppendItem(Condition, "Condition");
+                }
+                {
+                    sb.AppendItem(End, "End");
+                }
             }
             #endregion
 
@@ -255,6 +360,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Start = this.Start.Combine(rhs.Start);
+                ret.Condition = this.Condition.Combine(rhs.Condition);
+                ret.End = this.End.Combine(rhs.End);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +384,32 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Start;
+            public bool Condition;
+            public bool End;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Start = defaultOn;
+                this.Condition = defaultOn;
+                this.End = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Start, null));
+                ret.Add((Condition, null));
+                ret.Add((End, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +421,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WWiseEventData_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WWiseEventDataCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WWiseEventDataSetterCommon.Instance.RemapLinks(this, mapping);
         public WWiseEventData(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +551,14 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IWWiseEventData :
+        IFormLinkContainer,
         ILoquiObjectSetter<IWWiseEventDataInternal>,
         IStarfieldMajorRecordInternal,
         IWWiseEventDataGetter
     {
+        new Guid? Start { get; set; }
+        new IFormLinkNullable<IConditionRecordGetter> Condition { get; set; }
+        new Guid? End { get; set; }
     }
 
     public partial interface IWWiseEventDataInternal :
@@ -441,10 +572,14 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IWWiseEventDataGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IWWiseEventDataGetter>,
         IMapsToGetter<IWWiseEventDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => WWiseEventData_Registration.Instance;
+        Guid? Start { get; }
+        IFormLinkNullableGetter<IConditionRecordGetter> Condition { get; }
+        Guid? End { get; }
 
     }
 
@@ -621,6 +756,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Start = 7,
+        Condition = 8,
+        End = 9,
     }
     #endregion
 
@@ -631,9 +769,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(WWiseEventData.Mask<>);
 
@@ -663,8 +801,15 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.WWED);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.WWED);
+            var all = RecordCollection.Factory(
+                RecordTypes.WWED,
+                RecordTypes.WSED,
+                RecordTypes.CNAM,
+                RecordTypes.WTED);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WWiseEventDataBinaryWriteTranslation);
         #region Interface
@@ -706,6 +851,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IWWiseEventDataInternal item)
         {
             ClearPartial();
+            item.Start = default;
+            item.Condition.Clear();
+            item.End = default;
             base.Clear(item);
         }
         
@@ -723,6 +871,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IWWiseEventData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Condition.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +939,9 @@ namespace Mutagen.Bethesda.Starfield
             WWiseEventData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Start = item.Start == rhs.Start;
+            ret.Condition = item.Condition.Equals(rhs.Condition);
+            ret.End = item.End == rhs.End;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +991,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Start ?? true)
+                && item.Start is {} StartItem)
+            {
+                sb.AppendItem(StartItem, "Start");
+            }
+            if (printMask?.Condition ?? true)
+            {
+                sb.AppendItem(item.Condition.FormKeyNullable, "Condition");
+            }
+            if ((printMask?.End ?? true)
+                && item.End is {} EndItem)
+            {
+                sb.AppendItem(EndItem, "End");
+            }
         }
         
         public static WWiseEventData_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1055,18 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)WWiseEventData_FieldIndex.Start) ?? true))
+            {
+                if (lhs.Start != rhs.Start) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WWiseEventData_FieldIndex.Condition) ?? true))
+            {
+                if (!lhs.Condition.Equals(rhs.Condition)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WWiseEventData_FieldIndex.End) ?? true))
+            {
+                if (lhs.End != rhs.End) return false;
+            }
             return true;
         }
         
@@ -917,6 +1095,15 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IWWiseEventDataGetter item)
         {
             var hash = new HashCode();
+            if (item.Start is {} Startitem)
+            {
+                hash.Add(Startitem);
+            }
+            hash.Add(item.Condition);
+            if (item.End is {} Enditem)
+            {
+                hash.Add(Enditem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1132,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Condition, out var ConditionInfo))
+            {
+                yield return ConditionInfo;
             }
             yield break;
         }
@@ -1020,6 +1211,18 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)WWiseEventData_FieldIndex.Start) ?? true))
+            {
+                item.Start = rhs.Start;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WWiseEventData_FieldIndex.Condition) ?? true))
+            {
+                item.Condition.SetTo(rhs.Condition.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)WWiseEventData_FieldIndex.End) ?? true))
+            {
+                item.End = rhs.End;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1371,29 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly WWiseEventDataBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IWWiseEventDataGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            GuidBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Start,
+                header: translationParams.ConvertToCustom(RecordTypes.WSED));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Condition,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            GuidBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.End,
+                header: translationParams.ConvertToCustom(RecordTypes.WTED));
+        }
+
         public void Write(
             MutagenWriter writer,
             IWWiseEventDataGetter item,
@@ -1184,10 +1410,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1465,48 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly WWiseEventDataBinaryCreateTranslation Instance = new WWiseEventDataBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WWED;
+        public static ParseResult FillBinaryRecordTypes(
+            IWWiseEventDataInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.WSED:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Start = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)WWiseEventData_FieldIndex.Start;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Condition.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)WWiseEventData_FieldIndex.Condition;
+                }
+                case RecordTypeInts.WTED:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.End = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)WWiseEventData_FieldIndex.End;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1539,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WWiseEventDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WWiseEventDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1554,18 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IWWiseEventData);
 
 
+        #region Start
+        private int? _StartLocation;
+        public Guid? Start => _StartLocation.HasValue ? new Guid(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartLocation.Value, _package.MetaData.Constants).Slice(0, 16)) : default(Guid?);
+        #endregion
+        #region Condition
+        private int? _ConditionLocation;
+        public IFormLinkNullableGetter<IConditionRecordGetter> Condition => _ConditionLocation.HasValue ? new FormLinkNullable<IConditionRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConditionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IConditionRecordGetter>.Null;
+        #endregion
+        #region End
+        private int? _EndLocation;
+        public Guid? End => _EndLocation.HasValue ? new Guid(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EndLocation.Value, _package.MetaData.Constants).Slice(0, 16)) : default(Guid?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1623,44 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.WSED:
+                {
+                    _StartLocation = (stream.Position - offset);
+                    return (int)WWiseEventData_FieldIndex.Start;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _ConditionLocation = (stream.Position - offset);
+                    return (int)WWiseEventData_FieldIndex.Condition;
+                }
+                case RecordTypeInts.WTED:
+                {
+                    _EndLocation = (stream.Position - offset);
+                    return (int)WWiseEventData_FieldIndex.End;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
