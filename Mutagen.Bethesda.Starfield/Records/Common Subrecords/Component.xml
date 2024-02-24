@@ -512,23 +512,36 @@
   </Object>
   <Object name="OrbitedDataComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <UInt64 name="Unknown1" />
-      <Float name="MassInSm" divisor="1.98847E30" multiplier="2" />
-      <Float name="RadiusInKm" />
-      <Float name="Unknown2" />
+      <Data>
+        <Fields>
+          <UInt64 name="Unknown1" />
+          <Float name="MassInSm" divisor="1.98847E30" multiplier="1" />
+          <Float name="RadiusInKm" />
+          <Float name="Unknown2" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
   <Object name="StarDataComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <String name="CatalogueId" binaryType="PrependLengthUShort" />
-      <String name="SpectralClass" binaryType="PrependLengthUShort" />
-      <Float name="Magnitude" />
-      <Float name="MassInSm" divisor="1.98847E30" multiplier="2" />
-      <Float name="InnerHabitableZone" />
-      <Float name="OuterHabitableZone" />
-      <UInt32 name="HIP" />
-      <UInt32 name="Radius" />
-      <UInt32 name="TemperatureInK" />
+      <Data>
+        <Fields>
+          <String name="CatalogueId" binaryType="PrependLength" />
+          <String name="SpectralClass" binaryType="PrependLength" />
+          <Float name="Magnitude" />
+          <Float name="MassInSm" divisor="1.98847E30" multiplier="1" />
+          <Float name="InnerHabitableZone" />
+          <Float name="OuterHabitableZone" />
+          <UInt32 name="HIP" />
+          <UInt32 name="Radius" />
+          <UInt32 name="TemperatureInK" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="OrbitalDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="DATA" recordType="DATA" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

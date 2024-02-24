@@ -279,6 +279,12 @@ public class StarfieldProcessor : Processor
                 case "SurfaceTreePatternSwapInfo_Component":
                     SurfaceTreePatternSwapInfoComponent(majorFrame, bfcb, fileOffset);
                     break;
+                case "BGSOrbitedDataComponent_Component":
+                    OrbitedDataComponent(majorFrame, bfcb, fileOffset);
+                    break;
+                case "BGSStarDataComponent_Component":
+                    StarDataComponent(majorFrame, bfcb, fileOffset);
+                    break;
             }
         }
     }
@@ -331,6 +337,54 @@ public class StarfieldProcessor : Processor
             {
                 ProcessFormIDOverflows(data.Value, fileOffset, ref refLoc, 1);
                 refLoc += 4;
+            }
+        }
+    }
+
+    private const float MassDiv = 1.98847E+30f;
+
+    private void OrbitedDataComponent(
+        MajorRecordFrame majorFrame,
+        SubrecordPinFrame bfcb,
+        long fileOffset)
+    {
+        var data = majorFrame.TryFindSubrecordAfter(bfcb, RecordTypes.DATA);
+        if (data != null)
+        {
+            var slice = data.Value.Content.Slice(8, 4);
+            var val = BinaryPrimitives.ReadSingleLittleEndian(slice);
+            var d = val / MassDiv;
+            var val2 = d * MassDiv;
+            var b = new byte[4];
+            BinaryPrimitives.WriteSingleLittleEndian(b, val2);
+            if (!b.SequenceEqual(slice))
+            {
+                this.Instructions.SetSubstitution(fileOffset + data.Value.Location + data.Value.HeaderLength + 8, b);
+            }
+        }
+    }
+    
+    private void StarDataComponent(
+        MajorRecordFrame majorFrame,
+        SubrecordPinFrame bfcb,
+        long fileOffset)
+    {
+        var data = majorFrame.TryFindSubrecordAfter(bfcb, RecordTypes.DATA);
+        if (data != null)
+        {
+            int index = 0;
+            var strLen = BinaryPrimitives.ReadInt32LittleEndian(data.Value.Content.Slice(index));
+            index += strLen + 4;
+            strLen = BinaryPrimitives.ReadInt32LittleEndian(data.Value.Content.Slice(index));
+            index += strLen + 4 + 4;
+            var val = BinaryPrimitives.ReadSingleLittleEndian(data.Value.Content.Slice(index));
+            var d = val / MassDiv;
+            var val2 = d * MassDiv;
+            if (val != val2)
+            {
+                var b = new byte[4];
+                BinaryPrimitives.WriteSingleLittleEndian(b, val2);
+                this.Instructions.SetSubstitution(fileOffset + data.Value.Location + data.Value.HeaderLength + index, b);
             }
         }
     }

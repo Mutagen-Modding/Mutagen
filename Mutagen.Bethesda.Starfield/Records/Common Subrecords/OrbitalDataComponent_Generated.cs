@@ -38,31 +38,30 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class OrbitedDataComponent :
+    public partial class OrbitalDataComponent :
         AComponent,
-        IEquatable<IOrbitedDataComponentGetter>,
-        ILoquiObjectSetter<OrbitedDataComponent>,
-        IOrbitedDataComponent
+        IEquatable<IOrbitalDataComponentGetter>,
+        ILoquiObjectSetter<OrbitalDataComponent>,
+        IOrbitalDataComponent
     {
         #region Ctor
-        public OrbitedDataComponent()
+        public OrbitalDataComponent()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Unknown1
-        public UInt64 Unknown1 { get; set; } = default(UInt64);
-        #endregion
-        #region MassInSm
-        public Single MassInSm { get; set; } = default(Single);
-        #endregion
-        #region RadiusInKm
-        public Single RadiusInKm { get; set; } = default(Single);
-        #endregion
-        #region Unknown2
-        public Single Unknown2 { get; set; } = default(Single);
+        #region DATA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _DATA;
+        public MemorySlice<Byte>? DATA
+        {
+            get => this._DATA;
+            set => this._DATA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IOrbitalDataComponentGetter.DATA => this.DATA;
         #endregion
 
         #region To String
@@ -71,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            OrbitedDataComponentMixIn.Print(
+            OrbitalDataComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -82,16 +81,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IOrbitedDataComponentGetter rhs) return false;
-            return ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IOrbitalDataComponentGetter rhs) return false;
+            return ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IOrbitedDataComponentGetter? obj)
+        public bool Equals(IOrbitalDataComponentGetter? obj)
         {
-            return ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -102,26 +101,10 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem initialValue)
-            : base(initialValue)
-            {
-                this.Unknown1 = initialValue;
-                this.MassInSm = initialValue;
-                this.RadiusInKm = initialValue;
-                this.Unknown2 = initialValue;
-            }
-
-            public Mask(
-                TItem Unknown1,
-                TItem MassInSm,
-                TItem RadiusInKm,
-                TItem Unknown2)
+            public Mask(TItem DATA)
             : base()
             {
-                this.Unknown1 = Unknown1;
-                this.MassInSm = MassInSm;
-                this.RadiusInKm = RadiusInKm;
-                this.Unknown2 = Unknown2;
+                this.DATA = DATA;
             }
 
             #pragma warning disable CS8618
@@ -133,10 +116,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Unknown1;
-            public TItem MassInSm;
-            public TItem RadiusInKm;
-            public TItem Unknown2;
+            public TItem DATA;
             #endregion
 
             #region Equals
@@ -150,19 +130,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.MassInSm, rhs.MassInSm)) return false;
-                if (!object.Equals(this.RadiusInKm, rhs.RadiusInKm)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown1);
-                hash.Add(this.MassInSm);
-                hash.Add(this.RadiusInKm);
-                hash.Add(this.Unknown2);
+                hash.Add(this.DATA);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -173,10 +147,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.MassInSm)) return false;
-                if (!eval(this.RadiusInKm)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.DATA)) return false;
                 return true;
             }
             #endregion
@@ -185,10 +156,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.MassInSm)) return true;
-                if (eval(this.RadiusInKm)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.DATA)) return true;
                 return false;
             }
             #endregion
@@ -196,7 +164,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new OrbitedDataComponent.Mask<R>();
+                var ret = new OrbitalDataComponent.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -204,43 +172,28 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.MassInSm = eval(this.MassInSm);
-                obj.RadiusInKm = eval(this.RadiusInKm);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.DATA = eval(this.DATA);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(OrbitedDataComponent.Mask<bool>? printMask = null)
+            public string Print(OrbitalDataComponent.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, OrbitedDataComponent.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, OrbitalDataComponent.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(OrbitedDataComponent.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(OrbitalDataComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.DATA ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
-                    }
-                    if (printMask?.MassInSm ?? true)
-                    {
-                        sb.AppendItem(MassInSm, "MassInSm");
-                    }
-                    if (printMask?.RadiusInKm ?? true)
-                    {
-                        sb.AppendItem(RadiusInKm, "RadiusInKm");
-                    }
-                    if (printMask?.Unknown2 ?? true)
-                    {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(DATA, "DATA");
                     }
                 }
             }
@@ -253,26 +206,17 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Unknown1;
-            public Exception? MassInSm;
-            public Exception? RadiusInKm;
-            public Exception? Unknown2;
+            public Exception? DATA;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                OrbitedDataComponent_FieldIndex enu = (OrbitedDataComponent_FieldIndex)index;
+                OrbitalDataComponent_FieldIndex enu = (OrbitalDataComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case OrbitedDataComponent_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case OrbitedDataComponent_FieldIndex.MassInSm:
-                        return MassInSm;
-                    case OrbitedDataComponent_FieldIndex.RadiusInKm:
-                        return RadiusInKm;
-                    case OrbitedDataComponent_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case OrbitalDataComponent_FieldIndex.DATA:
+                        return DATA;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -280,20 +224,11 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                OrbitedDataComponent_FieldIndex enu = (OrbitedDataComponent_FieldIndex)index;
+                OrbitalDataComponent_FieldIndex enu = (OrbitalDataComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case OrbitedDataComponent_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
-                        break;
-                    case OrbitedDataComponent_FieldIndex.MassInSm:
-                        this.MassInSm = ex;
-                        break;
-                    case OrbitedDataComponent_FieldIndex.RadiusInKm:
-                        this.RadiusInKm = ex;
-                        break;
-                    case OrbitedDataComponent_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case OrbitalDataComponent_FieldIndex.DATA:
+                        this.DATA = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -303,20 +238,11 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                OrbitedDataComponent_FieldIndex enu = (OrbitedDataComponent_FieldIndex)index;
+                OrbitalDataComponent_FieldIndex enu = (OrbitalDataComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case OrbitedDataComponent_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
-                        break;
-                    case OrbitedDataComponent_FieldIndex.MassInSm:
-                        this.MassInSm = (Exception?)obj;
-                        break;
-                    case OrbitedDataComponent_FieldIndex.RadiusInKm:
-                        this.RadiusInKm = (Exception?)obj;
-                        break;
-                    case OrbitedDataComponent_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case OrbitalDataComponent_FieldIndex.DATA:
+                        this.DATA = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -327,10 +253,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown1 != null) return true;
-                if (MassInSm != null) return true;
-                if (RadiusInKm != null) return true;
-                if (Unknown2 != null) return true;
+                if (DATA != null) return true;
                 return false;
             }
             #endregion
@@ -358,16 +281,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
-                }
-                {
-                    sb.AppendItem(MassInSm, "MassInSm");
-                }
-                {
-                    sb.AppendItem(RadiusInKm, "RadiusInKm");
-                }
-                {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(DATA, "DATA");
                 }
             }
             #endregion
@@ -377,10 +291,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.MassInSm = this.MassInSm.Combine(rhs.MassInSm);
-                ret.RadiusInKm = this.RadiusInKm.Combine(rhs.RadiusInKm);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.DATA = this.DATA.Combine(rhs.DATA);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -403,10 +314,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool Unknown1;
-            public bool MassInSm;
-            public bool RadiusInKm;
-            public bool Unknown2;
+            public bool DATA;
             #endregion
 
             #region Ctors
@@ -415,10 +323,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Unknown1 = defaultOn;
-                this.MassInSm = defaultOn;
-                this.RadiusInKm = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.DATA = defaultOn;
             }
 
             #endregion
@@ -426,10 +331,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Unknown1, null));
-                ret.Add((MassInSm, null));
-                ret.Add((RadiusInKm, null));
-                ret.Add((Unknown2, null));
+                ret.Add((DATA, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -442,23 +344,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => OrbitedDataComponentBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => OrbitalDataComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((OrbitedDataComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OrbitalDataComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static OrbitedDataComponent CreateFromBinary(
+        public new static OrbitalDataComponent CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new OrbitedDataComponent();
-            ((OrbitedDataComponentSetterCommon)((IOrbitedDataComponentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new OrbitalDataComponent();
+            ((OrbitalDataComponentSetterCommon)((IOrbitalDataComponentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -469,7 +371,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out OrbitedDataComponent item,
+            out OrbitalDataComponent item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -484,81 +386,75 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((OrbitedDataComponentSetterCommon)((IOrbitedDataComponentGetter)this).CommonSetterInstance()!).Clear(this);
+            ((OrbitalDataComponentSetterCommon)((IOrbitalDataComponentGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new OrbitedDataComponent GetNew()
+        internal static new OrbitalDataComponent GetNew()
         {
-            return new OrbitedDataComponent();
+            return new OrbitalDataComponent();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IOrbitedDataComponent :
+    public partial interface IOrbitalDataComponent :
         IAComponent,
-        ILoquiObjectSetter<IOrbitedDataComponent>,
-        IOrbitedDataComponentGetter
+        ILoquiObjectSetter<IOrbitalDataComponent>,
+        IOrbitalDataComponentGetter
     {
-        new UInt64 Unknown1 { get; set; }
-        new Single MassInSm { get; set; }
-        new Single RadiusInKm { get; set; }
-        new Single Unknown2 { get; set; }
+        new MemorySlice<Byte>? DATA { get; set; }
     }
 
-    public partial interface IOrbitedDataComponentGetter :
+    public partial interface IOrbitalDataComponentGetter :
         IAComponentGetter,
         IBinaryItem,
-        ILoquiObject<IOrbitedDataComponentGetter>
+        ILoquiObject<IOrbitalDataComponentGetter>
     {
-        static new ILoquiRegistration StaticRegistration => OrbitedDataComponent_Registration.Instance;
-        UInt64 Unknown1 { get; }
-        Single MassInSm { get; }
-        Single RadiusInKm { get; }
-        Single Unknown2 { get; }
+        static new ILoquiRegistration StaticRegistration => OrbitalDataComponent_Registration.Instance;
+        ReadOnlyMemorySlice<Byte>? DATA { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class OrbitedDataComponentMixIn
+    public static partial class OrbitalDataComponentMixIn
     {
-        public static void Clear(this IOrbitedDataComponent item)
+        public static void Clear(this IOrbitalDataComponent item)
         {
-            ((OrbitedDataComponentSetterCommon)((IOrbitedDataComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((OrbitalDataComponentSetterCommon)((IOrbitalDataComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static OrbitedDataComponent.Mask<bool> GetEqualsMask(
-            this IOrbitedDataComponentGetter item,
-            IOrbitedDataComponentGetter rhs,
+        public static OrbitalDataComponent.Mask<bool> GetEqualsMask(
+            this IOrbitalDataComponentGetter item,
+            IOrbitalDataComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IOrbitedDataComponentGetter item,
+            this IOrbitalDataComponentGetter item,
             string? name = null,
-            OrbitedDataComponent.Mask<bool>? printMask = null)
+            OrbitalDataComponent.Mask<bool>? printMask = null)
         {
-            return ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).Print(
+            return ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IOrbitedDataComponentGetter item,
+            this IOrbitalDataComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            OrbitedDataComponent.Mask<bool>? printMask = null)
+            OrbitalDataComponent.Mask<bool>? printMask = null)
         {
-            ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).Print(
+            ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -566,39 +462,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IOrbitedDataComponentGetter item,
-            IOrbitedDataComponentGetter rhs,
-            OrbitedDataComponent.TranslationMask? equalsMask = null)
+            this IOrbitalDataComponentGetter item,
+            IOrbitalDataComponentGetter rhs,
+            OrbitalDataComponent.TranslationMask? equalsMask = null)
         {
-            return ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).Equals(
+            return ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IOrbitedDataComponent lhs,
-            IOrbitedDataComponentGetter rhs,
-            out OrbitedDataComponent.ErrorMask errorMask,
-            OrbitedDataComponent.TranslationMask? copyMask = null)
+            this IOrbitalDataComponent lhs,
+            IOrbitalDataComponentGetter rhs,
+            out OrbitalDataComponent.ErrorMask errorMask,
+            OrbitalDataComponent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = OrbitedDataComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OrbitalDataComponent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IOrbitedDataComponent lhs,
-            IOrbitedDataComponentGetter rhs,
+            this IOrbitalDataComponent lhs,
+            IOrbitalDataComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -606,32 +502,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static OrbitedDataComponent DeepCopy(
-            this IOrbitedDataComponentGetter item,
-            OrbitedDataComponent.TranslationMask? copyMask = null)
+        public static OrbitalDataComponent DeepCopy(
+            this IOrbitalDataComponentGetter item,
+            OrbitalDataComponent.TranslationMask? copyMask = null)
         {
-            return ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static OrbitedDataComponent DeepCopy(
-            this IOrbitedDataComponentGetter item,
-            out OrbitedDataComponent.ErrorMask errorMask,
-            OrbitedDataComponent.TranslationMask? copyMask = null)
+        public static OrbitalDataComponent DeepCopy(
+            this IOrbitalDataComponentGetter item,
+            out OrbitalDataComponent.ErrorMask errorMask,
+            OrbitalDataComponent.TranslationMask? copyMask = null)
         {
-            return ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static OrbitedDataComponent DeepCopy(
-            this IOrbitedDataComponentGetter item,
+        public static OrbitalDataComponent DeepCopy(
+            this IOrbitalDataComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -639,11 +535,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IOrbitedDataComponent item,
+            this IOrbitalDataComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((OrbitedDataComponentSetterCommon)((IOrbitedDataComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((OrbitalDataComponentSetterCommon)((IOrbitalDataComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -659,43 +555,40 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum OrbitedDataComponent_FieldIndex
+    internal enum OrbitalDataComponent_FieldIndex
     {
-        Unknown1 = 0,
-        MassInSm = 1,
-        RadiusInKm = 2,
-        Unknown2 = 3,
+        DATA = 0,
     }
     #endregion
 
     #region Registration
-    internal partial class OrbitedDataComponent_Registration : ILoquiRegistration
+    internal partial class OrbitalDataComponent_Registration : ILoquiRegistration
     {
-        public static readonly OrbitedDataComponent_Registration Instance = new OrbitedDataComponent_Registration();
+        public static readonly OrbitalDataComponent_Registration Instance = new OrbitalDataComponent_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(OrbitedDataComponent.Mask<>);
+        public static readonly Type MaskType = typeof(OrbitalDataComponent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(OrbitedDataComponent.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(OrbitalDataComponent.ErrorMask);
 
-        public static readonly Type ClassType = typeof(OrbitedDataComponent);
+        public static readonly Type ClassType = typeof(OrbitalDataComponent);
 
-        public static readonly Type GetterType = typeof(IOrbitedDataComponentGetter);
+        public static readonly Type GetterType = typeof(IOrbitalDataComponentGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IOrbitedDataComponent);
+        public static readonly Type SetterType = typeof(IOrbitalDataComponent);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.OrbitedDataComponent";
+        public const string FullName = "Mutagen.Bethesda.Starfield.OrbitalDataComponent";
 
-        public const string Name = "OrbitedDataComponent";
+        public const string Name = "OrbitalDataComponent";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -715,7 +608,7 @@ namespace Mutagen.Bethesda.Starfield
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(OrbitedDataComponentBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(OrbitalDataComponentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -746,29 +639,26 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class OrbitedDataComponentSetterCommon : AComponentSetterCommon
+    internal partial class OrbitalDataComponentSetterCommon : AComponentSetterCommon
     {
-        public new static readonly OrbitedDataComponentSetterCommon Instance = new OrbitedDataComponentSetterCommon();
+        public new static readonly OrbitalDataComponentSetterCommon Instance = new OrbitalDataComponentSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IOrbitedDataComponent item)
+        public void Clear(IOrbitalDataComponent item)
         {
             ClearPartial();
-            item.Unknown1 = default(UInt64);
-            item.MassInSm = default(Single);
-            item.RadiusInKm = default(Single);
-            item.Unknown2 = default(Single);
+            item.DATA = default;
             base.Clear(item);
         }
         
         public override void Clear(IAComponent item)
         {
-            Clear(item: (IOrbitedDataComponent)item);
+            Clear(item: (IOrbitalDataComponent)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IOrbitedDataComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IOrbitalDataComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -777,7 +667,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IOrbitedDataComponent item,
+            IOrbitalDataComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -785,7 +675,7 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: OrbitedDataComponentBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: OrbitalDataComponentBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -794,7 +684,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (OrbitedDataComponent)item,
+                item: (OrbitalDataComponent)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -802,17 +692,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class OrbitedDataComponentCommon : AComponentCommon
+    internal partial class OrbitalDataComponentCommon : AComponentCommon
     {
-        public new static readonly OrbitedDataComponentCommon Instance = new OrbitedDataComponentCommon();
+        public new static readonly OrbitalDataComponentCommon Instance = new OrbitalDataComponentCommon();
 
-        public OrbitedDataComponent.Mask<bool> GetEqualsMask(
-            IOrbitedDataComponentGetter item,
-            IOrbitedDataComponentGetter rhs,
+        public OrbitalDataComponent.Mask<bool> GetEqualsMask(
+            IOrbitalDataComponentGetter item,
+            IOrbitalDataComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new OrbitedDataComponent.Mask<bool>(false);
-            ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new OrbitalDataComponent.Mask<bool>(false);
+            ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -821,22 +711,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IOrbitedDataComponentGetter item,
-            IOrbitedDataComponentGetter rhs,
-            OrbitedDataComponent.Mask<bool> ret,
+            IOrbitalDataComponentGetter item,
+            IOrbitalDataComponentGetter rhs,
+            OrbitalDataComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
-            ret.MassInSm = item.MassInSm.EqualsWithin(rhs.MassInSm);
-            ret.RadiusInKm = item.RadiusInKm.EqualsWithin(rhs.RadiusInKm);
-            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IOrbitedDataComponentGetter item,
+            IOrbitalDataComponentGetter item,
             string? name = null,
-            OrbitedDataComponent.Mask<bool>? printMask = null)
+            OrbitalDataComponent.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -848,18 +735,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IOrbitedDataComponentGetter item,
+            IOrbitalDataComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            OrbitedDataComponent.Mask<bool>? printMask = null)
+            OrbitalDataComponent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"OrbitedDataComponent =>");
+                sb.AppendLine($"OrbitalDataComponent =>");
             }
             else
             {
-                sb.AppendLine($"{name} (OrbitedDataComponent) =>");
+                sb.AppendLine($"{name} (OrbitalDataComponent) =>");
             }
             using (sb.Brace())
             {
@@ -871,33 +758,22 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IOrbitedDataComponentGetter item,
+            IOrbitalDataComponentGetter item,
             StructuredStringBuilder sb,
-            OrbitedDataComponent.Mask<bool>? printMask = null)
+            OrbitalDataComponent.Mask<bool>? printMask = null)
         {
             AComponentCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Unknown1 ?? true)
+            if ((printMask?.DATA ?? true)
+                && item.DATA is {} DATAItem)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
-            }
-            if (printMask?.MassInSm ?? true)
-            {
-                sb.AppendItem(item.MassInSm, "MassInSm");
-            }
-            if (printMask?.RadiusInKm ?? true)
-            {
-                sb.AppendItem(item.RadiusInKm, "RadiusInKm");
-            }
-            if (printMask?.Unknown2 ?? true)
-            {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
         }
         
-        public static OrbitedDataComponent_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
+        public static OrbitalDataComponent_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
         {
             switch (index)
             {
@@ -908,27 +784,15 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IOrbitedDataComponentGetter? lhs,
-            IOrbitedDataComponentGetter? rhs,
+            IOrbitalDataComponentGetter? lhs,
+            IOrbitalDataComponentGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OrbitalDataComponent_FieldIndex.DATA) ?? true))
             {
-                if (lhs.Unknown1 != rhs.Unknown1) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.MassInSm) ?? true))
-            {
-                if (!lhs.MassInSm.EqualsWithin(rhs.MassInSm)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.RadiusInKm) ?? true))
-            {
-                if (!lhs.RadiusInKm.EqualsWithin(rhs.RadiusInKm)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.Unknown2) ?? true))
-            {
-                if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
             return true;
         }
@@ -939,25 +803,25 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IOrbitedDataComponentGetter?)lhs,
-                rhs: rhs as IOrbitedDataComponentGetter,
+                lhs: (IOrbitalDataComponentGetter?)lhs,
+                rhs: rhs as IOrbitalDataComponentGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IOrbitedDataComponentGetter item)
+        public virtual int GetHashCode(IOrbitalDataComponentGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown1);
-            hash.Add(item.MassInSm);
-            hash.Add(item.RadiusInKm);
-            hash.Add(item.Unknown2);
+            if (item.DATA is {} DATAItem)
+            {
+                hash.Add(DATAItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAComponentGetter item)
         {
-            return GetHashCode(item: (IOrbitedDataComponentGetter)item);
+            return GetHashCode(item: (IOrbitalDataComponentGetter)item);
         }
         
         #endregion
@@ -965,11 +829,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return OrbitedDataComponent.GetNew();
+            return OrbitalDataComponent.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOrbitedDataComponentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOrbitalDataComponentGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -981,14 +845,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class OrbitedDataComponentSetterTranslationCommon : AComponentSetterTranslationCommon
+    internal partial class OrbitalDataComponentSetterTranslationCommon : AComponentSetterTranslationCommon
     {
-        public new static readonly OrbitedDataComponentSetterTranslationCommon Instance = new OrbitedDataComponentSetterTranslationCommon();
+        public new static readonly OrbitalDataComponentSetterTranslationCommon Instance = new OrbitalDataComponentSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IOrbitedDataComponent item,
-            IOrbitedDataComponentGetter rhs,
+            IOrbitalDataComponent item,
+            IOrbitalDataComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -999,21 +863,16 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OrbitalDataComponent_FieldIndex.DATA) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
-            }
-            if ((copyMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.MassInSm) ?? true))
-            {
-                item.MassInSm = rhs.MassInSm;
-            }
-            if ((copyMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.RadiusInKm) ?? true))
-            {
-                item.RadiusInKm = rhs.RadiusInKm;
-            }
-            if ((copyMask?.GetShouldTranslate((int)OrbitedDataComponent_FieldIndex.Unknown2) ?? true))
-            {
-                item.Unknown2 = rhs.Unknown2;
+                if(rhs.DATA is {} DATArhs)
+                {
+                    item.DATA = DATArhs.ToArray();
+                }
+                else
+                {
+                    item.DATA = default;
+                }
             }
         }
         
@@ -1026,8 +885,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IOrbitedDataComponent)item,
-                rhs: (IOrbitedDataComponentGetter)rhs,
+                item: (IOrbitalDataComponent)item,
+                rhs: (IOrbitalDataComponentGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1035,12 +894,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public OrbitedDataComponent DeepCopy(
-            IOrbitedDataComponentGetter item,
-            OrbitedDataComponent.TranslationMask? copyMask = null)
+        public OrbitalDataComponent DeepCopy(
+            IOrbitalDataComponentGetter item,
+            OrbitalDataComponent.TranslationMask? copyMask = null)
         {
-            OrbitedDataComponent ret = (OrbitedDataComponent)((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).GetNew();
-            ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OrbitalDataComponent ret = (OrbitalDataComponent)((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).GetNew();
+            ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1049,30 +908,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public OrbitedDataComponent DeepCopy(
-            IOrbitedDataComponentGetter item,
-            out OrbitedDataComponent.ErrorMask errorMask,
-            OrbitedDataComponent.TranslationMask? copyMask = null)
+        public OrbitalDataComponent DeepCopy(
+            IOrbitalDataComponentGetter item,
+            out OrbitalDataComponent.ErrorMask errorMask,
+            OrbitalDataComponent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            OrbitedDataComponent ret = (OrbitedDataComponent)((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).GetNew();
-            ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OrbitalDataComponent ret = (OrbitalDataComponent)((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).GetNew();
+            ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = OrbitedDataComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OrbitalDataComponent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public OrbitedDataComponent DeepCopy(
-            IOrbitedDataComponentGetter item,
+        public OrbitalDataComponent DeepCopy(
+            IOrbitalDataComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            OrbitedDataComponent ret = (OrbitedDataComponent)((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)item).CommonInstance()!).GetNew();
-            ((OrbitedDataComponentSetterTranslationCommon)((IOrbitedDataComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OrbitalDataComponent ret = (OrbitalDataComponent)((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)item).CommonInstance()!).GetNew();
+            ((OrbitalDataComponentSetterTranslationCommon)((IOrbitalDataComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1088,21 +947,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class OrbitedDataComponent
+    public partial class OrbitalDataComponent
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => OrbitedDataComponent_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => OrbitedDataComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OrbitalDataComponent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => OrbitalDataComponent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => OrbitedDataComponentCommon.Instance;
+        protected override object CommonInstance() => OrbitalDataComponentCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return OrbitedDataComponentSetterCommon.Instance;
+            return OrbitalDataComponentSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => OrbitedDataComponentSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => OrbitalDataComponentSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1113,14 +972,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class OrbitedDataComponentBinaryWriteTranslation :
+    public partial class OrbitalDataComponentBinaryWriteTranslation :
         AComponentBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly OrbitedDataComponentBinaryWriteTranslation Instance = new();
+        public new static readonly OrbitalDataComponentBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IOrbitedDataComponentGetter item,
+            IOrbitalDataComponentGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1128,26 +987,15 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
-            {
-                writer.Write(item.Unknown1);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.MassInSm,
-                    divisor: null,
-                    multiplier: 1.98847E+30f);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.RadiusInKm);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unknown2);
-            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DATA,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
             MutagenWriter writer,
-            IOrbitedDataComponentGetter item,
+            IOrbitalDataComponentGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1163,7 +1011,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IOrbitedDataComponentGetter)item,
+                item: (IOrbitalDataComponentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1174,19 +1022,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IOrbitedDataComponentGetter)item,
+                item: (IOrbitalDataComponentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class OrbitedDataComponentBinaryCreateTranslation : AComponentBinaryCreateTranslation
+    internal partial class OrbitalDataComponentBinaryCreateTranslation : AComponentBinaryCreateTranslation
     {
-        public new static readonly OrbitedDataComponentBinaryCreateTranslation Instance = new OrbitedDataComponentBinaryCreateTranslation();
+        public new static readonly OrbitalDataComponentBinaryCreateTranslation Instance = new OrbitalDataComponentBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IOrbitedDataComponent item,
+            IOrbitalDataComponent item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1200,19 +1048,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 8) return null;
-                    item.Unknown1 = dataFrame.ReadUInt64();
-                    if (dataFrame.Remaining < 4) return null;
-                    item.MassInSm = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        multiplier: null,
-                        divisor: 1.98847E+30f);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.RadiusInKm = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.Unknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)OrbitedDataComponent_FieldIndex.Unknown2;
+                    item.DATA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)OrbitalDataComponent_FieldIndex.DATA;
                 }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1232,7 +1069,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class OrbitedDataComponentBinaryTranslationMixIn
+    public static class OrbitalDataComponentBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1241,55 +1078,38 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class OrbitedDataComponentBinaryOverlay :
+    internal partial class OrbitalDataComponentBinaryOverlay :
         AComponentBinaryOverlay,
-        IOrbitedDataComponentGetter
+        IOrbitalDataComponentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => OrbitedDataComponent_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => OrbitedDataComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OrbitalDataComponent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => OrbitalDataComponent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => OrbitedDataComponentCommon.Instance;
+        protected override object CommonInstance() => OrbitalDataComponentCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => OrbitedDataComponentSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => OrbitalDataComponentSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => OrbitedDataComponentBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => OrbitalDataComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((OrbitedDataComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OrbitalDataComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        private RangeInt32? _DATALocation;
-        #region Unknown1
-        private int _Unknown1Location => _DATALocation!.Value.Min;
-        private bool _Unknown1_IsSet => _DATALocation.HasValue;
-        public UInt64 Unknown1 => _Unknown1_IsSet ? BinaryPrimitives.ReadUInt64LittleEndian(_recordData.Slice(_Unknown1Location, 8)) : default(UInt64);
-        #endregion
-        #region MassInSm
-        private int _MassInSmLocation => _DATALocation!.Value.Min + 0x8;
-        private bool _MassInSm_IsSet => _DATALocation.HasValue;
-        public Single MassInSm => _MassInSm_IsSet ? _recordData.Slice(_MassInSmLocation, 4).Float() / 1.98847E+30f : default(Single);
-        #endregion
-        #region RadiusInKm
-        private int _RadiusInKmLocation => _DATALocation!.Value.Min + 0xC;
-        private bool _RadiusInKm_IsSet => _DATALocation.HasValue;
-        public Single RadiusInKm => _RadiusInKm_IsSet ? _recordData.Slice(_RadiusInKmLocation, 4).Float() : default(Single);
-        #endregion
-        #region Unknown2
-        private int _Unknown2Location => _DATALocation!.Value.Min + 0x10;
-        private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default(Single);
+        #region DATA
+        private int? _DATALocation;
+        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1297,7 +1117,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected OrbitedDataComponentBinaryOverlay(
+        protected OrbitalDataComponentBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1307,7 +1127,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IOrbitedDataComponentGetter OrbitedDataComponentFactory(
+        public static IOrbitalDataComponentGetter OrbitalDataComponentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1319,7 +1139,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new OrbitedDataComponentBinaryOverlay(
+            var ret = new OrbitalDataComponentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1331,12 +1151,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IOrbitedDataComponentGetter OrbitedDataComponentFactory(
+        public static IOrbitalDataComponentGetter OrbitalDataComponentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return OrbitedDataComponentFactory(
+            return OrbitalDataComponentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1356,8 +1176,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)OrbitedDataComponent_FieldIndex.Unknown2;
+                    _DATALocation = (stream.Position - offset);
+                    return (int)OrbitalDataComponent_FieldIndex.DATA;
                 }
                 default:
                     return base.FillRecordType(
@@ -1376,7 +1196,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            OrbitedDataComponentMixIn.Print(
+            OrbitalDataComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1387,16 +1207,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IOrbitedDataComponentGetter rhs) return false;
-            return ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IOrbitalDataComponentGetter rhs) return false;
+            return ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IOrbitedDataComponentGetter? obj)
+        public bool Equals(IOrbitalDataComponentGetter? obj)
         {
-            return ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((OrbitedDataComponentCommon)((IOrbitedDataComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((OrbitalDataComponentCommon)((IOrbitalDataComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

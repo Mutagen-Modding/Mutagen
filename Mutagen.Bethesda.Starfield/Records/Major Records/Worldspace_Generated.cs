@@ -3347,6 +3347,9 @@ namespace Mutagen.Bethesda.Starfield
                 case "StarDataComponent":
                 case "IStarDataComponentGetter":
                 case "IStarDataComponent":
+                case "OrbitalDataComponent":
+                case "IOrbitalDataComponentGetter":
+                case "IOrbitalDataComponent":
                     break;
                 case "WorldspaceGridReference":
                 case "IWorldspaceGridReferenceGetter":

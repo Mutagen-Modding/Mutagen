@@ -975,6 +975,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ObjectVisibilityManagerItem_Registration.Instance,
             ObjectWindowFilterComponent_Registration.Instance,
             OffsetRotation_Registration.Instance,
+            OrbitalDataComponent_Registration.Instance,
             OrbitedDataComponent_Registration.Instance,
             Outfit_Registration.Instance,
             Ownership_Registration.Instance,

@@ -6570,5 +6570,8 @@
     <Compile Include="Records\Common Subrecords\StarDataComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\OrbitalDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

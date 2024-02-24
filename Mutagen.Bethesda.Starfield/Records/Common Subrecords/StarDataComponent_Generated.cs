@@ -887,8 +887,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.BFCB);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.BFCB);
+            var all = RecordCollection.Factory(
+                RecordTypes.BFCB,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StarDataComponentBinaryWriteTranslation);
         #region Interface
@@ -965,7 +970,6 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: StarDataComponentBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: StarDataComponentBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1370,35 +1374,43 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly StarDataComponentBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
+        public static void WriteRecordTypes(
             IStarDataComponentGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            AComponentBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
                 writer: writer,
-                item: item.CatalogueId,
-                binaryType: StringBinaryType.PrependLengthUShort);
-            StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SpectralClass,
-                binaryType: StringBinaryType.PrependLengthUShort);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Magnitude);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.MassInSm,
-                divisor: 2f,
-                multiplier: 1.98847E+30f);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.InnerHabitableZone);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.OuterHabitableZone);
-            writer.Write(item.HIP);
-            writer.Write(item.Radius);
-            writer.Write(item.TemperatureInK);
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CatalogueId,
+                    binaryType: StringBinaryType.PrependLength);
+                StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpectralClass,
+                    binaryType: StringBinaryType.PrependLength);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Magnitude);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MassInSm,
+                    divisor: null,
+                    multiplier: 1.98847E+30f);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.InnerHabitableZone);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.OuterHabitableZone);
+                writer.Write(item.HIP);
+                writer.Write(item.Radius);
+                writer.Write(item.TemperatureInK);
+            }
         }
 
         public void Write(
@@ -1406,10 +1418,7 @@ namespace Mutagen.Bethesda.Starfield
             IStarDataComponentGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
-            AComponentBinaryWriteTranslation.WriteRecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1444,26 +1453,57 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly StarDataComponentBinaryCreateTranslation Instance = new StarDataComponentBinaryCreateTranslation();
 
-        public static void FillBinaryStructs(
+        public static ParseResult FillBinaryRecordTypes(
             IStarDataComponent item,
-            MutagenFrame frame)
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
         {
-            item.CatalogueId = StringBinaryTranslation.Instance.Parse(
-                reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
-            item.SpectralClass = StringBinaryTranslation.Instance.Parse(
-                reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
-            item.Magnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.MassInSm = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                multiplier: 2f,
-                divisor: 1.98847E+30f);
-            item.InnerHabitableZone = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.OuterHabitableZone = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.HIP = frame.ReadUInt32();
-            item.Radius = frame.ReadUInt32();
-            item.TemperatureInK = frame.ReadUInt32();
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.CatalogueId = StringBinaryTranslation.Instance.Parse(
+                        reader: dataFrame,
+                        stringBinaryType: StringBinaryType.PrependLength);
+                    item.SpectralClass = StringBinaryTranslation.Instance.Parse(
+                        reader: dataFrame,
+                        stringBinaryType: StringBinaryType.PrependLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Magnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MassInSm = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        multiplier: null,
+                        divisor: 1.98847E+30f);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.InnerHabitableZone = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.OuterHabitableZone = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.HIP = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Radius = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TemperatureInK = dataFrame.ReadUInt32();
+                    return (int)StarDataComponent_FieldIndex.TemperatureInK;
+                }
+                default:
+                    return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
         }
 
     }
@@ -1510,21 +1550,54 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        private RangeInt32? _DATALocation;
         #region CatalogueId
-        public String CatalogueId => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
+        private int _CatalogueIdLocation => _DATALocation!.Value.Min;
+        private bool _CatalogueId_IsSet => _DATALocation.HasValue;
+        public String CatalogueId => _CatalogueId_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_CatalogueIdLocation), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         protected int CatalogueIdEndingPos;
         #endregion
         #region SpectralClass
-        public String SpectralClass => BinaryStringUtility.ParsePrependedString(_structData.Slice(CatalogueIdEndingPos), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
+        private int _SpectralClassLocation => CatalogueIdEndingPos;
+        private bool _SpectralClass_IsSet => _DATALocation.HasValue;
+        public String SpectralClass => _SpectralClass_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_SpectralClassLocation), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         protected int SpectralClassEndingPos;
         #endregion
-        public Single Magnitude => _structData.Slice(SpectralClassEndingPos, 0x4).Float();
-        public Single MassInSm => _structData.Slice(SpectralClassEndingPos + 0x4, 0x4).Float() * 2f / 1.98847E+30f;
-        public Single InnerHabitableZone => _structData.Slice(SpectralClassEndingPos + 0x8, 0x4).Float();
-        public Single OuterHabitableZone => _structData.Slice(SpectralClassEndingPos + 0xC, 0x4).Float();
-        public UInt32 HIP => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(SpectralClassEndingPos + 0x10, 0x4));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(SpectralClassEndingPos + 0x14, 0x4));
-        public UInt32 TemperatureInK => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(SpectralClassEndingPos + 0x18, 0x4));
+        #region Magnitude
+        private int _MagnitudeLocation => SpectralClassEndingPos;
+        private bool _Magnitude_IsSet => _DATALocation.HasValue;
+        public Single Magnitude => _Magnitude_IsSet ? _recordData.Slice(_MagnitudeLocation, 4).Float() : default(Single);
+        #endregion
+        #region MassInSm
+        private int _MassInSmLocation => SpectralClassEndingPos + 0x4;
+        private bool _MassInSm_IsSet => _DATALocation.HasValue;
+        public Single MassInSm => _MassInSm_IsSet ? _recordData.Slice(_MassInSmLocation, 4).Float() / 1.98847E+30f : default(Single);
+        #endregion
+        #region InnerHabitableZone
+        private int _InnerHabitableZoneLocation => SpectralClassEndingPos + 0x8;
+        private bool _InnerHabitableZone_IsSet => _DATALocation.HasValue;
+        public Single InnerHabitableZone => _InnerHabitableZone_IsSet ? _recordData.Slice(_InnerHabitableZoneLocation, 4).Float() : default(Single);
+        #endregion
+        #region OuterHabitableZone
+        private int _OuterHabitableZoneLocation => SpectralClassEndingPos + 0xC;
+        private bool _OuterHabitableZone_IsSet => _DATALocation.HasValue;
+        public Single OuterHabitableZone => _OuterHabitableZone_IsSet ? _recordData.Slice(_OuterHabitableZoneLocation, 4).Float() : default(Single);
+        #endregion
+        #region HIP
+        private int _HIPLocation => SpectralClassEndingPos + 0x10;
+        private bool _HIP_IsSet => _DATALocation.HasValue;
+        public UInt32 HIP => _HIP_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HIPLocation, 4)) : default(UInt32);
+        #endregion
+        #region Radius
+        private int _RadiusLocation => SpectralClassEndingPos + 0x14;
+        private bool _Radius_IsSet => _DATALocation.HasValue;
+        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadiusLocation, 4)) : default(UInt32);
+        #endregion
+        #region TemperatureInK
+        private int _TemperatureInKLocation => SpectralClassEndingPos + 0x18;
+        private bool _TemperatureInK_IsSet => _DATALocation.HasValue;
+        public UInt32 TemperatureInK => _TemperatureInK_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TemperatureInKLocation, 4)) : default(UInt32);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1556,14 +1629,14 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new StarDataComponentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CatalogueIdEndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
-            ret.SpectralClassEndingPos = ret.CatalogueIdEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.CatalogueIdEndingPos)) + 2;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
+            ret.CatalogueIdEndingPos = ret._DATALocation!.Value.Min + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._DATALocation!.Value.Min)) + 4;
+            ret.SpectralClassEndingPos = ret.CatalogueIdEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret.CatalogueIdEndingPos)) + 4;
             return ret;
         }
 
@@ -1578,6 +1651,34 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)StarDataComponent_FieldIndex.TemperatureInK;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
