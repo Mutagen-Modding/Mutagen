@@ -1120,6 +1120,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             RegionWeather_Registration.Instance,
             Relation_Registration.Instance,
             ResearchProject_Registration.Instance,
+            ResearchProjectRequiredPerk_Registration.Instance,
+            ResearchProjectResource_Registration.Instance,
             ResistanceDestructible_Registration.Instance,
             Resource_Registration.Instance,
             ResourceGenerationData_Registration.Instance,

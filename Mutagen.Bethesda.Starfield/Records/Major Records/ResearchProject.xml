@@ -2,6 +2,35 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ResearchProject" recordType="RSPJ" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
+      <RefList name="Resources" refName="ResearchProjectResource" recordType="FVPA" />
+      <RefList name="RequiredPerks" refName="ResearchProjectRequiredPerk" recordType="RQPK" />
+      <FormLink name="IconSource" refName="StarfieldMajorRecord" recordType="CNAM" />
+      <UInt16 name="NNAM" recordType="NNAM" unknown="true" />
+      <Float name="MenuSortOrder" recordType="SNAM" />
+      <UInt8 name="TNAM" recordType="TNAM" unknown="true" />
+      <FormLink name="CategoryKeyword" refName="Keyword" recordType="KNAM" />
+      <List name="RequiredProjects">
+        <FormLink recordType="RNAM" refName="ResearchProject" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ResearchProjectResource" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Resource" >
+        <Interface>IResearchResourceTarget</Interface>
+      </FormLink>
+      <UInt32 name="RequiredCount" />
+      <UInt32 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="ResearchProjectRequiredPerk" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Perk" refName="Perk" />
+      <UInt32 name="RequiredCount" />
+      <UInt32 name="Unknown" />
     </Fields>
   </Object>
 </Loqui>

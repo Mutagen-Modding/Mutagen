@@ -3276,9 +3276,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ResearchProject</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter> ResearchProject(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter> ResearchProject(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IResearchProjectGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3288,9 +3288,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on ResearchProject</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter> ResearchProject(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter> ResearchProject(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IResearchProjectGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IResearchProject, IResearchProjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4736,6 +4736,30 @@ namespace Mutagen.Bethesda.Starfield
             return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ILeveledBaseFormTarget, ILeveledBaseFormTargetGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILeveledBaseFormTargetGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ILeveledBaseFormTarget, ILeveledBaseFormTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IResearchResourceTarget
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IResearchResourceTarget</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchResourceTarget, IResearchResourceTargetGetter> IResearchResourceTarget(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchResourceTarget, IResearchResourceTargetGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IResearchResourceTargetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IResearchResourceTarget, IResearchResourceTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IResearchResourceTarget
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IResearchResourceTarget</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchResourceTarget, IResearchResourceTargetGetter> IResearchResourceTarget(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IResearchResourceTarget, IResearchResourceTargetGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IResearchResourceTargetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IResearchResourceTarget, IResearchResourceTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

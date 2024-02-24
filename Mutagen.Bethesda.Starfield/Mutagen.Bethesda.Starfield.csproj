@@ -6573,5 +6573,12 @@
     <Compile Include="Records\Common Subrecords\OrbitalDataComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ResearchProjectResource_Generated.cs">
+      <DependentUpon>ResearchProject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ResearchProjectRequiredPerk_Generated.cs">
+      <DependentUpon>ResearchProject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IResearchResourceTarget_Generated.cs" />
   </ItemGroup>
 </Project>

@@ -312,6 +312,17 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ILeveledBaseFormTarget),
                 Getter: typeof(ILeveledBaseFormTargetGetter)));
         dict[typeof(ILeveledBaseFormTargetGetter)] = dict[typeof(ILeveledBaseFormTarget)] with { Setter = false };
+        dict[typeof(IResearchResourceTarget)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Ingestible_Registration.Instance,
+                Resource_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IResearchResourceTarget),
+                Getter: typeof(IResearchResourceTargetGetter)));
+        dict[typeof(IResearchResourceTargetGetter)] = dict[typeof(IResearchResourceTarget)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

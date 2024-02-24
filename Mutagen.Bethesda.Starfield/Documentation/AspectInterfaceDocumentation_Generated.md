@@ -217,6 +217,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Race
 - RadioSceneAction
 - ReferenceGroup
+- ResearchProject
 - Resource
 - ScenePhase
 - ScriptBoolListProperty
@@ -741,6 +742,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### RagdollData
 - IPositionRotation
 ### ReferenceGroup
+- INamed
+### ResearchProject
 - INamed
 ### Resource
 - IKeyworded

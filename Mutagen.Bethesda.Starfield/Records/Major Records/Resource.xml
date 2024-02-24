@@ -22,5 +22,6 @@
       <FormLink name="Interval" refName="Global" recordType="NAM3" />
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
 </Loqui>

@@ -38,5 +38,6 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
 </Loqui>

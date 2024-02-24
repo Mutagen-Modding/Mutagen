@@ -174,6 +174,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IRelatable
 - Faction
 - Race
+### IResearchResourceTarget
+- Ingestible
+- Resource
 ### IResourceTarget
 - ConstructibleObject
 - LeveledItem
@@ -299,6 +302,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IBaseObject
 - IConstructible
 - IItem
+- IResearchResourceTarget
 - IStaticTarget
 ### Key
 - IItem
@@ -386,6 +390,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEmittance
 ### Resource
 - IBaseObject
+- IResearchResourceTarget
 ### SoundEchoMarker
 - IBaseObject
 ### SoundMarker

@@ -1091,6 +1091,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IResourceInternal>,
         INamed,
         INamedRequired,
+        IResearchResourceTarget,
         IResourceGetter,
         IStarfieldMajorRecordInternal,
         ITranslatedNamed,
@@ -1134,6 +1135,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IResourceGetter>,
         INamedGetter,
         INamedRequiredGetter,
+        IResearchResourceTargetGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
