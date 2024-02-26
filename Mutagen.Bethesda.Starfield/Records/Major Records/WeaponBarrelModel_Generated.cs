@@ -54,6 +54,18 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region AllowCoverState
+        public Boolean AllowCoverState { get; set; } = default(Boolean);
+        #endregion
+        #region CoverDetectionDistance
+        public Single CoverDetectionDistance { get; set; } = default(Single);
+        #endregion
+        #region EnterCoverAnimationTimeSeconds
+        public Single EnterCoverAnimationTimeSeconds { get; set; } = default(Single);
+        #endregion
+        #region HipfireDuringCoverAnimationTimeSeconds
+        public Single HipfireDuringCoverAnimationTimeSeconds { get; set; } = default(Single);
+        #endregion
 
         #region To String
 
@@ -79,6 +91,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.AllowCoverState = initialValue;
+                this.CoverDetectionDistance = initialValue;
+                this.EnterCoverAnimationTimeSeconds = initialValue;
+                this.HipfireDuringCoverAnimationTimeSeconds = initialValue;
             }
 
             public Mask(
@@ -88,7 +104,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem AllowCoverState,
+                TItem CoverDetectionDistance,
+                TItem EnterCoverAnimationTimeSeconds,
+                TItem HipfireDuringCoverAnimationTimeSeconds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +118,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.AllowCoverState = AllowCoverState;
+                this.CoverDetectionDistance = CoverDetectionDistance;
+                this.EnterCoverAnimationTimeSeconds = EnterCoverAnimationTimeSeconds;
+                this.HipfireDuringCoverAnimationTimeSeconds = HipfireDuringCoverAnimationTimeSeconds;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +130,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem AllowCoverState;
+            public TItem CoverDetectionDistance;
+            public TItem EnterCoverAnimationTimeSeconds;
+            public TItem HipfireDuringCoverAnimationTimeSeconds;
             #endregion
 
             #region Equals
@@ -119,11 +150,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.AllowCoverState, rhs.AllowCoverState)) return false;
+                if (!object.Equals(this.CoverDetectionDistance, rhs.CoverDetectionDistance)) return false;
+                if (!object.Equals(this.EnterCoverAnimationTimeSeconds, rhs.EnterCoverAnimationTimeSeconds)) return false;
+                if (!object.Equals(this.HipfireDuringCoverAnimationTimeSeconds, rhs.HipfireDuringCoverAnimationTimeSeconds)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.AllowCoverState);
+                hash.Add(this.CoverDetectionDistance);
+                hash.Add(this.EnterCoverAnimationTimeSeconds);
+                hash.Add(this.HipfireDuringCoverAnimationTimeSeconds);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +173,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.AllowCoverState)) return false;
+                if (!eval(this.CoverDetectionDistance)) return false;
+                if (!eval(this.EnterCoverAnimationTimeSeconds)) return false;
+                if (!eval(this.HipfireDuringCoverAnimationTimeSeconds)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +185,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.AllowCoverState)) return true;
+                if (eval(this.CoverDetectionDistance)) return true;
+                if (eval(this.EnterCoverAnimationTimeSeconds)) return true;
+                if (eval(this.HipfireDuringCoverAnimationTimeSeconds)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +204,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.AllowCoverState = eval(this.AllowCoverState);
+                obj.CoverDetectionDistance = eval(this.CoverDetectionDistance);
+                obj.EnterCoverAnimationTimeSeconds = eval(this.EnterCoverAnimationTimeSeconds);
+                obj.HipfireDuringCoverAnimationTimeSeconds = eval(this.HipfireDuringCoverAnimationTimeSeconds);
             }
             #endregion
 
@@ -175,6 +226,22 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(WeaponBarrelModel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.AllowCoverState ?? true)
+                    {
+                        sb.AppendItem(AllowCoverState, "AllowCoverState");
+                    }
+                    if (printMask?.CoverDetectionDistance ?? true)
+                    {
+                        sb.AppendItem(CoverDetectionDistance, "CoverDetectionDistance");
+                    }
+                    if (printMask?.EnterCoverAnimationTimeSeconds ?? true)
+                    {
+                        sb.AppendItem(EnterCoverAnimationTimeSeconds, "EnterCoverAnimationTimeSeconds");
+                    }
+                    if (printMask?.HipfireDuringCoverAnimationTimeSeconds ?? true)
+                    {
+                        sb.AppendItem(HipfireDuringCoverAnimationTimeSeconds, "HipfireDuringCoverAnimationTimeSeconds");
+                    }
                 }
             }
             #endregion
@@ -185,12 +252,27 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? AllowCoverState;
+            public Exception? CoverDetectionDistance;
+            public Exception? EnterCoverAnimationTimeSeconds;
+            public Exception? HipfireDuringCoverAnimationTimeSeconds;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 WeaponBarrelModel_FieldIndex enu = (WeaponBarrelModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case WeaponBarrelModel_FieldIndex.AllowCoverState:
+                        return AllowCoverState;
+                    case WeaponBarrelModel_FieldIndex.CoverDetectionDistance:
+                        return CoverDetectionDistance;
+                    case WeaponBarrelModel_FieldIndex.EnterCoverAnimationTimeSeconds:
+                        return EnterCoverAnimationTimeSeconds;
+                    case WeaponBarrelModel_FieldIndex.HipfireDuringCoverAnimationTimeSeconds:
+                        return HipfireDuringCoverAnimationTimeSeconds;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +283,18 @@ namespace Mutagen.Bethesda.Starfield
                 WeaponBarrelModel_FieldIndex enu = (WeaponBarrelModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case WeaponBarrelModel_FieldIndex.AllowCoverState:
+                        this.AllowCoverState = ex;
+                        break;
+                    case WeaponBarrelModel_FieldIndex.CoverDetectionDistance:
+                        this.CoverDetectionDistance = ex;
+                        break;
+                    case WeaponBarrelModel_FieldIndex.EnterCoverAnimationTimeSeconds:
+                        this.EnterCoverAnimationTimeSeconds = ex;
+                        break;
+                    case WeaponBarrelModel_FieldIndex.HipfireDuringCoverAnimationTimeSeconds:
+                        this.HipfireDuringCoverAnimationTimeSeconds = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +306,18 @@ namespace Mutagen.Bethesda.Starfield
                 WeaponBarrelModel_FieldIndex enu = (WeaponBarrelModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case WeaponBarrelModel_FieldIndex.AllowCoverState:
+                        this.AllowCoverState = (Exception?)obj;
+                        break;
+                    case WeaponBarrelModel_FieldIndex.CoverDetectionDistance:
+                        this.CoverDetectionDistance = (Exception?)obj;
+                        break;
+                    case WeaponBarrelModel_FieldIndex.EnterCoverAnimationTimeSeconds:
+                        this.EnterCoverAnimationTimeSeconds = (Exception?)obj;
+                        break;
+                    case WeaponBarrelModel_FieldIndex.HipfireDuringCoverAnimationTimeSeconds:
+                        this.HipfireDuringCoverAnimationTimeSeconds = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +327,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (AllowCoverState != null) return true;
+                if (CoverDetectionDistance != null) return true;
+                if (EnterCoverAnimationTimeSeconds != null) return true;
+                if (HipfireDuringCoverAnimationTimeSeconds != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +357,18 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(AllowCoverState, "AllowCoverState");
+                }
+                {
+                    sb.AppendItem(CoverDetectionDistance, "CoverDetectionDistance");
+                }
+                {
+                    sb.AppendItem(EnterCoverAnimationTimeSeconds, "EnterCoverAnimationTimeSeconds");
+                }
+                {
+                    sb.AppendItem(HipfireDuringCoverAnimationTimeSeconds, "HipfireDuringCoverAnimationTimeSeconds");
+                }
             }
             #endregion
 
@@ -255,6 +377,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.AllowCoverState = this.AllowCoverState.Combine(rhs.AllowCoverState);
+                ret.CoverDetectionDistance = this.CoverDetectionDistance.Combine(rhs.CoverDetectionDistance);
+                ret.EnterCoverAnimationTimeSeconds = this.EnterCoverAnimationTimeSeconds.Combine(rhs.EnterCoverAnimationTimeSeconds);
+                ret.HipfireDuringCoverAnimationTimeSeconds = this.HipfireDuringCoverAnimationTimeSeconds.Combine(rhs.HipfireDuringCoverAnimationTimeSeconds);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +402,35 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool AllowCoverState;
+            public bool CoverDetectionDistance;
+            public bool EnterCoverAnimationTimeSeconds;
+            public bool HipfireDuringCoverAnimationTimeSeconds;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.AllowCoverState = defaultOn;
+                this.CoverDetectionDistance = defaultOn;
+                this.EnterCoverAnimationTimeSeconds = defaultOn;
+                this.HipfireDuringCoverAnimationTimeSeconds = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((AllowCoverState, null));
+                ret.Add((CoverDetectionDistance, null));
+                ret.Add((EnterCoverAnimationTimeSeconds, null));
+                ret.Add((HipfireDuringCoverAnimationTimeSeconds, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -428,6 +574,10 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal,
         IWeaponBarrelModelGetter
     {
+        new Boolean AllowCoverState { get; set; }
+        new Single CoverDetectionDistance { get; set; }
+        new Single EnterCoverAnimationTimeSeconds { get; set; }
+        new Single HipfireDuringCoverAnimationTimeSeconds { get; set; }
     }
 
     public partial interface IWeaponBarrelModelInternal :
@@ -445,6 +595,10 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IWeaponBarrelModelGetter>
     {
         static new ILoquiRegistration StaticRegistration => WeaponBarrelModel_Registration.Instance;
+        Boolean AllowCoverState { get; }
+        Single CoverDetectionDistance { get; }
+        Single EnterCoverAnimationTimeSeconds { get; }
+        Single HipfireDuringCoverAnimationTimeSeconds { get; }
 
     }
 
@@ -621,6 +775,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        AllowCoverState = 7,
+        CoverDetectionDistance = 8,
+        EnterCoverAnimationTimeSeconds = 9,
+        HipfireDuringCoverAnimationTimeSeconds = 10,
     }
     #endregion
 
@@ -631,9 +789,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(WeaponBarrelModel.Mask<>);
 
@@ -663,8 +821,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.WBAR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.WBAR);
+            var all = RecordCollection.Factory(
+                RecordTypes.WBAR,
+                RecordTypes.ZNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBarrelModelBinaryWriteTranslation);
         #region Interface
@@ -706,6 +869,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IWeaponBarrelModelInternal item)
         {
             ClearPartial();
+            item.AllowCoverState = default(Boolean);
+            item.CoverDetectionDistance = default(Single);
+            item.EnterCoverAnimationTimeSeconds = default(Single);
+            item.HipfireDuringCoverAnimationTimeSeconds = default(Single);
             base.Clear(item);
         }
         
@@ -790,6 +957,10 @@ namespace Mutagen.Bethesda.Starfield
             WeaponBarrelModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.AllowCoverState = item.AllowCoverState == rhs.AllowCoverState;
+            ret.CoverDetectionDistance = item.CoverDetectionDistance.EqualsWithin(rhs.CoverDetectionDistance);
+            ret.EnterCoverAnimationTimeSeconds = item.EnterCoverAnimationTimeSeconds.EqualsWithin(rhs.EnterCoverAnimationTimeSeconds);
+            ret.HipfireDuringCoverAnimationTimeSeconds = item.HipfireDuringCoverAnimationTimeSeconds.EqualsWithin(rhs.HipfireDuringCoverAnimationTimeSeconds);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1010,22 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.AllowCoverState ?? true)
+            {
+                sb.AppendItem(item.AllowCoverState, "AllowCoverState");
+            }
+            if (printMask?.CoverDetectionDistance ?? true)
+            {
+                sb.AppendItem(item.CoverDetectionDistance, "CoverDetectionDistance");
+            }
+            if (printMask?.EnterCoverAnimationTimeSeconds ?? true)
+            {
+                sb.AppendItem(item.EnterCoverAnimationTimeSeconds, "EnterCoverAnimationTimeSeconds");
+            }
+            if (printMask?.HipfireDuringCoverAnimationTimeSeconds ?? true)
+            {
+                sb.AppendItem(item.HipfireDuringCoverAnimationTimeSeconds, "HipfireDuringCoverAnimationTimeSeconds");
+            }
         }
         
         public static WeaponBarrelModel_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1076,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.AllowCoverState) ?? true))
+            {
+                if (lhs.AllowCoverState != rhs.AllowCoverState) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.CoverDetectionDistance) ?? true))
+            {
+                if (!lhs.CoverDetectionDistance.EqualsWithin(rhs.CoverDetectionDistance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.EnterCoverAnimationTimeSeconds) ?? true))
+            {
+                if (!lhs.EnterCoverAnimationTimeSeconds.EqualsWithin(rhs.EnterCoverAnimationTimeSeconds)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.HipfireDuringCoverAnimationTimeSeconds) ?? true))
+            {
+                if (!lhs.HipfireDuringCoverAnimationTimeSeconds.EqualsWithin(rhs.HipfireDuringCoverAnimationTimeSeconds)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1120,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IWeaponBarrelModelGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.AllowCoverState);
+            hash.Add(item.CoverDetectionDistance);
+            hash.Add(item.EnterCoverAnimationTimeSeconds);
+            hash.Add(item.HipfireDuringCoverAnimationTimeSeconds);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,6 +1227,22 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.AllowCoverState) ?? true))
+            {
+                item.AllowCoverState = rhs.AllowCoverState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.CoverDetectionDistance) ?? true))
+            {
+                item.CoverDetectionDistance = rhs.CoverDetectionDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.EnterCoverAnimationTimeSeconds) ?? true))
+            {
+                item.EnterCoverAnimationTimeSeconds = rhs.EnterCoverAnimationTimeSeconds;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeaponBarrelModel_FieldIndex.HipfireDuringCoverAnimationTimeSeconds) ?? true))
+            {
+                item.HipfireDuringCoverAnimationTimeSeconds = rhs.HipfireDuringCoverAnimationTimeSeconds;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1391,30 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly WeaponBarrelModelBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IWeaponBarrelModelGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ZNAM)))
+            {
+                writer.Write(item.AllowCoverState);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.CoverDetectionDistance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.EnterCoverAnimationTimeSeconds);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.HipfireDuringCoverAnimationTimeSeconds);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IWeaponBarrelModelGetter item,
@@ -1184,10 +1431,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1486,44 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly WeaponBarrelModelBinaryCreateTranslation Instance = new WeaponBarrelModelBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WBAR;
+        public static ParseResult FillBinaryRecordTypes(
+            IWeaponBarrelModelInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.AllowCoverState = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CoverDetectionDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EnterCoverAnimationTimeSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.HipfireDuringCoverAnimationTimeSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)WeaponBarrelModel_FieldIndex.HipfireDuringCoverAnimationTimeSeconds;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1283,6 +1570,27 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IWeaponBarrelModel);
 
 
+        private RangeInt32? _ZNAMLocation;
+        #region AllowCoverState
+        private int _AllowCoverStateLocation => _ZNAMLocation!.Value.Min;
+        private bool _AllowCoverState_IsSet => _ZNAMLocation.HasValue;
+        public Boolean AllowCoverState => _AllowCoverState_IsSet ? _recordData.Slice(_AllowCoverStateLocation, 1)[0] >= 1 : default(Boolean);
+        #endregion
+        #region CoverDetectionDistance
+        private int _CoverDetectionDistanceLocation => _ZNAMLocation!.Value.Min + 0x1;
+        private bool _CoverDetectionDistance_IsSet => _ZNAMLocation.HasValue;
+        public Single CoverDetectionDistance => _CoverDetectionDistance_IsSet ? _recordData.Slice(_CoverDetectionDistanceLocation, 4).Float() : default(Single);
+        #endregion
+        #region EnterCoverAnimationTimeSeconds
+        private int _EnterCoverAnimationTimeSecondsLocation => _ZNAMLocation!.Value.Min + 0x5;
+        private bool _EnterCoverAnimationTimeSeconds_IsSet => _ZNAMLocation.HasValue;
+        public Single EnterCoverAnimationTimeSeconds => _EnterCoverAnimationTimeSeconds_IsSet ? _recordData.Slice(_EnterCoverAnimationTimeSecondsLocation, 4).Float() : default(Single);
+        #endregion
+        #region HipfireDuringCoverAnimationTimeSeconds
+        private int _HipfireDuringCoverAnimationTimeSecondsLocation => _ZNAMLocation!.Value.Min + 0x9;
+        private bool _HipfireDuringCoverAnimationTimeSeconds_IsSet => _ZNAMLocation.HasValue;
+        public Single HipfireDuringCoverAnimationTimeSeconds => _HipfireDuringCoverAnimationTimeSeconds_IsSet ? _recordData.Slice(_HipfireDuringCoverAnimationTimeSecondsLocation, 4).Float() : default(Single);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1648,34 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.ZNAM:
+                {
+                    _ZNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)WeaponBarrelModel_FieldIndex.HipfireDuringCoverAnimationTimeSeconds;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

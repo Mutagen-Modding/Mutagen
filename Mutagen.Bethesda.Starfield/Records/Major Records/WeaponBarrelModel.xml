@@ -2,6 +2,14 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="WeaponBarrelModel" recordType="WBAR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Data recordType="ZNAM" >
+        <Fields>
+          <Bool name="AllowCoverState" byteLength="1" />
+          <Float name="CoverDetectionDistance" />
+          <Float name="EnterCoverAnimationTimeSeconds" />
+          <Float name="HipfireDuringCoverAnimationTimeSeconds" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

@@ -4116,9 +4116,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on WeaponBarrelModel</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter> WeaponBarrelModel(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter> WeaponBarrelModel(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWeaponBarrelModelGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4128,9 +4128,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on WeaponBarrelModel</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter> WeaponBarrelModel(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter> WeaponBarrelModel(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IWeaponBarrelModelGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWeaponBarrelModel, IWeaponBarrelModelGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

@@ -205,6 +205,7 @@ namespace Mutagen.Bethesda.Starfield
             _ResearchProjects_Object = new StarfieldGroup<ResearchProject>(this);
             _AmbienceSets_Object = new StarfieldGroup<AmbienceSet>(this);
             _AimOpticalSightMarkers_Object = new StarfieldGroup<AimOpticalSightMarker>(this);
+            _WeaponBarrelModels_Object = new StarfieldGroup<WeaponBarrelModel>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatternConfigs_Object = new StarfieldGroup<SurfacePatternConfig>(this);
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
@@ -1241,6 +1242,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAimOpticalSightMarkerGetter> IStarfieldModGetter.AimOpticalSightMarkers => _AimOpticalSightMarkers_Object;
         #endregion
+        #region WeaponBarrelModels
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<WeaponBarrelModel> _WeaponBarrelModels_Object;
+        public StarfieldGroup<WeaponBarrelModel> WeaponBarrelModels => _WeaponBarrelModels_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IWeaponBarrelModelGetter> IStarfieldModGetter.WeaponBarrelModels => _WeaponBarrelModels_Object;
+        #endregion
         #region SurfacePatternStyles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<SurfacePatternStyle> _SurfacePatternStyles_Object;
@@ -1489,6 +1497,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ResearchProjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AmbienceSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AimOpticalSightMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.WeaponBarrelModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternConfigs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1647,6 +1656,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ResearchProjects,
                 TItem AmbienceSets,
                 TItem AimOpticalSightMarkers,
+                TItem WeaponBarrelModels,
                 TItem SurfacePatternStyles,
                 TItem SurfacePatternConfigs,
                 TItem SurfacePatterns,
@@ -1803,6 +1813,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ResearchProjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ResearchProjects, new StarfieldGroup.Mask<TItem>(ResearchProjects));
                 this.AmbienceSets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AmbienceSets, new StarfieldGroup.Mask<TItem>(AmbienceSets));
                 this.AimOpticalSightMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AimOpticalSightMarkers, new StarfieldGroup.Mask<TItem>(AimOpticalSightMarkers));
+                this.WeaponBarrelModels = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(WeaponBarrelModels, new StarfieldGroup.Mask<TItem>(WeaponBarrelModels));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
                 this.SurfacePatternConfigs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternConfigs, new StarfieldGroup.Mask<TItem>(SurfacePatternConfigs));
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatterns, new StarfieldGroup.Mask<TItem>(SurfacePatterns));
@@ -1969,6 +1980,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ResearchProjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AmbienceSets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AimOpticalSightMarkers { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? WeaponBarrelModels { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternConfigs { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatterns { get; set; }
@@ -2136,6 +2148,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ResearchProjects, rhs.ResearchProjects)) return false;
                 if (!object.Equals(this.AmbienceSets, rhs.AmbienceSets)) return false;
                 if (!object.Equals(this.AimOpticalSightMarkers, rhs.AimOpticalSightMarkers)) return false;
+                if (!object.Equals(this.WeaponBarrelModels, rhs.WeaponBarrelModels)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 if (!object.Equals(this.SurfacePatternConfigs, rhs.SurfacePatternConfigs)) return false;
                 if (!object.Equals(this.SurfacePatterns, rhs.SurfacePatterns)) return false;
@@ -2296,6 +2309,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ResearchProjects);
                 hash.Add(this.AmbienceSets);
                 hash.Add(this.AimOpticalSightMarkers);
+                hash.Add(this.WeaponBarrelModels);
                 hash.Add(this.SurfacePatternStyles);
                 hash.Add(this.SurfacePatternConfigs);
                 hash.Add(this.SurfacePatterns);
@@ -3042,6 +3056,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.AimOpticalSightMarkers.Overall)) return false;
                     if (this.AimOpticalSightMarkers.Specific != null && !this.AimOpticalSightMarkers.Specific.All(eval)) return false;
+                }
+                if (WeaponBarrelModels != null)
+                {
+                    if (!eval(this.WeaponBarrelModels.Overall)) return false;
+                    if (this.WeaponBarrelModels.Specific != null && !this.WeaponBarrelModels.Specific.All(eval)) return false;
                 }
                 if (SurfacePatternStyles != null)
                 {
@@ -3825,6 +3844,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AimOpticalSightMarkers.Overall)) return true;
                     if (this.AimOpticalSightMarkers.Specific != null && this.AimOpticalSightMarkers.Specific.Any(eval)) return true;
                 }
+                if (WeaponBarrelModels != null)
+                {
+                    if (eval(this.WeaponBarrelModels.Overall)) return true;
+                    if (this.WeaponBarrelModels.Specific != null && this.WeaponBarrelModels.Specific.Any(eval)) return true;
+                }
                 if (SurfacePatternStyles != null)
                 {
                     if (eval(this.SurfacePatternStyles.Overall)) return true;
@@ -4030,6 +4054,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ResearchProjects = this.ResearchProjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ResearchProjects.Overall), this.ResearchProjects.Specific?.Translate(eval));
                 obj.AmbienceSets = this.AmbienceSets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AmbienceSets.Overall), this.AmbienceSets.Specific?.Translate(eval));
                 obj.AimOpticalSightMarkers = this.AimOpticalSightMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AimOpticalSightMarkers.Overall), this.AimOpticalSightMarkers.Specific?.Translate(eval));
+                obj.WeaponBarrelModels = this.WeaponBarrelModels == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.WeaponBarrelModels.Overall), this.WeaponBarrelModels.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
                 obj.SurfacePatternConfigs = this.SurfacePatternConfigs == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternConfigs.Overall), this.SurfacePatternConfigs.Specific?.Translate(eval));
                 obj.SurfacePatterns = this.SurfacePatterns == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatterns.Overall), this.SurfacePatterns.Specific?.Translate(eval));
@@ -4641,6 +4666,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AimOpticalSightMarkers?.Print(sb);
                     }
+                    if (printMask?.WeaponBarrelModels?.Overall ?? true)
+                    {
+                        WeaponBarrelModels?.Print(sb);
+                    }
                     if (printMask?.SurfacePatternStyles?.Overall ?? true)
                     {
                         SurfacePatternStyles?.Print(sb);
@@ -4847,6 +4876,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ResearchProject.ErrorMask>?>? ResearchProjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AmbienceSet.ErrorMask>?>? AmbienceSets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AimOpticalSightMarker.ErrorMask>?>? AimOpticalSightMarkers;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<WeaponBarrelModel.ErrorMask>?>? WeaponBarrelModels;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternConfig.ErrorMask>?>? SurfacePatternConfigs;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePattern.ErrorMask>?>? SurfacePatterns;
@@ -5156,6 +5186,8 @@ namespace Mutagen.Bethesda.Starfield
                         return AmbienceSets;
                     case StarfieldMod_FieldIndex.AimOpticalSightMarkers:
                         return AimOpticalSightMarkers;
+                    case StarfieldMod_FieldIndex.WeaponBarrelModels:
+                        return WeaponBarrelModels;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         return SurfacePatternStyles;
                     case StarfieldMod_FieldIndex.SurfacePatternConfigs:
@@ -5621,6 +5653,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.AimOpticalSightMarkers:
                         this.AimOpticalSightMarkers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AimOpticalSightMarker.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.WeaponBarrelModels:
+                        this.WeaponBarrelModels = new MaskItem<Exception?, StarfieldGroup.ErrorMask<WeaponBarrelModel.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         this.SurfacePatternStyles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>(ex, null);
@@ -6097,6 +6132,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AimOpticalSightMarkers:
                         this.AimOpticalSightMarkers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AimOpticalSightMarker.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.WeaponBarrelModels:
+                        this.WeaponBarrelModels = (MaskItem<Exception?, StarfieldGroup.ErrorMask<WeaponBarrelModel.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         this.SurfacePatternStyles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>?)obj;
                         break;
@@ -6278,6 +6316,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ResearchProjects != null) return true;
                 if (AmbienceSets != null) return true;
                 if (AimOpticalSightMarkers != null) return true;
+                if (WeaponBarrelModels != null) return true;
                 if (SurfacePatternStyles != null) return true;
                 if (SurfacePatternConfigs != null) return true;
                 if (SurfacePatterns != null) return true;
@@ -6458,6 +6497,7 @@ namespace Mutagen.Bethesda.Starfield
                 ResearchProjects?.Print(sb);
                 AmbienceSets?.Print(sb);
                 AimOpticalSightMarkers?.Print(sb);
+                WeaponBarrelModels?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
                 SurfacePatternConfigs?.Print(sb);
                 SurfacePatterns?.Print(sb);
@@ -6621,6 +6661,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ResearchProjects = this.ResearchProjects.Combine(rhs.ResearchProjects, (l, r) => l.Combine(r));
                 ret.AmbienceSets = this.AmbienceSets.Combine(rhs.AmbienceSets, (l, r) => l.Combine(r));
                 ret.AimOpticalSightMarkers = this.AimOpticalSightMarkers.Combine(rhs.AimOpticalSightMarkers, (l, r) => l.Combine(r));
+                ret.WeaponBarrelModels = this.WeaponBarrelModels.Combine(rhs.WeaponBarrelModels, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 ret.SurfacePatternConfigs = this.SurfacePatternConfigs.Combine(rhs.SurfacePatternConfigs, (l, r) => l.Combine(r));
                 ret.SurfacePatterns = this.SurfacePatterns.Combine(rhs.SurfacePatterns, (l, r) => l.Combine(r));
@@ -6799,6 +6840,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<ResearchProject.TranslationMask>? ResearchProjects;
             public StarfieldGroup.TranslationMask<AmbienceSet.TranslationMask>? AmbienceSets;
             public StarfieldGroup.TranslationMask<AimOpticalSightMarker.TranslationMask>? AimOpticalSightMarkers;
+            public StarfieldGroup.TranslationMask<WeaponBarrelModel.TranslationMask>? WeaponBarrelModels;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             public StarfieldGroup.TranslationMask<SurfacePatternConfig.TranslationMask>? SurfacePatternConfigs;
             public StarfieldGroup.TranslationMask<SurfacePattern.TranslationMask>? SurfacePatterns;
@@ -6978,6 +7020,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ResearchProjects != null ? ResearchProjects.OnOverall : DefaultOn, ResearchProjects?.GetCrystal()));
                 ret.Add((AmbienceSets != null ? AmbienceSets.OnOverall : DefaultOn, AmbienceSets?.GetCrystal()));
                 ret.Add((AimOpticalSightMarkers != null ? AimOpticalSightMarkers.OnOverall : DefaultOn, AimOpticalSightMarkers?.GetCrystal()));
+                ret.Add((WeaponBarrelModels != null ? WeaponBarrelModels.OnOverall : DefaultOn, WeaponBarrelModels?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
                 ret.Add((SurfacePatternConfigs != null ? SurfacePatternConfigs.OnOverall : DefaultOn, SurfacePatternConfigs?.GetCrystal()));
                 ret.Add((SurfacePatterns != null ? SurfacePatterns.OnOverall : DefaultOn, SurfacePatterns?.GetCrystal()));
@@ -7178,6 +7221,7 @@ namespace Mutagen.Bethesda.Starfield
             _ResearchProjects_Object = new StarfieldGroup<ResearchProject>(this);
             _AmbienceSets_Object = new StarfieldGroup<AmbienceSet>(this);
             _AimOpticalSightMarkers_Object = new StarfieldGroup<AimOpticalSightMarker>(this);
+            _WeaponBarrelModels_Object = new StarfieldGroup<WeaponBarrelModel>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatternConfigs_Object = new StarfieldGroup<SurfacePatternConfig>(this);
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
@@ -7776,6 +7820,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.AimOpticalSightMarkers.RecordCache.Set(rhsMod.AimOpticalSightMarkers.RecordCache.Items);
             }
+            if (mask?.WeaponBarrelModels ?? true)
+            {
+                this.WeaponBarrelModels.RecordCache.Set(rhsMod.WeaponBarrelModels.RecordCache.Items);
+            }
             if (mask?.SurfacePatternStyles ?? true)
             {
                 this.SurfacePatternStyles.RecordCache.Set(rhsMod.SurfacePatternStyles.RecordCache.Items);
@@ -7967,6 +8015,7 @@ namespace Mutagen.Bethesda.Starfield
             count += ResearchProjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += AmbienceSets.RecordCache.Count > 0 ? 1 : default(uint);
             count += AimOpticalSightMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += WeaponBarrelModels.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternConfigs.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatterns.RecordCache.Count > 0 ? 1 : default(uint);
@@ -8395,6 +8444,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<ResearchProject> ResearchProjects { get; }
         new StarfieldGroup<AmbienceSet> AmbienceSets { get; }
         new StarfieldGroup<AimOpticalSightMarker> AimOpticalSightMarkers { get; }
+        new StarfieldGroup<WeaponBarrelModel> WeaponBarrelModels { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
         new StarfieldGroup<SurfacePatternConfig> SurfacePatternConfigs { get; }
         new StarfieldGroup<SurfacePattern> SurfacePatterns { get; }
@@ -8569,6 +8619,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IResearchProjectGetter> ResearchProjects { get; }
         IStarfieldGroupGetter<IAmbienceSetGetter> AmbienceSets { get; }
         IStarfieldGroupGetter<IAimOpticalSightMarkerGetter> AimOpticalSightMarkers { get; }
+        IStarfieldGroupGetter<IWeaponBarrelModelGetter> WeaponBarrelModels { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
         IStarfieldGroupGetter<ISurfacePatternConfigGetter> SurfacePatternConfigs { get; }
         IStarfieldGroupGetter<ISurfacePatternGetter> SurfacePatterns { get; }
@@ -9306,15 +9357,16 @@ namespace Mutagen.Bethesda.Starfield
         ResearchProjects = 143,
         AmbienceSets = 144,
         AimOpticalSightMarkers = 145,
-        SurfacePatternStyles = 146,
-        SurfacePatternConfigs = 147,
-        SurfacePatterns = 148,
-        SurfaceTrees = 149,
-        PlanetContentManagerTrees = 150,
-        SnapTemplateBehaviors = 151,
-        TerminalMenus = 152,
-        LegendaryItems = 153,
-        ActorValueModulations = 154,
+        WeaponBarrelModels = 146,
+        SurfacePatternStyles = 147,
+        SurfacePatternConfigs = 148,
+        SurfacePatterns = 149,
+        SurfaceTrees = 150,
+        PlanetContentManagerTrees = 151,
+        SnapTemplateBehaviors = 152,
+        TerminalMenus = 153,
+        LegendaryItems = 154,
+        ActorValueModulations = 155,
     }
     #endregion
 
@@ -9325,9 +9377,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 155;
+        public const ushort AdditionalFieldCount = 156;
 
-        public const ushort FieldCount = 155;
+        public const ushort FieldCount = 156;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -9538,6 +9590,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ResearchProjects.Clear();
             item.AmbienceSets.Clear();
             item.AimOpticalSightMarkers.Clear();
+            item.WeaponBarrelModels.Clear();
             item.SurfacePatternStyles.Clear();
             item.SurfacePatternConfigs.Clear();
             item.SurfacePatterns.Clear();
@@ -9858,6 +9911,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ResearchProjects.Remove(keys);
             obj.AmbienceSets.Remove(keys);
             obj.AimOpticalSightMarkers.Remove(keys);
+            obj.WeaponBarrelModels.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
             obj.SurfacePatternConfigs.Remove(keys);
             obj.SurfacePatterns.Remove(keys);
@@ -11083,6 +11137,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAimOpticalSightMarker":
                 case "IAimOpticalSightMarkerInternal":
                     obj.AimOpticalSightMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "WeaponBarrelModel":
+                case "IWeaponBarrelModelGetter":
+                case "IWeaponBarrelModel":
+                case "IWeaponBarrelModelInternal":
+                    obj.WeaponBarrelModels.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -12352,6 +12414,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ResearchProjects = MaskItemExt.Factory(item.ResearchProjects.GetEqualsMask(rhs.ResearchProjects, include), include);
             ret.AmbienceSets = MaskItemExt.Factory(item.AmbienceSets.GetEqualsMask(rhs.AmbienceSets, include), include);
             ret.AimOpticalSightMarkers = MaskItemExt.Factory(item.AimOpticalSightMarkers.GetEqualsMask(rhs.AimOpticalSightMarkers, include), include);
+            ret.WeaponBarrelModels = MaskItemExt.Factory(item.WeaponBarrelModels.GetEqualsMask(rhs.WeaponBarrelModels, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
             ret.SurfacePatternConfigs = MaskItemExt.Factory(item.SurfacePatternConfigs.GetEqualsMask(rhs.SurfacePatternConfigs, include), include);
             ret.SurfacePatterns = MaskItemExt.Factory(item.SurfacePatterns.GetEqualsMask(rhs.SurfacePatterns, include), include);
@@ -12988,6 +13051,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.AimOpticalSightMarkers?.Overall ?? true)
             {
                 item.AimOpticalSightMarkers?.Print(sb, "AimOpticalSightMarkers");
+            }
+            if (printMask?.WeaponBarrelModels?.Overall ?? true)
+            {
+                item.WeaponBarrelModels?.Print(sb, "WeaponBarrelModels");
             }
             if (printMask?.SurfacePatternStyles?.Overall ?? true)
             {
@@ -14202,6 +14269,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAimOpticalSightMarkersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WeaponBarrelModels) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WeaponBarrelModels, rhs.WeaponBarrelModels, out var lhsWeaponBarrelModels, out var rhsWeaponBarrelModels, out var isWeaponBarrelModelsEqual))
+                {
+                    if (!object.Equals(lhsWeaponBarrelModels, rhsWeaponBarrelModels)) return false;
+                }
+                else if (!isWeaponBarrelModelsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfacePatternStyles) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SurfacePatternStyles, rhs.SurfacePatternStyles, out var lhsSurfacePatternStyles, out var rhsSurfacePatternStyles, out var isSurfacePatternStylesEqual))
@@ -14426,6 +14501,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ResearchProjects);
             hash.Add(item.AmbienceSets);
             hash.Add(item.AimOpticalSightMarkers);
+            hash.Add(item.WeaponBarrelModels);
             hash.Add(item.SurfacePatternStyles);
             hash.Add(item.SurfacePatternConfigs);
             hash.Add(item.SurfacePatterns);
@@ -15177,6 +15253,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAimOpticalSightMarker":
                 case "IAimOpticalSightMarkerInternal":
                     return obj.AimOpticalSightMarkers;
+                case "WeaponBarrelModel":
+                case "IWeaponBarrelModelGetter":
+                case "IWeaponBarrelModel":
+                case "IWeaponBarrelModelInternal":
+                    return obj.WeaponBarrelModels;
                 case "SurfacePatternStyle":
                 case "ISurfacePatternStyleGetter":
                 case "ISurfacePatternStyle":
@@ -15248,7 +15329,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[154];
+            Stream[] outputStreams = new Stream[155];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -15395,15 +15476,16 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.ResearchProjects, 142, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AmbienceSets, 143, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AimOpticalSightMarkers, 144, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 145, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 146, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 147, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 148, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 149, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 150, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 151, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 152, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 153, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.WeaponBarrelModels, 145, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 146, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternConfigs, 147, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 148, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 149, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 150, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 151, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 152, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 153, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 154, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -16559,6 +16641,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.AimOpticalSightMarkers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WeaponBarrelModels.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -17925,6 +18011,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAimOpticalSightMarker":
                 case "IAimOpticalSightMarkerInternal":
                     foreach (var item in obj.AimOpticalSightMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WeaponBarrelModel":
+                case "IWeaponBarrelModelGetter":
+                case "IWeaponBarrelModel":
+                case "IWeaponBarrelModelInternal":
+                    foreach (var item in obj.WeaponBarrelModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -19461,6 +19556,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.AimOpticalSightMarkers,
                 groupGetter: (m) => m.AimOpticalSightMarkers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WeaponBarrelModel, IWeaponBarrelModelGetter>(
+                srcGroup: obj.WeaponBarrelModels,
+                type: typeof(IWeaponBarrelModelGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.WeaponBarrelModels,
+                groupGetter: (m) => m.WeaponBarrelModels))
             {
                 yield return item;
             }
@@ -21588,6 +21692,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.AimOpticalSightMarkers,
                         groupGetter: (m) => m.AimOpticalSightMarkers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WeaponBarrelModel":
+                case "IWeaponBarrelModelGetter":
+                case "IWeaponBarrelModel":
+                case "IWeaponBarrelModelInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WeaponBarrelModel, IWeaponBarrelModelGetter>(
+                        srcGroup: obj.WeaponBarrelModels,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.WeaponBarrelModels,
+                        groupGetter: (m) => m.WeaponBarrelModels))
                     {
                         yield return item;
                     }
@@ -25363,6 +25481,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WeaponBarrelModels) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.WeaponBarrelModels);
+                try
+                {
+                    item.WeaponBarrelModels.DeepCopyIn(
+                        rhs: rhs.WeaponBarrelModels,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.WeaponBarrelModels));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfacePatternStyles) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SurfacePatternStyles);
@@ -25778,6 +25916,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool ResearchProjects;
         public bool AmbienceSets;
         public bool AimOpticalSightMarkers;
+        public bool WeaponBarrelModels;
         public bool SurfacePatternStyles;
         public bool SurfacePatternConfigs;
         public bool SurfacePatterns;
@@ -25937,6 +26076,7 @@ namespace Mutagen.Bethesda.Starfield
             ResearchProjects = defaultValue;
             AmbienceSets = defaultValue;
             AimOpticalSightMarkers = defaultValue;
+            WeaponBarrelModels = defaultValue;
             SurfacePatternStyles = defaultValue;
             SurfacePatternConfigs = defaultValue;
             SurfacePatterns = defaultValue;
@@ -27596,6 +27736,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AimOpticalSightMarkersItem).BinaryWriteTranslator).Write<IAimOpticalSightMarkerGetter>(
                         item: AimOpticalSightMarkersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.WeaponBarrelModels ?? true)
+            {
+                var WeaponBarrelModelsItem = item.WeaponBarrelModels;
+                if (WeaponBarrelModelsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeaponBarrelModelsItem).BinaryWriteTranslator).Write<IWeaponBarrelModelGetter>(
+                        item: WeaponBarrelModelsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -29789,6 +29940,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.AimOpticalSightMarkers;
                 }
+                case RecordTypeInts.WBAR:
+                {
+                    if (importMask?.WeaponBarrelModels ?? true)
+                    {
+                        item.WeaponBarrelModels.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.WeaponBarrelModels;
+                }
                 case RecordTypeInts.PTST:
                 {
                     if (importMask?.SurfacePatternStyles ?? true)
@@ -30811,6 +30976,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAimOpticalSightMarkerGetter>? _AimOpticalSightMarkers => _AimOpticalSightMarkersLocations != null ? StarfieldGroupBinaryOverlay<IAimOpticalSightMarkerGetter>.StarfieldGroupFactory(_stream, _AimOpticalSightMarkersLocations, _package) : default;
         public IStarfieldGroupGetter<IAimOpticalSightMarkerGetter> AimOpticalSightMarkers => _AimOpticalSightMarkers ?? new StarfieldGroup<AimOpticalSightMarker>(this);
         #endregion
+        #region WeaponBarrelModels
+        private List<RangeInt64>? _WeaponBarrelModelsLocations;
+        private IStarfieldGroupGetter<IWeaponBarrelModelGetter>? _WeaponBarrelModels => _WeaponBarrelModelsLocations != null ? StarfieldGroupBinaryOverlay<IWeaponBarrelModelGetter>.StarfieldGroupFactory(_stream, _WeaponBarrelModelsLocations, _package) : default;
+        public IStarfieldGroupGetter<IWeaponBarrelModelGetter> WeaponBarrelModels => _WeaponBarrelModels ?? new StarfieldGroup<WeaponBarrelModel>(this);
+        #endregion
         #region SurfacePatternStyles
         private List<RangeInt64>? _SurfacePatternStylesLocations;
         private IStarfieldGroupGetter<ISurfacePatternStyleGetter>? _SurfacePatternStyles => _SurfacePatternStylesLocations != null ? StarfieldGroupBinaryOverlay<ISurfacePatternStyleGetter>.StarfieldGroupFactory(_stream, _SurfacePatternStylesLocations, _package) : default;
@@ -31818,6 +31988,12 @@ namespace Mutagen.Bethesda.Starfield
                     _AimOpticalSightMarkersLocations ??= new();
                     _AimOpticalSightMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AimOpticalSightMarkers;
+                }
+                case RecordTypeInts.WBAR:
+                {
+                    _WeaponBarrelModelsLocations ??= new();
+                    _WeaponBarrelModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.WeaponBarrelModels;
                 }
                 case RecordTypeInts.PTST:
                 {

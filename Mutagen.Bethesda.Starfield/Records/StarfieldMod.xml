@@ -152,6 +152,7 @@
       <Group name="ResearchProjects" refName="ResearchProject" />
       <Group name="AmbienceSets" refName="AmbienceSet" />
       <Group name="AimOpticalSightMarkers" refName="AimOpticalSightMarker" />
+      <Group name="WeaponBarrelModels" refName="WeaponBarrelModel" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="SurfacePatternConfigs" refName="SurfacePatternConfig" />
       <Group name="SurfacePatterns" refName="SurfacePattern" />
