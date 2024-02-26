@@ -2,6 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LayeredMaterialSwap" recordType="LMSW" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

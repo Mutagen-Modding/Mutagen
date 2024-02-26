@@ -143,6 +143,7 @@
       <Group name="AimAssistPoses" refName="AimAssistPose" />
       <Group name="VolumetricLightings" refName="VolumetricLighting" />
       <Group name="SurfaceBlocks" refName="SurfaceBlock" />
+      <Group name="SurfacePatternConfigs" refName="SurfacePatternConfig" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="PlanetContentManagerBranchNodes" refName="PlanetContentManagerBranchNode" />
@@ -154,8 +155,8 @@
       <Group name="AimOpticalSightMarkers" refName="AimOpticalSightMarker" />
       <Group name="WeaponBarrelModels" refName="WeaponBarrelModel" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
-      <Group name="SurfacePatternConfigs" refName="SurfacePatternConfig" />
       <Group name="SurfacePatterns" refName="SurfacePattern" />
+      <Group name="LayeredMaterialSwaps" refName="LayeredMaterialSwap" />
       <Group name="SurfaceTrees" refName="SurfaceTree" />
       <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
       <Group name="SnapTemplateBehaviors" refName="SnapTemplateBehavior" />

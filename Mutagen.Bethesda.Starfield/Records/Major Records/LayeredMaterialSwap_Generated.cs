@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +57,31 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ILayeredMaterialSwapGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region REFL
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _REFL;
+        public MemorySlice<Byte>? REFL
+        {
+            get => this._REFL;
+            set => this._REFL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILayeredMaterialSwapGetter.REFL => this.REFL;
+        #endregion
 
         #region To String
 
@@ -79,6 +107,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.REFL = initialValue;
             }
 
             public Mask(
@@ -88,7 +118,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem REFL)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +130,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.REFL = REFL;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +140,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem REFL;
             #endregion
 
             #region Equals
@@ -119,11 +158,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.REFL, rhs.REFL)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.REFL);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +177,19 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.REFL)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +198,19 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.REFL)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +226,22 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.REFL = eval(this.REFL);
             }
             #endregion
 
@@ -175,6 +260,29 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LayeredMaterialSwap.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.REFL ?? true)
+                    {
+                        sb.AppendItem(REFL, "REFL");
+                    }
                 }
             }
             #endregion
@@ -185,12 +293,21 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? REFL;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LayeredMaterialSwap_FieldIndex enu = (LayeredMaterialSwap_FieldIndex)index;
                 switch (enu)
                 {
+                    case LayeredMaterialSwap_FieldIndex.Components:
+                        return Components;
+                    case LayeredMaterialSwap_FieldIndex.REFL:
+                        return REFL;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +318,12 @@ namespace Mutagen.Bethesda.Starfield
                 LayeredMaterialSwap_FieldIndex enu = (LayeredMaterialSwap_FieldIndex)index;
                 switch (enu)
                 {
+                    case LayeredMaterialSwap_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LayeredMaterialSwap_FieldIndex.REFL:
+                        this.REFL = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +335,12 @@ namespace Mutagen.Bethesda.Starfield
                 LayeredMaterialSwap_FieldIndex enu = (LayeredMaterialSwap_FieldIndex)index;
                 switch (enu)
                 {
+                    case LayeredMaterialSwap_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case LayeredMaterialSwap_FieldIndex.REFL:
+                        this.REFL = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +350,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (REFL != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +378,27 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(REFL, "REFL");
+                }
             }
             #endregion
 
@@ -255,6 +407,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.REFL = this.REFL.Combine(rhs.REFL);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +430,28 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool REFL;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.REFL = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((REFL, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +463,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LayeredMaterialSwap_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayeredMaterialSwapCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayeredMaterialSwapSetterCommon.Instance.RemapLinks(this, mapping);
         public LayeredMaterialSwap(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +514,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILayeredMaterialSwap);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LayeredMaterialSwapCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LayeredMaterialSwapSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LayeredMaterialSwapSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LayeredMaterialSwapSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +597,14 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILayeredMaterialSwap :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILayeredMaterialSwapGetter,
         ILoquiObjectSetter<ILayeredMaterialSwapInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<AComponent> Components { get; }
+        new MemorySlice<Byte>? REFL { get; set; }
     }
 
     public partial interface ILayeredMaterialSwapInternal :
@@ -440,11 +617,15 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.LMSW)]
     public partial interface ILayeredMaterialSwapGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ILayeredMaterialSwapGetter>,
         IMapsToGetter<ILayeredMaterialSwapGetter>
     {
         static new ILoquiRegistration StaticRegistration => LayeredMaterialSwap_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        ReadOnlyMemorySlice<Byte>? REFL { get; }
 
     }
 
@@ -621,6 +802,8 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        REFL = 8,
     }
     #endregion
 
@@ -631,9 +814,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(LayeredMaterialSwap.Mask<>);
 
@@ -663,8 +846,15 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LMSW);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LMSW);
+            var all = RecordCollection.Factory(
+                RecordTypes.LMSW,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.REFL);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LayeredMaterialSwapBinaryWriteTranslation);
         #region Interface
@@ -706,6 +896,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILayeredMaterialSwapInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.REFL = default;
             base.Clear(item);
         }
         
@@ -723,6 +915,31 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILayeredMaterialSwap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILayeredMaterialSwap obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILayeredMaterialSwap obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +1007,11 @@ namespace Mutagen.Bethesda.Starfield
             LayeredMaterialSwap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.REFL = MemorySliceExt.SequenceEqual(item.REFL, rhs.REFL);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1061,25 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.REFL ?? true)
+                && item.REFL is {} REFLItem)
+            {
+                sb.AppendLine($"REFL => {SpanExt.ToHexString(REFLItem)}");
+            }
         }
         
         public static LayeredMaterialSwap_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1130,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LayeredMaterialSwap_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LayeredMaterialSwap_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LayeredMaterialSwap_FieldIndex.REFL) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.REFL, rhs.REFL)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1166,11 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILayeredMaterialSwapGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            if (item.REFL is {} REFLItem)
+            {
+                hash.Add(REFLItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1199,28 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILayeredMaterialSwapGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +1296,41 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LayeredMaterialSwap_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)LayeredMaterialSwap_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LayeredMaterialSwap_FieldIndex.REFL) ?? true))
+            {
+                if(rhs.REFL is {} REFLrhs)
+                {
+                    item.REFL = REFLrhs.ToArray();
+                }
+                else
+                {
+                    item.REFL = default;
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1479,32 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly LayeredMaterialSwapBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ILayeredMaterialSwapGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.REFL,
+                header: translationParams.ConvertToCustom(RecordTypes.REFL));
+        }
+
         public void Write(
             MutagenWriter writer,
             ILayeredMaterialSwapGetter item,
@@ -1184,10 +1521,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1576,46 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly LayeredMaterialSwapBinaryCreateTranslation Instance = new LayeredMaterialSwapBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LMSW;
+        public static ParseResult FillBinaryRecordTypes(
+            ILayeredMaterialSwapInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)LayeredMaterialSwap_FieldIndex.Components;
+                }
+                case RecordTypeInts.REFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.REFL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LayeredMaterialSwap_FieldIndex.REFL;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1648,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayeredMaterialSwapCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LayeredMaterialSwapCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LayeredMaterialSwapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1664,11 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILayeredMaterialSwap);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region REFL
+        private int? _REFLLocation;
+        public ReadOnlyMemorySlice<Byte>? REFL => _REFLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _REFLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1726,43 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)LayeredMaterialSwap_FieldIndex.Components;
+                }
+                case RecordTypeInts.REFL:
+                {
+                    _REFLLocation = (stream.Position - offset);
+                    return (int)LayeredMaterialSwap_FieldIndex.REFL;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
