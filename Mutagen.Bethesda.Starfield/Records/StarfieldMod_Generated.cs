@@ -211,10 +211,13 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
             _LayeredMaterialSwaps_Object = new StarfieldGroup<LayeredMaterialSwap>(this);
             _ForceDatas_Object = new StarfieldGroup<ForceData>(this);
+            _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
+            _EffectSequences_Object = new StarfieldGroup<EffectSequence>(this);
+            _Clouds_Object = new StarfieldGroup<Clouds>(this);
+            _FogVolumes_Object = new StarfieldGroup<FogVolume>(this);
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
             _PlanetContentManagerTrees_Object = new StarfieldGroup<PlanetContentManagerTree>(this);
             _SnapTemplateBehaviors_Object = new StarfieldGroup<SnapTemplateBehavior>(this);
-            _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             CustomCtor();
@@ -1286,6 +1289,34 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IForceDataGetter> IStarfieldModGetter.ForceDatas => _ForceDatas_Object;
         #endregion
+        #region TerminalMenus
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<TerminalMenu> _TerminalMenus_Object;
+        public StarfieldGroup<TerminalMenu> TerminalMenus => _TerminalMenus_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ITerminalMenuGetter> IStarfieldModGetter.TerminalMenus => _TerminalMenus_Object;
+        #endregion
+        #region EffectSequences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<EffectSequence> _EffectSequences_Object;
+        public StarfieldGroup<EffectSequence> EffectSequences => _EffectSequences_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IEffectSequenceGetter> IStarfieldModGetter.EffectSequences => _EffectSequences_Object;
+        #endregion
+        #region Clouds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Clouds> _Clouds_Object;
+        public StarfieldGroup<Clouds> Clouds => _Clouds_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ICloudsGetter> IStarfieldModGetter.Clouds => _Clouds_Object;
+        #endregion
+        #region FogVolumes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<FogVolume> _FogVolumes_Object;
+        public StarfieldGroup<FogVolume> FogVolumes => _FogVolumes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IFogVolumeGetter> IStarfieldModGetter.FogVolumes => _FogVolumes_Object;
+        #endregion
         #region SurfaceTrees
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<SurfaceTree> _SurfaceTrees_Object;
@@ -1306,13 +1337,6 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<SnapTemplateBehavior> SnapTemplateBehaviors => _SnapTemplateBehaviors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> IStarfieldModGetter.SnapTemplateBehaviors => _SnapTemplateBehaviors_Object;
-        #endregion
-        #region TerminalMenus
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<TerminalMenu> _TerminalMenus_Object;
-        public StarfieldGroup<TerminalMenu> TerminalMenus => _TerminalMenus_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<ITerminalMenuGetter> IStarfieldModGetter.TerminalMenus => _TerminalMenus_Object;
         #endregion
         #region LegendaryItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1519,10 +1543,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LayeredMaterialSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ForceDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.EffectSequences = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Clouds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.FogVolumes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.PlanetContentManagerTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SnapTemplateBehaviors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
@@ -1680,10 +1707,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SurfacePatterns,
                 TItem LayeredMaterialSwaps,
                 TItem ForceDatas,
+                TItem TerminalMenus,
+                TItem EffectSequences,
+                TItem Clouds,
+                TItem FogVolumes,
                 TItem SurfaceTrees,
                 TItem PlanetContentManagerTrees,
                 TItem SnapTemplateBehaviors,
-                TItem TerminalMenus,
                 TItem LegendaryItems,
                 TItem ActorValueModulations)
             {
@@ -1839,10 +1869,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatterns, new StarfieldGroup.Mask<TItem>(SurfacePatterns));
                 this.LayeredMaterialSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LayeredMaterialSwaps, new StarfieldGroup.Mask<TItem>(LayeredMaterialSwaps));
                 this.ForceDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ForceDatas, new StarfieldGroup.Mask<TItem>(ForceDatas));
+                this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(TerminalMenus, new StarfieldGroup.Mask<TItem>(TerminalMenus));
+                this.EffectSequences = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(EffectSequences, new StarfieldGroup.Mask<TItem>(EffectSequences));
+                this.Clouds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Clouds, new StarfieldGroup.Mask<TItem>(Clouds));
+                this.FogVolumes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FogVolumes, new StarfieldGroup.Mask<TItem>(FogVolumes));
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfaceTrees, new StarfieldGroup.Mask<TItem>(SurfaceTrees));
                 this.PlanetContentManagerTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PlanetContentManagerTrees, new StarfieldGroup.Mask<TItem>(PlanetContentManagerTrees));
                 this.SnapTemplateBehaviors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SnapTemplateBehaviors, new StarfieldGroup.Mask<TItem>(SnapTemplateBehaviors));
-                this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(TerminalMenus, new StarfieldGroup.Mask<TItem>(TerminalMenus));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LegendaryItems, new StarfieldGroup.Mask<TItem>(LegendaryItems));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
             }
@@ -2008,10 +2041,13 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatterns { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LayeredMaterialSwaps { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ForceDatas { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? TerminalMenus { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? EffectSequences { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Clouds { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FogVolumes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfaceTrees { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PlanetContentManagerTrees { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SnapTemplateBehaviors { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? TerminalMenus { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LegendaryItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
             #endregion
@@ -2178,10 +2214,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SurfacePatterns, rhs.SurfacePatterns)) return false;
                 if (!object.Equals(this.LayeredMaterialSwaps, rhs.LayeredMaterialSwaps)) return false;
                 if (!object.Equals(this.ForceDatas, rhs.ForceDatas)) return false;
+                if (!object.Equals(this.TerminalMenus, rhs.TerminalMenus)) return false;
+                if (!object.Equals(this.EffectSequences, rhs.EffectSequences)) return false;
+                if (!object.Equals(this.Clouds, rhs.Clouds)) return false;
+                if (!object.Equals(this.FogVolumes, rhs.FogVolumes)) return false;
                 if (!object.Equals(this.SurfaceTrees, rhs.SurfaceTrees)) return false;
                 if (!object.Equals(this.PlanetContentManagerTrees, rhs.PlanetContentManagerTrees)) return false;
                 if (!object.Equals(this.SnapTemplateBehaviors, rhs.SnapTemplateBehaviors)) return false;
-                if (!object.Equals(this.TerminalMenus, rhs.TerminalMenus)) return false;
                 if (!object.Equals(this.LegendaryItems, rhs.LegendaryItems)) return false;
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
                 return true;
@@ -2341,10 +2380,13 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SurfacePatterns);
                 hash.Add(this.LayeredMaterialSwaps);
                 hash.Add(this.ForceDatas);
+                hash.Add(this.TerminalMenus);
+                hash.Add(this.EffectSequences);
+                hash.Add(this.Clouds);
+                hash.Add(this.FogVolumes);
                 hash.Add(this.SurfaceTrees);
                 hash.Add(this.PlanetContentManagerTrees);
                 hash.Add(this.SnapTemplateBehaviors);
-                hash.Add(this.TerminalMenus);
                 hash.Add(this.LegendaryItems);
                 hash.Add(this.ActorValueModulations);
                 return hash.ToHashCode();
@@ -3115,6 +3157,26 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ForceDatas.Overall)) return false;
                     if (this.ForceDatas.Specific != null && !this.ForceDatas.Specific.All(eval)) return false;
                 }
+                if (TerminalMenus != null)
+                {
+                    if (!eval(this.TerminalMenus.Overall)) return false;
+                    if (this.TerminalMenus.Specific != null && !this.TerminalMenus.Specific.All(eval)) return false;
+                }
+                if (EffectSequences != null)
+                {
+                    if (!eval(this.EffectSequences.Overall)) return false;
+                    if (this.EffectSequences.Specific != null && !this.EffectSequences.Specific.All(eval)) return false;
+                }
+                if (Clouds != null)
+                {
+                    if (!eval(this.Clouds.Overall)) return false;
+                    if (this.Clouds.Specific != null && !this.Clouds.Specific.All(eval)) return false;
+                }
+                if (FogVolumes != null)
+                {
+                    if (!eval(this.FogVolumes.Overall)) return false;
+                    if (this.FogVolumes.Specific != null && !this.FogVolumes.Specific.All(eval)) return false;
+                }
                 if (SurfaceTrees != null)
                 {
                     if (!eval(this.SurfaceTrees.Overall)) return false;
@@ -3129,11 +3191,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.SnapTemplateBehaviors.Overall)) return false;
                     if (this.SnapTemplateBehaviors.Specific != null && !this.SnapTemplateBehaviors.Specific.All(eval)) return false;
-                }
-                if (TerminalMenus != null)
-                {
-                    if (!eval(this.TerminalMenus.Overall)) return false;
-                    if (this.TerminalMenus.Specific != null && !this.TerminalMenus.Specific.All(eval)) return false;
                 }
                 if (LegendaryItems != null)
                 {
@@ -3912,6 +3969,26 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ForceDatas.Overall)) return true;
                     if (this.ForceDatas.Specific != null && this.ForceDatas.Specific.Any(eval)) return true;
                 }
+                if (TerminalMenus != null)
+                {
+                    if (eval(this.TerminalMenus.Overall)) return true;
+                    if (this.TerminalMenus.Specific != null && this.TerminalMenus.Specific.Any(eval)) return true;
+                }
+                if (EffectSequences != null)
+                {
+                    if (eval(this.EffectSequences.Overall)) return true;
+                    if (this.EffectSequences.Specific != null && this.EffectSequences.Specific.Any(eval)) return true;
+                }
+                if (Clouds != null)
+                {
+                    if (eval(this.Clouds.Overall)) return true;
+                    if (this.Clouds.Specific != null && this.Clouds.Specific.Any(eval)) return true;
+                }
+                if (FogVolumes != null)
+                {
+                    if (eval(this.FogVolumes.Overall)) return true;
+                    if (this.FogVolumes.Specific != null && this.FogVolumes.Specific.Any(eval)) return true;
+                }
                 if (SurfaceTrees != null)
                 {
                     if (eval(this.SurfaceTrees.Overall)) return true;
@@ -3926,11 +4003,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.SnapTemplateBehaviors.Overall)) return true;
                     if (this.SnapTemplateBehaviors.Specific != null && this.SnapTemplateBehaviors.Specific.Any(eval)) return true;
-                }
-                if (TerminalMenus != null)
-                {
-                    if (eval(this.TerminalMenus.Overall)) return true;
-                    if (this.TerminalMenus.Specific != null && this.TerminalMenus.Specific.Any(eval)) return true;
                 }
                 if (LegendaryItems != null)
                 {
@@ -4108,10 +4180,13 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfacePatterns = this.SurfacePatterns == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatterns.Overall), this.SurfacePatterns.Specific?.Translate(eval));
                 obj.LayeredMaterialSwaps = this.LayeredMaterialSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LayeredMaterialSwaps.Overall), this.LayeredMaterialSwaps.Specific?.Translate(eval));
                 obj.ForceDatas = this.ForceDatas == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ForceDatas.Overall), this.ForceDatas.Specific?.Translate(eval));
+                obj.TerminalMenus = this.TerminalMenus == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.TerminalMenus.Overall), this.TerminalMenus.Specific?.Translate(eval));
+                obj.EffectSequences = this.EffectSequences == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.EffectSequences.Overall), this.EffectSequences.Specific?.Translate(eval));
+                obj.Clouds = this.Clouds == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Clouds.Overall), this.Clouds.Specific?.Translate(eval));
+                obj.FogVolumes = this.FogVolumes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FogVolumes.Overall), this.FogVolumes.Specific?.Translate(eval));
                 obj.SurfaceTrees = this.SurfaceTrees == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfaceTrees.Overall), this.SurfaceTrees.Specific?.Translate(eval));
                 obj.PlanetContentManagerTrees = this.PlanetContentManagerTrees == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PlanetContentManagerTrees.Overall), this.PlanetContentManagerTrees.Specific?.Translate(eval));
                 obj.SnapTemplateBehaviors = this.SnapTemplateBehaviors == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SnapTemplateBehaviors.Overall), this.SnapTemplateBehaviors.Specific?.Translate(eval));
-                obj.TerminalMenus = this.TerminalMenus == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.TerminalMenus.Overall), this.TerminalMenus.Specific?.Translate(eval));
                 obj.LegendaryItems = this.LegendaryItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LegendaryItems.Overall), this.LegendaryItems.Specific?.Translate(eval));
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
             }
@@ -4740,6 +4815,22 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ForceDatas?.Print(sb);
                     }
+                    if (printMask?.TerminalMenus?.Overall ?? true)
+                    {
+                        TerminalMenus?.Print(sb);
+                    }
+                    if (printMask?.EffectSequences?.Overall ?? true)
+                    {
+                        EffectSequences?.Print(sb);
+                    }
+                    if (printMask?.Clouds?.Overall ?? true)
+                    {
+                        Clouds?.Print(sb);
+                    }
+                    if (printMask?.FogVolumes?.Overall ?? true)
+                    {
+                        FogVolumes?.Print(sb);
+                    }
                     if (printMask?.SurfaceTrees?.Overall ?? true)
                     {
                         SurfaceTrees?.Print(sb);
@@ -4751,10 +4842,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.SnapTemplateBehaviors?.Overall ?? true)
                     {
                         SnapTemplateBehaviors?.Print(sb);
-                    }
-                    if (printMask?.TerminalMenus?.Overall ?? true)
-                    {
-                        TerminalMenus?.Print(sb);
                     }
                     if (printMask?.LegendaryItems?.Overall ?? true)
                     {
@@ -4940,10 +5027,13 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePattern.ErrorMask>?>? SurfacePatterns;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LayeredMaterialSwap.ErrorMask>?>? LayeredMaterialSwaps;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ForceData.ErrorMask>?>? ForceDatas;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>? TerminalMenus;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectSequence.ErrorMask>?>? EffectSequences;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Clouds.ErrorMask>?>? Clouds;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<FogVolume.ErrorMask>?>? FogVolumes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>? SurfaceTrees;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PlanetContentManagerTree.ErrorMask>?>? PlanetContentManagerTrees;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateBehavior.ErrorMask>?>? SnapTemplateBehaviors;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>? TerminalMenus;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>? LegendaryItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
             #endregion
@@ -5258,14 +5348,20 @@ namespace Mutagen.Bethesda.Starfield
                         return LayeredMaterialSwaps;
                     case StarfieldMod_FieldIndex.ForceDatas:
                         return ForceDatas;
+                    case StarfieldMod_FieldIndex.TerminalMenus:
+                        return TerminalMenus;
+                    case StarfieldMod_FieldIndex.EffectSequences:
+                        return EffectSequences;
+                    case StarfieldMod_FieldIndex.Clouds:
+                        return Clouds;
+                    case StarfieldMod_FieldIndex.FogVolumes:
+                        return FogVolumes;
                     case StarfieldMod_FieldIndex.SurfaceTrees:
                         return SurfaceTrees;
                     case StarfieldMod_FieldIndex.PlanetContentManagerTrees:
                         return PlanetContentManagerTrees;
                     case StarfieldMod_FieldIndex.SnapTemplateBehaviors:
                         return SnapTemplateBehaviors;
-                    case StarfieldMod_FieldIndex.TerminalMenus:
-                        return TerminalMenus;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         return LegendaryItems;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
@@ -5736,6 +5832,18 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ForceDatas:
                         this.ForceDatas = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ForceData.ErrorMask>?>(ex, null);
                         break;
+                    case StarfieldMod_FieldIndex.TerminalMenus:
+                        this.TerminalMenus = new MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.EffectSequences:
+                        this.EffectSequences = new MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectSequence.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Clouds:
+                        this.Clouds = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Clouds.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.FogVolumes:
+                        this.FogVolumes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FogVolume.ErrorMask>?>(ex, null);
+                        break;
                     case StarfieldMod_FieldIndex.SurfaceTrees:
                         this.SurfaceTrees = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>(ex, null);
                         break;
@@ -5744,9 +5852,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.SnapTemplateBehaviors:
                         this.SnapTemplateBehaviors = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateBehavior.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.TerminalMenus:
-                        this.TerminalMenus = new MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         this.LegendaryItems = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>(ex, null);
@@ -6220,6 +6325,18 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ForceDatas:
                         this.ForceDatas = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ForceData.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.TerminalMenus:
+                        this.TerminalMenus = (MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.EffectSequences:
+                        this.EffectSequences = (MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectSequence.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.Clouds:
+                        this.Clouds = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Clouds.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.FogVolumes:
+                        this.FogVolumes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FogVolume.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.SurfaceTrees:
                         this.SurfaceTrees = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>?)obj;
                         break;
@@ -6228,9 +6345,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.SnapTemplateBehaviors:
                         this.SnapTemplateBehaviors = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateBehavior.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.TerminalMenus:
-                        this.TerminalMenus = (MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         this.LegendaryItems = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>?)obj;
@@ -6398,10 +6512,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (SurfacePatterns != null) return true;
                 if (LayeredMaterialSwaps != null) return true;
                 if (ForceDatas != null) return true;
+                if (TerminalMenus != null) return true;
+                if (EffectSequences != null) return true;
+                if (Clouds != null) return true;
+                if (FogVolumes != null) return true;
                 if (SurfaceTrees != null) return true;
                 if (PlanetContentManagerTrees != null) return true;
                 if (SnapTemplateBehaviors != null) return true;
-                if (TerminalMenus != null) return true;
                 if (LegendaryItems != null) return true;
                 if (ActorValueModulations != null) return true;
                 return false;
@@ -6581,10 +6698,13 @@ namespace Mutagen.Bethesda.Starfield
                 SurfacePatterns?.Print(sb);
                 LayeredMaterialSwaps?.Print(sb);
                 ForceDatas?.Print(sb);
+                TerminalMenus?.Print(sb);
+                EffectSequences?.Print(sb);
+                Clouds?.Print(sb);
+                FogVolumes?.Print(sb);
                 SurfaceTrees?.Print(sb);
                 PlanetContentManagerTrees?.Print(sb);
                 SnapTemplateBehaviors?.Print(sb);
-                TerminalMenus?.Print(sb);
                 LegendaryItems?.Print(sb);
                 ActorValueModulations?.Print(sb);
             }
@@ -6747,10 +6867,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SurfacePatterns = this.SurfacePatterns.Combine(rhs.SurfacePatterns, (l, r) => l.Combine(r));
                 ret.LayeredMaterialSwaps = this.LayeredMaterialSwaps.Combine(rhs.LayeredMaterialSwaps, (l, r) => l.Combine(r));
                 ret.ForceDatas = this.ForceDatas.Combine(rhs.ForceDatas, (l, r) => l.Combine(r));
+                ret.TerminalMenus = this.TerminalMenus.Combine(rhs.TerminalMenus, (l, r) => l.Combine(r));
+                ret.EffectSequences = this.EffectSequences.Combine(rhs.EffectSequences, (l, r) => l.Combine(r));
+                ret.Clouds = this.Clouds.Combine(rhs.Clouds, (l, r) => l.Combine(r));
+                ret.FogVolumes = this.FogVolumes.Combine(rhs.FogVolumes, (l, r) => l.Combine(r));
                 ret.SurfaceTrees = this.SurfaceTrees.Combine(rhs.SurfaceTrees, (l, r) => l.Combine(r));
                 ret.PlanetContentManagerTrees = this.PlanetContentManagerTrees.Combine(rhs.PlanetContentManagerTrees, (l, r) => l.Combine(r));
                 ret.SnapTemplateBehaviors = this.SnapTemplateBehaviors.Combine(rhs.SnapTemplateBehaviors, (l, r) => l.Combine(r));
-                ret.TerminalMenus = this.TerminalMenus.Combine(rhs.TerminalMenus, (l, r) => l.Combine(r));
                 ret.LegendaryItems = this.LegendaryItems.Combine(rhs.LegendaryItems, (l, r) => l.Combine(r));
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
                 return ret;
@@ -6928,10 +7051,13 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<SurfacePattern.TranslationMask>? SurfacePatterns;
             public StarfieldGroup.TranslationMask<LayeredMaterialSwap.TranslationMask>? LayeredMaterialSwaps;
             public StarfieldGroup.TranslationMask<ForceData.TranslationMask>? ForceDatas;
+            public StarfieldGroup.TranslationMask<TerminalMenu.TranslationMask>? TerminalMenus;
+            public StarfieldGroup.TranslationMask<EffectSequence.TranslationMask>? EffectSequences;
+            public StarfieldGroup.TranslationMask<Clouds.TranslationMask>? Clouds;
+            public StarfieldGroup.TranslationMask<FogVolume.TranslationMask>? FogVolumes;
             public StarfieldGroup.TranslationMask<SurfaceTree.TranslationMask>? SurfaceTrees;
             public StarfieldGroup.TranslationMask<PlanetContentManagerTree.TranslationMask>? PlanetContentManagerTrees;
             public StarfieldGroup.TranslationMask<SnapTemplateBehavior.TranslationMask>? SnapTemplateBehaviors;
-            public StarfieldGroup.TranslationMask<TerminalMenu.TranslationMask>? TerminalMenus;
             public StarfieldGroup.TranslationMask<LegendaryItem.TranslationMask>? LegendaryItems;
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
             #endregion
@@ -7110,10 +7236,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SurfacePatterns != null ? SurfacePatterns.OnOverall : DefaultOn, SurfacePatterns?.GetCrystal()));
                 ret.Add((LayeredMaterialSwaps != null ? LayeredMaterialSwaps.OnOverall : DefaultOn, LayeredMaterialSwaps?.GetCrystal()));
                 ret.Add((ForceDatas != null ? ForceDatas.OnOverall : DefaultOn, ForceDatas?.GetCrystal()));
+                ret.Add((TerminalMenus != null ? TerminalMenus.OnOverall : DefaultOn, TerminalMenus?.GetCrystal()));
+                ret.Add((EffectSequences != null ? EffectSequences.OnOverall : DefaultOn, EffectSequences?.GetCrystal()));
+                ret.Add((Clouds != null ? Clouds.OnOverall : DefaultOn, Clouds?.GetCrystal()));
+                ret.Add((FogVolumes != null ? FogVolumes.OnOverall : DefaultOn, FogVolumes?.GetCrystal()));
                 ret.Add((SurfaceTrees != null ? SurfaceTrees.OnOverall : DefaultOn, SurfaceTrees?.GetCrystal()));
                 ret.Add((PlanetContentManagerTrees != null ? PlanetContentManagerTrees.OnOverall : DefaultOn, PlanetContentManagerTrees?.GetCrystal()));
                 ret.Add((SnapTemplateBehaviors != null ? SnapTemplateBehaviors.OnOverall : DefaultOn, SnapTemplateBehaviors?.GetCrystal()));
-                ret.Add((TerminalMenus != null ? TerminalMenus.OnOverall : DefaultOn, TerminalMenus?.GetCrystal()));
                 ret.Add((LegendaryItems != null ? LegendaryItems.OnOverall : DefaultOn, LegendaryItems?.GetCrystal()));
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
             }
@@ -7313,10 +7442,13 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
             _LayeredMaterialSwaps_Object = new StarfieldGroup<LayeredMaterialSwap>(this);
             _ForceDatas_Object = new StarfieldGroup<ForceData>(this);
+            _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
+            _EffectSequences_Object = new StarfieldGroup<EffectSequence>(this);
+            _Clouds_Object = new StarfieldGroup<Clouds>(this);
+            _FogVolumes_Object = new StarfieldGroup<FogVolume>(this);
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
             _PlanetContentManagerTrees_Object = new StarfieldGroup<PlanetContentManagerTree>(this);
             _SnapTemplateBehaviors_Object = new StarfieldGroup<SnapTemplateBehavior>(this);
-            _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             CustomCtor();
@@ -7932,6 +8064,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ForceDatas.RecordCache.Set(rhsMod.ForceDatas.RecordCache.Items);
             }
+            if (mask?.TerminalMenus ?? true)
+            {
+                this.TerminalMenus.RecordCache.Set(rhsMod.TerminalMenus.RecordCache.Items);
+            }
+            if (mask?.EffectSequences ?? true)
+            {
+                this.EffectSequences.RecordCache.Set(rhsMod.EffectSequences.RecordCache.Items);
+            }
+            if (mask?.Clouds ?? true)
+            {
+                this.Clouds.RecordCache.Set(rhsMod.Clouds.RecordCache.Items);
+            }
+            if (mask?.FogVolumes ?? true)
+            {
+                this.FogVolumes.RecordCache.Set(rhsMod.FogVolumes.RecordCache.Items);
+            }
             if (mask?.SurfaceTrees ?? true)
             {
                 this.SurfaceTrees.RecordCache.Set(rhsMod.SurfaceTrees.RecordCache.Items);
@@ -7943,10 +8091,6 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.SnapTemplateBehaviors ?? true)
             {
                 this.SnapTemplateBehaviors.RecordCache.Set(rhsMod.SnapTemplateBehaviors.RecordCache.Items);
-            }
-            if (mask?.TerminalMenus ?? true)
-            {
-                this.TerminalMenus.RecordCache.Set(rhsMod.TerminalMenus.RecordCache.Items);
             }
             if (mask?.LegendaryItems ?? true)
             {
@@ -8117,10 +8261,13 @@ namespace Mutagen.Bethesda.Starfield
             count += SurfacePatterns.RecordCache.Count > 0 ? 1 : default(uint);
             count += LayeredMaterialSwaps.RecordCache.Count > 0 ? 1 : default(uint);
             count += ForceDatas.RecordCache.Count > 0 ? 1 : default(uint);
+            count += TerminalMenus.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EffectSequences.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Clouds.RecordCache.Count > 0 ? 1 : default(uint);
+            count += FogVolumes.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfaceTrees.RecordCache.Count > 0 ? 1 : default(uint);
             count += PlanetContentManagerTrees.RecordCache.Count > 0 ? 1 : default(uint);
             count += SnapTemplateBehaviors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TerminalMenus.RecordCache.Count > 0 ? 1 : default(uint);
             count += LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
@@ -8548,10 +8695,13 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<SurfacePattern> SurfacePatterns { get; }
         new StarfieldGroup<LayeredMaterialSwap> LayeredMaterialSwaps { get; }
         new StarfieldGroup<ForceData> ForceDatas { get; }
+        new StarfieldGroup<TerminalMenu> TerminalMenus { get; }
+        new StarfieldGroup<EffectSequence> EffectSequences { get; }
+        new StarfieldGroup<Clouds> Clouds { get; }
+        new StarfieldGroup<FogVolume> FogVolumes { get; }
         new StarfieldGroup<SurfaceTree> SurfaceTrees { get; }
         new StarfieldGroup<PlanetContentManagerTree> PlanetContentManagerTrees { get; }
         new StarfieldGroup<SnapTemplateBehavior> SnapTemplateBehaviors { get; }
-        new StarfieldGroup<TerminalMenu> TerminalMenus { get; }
         new StarfieldGroup<LegendaryItem> LegendaryItems { get; }
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
     }
@@ -8725,10 +8875,13 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ISurfacePatternGetter> SurfacePatterns { get; }
         IStarfieldGroupGetter<ILayeredMaterialSwapGetter> LayeredMaterialSwaps { get; }
         IStarfieldGroupGetter<IForceDataGetter> ForceDatas { get; }
+        IStarfieldGroupGetter<ITerminalMenuGetter> TerminalMenus { get; }
+        IStarfieldGroupGetter<IEffectSequenceGetter> EffectSequences { get; }
+        IStarfieldGroupGetter<ICloudsGetter> Clouds { get; }
+        IStarfieldGroupGetter<IFogVolumeGetter> FogVolumes { get; }
         IStarfieldGroupGetter<ISurfaceTreeGetter> SurfaceTrees { get; }
         IStarfieldGroupGetter<IPlanetContentManagerTreeGetter> PlanetContentManagerTrees { get; }
         IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> SnapTemplateBehaviors { get; }
-        IStarfieldGroupGetter<ITerminalMenuGetter> TerminalMenus { get; }
         IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems { get; }
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
 
@@ -9465,12 +9618,15 @@ namespace Mutagen.Bethesda.Starfield
         SurfacePatterns = 149,
         LayeredMaterialSwaps = 150,
         ForceDatas = 151,
-        SurfaceTrees = 152,
-        PlanetContentManagerTrees = 153,
-        SnapTemplateBehaviors = 154,
-        TerminalMenus = 155,
-        LegendaryItems = 156,
-        ActorValueModulations = 157,
+        TerminalMenus = 152,
+        EffectSequences = 153,
+        Clouds = 154,
+        FogVolumes = 155,
+        SurfaceTrees = 156,
+        PlanetContentManagerTrees = 157,
+        SnapTemplateBehaviors = 158,
+        LegendaryItems = 159,
+        ActorValueModulations = 160,
     }
     #endregion
 
@@ -9481,9 +9637,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 158;
+        public const ushort AdditionalFieldCount = 161;
 
-        public const ushort FieldCount = 158;
+        public const ushort FieldCount = 161;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -9700,10 +9856,13 @@ namespace Mutagen.Bethesda.Starfield
             item.SurfacePatterns.Clear();
             item.LayeredMaterialSwaps.Clear();
             item.ForceDatas.Clear();
+            item.TerminalMenus.Clear();
+            item.EffectSequences.Clear();
+            item.Clouds.Clear();
+            item.FogVolumes.Clear();
             item.SurfaceTrees.Clear();
             item.PlanetContentManagerTrees.Clear();
             item.SnapTemplateBehaviors.Clear();
-            item.TerminalMenus.Clear();
             item.LegendaryItems.Clear();
             item.ActorValueModulations.Clear();
         }
@@ -9833,10 +9992,10 @@ namespace Mutagen.Bethesda.Starfield
             obj.AimOpticalSightMarkers.RemapLinks(mapping);
             obj.SurfacePatterns.RemapLinks(mapping);
             obj.LayeredMaterialSwaps.RemapLinks(mapping);
+            obj.TerminalMenus.RemapLinks(mapping);
             obj.SurfaceTrees.RemapLinks(mapping);
             obj.PlanetContentManagerTrees.RemapLinks(mapping);
             obj.SnapTemplateBehaviors.RemapLinks(mapping);
-            obj.TerminalMenus.RemapLinks(mapping);
             obj.LegendaryItems.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
         }
@@ -10024,10 +10183,13 @@ namespace Mutagen.Bethesda.Starfield
             obj.SurfacePatterns.Remove(keys);
             obj.LayeredMaterialSwaps.Remove(keys);
             obj.ForceDatas.Remove(keys);
+            obj.TerminalMenus.Remove(keys);
+            obj.EffectSequences.Remove(keys);
+            obj.Clouds.Remove(keys);
+            obj.FogVolumes.Remove(keys);
             obj.SurfaceTrees.Remove(keys);
             obj.PlanetContentManagerTrees.Remove(keys);
             obj.SnapTemplateBehaviors.Remove(keys);
-            obj.TerminalMenus.Remove(keys);
             obj.LegendaryItems.Remove(keys);
             obj.ActorValueModulations.Remove(keys);
         }
@@ -11297,6 +11459,38 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "TerminalMenu":
+                case "ITerminalMenuGetter":
+                case "ITerminalMenu":
+                case "ITerminalMenuInternal":
+                    obj.TerminalMenus.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EffectSequence":
+                case "IEffectSequenceGetter":
+                case "IEffectSequence":
+                case "IEffectSequenceInternal":
+                    obj.EffectSequences.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Clouds":
+                case "ICloudsGetter":
+                case "IClouds":
+                case "ICloudsInternal":
+                    obj.Clouds.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "FogVolume":
+                case "IFogVolumeGetter":
+                case "IFogVolume":
+                case "IFogVolumeInternal":
+                    obj.FogVolumes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "SurfaceTree":
                 case "ISurfaceTreeGetter":
                 case "ISurfaceTree":
@@ -11318,14 +11512,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISnapTemplateBehavior":
                 case "ISnapTemplateBehaviorInternal":
                     obj.SnapTemplateBehaviors.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "TerminalMenu":
-                case "ITerminalMenuGetter":
-                case "ITerminalMenu":
-                case "ITerminalMenuInternal":
-                    obj.TerminalMenus.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -12553,10 +12739,13 @@ namespace Mutagen.Bethesda.Starfield
             ret.SurfacePatterns = MaskItemExt.Factory(item.SurfacePatterns.GetEqualsMask(rhs.SurfacePatterns, include), include);
             ret.LayeredMaterialSwaps = MaskItemExt.Factory(item.LayeredMaterialSwaps.GetEqualsMask(rhs.LayeredMaterialSwaps, include), include);
             ret.ForceDatas = MaskItemExt.Factory(item.ForceDatas.GetEqualsMask(rhs.ForceDatas, include), include);
+            ret.TerminalMenus = MaskItemExt.Factory(item.TerminalMenus.GetEqualsMask(rhs.TerminalMenus, include), include);
+            ret.EffectSequences = MaskItemExt.Factory(item.EffectSequences.GetEqualsMask(rhs.EffectSequences, include), include);
+            ret.Clouds = MaskItemExt.Factory(item.Clouds.GetEqualsMask(rhs.Clouds, include), include);
+            ret.FogVolumes = MaskItemExt.Factory(item.FogVolumes.GetEqualsMask(rhs.FogVolumes, include), include);
             ret.SurfaceTrees = MaskItemExt.Factory(item.SurfaceTrees.GetEqualsMask(rhs.SurfaceTrees, include), include);
             ret.PlanetContentManagerTrees = MaskItemExt.Factory(item.PlanetContentManagerTrees.GetEqualsMask(rhs.PlanetContentManagerTrees, include), include);
             ret.SnapTemplateBehaviors = MaskItemExt.Factory(item.SnapTemplateBehaviors.GetEqualsMask(rhs.SnapTemplateBehaviors, include), include);
-            ret.TerminalMenus = MaskItemExt.Factory(item.TerminalMenus.GetEqualsMask(rhs.TerminalMenus, include), include);
             ret.LegendaryItems = MaskItemExt.Factory(item.LegendaryItems.GetEqualsMask(rhs.LegendaryItems, include), include);
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
         }
@@ -13211,6 +13400,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ForceDatas?.Print(sb, "ForceDatas");
             }
+            if (printMask?.TerminalMenus?.Overall ?? true)
+            {
+                item.TerminalMenus?.Print(sb, "TerminalMenus");
+            }
+            if (printMask?.EffectSequences?.Overall ?? true)
+            {
+                item.EffectSequences?.Print(sb, "EffectSequences");
+            }
+            if (printMask?.Clouds?.Overall ?? true)
+            {
+                item.Clouds?.Print(sb, "Clouds");
+            }
+            if (printMask?.FogVolumes?.Overall ?? true)
+            {
+                item.FogVolumes?.Print(sb, "FogVolumes");
+            }
             if (printMask?.SurfaceTrees?.Overall ?? true)
             {
                 item.SurfaceTrees?.Print(sb, "SurfaceTrees");
@@ -13222,10 +13427,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SnapTemplateBehaviors?.Overall ?? true)
             {
                 item.SnapTemplateBehaviors?.Print(sb, "SnapTemplateBehaviors");
-            }
-            if (printMask?.TerminalMenus?.Overall ?? true)
-            {
-                item.TerminalMenus?.Print(sb, "TerminalMenus");
             }
             if (printMask?.LegendaryItems?.Overall ?? true)
             {
@@ -14460,6 +14661,38 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isForceDatasEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.TerminalMenus) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.TerminalMenus, rhs.TerminalMenus, out var lhsTerminalMenus, out var rhsTerminalMenus, out var isTerminalMenusEqual))
+                {
+                    if (!object.Equals(lhsTerminalMenus, rhsTerminalMenus)) return false;
+                }
+                else if (!isTerminalMenusEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.EffectSequences) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EffectSequences, rhs.EffectSequences, out var lhsEffectSequences, out var rhsEffectSequences, out var isEffectSequencesEqual))
+                {
+                    if (!object.Equals(lhsEffectSequences, rhsEffectSequences)) return false;
+                }
+                else if (!isEffectSequencesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Clouds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Clouds, rhs.Clouds, out var lhsClouds, out var rhsClouds, out var isCloudsEqual))
+                {
+                    if (!object.Equals(lhsClouds, rhsClouds)) return false;
+                }
+                else if (!isCloudsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FogVolumes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FogVolumes, rhs.FogVolumes, out var lhsFogVolumes, out var rhsFogVolumes, out var isFogVolumesEqual))
+                {
+                    if (!object.Equals(lhsFogVolumes, rhsFogVolumes)) return false;
+                }
+                else if (!isFogVolumesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfaceTrees) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SurfaceTrees, rhs.SurfaceTrees, out var lhsSurfaceTrees, out var rhsSurfaceTrees, out var isSurfaceTreesEqual))
@@ -14483,14 +14716,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsSnapTemplateBehaviors, rhsSnapTemplateBehaviors)) return false;
                 }
                 else if (!isSnapTemplateBehaviorsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.TerminalMenus) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.TerminalMenus, rhs.TerminalMenus, out var lhsTerminalMenus, out var rhsTerminalMenus, out var isTerminalMenusEqual))
-                {
-                    if (!object.Equals(lhsTerminalMenus, rhsTerminalMenus)) return false;
-                }
-                else if (!isTerminalMenusEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LegendaryItems) ?? true))
             {
@@ -14666,10 +14891,13 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SurfacePatterns);
             hash.Add(item.LayeredMaterialSwaps);
             hash.Add(item.ForceDatas);
+            hash.Add(item.TerminalMenus);
+            hash.Add(item.EffectSequences);
+            hash.Add(item.Clouds);
+            hash.Add(item.FogVolumes);
             hash.Add(item.SurfaceTrees);
             hash.Add(item.PlanetContentManagerTrees);
             hash.Add(item.SnapTemplateBehaviors);
-            hash.Add(item.TerminalMenus);
             hash.Add(item.LegendaryItems);
             hash.Add(item.ActorValueModulations);
             return hash.ToHashCode();
@@ -15444,6 +15672,26 @@ namespace Mutagen.Bethesda.Starfield
                 case "IForceData":
                 case "IForceDataInternal":
                     return obj.ForceDatas;
+                case "TerminalMenu":
+                case "ITerminalMenuGetter":
+                case "ITerminalMenu":
+                case "ITerminalMenuInternal":
+                    return obj.TerminalMenus;
+                case "EffectSequence":
+                case "IEffectSequenceGetter":
+                case "IEffectSequence":
+                case "IEffectSequenceInternal":
+                    return obj.EffectSequences;
+                case "Clouds":
+                case "ICloudsGetter":
+                case "IClouds":
+                case "ICloudsInternal":
+                    return obj.Clouds;
+                case "FogVolume":
+                case "IFogVolumeGetter":
+                case "IFogVolume":
+                case "IFogVolumeInternal":
+                    return obj.FogVolumes;
                 case "SurfaceTree":
                 case "ISurfaceTreeGetter":
                 case "ISurfaceTree":
@@ -15459,11 +15707,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISnapTemplateBehavior":
                 case "ISnapTemplateBehaviorInternal":
                     return obj.SnapTemplateBehaviors;
-                case "TerminalMenu":
-                case "ITerminalMenuGetter":
-                case "ITerminalMenu":
-                case "ITerminalMenuInternal":
-                    return obj.TerminalMenus;
                 case "LegendaryItem":
                 case "ILegendaryItemGetter":
                 case "ILegendaryItem":
@@ -15500,7 +15743,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[157];
+            Stream[] outputStreams = new Stream[160];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -15653,12 +15896,15 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 148, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LayeredMaterialSwaps, 149, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ForceDatas, 150, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 151, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 152, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 153, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 154, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 155, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 156, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 151, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.EffectSequences, 152, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Clouds, 153, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FogVolumes, 154, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 155, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 156, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 157, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 158, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 159, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -16206,6 +16452,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.TerminalMenus is IFormLinkContainerGetter TerminalMenuslinkCont)
+            {
+                foreach (var item in TerminalMenuslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.SurfaceTrees.EnumerateFormLinks())
             {
                 yield return item;
@@ -16217,13 +16470,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.SnapTemplateBehaviors is IFormLinkContainerGetter SnapTemplateBehaviorslinkCont)
             {
                 foreach (var item in SnapTemplateBehaviorslinkCont.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.TerminalMenus is IFormLinkContainerGetter TerminalMenuslinkCont)
-            {
-                foreach (var item in TerminalMenuslinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -16848,6 +17094,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.TerminalMenus.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectSequences.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Clouds.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FogVolumes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.SurfaceTrees.EnumerateMajorRecords())
             {
                 yield return item;
@@ -16857,10 +17119,6 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SnapTemplateBehaviors.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.TerminalMenus.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -18257,6 +18515,42 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "TerminalMenu":
+                case "ITerminalMenuGetter":
+                case "ITerminalMenu":
+                case "ITerminalMenuInternal":
+                    foreach (var item in obj.TerminalMenus.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectSequence":
+                case "IEffectSequenceGetter":
+                case "IEffectSequence":
+                case "IEffectSequenceInternal":
+                    foreach (var item in obj.EffectSequences.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Clouds":
+                case "ICloudsGetter":
+                case "IClouds":
+                case "ICloudsInternal":
+                    foreach (var item in obj.Clouds.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FogVolume":
+                case "IFogVolumeGetter":
+                case "IFogVolume":
+                case "IFogVolumeInternal":
+                    foreach (var item in obj.FogVolumes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "SurfaceTree":
                 case "ISurfaceTreeGetter":
                 case "ISurfaceTree":
@@ -18280,15 +18574,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISnapTemplateBehavior":
                 case "ISnapTemplateBehaviorInternal":
                     foreach (var item in obj.SnapTemplateBehaviors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "TerminalMenu":
-                case "ITerminalMenuGetter":
-                case "ITerminalMenu":
-                case "ITerminalMenuInternal":
-                    foreach (var item in obj.TerminalMenus.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -19819,6 +20104,42 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, TerminalMenu, ITerminalMenuGetter>(
+                srcGroup: obj.TerminalMenus,
+                type: typeof(ITerminalMenuGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.TerminalMenus,
+                groupGetter: (m) => m.TerminalMenus))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, EffectSequence, IEffectSequenceGetter>(
+                srcGroup: obj.EffectSequences,
+                type: typeof(IEffectSequenceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EffectSequences,
+                groupGetter: (m) => m.EffectSequences))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Clouds, ICloudsGetter>(
+                srcGroup: obj.Clouds,
+                type: typeof(ICloudsGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Clouds,
+                groupGetter: (m) => m.Clouds))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FogVolume, IFogVolumeGetter>(
+                srcGroup: obj.FogVolumes,
+                type: typeof(IFogVolumeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FogVolumes,
+                groupGetter: (m) => m.FogVolumes))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SurfaceTree, ISurfaceTreeGetter>(
                 srcGroup: obj.SurfaceTrees,
                 type: typeof(ISurfaceTreeGetter),
@@ -19843,15 +20164,6 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.SnapTemplateBehaviors,
                 groupGetter: (m) => m.SnapTemplateBehaviors))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, TerminalMenu, ITerminalMenuGetter>(
-                srcGroup: obj.TerminalMenus,
-                type: typeof(ITerminalMenuGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.TerminalMenus,
-                groupGetter: (m) => m.TerminalMenus))
             {
                 yield return item;
             }
@@ -22004,6 +22316,62 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "TerminalMenu":
+                case "ITerminalMenuGetter":
+                case "ITerminalMenu":
+                case "ITerminalMenuInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, TerminalMenu, ITerminalMenuGetter>(
+                        srcGroup: obj.TerminalMenus,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TerminalMenus,
+                        groupGetter: (m) => m.TerminalMenus))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectSequence":
+                case "IEffectSequenceGetter":
+                case "IEffectSequence":
+                case "IEffectSequenceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, EffectSequence, IEffectSequenceGetter>(
+                        srcGroup: obj.EffectSequences,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EffectSequences,
+                        groupGetter: (m) => m.EffectSequences))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Clouds":
+                case "ICloudsGetter":
+                case "IClouds":
+                case "ICloudsInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Clouds, ICloudsGetter>(
+                        srcGroup: obj.Clouds,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Clouds,
+                        groupGetter: (m) => m.Clouds))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FogVolume":
+                case "IFogVolumeGetter":
+                case "IFogVolume":
+                case "IFogVolumeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FogVolume, IFogVolumeGetter>(
+                        srcGroup: obj.FogVolumes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FogVolumes,
+                        groupGetter: (m) => m.FogVolumes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "SurfaceTree":
                 case "ISurfaceTreeGetter":
                 case "ISurfaceTree":
@@ -22042,20 +22410,6 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.SnapTemplateBehaviors,
                         groupGetter: (m) => m.SnapTemplateBehaviors))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "TerminalMenu":
-                case "ITerminalMenuGetter":
-                case "ITerminalMenu":
-                case "ITerminalMenuInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, TerminalMenu, ITerminalMenuGetter>(
-                        srcGroup: obj.TerminalMenus,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.TerminalMenus,
-                        groupGetter: (m) => m.TerminalMenus))
                     {
                         yield return item;
                     }
@@ -25860,6 +26214,86 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.TerminalMenus) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.TerminalMenus);
+                try
+                {
+                    item.TerminalMenus.DeepCopyIn(
+                        rhs: rhs.TerminalMenus,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.TerminalMenus));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.EffectSequences) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.EffectSequences);
+                try
+                {
+                    item.EffectSequences.DeepCopyIn(
+                        rhs: rhs.EffectSequences,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.EffectSequences));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Clouds) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Clouds);
+                try
+                {
+                    item.Clouds.DeepCopyIn(
+                        rhs: rhs.Clouds,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Clouds));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FogVolumes) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.FogVolumes);
+                try
+                {
+                    item.FogVolumes.DeepCopyIn(
+                        rhs: rhs.FogVolumes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.FogVolumes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfaceTrees) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SurfaceTrees);
@@ -25909,26 +26343,6 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.SnapTemplateBehaviors,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.SnapTemplateBehaviors));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.TerminalMenus) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.TerminalMenus);
-                try
-                {
-                    item.TerminalMenus.DeepCopyIn(
-                        rhs: rhs.TerminalMenus,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.TerminalMenus));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -26221,10 +26635,13 @@ namespace Mutagen.Bethesda.Starfield
         public bool SurfacePatterns;
         public bool LayeredMaterialSwaps;
         public bool ForceDatas;
+        public bool TerminalMenus;
+        public bool EffectSequences;
+        public bool Clouds;
+        public bool FogVolumes;
         public bool SurfaceTrees;
         public bool PlanetContentManagerTrees;
         public bool SnapTemplateBehaviors;
-        public bool TerminalMenus;
         public bool LegendaryItems;
         public bool ActorValueModulations;
         public GroupMask()
@@ -26383,10 +26800,13 @@ namespace Mutagen.Bethesda.Starfield
             SurfacePatterns = defaultValue;
             LayeredMaterialSwaps = defaultValue;
             ForceDatas = defaultValue;
+            TerminalMenus = defaultValue;
+            EffectSequences = defaultValue;
+            Clouds = defaultValue;
+            FogVolumes = defaultValue;
             SurfaceTrees = defaultValue;
             PlanetContentManagerTrees = defaultValue;
             SnapTemplateBehaviors = defaultValue;
-            TerminalMenus = defaultValue;
             LegendaryItems = defaultValue;
             ActorValueModulations = defaultValue;
         }
@@ -28109,6 +28529,50 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.TerminalMenus ?? true)
+            {
+                var TerminalMenusItem = item.TerminalMenus;
+                if (TerminalMenusItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)TerminalMenusItem).BinaryWriteTranslator).Write<ITerminalMenuGetter>(
+                        item: TerminalMenusItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.EffectSequences ?? true)
+            {
+                var EffectSequencesItem = item.EffectSequences;
+                if (EffectSequencesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)EffectSequencesItem).BinaryWriteTranslator).Write<IEffectSequenceGetter>(
+                        item: EffectSequencesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Clouds ?? true)
+            {
+                var CloudsItem = item.Clouds;
+                if (CloudsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)CloudsItem).BinaryWriteTranslator).Write<ICloudsGetter>(
+                        item: CloudsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.FogVolumes ?? true)
+            {
+                var FogVolumesItem = item.FogVolumes;
+                if (FogVolumesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FogVolumesItem).BinaryWriteTranslator).Write<IFogVolumeGetter>(
+                        item: FogVolumesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.SurfaceTrees ?? true)
             {
                 var SurfaceTreesItem = item.SurfaceTrees;
@@ -28138,17 +28602,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SnapTemplateBehaviorsItem).BinaryWriteTranslator).Write<ISnapTemplateBehaviorGetter>(
                         item: SnapTemplateBehaviorsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.TerminalMenus ?? true)
-            {
-                var TerminalMenusItem = item.TerminalMenus;
-                if (TerminalMenusItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)TerminalMenusItem).BinaryWriteTranslator).Write<ITerminalMenuGetter>(
-                        item: TerminalMenusItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -30349,6 +30802,62 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.ForceDatas;
                 }
+                case RecordTypeInts.TMLM:
+                {
+                    if (importMask?.TerminalMenus ?? true)
+                    {
+                        item.TerminalMenus.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.TerminalMenus;
+                }
+                case RecordTypeInts.EFSQ:
+                {
+                    if (importMask?.EffectSequences ?? true)
+                    {
+                        item.EffectSequences.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.EffectSequences;
+                }
+                case RecordTypeInts.CLDF:
+                {
+                    if (importMask?.Clouds ?? true)
+                    {
+                        item.Clouds.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Clouds;
+                }
+                case RecordTypeInts.FOGV:
+                {
+                    if (importMask?.FogVolumes ?? true)
+                    {
+                        item.FogVolumes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.FogVolumes;
+                }
                 case RecordTypeInts.SFTR:
                 {
                     if (importMask?.SurfaceTrees ?? true)
@@ -30390,20 +30899,6 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.SnapTemplateBehaviors;
-                }
-                case RecordTypeInts.TMLM:
-                {
-                    if (importMask?.TerminalMenus ?? true)
-                    {
-                        item.TerminalMenus.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.TerminalMenus;
                 }
                 case RecordTypeInts.LGDI:
                 {
@@ -31359,6 +31854,26 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IForceDataGetter>? _ForceDatas => _ForceDatasLocations != null ? StarfieldGroupBinaryOverlay<IForceDataGetter>.StarfieldGroupFactory(_stream, _ForceDatasLocations, _package) : default;
         public IStarfieldGroupGetter<IForceDataGetter> ForceDatas => _ForceDatas ?? new StarfieldGroup<ForceData>(this);
         #endregion
+        #region TerminalMenus
+        private List<RangeInt64>? _TerminalMenusLocations;
+        private IStarfieldGroupGetter<ITerminalMenuGetter>? _TerminalMenus => _TerminalMenusLocations != null ? StarfieldGroupBinaryOverlay<ITerminalMenuGetter>.StarfieldGroupFactory(_stream, _TerminalMenusLocations, _package) : default;
+        public IStarfieldGroupGetter<ITerminalMenuGetter> TerminalMenus => _TerminalMenus ?? new StarfieldGroup<TerminalMenu>(this);
+        #endregion
+        #region EffectSequences
+        private List<RangeInt64>? _EffectSequencesLocations;
+        private IStarfieldGroupGetter<IEffectSequenceGetter>? _EffectSequences => _EffectSequencesLocations != null ? StarfieldGroupBinaryOverlay<IEffectSequenceGetter>.StarfieldGroupFactory(_stream, _EffectSequencesLocations, _package) : default;
+        public IStarfieldGroupGetter<IEffectSequenceGetter> EffectSequences => _EffectSequences ?? new StarfieldGroup<EffectSequence>(this);
+        #endregion
+        #region Clouds
+        private List<RangeInt64>? _CloudsLocations;
+        private IStarfieldGroupGetter<ICloudsGetter>? _Clouds => _CloudsLocations != null ? StarfieldGroupBinaryOverlay<ICloudsGetter>.StarfieldGroupFactory(_stream, _CloudsLocations, _package) : default;
+        public IStarfieldGroupGetter<ICloudsGetter> Clouds => _Clouds ?? new StarfieldGroup<Clouds>(this);
+        #endregion
+        #region FogVolumes
+        private List<RangeInt64>? _FogVolumesLocations;
+        private IStarfieldGroupGetter<IFogVolumeGetter>? _FogVolumes => _FogVolumesLocations != null ? StarfieldGroupBinaryOverlay<IFogVolumeGetter>.StarfieldGroupFactory(_stream, _FogVolumesLocations, _package) : default;
+        public IStarfieldGroupGetter<IFogVolumeGetter> FogVolumes => _FogVolumes ?? new StarfieldGroup<FogVolume>(this);
+        #endregion
         #region SurfaceTrees
         private List<RangeInt64>? _SurfaceTreesLocations;
         private IStarfieldGroupGetter<ISurfaceTreeGetter>? _SurfaceTrees => _SurfaceTreesLocations != null ? StarfieldGroupBinaryOverlay<ISurfaceTreeGetter>.StarfieldGroupFactory(_stream, _SurfaceTreesLocations, _package) : default;
@@ -31373,11 +31888,6 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _SnapTemplateBehaviorsLocations;
         private IStarfieldGroupGetter<ISnapTemplateBehaviorGetter>? _SnapTemplateBehaviors => _SnapTemplateBehaviorsLocations != null ? StarfieldGroupBinaryOverlay<ISnapTemplateBehaviorGetter>.StarfieldGroupFactory(_stream, _SnapTemplateBehaviorsLocations, _package) : default;
         public IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> SnapTemplateBehaviors => _SnapTemplateBehaviors ?? new StarfieldGroup<SnapTemplateBehavior>(this);
-        #endregion
-        #region TerminalMenus
-        private List<RangeInt64>? _TerminalMenusLocations;
-        private IStarfieldGroupGetter<ITerminalMenuGetter>? _TerminalMenus => _TerminalMenusLocations != null ? StarfieldGroupBinaryOverlay<ITerminalMenuGetter>.StarfieldGroupFactory(_stream, _TerminalMenusLocations, _package) : default;
-        public IStarfieldGroupGetter<ITerminalMenuGetter> TerminalMenus => _TerminalMenus ?? new StarfieldGroup<TerminalMenu>(this);
         #endregion
         #region LegendaryItems
         private List<RangeInt64>? _LegendaryItemsLocations;
@@ -32388,6 +32898,30 @@ namespace Mutagen.Bethesda.Starfield
                     _ForceDatasLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ForceDatas;
                 }
+                case RecordTypeInts.TMLM:
+                {
+                    _TerminalMenusLocations ??= new();
+                    _TerminalMenusLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.TerminalMenus;
+                }
+                case RecordTypeInts.EFSQ:
+                {
+                    _EffectSequencesLocations ??= new();
+                    _EffectSequencesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.EffectSequences;
+                }
+                case RecordTypeInts.CLDF:
+                {
+                    _CloudsLocations ??= new();
+                    _CloudsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Clouds;
+                }
+                case RecordTypeInts.FOGV:
+                {
+                    _FogVolumesLocations ??= new();
+                    _FogVolumesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.FogVolumes;
+                }
                 case RecordTypeInts.SFTR:
                 {
                     _SurfaceTreesLocations ??= new();
@@ -32405,12 +32939,6 @@ namespace Mutagen.Bethesda.Starfield
                     _SnapTemplateBehaviorsLocations ??= new();
                     _SnapTemplateBehaviorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.SnapTemplateBehaviors;
-                }
-                case RecordTypeInts.TMLM:
-                {
-                    _TerminalMenusLocations ??= new();
-                    _TerminalMenusLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.TerminalMenus;
                 }
                 case RecordTypeInts.LGDI:
                 {

@@ -158,10 +158,13 @@
       <Group name="SurfacePatterns" refName="SurfacePattern" />
       <Group name="LayeredMaterialSwaps" refName="LayeredMaterialSwap" />
       <Group name="ForceDatas" refName="ForceData" />
+      <Group name="TerminalMenus" refName="TerminalMenu" />
+      <Group name="EffectSequences" refName="EffectSequence" />
+      <Group name="Clouds" refName="Clouds" />
+      <Group name="FogVolumes" refName="FogVolume" />
       <Group name="SurfaceTrees" refName="SurfaceTree" />
       <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
       <Group name="SnapTemplateBehaviors" refName="SnapTemplateBehavior" />
-      <Group name="TerminalMenus" refName="TerminalMenu" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
     </Fields>

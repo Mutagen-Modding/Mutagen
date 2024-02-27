@@ -900,9 +900,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Clouds</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter> Clouds(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter> Clouds(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICloudsGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -912,9 +912,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Clouds</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter> Clouds(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter> Clouds(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICloudsGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IClouds, ICloudsGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1308,9 +1308,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on EffectSequence</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter> EffectSequence(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter> EffectSequence(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEffectSequenceGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1320,9 +1320,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on EffectSequence</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter> EffectSequence(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter> EffectSequence(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IEffectSequenceGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IEffectSequence, IEffectSequenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1476,9 +1476,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on FogVolume</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter> FogVolume(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter> FogVolume(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFogVolumeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1488,9 +1488,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on FogVolume</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter> FogVolume(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter> FogVolume(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IFogVolumeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IFogVolume, IFogVolumeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
