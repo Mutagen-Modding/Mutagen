@@ -519,13 +519,15 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
 
         LoquiType loqui = typeGen as LoquiType;
         if (loqui.TargetObjectGeneration == null) return null;
-
+        
         var sum = 0;
         foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
         {
+            var fieldData = item.GetFieldData();
             if (item.Nullable) return null;
             if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
-            if (item.GetFieldData().Binary == BinaryGenerationType.NoGeneration) continue;
+            if (fieldData.HasTrigger) return null;
+            if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
             var len = await gen.ExpectedLength(loqui.TargetObjectGeneration, item);
             if (len == null) return null;
             sum += len.Value;

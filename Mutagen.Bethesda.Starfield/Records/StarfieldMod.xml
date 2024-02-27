@@ -160,6 +160,7 @@
       <Group name="ForceDatas" refName="ForceData" />
       <Group name="TerminalMenus" refName="TerminalMenu" />
       <Group name="EffectSequences" refName="EffectSequence" />
+      <Group name="SecondaryDamageLists" refName="SecondaryDamageList" />
       <Group name="Clouds" refName="Clouds" />
       <Group name="FogVolumes" refName="FogVolume" />
       <Group name="SurfaceTrees" refName="SurfaceTree" />

@@ -1165,6 +1165,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ScriptVariableListProperty_Registration.Instance,
             ScriptVariableProperty_Registration.Instance,
             SeasonalIngredientProduction_Registration.Instance,
+            SecondaryDamageItem_Registration.Instance,
             SecondaryDamageList_Registration.Instance,
             ShaderParticleGeometry_Registration.Instance,
             ShipContainsRefConditionData_Registration.Instance,

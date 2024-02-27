@@ -3396,9 +3396,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SecondaryDamageList</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter> SecondaryDamageList(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter> SecondaryDamageList(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISecondaryDamageListGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3408,9 +3408,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SecondaryDamageList</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter> SecondaryDamageList(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter> SecondaryDamageList(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISecondaryDamageListGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISecondaryDamageList, ISecondaryDamageListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

@@ -213,6 +213,7 @@ namespace Mutagen.Bethesda.Starfield
             _ForceDatas_Object = new StarfieldGroup<ForceData>(this);
             _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
             _EffectSequences_Object = new StarfieldGroup<EffectSequence>(this);
+            _SecondaryDamageLists_Object = new StarfieldGroup<SecondaryDamageList>(this);
             _Clouds_Object = new StarfieldGroup<Clouds>(this);
             _FogVolumes_Object = new StarfieldGroup<FogVolume>(this);
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
@@ -1303,6 +1304,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IEffectSequenceGetter> IStarfieldModGetter.EffectSequences => _EffectSequences_Object;
         #endregion
+        #region SecondaryDamageLists
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<SecondaryDamageList> _SecondaryDamageLists_Object;
+        public StarfieldGroup<SecondaryDamageList> SecondaryDamageLists => _SecondaryDamageLists_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ISecondaryDamageListGetter> IStarfieldModGetter.SecondaryDamageLists => _SecondaryDamageLists_Object;
+        #endregion
         #region Clouds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Clouds> _Clouds_Object;
@@ -1545,6 +1553,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ForceDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.EffectSequences = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.SecondaryDamageLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Clouds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.FogVolumes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1709,6 +1718,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ForceDatas,
                 TItem TerminalMenus,
                 TItem EffectSequences,
+                TItem SecondaryDamageLists,
                 TItem Clouds,
                 TItem FogVolumes,
                 TItem SurfaceTrees,
@@ -1871,6 +1881,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ForceDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ForceDatas, new StarfieldGroup.Mask<TItem>(ForceDatas));
                 this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(TerminalMenus, new StarfieldGroup.Mask<TItem>(TerminalMenus));
                 this.EffectSequences = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(EffectSequences, new StarfieldGroup.Mask<TItem>(EffectSequences));
+                this.SecondaryDamageLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SecondaryDamageLists, new StarfieldGroup.Mask<TItem>(SecondaryDamageLists));
                 this.Clouds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Clouds, new StarfieldGroup.Mask<TItem>(Clouds));
                 this.FogVolumes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FogVolumes, new StarfieldGroup.Mask<TItem>(FogVolumes));
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfaceTrees, new StarfieldGroup.Mask<TItem>(SurfaceTrees));
@@ -2043,6 +2054,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ForceDatas { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? TerminalMenus { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? EffectSequences { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SecondaryDamageLists { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Clouds { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FogVolumes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfaceTrees { get; set; }
@@ -2216,6 +2228,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ForceDatas, rhs.ForceDatas)) return false;
                 if (!object.Equals(this.TerminalMenus, rhs.TerminalMenus)) return false;
                 if (!object.Equals(this.EffectSequences, rhs.EffectSequences)) return false;
+                if (!object.Equals(this.SecondaryDamageLists, rhs.SecondaryDamageLists)) return false;
                 if (!object.Equals(this.Clouds, rhs.Clouds)) return false;
                 if (!object.Equals(this.FogVolumes, rhs.FogVolumes)) return false;
                 if (!object.Equals(this.SurfaceTrees, rhs.SurfaceTrees)) return false;
@@ -2382,6 +2395,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ForceDatas);
                 hash.Add(this.TerminalMenus);
                 hash.Add(this.EffectSequences);
+                hash.Add(this.SecondaryDamageLists);
                 hash.Add(this.Clouds);
                 hash.Add(this.FogVolumes);
                 hash.Add(this.SurfaceTrees);
@@ -3166,6 +3180,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.EffectSequences.Overall)) return false;
                     if (this.EffectSequences.Specific != null && !this.EffectSequences.Specific.All(eval)) return false;
+                }
+                if (SecondaryDamageLists != null)
+                {
+                    if (!eval(this.SecondaryDamageLists.Overall)) return false;
+                    if (this.SecondaryDamageLists.Specific != null && !this.SecondaryDamageLists.Specific.All(eval)) return false;
                 }
                 if (Clouds != null)
                 {
@@ -3979,6 +3998,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.EffectSequences.Overall)) return true;
                     if (this.EffectSequences.Specific != null && this.EffectSequences.Specific.Any(eval)) return true;
                 }
+                if (SecondaryDamageLists != null)
+                {
+                    if (eval(this.SecondaryDamageLists.Overall)) return true;
+                    if (this.SecondaryDamageLists.Specific != null && this.SecondaryDamageLists.Specific.Any(eval)) return true;
+                }
                 if (Clouds != null)
                 {
                     if (eval(this.Clouds.Overall)) return true;
@@ -4182,6 +4206,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ForceDatas = this.ForceDatas == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ForceDatas.Overall), this.ForceDatas.Specific?.Translate(eval));
                 obj.TerminalMenus = this.TerminalMenus == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.TerminalMenus.Overall), this.TerminalMenus.Specific?.Translate(eval));
                 obj.EffectSequences = this.EffectSequences == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.EffectSequences.Overall), this.EffectSequences.Specific?.Translate(eval));
+                obj.SecondaryDamageLists = this.SecondaryDamageLists == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SecondaryDamageLists.Overall), this.SecondaryDamageLists.Specific?.Translate(eval));
                 obj.Clouds = this.Clouds == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Clouds.Overall), this.Clouds.Specific?.Translate(eval));
                 obj.FogVolumes = this.FogVolumes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FogVolumes.Overall), this.FogVolumes.Specific?.Translate(eval));
                 obj.SurfaceTrees = this.SurfaceTrees == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfaceTrees.Overall), this.SurfaceTrees.Specific?.Translate(eval));
@@ -4823,6 +4848,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         EffectSequences?.Print(sb);
                     }
+                    if (printMask?.SecondaryDamageLists?.Overall ?? true)
+                    {
+                        SecondaryDamageLists?.Print(sb);
+                    }
                     if (printMask?.Clouds?.Overall ?? true)
                     {
                         Clouds?.Print(sb);
@@ -5029,6 +5058,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ForceData.ErrorMask>?>? ForceDatas;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>? TerminalMenus;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectSequence.ErrorMask>?>? EffectSequences;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<SecondaryDamageList.ErrorMask>?>? SecondaryDamageLists;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Clouds.ErrorMask>?>? Clouds;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FogVolume.ErrorMask>?>? FogVolumes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>? SurfaceTrees;
@@ -5352,6 +5382,8 @@ namespace Mutagen.Bethesda.Starfield
                         return TerminalMenus;
                     case StarfieldMod_FieldIndex.EffectSequences:
                         return EffectSequences;
+                    case StarfieldMod_FieldIndex.SecondaryDamageLists:
+                        return SecondaryDamageLists;
                     case StarfieldMod_FieldIndex.Clouds:
                         return Clouds;
                     case StarfieldMod_FieldIndex.FogVolumes:
@@ -5837,6 +5869,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.EffectSequences:
                         this.EffectSequences = new MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectSequence.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.SecondaryDamageLists:
+                        this.SecondaryDamageLists = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SecondaryDamageList.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Clouds:
                         this.Clouds = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Clouds.ErrorMask>?>(ex, null);
@@ -6331,6 +6366,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.EffectSequences:
                         this.EffectSequences = (MaskItem<Exception?, StarfieldGroup.ErrorMask<EffectSequence.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.SecondaryDamageLists:
+                        this.SecondaryDamageLists = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SecondaryDamageList.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Clouds:
                         this.Clouds = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Clouds.ErrorMask>?>?)obj;
                         break;
@@ -6514,6 +6552,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ForceDatas != null) return true;
                 if (TerminalMenus != null) return true;
                 if (EffectSequences != null) return true;
+                if (SecondaryDamageLists != null) return true;
                 if (Clouds != null) return true;
                 if (FogVolumes != null) return true;
                 if (SurfaceTrees != null) return true;
@@ -6700,6 +6739,7 @@ namespace Mutagen.Bethesda.Starfield
                 ForceDatas?.Print(sb);
                 TerminalMenus?.Print(sb);
                 EffectSequences?.Print(sb);
+                SecondaryDamageLists?.Print(sb);
                 Clouds?.Print(sb);
                 FogVolumes?.Print(sb);
                 SurfaceTrees?.Print(sb);
@@ -6869,6 +6909,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ForceDatas = this.ForceDatas.Combine(rhs.ForceDatas, (l, r) => l.Combine(r));
                 ret.TerminalMenus = this.TerminalMenus.Combine(rhs.TerminalMenus, (l, r) => l.Combine(r));
                 ret.EffectSequences = this.EffectSequences.Combine(rhs.EffectSequences, (l, r) => l.Combine(r));
+                ret.SecondaryDamageLists = this.SecondaryDamageLists.Combine(rhs.SecondaryDamageLists, (l, r) => l.Combine(r));
                 ret.Clouds = this.Clouds.Combine(rhs.Clouds, (l, r) => l.Combine(r));
                 ret.FogVolumes = this.FogVolumes.Combine(rhs.FogVolumes, (l, r) => l.Combine(r));
                 ret.SurfaceTrees = this.SurfaceTrees.Combine(rhs.SurfaceTrees, (l, r) => l.Combine(r));
@@ -7053,6 +7094,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<ForceData.TranslationMask>? ForceDatas;
             public StarfieldGroup.TranslationMask<TerminalMenu.TranslationMask>? TerminalMenus;
             public StarfieldGroup.TranslationMask<EffectSequence.TranslationMask>? EffectSequences;
+            public StarfieldGroup.TranslationMask<SecondaryDamageList.TranslationMask>? SecondaryDamageLists;
             public StarfieldGroup.TranslationMask<Clouds.TranslationMask>? Clouds;
             public StarfieldGroup.TranslationMask<FogVolume.TranslationMask>? FogVolumes;
             public StarfieldGroup.TranslationMask<SurfaceTree.TranslationMask>? SurfaceTrees;
@@ -7238,6 +7280,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ForceDatas != null ? ForceDatas.OnOverall : DefaultOn, ForceDatas?.GetCrystal()));
                 ret.Add((TerminalMenus != null ? TerminalMenus.OnOverall : DefaultOn, TerminalMenus?.GetCrystal()));
                 ret.Add((EffectSequences != null ? EffectSequences.OnOverall : DefaultOn, EffectSequences?.GetCrystal()));
+                ret.Add((SecondaryDamageLists != null ? SecondaryDamageLists.OnOverall : DefaultOn, SecondaryDamageLists?.GetCrystal()));
                 ret.Add((Clouds != null ? Clouds.OnOverall : DefaultOn, Clouds?.GetCrystal()));
                 ret.Add((FogVolumes != null ? FogVolumes.OnOverall : DefaultOn, FogVolumes?.GetCrystal()));
                 ret.Add((SurfaceTrees != null ? SurfaceTrees.OnOverall : DefaultOn, SurfaceTrees?.GetCrystal()));
@@ -7444,6 +7487,7 @@ namespace Mutagen.Bethesda.Starfield
             _ForceDatas_Object = new StarfieldGroup<ForceData>(this);
             _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
             _EffectSequences_Object = new StarfieldGroup<EffectSequence>(this);
+            _SecondaryDamageLists_Object = new StarfieldGroup<SecondaryDamageList>(this);
             _Clouds_Object = new StarfieldGroup<Clouds>(this);
             _FogVolumes_Object = new StarfieldGroup<FogVolume>(this);
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
@@ -8072,6 +8116,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.EffectSequences.RecordCache.Set(rhsMod.EffectSequences.RecordCache.Items);
             }
+            if (mask?.SecondaryDamageLists ?? true)
+            {
+                this.SecondaryDamageLists.RecordCache.Set(rhsMod.SecondaryDamageLists.RecordCache.Items);
+            }
             if (mask?.Clouds ?? true)
             {
                 this.Clouds.RecordCache.Set(rhsMod.Clouds.RecordCache.Items);
@@ -8263,6 +8311,7 @@ namespace Mutagen.Bethesda.Starfield
             count += ForceDatas.RecordCache.Count > 0 ? 1 : default(uint);
             count += TerminalMenus.RecordCache.Count > 0 ? 1 : default(uint);
             count += EffectSequences.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SecondaryDamageLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += Clouds.RecordCache.Count > 0 ? 1 : default(uint);
             count += FogVolumes.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfaceTrees.RecordCache.Count > 0 ? 1 : default(uint);
@@ -8697,6 +8746,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<ForceData> ForceDatas { get; }
         new StarfieldGroup<TerminalMenu> TerminalMenus { get; }
         new StarfieldGroup<EffectSequence> EffectSequences { get; }
+        new StarfieldGroup<SecondaryDamageList> SecondaryDamageLists { get; }
         new StarfieldGroup<Clouds> Clouds { get; }
         new StarfieldGroup<FogVolume> FogVolumes { get; }
         new StarfieldGroup<SurfaceTree> SurfaceTrees { get; }
@@ -8877,6 +8927,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IForceDataGetter> ForceDatas { get; }
         IStarfieldGroupGetter<ITerminalMenuGetter> TerminalMenus { get; }
         IStarfieldGroupGetter<IEffectSequenceGetter> EffectSequences { get; }
+        IStarfieldGroupGetter<ISecondaryDamageListGetter> SecondaryDamageLists { get; }
         IStarfieldGroupGetter<ICloudsGetter> Clouds { get; }
         IStarfieldGroupGetter<IFogVolumeGetter> FogVolumes { get; }
         IStarfieldGroupGetter<ISurfaceTreeGetter> SurfaceTrees { get; }
@@ -9620,13 +9671,14 @@ namespace Mutagen.Bethesda.Starfield
         ForceDatas = 151,
         TerminalMenus = 152,
         EffectSequences = 153,
-        Clouds = 154,
-        FogVolumes = 155,
-        SurfaceTrees = 156,
-        PlanetContentManagerTrees = 157,
-        SnapTemplateBehaviors = 158,
-        LegendaryItems = 159,
-        ActorValueModulations = 160,
+        SecondaryDamageLists = 154,
+        Clouds = 155,
+        FogVolumes = 156,
+        SurfaceTrees = 157,
+        PlanetContentManagerTrees = 158,
+        SnapTemplateBehaviors = 159,
+        LegendaryItems = 160,
+        ActorValueModulations = 161,
     }
     #endregion
 
@@ -9637,9 +9689,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 161;
+        public const ushort AdditionalFieldCount = 162;
 
-        public const ushort FieldCount = 161;
+        public const ushort FieldCount = 162;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -9858,6 +9910,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ForceDatas.Clear();
             item.TerminalMenus.Clear();
             item.EffectSequences.Clear();
+            item.SecondaryDamageLists.Clear();
             item.Clouds.Clear();
             item.FogVolumes.Clear();
             item.SurfaceTrees.Clear();
@@ -9993,6 +10046,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SurfacePatterns.RemapLinks(mapping);
             obj.LayeredMaterialSwaps.RemapLinks(mapping);
             obj.TerminalMenus.RemapLinks(mapping);
+            obj.SecondaryDamageLists.RemapLinks(mapping);
             obj.SurfaceTrees.RemapLinks(mapping);
             obj.PlanetContentManagerTrees.RemapLinks(mapping);
             obj.SnapTemplateBehaviors.RemapLinks(mapping);
@@ -10185,6 +10239,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ForceDatas.Remove(keys);
             obj.TerminalMenus.Remove(keys);
             obj.EffectSequences.Remove(keys);
+            obj.SecondaryDamageLists.Remove(keys);
             obj.Clouds.Remove(keys);
             obj.FogVolumes.Remove(keys);
             obj.SurfaceTrees.Remove(keys);
@@ -11475,6 +11530,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "SecondaryDamageList":
+                case "ISecondaryDamageListGetter":
+                case "ISecondaryDamageList":
+                case "ISecondaryDamageListInternal":
+                    obj.SecondaryDamageLists.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Clouds":
                 case "ICloudsGetter":
                 case "IClouds":
@@ -12741,6 +12804,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ForceDatas = MaskItemExt.Factory(item.ForceDatas.GetEqualsMask(rhs.ForceDatas, include), include);
             ret.TerminalMenus = MaskItemExt.Factory(item.TerminalMenus.GetEqualsMask(rhs.TerminalMenus, include), include);
             ret.EffectSequences = MaskItemExt.Factory(item.EffectSequences.GetEqualsMask(rhs.EffectSequences, include), include);
+            ret.SecondaryDamageLists = MaskItemExt.Factory(item.SecondaryDamageLists.GetEqualsMask(rhs.SecondaryDamageLists, include), include);
             ret.Clouds = MaskItemExt.Factory(item.Clouds.GetEqualsMask(rhs.Clouds, include), include);
             ret.FogVolumes = MaskItemExt.Factory(item.FogVolumes.GetEqualsMask(rhs.FogVolumes, include), include);
             ret.SurfaceTrees = MaskItemExt.Factory(item.SurfaceTrees.GetEqualsMask(rhs.SurfaceTrees, include), include);
@@ -13407,6 +13471,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.EffectSequences?.Overall ?? true)
             {
                 item.EffectSequences?.Print(sb, "EffectSequences");
+            }
+            if (printMask?.SecondaryDamageLists?.Overall ?? true)
+            {
+                item.SecondaryDamageLists?.Print(sb, "SecondaryDamageLists");
             }
             if (printMask?.Clouds?.Overall ?? true)
             {
@@ -14677,6 +14745,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isEffectSequencesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SecondaryDamageLists) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SecondaryDamageLists, rhs.SecondaryDamageLists, out var lhsSecondaryDamageLists, out var rhsSecondaryDamageLists, out var isSecondaryDamageListsEqual))
+                {
+                    if (!object.Equals(lhsSecondaryDamageLists, rhsSecondaryDamageLists)) return false;
+                }
+                else if (!isSecondaryDamageListsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Clouds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Clouds, rhs.Clouds, out var lhsClouds, out var rhsClouds, out var isCloudsEqual))
@@ -14893,6 +14969,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ForceDatas);
             hash.Add(item.TerminalMenus);
             hash.Add(item.EffectSequences);
+            hash.Add(item.SecondaryDamageLists);
             hash.Add(item.Clouds);
             hash.Add(item.FogVolumes);
             hash.Add(item.SurfaceTrees);
@@ -15682,6 +15759,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IEffectSequence":
                 case "IEffectSequenceInternal":
                     return obj.EffectSequences;
+                case "SecondaryDamageList":
+                case "ISecondaryDamageListGetter":
+                case "ISecondaryDamageList":
+                case "ISecondaryDamageListInternal":
+                    return obj.SecondaryDamageLists;
                 case "Clouds":
                 case "ICloudsGetter":
                 case "IClouds":
@@ -15743,7 +15825,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[160];
+            Stream[] outputStreams = new Stream[161];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -15898,13 +15980,14 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.ForceDatas, 150, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 151, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.EffectSequences, 152, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Clouds, 153, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FogVolumes, 154, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 155, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 156, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 157, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 158, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 159, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SecondaryDamageLists, 153, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Clouds, 154, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FogVolumes, 155, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 156, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 157, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 158, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 159, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 160, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -16458,6 +16541,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.SecondaryDamageLists.EnumerateFormLinks())
+            {
+                yield return item;
             }
             foreach (var item in obj.SurfaceTrees.EnumerateFormLinks())
             {
@@ -17099,6 +17186,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.EffectSequences.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SecondaryDamageLists.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -18529,6 +18620,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IEffectSequence":
                 case "IEffectSequenceInternal":
                     foreach (var item in obj.EffectSequences.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SecondaryDamageList":
+                case "ISecondaryDamageListGetter":
+                case "ISecondaryDamageList":
+                case "ISecondaryDamageListInternal":
+                    foreach (var item in obj.SecondaryDamageLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -20119,6 +20219,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.EffectSequences,
                 groupGetter: (m) => m.EffectSequences))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SecondaryDamageList, ISecondaryDamageListGetter>(
+                srcGroup: obj.SecondaryDamageLists,
+                type: typeof(ISecondaryDamageListGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SecondaryDamageLists,
+                groupGetter: (m) => m.SecondaryDamageLists))
             {
                 yield return item;
             }
@@ -22340,6 +22449,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.EffectSequences,
                         groupGetter: (m) => m.EffectSequences))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SecondaryDamageList":
+                case "ISecondaryDamageListGetter":
+                case "ISecondaryDamageList":
+                case "ISecondaryDamageListInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SecondaryDamageList, ISecondaryDamageListGetter>(
+                        srcGroup: obj.SecondaryDamageLists,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SecondaryDamageLists,
+                        groupGetter: (m) => m.SecondaryDamageLists))
                     {
                         yield return item;
                     }
@@ -26254,6 +26377,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SecondaryDamageLists) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SecondaryDamageLists);
+                try
+                {
+                    item.SecondaryDamageLists.DeepCopyIn(
+                        rhs: rhs.SecondaryDamageLists,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.SecondaryDamageLists));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Clouds) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Clouds);
@@ -26637,6 +26780,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool ForceDatas;
         public bool TerminalMenus;
         public bool EffectSequences;
+        public bool SecondaryDamageLists;
         public bool Clouds;
         public bool FogVolumes;
         public bool SurfaceTrees;
@@ -26802,6 +26946,7 @@ namespace Mutagen.Bethesda.Starfield
             ForceDatas = defaultValue;
             TerminalMenus = defaultValue;
             EffectSequences = defaultValue;
+            SecondaryDamageLists = defaultValue;
             Clouds = defaultValue;
             FogVolumes = defaultValue;
             SurfaceTrees = defaultValue;
@@ -28547,6 +28692,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)EffectSequencesItem).BinaryWriteTranslator).Write<IEffectSequenceGetter>(
                         item: EffectSequencesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SecondaryDamageLists ?? true)
+            {
+                var SecondaryDamageListsItem = item.SecondaryDamageLists;
+                if (SecondaryDamageListsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SecondaryDamageListsItem).BinaryWriteTranslator).Write<ISecondaryDamageListGetter>(
+                        item: SecondaryDamageListsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -30830,6 +30986,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.EffectSequences;
                 }
+                case RecordTypeInts.SDLT:
+                {
+                    if (importMask?.SecondaryDamageLists ?? true)
+                    {
+                        item.SecondaryDamageLists.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.SecondaryDamageLists;
+                }
                 case RecordTypeInts.CLDF:
                 {
                     if (importMask?.Clouds ?? true)
@@ -31863,6 +32033,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _EffectSequencesLocations;
         private IStarfieldGroupGetter<IEffectSequenceGetter>? _EffectSequences => _EffectSequencesLocations != null ? StarfieldGroupBinaryOverlay<IEffectSequenceGetter>.StarfieldGroupFactory(_stream, _EffectSequencesLocations, _package) : default;
         public IStarfieldGroupGetter<IEffectSequenceGetter> EffectSequences => _EffectSequences ?? new StarfieldGroup<EffectSequence>(this);
+        #endregion
+        #region SecondaryDamageLists
+        private List<RangeInt64>? _SecondaryDamageListsLocations;
+        private IStarfieldGroupGetter<ISecondaryDamageListGetter>? _SecondaryDamageLists => _SecondaryDamageListsLocations != null ? StarfieldGroupBinaryOverlay<ISecondaryDamageListGetter>.StarfieldGroupFactory(_stream, _SecondaryDamageListsLocations, _package) : default;
+        public IStarfieldGroupGetter<ISecondaryDamageListGetter> SecondaryDamageLists => _SecondaryDamageLists ?? new StarfieldGroup<SecondaryDamageList>(this);
         #endregion
         #region Clouds
         private List<RangeInt64>? _CloudsLocations;
@@ -32909,6 +33084,12 @@ namespace Mutagen.Bethesda.Starfield
                     _EffectSequencesLocations ??= new();
                     _EffectSequencesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.EffectSequences;
+                }
+                case RecordTypeInts.SDLT:
+                {
+                    _SecondaryDamageListsLocations ??= new();
+                    _SecondaryDamageListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.SecondaryDamageLists;
                 }
                 case RecordTypeInts.CLDF:
                 {

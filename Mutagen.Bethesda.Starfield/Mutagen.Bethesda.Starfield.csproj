@@ -6583,5 +6583,8 @@
     <Compile Include="Records\Major Records\AmbienceSound_Generated.cs">
       <DependentUpon>AmbienceSet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SecondaryDamageItem_Generated.cs">
+      <DependentUpon>SecondaryDamageList.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +55,20 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Damages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SecondaryDamageItem> _Damages = new ExtendedList<SecondaryDamageItem>();
+        public ExtendedList<SecondaryDamageItem> Damages
+        {
+            get => this._Damages;
+            init => this._Damages = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISecondaryDamageItemGetter> ISecondaryDamageListGetter.Damages => _Damages;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +94,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Damages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SecondaryDamageItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SecondaryDamageItem.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +104,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Damages)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +115,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Damages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SecondaryDamageItem.Mask<TItem>?>>?>(Damages, Enumerable.Empty<MaskItemIndexed<TItem, SecondaryDamageItem.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +124,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SecondaryDamageItem.Mask<TItem>?>>?>? Damages;
             #endregion
 
             #region Equals
@@ -119,11 +141,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Damages, rhs.Damages)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Damages);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +158,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Damages != null)
+                {
+                    if (!eval(this.Damages.Overall)) return false;
+                    if (this.Damages.Specific != null)
+                    {
+                        foreach (var item in this.Damages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +178,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Damages != null)
+                {
+                    if (eval(this.Damages.Overall)) return true;
+                    if (this.Damages.Specific != null)
+                    {
+                        foreach (var item in this.Damages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +205,21 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Damages != null)
+                {
+                    obj.Damages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SecondaryDamageItem.Mask<R>?>>?>(eval(this.Damages.Overall), Enumerable.Empty<MaskItemIndexed<R, SecondaryDamageItem.Mask<R>?>>());
+                    if (Damages.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SecondaryDamageItem.Mask<R>?>>();
+                        obj.Damages.Specific = l;
+                        foreach (var item in Damages.Specific)
+                        {
+                            MaskItemIndexed<R, SecondaryDamageItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SecondaryDamageItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +238,25 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SecondaryDamageList.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Damages?.Overall ?? true)
+                        && Damages is {} DamagesItem)
+                    {
+                        sb.AppendLine("Damages =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DamagesItem.Overall);
+                            if (DamagesItem.Specific != null)
+                            {
+                                foreach (var subItem in DamagesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +267,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SecondaryDamageItem.ErrorMask?>>?>? Damages;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SecondaryDamageList_FieldIndex enu = (SecondaryDamageList_FieldIndex)index;
                 switch (enu)
                 {
+                    case SecondaryDamageList_FieldIndex.Damages:
+                        return Damages;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +289,9 @@ namespace Mutagen.Bethesda.Starfield
                 SecondaryDamageList_FieldIndex enu = (SecondaryDamageList_FieldIndex)index;
                 switch (enu)
                 {
+                    case SecondaryDamageList_FieldIndex.Damages:
+                        this.Damages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SecondaryDamageItem.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +303,9 @@ namespace Mutagen.Bethesda.Starfield
                 SecondaryDamageList_FieldIndex enu = (SecondaryDamageList_FieldIndex)index;
                 switch (enu)
                 {
+                    case SecondaryDamageList_FieldIndex.Damages:
+                        this.Damages = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SecondaryDamageItem.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +315,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Damages != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +342,24 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Damages is {} DamagesItem)
+                {
+                    sb.AppendLine("Damages =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DamagesItem.Overall);
+                        if (DamagesItem.Specific != null)
+                        {
+                            foreach (var subItem in DamagesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +368,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Damages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SecondaryDamageItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Damages?.Overall, rhs.Damages?.Overall), Noggog.ExceptionExt.Combine(this.Damages?.Specific, rhs.Damages?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,6 +390,10 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public SecondaryDamageItem.TranslationMask? Damages;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -285,6 +403,12 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Damages == null ? DefaultOn : !Damages.GetCrystal().CopyNothing, Damages?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +420,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SecondaryDamageList_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SecondaryDamageListCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SecondaryDamageListSetterCommon.Instance.RemapLinks(this, mapping);
         public SecondaryDamageList(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +550,12 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISecondaryDamageList :
+        IFormLinkContainer,
         ILoquiObjectSetter<ISecondaryDamageListInternal>,
         ISecondaryDamageListGetter,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<SecondaryDamageItem> Damages { get; }
     }
 
     public partial interface ISecondaryDamageListInternal :
@@ -441,10 +569,12 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ISecondaryDamageListGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISecondaryDamageListGetter>,
         IMapsToGetter<ISecondaryDamageListGetter>
     {
         static new ILoquiRegistration StaticRegistration => SecondaryDamageList_Registration.Instance;
+        IReadOnlyList<ISecondaryDamageItemGetter> Damages { get; }
 
     }
 
@@ -621,6 +751,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Damages = 7,
     }
     #endregion
 
@@ -631,9 +762,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(SecondaryDamageList.Mask<>);
 
@@ -663,8 +794,15 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SDLT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SDLT);
+            var all = RecordCollection.Factory(
+                RecordTypes.SDLT,
+                RecordTypes.DAMA,
+                RecordTypes.ITMC,
+                RecordTypes.ACTV);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SecondaryDamageListBinaryWriteTranslation);
         #region Interface
@@ -706,6 +844,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISecondaryDamageListInternal item)
         {
             ClearPartial();
+            item.Damages.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +862,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISecondaryDamageList obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Damages.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,6 +930,10 @@ namespace Mutagen.Bethesda.Starfield
             SecondaryDamageList.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Damages = item.Damages.CollectionEqualsHelper(
+                rhs.Damages,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +983,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Damages?.Overall ?? true)
+            {
+                sb.AppendLine("Damages =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Damages)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static SecondaryDamageList_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1047,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SecondaryDamageList_FieldIndex.Damages) ?? true))
+            {
+                if (!lhs.Damages.SequenceEqual(rhs.Damages, (l, r) => ((SecondaryDamageItemCommon)((ISecondaryDamageItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SecondaryDamageList_FieldIndex.Damages)))) return false;
+            }
             return true;
         }
         
@@ -917,6 +1079,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISecondaryDamageListGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Damages);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1108,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Damages.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1020,6 +1187,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SecondaryDamageList_FieldIndex.Damages) ?? true))
+            {
+                errorMask?.PushIndex((int)SecondaryDamageList_FieldIndex.Damages);
+                try
+                {
+                    item.Damages.SetTo(
+                        rhs.Damages
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1359,30 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SecondaryDamageListBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISecondaryDamageListGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISecondaryDamageItemGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Damages,
+                counterType: RecordTypes.ITMC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, ISecondaryDamageItemGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SecondaryDamageItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ISecondaryDamageListGetter item,
@@ -1184,10 +1399,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1454,43 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SecondaryDamageListBinaryCreateTranslation Instance = new SecondaryDamageListBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SDLT;
+        public static ParseResult FillBinaryRecordTypes(
+            ISecondaryDamageListInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DAMA:
+                case RecordTypeInts.ITMC:
+                {
+                    item.Damages.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SecondaryDamageItem>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.ITMC,
+                            triggeringRecord: SecondaryDamageItem_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SecondaryDamageItem.TryCreateFromBinary));
+                    return (int)SecondaryDamageList_FieldIndex.Damages;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1523,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SecondaryDamageListCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SecondaryDamageListBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +1538,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISecondaryDamageList);
 
 
+        public IReadOnlyList<ISecondaryDamageItemGetter> Damages { get; private set; } = Array.Empty<ISecondaryDamageItemGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1596,43 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DAMA:
+                case RecordTypeInts.ITMC:
+                {
+                    this.Damages = BinaryOverlayList.FactoryByCountPerItem<ISecondaryDamageItemGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: SecondaryDamageItem_Registration.TriggerSpecs,
+                        countType: RecordTypes.ITMC,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => SecondaryDamageItemBinaryOverlay.SecondaryDamageItemFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)SecondaryDamageList_FieldIndex.Damages;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
