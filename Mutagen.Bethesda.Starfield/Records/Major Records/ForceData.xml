@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ForceData" recordType="FORC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

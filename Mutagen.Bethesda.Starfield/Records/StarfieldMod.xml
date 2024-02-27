@@ -157,6 +157,7 @@
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="SurfacePatterns" refName="SurfacePattern" />
       <Group name="LayeredMaterialSwaps" refName="LayeredMaterialSwap" />
+      <Group name="ForceDatas" refName="ForceData" />
       <Group name="SurfaceTrees" refName="SurfaceTree" />
       <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
       <Group name="SnapTemplateBehaviors" refName="SnapTemplateBehavior" />

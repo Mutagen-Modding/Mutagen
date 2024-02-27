@@ -210,6 +210,7 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
             _LayeredMaterialSwaps_Object = new StarfieldGroup<LayeredMaterialSwap>(this);
+            _ForceDatas_Object = new StarfieldGroup<ForceData>(this);
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
             _PlanetContentManagerTrees_Object = new StarfieldGroup<PlanetContentManagerTree>(this);
             _SnapTemplateBehaviors_Object = new StarfieldGroup<SnapTemplateBehavior>(this);
@@ -1278,6 +1279,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ILayeredMaterialSwapGetter> IStarfieldModGetter.LayeredMaterialSwaps => _LayeredMaterialSwaps_Object;
         #endregion
+        #region ForceDatas
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ForceData> _ForceDatas_Object;
+        public StarfieldGroup<ForceData> ForceDatas => _ForceDatas_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IForceDataGetter> IStarfieldModGetter.ForceDatas => _ForceDatas_Object;
+        #endregion
         #region SurfaceTrees
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<SurfaceTree> _SurfaceTrees_Object;
@@ -1510,6 +1518,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LayeredMaterialSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ForceDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.PlanetContentManagerTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SnapTemplateBehaviors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1670,6 +1679,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SurfacePatternStyles,
                 TItem SurfacePatterns,
                 TItem LayeredMaterialSwaps,
+                TItem ForceDatas,
                 TItem SurfaceTrees,
                 TItem PlanetContentManagerTrees,
                 TItem SnapTemplateBehaviors,
@@ -1828,6 +1838,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
                 this.SurfacePatterns = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatterns, new StarfieldGroup.Mask<TItem>(SurfacePatterns));
                 this.LayeredMaterialSwaps = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LayeredMaterialSwaps, new StarfieldGroup.Mask<TItem>(LayeredMaterialSwaps));
+                this.ForceDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ForceDatas, new StarfieldGroup.Mask<TItem>(ForceDatas));
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfaceTrees, new StarfieldGroup.Mask<TItem>(SurfaceTrees));
                 this.PlanetContentManagerTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PlanetContentManagerTrees, new StarfieldGroup.Mask<TItem>(PlanetContentManagerTrees));
                 this.SnapTemplateBehaviors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SnapTemplateBehaviors, new StarfieldGroup.Mask<TItem>(SnapTemplateBehaviors));
@@ -1996,6 +2007,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatterns { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LayeredMaterialSwaps { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ForceDatas { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfaceTrees { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PlanetContentManagerTrees { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SnapTemplateBehaviors { get; set; }
@@ -2165,6 +2177,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 if (!object.Equals(this.SurfacePatterns, rhs.SurfacePatterns)) return false;
                 if (!object.Equals(this.LayeredMaterialSwaps, rhs.LayeredMaterialSwaps)) return false;
+                if (!object.Equals(this.ForceDatas, rhs.ForceDatas)) return false;
                 if (!object.Equals(this.SurfaceTrees, rhs.SurfaceTrees)) return false;
                 if (!object.Equals(this.PlanetContentManagerTrees, rhs.PlanetContentManagerTrees)) return false;
                 if (!object.Equals(this.SnapTemplateBehaviors, rhs.SnapTemplateBehaviors)) return false;
@@ -2327,6 +2340,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SurfacePatternStyles);
                 hash.Add(this.SurfacePatterns);
                 hash.Add(this.LayeredMaterialSwaps);
+                hash.Add(this.ForceDatas);
                 hash.Add(this.SurfaceTrees);
                 hash.Add(this.PlanetContentManagerTrees);
                 hash.Add(this.SnapTemplateBehaviors);
@@ -3095,6 +3109,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.LayeredMaterialSwaps.Overall)) return false;
                     if (this.LayeredMaterialSwaps.Specific != null && !this.LayeredMaterialSwaps.Specific.All(eval)) return false;
+                }
+                if (ForceDatas != null)
+                {
+                    if (!eval(this.ForceDatas.Overall)) return false;
+                    if (this.ForceDatas.Specific != null && !this.ForceDatas.Specific.All(eval)) return false;
                 }
                 if (SurfaceTrees != null)
                 {
@@ -3888,6 +3907,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.LayeredMaterialSwaps.Overall)) return true;
                     if (this.LayeredMaterialSwaps.Specific != null && this.LayeredMaterialSwaps.Specific.Any(eval)) return true;
                 }
+                if (ForceDatas != null)
+                {
+                    if (eval(this.ForceDatas.Overall)) return true;
+                    if (this.ForceDatas.Specific != null && this.ForceDatas.Specific.Any(eval)) return true;
+                }
                 if (SurfaceTrees != null)
                 {
                     if (eval(this.SurfaceTrees.Overall)) return true;
@@ -4083,6 +4107,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
                 obj.SurfacePatterns = this.SurfacePatterns == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatterns.Overall), this.SurfacePatterns.Specific?.Translate(eval));
                 obj.LayeredMaterialSwaps = this.LayeredMaterialSwaps == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LayeredMaterialSwaps.Overall), this.LayeredMaterialSwaps.Specific?.Translate(eval));
+                obj.ForceDatas = this.ForceDatas == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ForceDatas.Overall), this.ForceDatas.Specific?.Translate(eval));
                 obj.SurfaceTrees = this.SurfaceTrees == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfaceTrees.Overall), this.SurfaceTrees.Specific?.Translate(eval));
                 obj.PlanetContentManagerTrees = this.PlanetContentManagerTrees == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PlanetContentManagerTrees.Overall), this.PlanetContentManagerTrees.Specific?.Translate(eval));
                 obj.SnapTemplateBehaviors = this.SnapTemplateBehaviors == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SnapTemplateBehaviors.Overall), this.SnapTemplateBehaviors.Specific?.Translate(eval));
@@ -4711,6 +4736,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         LayeredMaterialSwaps?.Print(sb);
                     }
+                    if (printMask?.ForceDatas?.Overall ?? true)
+                    {
+                        ForceDatas?.Print(sb);
+                    }
                     if (printMask?.SurfaceTrees?.Overall ?? true)
                     {
                         SurfaceTrees?.Print(sb);
@@ -4910,6 +4939,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePattern.ErrorMask>?>? SurfacePatterns;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LayeredMaterialSwap.ErrorMask>?>? LayeredMaterialSwaps;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ForceData.ErrorMask>?>? ForceDatas;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>? SurfaceTrees;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PlanetContentManagerTree.ErrorMask>?>? PlanetContentManagerTrees;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateBehavior.ErrorMask>?>? SnapTemplateBehaviors;
@@ -5226,6 +5256,8 @@ namespace Mutagen.Bethesda.Starfield
                         return SurfacePatterns;
                     case StarfieldMod_FieldIndex.LayeredMaterialSwaps:
                         return LayeredMaterialSwaps;
+                    case StarfieldMod_FieldIndex.ForceDatas:
+                        return ForceDatas;
                     case StarfieldMod_FieldIndex.SurfaceTrees:
                         return SurfaceTrees;
                     case StarfieldMod_FieldIndex.PlanetContentManagerTrees:
@@ -5700,6 +5732,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.LayeredMaterialSwaps:
                         this.LayeredMaterialSwaps = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LayeredMaterialSwap.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ForceDatas:
+                        this.ForceDatas = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ForceData.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.SurfaceTrees:
                         this.SurfaceTrees = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>(ex, null);
@@ -6182,6 +6217,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.LayeredMaterialSwaps:
                         this.LayeredMaterialSwaps = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LayeredMaterialSwap.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.ForceDatas:
+                        this.ForceDatas = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ForceData.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.SurfaceTrees:
                         this.SurfaceTrees = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>?)obj;
                         break;
@@ -6359,6 +6397,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (SurfacePatternStyles != null) return true;
                 if (SurfacePatterns != null) return true;
                 if (LayeredMaterialSwaps != null) return true;
+                if (ForceDatas != null) return true;
                 if (SurfaceTrees != null) return true;
                 if (PlanetContentManagerTrees != null) return true;
                 if (SnapTemplateBehaviors != null) return true;
@@ -6541,6 +6580,7 @@ namespace Mutagen.Bethesda.Starfield
                 SurfacePatternStyles?.Print(sb);
                 SurfacePatterns?.Print(sb);
                 LayeredMaterialSwaps?.Print(sb);
+                ForceDatas?.Print(sb);
                 SurfaceTrees?.Print(sb);
                 PlanetContentManagerTrees?.Print(sb);
                 SnapTemplateBehaviors?.Print(sb);
@@ -6706,6 +6746,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 ret.SurfacePatterns = this.SurfacePatterns.Combine(rhs.SurfacePatterns, (l, r) => l.Combine(r));
                 ret.LayeredMaterialSwaps = this.LayeredMaterialSwaps.Combine(rhs.LayeredMaterialSwaps, (l, r) => l.Combine(r));
+                ret.ForceDatas = this.ForceDatas.Combine(rhs.ForceDatas, (l, r) => l.Combine(r));
                 ret.SurfaceTrees = this.SurfaceTrees.Combine(rhs.SurfaceTrees, (l, r) => l.Combine(r));
                 ret.PlanetContentManagerTrees = this.PlanetContentManagerTrees.Combine(rhs.PlanetContentManagerTrees, (l, r) => l.Combine(r));
                 ret.SnapTemplateBehaviors = this.SnapTemplateBehaviors.Combine(rhs.SnapTemplateBehaviors, (l, r) => l.Combine(r));
@@ -6886,6 +6927,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             public StarfieldGroup.TranslationMask<SurfacePattern.TranslationMask>? SurfacePatterns;
             public StarfieldGroup.TranslationMask<LayeredMaterialSwap.TranslationMask>? LayeredMaterialSwaps;
+            public StarfieldGroup.TranslationMask<ForceData.TranslationMask>? ForceDatas;
             public StarfieldGroup.TranslationMask<SurfaceTree.TranslationMask>? SurfaceTrees;
             public StarfieldGroup.TranslationMask<PlanetContentManagerTree.TranslationMask>? PlanetContentManagerTrees;
             public StarfieldGroup.TranslationMask<SnapTemplateBehavior.TranslationMask>? SnapTemplateBehaviors;
@@ -7067,6 +7109,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
                 ret.Add((SurfacePatterns != null ? SurfacePatterns.OnOverall : DefaultOn, SurfacePatterns?.GetCrystal()));
                 ret.Add((LayeredMaterialSwaps != null ? LayeredMaterialSwaps.OnOverall : DefaultOn, LayeredMaterialSwaps?.GetCrystal()));
+                ret.Add((ForceDatas != null ? ForceDatas.OnOverall : DefaultOn, ForceDatas?.GetCrystal()));
                 ret.Add((SurfaceTrees != null ? SurfaceTrees.OnOverall : DefaultOn, SurfaceTrees?.GetCrystal()));
                 ret.Add((PlanetContentManagerTrees != null ? PlanetContentManagerTrees.OnOverall : DefaultOn, PlanetContentManagerTrees?.GetCrystal()));
                 ret.Add((SnapTemplateBehaviors != null ? SnapTemplateBehaviors.OnOverall : DefaultOn, SnapTemplateBehaviors?.GetCrystal()));
@@ -7269,6 +7312,7 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _SurfacePatterns_Object = new StarfieldGroup<SurfacePattern>(this);
             _LayeredMaterialSwaps_Object = new StarfieldGroup<LayeredMaterialSwap>(this);
+            _ForceDatas_Object = new StarfieldGroup<ForceData>(this);
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
             _PlanetContentManagerTrees_Object = new StarfieldGroup<PlanetContentManagerTree>(this);
             _SnapTemplateBehaviors_Object = new StarfieldGroup<SnapTemplateBehavior>(this);
@@ -7884,6 +7928,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.LayeredMaterialSwaps.RecordCache.Set(rhsMod.LayeredMaterialSwaps.RecordCache.Items);
             }
+            if (mask?.ForceDatas ?? true)
+            {
+                this.ForceDatas.RecordCache.Set(rhsMod.ForceDatas.RecordCache.Items);
+            }
             if (mask?.SurfaceTrees ?? true)
             {
                 this.SurfaceTrees.RecordCache.Set(rhsMod.SurfaceTrees.RecordCache.Items);
@@ -8068,6 +8116,7 @@ namespace Mutagen.Bethesda.Starfield
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatterns.RecordCache.Count > 0 ? 1 : default(uint);
             count += LayeredMaterialSwaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ForceDatas.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfaceTrees.RecordCache.Count > 0 ? 1 : default(uint);
             count += PlanetContentManagerTrees.RecordCache.Count > 0 ? 1 : default(uint);
             count += SnapTemplateBehaviors.RecordCache.Count > 0 ? 1 : default(uint);
@@ -8498,6 +8547,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
         new StarfieldGroup<SurfacePattern> SurfacePatterns { get; }
         new StarfieldGroup<LayeredMaterialSwap> LayeredMaterialSwaps { get; }
+        new StarfieldGroup<ForceData> ForceDatas { get; }
         new StarfieldGroup<SurfaceTree> SurfaceTrees { get; }
         new StarfieldGroup<PlanetContentManagerTree> PlanetContentManagerTrees { get; }
         new StarfieldGroup<SnapTemplateBehavior> SnapTemplateBehaviors { get; }
@@ -8674,6 +8724,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
         IStarfieldGroupGetter<ISurfacePatternGetter> SurfacePatterns { get; }
         IStarfieldGroupGetter<ILayeredMaterialSwapGetter> LayeredMaterialSwaps { get; }
+        IStarfieldGroupGetter<IForceDataGetter> ForceDatas { get; }
         IStarfieldGroupGetter<ISurfaceTreeGetter> SurfaceTrees { get; }
         IStarfieldGroupGetter<IPlanetContentManagerTreeGetter> PlanetContentManagerTrees { get; }
         IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> SnapTemplateBehaviors { get; }
@@ -9413,12 +9464,13 @@ namespace Mutagen.Bethesda.Starfield
         SurfacePatternStyles = 148,
         SurfacePatterns = 149,
         LayeredMaterialSwaps = 150,
-        SurfaceTrees = 151,
-        PlanetContentManagerTrees = 152,
-        SnapTemplateBehaviors = 153,
-        TerminalMenus = 154,
-        LegendaryItems = 155,
-        ActorValueModulations = 156,
+        ForceDatas = 151,
+        SurfaceTrees = 152,
+        PlanetContentManagerTrees = 153,
+        SnapTemplateBehaviors = 154,
+        TerminalMenus = 155,
+        LegendaryItems = 156,
+        ActorValueModulations = 157,
     }
     #endregion
 
@@ -9429,9 +9481,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 157;
+        public const ushort AdditionalFieldCount = 158;
 
-        public const ushort FieldCount = 157;
+        public const ushort FieldCount = 158;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -9647,6 +9699,7 @@ namespace Mutagen.Bethesda.Starfield
             item.SurfacePatternStyles.Clear();
             item.SurfacePatterns.Clear();
             item.LayeredMaterialSwaps.Clear();
+            item.ForceDatas.Clear();
             item.SurfaceTrees.Clear();
             item.PlanetContentManagerTrees.Clear();
             item.SnapTemplateBehaviors.Clear();
@@ -9970,6 +10023,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SurfacePatternStyles.Remove(keys);
             obj.SurfacePatterns.Remove(keys);
             obj.LayeredMaterialSwaps.Remove(keys);
+            obj.ForceDatas.Remove(keys);
             obj.SurfaceTrees.Remove(keys);
             obj.PlanetContentManagerTrees.Remove(keys);
             obj.SnapTemplateBehaviors.Remove(keys);
@@ -11235,6 +11289,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "ForceData":
+                case "IForceDataGetter":
+                case "IForceData":
+                case "IForceDataInternal":
+                    obj.ForceDatas.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "SurfaceTree":
                 case "ISurfaceTreeGetter":
                 case "ISurfaceTree":
@@ -12490,6 +12552,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
             ret.SurfacePatterns = MaskItemExt.Factory(item.SurfacePatterns.GetEqualsMask(rhs.SurfacePatterns, include), include);
             ret.LayeredMaterialSwaps = MaskItemExt.Factory(item.LayeredMaterialSwaps.GetEqualsMask(rhs.LayeredMaterialSwaps, include), include);
+            ret.ForceDatas = MaskItemExt.Factory(item.ForceDatas.GetEqualsMask(rhs.ForceDatas, include), include);
             ret.SurfaceTrees = MaskItemExt.Factory(item.SurfaceTrees.GetEqualsMask(rhs.SurfaceTrees, include), include);
             ret.PlanetContentManagerTrees = MaskItemExt.Factory(item.PlanetContentManagerTrees.GetEqualsMask(rhs.PlanetContentManagerTrees, include), include);
             ret.SnapTemplateBehaviors = MaskItemExt.Factory(item.SnapTemplateBehaviors.GetEqualsMask(rhs.SnapTemplateBehaviors, include), include);
@@ -13143,6 +13206,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.LayeredMaterialSwaps?.Overall ?? true)
             {
                 item.LayeredMaterialSwaps?.Print(sb, "LayeredMaterialSwaps");
+            }
+            if (printMask?.ForceDatas?.Overall ?? true)
+            {
+                item.ForceDatas?.Print(sb, "ForceDatas");
             }
             if (printMask?.SurfaceTrees?.Overall ?? true)
             {
@@ -14385,6 +14452,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isLayeredMaterialSwapsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ForceDatas) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ForceDatas, rhs.ForceDatas, out var lhsForceDatas, out var rhsForceDatas, out var isForceDatasEqual))
+                {
+                    if (!object.Equals(lhsForceDatas, rhsForceDatas)) return false;
+                }
+                else if (!isForceDatasEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfaceTrees) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SurfaceTrees, rhs.SurfaceTrees, out var lhsSurfaceTrees, out var rhsSurfaceTrees, out var isSurfaceTreesEqual))
@@ -14590,6 +14665,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SurfacePatternStyles);
             hash.Add(item.SurfacePatterns);
             hash.Add(item.LayeredMaterialSwaps);
+            hash.Add(item.ForceDatas);
             hash.Add(item.SurfaceTrees);
             hash.Add(item.PlanetContentManagerTrees);
             hash.Add(item.SnapTemplateBehaviors);
@@ -15363,6 +15439,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILayeredMaterialSwap":
                 case "ILayeredMaterialSwapInternal":
                     return obj.LayeredMaterialSwaps;
+                case "ForceData":
+                case "IForceDataGetter":
+                case "IForceData":
+                case "IForceDataInternal":
+                    return obj.ForceDatas;
                 case "SurfaceTree":
                 case "ISurfaceTreeGetter":
                 case "ISurfaceTree":
@@ -15419,7 +15500,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[156];
+            Stream[] outputStreams = new Stream[157];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -15571,12 +15652,13 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 147, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SurfacePatterns, 148, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LayeredMaterialSwaps, 149, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 150, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 151, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 152, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 153, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 154, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 155, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ForceDatas, 150, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 151, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 152, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 153, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 154, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 155, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 156, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -16759,6 +16841,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.LayeredMaterialSwaps.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ForceDatas.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -18158,6 +18244,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILayeredMaterialSwap":
                 case "ILayeredMaterialSwapInternal":
                     foreach (var item in obj.LayeredMaterialSwaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ForceData":
+                case "IForceDataGetter":
+                case "IForceData":
+                case "IForceDataInternal":
+                    foreach (var item in obj.ForceDatas.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -19712,6 +19807,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.LayeredMaterialSwaps,
                 groupGetter: (m) => m.LayeredMaterialSwaps))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ForceData, IForceDataGetter>(
+                srcGroup: obj.ForceDatas,
+                type: typeof(IForceDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ForceDatas,
+                groupGetter: (m) => m.ForceDatas))
             {
                 yield return item;
             }
@@ -21882,6 +21986,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.LayeredMaterialSwaps,
                         groupGetter: (m) => m.LayeredMaterialSwaps))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ForceData":
+                case "IForceDataGetter":
+                case "IForceData":
+                case "IForceDataInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ForceData, IForceDataGetter>(
+                        srcGroup: obj.ForceDatas,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ForceDatas,
+                        groupGetter: (m) => m.ForceDatas))
                     {
                         yield return item;
                     }
@@ -25722,6 +25840,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ForceDatas) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ForceDatas);
+                try
+                {
+                    item.ForceDatas.DeepCopyIn(
+                        rhs: rhs.ForceDatas,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ForceDatas));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfaceTrees) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SurfaceTrees);
@@ -26082,6 +26220,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool SurfacePatternStyles;
         public bool SurfacePatterns;
         public bool LayeredMaterialSwaps;
+        public bool ForceDatas;
         public bool SurfaceTrees;
         public bool PlanetContentManagerTrees;
         public bool SnapTemplateBehaviors;
@@ -26243,6 +26382,7 @@ namespace Mutagen.Bethesda.Starfield
             SurfacePatternStyles = defaultValue;
             SurfacePatterns = defaultValue;
             LayeredMaterialSwaps = defaultValue;
+            ForceDatas = defaultValue;
             SurfaceTrees = defaultValue;
             PlanetContentManagerTrees = defaultValue;
             SnapTemplateBehaviors = defaultValue;
@@ -27954,6 +28094,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)LayeredMaterialSwapsItem).BinaryWriteTranslator).Write<ILayeredMaterialSwapGetter>(
                         item: LayeredMaterialSwapsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ForceDatas ?? true)
+            {
+                var ForceDatasItem = item.ForceDatas;
+                if (ForceDatasItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ForceDatasItem).BinaryWriteTranslator).Write<IForceDataGetter>(
+                        item: ForceDatasItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -30184,6 +30335,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.LayeredMaterialSwaps;
                 }
+                case RecordTypeInts.FORC:
+                {
+                    if (importMask?.ForceDatas ?? true)
+                    {
+                        item.ForceDatas.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ForceDatas;
+                }
                 case RecordTypeInts.SFTR:
                 {
                     if (importMask?.SurfaceTrees ?? true)
@@ -31188,6 +31353,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _LayeredMaterialSwapsLocations;
         private IStarfieldGroupGetter<ILayeredMaterialSwapGetter>? _LayeredMaterialSwaps => _LayeredMaterialSwapsLocations != null ? StarfieldGroupBinaryOverlay<ILayeredMaterialSwapGetter>.StarfieldGroupFactory(_stream, _LayeredMaterialSwapsLocations, _package) : default;
         public IStarfieldGroupGetter<ILayeredMaterialSwapGetter> LayeredMaterialSwaps => _LayeredMaterialSwaps ?? new StarfieldGroup<LayeredMaterialSwap>(this);
+        #endregion
+        #region ForceDatas
+        private List<RangeInt64>? _ForceDatasLocations;
+        private IStarfieldGroupGetter<IForceDataGetter>? _ForceDatas => _ForceDatasLocations != null ? StarfieldGroupBinaryOverlay<IForceDataGetter>.StarfieldGroupFactory(_stream, _ForceDatasLocations, _package) : default;
+        public IStarfieldGroupGetter<IForceDataGetter> ForceDatas => _ForceDatas ?? new StarfieldGroup<ForceData>(this);
         #endregion
         #region SurfaceTrees
         private List<RangeInt64>? _SurfaceTreesLocations;
@@ -32211,6 +32381,12 @@ namespace Mutagen.Bethesda.Starfield
                     _LayeredMaterialSwapsLocations ??= new();
                     _LayeredMaterialSwapsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.LayeredMaterialSwaps;
+                }
+                case RecordTypeInts.FORC:
+                {
+                    _ForceDatasLocations ??= new();
+                    _ForceDatasLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ForceDatas;
                 }
                 case RecordTypeInts.SFTR:
                 {
