@@ -168,6 +168,7 @@
       <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
       <Group name="SnapTemplateBehaviors" refName="SnapTemplateBehavior" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
+      <Group name="ParticleSystemDefineCollisions" refName="ParticleSystemDefineCollision" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
