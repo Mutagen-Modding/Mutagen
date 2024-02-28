@@ -2,6 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SunPreset" recordType="SUNP" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+      <FormLink name="ReflectionParent" refName="SunPreset" recordType="RFDP" />
+      <ByteArray name="ReflectionDiff" recordType="RDIF" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

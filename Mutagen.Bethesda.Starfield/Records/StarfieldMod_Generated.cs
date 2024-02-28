@@ -223,6 +223,7 @@ namespace Mutagen.Bethesda.Starfield
             _WWiseKeywordMappings_Object = new StarfieldGroup<WWiseKeywordMapping>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
+            _SunPresets_Object = new StarfieldGroup<SunPreset>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             CustomCtor();
         }
@@ -1377,6 +1378,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter> IStarfieldModGetter.ParticleSystemDefineCollisions => _ParticleSystemDefineCollisions_Object;
         #endregion
+        #region SunPresets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<SunPreset> _SunPresets_Object;
+        public StarfieldGroup<SunPreset> SunPresets => _SunPresets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ISunPresetGetter> IStarfieldModGetter.SunPresets => _SunPresets_Object;
+        #endregion
         #region ActorValueModulations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<ActorValueModulation> _ActorValueModulations_Object;
@@ -1587,6 +1595,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WWiseKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ParticleSystemDefineCollisions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.SunPresets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
@@ -1755,6 +1764,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem WWiseKeywordMappings,
                 TItem LegendaryItems,
                 TItem ParticleSystemDefineCollisions,
+                TItem SunPresets,
                 TItem ActorValueModulations)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
@@ -1921,6 +1931,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WWiseKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(WWiseKeywordMappings, new StarfieldGroup.Mask<TItem>(WWiseKeywordMappings));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LegendaryItems, new StarfieldGroup.Mask<TItem>(LegendaryItems));
                 this.ParticleSystemDefineCollisions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ParticleSystemDefineCollisions, new StarfieldGroup.Mask<TItem>(ParticleSystemDefineCollisions));
+                this.SunPresets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SunPresets, new StarfieldGroup.Mask<TItem>(SunPresets));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
             }
 
@@ -2097,6 +2108,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? WWiseKeywordMappings { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LegendaryItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ParticleSystemDefineCollisions { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SunPresets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
             #endregion
 
@@ -2274,6 +2286,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.WWiseKeywordMappings, rhs.WWiseKeywordMappings)) return false;
                 if (!object.Equals(this.LegendaryItems, rhs.LegendaryItems)) return false;
                 if (!object.Equals(this.ParticleSystemDefineCollisions, rhs.ParticleSystemDefineCollisions)) return false;
+                if (!object.Equals(this.SunPresets, rhs.SunPresets)) return false;
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
                 return true;
             }
@@ -2444,6 +2457,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.WWiseKeywordMappings);
                 hash.Add(this.LegendaryItems);
                 hash.Add(this.ParticleSystemDefineCollisions);
+                hash.Add(this.SunPresets);
                 hash.Add(this.ActorValueModulations);
                 return hash.ToHashCode();
             }
@@ -3272,6 +3286,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ParticleSystemDefineCollisions.Overall)) return false;
                     if (this.ParticleSystemDefineCollisions.Specific != null && !this.ParticleSystemDefineCollisions.Specific.All(eval)) return false;
+                }
+                if (SunPresets != null)
+                {
+                    if (!eval(this.SunPresets.Overall)) return false;
+                    if (this.SunPresets.Specific != null && !this.SunPresets.Specific.All(eval)) return false;
                 }
                 if (ActorValueModulations != null)
                 {
@@ -4105,6 +4124,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ParticleSystemDefineCollisions.Overall)) return true;
                     if (this.ParticleSystemDefineCollisions.Specific != null && this.ParticleSystemDefineCollisions.Specific.Any(eval)) return true;
                 }
+                if (SunPresets != null)
+                {
+                    if (eval(this.SunPresets.Overall)) return true;
+                    if (this.SunPresets.Specific != null && this.SunPresets.Specific.Any(eval)) return true;
+                }
                 if (ActorValueModulations != null)
                 {
                     if (eval(this.ActorValueModulations.Overall)) return true;
@@ -4288,6 +4312,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WWiseKeywordMappings = this.WWiseKeywordMappings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.WWiseKeywordMappings.Overall), this.WWiseKeywordMappings.Specific?.Translate(eval));
                 obj.LegendaryItems = this.LegendaryItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LegendaryItems.Overall), this.LegendaryItems.Specific?.Translate(eval));
                 obj.ParticleSystemDefineCollisions = this.ParticleSystemDefineCollisions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ParticleSystemDefineCollisions.Overall), this.ParticleSystemDefineCollisions.Specific?.Translate(eval));
+                obj.SunPresets = this.SunPresets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SunPresets.Overall), this.SunPresets.Specific?.Translate(eval));
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
             }
             #endregion
@@ -4963,6 +4988,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ParticleSystemDefineCollisions?.Print(sb);
                     }
+                    if (printMask?.SunPresets?.Overall ?? true)
+                    {
+                        SunPresets?.Print(sb);
+                    }
                     if (printMask?.ActorValueModulations?.Overall ?? true)
                     {
                         ActorValueModulations?.Print(sb);
@@ -5155,6 +5184,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseKeywordMapping.ErrorMask>?>? WWiseKeywordMappings;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>? LegendaryItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ParticleSystemDefineCollision.ErrorMask>?>? ParticleSystemDefineCollisions;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<SunPreset.ErrorMask>?>? SunPresets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
             #endregion
 
@@ -5492,6 +5522,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LegendaryItems;
                     case StarfieldMod_FieldIndex.ParticleSystemDefineCollisions:
                         return ParticleSystemDefineCollisions;
+                    case StarfieldMod_FieldIndex.SunPresets:
+                        return SunPresets;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         return ActorValueModulations;
                     default:
@@ -5995,6 +6027,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ParticleSystemDefineCollisions:
                         this.ParticleSystemDefineCollisions = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ParticleSystemDefineCollision.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.SunPresets:
+                        this.SunPresets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SunPreset.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>(ex, null);
@@ -6501,6 +6536,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ParticleSystemDefineCollisions:
                         this.ParticleSystemDefineCollisions = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ParticleSystemDefineCollision.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.SunPresets:
+                        this.SunPresets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SunPreset.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>?)obj;
                         break;
@@ -6676,6 +6714,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (WWiseKeywordMappings != null) return true;
                 if (LegendaryItems != null) return true;
                 if (ParticleSystemDefineCollisions != null) return true;
+                if (SunPresets != null) return true;
                 if (ActorValueModulations != null) return true;
                 return false;
             }
@@ -6866,6 +6905,7 @@ namespace Mutagen.Bethesda.Starfield
                 WWiseKeywordMappings?.Print(sb);
                 LegendaryItems?.Print(sb);
                 ParticleSystemDefineCollisions?.Print(sb);
+                SunPresets?.Print(sb);
                 ActorValueModulations?.Print(sb);
             }
             #endregion
@@ -7039,6 +7079,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.WWiseKeywordMappings = this.WWiseKeywordMappings.Combine(rhs.WWiseKeywordMappings, (l, r) => l.Combine(r));
                 ret.LegendaryItems = this.LegendaryItems.Combine(rhs.LegendaryItems, (l, r) => l.Combine(r));
                 ret.ParticleSystemDefineCollisions = this.ParticleSystemDefineCollisions.Combine(rhs.ParticleSystemDefineCollisions, (l, r) => l.Combine(r));
+                ret.SunPresets = this.SunPresets.Combine(rhs.SunPresets, (l, r) => l.Combine(r));
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -7227,6 +7268,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<WWiseKeywordMapping.TranslationMask>? WWiseKeywordMappings;
             public StarfieldGroup.TranslationMask<LegendaryItem.TranslationMask>? LegendaryItems;
             public StarfieldGroup.TranslationMask<ParticleSystemDefineCollision.TranslationMask>? ParticleSystemDefineCollisions;
+            public StarfieldGroup.TranslationMask<SunPreset.TranslationMask>? SunPresets;
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
             #endregion
 
@@ -7416,6 +7458,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((WWiseKeywordMappings != null ? WWiseKeywordMappings.OnOverall : DefaultOn, WWiseKeywordMappings?.GetCrystal()));
                 ret.Add((LegendaryItems != null ? LegendaryItems.OnOverall : DefaultOn, LegendaryItems?.GetCrystal()));
                 ret.Add((ParticleSystemDefineCollisions != null ? ParticleSystemDefineCollisions.OnOverall : DefaultOn, ParticleSystemDefineCollisions?.GetCrystal()));
+                ret.Add((SunPresets != null ? SunPresets.OnOverall : DefaultOn, SunPresets?.GetCrystal()));
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
             }
 
@@ -7626,6 +7669,7 @@ namespace Mutagen.Bethesda.Starfield
             _WWiseKeywordMappings_Object = new StarfieldGroup<WWiseKeywordMapping>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
+            _SunPresets_Object = new StarfieldGroup<SunPreset>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
             CustomCtor();
         }
@@ -8288,6 +8332,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ParticleSystemDefineCollisions.RecordCache.Set(rhsMod.ParticleSystemDefineCollisions.RecordCache.Items);
             }
+            if (mask?.SunPresets ?? true)
+            {
+                this.SunPresets.RecordCache.Set(rhsMod.SunPresets.RecordCache.Items);
+            }
             if (mask?.ActorValueModulations ?? true)
             {
                 this.ActorValueModulations.RecordCache.Set(rhsMod.ActorValueModulations.RecordCache.Items);
@@ -8465,6 +8513,7 @@ namespace Mutagen.Bethesda.Starfield
             count += WWiseKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
             count += LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += ParticleSystemDefineCollisions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SunPresets.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
@@ -8903,6 +8952,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<WWiseKeywordMapping> WWiseKeywordMappings { get; }
         new StarfieldGroup<LegendaryItem> LegendaryItems { get; }
         new StarfieldGroup<ParticleSystemDefineCollision> ParticleSystemDefineCollisions { get; }
+        new StarfieldGroup<SunPreset> SunPresets { get; }
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
     }
 
@@ -9087,6 +9137,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IWWiseKeywordMappingGetter> WWiseKeywordMappings { get; }
         IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems { get; }
         IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter> ParticleSystemDefineCollisions { get; }
+        IStarfieldGroupGetter<ISunPresetGetter> SunPresets { get; }
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
 
         #region Mutagen
@@ -9834,7 +9885,8 @@ namespace Mutagen.Bethesda.Starfield
         WWiseKeywordMappings = 161,
         LegendaryItems = 162,
         ParticleSystemDefineCollisions = 163,
-        ActorValueModulations = 164,
+        SunPresets = 164,
+        ActorValueModulations = 165,
     }
     #endregion
 
@@ -9845,9 +9897,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 165;
+        public const ushort AdditionalFieldCount = 166;
 
-        public const ushort FieldCount = 165;
+        public const ushort FieldCount = 166;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10076,6 +10128,7 @@ namespace Mutagen.Bethesda.Starfield
             item.WWiseKeywordMappings.Clear();
             item.LegendaryItems.Clear();
             item.ParticleSystemDefineCollisions.Clear();
+            item.SunPresets.Clear();
             item.ActorValueModulations.Clear();
         }
         
@@ -10211,6 +10264,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SnapTemplateBehaviors.RemapLinks(mapping);
             obj.WWiseKeywordMappings.RemapLinks(mapping);
             obj.LegendaryItems.RemapLinks(mapping);
+            obj.SunPresets.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
         }
         
@@ -10409,6 +10463,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.WWiseKeywordMappings.Remove(keys);
             obj.LegendaryItems.Remove(keys);
             obj.ParticleSystemDefineCollisions.Remove(keys);
+            obj.SunPresets.Remove(keys);
             obj.ActorValueModulations.Remove(keys);
         }
         
@@ -11773,6 +11828,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "SunPreset":
+                case "ISunPresetGetter":
+                case "ISunPreset":
+                case "ISunPresetInternal":
+                    obj.SunPresets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "ActorValueModulation":
                 case "IActorValueModulationGetter":
                 case "IActorValueModulation":
@@ -13001,6 +13064,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.WWiseKeywordMappings = MaskItemExt.Factory(item.WWiseKeywordMappings.GetEqualsMask(rhs.WWiseKeywordMappings, include), include);
             ret.LegendaryItems = MaskItemExt.Factory(item.LegendaryItems.GetEqualsMask(rhs.LegendaryItems, include), include);
             ret.ParticleSystemDefineCollisions = MaskItemExt.Factory(item.ParticleSystemDefineCollisions.GetEqualsMask(rhs.ParticleSystemDefineCollisions, include), include);
+            ret.SunPresets = MaskItemExt.Factory(item.SunPresets.GetEqualsMask(rhs.SunPresets, include), include);
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
         }
         
@@ -13701,6 +13765,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.ParticleSystemDefineCollisions?.Overall ?? true)
             {
                 item.ParticleSystemDefineCollisions?.Print(sb, "ParticleSystemDefineCollisions");
+            }
+            if (printMask?.SunPresets?.Overall ?? true)
+            {
+                item.SunPresets?.Print(sb, "SunPresets");
             }
             if (printMask?.ActorValueModulations?.Overall ?? true)
             {
@@ -15027,6 +15095,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isParticleSystemDefineCollisionsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SunPresets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SunPresets, rhs.SunPresets, out var lhsSunPresets, out var rhsSunPresets, out var isSunPresetsEqual))
+                {
+                    if (!object.Equals(lhsSunPresets, rhsSunPresets)) return false;
+                }
+                else if (!isSunPresetsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ActorValueModulations) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ActorValueModulations, rhs.ActorValueModulations, out var lhsActorValueModulations, out var rhsActorValueModulations, out var isActorValueModulationsEqual))
@@ -15205,6 +15281,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.WWiseKeywordMappings);
             hash.Add(item.LegendaryItems);
             hash.Add(item.ParticleSystemDefineCollisions);
+            hash.Add(item.SunPresets);
             hash.Add(item.ActorValueModulations);
             return hash.ToHashCode();
         }
@@ -16038,6 +16115,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IParticleSystemDefineCollision":
                 case "IParticleSystemDefineCollisionInternal":
                     return obj.ParticleSystemDefineCollisions;
+                case "SunPreset":
+                case "ISunPresetGetter":
+                case "ISunPreset":
+                case "ISunPresetInternal":
+                    return obj.SunPresets;
                 case "ActorValueModulation":
                 case "IActorValueModulationGetter":
                 case "IActorValueModulation":
@@ -16069,7 +16151,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[164];
+            Stream[] outputStreams = new Stream[165];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -16234,7 +16316,8 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.WWiseKeywordMappings, 160, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 161, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 162, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 163, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SunPresets, 163, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 164, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -16813,6 +16896,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.LegendaryItems.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SunPresets.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -17477,6 +17564,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ParticleSystemDefineCollisions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SunPresets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -18973,6 +19064,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IParticleSystemDefineCollision":
                 case "IParticleSystemDefineCollisionInternal":
                     foreach (var item in obj.ParticleSystemDefineCollisions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SunPreset":
+                case "ISunPresetGetter":
+                case "ISunPreset":
+                case "ISunPresetInternal":
+                    foreach (var item in obj.SunPresets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -20599,6 +20699,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.ParticleSystemDefineCollisions,
                 groupGetter: (m) => m.ParticleSystemDefineCollisions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SunPreset, ISunPresetGetter>(
+                srcGroup: obj.SunPresets,
+                type: typeof(ISunPresetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SunPresets,
+                groupGetter: (m) => m.SunPresets))
             {
                 yield return item;
             }
@@ -22906,6 +23015,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.ParticleSystemDefineCollisions,
                         groupGetter: (m) => m.ParticleSystemDefineCollisions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SunPreset":
+                case "ISunPresetGetter":
+                case "ISunPreset":
+                case "ISunPresetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SunPreset, ISunPresetGetter>(
+                        srcGroup: obj.SunPresets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SunPresets,
+                        groupGetter: (m) => m.SunPresets))
                     {
                         yield return item;
                     }
@@ -26936,6 +27059,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SunPresets) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SunPresets);
+                try
+                {
+                    item.SunPresets.DeepCopyIn(
+                        rhs: rhs.SunPresets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.SunPresets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ActorValueModulations) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ActorValueModulations);
@@ -27209,6 +27352,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool WWiseKeywordMappings;
         public bool LegendaryItems;
         public bool ParticleSystemDefineCollisions;
+        public bool SunPresets;
         public bool ActorValueModulations;
         public GroupMask()
         {
@@ -27378,6 +27522,7 @@ namespace Mutagen.Bethesda.Starfield
             WWiseKeywordMappings = defaultValue;
             LegendaryItems = defaultValue;
             ParticleSystemDefineCollisions = defaultValue;
+            SunPresets = defaultValue;
             ActorValueModulations = defaultValue;
         }
     }
@@ -29227,6 +29372,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ParticleSystemDefineCollisionsItem).BinaryWriteTranslator).Write<IParticleSystemDefineCollisionGetter>(
                         item: ParticleSystemDefineCollisionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SunPresets ?? true)
+            {
+                var SunPresetsItem = item.SunPresets;
+                if (SunPresetsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SunPresetsItem).BinaryWriteTranslator).Write<ISunPresetGetter>(
+                        item: SunPresetsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -31584,6 +31740,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.ParticleSystemDefineCollisions;
                 }
+                case RecordTypeInts.SUNP:
+                {
+                    if (importMask?.SunPresets ?? true)
+                    {
+                        item.SunPresets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.SunPresets;
+                }
                 case RecordTypeInts.AVMD:
                 {
                     if (importMask?.ActorValueModulations ?? true)
@@ -32583,6 +32753,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _ParticleSystemDefineCollisionsLocations;
         private IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter>? _ParticleSystemDefineCollisions => _ParticleSystemDefineCollisionsLocations != null ? StarfieldGroupBinaryOverlay<IParticleSystemDefineCollisionGetter>.StarfieldGroupFactory(_stream, _ParticleSystemDefineCollisionsLocations, _package) : default;
         public IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter> ParticleSystemDefineCollisions => _ParticleSystemDefineCollisions ?? new StarfieldGroup<ParticleSystemDefineCollision>(this);
+        #endregion
+        #region SunPresets
+        private List<RangeInt64>? _SunPresetsLocations;
+        private IStarfieldGroupGetter<ISunPresetGetter>? _SunPresets => _SunPresetsLocations != null ? StarfieldGroupBinaryOverlay<ISunPresetGetter>.StarfieldGroupFactory(_stream, _SunPresetsLocations, _package) : default;
+        public IStarfieldGroupGetter<ISunPresetGetter> SunPresets => _SunPresets ?? new StarfieldGroup<SunPreset>(this);
         #endregion
         #region ActorValueModulations
         private List<RangeInt64>? _ActorValueModulationsLocations;
@@ -33659,6 +33834,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ParticleSystemDefineCollisionsLocations ??= new();
                     _ParticleSystemDefineCollisionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ParticleSystemDefineCollisions;
+                }
+                case RecordTypeInts.SUNP:
+                {
+                    _SunPresetsLocations ??= new();
+                    _SunPresetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.SunPresets;
                 }
                 case RecordTypeInts.AVMD:
                 {

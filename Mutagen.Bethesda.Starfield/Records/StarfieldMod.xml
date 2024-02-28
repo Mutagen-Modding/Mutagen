@@ -170,6 +170,7 @@
       <Group name="WWiseKeywordMappings" refName="WWiseKeywordMapping" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ParticleSystemDefineCollisions" refName="ParticleSystemDefineCollision" />
+      <Group name="SunPresets" refName="SunPreset" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>

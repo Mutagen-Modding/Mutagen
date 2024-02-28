@@ -3732,9 +3732,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SunPreset</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter> SunPreset(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter> SunPreset(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISunPresetGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3744,9 +3744,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SunPreset</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter> SunPreset(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter> SunPreset(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISunPresetGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISunPreset, ISunPresetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
