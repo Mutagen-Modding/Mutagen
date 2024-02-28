@@ -2,6 +2,30 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="WWiseKeywordMapping" recordType="WKMF" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <UInt16 name="WMTI" recordType="WMTI" unknown="true" />
+      <List name="Keywords" recordType="WMKA" >
+        <FormLink refName="Keyword" />
+      </List>
+      <UInt32 name="WMSS" recordType="WMSS" unknown="true" />
+      <RefList name="Items" refName="WWiseKeywordMappingItem" />
+    </Fields>
+  </Object>
+  <Object name="WWiseKeywordMappingItem" objType="Subrecord" >
+    <Fields>
+      <UInt16 name="WMSI" recordType="WMSI" unknown="true" />
+      <RefDirect name="Sound" refName="WWiseKeywordMappingSoundItem" />
+    </Fields>
+  </Object>
+  <Object name="WWiseKeywordMappingSoundItem" objType="Subrecord" recordType="WMSD" >
+    <Fields>
+      <RefDirect name="Sound" refName="SoundReference" />
+      <RefList name="GuidPairs" refName="WWiseKeywordMappingSoundItemGuidPair" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="WWiseKeywordMappingSoundItemGuidPair" objType="Subrecord" >
+    <Fields>
+      <Guid name="Unknown1" />
+      <Guid name="Unknown2" />
     </Fields>
   </Object>
 </Loqui>

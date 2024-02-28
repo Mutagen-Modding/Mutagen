@@ -4236,9 +4236,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on WWiseKeywordMapping</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter> WWiseKeywordMapping(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter> WWiseKeywordMapping(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWWiseKeywordMappingGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4248,9 +4248,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on WWiseKeywordMapping</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter> WWiseKeywordMapping(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter> WWiseKeywordMapping(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IWWiseKeywordMappingGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IWWiseKeywordMapping, IWWiseKeywordMappingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

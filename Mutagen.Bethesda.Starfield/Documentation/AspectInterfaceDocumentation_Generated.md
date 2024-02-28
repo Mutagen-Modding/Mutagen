@@ -86,6 +86,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Terminal
 - Weapon
 - Weather
+- WWiseKeywordMapping
 ### IModeled
 - Activator
 - AddonNode
@@ -856,3 +857,5 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeyworded
 ### Worldspace
 - INamed
+### WWiseKeywordMapping
+- IKeyworded

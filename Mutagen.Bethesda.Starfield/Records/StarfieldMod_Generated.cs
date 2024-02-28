@@ -220,6 +220,7 @@ namespace Mutagen.Bethesda.Starfield
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
             _PlanetContentManagerTrees_Object = new StarfieldGroup<PlanetContentManagerTree>(this);
             _SnapTemplateBehaviors_Object = new StarfieldGroup<SnapTemplateBehavior>(this);
+            _WWiseKeywordMappings_Object = new StarfieldGroup<WWiseKeywordMapping>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
@@ -1355,6 +1356,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> IStarfieldModGetter.SnapTemplateBehaviors => _SnapTemplateBehaviors_Object;
         #endregion
+        #region WWiseKeywordMappings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<WWiseKeywordMapping> _WWiseKeywordMappings_Object;
+        public StarfieldGroup<WWiseKeywordMapping> WWiseKeywordMappings => _WWiseKeywordMappings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IWWiseKeywordMappingGetter> IStarfieldModGetter.WWiseKeywordMappings => _WWiseKeywordMappings_Object;
+        #endregion
         #region LegendaryItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<LegendaryItem> _LegendaryItems_Object;
@@ -1576,6 +1584,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.PlanetContentManagerTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SnapTemplateBehaviors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.WWiseKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ParticleSystemDefineCollisions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1743,6 +1752,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SurfaceTrees,
                 TItem PlanetContentManagerTrees,
                 TItem SnapTemplateBehaviors,
+                TItem WWiseKeywordMappings,
                 TItem LegendaryItems,
                 TItem ParticleSystemDefineCollisions,
                 TItem ActorValueModulations)
@@ -1908,6 +1918,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfaceTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfaceTrees, new StarfieldGroup.Mask<TItem>(SurfaceTrees));
                 this.PlanetContentManagerTrees = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PlanetContentManagerTrees, new StarfieldGroup.Mask<TItem>(PlanetContentManagerTrees));
                 this.SnapTemplateBehaviors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SnapTemplateBehaviors, new StarfieldGroup.Mask<TItem>(SnapTemplateBehaviors));
+                this.WWiseKeywordMappings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(WWiseKeywordMappings, new StarfieldGroup.Mask<TItem>(WWiseKeywordMappings));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LegendaryItems, new StarfieldGroup.Mask<TItem>(LegendaryItems));
                 this.ParticleSystemDefineCollisions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ParticleSystemDefineCollisions, new StarfieldGroup.Mask<TItem>(ParticleSystemDefineCollisions));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
@@ -2083,6 +2094,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfaceTrees { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PlanetContentManagerTrees { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SnapTemplateBehaviors { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? WWiseKeywordMappings { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LegendaryItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ParticleSystemDefineCollisions { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
@@ -2259,6 +2271,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SurfaceTrees, rhs.SurfaceTrees)) return false;
                 if (!object.Equals(this.PlanetContentManagerTrees, rhs.PlanetContentManagerTrees)) return false;
                 if (!object.Equals(this.SnapTemplateBehaviors, rhs.SnapTemplateBehaviors)) return false;
+                if (!object.Equals(this.WWiseKeywordMappings, rhs.WWiseKeywordMappings)) return false;
                 if (!object.Equals(this.LegendaryItems, rhs.LegendaryItems)) return false;
                 if (!object.Equals(this.ParticleSystemDefineCollisions, rhs.ParticleSystemDefineCollisions)) return false;
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
@@ -2428,6 +2441,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SurfaceTrees);
                 hash.Add(this.PlanetContentManagerTrees);
                 hash.Add(this.SnapTemplateBehaviors);
+                hash.Add(this.WWiseKeywordMappings);
                 hash.Add(this.LegendaryItems);
                 hash.Add(this.ParticleSystemDefineCollisions);
                 hash.Add(this.ActorValueModulations);
@@ -3243,6 +3257,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.SnapTemplateBehaviors.Overall)) return false;
                     if (this.SnapTemplateBehaviors.Specific != null && !this.SnapTemplateBehaviors.Specific.All(eval)) return false;
+                }
+                if (WWiseKeywordMappings != null)
+                {
+                    if (!eval(this.WWiseKeywordMappings.Overall)) return false;
+                    if (this.WWiseKeywordMappings.Specific != null && !this.WWiseKeywordMappings.Specific.All(eval)) return false;
                 }
                 if (LegendaryItems != null)
                 {
@@ -4071,6 +4090,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.SnapTemplateBehaviors.Overall)) return true;
                     if (this.SnapTemplateBehaviors.Specific != null && this.SnapTemplateBehaviors.Specific.Any(eval)) return true;
                 }
+                if (WWiseKeywordMappings != null)
+                {
+                    if (eval(this.WWiseKeywordMappings.Overall)) return true;
+                    if (this.WWiseKeywordMappings.Specific != null && this.WWiseKeywordMappings.Specific.Any(eval)) return true;
+                }
                 if (LegendaryItems != null)
                 {
                     if (eval(this.LegendaryItems.Overall)) return true;
@@ -4261,6 +4285,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfaceTrees = this.SurfaceTrees == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfaceTrees.Overall), this.SurfaceTrees.Specific?.Translate(eval));
                 obj.PlanetContentManagerTrees = this.PlanetContentManagerTrees == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PlanetContentManagerTrees.Overall), this.PlanetContentManagerTrees.Specific?.Translate(eval));
                 obj.SnapTemplateBehaviors = this.SnapTemplateBehaviors == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SnapTemplateBehaviors.Overall), this.SnapTemplateBehaviors.Specific?.Translate(eval));
+                obj.WWiseKeywordMappings = this.WWiseKeywordMappings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.WWiseKeywordMappings.Overall), this.WWiseKeywordMappings.Specific?.Translate(eval));
                 obj.LegendaryItems = this.LegendaryItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LegendaryItems.Overall), this.LegendaryItems.Specific?.Translate(eval));
                 obj.ParticleSystemDefineCollisions = this.ParticleSystemDefineCollisions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ParticleSystemDefineCollisions.Overall), this.ParticleSystemDefineCollisions.Specific?.Translate(eval));
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
@@ -4926,6 +4951,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         SnapTemplateBehaviors?.Print(sb);
                     }
+                    if (printMask?.WWiseKeywordMappings?.Overall ?? true)
+                    {
+                        WWiseKeywordMappings?.Print(sb);
+                    }
                     if (printMask?.LegendaryItems?.Overall ?? true)
                     {
                         LegendaryItems?.Print(sb);
@@ -5123,6 +5152,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfaceTree.ErrorMask>?>? SurfaceTrees;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PlanetContentManagerTree.ErrorMask>?>? PlanetContentManagerTrees;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateBehavior.ErrorMask>?>? SnapTemplateBehaviors;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseKeywordMapping.ErrorMask>?>? WWiseKeywordMappings;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>? LegendaryItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ParticleSystemDefineCollision.ErrorMask>?>? ParticleSystemDefineCollisions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
@@ -5456,6 +5486,8 @@ namespace Mutagen.Bethesda.Starfield
                         return PlanetContentManagerTrees;
                     case StarfieldMod_FieldIndex.SnapTemplateBehaviors:
                         return SnapTemplateBehaviors;
+                    case StarfieldMod_FieldIndex.WWiseKeywordMappings:
+                        return WWiseKeywordMappings;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         return LegendaryItems;
                     case StarfieldMod_FieldIndex.ParticleSystemDefineCollisions:
@@ -5954,6 +5986,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.SnapTemplateBehaviors:
                         this.SnapTemplateBehaviors = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateBehavior.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.WWiseKeywordMappings:
+                        this.WWiseKeywordMappings = new MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseKeywordMapping.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         this.LegendaryItems = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>(ex, null);
@@ -6457,6 +6492,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.SnapTemplateBehaviors:
                         this.SnapTemplateBehaviors = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SnapTemplateBehavior.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.WWiseKeywordMappings:
+                        this.WWiseKeywordMappings = (MaskItem<Exception?, StarfieldGroup.ErrorMask<WWiseKeywordMapping.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         this.LegendaryItems = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>?)obj;
                         break;
@@ -6635,6 +6673,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (SurfaceTrees != null) return true;
                 if (PlanetContentManagerTrees != null) return true;
                 if (SnapTemplateBehaviors != null) return true;
+                if (WWiseKeywordMappings != null) return true;
                 if (LegendaryItems != null) return true;
                 if (ParticleSystemDefineCollisions != null) return true;
                 if (ActorValueModulations != null) return true;
@@ -6824,6 +6863,7 @@ namespace Mutagen.Bethesda.Starfield
                 SurfaceTrees?.Print(sb);
                 PlanetContentManagerTrees?.Print(sb);
                 SnapTemplateBehaviors?.Print(sb);
+                WWiseKeywordMappings?.Print(sb);
                 LegendaryItems?.Print(sb);
                 ParticleSystemDefineCollisions?.Print(sb);
                 ActorValueModulations?.Print(sb);
@@ -6996,6 +7036,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SurfaceTrees = this.SurfaceTrees.Combine(rhs.SurfaceTrees, (l, r) => l.Combine(r));
                 ret.PlanetContentManagerTrees = this.PlanetContentManagerTrees.Combine(rhs.PlanetContentManagerTrees, (l, r) => l.Combine(r));
                 ret.SnapTemplateBehaviors = this.SnapTemplateBehaviors.Combine(rhs.SnapTemplateBehaviors, (l, r) => l.Combine(r));
+                ret.WWiseKeywordMappings = this.WWiseKeywordMappings.Combine(rhs.WWiseKeywordMappings, (l, r) => l.Combine(r));
                 ret.LegendaryItems = this.LegendaryItems.Combine(rhs.LegendaryItems, (l, r) => l.Combine(r));
                 ret.ParticleSystemDefineCollisions = this.ParticleSystemDefineCollisions.Combine(rhs.ParticleSystemDefineCollisions, (l, r) => l.Combine(r));
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
@@ -7183,6 +7224,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<SurfaceTree.TranslationMask>? SurfaceTrees;
             public StarfieldGroup.TranslationMask<PlanetContentManagerTree.TranslationMask>? PlanetContentManagerTrees;
             public StarfieldGroup.TranslationMask<SnapTemplateBehavior.TranslationMask>? SnapTemplateBehaviors;
+            public StarfieldGroup.TranslationMask<WWiseKeywordMapping.TranslationMask>? WWiseKeywordMappings;
             public StarfieldGroup.TranslationMask<LegendaryItem.TranslationMask>? LegendaryItems;
             public StarfieldGroup.TranslationMask<ParticleSystemDefineCollision.TranslationMask>? ParticleSystemDefineCollisions;
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
@@ -7371,6 +7413,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SurfaceTrees != null ? SurfaceTrees.OnOverall : DefaultOn, SurfaceTrees?.GetCrystal()));
                 ret.Add((PlanetContentManagerTrees != null ? PlanetContentManagerTrees.OnOverall : DefaultOn, PlanetContentManagerTrees?.GetCrystal()));
                 ret.Add((SnapTemplateBehaviors != null ? SnapTemplateBehaviors.OnOverall : DefaultOn, SnapTemplateBehaviors?.GetCrystal()));
+                ret.Add((WWiseKeywordMappings != null ? WWiseKeywordMappings.OnOverall : DefaultOn, WWiseKeywordMappings?.GetCrystal()));
                 ret.Add((LegendaryItems != null ? LegendaryItems.OnOverall : DefaultOn, LegendaryItems?.GetCrystal()));
                 ret.Add((ParticleSystemDefineCollisions != null ? ParticleSystemDefineCollisions.OnOverall : DefaultOn, ParticleSystemDefineCollisions?.GetCrystal()));
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
@@ -7580,6 +7623,7 @@ namespace Mutagen.Bethesda.Starfield
             _SurfaceTrees_Object = new StarfieldGroup<SurfaceTree>(this);
             _PlanetContentManagerTrees_Object = new StarfieldGroup<PlanetContentManagerTree>(this);
             _SnapTemplateBehaviors_Object = new StarfieldGroup<SnapTemplateBehavior>(this);
+            _WWiseKeywordMappings_Object = new StarfieldGroup<WWiseKeywordMapping>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
@@ -8232,6 +8276,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.SnapTemplateBehaviors.RecordCache.Set(rhsMod.SnapTemplateBehaviors.RecordCache.Items);
             }
+            if (mask?.WWiseKeywordMappings ?? true)
+            {
+                this.WWiseKeywordMappings.RecordCache.Set(rhsMod.WWiseKeywordMappings.RecordCache.Items);
+            }
             if (mask?.LegendaryItems ?? true)
             {
                 this.LegendaryItems.RecordCache.Set(rhsMod.LegendaryItems.RecordCache.Items);
@@ -8414,6 +8462,7 @@ namespace Mutagen.Bethesda.Starfield
             count += SurfaceTrees.RecordCache.Count > 0 ? 1 : default(uint);
             count += PlanetContentManagerTrees.RecordCache.Count > 0 ? 1 : default(uint);
             count += SnapTemplateBehaviors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += WWiseKeywordMappings.RecordCache.Count > 0 ? 1 : default(uint);
             count += LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += ParticleSystemDefineCollisions.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
@@ -8851,6 +8900,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<SurfaceTree> SurfaceTrees { get; }
         new StarfieldGroup<PlanetContentManagerTree> PlanetContentManagerTrees { get; }
         new StarfieldGroup<SnapTemplateBehavior> SnapTemplateBehaviors { get; }
+        new StarfieldGroup<WWiseKeywordMapping> WWiseKeywordMappings { get; }
         new StarfieldGroup<LegendaryItem> LegendaryItems { get; }
         new StarfieldGroup<ParticleSystemDefineCollision> ParticleSystemDefineCollisions { get; }
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
@@ -9034,6 +9084,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ISurfaceTreeGetter> SurfaceTrees { get; }
         IStarfieldGroupGetter<IPlanetContentManagerTreeGetter> PlanetContentManagerTrees { get; }
         IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> SnapTemplateBehaviors { get; }
+        IStarfieldGroupGetter<IWWiseKeywordMappingGetter> WWiseKeywordMappings { get; }
         IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems { get; }
         IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter> ParticleSystemDefineCollisions { get; }
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
@@ -9780,9 +9831,10 @@ namespace Mutagen.Bethesda.Starfield
         SurfaceTrees = 158,
         PlanetContentManagerTrees = 159,
         SnapTemplateBehaviors = 160,
-        LegendaryItems = 161,
-        ParticleSystemDefineCollisions = 162,
-        ActorValueModulations = 163,
+        WWiseKeywordMappings = 161,
+        LegendaryItems = 162,
+        ParticleSystemDefineCollisions = 163,
+        ActorValueModulations = 164,
     }
     #endregion
 
@@ -9793,9 +9845,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 164;
+        public const ushort AdditionalFieldCount = 165;
 
-        public const ushort FieldCount = 164;
+        public const ushort FieldCount = 165;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10021,6 +10073,7 @@ namespace Mutagen.Bethesda.Starfield
             item.SurfaceTrees.Clear();
             item.PlanetContentManagerTrees.Clear();
             item.SnapTemplateBehaviors.Clear();
+            item.WWiseKeywordMappings.Clear();
             item.LegendaryItems.Clear();
             item.ParticleSystemDefineCollisions.Clear();
             item.ActorValueModulations.Clear();
@@ -10156,6 +10209,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SurfaceTrees.RemapLinks(mapping);
             obj.PlanetContentManagerTrees.RemapLinks(mapping);
             obj.SnapTemplateBehaviors.RemapLinks(mapping);
+            obj.WWiseKeywordMappings.RemapLinks(mapping);
             obj.LegendaryItems.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
         }
@@ -10352,6 +10406,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.SurfaceTrees.Remove(keys);
             obj.PlanetContentManagerTrees.Remove(keys);
             obj.SnapTemplateBehaviors.Remove(keys);
+            obj.WWiseKeywordMappings.Remove(keys);
             obj.LegendaryItems.Remove(keys);
             obj.ParticleSystemDefineCollisions.Remove(keys);
             obj.ActorValueModulations.Remove(keys);
@@ -11694,6 +11749,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "WWiseKeywordMapping":
+                case "IWWiseKeywordMappingGetter":
+                case "IWWiseKeywordMapping":
+                case "IWWiseKeywordMappingInternal":
+                    obj.WWiseKeywordMappings.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "LegendaryItem":
                 case "ILegendaryItemGetter":
                 case "ILegendaryItem":
@@ -12935,6 +12998,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.SurfaceTrees = MaskItemExt.Factory(item.SurfaceTrees.GetEqualsMask(rhs.SurfaceTrees, include), include);
             ret.PlanetContentManagerTrees = MaskItemExt.Factory(item.PlanetContentManagerTrees.GetEqualsMask(rhs.PlanetContentManagerTrees, include), include);
             ret.SnapTemplateBehaviors = MaskItemExt.Factory(item.SnapTemplateBehaviors.GetEqualsMask(rhs.SnapTemplateBehaviors, include), include);
+            ret.WWiseKeywordMappings = MaskItemExt.Factory(item.WWiseKeywordMappings.GetEqualsMask(rhs.WWiseKeywordMappings, include), include);
             ret.LegendaryItems = MaskItemExt.Factory(item.LegendaryItems.GetEqualsMask(rhs.LegendaryItems, include), include);
             ret.ParticleSystemDefineCollisions = MaskItemExt.Factory(item.ParticleSystemDefineCollisions.GetEqualsMask(rhs.ParticleSystemDefineCollisions, include), include);
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
@@ -13625,6 +13689,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SnapTemplateBehaviors?.Overall ?? true)
             {
                 item.SnapTemplateBehaviors?.Print(sb, "SnapTemplateBehaviors");
+            }
+            if (printMask?.WWiseKeywordMappings?.Overall ?? true)
+            {
+                item.WWiseKeywordMappings?.Print(sb, "WWiseKeywordMappings");
             }
             if (printMask?.LegendaryItems?.Overall ?? true)
             {
@@ -14935,6 +15003,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isSnapTemplateBehaviorsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WWiseKeywordMappings) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WWiseKeywordMappings, rhs.WWiseKeywordMappings, out var lhsWWiseKeywordMappings, out var rhsWWiseKeywordMappings, out var isWWiseKeywordMappingsEqual))
+                {
+                    if (!object.Equals(lhsWWiseKeywordMappings, rhsWWiseKeywordMappings)) return false;
+                }
+                else if (!isWWiseKeywordMappingsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LegendaryItems) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LegendaryItems, rhs.LegendaryItems, out var lhsLegendaryItems, out var rhsLegendaryItems, out var isLegendaryItemsEqual))
@@ -15126,6 +15202,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SurfaceTrees);
             hash.Add(item.PlanetContentManagerTrees);
             hash.Add(item.SnapTemplateBehaviors);
+            hash.Add(item.WWiseKeywordMappings);
             hash.Add(item.LegendaryItems);
             hash.Add(item.ParticleSystemDefineCollisions);
             hash.Add(item.ActorValueModulations);
@@ -15946,6 +16023,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISnapTemplateBehavior":
                 case "ISnapTemplateBehaviorInternal":
                     return obj.SnapTemplateBehaviors;
+                case "WWiseKeywordMapping":
+                case "IWWiseKeywordMappingGetter":
+                case "IWWiseKeywordMapping":
+                case "IWWiseKeywordMappingInternal":
+                    return obj.WWiseKeywordMappings;
                 case "LegendaryItem":
                 case "ILegendaryItemGetter":
                 case "ILegendaryItem":
@@ -15987,7 +16069,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[163];
+            Stream[] outputStreams = new Stream[164];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -16149,9 +16231,10 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.SurfaceTrees, 157, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.PlanetContentManagerTrees, 158, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SnapTemplateBehaviors, 159, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 160, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 161, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 162, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.WWiseKeywordMappings, 160, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 161, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 162, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 163, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -16724,6 +16807,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.WWiseKeywordMappings.EnumerateFormLinks())
+            {
+                yield return item;
             }
             foreach (var item in obj.LegendaryItems.EnumerateFormLinks())
             {
@@ -17378,6 +17465,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SnapTemplateBehaviors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WWiseKeywordMappings.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -18855,6 +18946,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISnapTemplateBehavior":
                 case "ISnapTemplateBehaviorInternal":
                     foreach (var item in obj.SnapTemplateBehaviors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WWiseKeywordMapping":
+                case "IWWiseKeywordMappingGetter":
+                case "IWWiseKeywordMapping":
+                case "IWWiseKeywordMappingInternal":
+                    foreach (var item in obj.WWiseKeywordMappings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -20472,6 +20572,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.SnapTemplateBehaviors,
                 groupGetter: (m) => m.SnapTemplateBehaviors))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WWiseKeywordMapping, IWWiseKeywordMappingGetter>(
+                srcGroup: obj.WWiseKeywordMappings,
+                type: typeof(IWWiseKeywordMappingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.WWiseKeywordMappings,
+                groupGetter: (m) => m.WWiseKeywordMappings))
             {
                 yield return item;
             }
@@ -22755,6 +22864,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.SnapTemplateBehaviors,
                         groupGetter: (m) => m.SnapTemplateBehaviors))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WWiseKeywordMapping":
+                case "IWWiseKeywordMappingGetter":
+                case "IWWiseKeywordMapping":
+                case "IWWiseKeywordMappingInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, WWiseKeywordMapping, IWWiseKeywordMappingGetter>(
+                        srcGroup: obj.WWiseKeywordMappings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.WWiseKeywordMappings,
+                        groupGetter: (m) => m.WWiseKeywordMappings))
                     {
                         yield return item;
                     }
@@ -26753,6 +26876,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.WWiseKeywordMappings) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.WWiseKeywordMappings);
+                try
+                {
+                    item.WWiseKeywordMappings.DeepCopyIn(
+                        rhs: rhs.WWiseKeywordMappings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.WWiseKeywordMappings));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LegendaryItems) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.LegendaryItems);
@@ -27063,6 +27206,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool SurfaceTrees;
         public bool PlanetContentManagerTrees;
         public bool SnapTemplateBehaviors;
+        public bool WWiseKeywordMappings;
         public bool LegendaryItems;
         public bool ParticleSystemDefineCollisions;
         public bool ActorValueModulations;
@@ -27231,6 +27375,7 @@ namespace Mutagen.Bethesda.Starfield
             SurfaceTrees = defaultValue;
             PlanetContentManagerTrees = defaultValue;
             SnapTemplateBehaviors = defaultValue;
+            WWiseKeywordMappings = defaultValue;
             LegendaryItems = defaultValue;
             ParticleSystemDefineCollisions = defaultValue;
             ActorValueModulations = defaultValue;
@@ -29049,6 +29194,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SnapTemplateBehaviorsItem).BinaryWriteTranslator).Write<ISnapTemplateBehaviorGetter>(
                         item: SnapTemplateBehaviorsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.WWiseKeywordMappings ?? true)
+            {
+                var WWiseKeywordMappingsItem = item.WWiseKeywordMappings;
+                if (WWiseKeywordMappingsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WWiseKeywordMappingsItem).BinaryWriteTranslator).Write<IWWiseKeywordMappingGetter>(
+                        item: WWiseKeywordMappingsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -31386,6 +31542,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.SnapTemplateBehaviors;
                 }
+                case RecordTypeInts.WKMF:
+                {
+                    if (importMask?.WWiseKeywordMappings ?? true)
+                    {
+                        item.WWiseKeywordMappings.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.WWiseKeywordMappings;
+                }
                 case RecordTypeInts.LGDI:
                 {
                     if (importMask?.LegendaryItems ?? true)
@@ -32398,6 +32568,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _SnapTemplateBehaviorsLocations;
         private IStarfieldGroupGetter<ISnapTemplateBehaviorGetter>? _SnapTemplateBehaviors => _SnapTemplateBehaviorsLocations != null ? StarfieldGroupBinaryOverlay<ISnapTemplateBehaviorGetter>.StarfieldGroupFactory(_stream, _SnapTemplateBehaviorsLocations, _package) : default;
         public IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> SnapTemplateBehaviors => _SnapTemplateBehaviors ?? new StarfieldGroup<SnapTemplateBehavior>(this);
+        #endregion
+        #region WWiseKeywordMappings
+        private List<RangeInt64>? _WWiseKeywordMappingsLocations;
+        private IStarfieldGroupGetter<IWWiseKeywordMappingGetter>? _WWiseKeywordMappings => _WWiseKeywordMappingsLocations != null ? StarfieldGroupBinaryOverlay<IWWiseKeywordMappingGetter>.StarfieldGroupFactory(_stream, _WWiseKeywordMappingsLocations, _package) : default;
+        public IStarfieldGroupGetter<IWWiseKeywordMappingGetter> WWiseKeywordMappings => _WWiseKeywordMappings ?? new StarfieldGroup<WWiseKeywordMapping>(this);
         #endregion
         #region LegendaryItems
         private List<RangeInt64>? _LegendaryItemsLocations;
@@ -33466,6 +33641,12 @@ namespace Mutagen.Bethesda.Starfield
                     _SnapTemplateBehaviorsLocations ??= new();
                     _SnapTemplateBehaviorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.SnapTemplateBehaviors;
+                }
+                case RecordTypeInts.WKMF:
+                {
+                    _WWiseKeywordMappingsLocations ??= new();
+                    _WWiseKeywordMappingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.WWiseKeywordMappings;
                 }
                 case RecordTypeInts.LGDI:
                 {

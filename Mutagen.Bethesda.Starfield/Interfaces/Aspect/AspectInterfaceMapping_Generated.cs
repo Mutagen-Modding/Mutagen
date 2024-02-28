@@ -121,6 +121,7 @@ namespace Mutagen.Bethesda.Starfield
                     Terminal_Registration.Instance,
                     Weapon_Registration.Instance,
                     Weather_Registration.Instance,
+                    WWiseKeywordMapping_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: null,

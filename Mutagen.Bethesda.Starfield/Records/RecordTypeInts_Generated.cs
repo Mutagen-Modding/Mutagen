@@ -971,8 +971,13 @@ public partial class RecordTypeInts
     public const int WMAT = 0x54414D57;
     public const int WMCR = 0x52434D57;
     public const int WMEL = 0x4C454D57;
+    public const int WMKA = 0x414B4D57;
     public const int WMNR = 0x524E4D57;
     public const int WMPS = 0x53504D57;
+    public const int WMSD = 0x44534D57;
+    public const int WMSI = 0x49534D57;
+    public const int WMSS = 0x53534D57;
+    public const int WMTI = 0x49544D57;
     public const int WMXR = 0x52584D57;
     public const int WNAM = 0x4D414E57;
     public const int WNDP = 0x50444E57;

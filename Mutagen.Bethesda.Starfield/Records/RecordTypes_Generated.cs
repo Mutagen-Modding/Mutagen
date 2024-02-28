@@ -973,8 +973,13 @@ public partial class RecordTypes
     public static readonly RecordType WMAT = new(0x54414D57);
     public static readonly RecordType WMCR = new(0x52434D57);
     public static readonly RecordType WMEL = new(0x4C454D57);
+    public static readonly RecordType WMKA = new(0x414B4D57);
     public static readonly RecordType WMNR = new(0x524E4D57);
     public static readonly RecordType WMPS = new(0x53504D57);
+    public static readonly RecordType WMSD = new(0x44534D57);
+    public static readonly RecordType WMSI = new(0x49534D57);
+    public static readonly RecordType WMSS = new(0x53534D57);
+    public static readonly RecordType WMTI = new(0x49544D57);
     public static readonly RecordType WMXR = new(0x52584D57);
     public static readonly RecordType WNAM = new(0x4D414E57);
     public static readonly RecordType WNDP = new(0x50444E57);

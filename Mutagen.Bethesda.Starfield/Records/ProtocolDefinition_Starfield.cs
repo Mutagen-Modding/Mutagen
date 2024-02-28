@@ -1303,6 +1303,9 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             WouldRefuseCommandConditionData_Registration.Instance,
             WWiseEventData_Registration.Instance,
             WWiseKeywordMapping_Registration.Instance,
+            WWiseKeywordMappingItem_Registration.Instance,
+            WWiseKeywordMappingSoundItem_Registration.Instance,
+            WWiseKeywordMappingSoundItemGuidPair_Registration.Instance,
             Zoom_Registration.Instance
         );
     }

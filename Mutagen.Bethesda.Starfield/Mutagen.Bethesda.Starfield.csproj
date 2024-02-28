@@ -6586,5 +6586,14 @@
     <Compile Include="Records\Major Records\SecondaryDamageItem_Generated.cs">
       <DependentUpon>SecondaryDamageList.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\WWiseKeywordMappingItem_Generated.cs">
+      <DependentUpon>WWiseKeywordMapping.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WWiseKeywordMappingSoundItem_Generated.cs">
+      <DependentUpon>WWiseKeywordMapping.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WWiseKeywordMappingSoundItemGuidPair_Generated.cs">
+      <DependentUpon>WWiseKeywordMapping.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
