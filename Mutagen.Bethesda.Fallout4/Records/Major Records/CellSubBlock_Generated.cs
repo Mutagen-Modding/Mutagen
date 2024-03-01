@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Cells
         partial void CellsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

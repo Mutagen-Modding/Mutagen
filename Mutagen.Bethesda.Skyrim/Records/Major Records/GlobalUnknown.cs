@@ -41,7 +41,7 @@ partial class GlobalUnknownBinaryOverlay
 
     private int? _TypeCharLocation;
 
-    partial void TypeCharCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void TypeCharCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _TypeCharLocation = (stream.Position - offset);
     }

@@ -130,7 +130,7 @@ partial class QuestBinaryOverlay
     public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
     public IReadOnlyList<IConditionGetter> EventConditions { get; private set; } = Array.Empty<IConditionGetter>();
 
-    partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void DialogConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         DialogConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }

@@ -646,7 +646,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                                $"partial void {typeGen.Name}CustomParse"))
                     {
                         args.Add($"{nameof(OverlayStream)} stream");
-                        args.Add($"long finalPos");
+                        args.Add($"int finalPos");
                         args.Add($"int offset");
                         args.Add($"{nameof(RecordType)} type");
                         args.Add($"{nameof(PreviousParse)} lastParsed");

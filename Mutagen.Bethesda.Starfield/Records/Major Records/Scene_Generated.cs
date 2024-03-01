@@ -4647,7 +4647,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Actions
         partial void ActionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

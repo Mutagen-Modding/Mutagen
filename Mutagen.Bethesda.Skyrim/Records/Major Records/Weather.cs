@@ -411,7 +411,7 @@ partial class WeatherBinaryOverlay
 
     int? _directionalLoc;
 
-    partial void CloudsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void CloudsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         WeatherBinaryCreateTranslation.FillBinaryCloudYSpeeds(
             new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
@@ -450,7 +450,7 @@ partial class WeatherBinaryOverlay
         return null;
     }
 
-    partial void DirectionalAmbientLightingColorsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void DirectionalAmbientLightingColorsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         if (_directionalLoc.HasValue) return;
         _directionalLoc = (ushort)(stream.Position - offset);

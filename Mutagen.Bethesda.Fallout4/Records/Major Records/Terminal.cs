@@ -192,7 +192,7 @@ partial class TerminalBinaryOverlay
         return marker;
     }
 
-    partial void MarkerParametersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void MarkerParametersCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         if (_flags == null)
         {
@@ -204,7 +204,7 @@ partial class TerminalBinaryOverlay
         }
     }
 
-    partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         this._flags = TerminalBinaryCreateTranslation.FillBinaryFlags(
             stream,

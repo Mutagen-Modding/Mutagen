@@ -1742,7 +1742,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Data
         partial void DataCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IAColorRecordDataGetter GetDataCustom();
         public IAColorRecordDataGetter Data => GetDataCustom();
@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         partial void FlagsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial ColorRecord.Flag GetFlagsCustom();
         public ColorRecord.Flag Flags => GetFlagsCustom();

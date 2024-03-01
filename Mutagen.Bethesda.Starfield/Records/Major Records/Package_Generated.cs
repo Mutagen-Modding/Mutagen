@@ -3909,7 +3909,7 @@ namespace Mutagen.Bethesda.Starfield
         #region PackageTemplate
         partial void PackageTemplateCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IFormLinkGetter<IPackageGetter> GetPackageTemplateCustom();
         public IFormLinkGetter<IPackageGetter> PackageTemplate => GetPackageTemplateCustom();
@@ -3921,7 +3921,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ProcedureTree
         partial void ProcedureTreeCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

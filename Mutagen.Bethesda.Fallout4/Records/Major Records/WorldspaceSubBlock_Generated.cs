@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Items
         partial void ItemsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Icon
         partial void IconCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial String? GetIconCustom();
         public String? Icon => GetIconCustom();

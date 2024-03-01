@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Animations
         partial void AnimationsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

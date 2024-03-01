@@ -3408,7 +3408,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region OpenByDefault
         partial void OpenByDefaultCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Boolean GetOpenByDefaultCustom();
         public Boolean OpenByDefault => GetOpenByDefaultCustom();

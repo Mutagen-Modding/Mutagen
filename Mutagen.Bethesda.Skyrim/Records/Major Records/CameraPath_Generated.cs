@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Zoom
         partial void ZoomCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial CameraPath.ZoomType GetZoomCustom();
         public CameraPath.ZoomType Zoom => GetZoomCustom();

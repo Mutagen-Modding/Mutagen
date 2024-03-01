@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Data
         partial void DataCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Boolean? GetDataCustom();
         public Boolean? Data => GetDataCustom();

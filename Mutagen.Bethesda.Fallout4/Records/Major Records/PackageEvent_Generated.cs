@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Topics
         partial void TopicsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

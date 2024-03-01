@@ -97,7 +97,7 @@ partial class AudioEffectChainBinaryOverlay
 {
     public IReadOnlyList<IAAudioEffectGetter> Effects { get; private set; } = Array.Empty<IAAudioEffectGetter>();
     
-    partial void EffectsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void EffectsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         this.Effects = this.ParseRepeatedTypelessSubrecord<IAAudioEffectGetter>(
             stream: stream,

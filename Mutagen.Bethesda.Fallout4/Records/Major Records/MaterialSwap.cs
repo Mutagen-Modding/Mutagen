@@ -163,7 +163,7 @@ partial class MaterialSwapBinaryOverlay
 
     partial void TreeFolderCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _fnamLoc = (stream.Position - offset);

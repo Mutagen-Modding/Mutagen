@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Role
         partial void RoleCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Subgraph.SubgraphRole GetRoleCustom();
         public Subgraph.SubgraphRole Role => GetRoleCustom();

@@ -59,7 +59,7 @@ partial class LeveledItemBinaryOverlay
         }
         return ret;
     }
-    partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _FlagsLocation = (ushort)(stream.Position - offset);
     }

@@ -139,7 +139,7 @@ partial class SceneActionBinaryOverlay
 
     partial void TypeCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         var loc = (stream.Position - offset);

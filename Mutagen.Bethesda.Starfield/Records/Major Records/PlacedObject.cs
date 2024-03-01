@@ -202,7 +202,7 @@ partial class PlacedObjectBinaryOverlay
 
     partial void TraversalsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

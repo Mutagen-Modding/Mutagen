@@ -43,7 +43,7 @@ partial class PlacedObjectBinaryOverlay
 {
     private int? _OpenByDefaultLocation;
     public partial bool GetOpenByDefaultCustom() => _OpenByDefaultLocation.HasValue;
-    partial void OpenByDefaultCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void OpenByDefaultCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _OpenByDefaultLocation = (ushort)(stream.Position - offset);
     }

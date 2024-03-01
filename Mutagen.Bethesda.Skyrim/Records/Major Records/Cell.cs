@@ -552,7 +552,7 @@ partial class CellBinaryOverlay
         }
     }
 
-    partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _flagsLoc = (stream.Position - offset);
     }

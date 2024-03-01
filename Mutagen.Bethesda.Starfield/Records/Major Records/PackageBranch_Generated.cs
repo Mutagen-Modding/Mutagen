@@ -2015,7 +2015,7 @@ namespace Mutagen.Bethesda.Starfield
         #region FlagsOverride
         partial void FlagsOverrideCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom();
         public IPackageFlagsOverrideGetter? FlagsOverride => GetFlagsOverrideCustom();

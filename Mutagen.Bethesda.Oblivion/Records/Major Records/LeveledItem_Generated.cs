@@ -1681,7 +1681,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Flags
         partial void FlagsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial LeveledFlag? GetFlagsCustom();
         public LeveledFlag? Flags => GetFlagsCustom();

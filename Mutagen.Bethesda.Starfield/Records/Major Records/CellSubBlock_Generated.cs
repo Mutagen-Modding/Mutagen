@@ -2080,7 +2080,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Cells
         partial void CellsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

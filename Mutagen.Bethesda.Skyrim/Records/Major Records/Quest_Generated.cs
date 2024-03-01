@@ -3430,7 +3430,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region DialogConditions
         partial void DialogConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

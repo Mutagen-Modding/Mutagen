@@ -165,7 +165,7 @@ partial class RegionBinaryOverlay : IRegionGetter
         return null;
     }
 
-    partial void IconCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void IconCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _iconLocation = (ushort)(stream.Position - offset);
     }

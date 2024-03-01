@@ -43,7 +43,7 @@ partial class PackageBranchBinaryOverlay
     private IPackageFlagsOverrideGetter? _flagsOverride;
     public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
 
-    partial void FlagsOverrideCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsOverrideCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _flagsOverride = PackageFlagsOverride.CreateFromBinary(new MutagenFrame(
             new MutagenInterfaceReadStream(stream, _package.MetaData)));

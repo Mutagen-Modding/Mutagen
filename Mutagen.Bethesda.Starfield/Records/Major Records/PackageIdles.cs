@@ -122,13 +122,13 @@ partial class PackageIdlesBinaryOverlay
     private float? _timerSetting;
     public partial Single? GetTimerSettingCustom() => _timerSetting;
 
-    partial void TimerSettingCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void TimerSettingCustomParse(OverlayStream stream, int finalPos, int offset)
     {
     }
 
     partial void AnimationsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

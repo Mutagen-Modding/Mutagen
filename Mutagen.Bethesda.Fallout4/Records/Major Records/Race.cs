@@ -285,7 +285,7 @@ partial class RaceBinaryOverlay
         return ret;
     }
 
-    partial void MorphValuesCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void MorphValuesCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         this.MorphValues = this.ParseRepeatedTypelessSubrecord<IMorphValueGetter>(
             stream: stream,

@@ -517,14 +517,7 @@ partial class PackageBinaryOverlay
     FormLink<IPackageGetter> _packageTemplate = null!;
     public partial IFormLinkGetter<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
-    partial void PackageTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
-    {
-    }
-
-    private void PackageTemplateCustomParse(
-        OverlayStream stream,
-        int finalPos,
-        int offset)
+    partial void PackageTemplateCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         var pkcu = stream.ReadSubrecord();
         var count = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcu.Content));
@@ -535,7 +528,7 @@ partial class PackageBinaryOverlay
             new MutagenInterfaceReadStream(stream, _package.MetaData), count, _packageData);
     }
 
-    partial void XnamMarkerCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void XnamMarkerCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         var xnam = stream.ReadSubrecord();
         _xnam = xnam.Content;

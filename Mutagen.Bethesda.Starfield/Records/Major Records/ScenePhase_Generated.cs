@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Starfield
         #region StartConditions
         partial void StartConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Starfield
         #region CompletionConditions
         partial void CompletionConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

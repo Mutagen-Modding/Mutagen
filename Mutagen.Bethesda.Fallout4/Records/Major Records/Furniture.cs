@@ -298,7 +298,7 @@ partial class FurnitureBinaryOverlay
         return marker;
     }
 
-    partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void FlagsCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         var subFrame = stream.ReadSubrecord();
         // Read flags like normal
@@ -316,13 +316,13 @@ partial class FurnitureBinaryOverlay
             
     partial void EnabledEntryPointsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _enabledEntryPoints = FurnitureBinaryCreateTranslation.ParseBinaryEnabledEntryPointsCustom(stream);
     }
 
-    partial void MarkerParametersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void MarkerParametersCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         FurnitureBinaryCreateTranslation.FillBinaryMarkers(new MutagenFrame(stream), GetNthMarker);
     }

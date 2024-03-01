@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Data
         partial void DataCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IWaterDataGetter? GetDataCustom();
         public IWaterDataGetter? Data => GetDataCustom();

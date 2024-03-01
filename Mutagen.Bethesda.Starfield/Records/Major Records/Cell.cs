@@ -563,7 +563,7 @@ partial class CellBinaryOverlay
         }
     }
 
-    partial void TraversalsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void TraversalsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         Traversals = TraversalReferenceBinaryOverlay.Factory(stream, _package, finalPos, offset, lastParsed, out var fluffBytes);
         NumTraversalFluffBytes = fluffBytes;

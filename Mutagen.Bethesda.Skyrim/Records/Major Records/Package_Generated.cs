@@ -3953,7 +3953,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region PackageTemplate
         partial void PackageTemplateCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IFormLinkGetter<IPackageGetter> GetPackageTemplateCustom();
         public IFormLinkGetter<IPackageGetter> PackageTemplate => GetPackageTemplateCustom();
@@ -3961,7 +3961,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region XnamMarker
         partial void XnamMarkerCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom();
         public ReadOnlyMemorySlice<Byte> XnamMarker => GetXnamMarkerCustom();

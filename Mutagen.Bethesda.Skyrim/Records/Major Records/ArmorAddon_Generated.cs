@@ -2823,7 +2823,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region BodyTemplate
         partial void BodyTemplateCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IBodyTemplateGetter? GetBodyTemplateCustom();
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();

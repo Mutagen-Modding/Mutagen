@@ -60,7 +60,7 @@ partial class GlobalIntBinaryOverlay
         return (int)HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float();
     }
 
-    partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void DataCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _DataLocation = (ushort)(stream.Position - offset);
     }

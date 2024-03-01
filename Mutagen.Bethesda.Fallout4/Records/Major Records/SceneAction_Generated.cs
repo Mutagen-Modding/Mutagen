@@ -4791,7 +4791,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Type
         partial void TypeCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IASceneActionTypeGetter GetTypeCustom();
         public IASceneActionTypeGetter Type => GetTypeCustom();

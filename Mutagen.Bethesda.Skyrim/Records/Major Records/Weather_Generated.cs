@@ -6642,7 +6642,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Clouds
         partial void CloudsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -6910,7 +6910,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom();
         public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();

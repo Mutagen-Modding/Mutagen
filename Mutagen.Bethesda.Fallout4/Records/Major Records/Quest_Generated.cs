@@ -5064,7 +5064,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DialogConditions
         partial void DialogConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

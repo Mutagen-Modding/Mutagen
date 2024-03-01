@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region TypeChar
         partial void TypeCharCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Char GetTypeCharCustom();
         public Char TypeChar => GetTypeCharCustom();

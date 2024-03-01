@@ -1865,7 +1865,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region StartConditions
         partial void StartConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region CompletionConditions
         partial void CompletionConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

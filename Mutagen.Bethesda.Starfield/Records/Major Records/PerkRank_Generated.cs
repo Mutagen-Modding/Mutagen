@@ -1686,7 +1686,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Effects
         partial void EffectsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

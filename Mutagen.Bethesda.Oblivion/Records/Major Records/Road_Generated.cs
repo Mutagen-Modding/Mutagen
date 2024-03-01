@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Points
         partial void PointsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

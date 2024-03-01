@@ -41,12 +41,12 @@ partial class ScenePhaseBinaryOverlay
 
     public IReadOnlyList<IConditionGetter> CompletionConditions { get; private set; } = Array.Empty<IConditionGetter>();
 
-    partial void StartConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void StartConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         StartConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }
 
-    partial void CompletionConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void CompletionConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         stream.ReadSubrecord();
         CompletionConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);

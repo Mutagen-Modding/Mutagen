@@ -345,7 +345,7 @@ partial class QuestBinaryOverlay
     public IReadOnlyList<IDialogBranchGetter> DialogBranches { get; private set; } =
         Array.Empty<IDialogBranchGetter>();
 
-    partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type,
+    partial void DialogConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type,
         PreviousParse lastParsed)
     {
         DialogConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);

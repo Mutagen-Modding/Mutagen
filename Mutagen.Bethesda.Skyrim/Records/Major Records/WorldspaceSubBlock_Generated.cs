@@ -2138,7 +2138,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Items
         partial void ItemsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

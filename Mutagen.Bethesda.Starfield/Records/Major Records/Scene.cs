@@ -186,7 +186,7 @@ partial class SceneBinaryOverlay
         }
     }
     
-    partial void ActionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void ActionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         var ret = new ExtendedList<IASceneActionGetter>();
         while (stream.TryReadSubrecord(RecordTypes.ANAM, out var subRec))

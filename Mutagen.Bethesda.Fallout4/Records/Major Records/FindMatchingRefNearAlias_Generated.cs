@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AliasID
         partial void AliasIDCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Int16? GetAliasIDCustom();
         public Int16? AliasID => GetAliasIDCustom();

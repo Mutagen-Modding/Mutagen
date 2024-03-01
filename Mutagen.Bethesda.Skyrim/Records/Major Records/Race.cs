@@ -204,7 +204,7 @@ partial class RaceBinaryOverlay
     public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_recordData.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
     public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
 
-    partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void BodyTemplateCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         _BodyTemplateLocation = (stream.Position - offset);
     }

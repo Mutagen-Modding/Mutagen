@@ -138,7 +138,7 @@ partial class ColorRecordBinaryOverlay
 
     partial void DataCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _cnamLocation = (stream.Position - offset);
@@ -146,7 +146,7 @@ partial class ColorRecordBinaryOverlay
 
     partial void FlagsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset)
     {
         _fnamLocation = (stream.Position - offset);

@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Topics
         partial void TopicsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

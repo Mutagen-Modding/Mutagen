@@ -4844,7 +4844,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         partial void FlagsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Furniture.Flag? GetFlagsCustom();
         public Furniture.Flag? Flags => GetFlagsCustom();
@@ -4884,7 +4884,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region EnabledEntryPoints
         partial void EnabledEntryPointsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Furniture.EntryPointType? GetEnabledEntryPointsCustom();
         public Furniture.EntryPointType? EnabledEntryPoints => GetEnabledEntryPointsCustom();
@@ -4897,7 +4897,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MarkerParameters
         partial void MarkerParametersCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

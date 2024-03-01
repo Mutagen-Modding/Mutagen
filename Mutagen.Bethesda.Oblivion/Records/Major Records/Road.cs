@@ -115,7 +115,7 @@ partial class RoadBinaryOverlay
 {
     public IReadOnlyList<IRoadPointGetter>? Points { get; private set; }
 
-    partial void PointsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void PointsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         if (stream.Complete) return;
         var subMeta = stream.GetSubrecordHeader();

@@ -3123,7 +3123,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         partial void FlagsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Furniture.Flag? GetFlagsCustom();
         public Furniture.Flag? Flags => GetFlagsCustom();
@@ -3155,7 +3155,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Markers
         partial void MarkersCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

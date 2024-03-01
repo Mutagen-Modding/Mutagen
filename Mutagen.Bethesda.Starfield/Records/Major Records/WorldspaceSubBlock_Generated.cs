@@ -2134,7 +2134,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Items
         partial void ItemsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

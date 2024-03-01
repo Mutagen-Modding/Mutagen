@@ -571,7 +571,7 @@ partial class PerkRankBinaryOverlay
 
     partial void EffectsCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

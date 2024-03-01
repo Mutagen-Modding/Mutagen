@@ -195,7 +195,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
                        $"partial void {typeGen.Name}CustomParse"))
             {
                 args.Add($"{nameof(OverlayStream)} stream");
-                args.Add($"long finalPos");
+                args.Add($"int finalPos");
                 args.Add($"int offset");
             }
             if (typeGen.Nullable && !typeGen.CanBeNullable(getter: true))

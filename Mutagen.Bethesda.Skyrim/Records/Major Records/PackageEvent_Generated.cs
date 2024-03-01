@@ -1708,7 +1708,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Topics
         partial void TopicsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

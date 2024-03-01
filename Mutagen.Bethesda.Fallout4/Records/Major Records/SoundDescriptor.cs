@@ -87,7 +87,7 @@ partial class SoundDescriptorBinaryOverlay
 {
     private ASoundDescriptor? _descriptor;
 
-    partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void DataCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         var cnam = stream.ReadSubrecord(RecordTypes.CNAM).AsUInt32();
         var type = (SoundDescriptorBinaryCreateTranslation.DescriptorType)cnam;

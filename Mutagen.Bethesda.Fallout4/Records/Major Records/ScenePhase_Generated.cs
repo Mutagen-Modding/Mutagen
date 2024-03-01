@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region StartConditions
         partial void StartConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region CompletionConditions
         partial void CompletionConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

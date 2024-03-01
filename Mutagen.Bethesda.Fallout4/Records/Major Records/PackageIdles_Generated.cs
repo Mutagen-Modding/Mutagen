@@ -1441,7 +1441,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region TimerSetting
         partial void TimerSettingCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial Single? GetTimerSettingCustom();
         public Single? TimerSetting => GetTimerSettingCustom();
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Animations
         partial void AnimationsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

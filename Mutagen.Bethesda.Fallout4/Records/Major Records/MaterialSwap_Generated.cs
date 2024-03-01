@@ -1685,7 +1685,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region TreeFolder
         partial void TreeFolderCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial String? GetTreeFolderCustom();
         public String? TreeFolder => GetTreeFolderCustom();

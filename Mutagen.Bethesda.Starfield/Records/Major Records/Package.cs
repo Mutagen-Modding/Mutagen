@@ -605,7 +605,7 @@ partial class PackageBinaryOverlay
     FormLink<IPackageGetter> _packageTemplate = null!;
     public partial IFormLinkGetter<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
-    private void PackageTemplateCustomParse(
+    partial void PackageTemplateCustomParse(
         OverlayStream stream,
         int finalPos,
         int offset)
@@ -621,7 +621,7 @@ partial class PackageBinaryOverlay
 
     partial void ProcedureTreeCustomParse(
         OverlayStream stream,
-        long finalPos,
+        int finalPos,
         int offset,
         RecordType type,
         PreviousParse lastParsed)

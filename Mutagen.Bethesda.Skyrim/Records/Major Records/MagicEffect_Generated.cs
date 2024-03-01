@@ -5124,7 +5124,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Conditions
         partial void ConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

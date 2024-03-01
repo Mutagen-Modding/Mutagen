@@ -9703,7 +9703,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MorphValues
         partial void MorphValuesCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);

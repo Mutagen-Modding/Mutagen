@@ -90,7 +90,7 @@ partial class IdleMarkerBinaryOverlay
 
     public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; private set; }
 
-    partial void AnimationsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+    partial void AnimationsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         var subHeader = stream.ReadSubrecordHeader();
         Animations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(

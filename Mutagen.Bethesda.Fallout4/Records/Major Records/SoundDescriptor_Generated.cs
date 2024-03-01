@@ -2667,7 +2667,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Data
         partial void DataCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         public partial IASoundDescriptorGetter? GetDataCustom();
         public IASoundDescriptorGetter? Data => GetDataCustom();

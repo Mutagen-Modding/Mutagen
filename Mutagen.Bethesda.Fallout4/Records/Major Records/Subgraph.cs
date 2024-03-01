@@ -30,7 +30,7 @@ partial class SubgraphBinaryCreateTranslation
 
 partial class SubgraphBinaryOverlay
 {
-    partial void RoleCustomParse(OverlayStream stream, long finalPos, int offset)
+    partial void RoleCustomParse(OverlayStream stream, int finalPos, int offset)
     {
         stream.ReadSubrecordHeader(RecordTypes.SRAF);
         _role = (SubgraphRole)stream.ReadUInt16();

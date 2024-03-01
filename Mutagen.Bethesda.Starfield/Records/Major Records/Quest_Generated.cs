@@ -6305,7 +6305,7 @@ namespace Mutagen.Bethesda.Starfield
         #region DialogConditions
         partial void DialogConditionsCustomParse(
             OverlayStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
