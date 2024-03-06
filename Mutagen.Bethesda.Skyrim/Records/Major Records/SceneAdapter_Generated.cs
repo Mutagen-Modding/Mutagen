@@ -1180,6 +1180,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void SceneAdapterParseEndingPositions(
+            SceneAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptFragmentsEndPos();
+        }
+
         public static ISceneAdapterGetter SceneAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1195,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new SceneAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomScriptFragmentsEndPos();
+            SceneAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

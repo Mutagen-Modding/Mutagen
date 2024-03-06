@@ -1261,6 +1261,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void WorldspaceGridReferenceParseEndingPositions(
+            WorldspaceGridReferenceBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) * 8 + 4;
+        }
+
         public static IWorldspaceGridReferenceGetter WorldspaceGridReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1276,7 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new WorldspaceGridReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) * 8 + 4;
+            WorldspaceGridReferenceParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

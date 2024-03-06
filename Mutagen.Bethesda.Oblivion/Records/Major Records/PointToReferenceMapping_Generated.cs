@@ -1250,6 +1250,13 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
+        public static void PointToReferenceMappingParseEndingPositions(
+            PointToReferenceMappingBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.PointsEndingPos = ret._structData.Length;
+        }
+
         public static IPointToReferenceMappingGetter PointToReferenceMappingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1265,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new PointToReferenceMappingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.PointsEndingPos = ret._structData.Length;
+            PointToReferenceMappingParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1180,6 +1180,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void PerkAdapterParseEndingPositions(
+            PerkAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptFragmentsEndPos();
+        }
+
         public static IPerkAdapterGetter PerkAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1195,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new PerkAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomScriptFragmentsEndPos();
+            PerkAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

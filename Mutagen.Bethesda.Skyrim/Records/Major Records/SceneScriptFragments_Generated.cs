@@ -1215,6 +1215,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void SceneScriptFragmentsParseEndingPositions(
+            SceneScriptFragmentsBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomPhaseFragmentsEndPos();
+        }
+
         public static ISceneScriptFragmentsGetter SceneScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1230,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new SceneScriptFragmentsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomPhaseFragmentsEndPos();
+            SceneScriptFragmentsParseEndingPositions(ret, package);
             stream.Position += ret.PhaseFragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

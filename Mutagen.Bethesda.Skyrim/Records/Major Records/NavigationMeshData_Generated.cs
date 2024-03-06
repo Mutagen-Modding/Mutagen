@@ -2350,6 +2350,16 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void NavigationMeshDataParseEndingPositions(
+            NavigationMeshDataBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 12 + 4;
+            ret.CustomTrianglesEndPos();
+            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 10 + 4;
+            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
+        }
+
         public static INavigationMeshDataGetter NavigationMeshDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -2365,10 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new NavigationMeshDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 12 + 4;
-            ret.CustomTrianglesEndPos();
-            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 10 + 4;
-            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
+            NavigationMeshDataParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

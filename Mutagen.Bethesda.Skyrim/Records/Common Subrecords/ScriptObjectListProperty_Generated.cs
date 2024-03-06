@@ -1227,6 +1227,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void ScriptObjectListPropertyParseEndingPositions(
+            ScriptObjectListPropertyBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ObjectsEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 8 + 4;
+        }
+
         public static IScriptObjectListPropertyGetter ScriptObjectListPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1242,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new ScriptObjectListPropertyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ObjectsEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 8 + 4;
+            ScriptObjectListPropertyParseEndingPositions(ret, package);
             stream.Position += ret.ObjectsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -1220,6 +1220,20 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void SceneScriptFragmentsParseEndingPositions(
+            SceneScriptFragmentsBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                    Position = 0x1
+                };
+                ret.PhaseFragments = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
+                ret.PhaseFragmentsEndingPos = tempStream.Position;
+            }
+        }
+
         public static ISceneScriptFragmentsGetter SceneScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1235,14 +1249,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new SceneScriptFragmentsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            {
-                var tempStream = new OverlayStream(ret._structData, package)
-                {
-                    Position = 0x1
-                };
-                ret.PhaseFragments = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
-                ret.PhaseFragmentsEndingPos = tempStream.Position;
-            }
+            SceneScriptFragmentsParseEndingPositions(ret, package);
             stream.Position += ret.PhaseFragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

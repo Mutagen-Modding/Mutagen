@@ -1331,6 +1331,14 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void QuestScriptFragmentParseEndingPositions(
+            QuestScriptFragmentBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ScriptNameEndingPos = 0x9 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x9)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+        }
+
         public static IQuestScriptFragmentGetter QuestScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1346,8 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new QuestScriptFragmentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ScriptNameEndingPos = 0x9 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x9)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+            QuestScriptFragmentParseEndingPositions(ret, package);
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

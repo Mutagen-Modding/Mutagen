@@ -925,6 +925,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ObjectModStringPropertyParseEndingPositions(
+            ObjectModStringPropertyBinaryOverlay<T> ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.Value = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x5), package.MetaData.Encodings.NonTranslated);
+            ret.ValueEndingPos = 0x5 + ret.Value.Length + 1;
+        }
+
         public static IObjectModStringPropertyGetter<T> ObjectModStringPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -940,8 +948,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ObjectModStringPropertyBinaryOverlay<T>(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Value = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x5), package.MetaData.Encodings.NonTranslated);
-            ret.ValueEndingPos = 0x5 + ret.Value.Length + 1;
+            ObjectModStringPropertyParseEndingPositions(ret, package);
             stream.Position += ret.ValueEndingPos + 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,

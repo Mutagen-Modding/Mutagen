@@ -1251,6 +1251,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void TransientTypeParseEndingPositions(
+            TransientTypeBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.LinksEndingPos = ret._structData.Length;
+        }
+
         public static ITransientTypeGetter TransientTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1266,7 +1273,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new TransientTypeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.LinksEndingPos = ret._structData.Length;
+            TransientTypeParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

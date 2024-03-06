@@ -1457,6 +1457,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void QuestFragmentAliasParseEndingPositions(
+            QuestFragmentAliasBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptsEndPos();
+        }
+
         public static IQuestFragmentAliasGetter QuestFragmentAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1472,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new QuestFragmentAliasBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomScriptsEndPos();
+            QuestFragmentAliasParseEndingPositions(ret, package);
             stream.Position += ret.ScriptsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

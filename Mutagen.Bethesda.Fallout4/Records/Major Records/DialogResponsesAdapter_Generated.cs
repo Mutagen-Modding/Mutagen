@@ -1197,6 +1197,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void DialogResponsesAdapterParseEndingPositions(
+            DialogResponsesAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptFragmentsEndPos();
+        }
+
         public static IDialogResponsesAdapterGetter DialogResponsesAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1212,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new DialogResponsesAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomScriptFragmentsEndPos();
+            DialogResponsesAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1277,6 +1277,14 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void IndexedScriptFragmentParseEndingPositions(
+            IndexedScriptFragmentBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ScriptNameEndingPos = 0x5 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x5)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+        }
+
         public static IIndexedScriptFragmentGetter IndexedScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1292,8 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new IndexedScriptFragmentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ScriptNameEndingPos = 0x5 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x5)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+            IndexedScriptFragmentParseEndingPositions(ret, package);
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

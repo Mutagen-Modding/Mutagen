@@ -1175,6 +1175,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void NavmeshSetParseEndingPositions(
+            NavmeshSetBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 4 + 4;
+        }
+
         public static INavmeshSetGetter NavmeshSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1190,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new NavmeshSetBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 4 + 4;
+            NavmeshSetParseEndingPositions(ret, package);
             stream.Position += ret.NavmeshesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

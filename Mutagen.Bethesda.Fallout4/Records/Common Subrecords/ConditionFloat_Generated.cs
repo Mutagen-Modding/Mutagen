@@ -1256,6 +1256,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ConditionFloatParseEndingPositions(
+            ConditionFloatBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomDataEndPos();
+        }
+
         public static IConditionFloatGetter ConditionFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1271,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ConditionFloatBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomDataEndPos();
+            ConditionFloatParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

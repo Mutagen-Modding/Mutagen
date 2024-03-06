@@ -1094,6 +1094,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void ScriptStringPropertyParseEndingPositions(
+            ScriptStringPropertyBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.DataEndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
+        }
+
         public static IScriptStringPropertyGetter ScriptStringPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1109,7 +1116,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new ScriptStringPropertyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.DataEndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
+            ScriptStringPropertyParseEndingPositions(ret, package);
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

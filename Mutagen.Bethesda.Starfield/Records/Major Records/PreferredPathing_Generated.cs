@@ -1391,6 +1391,14 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void PreferredPathingParseEndingPositions(
+            PreferredPathingBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomNavmeshSetsEndPos();
+            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
+        }
+
         public static IPreferredPathingGetter PreferredPathingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1406,8 +1414,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PreferredPathingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomNavmeshSetsEndPos();
-            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
+            PreferredPathingParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1265,6 +1265,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ConditionGlobalParseEndingPositions(
+            ConditionGlobalBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomDataEndPos();
+        }
+
         public static IConditionGlobalGetter ConditionGlobalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1280,7 +1287,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ConditionGlobalBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomDataEndPos();
+            ConditionGlobalParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

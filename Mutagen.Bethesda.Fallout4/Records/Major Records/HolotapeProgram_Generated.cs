@@ -1076,6 +1076,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void HolotapeProgramParseEndingPositions(
+            HolotapeProgramBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.File = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
+            ret.FileEndingPos = ret.File.Length + 1;
+        }
+
         public static IHolotapeProgramGetter HolotapeProgramFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1091,8 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new HolotapeProgramBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.File = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
-            ret.FileEndingPos = ret.File.Length + 1;
+            HolotapeProgramParseEndingPositions(ret, package);
             stream.Position += ret.FileEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

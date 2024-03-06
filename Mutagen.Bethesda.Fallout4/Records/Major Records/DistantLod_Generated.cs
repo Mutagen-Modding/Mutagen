@@ -1064,6 +1064,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void DistantLodParseEndingPositions(
+            DistantLodBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomMeshEndPos();
+        }
+
         public static IDistantLodGetter DistantLodFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1079,7 +1086,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new DistantLodBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomMeshEndPos();
+            DistantLodParseEndingPositions(ret, package);
             stream.Position += ret.MeshEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

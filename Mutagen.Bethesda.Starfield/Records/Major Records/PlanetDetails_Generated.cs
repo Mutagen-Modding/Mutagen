@@ -2389,6 +2389,20 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void PlanetDetailsParseEndingPositions(
+            PlanetDetailsBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.SpectralClassEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) + 4;
+            ret.CatalogueIdEndingPos = ret.SpectralClassEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.SpectralClassEndingPos)) + 4;
+            ret.LifeEndingPos = ret.CatalogueIdEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CatalogueIdEndingPos)) + 4;
+            ret.MagnetosphereEndingPos = ret.LifeEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.LifeEndingPos)) + 4;
+            ret.MassInKgEndingPos = ret.MagnetosphereEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MagnetosphereEndingPos)) + 4;
+            ret.TypeEndingPos = ret.MassInKgEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MassInKgEndingPos)) + 4;
+            ret.SettledStarEndingPos = ret.TypeEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TypeEndingPos)) + 4;
+            ret.SpecialEndingPos = ret.SettledStarEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.SettledStarEndingPos)) + 4;
+        }
+
         public static IPlanetDetailsGetter PlanetDetailsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -2404,14 +2418,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlanetDetailsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.SpectralClassEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) + 4;
-            ret.CatalogueIdEndingPos = ret.SpectralClassEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.SpectralClassEndingPos)) + 4;
-            ret.LifeEndingPos = ret.CatalogueIdEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CatalogueIdEndingPos)) + 4;
-            ret.MagnetosphereEndingPos = ret.LifeEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.LifeEndingPos)) + 4;
-            ret.MassInKgEndingPos = ret.MagnetosphereEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MagnetosphereEndingPos)) + 4;
-            ret.TypeEndingPos = ret.MassInKgEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MassInKgEndingPos)) + 4;
-            ret.SettledStarEndingPos = ret.TypeEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TypeEndingPos)) + 4;
-            ret.SpecialEndingPos = ret.SettledStarEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.SettledStarEndingPos)) + 4;
+            PlanetDetailsParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

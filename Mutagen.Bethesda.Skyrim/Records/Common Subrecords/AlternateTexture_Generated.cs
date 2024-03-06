@@ -1195,6 +1195,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void AlternateTextureParseEndingPositions(
+            AlternateTextureBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.NameEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) + 4;
+        }
+
         public static IAlternateTextureGetter AlternateTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1210,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new AlternateTextureBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.NameEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) + 4;
+            AlternateTextureParseEndingPositions(ret, package);
             stream.Position += ret.NameEndingPos + 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,

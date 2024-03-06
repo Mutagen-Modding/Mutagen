@@ -1718,6 +1718,15 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void QuestAdapterParseEndingPositions(
+            QuestAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomFileNameEndPos();
+            ret.CustomFragmentsEndPos();
+            ret.CustomAliasesEndPos();
+        }
+
         public static IQuestAdapterGetter QuestAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1733,9 +1742,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new QuestAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomFileNameEndPos();
-            ret.CustomFragmentsEndPos();
-            ret.CustomAliasesEndPos();
+            QuestAdapterParseEndingPositions(ret, package);
             if (ret._structData.Length <= ret.ScriptsEndingPos)
             {
                 ret.Versioning |= QuestAdapter.VersioningBreaks.Break0;

@@ -1215,6 +1215,19 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ScriptStructListPropertyParseEndingPositions(
+            ScriptStructListPropertyBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                };
+                ret.Structs = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 4, (s, p) => ScriptEntryStructsBinaryOverlay.ScriptEntryStructsFactory(s, p));
+                ret.StructsEndingPos = tempStream.Position;
+            }
+        }
+
         public static IScriptStructListPropertyGetter ScriptStructListPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1230,13 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ScriptStructListPropertyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            {
-                var tempStream = new OverlayStream(ret._structData, package)
-                {
-                };
-                ret.Structs = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 4, (s, p) => ScriptEntryStructsBinaryOverlay.ScriptEntryStructsFactory(s, p));
-                ret.StructsEndingPos = tempStream.Position;
-            }
+            ScriptStructListPropertyParseEndingPositions(ret, package);
             stream.Position += ret.StructsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

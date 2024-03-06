@@ -1146,6 +1146,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void AnimationSoundTagParseEndingPositions(
+            AnimationSoundTagBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.Action = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x4), package.MetaData.Encodings.NonTranslated);
+            ret.ActionEndingPos = 0x4 + ret.Action.Length + 1;
+        }
+
         public static IAnimationSoundTagGetter AnimationSoundTagFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1161,8 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new AnimationSoundTagBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Action = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x4), package.MetaData.Encodings.NonTranslated);
-            ret.ActionEndingPos = 0x4 + ret.Action.Length + 1;
+            AnimationSoundTagParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

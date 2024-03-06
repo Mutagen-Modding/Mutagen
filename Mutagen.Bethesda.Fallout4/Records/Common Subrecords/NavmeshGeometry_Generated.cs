@@ -2821,6 +2821,19 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void NavmeshGeometryParseEndingPositions(
+            NavmeshGeometryBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 12 + 4;
+            ret.CustomTrianglesEndPos();
+            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 11 + 4;
+            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
+            ret.CoverEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DoorTrianglesEndingPos)) * 8 + 4;
+            ret.CoverTriangleMappingsEndingPos = ret.CoverEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverEndingPos)) * 4 + 4;
+            ret.WaypointsEndingPos = ret.CoverTriangleMappingsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverTriangleMappingsEndingPos)) * 18 + 4;
+        }
+
         public static INavmeshGeometryGetter NavmeshGeometryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -2836,13 +2849,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new NavmeshGeometryBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 12 + 4;
-            ret.CustomTrianglesEndPos();
-            ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 11 + 4;
-            ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
-            ret.CoverEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DoorTrianglesEndingPos)) * 8 + 4;
-            ret.CoverTriangleMappingsEndingPos = ret.CoverEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverEndingPos)) * 4 + 4;
-            ret.WaypointsEndingPos = ret.CoverTriangleMappingsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverTriangleMappingsEndingPos)) * 18 + 4;
+            NavmeshGeometryParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

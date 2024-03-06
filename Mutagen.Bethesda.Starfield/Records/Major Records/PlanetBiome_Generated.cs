@@ -1751,6 +1751,14 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void PlanetBiomeParseEndingPositions(
+            PlanetBiomeBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.FaunaEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 4 + 4;
+            ret.FloraEndingPos = ret.FaunaEndingPos + 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FaunaEndingPos + 0x4)) * 9 + 4 + 4;
+        }
+
         public static IPlanetBiomeGetter PlanetBiomeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1766,8 +1774,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlanetBiomeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.FaunaEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 4 + 4;
-            ret.FloraEndingPos = ret.FaunaEndingPos + 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FaunaEndingPos + 0x4)) * 9 + 4 + 4;
+            PlanetBiomeParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

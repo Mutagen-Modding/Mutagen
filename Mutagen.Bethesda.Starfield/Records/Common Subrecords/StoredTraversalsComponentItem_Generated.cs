@@ -1308,6 +1308,20 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void StoredTraversalsComponentItemParseEndingPositions(
+            StoredTraversalsComponentItemBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                    Position = 0x10
+                };
+                ret.Traversals = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 4, (s, p) => TraversalReferenceBinaryOverlay.TraversalReferenceFactory(s, p));
+                ret.TraversalsEndingPos = tempStream.Position;
+            }
+        }
+
         public static IStoredTraversalsComponentItemGetter StoredTraversalsComponentItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1323,14 +1337,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new StoredTraversalsComponentItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            {
-                var tempStream = new OverlayStream(ret._structData, package)
-                {
-                    Position = 0x10
-                };
-                ret.Traversals = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 4, (s, p) => TraversalReferenceBinaryOverlay.TraversalReferenceFactory(s, p));
-                ret.TraversalsEndingPos = tempStream.Position;
-            }
+            StoredTraversalsComponentItemParseEndingPositions(ret, package);
             stream.Position += ret.TraversalsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

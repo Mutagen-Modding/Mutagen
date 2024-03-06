@@ -1441,6 +1441,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void IslandDataParseEndingPositions(
+            IslandDataBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.TrianglesEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 6 + 4;
+            ret.VerticesEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 12 + 4;
+        }
+
         public static IIslandDataGetter IslandDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1456,8 +1464,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new IslandDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.TrianglesEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 6 + 4;
-            ret.VerticesEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 12 + 4;
+            IslandDataParseEndingPositions(ret, package);
             stream.Position += ret.VerticesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

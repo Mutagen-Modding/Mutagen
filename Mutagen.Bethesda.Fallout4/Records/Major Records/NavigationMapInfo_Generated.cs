@@ -2097,6 +2097,17 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void NavigationMapInfoParseEndingPositions(
+            NavigationMapInfoBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 4 + 4;
+            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MergedToEndingPos)) * 4 + 4;
+            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
+            ret.CustomIslandEndPos();
+            ret.CustomParentEndPos();
+        }
+
         public static INavigationMapInfoGetter NavigationMapInfoFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -2112,11 +2123,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new NavigationMapInfoBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 4 + 4;
-            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MergedToEndingPos)) * 4 + 4;
-            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
-            ret.CustomIslandEndPos();
-            ret.CustomParentEndPos();
+            NavigationMapInfoParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

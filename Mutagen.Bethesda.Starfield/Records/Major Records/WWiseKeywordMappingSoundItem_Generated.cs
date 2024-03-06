@@ -1291,6 +1291,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void WWiseKeywordMappingSoundItemParseEndingPositions(
+            WWiseKeywordMappingSoundItemBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.GuidPairsEndingPos = 0x28 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x28)) * 32 + 4;
+        }
+
         public static IWWiseKeywordMappingSoundItemGetter WWiseKeywordMappingSoundItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1306,7 +1313,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new WWiseKeywordMappingSoundItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.GuidPairsEndingPos = 0x28 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x28)) * 32 + 4;
+            WWiseKeywordMappingSoundItemParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

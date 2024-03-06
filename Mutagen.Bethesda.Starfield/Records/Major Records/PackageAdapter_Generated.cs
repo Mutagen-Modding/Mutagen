@@ -1197,6 +1197,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void PackageAdapterParseEndingPositions(
+            PackageAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptFragmentsEndPos();
+        }
+
         public static IPackageAdapterGetter PackageAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1212,7 +1219,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PackageAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomScriptFragmentsEndPos();
+            PackageAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

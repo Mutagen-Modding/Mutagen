@@ -1763,6 +1763,15 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void NavigationMapInfoParseEndingPositions(
+            NavigationMapInfoBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 4 + 4;
+            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MergedToEndingPos)) * 4 + 4;
+            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
+        }
+
         public static INavigationMapInfoGetter NavigationMapInfoFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1778,9 +1787,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new NavigationMapInfoBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 4 + 4;
-            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MergedToEndingPos)) * 4 + 4;
-            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
+            NavigationMapInfoParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

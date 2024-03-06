@@ -1224,6 +1224,15 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void PlanetModelComponentXMPMSubItemParseEndingPositions(
+            PlanetModelComponentXMPMSubItemBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.Unknown1EndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
+            ret.Unknown3 = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(ret.Unknown1EndingPos + 0x4), package.MetaData.Encodings.NonTranslated);
+            ret.Unknown3EndingPos = ret.Unknown1EndingPos + 0x4 + ret.Unknown3.Length + 1;
+        }
+
         public static IPlanetModelComponentXMPMSubItemGetter PlanetModelComponentXMPMSubItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1239,9 +1248,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlanetModelComponentXMPMSubItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Unknown1EndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
-            ret.Unknown3 = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(ret.Unknown1EndingPos + 0x4), package.MetaData.Encodings.NonTranslated);
-            ret.Unknown3EndingPos = ret.Unknown1EndingPos + 0x4 + ret.Unknown3.Length + 1;
+            PlanetModelComponentXMPMSubItemParseEndingPositions(ret, package);
             stream.Position += ret.Unknown3EndingPos + 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,

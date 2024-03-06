@@ -1245,6 +1245,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void SnapLinkParseEndingPositions(
+            SnapLinkBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.LinksEndingPos = ret._structData.Length;
+        }
+
         public static ISnapLinkGetter SnapLinkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1260,7 +1267,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new SnapLinkBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.LinksEndingPos = ret._structData.Length;
+            SnapLinkParseEndingPositions(ret, package);
             stream.Position += ret.LinksEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

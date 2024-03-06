@@ -1418,6 +1418,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void QuestFragmentAliasParseEndingPositions(
+            QuestFragmentAliasBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptsEndPos();
+        }
+
         public static IQuestFragmentAliasGetter QuestFragmentAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1433,7 +1440,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new QuestFragmentAliasBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomScriptsEndPos();
+            QuestFragmentAliasParseEndingPositions(ret, package);
             stream.Position += ret.ScriptsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

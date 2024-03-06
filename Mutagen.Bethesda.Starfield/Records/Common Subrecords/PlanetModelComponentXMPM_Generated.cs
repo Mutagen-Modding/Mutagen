@@ -1373,6 +1373,21 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void PlanetModelComponentXMPMParseEndingPositions(
+            PlanetModelComponentXMPMBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.UnknownStringsEndingPos = StringBinaryTranslation.Instance.ExtractManyUInt16PrependedStringsLength(2, ret._structData) + 2;
+            {
+                var tempStream = new OverlayStream(ret._structData, package)
+                {
+                    Position = ret.UnknownStringsEndingPos
+                };
+                ret.UnknownSubItems = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 2, (s, p) => PlanetModelComponentXMPMSubItemBinaryOverlay.PlanetModelComponentXMPMSubItemFactory(s, p));
+                ret.UnknownSubItemsEndingPos = tempStream.Position;
+            }
+        }
+
         public static IPlanetModelComponentXMPMGetter PlanetModelComponentXMPMFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1388,15 +1403,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlanetModelComponentXMPMBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.UnknownStringsEndingPos = StringBinaryTranslation.Instance.ExtractManyUInt16PrependedStringsLength(2, ret._structData) + 2;
-            {
-                var tempStream = new OverlayStream(ret._structData, package)
-                {
-                    Position = ret.UnknownStringsEndingPos
-                };
-                ret.UnknownSubItems = BinaryOverlayList.EagerFactoryByPrependedCount(tempStream, package, 2, (s, p) => PlanetModelComponentXMPMSubItemBinaryOverlay.PlanetModelComponentXMPMSubItemFactory(s, p));
-                ret.UnknownSubItemsEndingPos = tempStream.Position;
-            }
+            PlanetModelComponentXMPMParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

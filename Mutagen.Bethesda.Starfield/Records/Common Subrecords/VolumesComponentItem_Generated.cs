@@ -1641,6 +1641,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void VolumesComponentItemParseEndingPositions(
+            VolumesComponentItemBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomEnderEndPos();
+        }
+
         public static IVolumesComponentItemGetter VolumesComponentItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1656,7 +1663,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new VolumesComponentItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomEnderEndPos();
+            VolumesComponentItemParseEndingPositions(ret, package);
             stream.Position += ret.EnderEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

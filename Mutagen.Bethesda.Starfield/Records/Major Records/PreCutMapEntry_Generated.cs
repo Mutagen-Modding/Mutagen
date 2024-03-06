@@ -1234,6 +1234,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void PreCutMapEntryParseEndingPositions(
+            PreCutMapEntryBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.TrianglesEndingPos = 0x4 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x4)) * 2 + 2;
+        }
+
         public static IPreCutMapEntryGetter PreCutMapEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1249,7 +1256,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PreCutMapEntryBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.TrianglesEndingPos = 0x4 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x4)) * 2 + 2;
+            PreCutMapEntryParseEndingPositions(ret, package);
             stream.Position += ret.TrianglesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

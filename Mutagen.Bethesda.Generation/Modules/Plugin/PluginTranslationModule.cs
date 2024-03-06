@@ -2762,6 +2762,62 @@ public class PluginTranslationModule : BinaryTranslationModule
         var recordDataAccessor = new Accessor("_recordData");
         var objData = obj.GetObjectData();
         if (!objData.BinaryOverlayGenerateCtor) return;
+
+        var endingPositionsBuilder = new StructuredStringBuilder();
+        
+        // Parse ending positions  
+        await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
+        {
+            if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+            var data = lengths.Field.GetFieldData();
+            switch (data.BinaryOverlayFallback)
+            {
+                case BinaryGenerationType.Normal:
+                case BinaryGenerationType.Custom:
+                    break;
+                default:
+                    continue;
+            }
+
+            if (data.HasTrigger) continue;
+            var amount = await typeGen.GetPassedAmount(obj, lengths.Field);
+            if (amount != null) continue;
+            if (lengths.Field is CustomLogic) continue;
+            switch (data.BinaryOverlayFallback)
+            {
+                case BinaryGenerationType.Custom:
+                    endingPositionsBuilder.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
+                    break;
+                case BinaryGenerationType.NoGeneration:
+                case BinaryGenerationType.CustomWrite:
+                    break;
+                case BinaryGenerationType.Normal:
+                    await typeGen.GenerateWrapperUnknownLengthParse(
+                        endingPositionsBuilder,
+                        obj,
+                        lengths.Field,
+                        structDataAccessor,
+                        lengths.PassedLength,
+                        lengths.PassedAccessor);
+                    break;
+            }
+        }
+
+        if (endingPositionsBuilder.Count > 0)
+        {
+            using (var args = sb.Function(
+                       $"public static void {obj.Name}ParseEndingPositions"))
+            {
+                args.Add($"{BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)} ret");
+                args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+            }
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLines(endingPositionsBuilder);
+            }
+            sb.AppendLine();
+        }
+
         var retValue = obj.GetObjectType() == ObjectType.Mod ? BinaryOverlayClass(obj) : obj.Interface(getter: true, internalInterface: true);
         using (var args = sb.Function(
                    $"public static {retValue} {obj.Name}Factory"))
@@ -2963,41 +3019,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
             }
 
-            // Parse ending positions  
-            await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
+            if (endingPositionsBuilder.Count > 0)
             {
-                if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
-                var data = lengths.Field.GetFieldData();
-                switch (data.BinaryOverlayFallback)
-                {
-                    case BinaryGenerationType.Normal:
-                    case BinaryGenerationType.Custom:
-                        break;
-                    default:
-                        continue;
-                }
-                if (data.HasTrigger) continue;
-                var amount = await typeGen.GetPassedAmount(obj, lengths.Field);
-                if (amount != null) continue;
-                if (lengths.Field is CustomLogic) continue;
-                switch (data.BinaryOverlayFallback)
-                {
-                    case BinaryGenerationType.Custom:
-                        sb.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
-                        break;
-                    case BinaryGenerationType.NoGeneration:
-                    case BinaryGenerationType.CustomWrite:
-                        break;
-                    case BinaryGenerationType.Normal:
-                        await typeGen.GenerateWrapperUnknownLengthParse(
-                            sb,
-                            obj,
-                            lengths.Field,
-                            structDataAccessor,
-                            lengths.PassedLength,
-                            lengths.PassedAccessor);
-                        break;
-                }
+                sb.AppendLine($"{obj.Name}ParseEndingPositions(ret, package);");
             }
 
             if (anyHasRecordTypes)

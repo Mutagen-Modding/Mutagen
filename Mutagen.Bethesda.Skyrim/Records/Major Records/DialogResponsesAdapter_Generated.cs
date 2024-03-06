@@ -1180,6 +1180,13 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void DialogResponsesAdapterParseEndingPositions(
+            DialogResponsesAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptFragmentsEndPos();
+        }
+
         public static IDialogResponsesAdapterGetter DialogResponsesAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1195,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new DialogResponsesAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomScriptFragmentsEndPos();
+            DialogResponsesAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1290,6 +1290,14 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
+        public static void PerkScriptFragmentsParseEndingPositions(
+            PerkScriptFragmentsBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.FileNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x1)) + 2;
+            ret.CustomFragmentsEndPos();
+        }
+
         public static IPerkScriptFragmentsGetter PerkScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1305,8 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new PerkScriptFragmentsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.FileNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x1)) + 2;
-            ret.CustomFragmentsEndPos();
+            PerkScriptFragmentsParseEndingPositions(ret, package);
             stream.Position += ret.FragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

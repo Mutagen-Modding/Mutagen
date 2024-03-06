@@ -1152,6 +1152,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void NavmeshGridArrayParseEndingPositions(
+            NavmeshGridArrayBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.GridCellEndingPos = ret._structData.Length;
+        }
+
         public static INavmeshGridArrayGetter NavmeshGridArrayFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1167,7 +1174,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new NavmeshGridArrayBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.GridCellEndingPos = ret._structData.Length;
+            NavmeshGridArrayParseEndingPositions(ret, package);
             stream.Position += ret.GridCellEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

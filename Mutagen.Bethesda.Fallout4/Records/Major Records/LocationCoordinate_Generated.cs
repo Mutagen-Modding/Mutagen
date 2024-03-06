@@ -1244,6 +1244,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void LocationCoordinateParseEndingPositions(
+            LocationCoordinateBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CoordinatesEndingPos = ret._structData.Length;
+        }
+
         public static ILocationCoordinateGetter LocationCoordinateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1259,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new LocationCoordinateBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CoordinatesEndingPos = ret._structData.Length;
+            LocationCoordinateParseEndingPositions(ret, package);
             stream.Position += ret.CoordinatesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

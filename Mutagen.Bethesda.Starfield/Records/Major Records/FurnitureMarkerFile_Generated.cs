@@ -1131,6 +1131,16 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void FurnitureMarkerFileParseEndingPositions(
+            FurnitureMarkerFileBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.Name = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
+            ret.NameEndingPos = ret.Name.Length + 1;
+            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(ret.NameEndingPos), package.MetaData.Encodings.NonTranslated);
+            ret.ModelFilenameEndingPos = ret.NameEndingPos + ret.ModelFilename.Length + 1;
+        }
+
         public static IFurnitureMarkerFileGetter FurnitureMarkerFileFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1146,10 +1156,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new FurnitureMarkerFileBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Name = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
-            ret.NameEndingPos = ret.Name.Length + 1;
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(ret.NameEndingPos), package.MetaData.Encodings.NonTranslated);
-            ret.ModelFilenameEndingPos = ret.NameEndingPos + ret.ModelFilename.Length + 1;
+            FurnitureMarkerFileParseEndingPositions(ret, package);
             stream.Position += ret.ModelFilenameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

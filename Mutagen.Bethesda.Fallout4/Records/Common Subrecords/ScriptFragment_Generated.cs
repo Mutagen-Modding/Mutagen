@@ -1170,6 +1170,14 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void ScriptFragmentParseEndingPositions(
+            ScriptFragmentBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ScriptNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x1)) + 2;
+            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+        }
+
         public static IScriptFragmentGetter ScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1185,8 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ScriptFragmentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ScriptNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(0x1)) + 2;
-            ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(ret.ScriptNameEndingPos)) + 2;
+            ScriptFragmentParseEndingPositions(ret, package);
             stream.Position += ret.FragmentNameEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

@@ -1278,6 +1278,13 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
+        public static void RoadPointParseEndingPositions(
+            RoadPointBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.ConnectionsEndingPos = ret._structData.Length;
+        }
+
         public static IRoadPointGetter RoadPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1293,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new RoadPointBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.ConnectionsEndingPos = ret._structData.Length;
+            RoadPointParseEndingPositions(ret, package);
             stream.Position += ret.ConnectionsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
