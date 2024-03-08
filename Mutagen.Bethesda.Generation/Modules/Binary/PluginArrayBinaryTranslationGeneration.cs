@@ -40,7 +40,7 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
         }
         if (arr.FixedSize.HasValue)
         {
-            var useFixedDefaultVariable = arr.FixedSize.HasValue && data.HasTrigger;
+            var useFixedDefaultVariable = arr.FixedSize.HasValue && data.HasTrigger && !arr.Nullable;
             if (useFixedDefaultVariable)
             {
                 sb.AppendLine($"private readonly static {typeGen.TypeName(getter: true)} _default{typeGen.Name} = ArrayExt.Create({arr.FixedSize}, {arr.SubTypeGeneration.GetDefault(getter: false)});");

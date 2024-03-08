@@ -2590,8 +2590,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<ISnapParentNodeEntryGetter> ParentNodes { get; private set; } = Array.Empty<ISnapParentNodeEntryGetter>();
         #region BNAM
         private int? _BNAMLocation;
-        private readonly static ReadOnlyMemorySlice<Single> _defaultBNAM = ArrayExt.Create(6, default(Single));
-        public ReadOnlyMemorySlice<Single>? BNAM => _BNAMLocation.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants), amount: 6) : _defaultBNAM;
+        public ReadOnlyMemorySlice<Single>? BNAM => _BNAMLocation.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants), amount: 6) : default(ReadOnlyMemorySlice<Single>?);
         #endregion
         #region NextNodeID
         private int? _NextNodeIDLocation;
