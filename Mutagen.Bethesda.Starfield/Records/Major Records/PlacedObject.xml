@@ -80,7 +80,7 @@
       </FormLink>
       <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <Percent name="HealthPercent" recordType="XHLT" />
-      <FormLink name="TimeOfDay" refName="TimeOfDayData" recordType="TODD" />
+      <FormLink name="TimeOfDay" refName="TimeOfDayRecord" recordType="TODD" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" binary="Custom" />
       <UInt32 name="NumTraversalFluffBytes" binary="NoGeneration" />

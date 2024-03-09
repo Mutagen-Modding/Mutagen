@@ -1249,7 +1249,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             TerminalMenuItem_Registration.Instance,
             TextureSet_Registration.Instance,
             TimelineSceneAction_Registration.Instance,
-            TimeOfDayData_Registration.Instance,
+            TimeOfDayRecord_Registration.Instance,
             TimerSceneAction_Registration.Instance,
             TopicReference_Registration.Instance,
             TopicReferenceSubtype_Registration.Instance,

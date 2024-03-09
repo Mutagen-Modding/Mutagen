@@ -828,9 +828,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Challenge</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter> Challenge(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter> Challenge(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IChallengeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -840,9 +840,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Challenge</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter> Challenge(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter> Challenge(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IChallengeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IChallenge, IChallengeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3944,27 +3944,27 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
-        /// Scope a load order query to TimeOfDayData
+        /// Scope a load order query to TimeOfDayRecord
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on TimeOfDayData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayData, ITimeOfDayDataGetter> TimeOfDayData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        /// <returns>A typed object to do further queries on TimeOfDayRecord</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayRecord, ITimeOfDayRecordGetter> TimeOfDayRecord(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayData, ITimeOfDayDataGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<ITimeOfDayDataGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITimeOfDayData, ITimeOfDayDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayRecord, ITimeOfDayRecordGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<ITimeOfDayRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITimeOfDayRecord, ITimeOfDayRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to TimeOfDayData
+        /// Scope a load order query to TimeOfDayRecord
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on TimeOfDayData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayData, ITimeOfDayDataGetter> TimeOfDayData(this IEnumerable<IStarfieldModGetter> mods)
+        /// <returns>A typed object to do further queries on TimeOfDayRecord</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayRecord, ITimeOfDayRecordGetter> TimeOfDayRecord(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayData, ITimeOfDayDataGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<ITimeOfDayDataGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITimeOfDayData, ITimeOfDayDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITimeOfDayRecord, ITimeOfDayRecordGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<ITimeOfDayRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITimeOfDayRecord, ITimeOfDayRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

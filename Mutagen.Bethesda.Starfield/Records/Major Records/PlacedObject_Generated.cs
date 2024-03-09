@@ -684,14 +684,14 @@ namespace Mutagen.Bethesda.Starfield
         Percent? IPlacedObjectGetter.HealthPercent => this.HealthPercent;
         #endregion
         #region TimeOfDay
-        private readonly IFormLinkNullable<ITimeOfDayDataGetter> _TimeOfDay = new FormLinkNullable<ITimeOfDayDataGetter>();
-        public IFormLinkNullable<ITimeOfDayDataGetter> TimeOfDay
+        private readonly IFormLinkNullable<ITimeOfDayRecordGetter> _TimeOfDay = new FormLinkNullable<ITimeOfDayRecordGetter>();
+        public IFormLinkNullable<ITimeOfDayRecordGetter> TimeOfDay
         {
             get => _TimeOfDay;
             set => _TimeOfDay.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITimeOfDayDataGetter> IPlacedObjectGetter.TimeOfDay => this.TimeOfDay;
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> IPlacedObjectGetter.TimeOfDay => this.TimeOfDay;
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4317,7 +4317,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<ILinkedReferenceGetter> AttachRef { get; set; }
         new P3Float? RagdollBipedRotation { get; set; }
         new Percent? HealthPercent { get; set; }
-        new IFormLinkNullable<ITimeOfDayDataGetter> TimeOfDay { get; set; }
+        new IFormLinkNullable<ITimeOfDayRecordGetter> TimeOfDay { get; set; }
         new EnableParent? EnableParent { get; set; }
         new ExtendedList<TraversalReference>? Traversals { get; set; }
         new UInt32 NumTraversalFluffBytes { get; set; }
@@ -4426,7 +4426,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef { get; }
         P3Float? RagdollBipedRotation { get; }
         Percent? HealthPercent { get; }
-        IFormLinkNullableGetter<ITimeOfDayDataGetter> TimeOfDay { get; }
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay { get; }
         IEnableParentGetter? EnableParent { get; }
         IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; }
         UInt32 NumTraversalFluffBytes { get; }
@@ -9348,7 +9348,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TimeOfDay
         private int? _TimeOfDayLocation;
-        public IFormLinkNullableGetter<ITimeOfDayDataGetter> TimeOfDay => _TimeOfDayLocation.HasValue ? new FormLinkNullable<ITimeOfDayDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimeOfDayLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayDataGetter>.Null;
+        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => _TimeOfDayLocation.HasValue ? new FormLinkNullable<ITimeOfDayRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimeOfDayLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayRecordGetter>.Null;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;

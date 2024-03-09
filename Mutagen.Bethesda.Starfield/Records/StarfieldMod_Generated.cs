@@ -226,7 +226,9 @@ namespace Mutagen.Bethesda.Starfield
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
             _SunPresets_Object = new StarfieldGroup<SunPreset>(this);
             _PhotoModeFeatures_Object = new StarfieldGroup<PhotoModeFeature>(this);
+            _TimeOfDays_Object = new StarfieldGroup<TimeOfDayRecord>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
+            _Challenges_Object = new StarfieldGroup<Challenge>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1401,12 +1403,26 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IPhotoModeFeatureGetter> IStarfieldModGetter.PhotoModeFeatures => _PhotoModeFeatures_Object;
         #endregion
+        #region TimeOfDays
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<TimeOfDayRecord> _TimeOfDays_Object;
+        public StarfieldGroup<TimeOfDayRecord> TimeOfDays => _TimeOfDays_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ITimeOfDayRecordGetter> IStarfieldModGetter.TimeOfDays => _TimeOfDays_Object;
+        #endregion
         #region ActorValueModulations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<ActorValueModulation> _ActorValueModulations_Object;
         public StarfieldGroup<ActorValueModulation> ActorValueModulations => _ActorValueModulations_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IActorValueModulationGetter> IStarfieldModGetter.ActorValueModulations => _ActorValueModulations_Object;
+        #endregion
+        #region Challenges
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Challenge> _Challenges_Object;
+        public StarfieldGroup<Challenge> Challenges => _Challenges_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IChallengeGetter> IStarfieldModGetter.Challenges => _Challenges_Object;
         #endregion
 
         #region To String
@@ -1614,7 +1630,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.ParticleSystemDefineCollisions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SunPresets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.PhotoModeFeatures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.TimeOfDays = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1785,7 +1803,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ParticleSystemDefineCollisions,
                 TItem SunPresets,
                 TItem PhotoModeFeatures,
-                TItem ActorValueModulations)
+                TItem TimeOfDays,
+                TItem ActorValueModulations,
+                TItem Challenges)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -1954,7 +1974,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.ParticleSystemDefineCollisions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ParticleSystemDefineCollisions, new StarfieldGroup.Mask<TItem>(ParticleSystemDefineCollisions));
                 this.SunPresets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SunPresets, new StarfieldGroup.Mask<TItem>(SunPresets));
                 this.PhotoModeFeatures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PhotoModeFeatures, new StarfieldGroup.Mask<TItem>(PhotoModeFeatures));
+                this.TimeOfDays = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(TimeOfDays, new StarfieldGroup.Mask<TItem>(TimeOfDays));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
+                this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Challenges, new StarfieldGroup.Mask<TItem>(Challenges));
             }
 
             #pragma warning disable CS8618
@@ -2133,7 +2155,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ParticleSystemDefineCollisions { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SunPresets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PhotoModeFeatures { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? TimeOfDays { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Challenges { get; set; }
             #endregion
 
             #region Equals
@@ -2313,7 +2337,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ParticleSystemDefineCollisions, rhs.ParticleSystemDefineCollisions)) return false;
                 if (!object.Equals(this.SunPresets, rhs.SunPresets)) return false;
                 if (!object.Equals(this.PhotoModeFeatures, rhs.PhotoModeFeatures)) return false;
+                if (!object.Equals(this.TimeOfDays, rhs.TimeOfDays)) return false;
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
+                if (!object.Equals(this.Challenges, rhs.Challenges)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -2486,7 +2512,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ParticleSystemDefineCollisions);
                 hash.Add(this.SunPresets);
                 hash.Add(this.PhotoModeFeatures);
+                hash.Add(this.TimeOfDays);
                 hash.Add(this.ActorValueModulations);
+                hash.Add(this.Challenges);
                 return hash.ToHashCode();
             }
 
@@ -3330,10 +3358,20 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.PhotoModeFeatures.Overall)) return false;
                     if (this.PhotoModeFeatures.Specific != null && !this.PhotoModeFeatures.Specific.All(eval)) return false;
                 }
+                if (TimeOfDays != null)
+                {
+                    if (!eval(this.TimeOfDays.Overall)) return false;
+                    if (this.TimeOfDays.Specific != null && !this.TimeOfDays.Specific.All(eval)) return false;
+                }
                 if (ActorValueModulations != null)
                 {
                     if (!eval(this.ActorValueModulations.Overall)) return false;
                     if (this.ActorValueModulations.Specific != null && !this.ActorValueModulations.Specific.All(eval)) return false;
+                }
+                if (Challenges != null)
+                {
+                    if (!eval(this.Challenges.Overall)) return false;
+                    if (this.Challenges.Specific != null && !this.Challenges.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -4177,10 +4215,20 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.PhotoModeFeatures.Overall)) return true;
                     if (this.PhotoModeFeatures.Specific != null && this.PhotoModeFeatures.Specific.Any(eval)) return true;
                 }
+                if (TimeOfDays != null)
+                {
+                    if (eval(this.TimeOfDays.Overall)) return true;
+                    if (this.TimeOfDays.Specific != null && this.TimeOfDays.Specific.Any(eval)) return true;
+                }
                 if (ActorValueModulations != null)
                 {
                     if (eval(this.ActorValueModulations.Overall)) return true;
                     if (this.ActorValueModulations.Specific != null && this.ActorValueModulations.Specific.Any(eval)) return true;
+                }
+                if (Challenges != null)
+                {
+                    if (eval(this.Challenges.Overall)) return true;
+                    if (this.Challenges.Specific != null && this.Challenges.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -4363,7 +4411,9 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ParticleSystemDefineCollisions = this.ParticleSystemDefineCollisions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ParticleSystemDefineCollisions.Overall), this.ParticleSystemDefineCollisions.Specific?.Translate(eval));
                 obj.SunPresets = this.SunPresets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SunPresets.Overall), this.SunPresets.Specific?.Translate(eval));
                 obj.PhotoModeFeatures = this.PhotoModeFeatures == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PhotoModeFeatures.Overall), this.PhotoModeFeatures.Specific?.Translate(eval));
+                obj.TimeOfDays = this.TimeOfDays == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.TimeOfDays.Overall), this.TimeOfDays.Specific?.Translate(eval));
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
+                obj.Challenges = this.Challenges == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Challenges.Overall), this.Challenges.Specific?.Translate(eval));
             }
             #endregion
 
@@ -5050,9 +5100,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         PhotoModeFeatures?.Print(sb);
                     }
+                    if (printMask?.TimeOfDays?.Overall ?? true)
+                    {
+                        TimeOfDays?.Print(sb);
+                    }
                     if (printMask?.ActorValueModulations?.Overall ?? true)
                     {
                         ActorValueModulations?.Print(sb);
+                    }
+                    if (printMask?.Challenges?.Overall ?? true)
+                    {
+                        Challenges?.Print(sb);
                     }
                 }
             }
@@ -5245,7 +5303,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ParticleSystemDefineCollision.ErrorMask>?>? ParticleSystemDefineCollisions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SunPreset.ErrorMask>?>? SunPresets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PhotoModeFeature.ErrorMask>?>? PhotoModeFeatures;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<TimeOfDayRecord.ErrorMask>?>? TimeOfDays;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Challenge.ErrorMask>?>? Challenges;
             #endregion
 
             #region IErrorMask
@@ -5588,8 +5648,12 @@ namespace Mutagen.Bethesda.Starfield
                         return SunPresets;
                     case StarfieldMod_FieldIndex.PhotoModeFeatures:
                         return PhotoModeFeatures;
+                    case StarfieldMod_FieldIndex.TimeOfDays:
+                        return TimeOfDays;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         return ActorValueModulations;
+                    case StarfieldMod_FieldIndex.Challenges:
+                        return Challenges;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -6101,8 +6165,14 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.PhotoModeFeatures:
                         this.PhotoModeFeatures = new MaskItem<Exception?, StarfieldGroup.ErrorMask<PhotoModeFeature.ErrorMask>?>(ex, null);
                         break;
+                    case StarfieldMod_FieldIndex.TimeOfDays:
+                        this.TimeOfDays = new MaskItem<Exception?, StarfieldGroup.ErrorMask<TimeOfDayRecord.ErrorMask>?>(ex, null);
+                        break;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Challenges:
+                        this.Challenges = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Challenge.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -6615,8 +6685,14 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.PhotoModeFeatures:
                         this.PhotoModeFeatures = (MaskItem<Exception?, StarfieldGroup.ErrorMask<PhotoModeFeature.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.TimeOfDays:
+                        this.TimeOfDays = (MaskItem<Exception?, StarfieldGroup.ErrorMask<TimeOfDayRecord.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.Challenges:
+                        this.Challenges = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Challenge.ErrorMask>?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -6793,7 +6869,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (ParticleSystemDefineCollisions != null) return true;
                 if (SunPresets != null) return true;
                 if (PhotoModeFeatures != null) return true;
+                if (TimeOfDays != null) return true;
                 if (ActorValueModulations != null) return true;
+                if (Challenges != null) return true;
                 return false;
             }
             #endregion
@@ -6986,7 +7064,9 @@ namespace Mutagen.Bethesda.Starfield
                 ParticleSystemDefineCollisions?.Print(sb);
                 SunPresets?.Print(sb);
                 PhotoModeFeatures?.Print(sb);
+                TimeOfDays?.Print(sb);
                 ActorValueModulations?.Print(sb);
+                Challenges?.Print(sb);
             }
             #endregion
 
@@ -7162,7 +7242,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ParticleSystemDefineCollisions = this.ParticleSystemDefineCollisions.Combine(rhs.ParticleSystemDefineCollisions, (l, r) => l.Combine(r));
                 ret.SunPresets = this.SunPresets.Combine(rhs.SunPresets, (l, r) => l.Combine(r));
                 ret.PhotoModeFeatures = this.PhotoModeFeatures.Combine(rhs.PhotoModeFeatures, (l, r) => l.Combine(r));
+                ret.TimeOfDays = this.TimeOfDays.Combine(rhs.TimeOfDays, (l, r) => l.Combine(r));
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
+                ret.Challenges = this.Challenges.Combine(rhs.Challenges, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -7353,7 +7435,9 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<ParticleSystemDefineCollision.TranslationMask>? ParticleSystemDefineCollisions;
             public StarfieldGroup.TranslationMask<SunPreset.TranslationMask>? SunPresets;
             public StarfieldGroup.TranslationMask<PhotoModeFeature.TranslationMask>? PhotoModeFeatures;
+            public StarfieldGroup.TranslationMask<TimeOfDayRecord.TranslationMask>? TimeOfDays;
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
+            public StarfieldGroup.TranslationMask<Challenge.TranslationMask>? Challenges;
             #endregion
 
             #region Ctors
@@ -7545,7 +7629,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ParticleSystemDefineCollisions != null ? ParticleSystemDefineCollisions.OnOverall : DefaultOn, ParticleSystemDefineCollisions?.GetCrystal()));
                 ret.Add((SunPresets != null ? SunPresets.OnOverall : DefaultOn, SunPresets?.GetCrystal()));
                 ret.Add((PhotoModeFeatures != null ? PhotoModeFeatures.OnOverall : DefaultOn, PhotoModeFeatures?.GetCrystal()));
+                ret.Add((TimeOfDays != null ? TimeOfDays.OnOverall : DefaultOn, TimeOfDays?.GetCrystal()));
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
+                ret.Add((Challenges != null ? Challenges.OnOverall : DefaultOn, Challenges?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -7758,7 +7844,9 @@ namespace Mutagen.Bethesda.Starfield
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
             _SunPresets_Object = new StarfieldGroup<SunPreset>(this);
             _PhotoModeFeatures_Object = new StarfieldGroup<PhotoModeFeature>(this);
+            _TimeOfDays_Object = new StarfieldGroup<TimeOfDayRecord>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
+            _Challenges_Object = new StarfieldGroup<Challenge>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -8432,9 +8520,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.PhotoModeFeatures.RecordCache.Set(rhsMod.PhotoModeFeatures.RecordCache.Items);
             }
+            if (mask?.TimeOfDays ?? true)
+            {
+                this.TimeOfDays.RecordCache.Set(rhsMod.TimeOfDays.RecordCache.Items);
+            }
             if (mask?.ActorValueModulations ?? true)
             {
                 this.ActorValueModulations.RecordCache.Set(rhsMod.ActorValueModulations.RecordCache.Items);
+            }
+            if (mask?.Challenges ?? true)
+            {
+                this.Challenges.RecordCache.Set(rhsMod.Challenges.RecordCache.Items);
             }
         }
 
@@ -8612,7 +8708,9 @@ namespace Mutagen.Bethesda.Starfield
             count += ParticleSystemDefineCollisions.RecordCache.Count > 0 ? 1 : default(uint);
             count += SunPresets.RecordCache.Count > 0 ? 1 : default(uint);
             count += PhotoModeFeatures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += TimeOfDays.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Challenges.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -9053,7 +9151,9 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<ParticleSystemDefineCollision> ParticleSystemDefineCollisions { get; }
         new StarfieldGroup<SunPreset> SunPresets { get; }
         new StarfieldGroup<PhotoModeFeature> PhotoModeFeatures { get; }
+        new StarfieldGroup<TimeOfDayRecord> TimeOfDays { get; }
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
+        new StarfieldGroup<Challenge> Challenges { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -9240,7 +9340,9 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter> ParticleSystemDefineCollisions { get; }
         IStarfieldGroupGetter<ISunPresetGetter> SunPresets { get; }
         IStarfieldGroupGetter<IPhotoModeFeatureGetter> PhotoModeFeatures { get; }
+        IStarfieldGroupGetter<ITimeOfDayRecordGetter> TimeOfDays { get; }
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
+        IStarfieldGroupGetter<IChallengeGetter> Challenges { get; }
 
         #region Mutagen
         StarfieldRelease StarfieldRelease { get; }
@@ -9990,7 +10092,9 @@ namespace Mutagen.Bethesda.Starfield
         ParticleSystemDefineCollisions = 164,
         SunPresets = 165,
         PhotoModeFeatures = 166,
-        ActorValueModulations = 167,
+        TimeOfDays = 167,
+        ActorValueModulations = 168,
+        Challenges = 169,
     }
     #endregion
 
@@ -10001,9 +10105,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 168;
+        public const ushort AdditionalFieldCount = 170;
 
-        public const ushort FieldCount = 168;
+        public const ushort FieldCount = 170;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10235,7 +10339,9 @@ namespace Mutagen.Bethesda.Starfield
             item.ParticleSystemDefineCollisions.Clear();
             item.SunPresets.Clear();
             item.PhotoModeFeatures.Clear();
+            item.TimeOfDays.Clear();
             item.ActorValueModulations.Clear();
+            item.Challenges.Clear();
         }
         
         #region Mutagen
@@ -10373,7 +10479,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.LegendaryItems.RemapLinks(mapping);
             obj.SunPresets.RemapLinks(mapping);
             obj.PhotoModeFeatures.RemapLinks(mapping);
+            obj.TimeOfDays.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
+            obj.Challenges.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -10574,7 +10682,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.ParticleSystemDefineCollisions.Remove(keys);
             obj.SunPresets.Remove(keys);
             obj.PhotoModeFeatures.Remove(keys);
+            obj.TimeOfDays.Remove(keys);
             obj.ActorValueModulations.Remove(keys);
+            obj.Challenges.Remove(keys);
         }
         
         public void Remove(
@@ -11962,11 +12072,27 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "TimeOfDayRecord":
+                case "ITimeOfDayRecordGetter":
+                case "ITimeOfDayRecord":
+                case "ITimeOfDayRecordInternal":
+                    obj.TimeOfDays.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "ActorValueModulation":
                 case "IActorValueModulationGetter":
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     obj.ActorValueModulations.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    obj.Challenges.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -12896,9 +13022,23 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.TimeOfDays is IAssetLinkContainer TimeOfDayslinkCont)
+            {
+                foreach (var item in TimeOfDayslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.ActorValueModulations is IAssetLinkContainer ActorValueModulationslinkCont)
             {
                 foreach (var item in ActorValueModulationslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Challenges is IAssetLinkContainer ChallengeslinkCont)
+            {
+                foreach (var item in ChallengeslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -12988,7 +13128,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.Stars.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LayeredMaterialSwaps.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.TimeOfDays.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueModulations.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Challenges.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -13201,7 +13343,9 @@ namespace Mutagen.Bethesda.Starfield
             ret.ParticleSystemDefineCollisions = MaskItemExt.Factory(item.ParticleSystemDefineCollisions.GetEqualsMask(rhs.ParticleSystemDefineCollisions, include), include);
             ret.SunPresets = MaskItemExt.Factory(item.SunPresets.GetEqualsMask(rhs.SunPresets, include), include);
             ret.PhotoModeFeatures = MaskItemExt.Factory(item.PhotoModeFeatures.GetEqualsMask(rhs.PhotoModeFeatures, include), include);
+            ret.TimeOfDays = MaskItemExt.Factory(item.TimeOfDays.GetEqualsMask(rhs.TimeOfDays, include), include);
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
+            ret.Challenges = MaskItemExt.Factory(item.Challenges.GetEqualsMask(rhs.Challenges, include), include);
         }
         
         public string Print(
@@ -13914,9 +14058,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.PhotoModeFeatures?.Print(sb, "PhotoModeFeatures");
             }
+            if (printMask?.TimeOfDays?.Overall ?? true)
+            {
+                item.TimeOfDays?.Print(sb, "TimeOfDays");
+            }
             if (printMask?.ActorValueModulations?.Overall ?? true)
             {
                 item.ActorValueModulations?.Print(sb, "ActorValueModulations");
+            }
+            if (printMask?.Challenges?.Overall ?? true)
+            {
+                item.Challenges?.Print(sb, "Challenges");
             }
         }
         
@@ -15263,6 +15415,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isPhotoModeFeaturesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.TimeOfDays) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.TimeOfDays, rhs.TimeOfDays, out var lhsTimeOfDays, out var rhsTimeOfDays, out var isTimeOfDaysEqual))
+                {
+                    if (!object.Equals(lhsTimeOfDays, rhsTimeOfDays)) return false;
+                }
+                else if (!isTimeOfDaysEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ActorValueModulations) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ActorValueModulations, rhs.ActorValueModulations, out var lhsActorValueModulations, out var rhsActorValueModulations, out var isActorValueModulationsEqual))
@@ -15270,6 +15430,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsActorValueModulations, rhsActorValueModulations)) return false;
                 }
                 else if (!isActorValueModulationsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Challenges) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Challenges, rhs.Challenges, out var lhsChallenges, out var rhsChallenges, out var isChallengesEqual))
+                {
+                    if (!object.Equals(lhsChallenges, rhsChallenges)) return false;
+                }
+                else if (!isChallengesEqual) return false;
             }
             return true;
         }
@@ -15444,7 +15612,9 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ParticleSystemDefineCollisions);
             hash.Add(item.SunPresets);
             hash.Add(item.PhotoModeFeatures);
+            hash.Add(item.TimeOfDays);
             hash.Add(item.ActorValueModulations);
+            hash.Add(item.Challenges);
             return hash.ToHashCode();
         }
         
@@ -16292,11 +16462,21 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPhotoModeFeature":
                 case "IPhotoModeFeatureInternal":
                     return obj.PhotoModeFeatures;
+                case "TimeOfDayRecord":
+                case "ITimeOfDayRecordGetter":
+                case "ITimeOfDayRecord":
+                case "ITimeOfDayRecordInternal":
+                    return obj.TimeOfDays;
                 case "ActorValueModulation":
                 case "IActorValueModulationGetter":
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     return obj.ActorValueModulations;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    return obj.Challenges;
                 default:
                     return null;
             }
@@ -16323,7 +16503,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[167];
+            Stream[] outputStreams = new Stream[169];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -16491,7 +16671,9 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.ParticleSystemDefineCollisions, 163, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SunPresets, 164, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.PhotoModeFeatures, 165, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 166, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TimeOfDays, 166, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 167, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Challenges, 168, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -17088,9 +17270,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.TimeOfDays is IFormLinkContainerGetter TimeOfDayslinkCont)
+            {
+                foreach (var item in TimeOfDayslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.ActorValueModulations is IFormLinkContainerGetter ActorValueModulationslinkCont)
             {
                 foreach (var item in ActorValueModulationslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Challenges is IFormLinkContainerGetter ChallengeslinkCont)
+            {
+                foreach (var item in ChallengeslinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -17764,7 +17960,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.TimeOfDays.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.ActorValueModulations.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Challenges.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -19288,11 +19492,29 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "TimeOfDayRecord":
+                case "ITimeOfDayRecordGetter":
+                case "ITimeOfDayRecord":
+                case "ITimeOfDayRecordInternal":
+                    foreach (var item in obj.TimeOfDays.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "ActorValueModulation":
                 case "IActorValueModulationGetter":
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     foreach (var item in obj.ActorValueModulations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    foreach (var item in obj.Challenges.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -20940,12 +21162,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, TimeOfDayRecord, ITimeOfDayRecordGetter>(
+                srcGroup: obj.TimeOfDays,
+                type: typeof(ITimeOfDayRecordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.TimeOfDays,
+                groupGetter: (m) => m.TimeOfDays))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ActorValueModulation, IActorValueModulationGetter>(
                 srcGroup: obj.ActorValueModulations,
                 type: typeof(IActorValueModulationGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.ActorValueModulations,
                 groupGetter: (m) => m.ActorValueModulations))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Challenge, IChallengeGetter>(
+                srcGroup: obj.Challenges,
+                type: typeof(IChallengeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Challenges,
+                groupGetter: (m) => m.Challenges))
             {
                 yield return item;
             }
@@ -23290,6 +23530,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "TimeOfDayRecord":
+                case "ITimeOfDayRecordGetter":
+                case "ITimeOfDayRecord":
+                case "ITimeOfDayRecordInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, TimeOfDayRecord, ITimeOfDayRecordGetter>(
+                        srcGroup: obj.TimeOfDays,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TimeOfDays,
+                        groupGetter: (m) => m.TimeOfDays))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "ActorValueModulation":
                 case "IActorValueModulationGetter":
                 case "IActorValueModulation":
@@ -23300,6 +23554,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.ActorValueModulations,
                         groupGetter: (m) => m.ActorValueModulations))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Challenge, IChallengeGetter>(
+                        srcGroup: obj.Challenges,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Challenges,
+                        groupGetter: (m) => m.Challenges))
                     {
                         yield return item;
                     }
@@ -24017,9 +24285,23 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+                if (obj.TimeOfDays is IAssetLinkContainerGetter TimeOfDayslinkCont)
+                {
+                    foreach (var item in TimeOfDayslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
                 if (obj.ActorValueModulations is IAssetLinkContainerGetter ActorValueModulationslinkCont)
                 {
                     foreach (var item in ActorValueModulationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Challenges is IAssetLinkContainerGetter ChallengeslinkCont)
+                {
+                    foreach (var item in ChallengeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -27383,6 +27665,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.TimeOfDays) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.TimeOfDays);
+                try
+                {
+                    item.TimeOfDays.DeepCopyIn(
+                        rhs: rhs.TimeOfDays,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.TimeOfDays));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ActorValueModulations) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ActorValueModulations);
@@ -27392,6 +27694,26 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.ActorValueModulations,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ActorValueModulations));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Challenges) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Challenges);
+                try
+                {
+                    item.Challenges.DeepCopyIn(
+                        rhs: rhs.Challenges,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Challenges));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -27659,7 +27981,9 @@ namespace Mutagen.Bethesda.Starfield
         public bool ParticleSystemDefineCollisions;
         public bool SunPresets;
         public bool PhotoModeFeatures;
+        public bool TimeOfDays;
         public bool ActorValueModulations;
+        public bool Challenges;
         public GroupMask()
         {
         }
@@ -27831,7 +28155,9 @@ namespace Mutagen.Bethesda.Starfield
             ParticleSystemDefineCollisions = defaultValue;
             SunPresets = defaultValue;
             PhotoModeFeatures = defaultValue;
+            TimeOfDays = defaultValue;
             ActorValueModulations = defaultValue;
+            Challenges = defaultValue;
         }
     }
 
@@ -29717,6 +30043,17 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.TimeOfDays ?? true)
+            {
+                var TimeOfDaysItem = item.TimeOfDays;
+                if (TimeOfDaysItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)TimeOfDaysItem).BinaryWriteTranslator).Write<ITimeOfDayRecordGetter>(
+                        item: TimeOfDaysItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.ActorValueModulations ?? true)
             {
                 var ActorValueModulationsItem = item.ActorValueModulations;
@@ -29724,6 +30061,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ActorValueModulationsItem).BinaryWriteTranslator).Write<IActorValueModulationGetter>(
                         item: ActorValueModulationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Challenges ?? true)
+            {
+                var ChallengesItem = item.Challenges;
+                if (ChallengesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ChallengesItem).BinaryWriteTranslator).Write<IChallengeGetter>(
+                        item: ChallengesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -32112,6 +32460,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.PhotoModeFeatures;
                 }
+                case RecordTypeInts.TODD:
+                {
+                    if (importMask?.TimeOfDays ?? true)
+                    {
+                        item.TimeOfDays.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.TimeOfDays;
+                }
                 case RecordTypeInts.AVMD:
                 {
                     if (importMask?.ActorValueModulations ?? true)
@@ -32125,6 +32487,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.ActorValueModulations;
+                }
+                case RecordTypeInts.CHAL:
+                {
+                    if (importMask?.Challenges ?? true)
+                    {
+                        item.Challenges.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Challenges;
                 }
                 default:
                     frame.Position += contentLength;
@@ -33127,10 +33503,20 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IPhotoModeFeatureGetter>? _PhotoModeFeatures => _PhotoModeFeaturesLocations != null ? StarfieldGroupBinaryOverlay<IPhotoModeFeatureGetter>.StarfieldGroupFactory(_stream, _PhotoModeFeaturesLocations, _package) : default;
         public IStarfieldGroupGetter<IPhotoModeFeatureGetter> PhotoModeFeatures => _PhotoModeFeatures ?? new StarfieldGroup<PhotoModeFeature>(this);
         #endregion
+        #region TimeOfDays
+        private List<RangeInt64>? _TimeOfDaysLocations;
+        private IStarfieldGroupGetter<ITimeOfDayRecordGetter>? _TimeOfDays => _TimeOfDaysLocations != null ? StarfieldGroupBinaryOverlay<ITimeOfDayRecordGetter>.StarfieldGroupFactory(_stream, _TimeOfDaysLocations, _package) : default;
+        public IStarfieldGroupGetter<ITimeOfDayRecordGetter> TimeOfDays => _TimeOfDays ?? new StarfieldGroup<TimeOfDayRecord>(this);
+        #endregion
         #region ActorValueModulations
         private List<RangeInt64>? _ActorValueModulationsLocations;
         private IStarfieldGroupGetter<IActorValueModulationGetter>? _ActorValueModulations => _ActorValueModulationsLocations != null ? StarfieldGroupBinaryOverlay<IActorValueModulationGetter>.StarfieldGroupFactory(_stream, _ActorValueModulationsLocations, _package) : default;
         public IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations => _ActorValueModulations ?? new StarfieldGroup<ActorValueModulation>(this);
+        #endregion
+        #region Challenges
+        private List<RangeInt64>? _ChallengesLocations;
+        private IStarfieldGroupGetter<IChallengeGetter>? _Challenges => _ChallengesLocations != null ? StarfieldGroupBinaryOverlay<IChallengeGetter>.StarfieldGroupFactory(_stream, _ChallengesLocations, _package) : default;
+        public IStarfieldGroupGetter<IChallengeGetter> Challenges => _Challenges ?? new StarfieldGroup<Challenge>(this);
         #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
@@ -34221,11 +34607,23 @@ namespace Mutagen.Bethesda.Starfield
                     _PhotoModeFeaturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.PhotoModeFeatures;
                 }
+                case RecordTypeInts.TODD:
+                {
+                    _TimeOfDaysLocations ??= new();
+                    _TimeOfDaysLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.TimeOfDays;
+                }
                 case RecordTypeInts.AVMD:
                 {
                     _ActorValueModulationsLocations ??= new();
                     _ActorValueModulationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ActorValueModulations;
+                }
+                case RecordTypeInts.CHAL:
+                {
+                    _ChallengesLocations ??= new();
+                    _ChallengesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Challenges;
                 }
                 default:
                     return default(int?);

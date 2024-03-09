@@ -23,7 +23,7 @@
       <Float name="UNAM" recordType="UNAM" unknown="true" />
       <FormLink name="AmbientSet" recordType="BIAS" refName="AmbienceSet" />
       <FormLink name="Music" recordType="BIMT" refName="MusicType" />
-      <FormLink name="NAM0" recordType="NAM0" refName="TimeOfDayData" />
+      <FormLink name="NAM0" recordType="NAM0" refName="TimeOfDayRecord" />
       <FormLink name="PatternStyle" recordType="NNAM" refName="SurfacePatternStyle" />
       <Color name="CNAM" recordType="CNAM" binaryType="Alpha" />
       <Color name="BiomeColor1" recordType="BMC1" binaryType="Alpha" />

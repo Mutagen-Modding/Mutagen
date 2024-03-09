@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Challenge" recordType="CHAL" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="TimeOfDayRecord" recordType="TODD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Components" refName="AComponent" />
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

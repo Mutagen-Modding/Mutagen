@@ -242,14 +242,14 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IMusicTypeGetter> IBiomeGetter.Music => this.Music;
         #endregion
         #region NAM0
-        private readonly IFormLinkNullable<ITimeOfDayDataGetter> _NAM0 = new FormLinkNullable<ITimeOfDayDataGetter>();
-        public IFormLinkNullable<ITimeOfDayDataGetter> NAM0
+        private readonly IFormLinkNullable<ITimeOfDayRecordGetter> _NAM0 = new FormLinkNullable<ITimeOfDayRecordGetter>();
+        public IFormLinkNullable<ITimeOfDayRecordGetter> NAM0
         {
             get => _NAM0;
             set => _NAM0.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITimeOfDayDataGetter> IBiomeGetter.NAM0 => this.NAM0;
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> IBiomeGetter.NAM0 => this.NAM0;
         #endregion
         #region PatternStyle
         private readonly IFormLinkNullable<ISurfacePatternStyleGetter> _PatternStyle = new FormLinkNullable<ISurfacePatternStyleGetter>();
@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single? UNAM { get; set; }
         new IFormLinkNullable<IAmbienceSetGetter> AmbientSet { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new IFormLinkNullable<ITimeOfDayDataGetter> NAM0 { get; set; }
+        new IFormLinkNullable<ITimeOfDayRecordGetter> NAM0 { get; set; }
         new IFormLinkNullable<ISurfacePatternStyleGetter> PatternStyle { get; set; }
         new Color? CNAM { get; set; }
         new Color? BiomeColor1 { get; set; }
@@ -2248,7 +2248,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? UNAM { get; }
         IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
-        IFormLinkNullableGetter<ITimeOfDayDataGetter> NAM0 { get; }
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> NAM0 { get; }
         IFormLinkNullableGetter<ISurfacePatternStyleGetter> PatternStyle { get; }
         Color? CNAM { get; }
         Color? BiomeColor1 { get; }
@@ -4591,7 +4591,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NAM0
         private int? _NAM0Location;
-        public IFormLinkNullableGetter<ITimeOfDayDataGetter> NAM0 => _NAM0Location.HasValue ? new FormLinkNullable<ITimeOfDayDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM0Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayDataGetter>.Null;
+        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> NAM0 => _NAM0Location.HasValue ? new FormLinkNullable<ITimeOfDayRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM0Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayRecordGetter>.Null;
         #endregion
         #region PatternStyle
         private int? _PatternStyleLocation;

@@ -43,14 +43,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class Challenge :
+    public partial class TimeOfDayRecord :
         StarfieldMajorRecord,
-        IChallengeInternal,
-        IEquatable<IChallengeGetter>,
-        ILoquiObjectSetter<Challenge>
+        IEquatable<ITimeOfDayRecordGetter>,
+        ILoquiObjectSetter<TimeOfDayRecord>,
+        ITimeOfDayRecordInternal
     {
         #region Ctor
-        protected Challenge()
+        protected TimeOfDayRecord()
         {
             CustomCtor();
         }
@@ -67,9 +67,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAComponentGetter> IChallengeGetter.Components => _Components;
+        IReadOnlyList<IAComponentGetter> ITimeOfDayRecordGetter.Components => _Components;
         #endregion
 
+        #endregion
+        #region REFL
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _REFL;
+        public MemorySlice<Byte>? REFL
+        {
+            get => this._REFL;
+            set => this._REFL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ITimeOfDayRecordGetter.REFL => this.REFL;
         #endregion
 
         #region To String
@@ -78,7 +89,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ChallengeMixIn.Print(
+            TimeOfDayRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -97,6 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.REFL = initialValue;
             }
 
             public Mask(
@@ -107,7 +119,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem Components)
+                TItem Components,
+                TItem REFL)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -118,6 +131,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.REFL = REFL;
             }
 
             #pragma warning disable CS8618
@@ -130,6 +144,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem REFL;
             #endregion
 
             #region Equals
@@ -144,12 +159,14 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.REFL, rhs.REFL)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Components);
+                hash.Add(this.REFL);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -172,6 +189,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.REFL)) return false;
                 return true;
             }
             #endregion
@@ -192,6 +210,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.REFL)) return true;
                 return false;
             }
             #endregion
@@ -199,7 +218,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Challenge.Mask<R>();
+                var ret = new TimeOfDayRecord.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -222,22 +241,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.REFL = eval(this.REFL);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Challenge.Mask<bool>? printMask = null)
+            public string Print(TimeOfDayRecord.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Challenge.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TimeOfDayRecord.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Challenge.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(TimeOfDayRecord.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if ((printMask?.Components?.Overall ?? true)
@@ -259,6 +279,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.REFL ?? true)
+                    {
+                        sb.AppendItem(REFL, "REFL");
+                    }
                 }
             }
             #endregion
@@ -271,16 +295,19 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? REFL;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Challenge_FieldIndex enu = (Challenge_FieldIndex)index;
+                TimeOfDayRecord_FieldIndex enu = (TimeOfDayRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case Challenge_FieldIndex.Components:
+                    case TimeOfDayRecord_FieldIndex.Components:
                         return Components;
+                    case TimeOfDayRecord_FieldIndex.REFL:
+                        return REFL;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -288,11 +315,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Challenge_FieldIndex enu = (Challenge_FieldIndex)index;
+                TimeOfDayRecord_FieldIndex enu = (TimeOfDayRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case Challenge_FieldIndex.Components:
+                    case TimeOfDayRecord_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case TimeOfDayRecord_FieldIndex.REFL:
+                        this.REFL = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -302,11 +332,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Challenge_FieldIndex enu = (Challenge_FieldIndex)index;
+                TimeOfDayRecord_FieldIndex enu = (TimeOfDayRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case Challenge_FieldIndex.Components:
+                    case TimeOfDayRecord_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case TimeOfDayRecord_FieldIndex.REFL:
+                        this.REFL = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -318,6 +351,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Components != null) return true;
+                if (REFL != null) return true;
                 return false;
             }
             #endregion
@@ -362,6 +396,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(REFL, "REFL");
+                }
             }
             #endregion
 
@@ -371,6 +408,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.REFL = this.REFL.Combine(rhs.REFL);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -394,6 +432,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public AComponent.TranslationMask? Components;
+            public bool REFL;
             #endregion
 
             #region Ctors
@@ -402,6 +441,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.REFL = defaultOn;
             }
 
             #endregion
@@ -410,6 +450,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((REFL, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -421,10 +462,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Challenge_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ChallengeCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ChallengeSetterCommon.Instance.RemapLinks(this, mapping);
-        public Challenge(
+        public static readonly RecordType GrupRecordType = TimeOfDayRecord_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TimeOfDayRecordCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TimeOfDayRecordSetterCommon.Instance.RemapLinks(this, mapping);
+        public TimeOfDayRecord(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -433,7 +474,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private Challenge(
+        private TimeOfDayRecord(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -442,7 +483,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Challenge(
+        internal TimeOfDayRecord(
             FormKey formKey,
             ushort formVersion)
         {
@@ -451,14 +492,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Challenge(IStarfieldMod mod)
+        public TimeOfDayRecord(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public Challenge(IStarfieldMod mod, string editorID)
+        public TimeOfDayRecord(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -468,15 +509,15 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Challenge>.ToString(this);
+            return MajorRecordPrinter<TimeOfDayRecord>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IChallenge);
+        protected override Type LinkType => typeof(ITimeOfDayRecord);
 
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ChallengeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ChallengeSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ChallengeSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ChallengeSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => TimeOfDayRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => TimeOfDayRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => TimeOfDayRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TimeOfDayRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -484,16 +525,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IChallengeGetter rhs) return false;
-            return ((ChallengeCommon)((IChallengeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ITimeOfDayRecordGetter rhs) return false;
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IChallengeGetter? obj)
+        public bool Equals(ITimeOfDayRecordGetter? obj)
         {
-            return ((ChallengeCommon)((IChallengeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ChallengeCommon)((IChallengeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -501,23 +542,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ChallengeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => TimeOfDayRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ChallengeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((TimeOfDayRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Challenge CreateFromBinary(
+        public new static TimeOfDayRecord CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Challenge();
-            ((ChallengeSetterCommon)((IChallengeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new TimeOfDayRecord();
+            ((TimeOfDayRecordSetterCommon)((ITimeOfDayRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -528,7 +569,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Challenge item,
+            out TimeOfDayRecord item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -543,88 +584,90 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ChallengeSetterCommon)((IChallengeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((TimeOfDayRecordSetterCommon)((ITimeOfDayRecordGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Challenge GetNew()
+        internal static new TimeOfDayRecord GetNew()
         {
-            return new Challenge();
+            return new TimeOfDayRecord();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IChallenge :
+    public partial interface ITimeOfDayRecord :
         IAssetLinkContainer,
-        IChallengeGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IChallengeInternal>,
-        IStarfieldMajorRecordInternal
+        ILoquiObjectSetter<ITimeOfDayRecordInternal>,
+        IStarfieldMajorRecordInternal,
+        ITimeOfDayRecordGetter
     {
         new ExtendedList<AComponent> Components { get; }
+        new MemorySlice<Byte>? REFL { get; set; }
     }
 
-    public partial interface IChallengeInternal :
+    public partial interface ITimeOfDayRecordInternal :
         IStarfieldMajorRecordInternal,
-        IChallenge,
-        IChallengeGetter
+        ITimeOfDayRecord,
+        ITimeOfDayRecordGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.CHAL)]
-    public partial interface IChallengeGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.TODD)]
+    public partial interface ITimeOfDayRecordGetter :
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IChallengeGetter>,
-        IMapsToGetter<IChallengeGetter>
+        ILoquiObject<ITimeOfDayRecordGetter>,
+        IMapsToGetter<ITimeOfDayRecordGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Challenge_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TimeOfDayRecord_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
+        ReadOnlyMemorySlice<Byte>? REFL { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ChallengeMixIn
+    public static partial class TimeOfDayRecordMixIn
     {
-        public static void Clear(this IChallengeInternal item)
+        public static void Clear(this ITimeOfDayRecordInternal item)
         {
-            ((ChallengeSetterCommon)((IChallengeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((TimeOfDayRecordSetterCommon)((ITimeOfDayRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Challenge.Mask<bool> GetEqualsMask(
-            this IChallengeGetter item,
-            IChallengeGetter rhs,
+        public static TimeOfDayRecord.Mask<bool> GetEqualsMask(
+            this ITimeOfDayRecordGetter item,
+            ITimeOfDayRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IChallengeGetter item,
+            this ITimeOfDayRecordGetter item,
             string? name = null,
-            Challenge.Mask<bool>? printMask = null)
+            TimeOfDayRecord.Mask<bool>? printMask = null)
         {
-            return ((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).Print(
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IChallengeGetter item,
+            this ITimeOfDayRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Challenge.Mask<bool>? printMask = null)
+            TimeOfDayRecord.Mask<bool>? printMask = null)
         {
-            ((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).Print(
+            ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -632,39 +675,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IChallengeGetter item,
-            IChallengeGetter rhs,
-            Challenge.TranslationMask? equalsMask = null)
+            this ITimeOfDayRecordGetter item,
+            ITimeOfDayRecordGetter rhs,
+            TimeOfDayRecord.TranslationMask? equalsMask = null)
         {
-            return ((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).Equals(
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IChallengeInternal lhs,
-            IChallengeGetter rhs,
-            out Challenge.ErrorMask errorMask,
-            Challenge.TranslationMask? copyMask = null)
+            this ITimeOfDayRecordInternal lhs,
+            ITimeOfDayRecordGetter rhs,
+            out TimeOfDayRecord.ErrorMask errorMask,
+            TimeOfDayRecord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ChallengeSetterTranslationCommon)((IChallengeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Challenge.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TimeOfDayRecord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IChallengeInternal lhs,
-            IChallengeGetter rhs,
+            this ITimeOfDayRecordInternal lhs,
+            ITimeOfDayRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ChallengeSetterTranslationCommon)((IChallengeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -672,55 +715,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Challenge DeepCopy(
-            this IChallengeGetter item,
-            Challenge.TranslationMask? copyMask = null)
+        public static TimeOfDayRecord DeepCopy(
+            this ITimeOfDayRecordGetter item,
+            TimeOfDayRecord.TranslationMask? copyMask = null)
         {
-            return ((ChallengeSetterTranslationCommon)((IChallengeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Challenge DeepCopy(
-            this IChallengeGetter item,
-            out Challenge.ErrorMask errorMask,
-            Challenge.TranslationMask? copyMask = null)
+        public static TimeOfDayRecord DeepCopy(
+            this ITimeOfDayRecordGetter item,
+            out TimeOfDayRecord.ErrorMask errorMask,
+            TimeOfDayRecord.TranslationMask? copyMask = null)
         {
-            return ((ChallengeSetterTranslationCommon)((IChallengeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Challenge DeepCopy(
-            this IChallengeGetter item,
+        public static TimeOfDayRecord DeepCopy(
+            this ITimeOfDayRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ChallengeSetterTranslationCommon)((IChallengeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Challenge Duplicate(
-            this IChallengeGetter item,
+        public static TimeOfDayRecord Duplicate(
+            this ITimeOfDayRecordGetter item,
             FormKey formKey,
-            Challenge.TranslationMask? copyMask = null)
+            TimeOfDayRecord.TranslationMask? copyMask = null)
         {
-            return ((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).Duplicate(
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Challenge Duplicate(
-            this IChallengeGetter item,
+        public static TimeOfDayRecord Duplicate(
+            this ITimeOfDayRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).Duplicate(
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -730,11 +773,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IChallengeInternal item,
+            this ITimeOfDayRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ChallengeSetterCommon)((IChallengeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((TimeOfDayRecordSetterCommon)((ITimeOfDayRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -750,7 +793,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Challenge_FieldIndex
+    internal enum TimeOfDayRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -760,37 +803,38 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Components = 7,
+        REFL = 8,
     }
     #endregion
 
     #region Registration
-    internal partial class Challenge_Registration : ILoquiRegistration
+    internal partial class TimeOfDayRecord_Registration : ILoquiRegistration
     {
-        public static readonly Challenge_Registration Instance = new Challenge_Registration();
+        public static readonly TimeOfDayRecord_Registration Instance = new TimeOfDayRecord_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(Challenge.Mask<>);
+        public static readonly Type MaskType = typeof(TimeOfDayRecord.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Challenge.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(TimeOfDayRecord.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Challenge);
+        public static readonly Type ClassType = typeof(TimeOfDayRecord);
 
-        public static readonly Type GetterType = typeof(IChallengeGetter);
+        public static readonly Type GetterType = typeof(ITimeOfDayRecordGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IChallenge);
+        public static readonly Type SetterType = typeof(ITimeOfDayRecord);
 
-        public static readonly Type? InternalSetterType = typeof(IChallengeInternal);
+        public static readonly Type? InternalSetterType = typeof(ITimeOfDayRecordInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Challenge";
+        public const string FullName = "Mutagen.Bethesda.Starfield.TimeOfDayRecord";
 
-        public const string Name = "Challenge";
+        public const string Name = "TimeOfDayRecord";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -798,20 +842,21 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.CHAL;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TODD;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.CHAL);
+            var triggers = RecordCollection.Factory(RecordTypes.TODD);
             var all = RecordCollection.Factory(
-                RecordTypes.CHAL,
+                RecordTypes.TODD,
                 RecordTypes.BFCB,
-                RecordTypes.BFCE);
+                RecordTypes.BFCE,
+                RecordTypes.REFL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ChallengeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(TimeOfDayRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -842,37 +887,38 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ChallengeSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class TimeOfDayRecordSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly ChallengeSetterCommon Instance = new ChallengeSetterCommon();
+        public new static readonly TimeOfDayRecordSetterCommon Instance = new TimeOfDayRecordSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IChallengeInternal item)
+        public void Clear(ITimeOfDayRecordInternal item)
         {
             ClearPartial();
             item.Components.Clear();
+            item.REFL = default;
             base.Clear(item);
         }
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IChallengeInternal)item);
+            Clear(item: (ITimeOfDayRecordInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IChallengeInternal)item);
+            Clear(item: (ITimeOfDayRecordInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IChallenge obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ITimeOfDayRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
         }
         
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IChallenge obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ITimeOfDayRecord obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))
             {
@@ -887,7 +933,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void RemapAssetLinks(
-            IChallenge obj,
+            ITimeOfDayRecord obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
@@ -900,16 +946,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IChallengeInternal item,
+            ITimeOfDayRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IChallengeInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ITimeOfDayRecordInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ChallengeBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ChallengeBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: TimeOfDayRecordBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: TimeOfDayRecordBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -918,7 +964,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Challenge)item,
+                item: (TimeOfDayRecord)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -929,7 +975,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Challenge)item,
+                item: (TimeOfDayRecord)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -937,17 +983,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ChallengeCommon : StarfieldMajorRecordCommon
+    internal partial class TimeOfDayRecordCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly ChallengeCommon Instance = new ChallengeCommon();
+        public new static readonly TimeOfDayRecordCommon Instance = new TimeOfDayRecordCommon();
 
-        public Challenge.Mask<bool> GetEqualsMask(
-            IChallengeGetter item,
-            IChallengeGetter rhs,
+        public TimeOfDayRecord.Mask<bool> GetEqualsMask(
+            ITimeOfDayRecordGetter item,
+            ITimeOfDayRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Challenge.Mask<bool>(false);
-            ((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new TimeOfDayRecord.Mask<bool>(false);
+            ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -956,22 +1002,23 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IChallengeGetter item,
-            IChallengeGetter rhs,
-            Challenge.Mask<bool> ret,
+            ITimeOfDayRecordGetter item,
+            ITimeOfDayRecordGetter rhs,
+            TimeOfDayRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.REFL = MemorySliceExt.SequenceEqual(item.REFL, rhs.REFL);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IChallengeGetter item,
+            ITimeOfDayRecordGetter item,
             string? name = null,
-            Challenge.Mask<bool>? printMask = null)
+            TimeOfDayRecord.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -983,18 +1030,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IChallengeGetter item,
+            ITimeOfDayRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Challenge.Mask<bool>? printMask = null)
+            TimeOfDayRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Challenge =>");
+                sb.AppendLine($"TimeOfDayRecord =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Challenge) =>");
+                sb.AppendLine($"{name} (TimeOfDayRecord) =>");
             }
             using (sb.Brace())
             {
@@ -1006,9 +1053,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IChallengeGetter item,
+            ITimeOfDayRecordGetter item,
             StructuredStringBuilder sb,
-            Challenge.Mask<bool>? printMask = null)
+            TimeOfDayRecord.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1028,43 +1075,48 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if ((printMask?.REFL ?? true)
+                && item.REFL is {} REFLItem)
+            {
+                sb.AppendLine($"REFL => {SpanExt.ToHexString(REFLItem)}");
+            }
         }
         
-        public static Challenge_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static TimeOfDayRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Challenge_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new TimeOfDayRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Challenge_FieldIndex)((int)index);
+                    return (TimeOfDayRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1072,15 +1124,19 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IChallengeGetter? lhs,
-            IChallengeGetter? rhs,
+            ITimeOfDayRecordGetter? lhs,
+            ITimeOfDayRecordGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Components) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TimeOfDayRecord_FieldIndex.Components) ?? true))
             {
-                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Challenge_FieldIndex.Components)))) return false;
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TimeOfDayRecord_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TimeOfDayRecord_FieldIndex.REFL) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.REFL, rhs.REFL)) return false;
             }
             return true;
         }
@@ -1091,8 +1147,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IChallengeGetter?)lhs,
-                rhs: rhs as IChallengeGetter,
+                lhs: (ITimeOfDayRecordGetter?)lhs,
+                rhs: rhs as ITimeOfDayRecordGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1102,27 +1158,31 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IChallengeGetter?)lhs,
-                rhs: rhs as IChallengeGetter,
+                lhs: (ITimeOfDayRecordGetter?)lhs,
+                rhs: rhs as ITimeOfDayRecordGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IChallengeGetter item)
+        public virtual int GetHashCode(ITimeOfDayRecordGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Components);
+            if (item.REFL is {} REFLItem)
+            {
+                hash.Add(REFLItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IChallengeGetter)item);
+            return GetHashCode(item: (ITimeOfDayRecordGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IChallengeGetter)item);
+            return GetHashCode(item: (ITimeOfDayRecordGetter)item);
         }
         
         #endregion
@@ -1130,11 +1190,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Challenge.GetNew();
+            return TimeOfDayRecord.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IChallengeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITimeOfDayRecordGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -1148,7 +1208,7 @@ namespace Mutagen.Bethesda.Starfield
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IChallengeGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITimeOfDayRecordGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
@@ -1166,12 +1226,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public Challenge Duplicate(
-            IChallengeGetter item,
+        public TimeOfDayRecord Duplicate(
+            ITimeOfDayRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Challenge(formKey, item.FormVersion);
+            var newRec = new TimeOfDayRecord(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1182,7 +1242,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IChallengeGetter)item,
+                item: (ITimeOfDayRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1193,7 +1253,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IChallengeGetter)item,
+                item: (ITimeOfDayRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1203,14 +1263,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ChallengeSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class TimeOfDayRecordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly ChallengeSetterTranslationCommon Instance = new ChallengeSetterTranslationCommon();
+        public new static readonly TimeOfDayRecordSetterTranslationCommon Instance = new TimeOfDayRecordSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IChallengeInternal item,
-            IChallengeGetter rhs,
+            ITimeOfDayRecordInternal item,
+            ITimeOfDayRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1224,8 +1284,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IChallenge item,
-            IChallengeGetter rhs,
+            ITimeOfDayRecord item,
+            ITimeOfDayRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1236,9 +1296,9 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Components) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TimeOfDayRecord_FieldIndex.Components) ?? true))
             {
-                errorMask?.PushIndex((int)Challenge_FieldIndex.Components);
+                errorMask?.PushIndex((int)TimeOfDayRecord_FieldIndex.Components);
                 try
                 {
                     item.Components.SetTo(
@@ -1260,6 +1320,17 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)TimeOfDayRecord_FieldIndex.REFL) ?? true))
+            {
+                if(rhs.REFL is {} REFLrhs)
+                {
+                    item.REFL = REFLrhs.ToArray();
+                }
+                else
+                {
+                    item.REFL = default;
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1270,8 +1341,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IChallengeInternal)item,
-                rhs: (IChallengeGetter)rhs,
+                item: (ITimeOfDayRecordInternal)item,
+                rhs: (ITimeOfDayRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1285,8 +1356,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IChallenge)item,
-                rhs: (IChallengeGetter)rhs,
+                item: (ITimeOfDayRecord)item,
+                rhs: (ITimeOfDayRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1300,8 +1371,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IChallengeInternal)item,
-                rhs: (IChallengeGetter)rhs,
+                item: (ITimeOfDayRecordInternal)item,
+                rhs: (ITimeOfDayRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1315,8 +1386,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IChallenge)item,
-                rhs: (IChallengeGetter)rhs,
+                item: (ITimeOfDayRecord)item,
+                rhs: (ITimeOfDayRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1324,12 +1395,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Challenge DeepCopy(
-            IChallengeGetter item,
-            Challenge.TranslationMask? copyMask = null)
+        public TimeOfDayRecord DeepCopy(
+            ITimeOfDayRecordGetter item,
+            TimeOfDayRecord.TranslationMask? copyMask = null)
         {
-            Challenge ret = (Challenge)((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).GetNew();
-            ((ChallengeSetterTranslationCommon)((IChallengeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            TimeOfDayRecord ret = (TimeOfDayRecord)((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).GetNew();
+            ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1338,30 +1409,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Challenge DeepCopy(
-            IChallengeGetter item,
-            out Challenge.ErrorMask errorMask,
-            Challenge.TranslationMask? copyMask = null)
+        public TimeOfDayRecord DeepCopy(
+            ITimeOfDayRecordGetter item,
+            out TimeOfDayRecord.ErrorMask errorMask,
+            TimeOfDayRecord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Challenge ret = (Challenge)((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).GetNew();
-            ((ChallengeSetterTranslationCommon)((IChallengeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            TimeOfDayRecord ret = (TimeOfDayRecord)((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).GetNew();
+            ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Challenge.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TimeOfDayRecord.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Challenge DeepCopy(
-            IChallengeGetter item,
+        public TimeOfDayRecord DeepCopy(
+            ITimeOfDayRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Challenge ret = (Challenge)((ChallengeCommon)((IChallengeGetter)item).CommonInstance()!).GetNew();
-            ((ChallengeSetterTranslationCommon)((IChallengeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            TimeOfDayRecord ret = (TimeOfDayRecord)((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)item).CommonInstance()!).GetNew();
+            ((TimeOfDayRecordSetterTranslationCommon)((ITimeOfDayRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1377,21 +1448,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Challenge
+    public partial class TimeOfDayRecord
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Challenge_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Challenge_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => TimeOfDayRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TimeOfDayRecord_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ChallengeCommon.Instance;
+        protected override object CommonInstance() => TimeOfDayRecordCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ChallengeSetterCommon.Instance;
+            return TimeOfDayRecordSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ChallengeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => TimeOfDayRecordSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1402,14 +1473,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ChallengeBinaryWriteTranslation :
+    public partial class TimeOfDayRecordBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ChallengeBinaryWriteTranslation Instance = new();
+        public new static readonly TimeOfDayRecordBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IChallengeGetter item,
+            ITimeOfDayRecordGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1428,16 +1499,20 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.REFL,
+                header: translationParams.ConvertToCustom(RecordTypes.REFL));
         }
 
         public void Write(
             MutagenWriter writer,
-            IChallengeGetter item,
+            ITimeOfDayRecordGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CHAL)))
+                record: translationParams.ConvertToCustom(RecordTypes.TODD)))
             {
                 try
                 {
@@ -1467,7 +1542,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IChallengeGetter)item,
+                item: (ITimeOfDayRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1478,7 +1553,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IChallengeGetter)item,
+                item: (ITimeOfDayRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1489,20 +1564,20 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IChallengeGetter)item,
+                item: (ITimeOfDayRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ChallengeBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class TimeOfDayRecordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly ChallengeBinaryCreateTranslation Instance = new ChallengeBinaryCreateTranslation();
+        public new static readonly TimeOfDayRecordBinaryCreateTranslation Instance = new TimeOfDayRecordBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.CHAL;
+        public override RecordType RecordType => RecordTypes.TODD;
         public static ParseResult FillBinaryRecordTypes(
-            IChallengeInternal item,
+            ITimeOfDayRecordInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1521,7 +1596,13 @@ namespace Mutagen.Bethesda.Starfield
                             triggeringRecord: AComponent_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: AComponent.TryCreateFromBinary));
-                    return (int)Challenge_FieldIndex.Components;
+                    return (int)TimeOfDayRecord_FieldIndex.Components;
+                }
+                case RecordTypeInts.REFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.REFL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)TimeOfDayRecord_FieldIndex.REFL;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1541,7 +1622,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ChallengeBinaryTranslationMixIn
+    public static class TimeOfDayRecordBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1550,47 +1631,51 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ChallengeBinaryOverlay :
+    internal partial class TimeOfDayRecordBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IChallengeGetter
+        ITimeOfDayRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Challenge_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Challenge_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => TimeOfDayRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TimeOfDayRecord_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ChallengeCommon.Instance;
+        protected override object CommonInstance() => TimeOfDayRecordCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ChallengeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => TimeOfDayRecordSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ChallengeCommon.Instance.EnumerateFormLinks(this);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ChallengeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TimeOfDayRecordCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => TimeOfDayRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ChallengeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => TimeOfDayRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ChallengeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((TimeOfDayRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IChallenge);
+        protected override Type LinkType => typeof(ITimeOfDayRecord);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region REFL
+        private int? _REFLLocation;
+        public ReadOnlyMemorySlice<Byte>? REFL => _REFLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _REFLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ChallengeBinaryOverlay(
+        protected TimeOfDayRecordBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1600,7 +1685,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IChallengeGetter ChallengeFactory(
+        public static ITimeOfDayRecordGetter TimeOfDayRecordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1612,7 +1697,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ChallengeBinaryOverlay(
+            var ret = new TimeOfDayRecordBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1630,12 +1715,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IChallengeGetter ChallengeFactory(
+        public static ITimeOfDayRecordGetter TimeOfDayRecordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ChallengeFactory(
+            return TimeOfDayRecordFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1660,7 +1745,12 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams,
                         trigger: AComponent_Registration.TriggerSpecs,
                         factory: AComponentBinaryOverlay.AComponentFactory);
-                    return (int)Challenge_FieldIndex.Components;
+                    return (int)TimeOfDayRecord_FieldIndex.Components;
+                }
+                case RecordTypeInts.REFL:
+                {
+                    _REFLLocation = (stream.Position - offset);
+                    return (int)TimeOfDayRecord_FieldIndex.REFL;
                 }
                 default:
                     return base.FillRecordType(
@@ -1679,7 +1769,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ChallengeMixIn.Print(
+            TimeOfDayRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1689,7 +1779,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Challenge>.ToString(this);
+            return MajorRecordPrinter<TimeOfDayRecord>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1699,16 +1789,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IChallengeGetter rhs) return false;
-            return ((ChallengeCommon)((IChallengeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ITimeOfDayRecordGetter rhs) return false;
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IChallengeGetter? obj)
+        public bool Equals(ITimeOfDayRecordGetter? obj)
         {
-            return ((ChallengeCommon)((IChallengeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ChallengeCommon)((IChallengeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((TimeOfDayRecordCommon)((ITimeOfDayRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

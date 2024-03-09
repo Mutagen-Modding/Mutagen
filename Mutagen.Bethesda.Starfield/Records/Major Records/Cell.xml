@@ -44,7 +44,7 @@
       <FormLink name="Music" refName="MusicType" recordType="XCMO" />
       <String name="GlobalDirtLayerMaterial" recordType="XCGD" />
       <Bool name="XCIB" recordType="XCIB" byteLength="1" />
-      <FormLink name="TimeOfDay" refName="TimeOfDayData" recordType="TODD" />
+      <FormLink name="TimeOfDay" refName="TimeOfDayRecord" recordType="TODD" />
       <FormLink name="EncounterLocation" refName="Location" recordType="XEZN" />
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />

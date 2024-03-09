@@ -5363,9 +5363,6 @@
     <Compile Include="Records\Major Records\TextureSet_Generated.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\TimeOfDayData_Generated.cs">
-      <DependentUpon>TimeOfDayData.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Transform_Generated.cs">
       <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
@@ -6580,6 +6577,9 @@
     </Compile>
     <Compile Include="Records\Major Records\BoneModifierSpringBoneData_Generated.cs">
       <DependentUpon>BoneModifier.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TimeOfDayRecord_Generated.cs">
+      <DependentUpon>TimeOfDayRecord.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

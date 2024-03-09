@@ -307,14 +307,14 @@ namespace Mutagen.Bethesda.Starfield
         Boolean? ICellGetter.XCIB => this.XCIB;
         #endregion
         #region TimeOfDay
-        private readonly IFormLinkNullable<ITimeOfDayDataGetter> _TimeOfDay = new FormLinkNullable<ITimeOfDayDataGetter>();
-        public IFormLinkNullable<ITimeOfDayDataGetter> TimeOfDay
+        private readonly IFormLinkNullable<ITimeOfDayRecordGetter> _TimeOfDay = new FormLinkNullable<ITimeOfDayRecordGetter>();
+        public IFormLinkNullable<ITimeOfDayRecordGetter> TimeOfDay
         {
             get => _TimeOfDay;
             set => _TimeOfDay.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITimeOfDayDataGetter> ICellGetter.TimeOfDay => this.TimeOfDay;
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> ICellGetter.TimeOfDay => this.TimeOfDay;
         #endregion
         #region EncounterLocation
         private readonly IFormLinkNullable<ILocationGetter> _EncounterLocation = new FormLinkNullable<ILocationGetter>();
@@ -2639,7 +2639,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new String? GlobalDirtLayerMaterial { get; set; }
         new Boolean? XCIB { get; set; }
-        new IFormLinkNullable<ITimeOfDayDataGetter> TimeOfDay { get; set; }
+        new IFormLinkNullable<ITimeOfDayRecordGetter> TimeOfDay { get; set; }
         new IFormLinkNullable<ILocationGetter> EncounterLocation { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Boolean IsLinkedRefTransient { get; set; }
@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
         String? GlobalDirtLayerMaterial { get; }
         Boolean? XCIB { get; }
-        IFormLinkNullableGetter<ITimeOfDayDataGetter> TimeOfDay { get; }
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay { get; }
         IFormLinkNullableGetter<ILocationGetter> EncounterLocation { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
         Boolean IsLinkedRefTransient { get; }
@@ -6639,7 +6639,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TimeOfDay
         private int? _TimeOfDayLocation;
-        public IFormLinkNullableGetter<ITimeOfDayDataGetter> TimeOfDay => _TimeOfDayLocation.HasValue ? new FormLinkNullable<ITimeOfDayDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimeOfDayLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayDataGetter>.Null;
+        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => _TimeOfDayLocation.HasValue ? new FormLinkNullable<ITimeOfDayRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimeOfDayLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITimeOfDayRecordGetter>.Null;
         #endregion
         #region EncounterLocation
         private int? _EncounterLocationLocation;
