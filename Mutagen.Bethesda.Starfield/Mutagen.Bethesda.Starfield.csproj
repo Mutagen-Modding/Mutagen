@@ -2365,6 +2365,9 @@
     <Compile Include="Records\Major Records\PerkScriptFragments.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PhotoModeFeature.cs">
+      <DependentUpon>PhotoModeFeature.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PlacedArrow.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>

@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +25,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +57,78 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IPhotoModeFeatureGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region FeatureType
+        public PhotoModeFeature.Mode FeatureType { get; set; } = default(PhotoModeFeature.Mode);
+        #endregion
+        #region XOffset
+        public Single XOffset { get; set; } = default(Single);
+        #endregion
+        #region YOffset
+        public Single YOffset { get; set; } = default(Single);
+        #endregion
+        #region UnknownFNAM1
+        public Int64 UnknownFNAM1 { get; set; } = default(Int64);
+        #endregion
+        #region Width
+        public UInt32 Width { get; set; } = default(UInt32);
+        #endregion
+        #region Height
+        public UInt32 Height { get; set; } = default(UInt32);
+        #endregion
+        #region UnknownFNAM2
+        public UInt32 UnknownFNAM2 { get; set; } = default(UInt32);
+        #endregion
+        #region Texture
+        public String? Texture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPhotoModeFeatureGetter.Texture => this.Texture;
+        #endregion
+        #region ImageSpace
+        private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
+        public IFormLinkNullable<IImageSpaceGetter> ImageSpace
+        {
+            get => _ImageSpace;
+            set => _ImageSpace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceGetter> IPhotoModeFeatureGetter.ImageSpace => this.ImageSpace;
+        #endregion
 
         #region To String
 
@@ -79,6 +154,16 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.FeatureType = initialValue;
+                this.XOffset = initialValue;
+                this.YOffset = initialValue;
+                this.UnknownFNAM1 = initialValue;
+                this.Width = initialValue;
+                this.Height = initialValue;
+                this.UnknownFNAM2 = initialValue;
+                this.Texture = initialValue;
+                this.ImageSpace = initialValue;
             }
 
             public Mask(
@@ -88,7 +173,17 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Name,
+                TItem FeatureType,
+                TItem XOffset,
+                TItem YOffset,
+                TItem UnknownFNAM1,
+                TItem Width,
+                TItem Height,
+                TItem UnknownFNAM2,
+                TItem Texture,
+                TItem ImageSpace)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +193,16 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Name = Name;
+                this.FeatureType = FeatureType;
+                this.XOffset = XOffset;
+                this.YOffset = YOffset;
+                this.UnknownFNAM1 = UnknownFNAM1;
+                this.Width = Width;
+                this.Height = Height;
+                this.UnknownFNAM2 = UnknownFNAM2;
+                this.Texture = Texture;
+                this.ImageSpace = ImageSpace;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +211,19 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem FeatureType;
+            public TItem XOffset;
+            public TItem YOffset;
+            public TItem UnknownFNAM1;
+            public TItem Width;
+            public TItem Height;
+            public TItem UnknownFNAM2;
+            public TItem Texture;
+            public TItem ImageSpace;
             #endregion
 
             #region Equals
@@ -119,11 +237,31 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.FeatureType, rhs.FeatureType)) return false;
+                if (!object.Equals(this.XOffset, rhs.XOffset)) return false;
+                if (!object.Equals(this.YOffset, rhs.YOffset)) return false;
+                if (!object.Equals(this.UnknownFNAM1, rhs.UnknownFNAM1)) return false;
+                if (!object.Equals(this.Width, rhs.Width)) return false;
+                if (!object.Equals(this.Height, rhs.Height)) return false;
+                if (!object.Equals(this.UnknownFNAM2, rhs.UnknownFNAM2)) return false;
+                if (!object.Equals(this.Texture, rhs.Texture)) return false;
+                if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.FeatureType);
+                hash.Add(this.XOffset);
+                hash.Add(this.YOffset);
+                hash.Add(this.UnknownFNAM1);
+                hash.Add(this.Width);
+                hash.Add(this.Height);
+                hash.Add(this.UnknownFNAM2);
+                hash.Add(this.Texture);
+                hash.Add(this.ImageSpace);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +272,16 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.FeatureType)) return false;
+                if (!eval(this.XOffset)) return false;
+                if (!eval(this.YOffset)) return false;
+                if (!eval(this.UnknownFNAM1)) return false;
+                if (!eval(this.Width)) return false;
+                if (!eval(this.Height)) return false;
+                if (!eval(this.UnknownFNAM2)) return false;
+                if (!eval(this.Texture)) return false;
+                if (!eval(this.ImageSpace)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +290,16 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.FeatureType)) return true;
+                if (eval(this.XOffset)) return true;
+                if (eval(this.YOffset)) return true;
+                if (eval(this.UnknownFNAM1)) return true;
+                if (eval(this.Width)) return true;
+                if (eval(this.Height)) return true;
+                if (eval(this.UnknownFNAM2)) return true;
+                if (eval(this.Texture)) return true;
+                if (eval(this.ImageSpace)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +315,16 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.FeatureType = eval(this.FeatureType);
+                obj.XOffset = eval(this.XOffset);
+                obj.YOffset = eval(this.YOffset);
+                obj.UnknownFNAM1 = eval(this.UnknownFNAM1);
+                obj.Width = eval(this.Width);
+                obj.Height = eval(this.Height);
+                obj.UnknownFNAM2 = eval(this.UnknownFNAM2);
+                obj.Texture = eval(this.Texture);
+                obj.ImageSpace = eval(this.ImageSpace);
             }
             #endregion
 
@@ -175,6 +343,46 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PhotoModeFeature.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.FeatureType ?? true)
+                    {
+                        sb.AppendItem(FeatureType, "FeatureType");
+                    }
+                    if (printMask?.XOffset ?? true)
+                    {
+                        sb.AppendItem(XOffset, "XOffset");
+                    }
+                    if (printMask?.YOffset ?? true)
+                    {
+                        sb.AppendItem(YOffset, "YOffset");
+                    }
+                    if (printMask?.UnknownFNAM1 ?? true)
+                    {
+                        sb.AppendItem(UnknownFNAM1, "UnknownFNAM1");
+                    }
+                    if (printMask?.Width ?? true)
+                    {
+                        sb.AppendItem(Width, "Width");
+                    }
+                    if (printMask?.Height ?? true)
+                    {
+                        sb.AppendItem(Height, "Height");
+                    }
+                    if (printMask?.UnknownFNAM2 ?? true)
+                    {
+                        sb.AppendItem(UnknownFNAM2, "UnknownFNAM2");
+                    }
+                    if (printMask?.Texture ?? true)
+                    {
+                        sb.AppendItem(Texture, "Texture");
+                    }
+                    if (printMask?.ImageSpace ?? true)
+                    {
+                        sb.AppendItem(ImageSpace, "ImageSpace");
+                    }
                 }
             }
             #endregion
@@ -185,12 +393,45 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? FeatureType;
+            public Exception? XOffset;
+            public Exception? YOffset;
+            public Exception? UnknownFNAM1;
+            public Exception? Width;
+            public Exception? Height;
+            public Exception? UnknownFNAM2;
+            public Exception? Texture;
+            public Exception? ImageSpace;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 PhotoModeFeature_FieldIndex enu = (PhotoModeFeature_FieldIndex)index;
                 switch (enu)
                 {
+                    case PhotoModeFeature_FieldIndex.Name:
+                        return Name;
+                    case PhotoModeFeature_FieldIndex.FeatureType:
+                        return FeatureType;
+                    case PhotoModeFeature_FieldIndex.XOffset:
+                        return XOffset;
+                    case PhotoModeFeature_FieldIndex.YOffset:
+                        return YOffset;
+                    case PhotoModeFeature_FieldIndex.UnknownFNAM1:
+                        return UnknownFNAM1;
+                    case PhotoModeFeature_FieldIndex.Width:
+                        return Width;
+                    case PhotoModeFeature_FieldIndex.Height:
+                        return Height;
+                    case PhotoModeFeature_FieldIndex.UnknownFNAM2:
+                        return UnknownFNAM2;
+                    case PhotoModeFeature_FieldIndex.Texture:
+                        return Texture;
+                    case PhotoModeFeature_FieldIndex.ImageSpace:
+                        return ImageSpace;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +442,36 @@ namespace Mutagen.Bethesda.Starfield
                 PhotoModeFeature_FieldIndex enu = (PhotoModeFeature_FieldIndex)index;
                 switch (enu)
                 {
+                    case PhotoModeFeature_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.FeatureType:
+                        this.FeatureType = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.XOffset:
+                        this.XOffset = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.YOffset:
+                        this.YOffset = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.UnknownFNAM1:
+                        this.UnknownFNAM1 = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.Width:
+                        this.Width = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.Height:
+                        this.Height = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.UnknownFNAM2:
+                        this.UnknownFNAM2 = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.Texture:
+                        this.Texture = ex;
+                        break;
+                    case PhotoModeFeature_FieldIndex.ImageSpace:
+                        this.ImageSpace = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +483,36 @@ namespace Mutagen.Bethesda.Starfield
                 PhotoModeFeature_FieldIndex enu = (PhotoModeFeature_FieldIndex)index;
                 switch (enu)
                 {
+                    case PhotoModeFeature_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.FeatureType:
+                        this.FeatureType = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.XOffset:
+                        this.XOffset = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.YOffset:
+                        this.YOffset = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.UnknownFNAM1:
+                        this.UnknownFNAM1 = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.Width:
+                        this.Width = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.Height:
+                        this.Height = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.UnknownFNAM2:
+                        this.UnknownFNAM2 = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.Texture:
+                        this.Texture = (Exception?)obj;
+                        break;
+                    case PhotoModeFeature_FieldIndex.ImageSpace:
+                        this.ImageSpace = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +522,16 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (FeatureType != null) return true;
+                if (XOffset != null) return true;
+                if (YOffset != null) return true;
+                if (UnknownFNAM1 != null) return true;
+                if (Width != null) return true;
+                if (Height != null) return true;
+                if (UnknownFNAM2 != null) return true;
+                if (Texture != null) return true;
+                if (ImageSpace != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +558,36 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(FeatureType, "FeatureType");
+                }
+                {
+                    sb.AppendItem(XOffset, "XOffset");
+                }
+                {
+                    sb.AppendItem(YOffset, "YOffset");
+                }
+                {
+                    sb.AppendItem(UnknownFNAM1, "UnknownFNAM1");
+                }
+                {
+                    sb.AppendItem(Width, "Width");
+                }
+                {
+                    sb.AppendItem(Height, "Height");
+                }
+                {
+                    sb.AppendItem(UnknownFNAM2, "UnknownFNAM2");
+                }
+                {
+                    sb.AppendItem(Texture, "Texture");
+                }
+                {
+                    sb.AppendItem(ImageSpace, "ImageSpace");
+                }
             }
             #endregion
 
@@ -255,6 +596,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.FeatureType = this.FeatureType.Combine(rhs.FeatureType);
+                ret.XOffset = this.XOffset.Combine(rhs.XOffset);
+                ret.YOffset = this.YOffset.Combine(rhs.YOffset);
+                ret.UnknownFNAM1 = this.UnknownFNAM1.Combine(rhs.UnknownFNAM1);
+                ret.Width = this.Width.Combine(rhs.Width);
+                ret.Height = this.Height.Combine(rhs.Height);
+                ret.UnknownFNAM2 = this.UnknownFNAM2.Combine(rhs.UnknownFNAM2);
+                ret.Texture = this.Texture.Combine(rhs.Texture);
+                ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +627,53 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool FeatureType;
+            public bool XOffset;
+            public bool YOffset;
+            public bool UnknownFNAM1;
+            public bool Width;
+            public bool Height;
+            public bool UnknownFNAM2;
+            public bool Texture;
+            public bool ImageSpace;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.FeatureType = defaultOn;
+                this.XOffset = defaultOn;
+                this.YOffset = defaultOn;
+                this.UnknownFNAM1 = defaultOn;
+                this.Width = defaultOn;
+                this.Height = defaultOn;
+                this.UnknownFNAM2 = defaultOn;
+                this.Texture = defaultOn;
+                this.ImageSpace = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((FeatureType, null));
+                ret.Add((XOffset, null));
+                ret.Add((YOffset, null));
+                ret.Add((UnknownFNAM1, null));
+                ret.Add((Width, null));
+                ret.Add((Height, null));
+                ret.Add((UnknownFNAM2, null));
+                ret.Add((Texture, null));
+                ret.Add((ImageSpace, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +685,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PhotoModeFeature_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PhotoModeFeatureCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PhotoModeFeatureSetterCommon.Instance.RemapLinks(this, mapping);
         public PhotoModeFeature(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +815,28 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPhotoModeFeature :
+        IFormLinkContainer,
         ILoquiObjectSetter<IPhotoModeFeatureInternal>,
+        INamed,
+        INamedRequired,
         IPhotoModeFeatureGetter,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new PhotoModeFeature.Mode FeatureType { get; set; }
+        new Single XOffset { get; set; }
+        new Single YOffset { get; set; }
+        new Int64 UnknownFNAM1 { get; set; }
+        new UInt32 Width { get; set; }
+        new UInt32 Height { get; set; }
+        new UInt32 UnknownFNAM2 { get; set; }
+        new String? Texture { get; set; }
+        new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
     }
 
     public partial interface IPhotoModeFeatureInternal :
@@ -441,10 +850,30 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPhotoModeFeatureGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IPhotoModeFeatureGetter>,
-        IMapsToGetter<IPhotoModeFeatureGetter>
+        IMapsToGetter<IPhotoModeFeatureGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => PhotoModeFeature_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        PhotoModeFeature.Mode FeatureType { get; }
+        Single XOffset { get; }
+        Single YOffset { get; }
+        Int64 UnknownFNAM1 { get; }
+        UInt32 Width { get; }
+        UInt32 Height { get; }
+        UInt32 UnknownFNAM2 { get; }
+        String? Texture { get; }
+        IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
 
     }
 
@@ -621,6 +1050,16 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Name = 7,
+        FeatureType = 8,
+        XOffset = 9,
+        YOffset = 10,
+        UnknownFNAM1 = 11,
+        Width = 12,
+        Height = 13,
+        UnknownFNAM2 = 14,
+        Texture = 15,
+        ImageSpace = 16,
     }
     #endregion
 
@@ -631,9 +1070,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(PhotoModeFeature.Mask<>);
 
@@ -663,8 +1102,16 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PMFT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PMFT);
+            var all = RecordCollection.Factory(
+                RecordTypes.PMFT,
+                RecordTypes.FULL,
+                RecordTypes.FNAM,
+                RecordTypes.HNAM,
+                RecordTypes.INAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PhotoModeFeatureBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1153,16 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPhotoModeFeatureInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.FeatureType = default(PhotoModeFeature.Mode);
+            item.XOffset = default(Single);
+            item.YOffset = default(Single);
+            item.UnknownFNAM1 = default(Int64);
+            item.Width = default(UInt32);
+            item.Height = default(UInt32);
+            item.UnknownFNAM2 = default(UInt32);
+            item.Texture = default;
+            item.ImageSpace.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1180,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IPhotoModeFeature obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.ImageSpace.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +1248,16 @@ namespace Mutagen.Bethesda.Starfield
             PhotoModeFeature.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.FeatureType = item.FeatureType == rhs.FeatureType;
+            ret.XOffset = item.XOffset.EqualsWithin(rhs.XOffset);
+            ret.YOffset = item.YOffset.EqualsWithin(rhs.YOffset);
+            ret.UnknownFNAM1 = item.UnknownFNAM1 == rhs.UnknownFNAM1;
+            ret.Width = item.Width == rhs.Width;
+            ret.Height = item.Height == rhs.Height;
+            ret.UnknownFNAM2 = item.UnknownFNAM2 == rhs.UnknownFNAM2;
+            ret.Texture = string.Equals(item.Texture, rhs.Texture);
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1307,48 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.FeatureType ?? true)
+            {
+                sb.AppendItem(item.FeatureType, "FeatureType");
+            }
+            if (printMask?.XOffset ?? true)
+            {
+                sb.AppendItem(item.XOffset, "XOffset");
+            }
+            if (printMask?.YOffset ?? true)
+            {
+                sb.AppendItem(item.YOffset, "YOffset");
+            }
+            if (printMask?.UnknownFNAM1 ?? true)
+            {
+                sb.AppendItem(item.UnknownFNAM1, "UnknownFNAM1");
+            }
+            if (printMask?.Width ?? true)
+            {
+                sb.AppendItem(item.Width, "Width");
+            }
+            if (printMask?.Height ?? true)
+            {
+                sb.AppendItem(item.Height, "Height");
+            }
+            if (printMask?.UnknownFNAM2 ?? true)
+            {
+                sb.AppendItem(item.UnknownFNAM2, "UnknownFNAM2");
+            }
+            if ((printMask?.Texture ?? true)
+                && item.Texture is {} TextureItem)
+            {
+                sb.AppendItem(TextureItem, "Texture");
+            }
+            if (printMask?.ImageSpace ?? true)
+            {
+                sb.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
+            }
         }
         
         public static PhotoModeFeature_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1399,46 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.FeatureType) ?? true))
+            {
+                if (lhs.FeatureType != rhs.FeatureType) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.XOffset) ?? true))
+            {
+                if (!lhs.XOffset.EqualsWithin(rhs.XOffset)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.YOffset) ?? true))
+            {
+                if (!lhs.YOffset.EqualsWithin(rhs.YOffset)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.UnknownFNAM1) ?? true))
+            {
+                if (lhs.UnknownFNAM1 != rhs.UnknownFNAM1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Width) ?? true))
+            {
+                if (lhs.Width != rhs.Width) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Height) ?? true))
+            {
+                if (lhs.Height != rhs.Height) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.UnknownFNAM2) ?? true))
+            {
+                if (lhs.UnknownFNAM2 != rhs.UnknownFNAM2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Texture) ?? true))
+            {
+                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.ImageSpace) ?? true))
+            {
+                if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1467,22 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPhotoModeFeatureGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.FeatureType);
+            hash.Add(item.XOffset);
+            hash.Add(item.YOffset);
+            hash.Add(item.UnknownFNAM1);
+            hash.Add(item.Width);
+            hash.Add(item.Height);
+            hash.Add(item.UnknownFNAM2);
+            if (item.Texture is {} Textureitem)
+            {
+                hash.Add(Textureitem);
+            }
+            hash.Add(item.ImageSpace);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1511,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.ImageSpace, out var ImageSpaceInfo))
+            {
+                yield return ImageSpaceInfo;
             }
             yield break;
         }
@@ -1020,6 +1590,46 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.FeatureType) ?? true))
+            {
+                item.FeatureType = rhs.FeatureType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.XOffset) ?? true))
+            {
+                item.XOffset = rhs.XOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.YOffset) ?? true))
+            {
+                item.YOffset = rhs.YOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.UnknownFNAM1) ?? true))
+            {
+                item.UnknownFNAM1 = rhs.UnknownFNAM1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Width) ?? true))
+            {
+                item.Width = rhs.Width;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Height) ?? true))
+            {
+                item.Height = rhs.Height;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.UnknownFNAM2) ?? true))
+            {
+                item.UnknownFNAM2 = rhs.UnknownFNAM2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.Texture) ?? true))
+            {
+                item.Texture = rhs.Texture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PhotoModeFeature_FieldIndex.ImageSpace) ?? true))
+            {
+                item.ImageSpace.SetTo(rhs.ImageSpace.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1778,49 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly PhotoModeFeatureBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IPhotoModeFeatureGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.FNAM)))
+            {
+                EnumBinaryTranslation<PhotoModeFeature.Mode, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.FeatureType,
+                    length: 1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.XOffset);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.YOffset);
+                writer.Write(item.UnknownFNAM1);
+                writer.Write(item.Width);
+                writer.Write(item.Height);
+                writer.Write(item.UnknownFNAM2);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Texture,
+                header: translationParams.ConvertToCustom(RecordTypes.HNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpace,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IPhotoModeFeatureGetter item,
@@ -1184,10 +1837,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1892,75 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly PhotoModeFeatureBinaryCreateTranslation Instance = new PhotoModeFeatureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PMFT;
+        public static ParseResult FillBinaryRecordTypes(
+            IPhotoModeFeatureInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)PhotoModeFeature_FieldIndex.Name;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.FeatureType = EnumBinaryTranslation<PhotoModeFeature.Mode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.XOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.YOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 8) return null;
+                    item.UnknownFNAM1 = dataFrame.ReadInt64();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Width = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Height = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.UnknownFNAM2 = dataFrame.ReadUInt32();
+                    return (int)PhotoModeFeature_FieldIndex.UnknownFNAM2;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Texture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)PhotoModeFeature_FieldIndex.Texture;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PhotoModeFeature_FieldIndex.ImageSpace;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +1993,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PhotoModeFeatureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PhotoModeFeatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2008,62 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IPhotoModeFeature);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        private RangeInt32? _FNAMLocation;
+        #region FeatureType
+        private int _FeatureTypeLocation => _FNAMLocation!.Value.Min;
+        private bool _FeatureType_IsSet => _FNAMLocation.HasValue;
+        public PhotoModeFeature.Mode FeatureType => _FeatureType_IsSet ? (PhotoModeFeature.Mode)_recordData.Span.Slice(_FeatureTypeLocation, 0x1)[0] : default;
+        #endregion
+        #region XOffset
+        private int _XOffsetLocation => _FNAMLocation!.Value.Min + 0x1;
+        private bool _XOffset_IsSet => _FNAMLocation.HasValue;
+        public Single XOffset => _XOffset_IsSet ? _recordData.Slice(_XOffsetLocation, 4).Float() : default(Single);
+        #endregion
+        #region YOffset
+        private int _YOffsetLocation => _FNAMLocation!.Value.Min + 0x5;
+        private bool _YOffset_IsSet => _FNAMLocation.HasValue;
+        public Single YOffset => _YOffset_IsSet ? _recordData.Slice(_YOffsetLocation, 4).Float() : default(Single);
+        #endregion
+        #region UnknownFNAM1
+        private int _UnknownFNAM1Location => _FNAMLocation!.Value.Min + 0x9;
+        private bool _UnknownFNAM1_IsSet => _FNAMLocation.HasValue;
+        public Int64 UnknownFNAM1 => _UnknownFNAM1_IsSet ? BinaryPrimitives.ReadInt64LittleEndian(_recordData.Slice(_UnknownFNAM1Location, 8)) : default(Int64);
+        #endregion
+        #region Width
+        private int _WidthLocation => _FNAMLocation!.Value.Min + 0x11;
+        private bool _Width_IsSet => _FNAMLocation.HasValue;
+        public UInt32 Width => _Width_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WidthLocation, 4)) : default(UInt32);
+        #endregion
+        #region Height
+        private int _HeightLocation => _FNAMLocation!.Value.Min + 0x15;
+        private bool _Height_IsSet => _FNAMLocation.HasValue;
+        public UInt32 Height => _Height_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HeightLocation, 4)) : default(UInt32);
+        #endregion
+        #region UnknownFNAM2
+        private int _UnknownFNAM2Location => _FNAMLocation!.Value.Min + 0x19;
+        private bool _UnknownFNAM2_IsSet => _FNAMLocation.HasValue;
+        public UInt32 UnknownFNAM2 => _UnknownFNAM2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownFNAM2Location, 4)) : default(UInt32);
+        #endregion
+        #region Texture
+        private int? _TextureLocation;
+        public String? Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ImageSpace
+        private int? _ImageSpaceLocation;
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2121,49 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)PhotoModeFeature_FieldIndex.Name;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)PhotoModeFeature_FieldIndex.UnknownFNAM2;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _TextureLocation = (stream.Position - offset);
+                    return (int)PhotoModeFeature_FieldIndex.Texture;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _ImageSpaceLocation = (stream.Position - offset);
+                    return (int)PhotoModeFeature_FieldIndex.ImageSpace;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -172,6 +172,7 @@
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ParticleSystemDefineCollisions" refName="ParticleSystemDefineCollision" />
       <Group name="SunPresets" refName="SunPreset" />
+      <Group name="PhotoModeFeatures" refName="PhotoModeFeature" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>

@@ -207,6 +207,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PackageSceneAction
 - PackIn
 - Perk
+- PhotoModeFeature
 - PlacedObjectMapMarker
 - Planet
 - PlayerDialogueSceneAction
@@ -665,6 +666,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### Perk
 - IHaveVirtualMachineAdapter
+- INamed
+### PhotoModeFeature
 - INamed
 ### PlacedArrow
 - IHaveVirtualMachineAdapter
