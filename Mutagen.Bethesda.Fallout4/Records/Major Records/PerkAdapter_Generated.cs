@@ -1197,6 +1197,15 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static void PerkAdapterParseEndingPositions(
+            PerkAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
+        }
+
         public static IPerkAdapterGetter PerkAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1212,6 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new PerkAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            PerkAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

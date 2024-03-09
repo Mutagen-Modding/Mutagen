@@ -1020,6 +1020,15 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void VirtualMachineAdapterParseEndingPositions(
+            VirtualMachineAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
+        }
+
         public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1035,7 +1044,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new VirtualMachineAdapterBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x0 + package.MetaData.Constants.SubConstants.HeaderLength;
+            VirtualMachineAdapterParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

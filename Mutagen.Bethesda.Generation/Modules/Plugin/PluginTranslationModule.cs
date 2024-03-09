@@ -2433,8 +2433,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
 
             int? totalPassedLength = 0;
-            TypeGeneration lastVersionedField = null;
-            await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true))
+            await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, includeBaseClass: true))
             {
                 if (totalPassedLength != null)
                 {
@@ -2447,6 +2446,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                         totalPassedLength = lengths.CurLength;
                     }
                 }
+            }
+
+            TypeGeneration lastVersionedField = null;
+            await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true))
+            {
                 if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen))
                 {
                     if (!lengths.Field.IntegrateField) continue;
@@ -2589,6 +2593,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
             }
             sb.AppendLine();
+
+            await GenerateEndingPositionFunction(obj, sb, structDataAccessor);
 
             if (!obj.Abstract)
             {
@@ -2756,15 +2762,10 @@ public class PluginTranslationModule : BinaryTranslationModule
         sb.AppendLine();
     }
 
-    private async Task GenerateFactoryMethod(ObjectGeneration obj, StructuredStringBuilder sb, bool anyHasRecordTypes, int? totalPassedLength)
+    private async Task<StructuredStringBuilder> GetParseEndingPositionsBuilder(ObjectGeneration obj, Accessor structDataAccessor)
     {
-        var structDataAccessor = new Accessor("_structData");
-        var recordDataAccessor = new Accessor("_recordData");
-        var objData = obj.GetObjectData();
-        if (!objData.BinaryOverlayGenerateCtor) return;
-
         var endingPositionsBuilder = new StructuredStringBuilder();
-        
+
         // Parse ending positions  
         await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
         {
@@ -2802,21 +2803,17 @@ public class PluginTranslationModule : BinaryTranslationModule
                     break;
             }
         }
+        return endingPositionsBuilder;
+    }
 
-        if (endingPositionsBuilder.Count > 0)
-        {
-            using (var args = sb.Function(
-                       $"public static void {obj.Name}ParseEndingPositions"))
-            {
-                args.Add($"{BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)} ret");
-                args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
-            }
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLines(endingPositionsBuilder);
-            }
-            sb.AppendLine();
-        }
+
+    private async Task GenerateFactoryMethod(ObjectGeneration obj, StructuredStringBuilder sb, bool anyHasRecordTypes, int? totalPassedLength)
+    {
+        var structDataAccessor = new Accessor("_structData");
+        var recordDataAccessor = new Accessor("_recordData");
+        var objData = obj.GetObjectData();
+
+        if (!objData.BinaryOverlayGenerateCtor) return;
 
         var retValue = obj.GetObjectType() == ObjectType.Mod ? BinaryOverlayClass(obj) : obj.Interface(getter: true, internalInterface: true);
         using (var args = sb.Function(
@@ -3019,7 +3016,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
             }
 
-            if (endingPositionsBuilder.Count > 0)
+            if ((await GetParseEndingPositionsBuilder(obj, structPassedAccessor)).Count > 0
+                || (obj.BaseClass != null && (await GetParseEndingPositionsBuilder(obj.BaseClass, structPassedAccessor)).Count > 0))
             {
                 sb.AppendLine($"{obj.Name}ParseEndingPositions(ret, package);");
             }
@@ -3240,10 +3238,40 @@ public class PluginTranslationModule : BinaryTranslationModule
                     args.AddPassArg($"offset");
                 }
             }
-            
+
             sb.AppendLine("return ret;");
         }
         sb.AppendLine();
+    }
+
+    private async Task GenerateEndingPositionFunction(ObjectGeneration obj, StructuredStringBuilder sb, Accessor structDataAccessor)
+    {
+        var endingPositionsBuilder = await GetParseEndingPositionsBuilder(obj, structDataAccessor);
+
+        var hasBaseClassEndingPositions = (obj.BaseClass != null && (await GetParseEndingPositionsBuilder(obj.BaseClass, structDataAccessor))?.Count > 0);
+
+        if (endingPositionsBuilder.Count > 0 || hasBaseClassEndingPositions)
+        {
+            using (var args = sb.Function(
+                       $"public static void {obj.Name}ParseEndingPositions"))
+            {
+                args.Add($"{BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)} ret");
+                args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+            }
+            using (sb.CurlyBrace())
+            {
+                if (hasBaseClassEndingPositions)
+                {
+                    using (var args2 = sb.Call($"{obj.BaseClass.Name}ParseEndingPositions"))
+                    {
+                        args2.AddPassArg("ret");
+                        args2.AddPassArg("package");
+                    }
+                }
+                sb.AppendLines(endingPositionsBuilder);
+            }
+            sb.AppendLine();
+        }
     }
 
     public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, StructuredStringBuilder sb)

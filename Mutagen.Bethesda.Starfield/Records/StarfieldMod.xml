@@ -144,6 +144,11 @@
       <Group name="VolumetricLightings" refName="VolumetricLighting" />
       <Group name="SurfaceBlocks" refName="SurfaceBlock" />
       <Group name="SurfacePatternConfigs" refName="SurfacePatternConfig" />
+      <Group name="SurfacePatterns" refName="SurfacePattern" />
+      <Group name="SurfaceTrees" refName="SurfaceTree" />
+      <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
+      <Group name="BoneModifierS" refName="BoneModifier" />
+      <Group name="SnapTemplateBehaviors" refName="SnapTemplateBehavior" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
       <Group name="PlanetContentManagerBranchNodes" refName="PlanetContentManagerBranchNode" />
@@ -155,7 +160,6 @@
       <Group name="AimOpticalSightMarkers" refName="AimOpticalSightMarker" />
       <Group name="WeaponBarrelModels" refName="WeaponBarrelModel" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
-      <Group name="SurfacePatterns" refName="SurfacePattern" />
       <Group name="LayeredMaterialSwaps" refName="LayeredMaterialSwap" />
       <Group name="ForceDatas" refName="ForceData" />
       <Group name="TerminalMenus" refName="TerminalMenu" />
@@ -164,9 +168,6 @@
       <Group name="MaterialPaths" refName="MaterialPath" />
       <Group name="Clouds" refName="Clouds" />
       <Group name="FogVolumes" refName="FogVolume" />
-      <Group name="SurfaceTrees" refName="SurfaceTree" />
-      <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
-      <Group name="SnapTemplateBehaviors" refName="SnapTemplateBehavior" />
       <Group name="WWiseKeywordMappings" refName="WWiseKeywordMapping" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ParticleSystemDefineCollisions" refName="ParticleSystemDefineCollision" />

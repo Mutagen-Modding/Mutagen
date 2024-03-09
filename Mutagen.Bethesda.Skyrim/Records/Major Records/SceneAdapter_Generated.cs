@@ -1184,6 +1184,9 @@ namespace Mutagen.Bethesda.Skyrim
             SceneAdapterBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
             ret.CustomScriptFragmentsEndPos();
         }
 

@@ -1711,6 +1711,9 @@ namespace Mutagen.Bethesda.Starfield
             QuestAdapterBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
             ret.CustomFragmentsEndPos();
             ret.CustomAliasesEndPos();
         }

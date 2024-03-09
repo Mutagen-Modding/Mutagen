@@ -1722,6 +1722,9 @@ namespace Mutagen.Bethesda.Skyrim
             QuestAdapterBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
             ret.CustomFileNameEndPos();
             ret.CustomFragmentsEndPos();
             ret.CustomAliasesEndPos();

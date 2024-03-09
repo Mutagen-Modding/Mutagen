@@ -9,6 +9,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
     public static void Register()
     {
         LoquiRegistration.Register(
+            ABoneModifierData_Registration.Instance,
             AColorRecordData_Registration.Instance,
             AComponent_Registration.Instance,
             AcousticSpace_Registration.Instance,
@@ -107,6 +108,10 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             BodyPartData_Registration.Instance,
             BodyPartInfoComponent_Registration.Instance,
             BoneModifier_Registration.Instance,
+            BoneModifierLookAtChainData_Registration.Instance,
+            BoneModifierMorphDriverData_Registration.Instance,
+            BoneModifierPoseDeformerData_Registration.Instance,
+            BoneModifierSpringBoneData_Registration.Instance,
             Book_Registration.Instance,
             BookActorValue_Registration.Instance,
             BookPerk_Registration.Instance,

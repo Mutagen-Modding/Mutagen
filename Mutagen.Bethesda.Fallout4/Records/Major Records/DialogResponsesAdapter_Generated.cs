@@ -1201,6 +1201,9 @@ namespace Mutagen.Bethesda.Fallout4
             DialogResponsesAdapterBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
+            AVirtualMachineAdapterParseEndingPositions(
+                ret: ret,
+                package: package);
             ret.CustomScriptFragmentsEndPos();
         }
 

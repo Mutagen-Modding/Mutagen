@@ -1305,6 +1305,13 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
+        public static void AVirtualMachineAdapterParseEndingPositions(
+            AVirtualMachineAdapterBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.CustomScriptsEndPos();
+        }
+
 
         #region To String
 

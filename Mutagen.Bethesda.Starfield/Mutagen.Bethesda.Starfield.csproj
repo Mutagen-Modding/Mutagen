@@ -2089,6 +2089,9 @@
     <Compile Include="Records\Major Records\BodyPart.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\BoneModifier.cs">
+      <DependentUpon>BoneModifier.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
@@ -2182,14 +2185,8 @@
     <Compile Include="Records\Major Records\GameSettingUInt.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Global.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Hazard.cs">
       <DependentUpon>Hazard.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\HeadPart.cs">
-      <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\IdleMarker.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
@@ -2209,17 +2206,8 @@
     <Compile Include="Records\Major Records\Key.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Keyword.cs">
-      <DependentUpon>Keyword.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LegendaryItem.cs">
-      <DependentUpon>LegendaryItem.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\LensFlareSpriteData.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LeveledItem.cs">
-      <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
@@ -2413,9 +2401,6 @@
     <Compile Include="Records\Major Records\PlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Planet.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PreferredPathing.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
@@ -2503,12 +2488,6 @@
     <Compile Include="Records\Major Records\Terminal.cs">
       <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\TextureSet.cs">
-      <DependentUpon>TextureSet.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Transform.cs">
-      <DependentUpon>Transform.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\VoiceType.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
@@ -2527,8 +2506,6 @@
     <Compile Include="Records\Major Records\WeatherAmbientColorSet.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
-    <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
     <Compile Include="Records\Major Records\Worldspace.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
@@ -2558,9 +2535,6 @@
       <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ConditionDatas\GetThreatRatioConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
@@ -4412,9 +4386,6 @@
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\StaticCollection.cs">
-      <DependentUpon>StaticCollection.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
@@ -4457,9 +4428,6 @@
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulation.cs">
-      <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
@@ -6594,6 +6562,21 @@
     </Compile>
     <Compile Include="Records\Major Records\WWiseKeywordMappingSoundItemGuidPair_Generated.cs">
       <DependentUpon>WWiseKeywordMapping.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ABoneModifierData_Generated.cs">
+      <DependentUpon>BoneModifier.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BoneModifierLookAtChainData_Generated.cs">
+      <DependentUpon>BoneModifier.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BoneModifierMorphDriverData_Generated.cs">
+      <DependentUpon>BoneModifier.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BoneModifierPoseDeformerData_Generated.cs">
+      <DependentUpon>BoneModifier.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BoneModifierSpringBoneData_Generated.cs">
+      <DependentUpon>BoneModifier.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
