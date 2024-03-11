@@ -54,6 +54,20 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<String> _Components = new ExtendedList<String>();
+        public ExtendedList<String> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<String> IGenericBaseFormTemplateGetter.Components => _Components;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -88,7 +103,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +114,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Components, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +123,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Components;
             #endregion
 
             #region Equals
@@ -119,11 +140,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +157,17 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +176,17 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +202,20 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Components.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +234,27 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(GenericBaseFormTemplate.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +265,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Components;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 GenericBaseFormTemplate_FieldIndex enu = (GenericBaseFormTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case GenericBaseFormTemplate_FieldIndex.Components:
+                        return Components;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +287,9 @@ namespace Mutagen.Bethesda.Starfield
                 GenericBaseFormTemplate_FieldIndex enu = (GenericBaseFormTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case GenericBaseFormTemplate_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +301,9 @@ namespace Mutagen.Bethesda.Starfield
                 GenericBaseFormTemplate_FieldIndex enu = (GenericBaseFormTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case GenericBaseFormTemplate_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +313,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +340,26 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +368,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +390,26 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Components;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Components = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -428,6 +553,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IGenericBaseFormTemplateInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<String> Components { get; }
     }
 
     public partial interface IGenericBaseFormTemplateInternal :
@@ -445,6 +571,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IGenericBaseFormTemplateGetter>
     {
         static new ILoquiRegistration StaticRegistration => GenericBaseFormTemplate_Registration.Instance;
+        IReadOnlyList<String> Components { get; }
 
     }
 
@@ -621,6 +748,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
     }
     #endregion
 
@@ -631,9 +759,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GenericBaseFormTemplate.Mask<>);
 
@@ -663,8 +791,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.GBFT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.GBFT);
+            var all = RecordCollection.Factory(
+                RecordTypes.GBFT,
+                RecordTypes.STRV);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GenericBaseFormTemplateBinaryWriteTranslation);
         #region Interface
@@ -706,6 +839,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGenericBaseFormTemplateInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
             base.Clear(item);
         }
         
@@ -790,6 +924,10 @@ namespace Mutagen.Bethesda.Starfield
             GenericBaseFormTemplate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (l, r) => string.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +977,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
         }
         
         public static GenericBaseFormTemplate_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1041,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GenericBaseFormTemplate_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqualNullable(rhs.Components)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1073,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IGenericBaseFormTemplateGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,6 +1177,23 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)GenericBaseFormTemplate_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)GenericBaseFormTemplate_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(rhs.Components);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +1342,22 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly GenericBaseFormTemplateBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IGenericBaseFormTemplateGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.WritePerItem(
+                writer: writer,
+                items: item.Components,
+                recordType: translationParams.ConvertToCustom(RecordTypes.STRV),
+                transl: StringBinaryTranslation.Instance.Write);
+        }
+
         public void Write(
             MutagenWriter writer,
             IGenericBaseFormTemplateGetter item,
@@ -1184,10 +1374,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +1429,39 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly GenericBaseFormTemplateBinaryCreateTranslation Instance = new GenericBaseFormTemplateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GBFT;
+        public static ParseResult FillBinaryRecordTypes(
+            IGenericBaseFormTemplateInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.STRV:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.STRV),
+                            transl: StringBinaryTranslation.Instance.Parse));
+                    return (int)GenericBaseFormTemplate_FieldIndex.Components;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1283,6 +1508,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IGenericBaseFormTemplate);
 
 
+        public IReadOnlyList<String> Components { get; private set; } = Array.Empty<String>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +1566,43 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.STRV:
+                {
+                    this.Components = BinaryOverlayList.FactoryByArray<String>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.STRV,
+                            skipHeader: false,
+                            translationParams: translationParams));
+                    return (int)GenericBaseFormTemplate_FieldIndex.Components;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

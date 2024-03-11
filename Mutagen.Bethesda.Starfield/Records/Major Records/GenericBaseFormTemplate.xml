@@ -2,6 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="GenericBaseFormTemplate" recordType="GBFT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <List name="Components" >
+        <String recordType="STRV" />
+      </List>
     </Fields>
   </Object>
 </Loqui>

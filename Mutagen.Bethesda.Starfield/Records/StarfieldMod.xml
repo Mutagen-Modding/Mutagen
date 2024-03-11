@@ -56,6 +56,7 @@
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="Terminals" refName="Terminal" />
       <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="GenericBaseFormTemplates" refName="GenericBaseFormTemplate" />
       <Group name="GenericBaseForms" refName="GenericBaseForm" />
       <Group name="LeveledBaseForms" refName="LeveledBaseForm" />
       <Group name="Weathers" refName="Weather" />

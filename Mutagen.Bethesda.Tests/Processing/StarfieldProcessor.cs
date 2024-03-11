@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests;
 
 public class StarfieldProcessor : Processor
 {
-    public override bool StrictStrings => false;
+    public override bool StrictStrings => true;
 
     public StarfieldProcessor(bool multithread) : base(multithread)
     {
