@@ -18,10 +18,10 @@
       </List>
       <ByteArray name="Screenshot" recordType="SCRN" />
       <RefList name="TransientTypes" refName="TransientType" />
-      <ByteArray name="INTV" recordType="INTV" />
-      <ByteArray name="BNAM" recordType="BNAM" />
-      <Int32 name="INCC" recordType="INCC" />
-      <ByteArray name="CHGL" recordType="CHGL" />
+      <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
+      <ByteArray name="INTV" recordType="INTV" unknown="true" />
+      <Int32 name="INCC" recordType="INCC" unknown="true" />
+      <ByteArray name="CHGL" recordType="CHGL" unknown="true" />
     </Fields>
   </Object>
   <Object name="ModStats" recordType="HEDR" objType="Subrecord">
