@@ -188,6 +188,7 @@ public partial class RecordTypeInts
     public const int BRIB = 0x42495242;
     public const int BSIZ = 0x5A495342;
     public const int BSMP = 0x504D5342;
+    public const int BSTT = 0x54545342;
     public const int BTPS = 0x53505442;
     public const int BTXT = 0x54585442;
     public const int BUO4 = 0x344F5542;
@@ -335,6 +336,7 @@ public partial class RecordTypeInts
     public const int FBOL = 0x4C4F4246;
     public const int FBUR = 0x52554246;
     public const int FCTF = 0x46544346;
+    public const int FCTP = 0x50544346;
     public const int FDSI = 0x49534446;
     public const int FDSL = 0x4C534446;
     public const int FFKW = 0x574B4646;
@@ -382,6 +384,7 @@ public partial class RecordTypeInts
     public const int FREP = 0x50455246;
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
+    public const int FSTT = 0x54545346;
     public const int FTMP = 0x504D5446;
     public const int FTSM = 0x4D535446;
     public const int FTYP = 0x50595446;
@@ -411,6 +414,7 @@ public partial class RecordTypeInts
     public const int HEFA = 0x41464548;
     public const int HERD = 0x44524548;
     public const int HNAM = 0x4D414E48;
+    public const int HSTT = 0x54545348;
     public const int HTID = 0x44495448;
     public const int HULL = 0x4C4C5548;
     public const int ICON = 0x4E4F4349;
@@ -562,6 +566,7 @@ public partial class RecordTypeInts
     public const int MSMO = 0x4F4D534D;
     public const int MSSA = 0x4153534D;
     public const int MSSI = 0x4953534D;
+    public const int MSSS = 0x5353534D;
     public const int MSTT = 0x5454534D;
     public const int MTNM = 0x4D4E544D;
     public const int MTPT = 0x5450544D;
@@ -755,6 +760,8 @@ public partial class RecordTypeInts
     public const int RNAM = 0x4D414E52;
     public const int RPLD = 0x444C5052;
     public const int RPLI = 0x494C5052;
+    public const int RPRF = 0x46525052;
+    public const int RPRM = 0x4D525052;
     public const int RQPK = 0x4B505152;
     public const int RSCS = 0x53435352;
     public const int RSGD = 0x44475352;

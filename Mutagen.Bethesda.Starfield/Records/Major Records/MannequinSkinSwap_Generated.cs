@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region MSSI
+        #region MSSS
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _MSSI;
-        public MemorySlice<Byte>? MSSI
+        protected MemorySlice<Byte>? _MSSS;
+        public MemorySlice<Byte>? MSSS
         {
-            get => this._MSSI;
-            set => this._MSSI = value;
+            get => this._MSSS;
+            set => this._MSSS = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IMannequinSkinSwapGetter.MSSI => this.MSSI;
+        ReadOnlyMemorySlice<Byte>? IMannequinSkinSwapGetter.MSSS => this.MSSS;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -116,15 +116,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.MSSI = initialValue;
+                this.MSSS = initialValue;
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>());
             }
 
             public Mask(
-                TItem MSSI,
+                TItem MSSS,
                 TItem Items)
             {
-                this.MSSI = MSSI;
+                this.MSSS = MSSS;
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>());
             }
 
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem MSSI;
+            public TItem MSSS;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>?>? Items;
             #endregion
 
@@ -151,14 +151,14 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.MSSI, rhs.MSSI)) return false;
+                if (!object.Equals(this.MSSS, rhs.MSSS)) return false;
                 if (!object.Equals(this.Items, rhs.Items)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.MSSI);
+                hash.Add(this.MSSS);
                 hash.Add(this.Items);
                 return hash.ToHashCode();
             }
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.MSSI)) return false;
+                if (!eval(this.MSSS)) return false;
                 if (this.Items != null)
                 {
                     if (!eval(this.Items.Overall)) return false;
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.MSSI)) return true;
+                if (eval(this.MSSS)) return true;
                 if (this.Items != null)
                 {
                     if (eval(this.Items.Overall)) return true;
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.MSSI = eval(this.MSSI);
+                obj.MSSS = eval(this.MSSS);
                 if (Items != null)
                 {
                     obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MannequinSkinSwapItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, MannequinSkinSwapItem.Mask<R>?>>());
@@ -249,9 +249,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MannequinSkinSwap.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.MSSI ?? true)
+                    if (printMask?.MSSS ?? true)
                     {
-                        sb.AppendItem(MSSI, "MSSI");
+                        sb.AppendItem(MSSS, "MSSS");
                     }
                     if ((printMask?.Items?.Overall ?? true)
                         && Items is {} ItemsItem)
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? MSSI;
+            public Exception? MSSS;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MannequinSkinSwapItem.ErrorMask?>>?>? Items;
             #endregion
 
@@ -306,8 +306,8 @@ namespace Mutagen.Bethesda.Starfield
                 MannequinSkinSwap_FieldIndex enu = (MannequinSkinSwap_FieldIndex)index;
                 switch (enu)
                 {
-                    case MannequinSkinSwap_FieldIndex.MSSI:
-                        return MSSI;
+                    case MannequinSkinSwap_FieldIndex.MSSS:
+                        return MSSS;
                     case MannequinSkinSwap_FieldIndex.Items:
                         return Items;
                     default:
@@ -320,8 +320,8 @@ namespace Mutagen.Bethesda.Starfield
                 MannequinSkinSwap_FieldIndex enu = (MannequinSkinSwap_FieldIndex)index;
                 switch (enu)
                 {
-                    case MannequinSkinSwap_FieldIndex.MSSI:
-                        this.MSSI = ex;
+                    case MannequinSkinSwap_FieldIndex.MSSS:
+                        this.MSSS = ex;
                         break;
                     case MannequinSkinSwap_FieldIndex.Items:
                         this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MannequinSkinSwapItem.ErrorMask?>>?>(ex, null);
@@ -336,8 +336,8 @@ namespace Mutagen.Bethesda.Starfield
                 MannequinSkinSwap_FieldIndex enu = (MannequinSkinSwap_FieldIndex)index;
                 switch (enu)
                 {
-                    case MannequinSkinSwap_FieldIndex.MSSI:
-                        this.MSSI = (Exception?)obj;
+                    case MannequinSkinSwap_FieldIndex.MSSS:
+                        this.MSSS = (Exception?)obj;
                         break;
                     case MannequinSkinSwap_FieldIndex.Items:
                         this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MannequinSkinSwapItem.ErrorMask?>>?>)obj;
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (MSSI != null) return true;
+                if (MSSS != null) return true;
                 if (Items != null) return true;
                 return false;
             }
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(MSSI, "MSSI");
+                    sb.AppendItem(MSSS, "MSSS");
                 }
                 if (Items is {} ItemsItem)
                 {
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.MSSI = this.MSSI.Combine(rhs.MSSI);
+                ret.MSSS = this.MSSS.Combine(rhs.MSSS);
                 ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MannequinSkinSwapItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool MSSI;
+            public bool MSSS;
             public MannequinSkinSwapItem.TranslationMask? Items;
             #endregion
 
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.MSSI = defaultOn;
+                this.MSSS = defaultOn;
             }
 
             #endregion
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((MSSI, null));
+                ret.Add((MSSS, null));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
             }
 
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IMannequinSkinSwap>,
         IMannequinSkinSwapGetter
     {
-        new MemorySlice<Byte>? MSSI { get; set; }
+        new MemorySlice<Byte>? MSSS { get; set; }
         new ExtendedList<MannequinSkinSwapItem> Items { get; }
     }
 
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MannequinSkinSwap_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? MSSI { get; }
+        ReadOnlyMemorySlice<Byte>? MSSS { get; }
         IReadOnlyList<IMannequinSkinSwapItemGetter> Items { get; }
 
     }
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum MannequinSkinSwap_FieldIndex
     {
-        MSSI = 0,
+        MSSS = 0,
         Items = 1,
     }
     #endregion
@@ -770,6 +770,7 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
+                RecordTypes.MSSS,
                 RecordTypes.MSSI,
                 RecordTypes.MSSA);
             return new RecordTriggerSpecs(allRecordTypes: all);
@@ -814,7 +815,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMannequinSkinSwap item)
         {
             ClearPartial();
-            item.MSSI = default;
+            item.MSSS = default;
             item.Items.Clear();
         }
         
@@ -866,7 +867,7 @@ namespace Mutagen.Bethesda.Starfield
             MannequinSkinSwap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.MSSI = MemorySliceExt.SequenceEqual(item.MSSI, rhs.MSSI);
+            ret.MSSS = MemorySliceExt.SequenceEqual(item.MSSS, rhs.MSSS);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -915,10 +916,10 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             MannequinSkinSwap.Mask<bool>? printMask = null)
         {
-            if ((printMask?.MSSI ?? true)
-                && item.MSSI is {} MSSIItem)
+            if ((printMask?.MSSS ?? true)
+                && item.MSSS is {} MSSSItem)
             {
-                sb.AppendLine($"MSSI => {SpanExt.ToHexString(MSSIItem)}");
+                sb.AppendLine($"MSSS => {SpanExt.ToHexString(MSSSItem)}");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -943,9 +944,9 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)MannequinSkinSwap_FieldIndex.MSSI) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MannequinSkinSwap_FieldIndex.MSSS) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.MSSI, rhs.MSSI)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.MSSS, rhs.MSSS)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MannequinSkinSwap_FieldIndex.Items) ?? true))
             {
@@ -957,9 +958,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMannequinSkinSwapGetter item)
         {
             var hash = new HashCode();
-            if (item.MSSI is {} MSSIItem)
+            if (item.MSSS is {} MSSSItem)
             {
-                hash.Add(MSSIItem);
+                hash.Add(MSSSItem);
             }
             hash.Add(item.Items);
             return hash.ToHashCode();
@@ -998,15 +999,15 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)MannequinSkinSwap_FieldIndex.MSSI) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MannequinSkinSwap_FieldIndex.MSSS) ?? true))
             {
-                if(rhs.MSSI is {} MSSIrhs)
+                if(rhs.MSSS is {} MSSSrhs)
                 {
-                    item.MSSI = MSSIrhs.ToArray();
+                    item.MSSS = MSSSrhs.ToArray();
                 }
                 else
                 {
-                    item.MSSI = default;
+                    item.MSSS = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)MannequinSkinSwap_FieldIndex.Items) ?? true))
@@ -1132,8 +1133,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.MSSI,
-                header: translationParams.ConvertToCustom(RecordTypes.MSSI));
+                item: item.MSSS,
+                header: translationParams.ConvertToCustom(RecordTypes.MSSS));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMannequinSkinSwapItemGetter>.Instance.Write(
                 writer: writer,
                 items: item.Items,
@@ -1187,49 +1188,14 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.MSSI:
+                case RecordTypeInts.MSSS:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue)
-                    {
-                        if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.MSSI, translationParams)) return ParseResult.Stop;
-                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.MSSI = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                        return new ParseResult((int)MannequinSkinSwap_FieldIndex.MSSI, nextRecordType);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)MannequinSkinSwap_FieldIndex.MSSI)
-                    {
-                        if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.Items, translationParams)) return ParseResult.Stop;
-                        item.Items.SetTo(
-                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MannequinSkinSwapItem>.Instance.Parse(
-                                reader: frame,
-                                triggeringRecord: MannequinSkinSwapItem_Registration.TriggerSpecs,
-                                translationParams: translationParams,
-                                transl: MannequinSkinSwapItem.TryCreateFromBinary));
-                        return new ParseResult((int)MannequinSkinSwap_FieldIndex.Items, nextRecordType);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
-                        {
-                            case 0:
-                                if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.MSSI, translationParams)) return ParseResult.Stop;
-                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.MSSI = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                                return new ParseResult((int)MannequinSkinSwap_FieldIndex.MSSI, nextRecordType);
-                            case 1:
-                                if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.Items, translationParams)) return ParseResult.Stop;
-                                item.Items.SetTo(
-                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MannequinSkinSwapItem>.Instance.Parse(
-                                        reader: frame,
-                                        triggeringRecord: MannequinSkinSwapItem_Registration.TriggerSpecs,
-                                        translationParams: translationParams,
-                                        transl: MannequinSkinSwapItem.TryCreateFromBinary));
-                                return new ParseResult((int)MannequinSkinSwap_FieldIndex.Items, nextRecordType);
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
+                    if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.MSSS, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MSSS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MannequinSkinSwap_FieldIndex.MSSS;
                 }
+                case RecordTypeInts.MSSI:
                 case RecordTypeInts.MSSA:
                 {
                     if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.Items, translationParams)) return ParseResult.Stop;
@@ -1310,9 +1276,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region MSSI
-        private int? _MSSILocation;
-        public ReadOnlyMemorySlice<Byte>? MSSI => _MSSILocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSSILocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region MSSS
+        private int? _MSSSLocation;
+        public ReadOnlyMemorySlice<Byte>? MSSS => _MSSSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSSSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IMannequinSkinSwapItemGetter> Items { get; private set; } = Array.Empty<IMannequinSkinSwapItemGetter>();
         partial void CustomFactoryEnd(
@@ -1378,49 +1344,13 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.MSSI:
+                case RecordTypeInts.MSSS:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue)
-                    {
-                        if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.MSSI, translationParams)) return ParseResult.Stop;
-                        _MSSILocation = (stream.Position - offset);
-                        return new ParseResult((int)MannequinSkinSwap_FieldIndex.MSSI, type);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)MannequinSkinSwap_FieldIndex.MSSI)
-                    {
-                        if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.Items, translationParams)) return ParseResult.Stop;
-                        this.Items = this.ParseRepeatedTypelessSubrecord<IMannequinSkinSwapItemGetter>(
-                            stream: stream,
-                            translationParams: translationParams,
-                            trigger: MannequinSkinSwapItem_Registration.TriggerSpecs,
-                            factory: MannequinSkinSwapItemBinaryOverlay.MannequinSkinSwapItemFactory);
-                        return new ParseResult((int)MannequinSkinSwap_FieldIndex.Items, type);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
-                        {
-                            case 0:
-                            {
-                                if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.MSSI, translationParams)) return ParseResult.Stop;
-                                _MSSILocation = (stream.Position - offset);
-                                return new ParseResult((int)MannequinSkinSwap_FieldIndex.MSSI, type);
-                            }
-                            case 1:
-                            {
-                                if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.Items, translationParams)) return ParseResult.Stop;
-                                this.Items = this.ParseRepeatedTypelessSubrecord<IMannequinSkinSwapItemGetter>(
-                                    stream: stream,
-                                    translationParams: translationParams,
-                                    trigger: MannequinSkinSwapItem_Registration.TriggerSpecs,
-                                    factory: MannequinSkinSwapItemBinaryOverlay.MannequinSkinSwapItemFactory);
-                                return new ParseResult((int)MannequinSkinSwap_FieldIndex.Items, type);
-                            }
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
+                    if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.MSSS, translationParams)) return ParseResult.Stop;
+                    _MSSSLocation = (stream.Position - offset);
+                    return (int)MannequinSkinSwap_FieldIndex.MSSS;
                 }
+                case RecordTypeInts.MSSI:
                 case RecordTypeInts.MSSA:
                 {
                     if (lastParsed.ShortCircuit((int)MannequinSkinSwap_FieldIndex.Items, translationParams)) return ParseResult.Stop;

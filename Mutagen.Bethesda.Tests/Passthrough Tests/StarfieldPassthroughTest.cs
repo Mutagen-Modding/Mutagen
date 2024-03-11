@@ -286,6 +286,37 @@ public class StarfieldPassthroughTest : PassthroughTest
             RecordTypes.DATA,
             RecordTypes.MNAM
         );
+
+        ret.StartMarkers.Add(RecordTypes.RACE, new[]
+        {
+            RecordTypes.SAKD,
+            RecordTypes.SGNM,
+            RecordTypes.STKD,
+            RecordTypes.SAPT,
+            RecordTypes.SRAF,
+        });
+        ret.StopMarkers.Add(RecordTypes.RACE, new[]
+        {
+            RecordTypes.PTOP,
+            RecordTypes.NTOP,
+            RecordTypes.QSTI,
+            RecordTypes.MSSS,
+            RecordTypes.MSSI,
+            RecordTypes.MSSA,
+            RecordTypes.SNAM,
+        });
+        ret.AddAlignments(
+            RecordTypes.RACE,
+            AlignmentRepeatedRule.Sorted(
+                new AlignmentRepeatedSubrule(RecordTypes.SAKD, Single: true),
+                new AlignmentRepeatedSubrule(RecordTypes.SGNM, Single: false),
+                new AlignmentRepeatedSubrule(RecordTypes.SAPT, Single: false),
+                new AlignmentRepeatedSubrule(RecordTypes.STKD, Single: false),
+                new AlignmentRepeatedSubrule(RecordTypes.SRAF, Single: true)
+                {
+                    Ender = true
+                })
+        );
         return ret;
     }
 }

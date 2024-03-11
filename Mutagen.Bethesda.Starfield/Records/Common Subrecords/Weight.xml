@@ -2,9 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weight" objType="Subrecord" >
     <Fields>
-      <FLoat name="Thin" />
-      <FLoat name="Muscular" />
-      <FLoat name="Fat" />
+      <Float name="Thin" />
+      <Float name="Muscular" />
+      <Float name="Fat" />
     </Fields>
   </Object>
 </Loqui>

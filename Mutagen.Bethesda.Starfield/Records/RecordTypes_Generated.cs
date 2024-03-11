@@ -190,6 +190,7 @@ public partial class RecordTypes
     public static readonly RecordType BRIB = new(0x42495242);
     public static readonly RecordType BSIZ = new(0x5A495342);
     public static readonly RecordType BSMP = new(0x504D5342);
+    public static readonly RecordType BSTT = new(0x54545342);
     public static readonly RecordType BTPS = new(0x53505442);
     public static readonly RecordType BTXT = new(0x54585442);
     public static readonly RecordType BUO4 = new(0x344F5542);
@@ -337,6 +338,7 @@ public partial class RecordTypes
     public static readonly RecordType FBOL = new(0x4C4F4246);
     public static readonly RecordType FBUR = new(0x52554246);
     public static readonly RecordType FCTF = new(0x46544346);
+    public static readonly RecordType FCTP = new(0x50544346);
     public static readonly RecordType FDSI = new(0x49534446);
     public static readonly RecordType FDSL = new(0x4C534446);
     public static readonly RecordType FFKW = new(0x574B4646);
@@ -384,6 +386,7 @@ public partial class RecordTypes
     public static readonly RecordType FREP = new(0x50455246);
     public static readonly RecordType FSTP = new(0x50545346);
     public static readonly RecordType FSTS = new(0x53545346);
+    public static readonly RecordType FSTT = new(0x54545346);
     public static readonly RecordType FTMP = new(0x504D5446);
     public static readonly RecordType FTSM = new(0x4D535446);
     public static readonly RecordType FTYP = new(0x50595446);
@@ -413,6 +416,7 @@ public partial class RecordTypes
     public static readonly RecordType HEFA = new(0x41464548);
     public static readonly RecordType HERD = new(0x44524548);
     public static readonly RecordType HNAM = new(0x4D414E48);
+    public static readonly RecordType HSTT = new(0x54545348);
     public static readonly RecordType HTID = new(0x44495448);
     public static readonly RecordType HULL = new(0x4C4C5548);
     public static readonly RecordType ICON = new(0x4E4F4349);
@@ -564,6 +568,7 @@ public partial class RecordTypes
     public static readonly RecordType MSMO = new(0x4F4D534D);
     public static readonly RecordType MSSA = new(0x4153534D);
     public static readonly RecordType MSSI = new(0x4953534D);
+    public static readonly RecordType MSSS = new(0x5353534D);
     public static readonly RecordType MSTT = new(0x5454534D);
     public static readonly RecordType MTNM = new(0x4D4E544D);
     public static readonly RecordType MTPT = new(0x5450544D);
@@ -757,6 +762,8 @@ public partial class RecordTypes
     public static readonly RecordType RNAM = new(0x4D414E52);
     public static readonly RecordType RPLD = new(0x444C5052);
     public static readonly RecordType RPLI = new(0x494C5052);
+    public static readonly RecordType RPRF = new(0x46525052);
+    public static readonly RecordType RPRM = new(0x4D525052);
     public static readonly RecordType RQPK = new(0x4B505152);
     public static readonly RecordType RSCS = new(0x53435352);
     public static readonly RecordType RSGD = new(0x44475352);

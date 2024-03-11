@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -38,13 +39,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class FaceDial :
-        IEquatable<IFaceDialGetter>,
-        IFaceDial,
-        ILoquiObjectSetter<FaceDial>
+    public partial class FaceMorphItem :
+        IEquatable<IFaceMorphItemGetter>,
+        IFaceMorphItem,
+        ILoquiObjectSetter<FaceMorphItem>
     {
         #region Ctor
-        public FaceDial()
+        public FaceMorphItem()
         {
             CustomCtor();
         }
@@ -54,12 +55,48 @@ namespace Mutagen.Bethesda.Starfield
         #region Index
         public UInt32? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IFaceDialGetter.Index => this.Index;
+        UInt32? IFaceMorphItemGetter.Index => this.Index;
         #endregion
-        #region Label
-        public TranslatedString? Label { get; set; }
+        #region FMRU
+        public String? FMRU { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IFaceDialGetter.Label => this.Label;
+        String? IFaceMorphItemGetter.FMRU => this.FMRU;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IFaceMorphItemGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
 
         #region To String
@@ -68,7 +105,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceDialMixIn.Print(
+            FaceMorphItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -79,16 +116,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFaceDialGetter rhs) return false;
-            return ((FaceDialCommon)((IFaceDialGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFaceMorphItemGetter rhs) return false;
+            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFaceDialGetter? obj)
+        public bool Equals(IFaceMorphItemGetter? obj)
         {
-            return ((FaceDialCommon)((IFaceDialGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FaceDialCommon)((IFaceDialGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -101,15 +138,18 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.Label = initialValue;
+                this.FMRU = initialValue;
+                this.Name = initialValue;
             }
 
             public Mask(
                 TItem Index,
-                TItem Label)
+                TItem FMRU,
+                TItem Name)
             {
                 this.Index = Index;
-                this.Label = Label;
+                this.FMRU = FMRU;
+                this.Name = Name;
             }
 
             #pragma warning disable CS8618
@@ -122,7 +162,8 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Index;
-            public TItem Label;
+            public TItem FMRU;
+            public TItem Name;
             #endregion
 
             #region Equals
@@ -136,14 +177,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
-                if (!object.Equals(this.Label, rhs.Label)) return false;
+                if (!object.Equals(this.FMRU, rhs.FMRU)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Index);
-                hash.Add(this.Label);
+                hash.Add(this.FMRU);
+                hash.Add(this.Name);
                 return hash.ToHashCode();
             }
 
@@ -153,7 +196,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Index)) return false;
-                if (!eval(this.Label)) return false;
+                if (!eval(this.FMRU)) return false;
+                if (!eval(this.Name)) return false;
                 return true;
             }
             #endregion
@@ -162,7 +206,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Index)) return true;
-                if (eval(this.Label)) return true;
+                if (eval(this.FMRU)) return true;
+                if (eval(this.Name)) return true;
                 return false;
             }
             #endregion
@@ -170,7 +215,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new FaceDial.Mask<R>();
+                var ret = new FaceMorphItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -178,32 +223,37 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
-                obj.Label = eval(this.Label);
+                obj.FMRU = eval(this.FMRU);
+                obj.Name = eval(this.Name);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(FaceDial.Mask<bool>? printMask = null)
+            public string Print(FaceMorphItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, FaceDial.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FaceMorphItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(FaceDial.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(FaceMorphItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Index ?? true)
                     {
                         sb.AppendItem(Index, "Index");
                     }
-                    if (printMask?.Label ?? true)
+                    if (printMask?.FMRU ?? true)
                     {
-                        sb.AppendItem(Label, "Label");
+                        sb.AppendItem(FMRU, "FMRU");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
                     }
                 }
             }
@@ -230,19 +280,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Index;
-            public Exception? Label;
+            public Exception? FMRU;
+            public Exception? Name;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                FaceDial_FieldIndex enu = (FaceDial_FieldIndex)index;
+                FaceMorphItem_FieldIndex enu = (FaceMorphItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceDial_FieldIndex.Index:
+                    case FaceMorphItem_FieldIndex.Index:
                         return Index;
-                    case FaceDial_FieldIndex.Label:
-                        return Label;
+                    case FaceMorphItem_FieldIndex.FMRU:
+                        return FMRU;
+                    case FaceMorphItem_FieldIndex.Name:
+                        return Name;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -250,14 +303,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                FaceDial_FieldIndex enu = (FaceDial_FieldIndex)index;
+                FaceMorphItem_FieldIndex enu = (FaceMorphItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceDial_FieldIndex.Index:
+                    case FaceMorphItem_FieldIndex.Index:
                         this.Index = ex;
                         break;
-                    case FaceDial_FieldIndex.Label:
-                        this.Label = ex;
+                    case FaceMorphItem_FieldIndex.FMRU:
+                        this.FMRU = ex;
+                        break;
+                    case FaceMorphItem_FieldIndex.Name:
+                        this.Name = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -266,14 +322,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                FaceDial_FieldIndex enu = (FaceDial_FieldIndex)index;
+                FaceMorphItem_FieldIndex enu = (FaceMorphItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceDial_FieldIndex.Index:
+                    case FaceMorphItem_FieldIndex.Index:
                         this.Index = (Exception?)obj;
                         break;
-                    case FaceDial_FieldIndex.Label:
-                        this.Label = (Exception?)obj;
+                    case FaceMorphItem_FieldIndex.FMRU:
+                        this.FMRU = (Exception?)obj;
+                        break;
+                    case FaceMorphItem_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -284,7 +343,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Index != null) return true;
-                if (Label != null) return true;
+                if (FMRU != null) return true;
+                if (Name != null) return true;
                 return false;
             }
             #endregion
@@ -314,7 +374,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Index, "Index");
                 }
                 {
-                    sb.AppendItem(Label, "Label");
+                    sb.AppendItem(FMRU, "FMRU");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
                 }
             }
             #endregion
@@ -325,7 +388,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Index = this.Index.Combine(rhs.Index);
-                ret.Label = this.Label.Combine(rhs.Label);
+                ret.FMRU = this.FMRU.Combine(rhs.FMRU);
+                ret.Name = this.Name.Combine(rhs.Name);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -350,7 +414,8 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Index;
-            public bool Label;
+            public bool FMRU;
+            public bool Name;
             #endregion
 
             #region Ctors
@@ -361,7 +426,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Index = defaultOn;
-                this.Label = defaultOn;
+                this.FMRU = defaultOn;
+                this.Name = defaultOn;
             }
 
             #endregion
@@ -378,7 +444,8 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Index, null));
-                ret.Add((Label, null));
+                ret.Add((FMRU, null));
+                ret.Add((Name, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -391,25 +458,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FaceDialBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FaceMorphItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceDialBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FaceMorphItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static FaceDial CreateFromBinary(
+        public static FaceMorphItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new FaceDial();
-            ((FaceDialSetterCommon)((IFaceDialGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new FaceMorphItem();
+            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -420,7 +487,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out FaceDial item,
+            out FaceMorphItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -435,30 +502,42 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((FaceDialSetterCommon)((IFaceDialGetter)this).CommonSetterInstance()!).Clear(this);
+            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static FaceDial GetNew()
+        internal static FaceMorphItem GetNew()
         {
-            return new FaceDial();
+            return new FaceMorphItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IFaceDial :
-        IFaceDialGetter,
-        ILoquiObjectSetter<IFaceDial>
+    public partial interface IFaceMorphItem :
+        IFaceMorphItemGetter,
+        ILoquiObjectSetter<IFaceMorphItem>,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new UInt32? Index { get; set; }
-        new TranslatedString? Label { get; set; }
+        new String? FMRU { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
     }
 
-    public partial interface IFaceDialGetter :
+    public partial interface IFaceMorphItemGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IFaceDialGetter>
+        ILoquiObject<IFaceMorphItemGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -466,51 +545,57 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => FaceDial_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FaceMorphItem_Registration.Instance;
         UInt32? Index { get; }
-        ITranslatedStringGetter? Label { get; }
+        String? FMRU { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class FaceDialMixIn
+    public static partial class FaceMorphItemMixIn
     {
-        public static void Clear(this IFaceDial item)
+        public static void Clear(this IFaceMorphItem item)
         {
-            ((FaceDialSetterCommon)((IFaceDialGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FaceDial.Mask<bool> GetEqualsMask(
-            this IFaceDialGetter item,
-            IFaceDialGetter rhs,
+        public static FaceMorphItem.Mask<bool> GetEqualsMask(
+            this IFaceMorphItemGetter item,
+            IFaceMorphItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IFaceDialGetter item,
+            this IFaceMorphItemGetter item,
             string? name = null,
-            FaceDial.Mask<bool>? printMask = null)
+            FaceMorphItem.Mask<bool>? printMask = null)
         {
-            return ((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).Print(
+            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IFaceDialGetter item,
+            this IFaceMorphItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FaceDial.Mask<bool>? printMask = null)
+            FaceMorphItem.Mask<bool>? printMask = null)
         {
-            ((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).Print(
+            ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -518,21 +603,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IFaceDialGetter item,
-            IFaceDialGetter rhs,
-            FaceDial.TranslationMask? equalsMask = null)
+            this IFaceMorphItemGetter item,
+            IFaceMorphItemGetter rhs,
+            FaceMorphItem.TranslationMask? equalsMask = null)
         {
-            return ((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).Equals(
+            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFaceDial lhs,
-            IFaceDialGetter rhs)
+            this IFaceMorphItem lhs,
+            IFaceMorphItemGetter rhs)
         {
-            ((FaceDialSetterTranslationCommon)((IFaceDialGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -541,11 +626,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFaceDial lhs,
-            IFaceDialGetter rhs,
-            FaceDial.TranslationMask? copyMask = null)
+            this IFaceMorphItem lhs,
+            IFaceMorphItemGetter rhs,
+            FaceMorphItem.TranslationMask? copyMask = null)
         {
-            ((FaceDialSetterTranslationCommon)((IFaceDialGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -554,28 +639,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFaceDial lhs,
-            IFaceDialGetter rhs,
-            out FaceDial.ErrorMask errorMask,
-            FaceDial.TranslationMask? copyMask = null)
+            this IFaceMorphItem lhs,
+            IFaceMorphItemGetter rhs,
+            out FaceMorphItem.ErrorMask errorMask,
+            FaceMorphItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FaceDialSetterTranslationCommon)((IFaceDialGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = FaceDial.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceMorphItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFaceDial lhs,
-            IFaceDialGetter rhs,
+            this IFaceMorphItem lhs,
+            IFaceMorphItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FaceDialSetterTranslationCommon)((IFaceDialGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -583,32 +668,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static FaceDial DeepCopy(
-            this IFaceDialGetter item,
-            FaceDial.TranslationMask? copyMask = null)
+        public static FaceMorphItem DeepCopy(
+            this IFaceMorphItemGetter item,
+            FaceMorphItem.TranslationMask? copyMask = null)
         {
-            return ((FaceDialSetterTranslationCommon)((IFaceDialGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static FaceDial DeepCopy(
-            this IFaceDialGetter item,
-            out FaceDial.ErrorMask errorMask,
-            FaceDial.TranslationMask? copyMask = null)
+        public static FaceMorphItem DeepCopy(
+            this IFaceMorphItemGetter item,
+            out FaceMorphItem.ErrorMask errorMask,
+            FaceMorphItem.TranslationMask? copyMask = null)
         {
-            return ((FaceDialSetterTranslationCommon)((IFaceDialGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static FaceDial DeepCopy(
-            this IFaceDialGetter item,
+        public static FaceMorphItem DeepCopy(
+            this IFaceMorphItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((FaceDialSetterTranslationCommon)((IFaceDialGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -616,11 +701,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFaceDial item,
+            this IFaceMorphItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((FaceDialSetterCommon)((IFaceDialGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -636,41 +721,42 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum FaceDial_FieldIndex
+    internal enum FaceMorphItem_FieldIndex
     {
         Index = 0,
-        Label = 1,
+        FMRU = 1,
+        Name = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class FaceDial_Registration : ILoquiRegistration
+    internal partial class FaceMorphItem_Registration : ILoquiRegistration
     {
-        public static readonly FaceDial_Registration Instance = new FaceDial_Registration();
+        public static readonly FaceMorphItem_Registration Instance = new FaceMorphItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(FaceDial.Mask<>);
+        public static readonly Type MaskType = typeof(FaceMorphItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FaceDial.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FaceMorphItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(FaceDial);
+        public static readonly Type ClassType = typeof(FaceMorphItem);
 
-        public static readonly Type GetterType = typeof(IFaceDialGetter);
+        public static readonly Type GetterType = typeof(IFaceMorphItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFaceDial);
+        public static readonly Type SetterType = typeof(IFaceMorphItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.FaceDial";
+        public const string FullName = "Mutagen.Bethesda.Starfield.FaceMorphItem";
 
-        public const string Name = "FaceDial";
+        public const string Name = "FaceMorphItem";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -682,11 +768,12 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.FDSI,
-                RecordTypes.FDSL);
+                RecordTypes.FMSR,
+                RecordTypes.FMRU,
+                RecordTypes.FMRN);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(FaceDialBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(FaceMorphItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -717,21 +804,22 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class FaceDialSetterCommon
+    internal partial class FaceMorphItemSetterCommon
     {
-        public static readonly FaceDialSetterCommon Instance = new FaceDialSetterCommon();
+        public static readonly FaceMorphItemSetterCommon Instance = new FaceMorphItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IFaceDial item)
+        public void Clear(IFaceMorphItem item)
         {
             ClearPartial();
             item.Index = default;
-            item.Label = default;
+            item.FMRU = default;
+            item.Name = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IFaceDial obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IFaceMorphItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -739,7 +827,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IFaceDial item,
+            IFaceMorphItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -747,23 +835,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: FaceDialBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: FaceMorphItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class FaceDialCommon
+    internal partial class FaceMorphItemCommon
     {
-        public static readonly FaceDialCommon Instance = new FaceDialCommon();
+        public static readonly FaceMorphItemCommon Instance = new FaceMorphItemCommon();
 
-        public FaceDial.Mask<bool> GetEqualsMask(
-            IFaceDialGetter item,
-            IFaceDialGetter rhs,
+        public FaceMorphItem.Mask<bool> GetEqualsMask(
+            IFaceMorphItemGetter item,
+            IFaceMorphItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FaceDial.Mask<bool>(false);
-            ((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new FaceMorphItem.Mask<bool>(false);
+            ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -772,19 +860,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IFaceDialGetter item,
-            IFaceDialGetter rhs,
-            FaceDial.Mask<bool> ret,
+            IFaceMorphItemGetter item,
+            IFaceMorphItemGetter rhs,
+            FaceMorphItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Index = item.Index == rhs.Index;
-            ret.Label = object.Equals(item.Label, rhs.Label);
+            ret.FMRU = string.Equals(item.FMRU, rhs.FMRU);
+            ret.Name = object.Equals(item.Name, rhs.Name);
         }
         
         public string Print(
-            IFaceDialGetter item,
+            IFaceMorphItemGetter item,
             string? name = null,
-            FaceDial.Mask<bool>? printMask = null)
+            FaceMorphItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -796,18 +885,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IFaceDialGetter item,
+            IFaceMorphItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FaceDial.Mask<bool>? printMask = null)
+            FaceMorphItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"FaceDial =>");
+                sb.AppendLine($"FaceMorphItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (FaceDial) =>");
+                sb.AppendLine($"{name} (FaceMorphItem) =>");
             }
             using (sb.Brace())
             {
@@ -819,50 +908,63 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IFaceDialGetter item,
+            IFaceMorphItemGetter item,
             StructuredStringBuilder sb,
-            FaceDial.Mask<bool>? printMask = null)
+            FaceMorphItem.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
                 sb.AppendItem(IndexItem, "Index");
             }
-            if ((printMask?.Label ?? true)
-                && item.Label is {} LabelItem)
+            if ((printMask?.FMRU ?? true)
+                && item.FMRU is {} FMRUItem)
             {
-                sb.AppendItem(LabelItem, "Label");
+                sb.AppendItem(FMRUItem, "FMRU");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFaceDialGetter? lhs,
-            IFaceDialGetter? rhs,
+            IFaceMorphItemGetter? lhs,
+            IFaceMorphItemGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)FaceDial_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FaceDial_FieldIndex.Label) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMRU) ?? true))
             {
-                if (!object.Equals(lhs.Label, rhs.Label)) return false;
+                if (!string.Equals(lhs.FMRU, rhs.FMRU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IFaceDialGetter item)
+        public virtual int GetHashCode(IFaceMorphItemGetter item)
         {
             var hash = new HashCode();
             if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.Label is {} Labelitem)
+            if (item.FMRU is {} FMRUitem)
             {
-                hash.Add(Labelitem);
+                hash.Add(FMRUitem);
+            }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
             }
             return hash.ToHashCode();
         }
@@ -872,11 +974,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return FaceDial.GetNew();
+            return FaceMorphItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceDialGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceMorphItemGetter obj)
         {
             yield break;
         }
@@ -884,36 +986,40 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class FaceDialSetterTranslationCommon
+    internal partial class FaceMorphItemSetterTranslationCommon
     {
-        public static readonly FaceDialSetterTranslationCommon Instance = new FaceDialSetterTranslationCommon();
+        public static readonly FaceMorphItemSetterTranslationCommon Instance = new FaceMorphItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IFaceDial item,
-            IFaceDialGetter rhs,
+            IFaceMorphItem item,
+            IFaceMorphItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)FaceDial_FieldIndex.Index) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.Index) ?? true))
             {
                 item.Index = rhs.Index;
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceDial_FieldIndex.Label) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMRU) ?? true))
             {
-                item.Label = rhs.Label?.DeepCopy();
+                item.FMRU = rhs.FMRU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
             }
         }
         
         #endregion
         
-        public FaceDial DeepCopy(
-            IFaceDialGetter item,
-            FaceDial.TranslationMask? copyMask = null)
+        public FaceMorphItem DeepCopy(
+            IFaceMorphItemGetter item,
+            FaceMorphItem.TranslationMask? copyMask = null)
         {
-            FaceDial ret = (FaceDial)((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).GetNew();
-            ((FaceDialSetterTranslationCommon)((IFaceDialGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FaceMorphItem ret = (FaceMorphItem)((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetNew();
+            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -922,30 +1028,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public FaceDial DeepCopy(
-            IFaceDialGetter item,
-            out FaceDial.ErrorMask errorMask,
-            FaceDial.TranslationMask? copyMask = null)
+        public FaceMorphItem DeepCopy(
+            IFaceMorphItemGetter item,
+            out FaceMorphItem.ErrorMask errorMask,
+            FaceMorphItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FaceDial ret = (FaceDial)((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).GetNew();
-            ((FaceDialSetterTranslationCommon)((IFaceDialGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FaceMorphItem ret = (FaceMorphItem)((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetNew();
+            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = FaceDial.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceMorphItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public FaceDial DeepCopy(
-            IFaceDialGetter item,
+        public FaceMorphItem DeepCopy(
+            IFaceMorphItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            FaceDial ret = (FaceDial)((FaceDialCommon)((IFaceDialGetter)item).CommonInstance()!).GetNew();
-            ((FaceDialSetterTranslationCommon)((IFaceDialGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FaceMorphItem ret = (FaceMorphItem)((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetNew();
+            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -961,27 +1067,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FaceDial
+    public partial class FaceMorphItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FaceDial_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FaceDial_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FaceMorphItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceMorphItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FaceDialCommon.Instance;
+        protected object CommonInstance() => FaceMorphItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return FaceDialSetterCommon.Instance;
+            return FaceMorphItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FaceDialSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FaceMorphItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFaceDialGetter.CommonInstance() => this.CommonInstance();
+        object IFaceMorphItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IFaceDialGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IFaceMorphItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IFaceDialGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFaceMorphItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -992,30 +1098,35 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FaceDialBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class FaceMorphItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FaceDialBinaryWriteTranslation Instance = new();
+        public static readonly FaceMorphItemBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IFaceDialGetter item,
+            IFaceMorphItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
-                header: translationParams.ConvertToCustom(RecordTypes.FDSI));
+                header: translationParams.ConvertToCustom(RecordTypes.FMSR));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Label,
-                header: translationParams.ConvertToCustom(RecordTypes.FDSL),
+                item: item.FMRU,
+                header: translationParams.ConvertToCustom(RecordTypes.FMRU),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FMRN),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
         }
 
         public void Write(
             MutagenWriter writer,
-            IFaceDialGetter item,
+            IFaceMorphItemGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1030,19 +1141,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IFaceDialGetter)item,
+                item: (IFaceMorphItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class FaceDialBinaryCreateTranslation
+    internal partial class FaceMorphItemBinaryCreateTranslation
     {
-        public static readonly FaceDialBinaryCreateTranslation Instance = new FaceDialBinaryCreateTranslation();
+        public static readonly FaceMorphItemBinaryCreateTranslation Instance = new FaceMorphItemBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IFaceDial item,
+            IFaceMorphItem item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1053,22 +1164,31 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.FDSI:
+                case RecordTypeInts.FMSR:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceDial_FieldIndex.Index, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt32();
-                    return (int)FaceDial_FieldIndex.Index;
+                    return (int)FaceMorphItem_FieldIndex.Index;
                 }
-                case RecordTypeInts.FDSL:
+                case RecordTypeInts.FMRU:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceDial_FieldIndex.Label, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMRU, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Label = StringBinaryTranslation.Instance.Parse(
+                    item.FMRU = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)FaceMorphItem_FieldIndex.FMRU;
+                }
+                case RecordTypeInts.FMRN:
+                {
+                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Name, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)FaceDial_FieldIndex.Label;
+                    return (int)FaceMorphItem_FieldIndex.Name;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1081,14 +1201,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class FaceDialBinaryTranslationMixIn
+    public static class FaceMorphItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IFaceDialGetter item,
+            this IFaceMorphItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceDialBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((FaceMorphItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1101,38 +1221,38 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class FaceDialBinaryOverlay :
+    internal partial class FaceMorphItemBinaryOverlay :
         PluginBinaryOverlay,
-        IFaceDialGetter
+        IFaceMorphItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FaceDial_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FaceDial_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FaceMorphItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceMorphItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FaceDialCommon.Instance;
+        protected object CommonInstance() => FaceMorphItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FaceDialSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FaceMorphItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFaceDialGetter.CommonInstance() => this.CommonInstance();
+        object IFaceMorphItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IFaceDialGetter.CommonSetterInstance() => null;
+        object? IFaceMorphItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IFaceDialGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFaceMorphItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FaceDialBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FaceMorphItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceDialBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FaceMorphItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1142,9 +1262,21 @@ namespace Mutagen.Bethesda.Starfield
         private int? _IndexLocation;
         public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        #region Label
-        private int? _LabelLocation;
-        public ITranslatedStringGetter? Label => _LabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region FMRU
+        private int? _FMRULocation;
+        public String? FMRU => _FMRULocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMRULocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1152,7 +1284,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected FaceDialBinaryOverlay(
+        protected FaceMorphItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1162,7 +1294,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IFaceDialGetter FaceDialFactory(
+        public static IFaceMorphItemGetter FaceMorphItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1174,7 +1306,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new FaceDialBinaryOverlay(
+            var ret = new FaceMorphItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1186,12 +1318,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IFaceDialGetter FaceDialFactory(
+        public static IFaceMorphItemGetter FaceMorphItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return FaceDialFactory(
+            return FaceMorphItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1209,17 +1341,23 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.FDSI:
+                case RecordTypeInts.FMSR:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceDial_FieldIndex.Index, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
-                    return (int)FaceDial_FieldIndex.Index;
+                    return (int)FaceMorphItem_FieldIndex.Index;
                 }
-                case RecordTypeInts.FDSL:
+                case RecordTypeInts.FMRU:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceDial_FieldIndex.Label, translationParams)) return ParseResult.Stop;
-                    _LabelLocation = (stream.Position - offset);
-                    return (int)FaceDial_FieldIndex.Label;
+                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMRU, translationParams)) return ParseResult.Stop;
+                    _FMRULocation = (stream.Position - offset);
+                    return (int)FaceMorphItem_FieldIndex.FMRU;
+                }
+                case RecordTypeInts.FMRN:
+                {
+                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Name, translationParams)) return ParseResult.Stop;
+                    _NameLocation = (stream.Position - offset);
+                    return (int)FaceMorphItem_FieldIndex.Name;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1231,7 +1369,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceDialMixIn.Print(
+            FaceMorphItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1242,16 +1380,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFaceDialGetter rhs) return false;
-            return ((FaceDialCommon)((IFaceDialGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFaceMorphItemGetter rhs) return false;
+            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFaceDialGetter? obj)
+        public bool Equals(IFaceMorphItemGetter? obj)
         {
-            return ((FaceDialCommon)((IFaceDialGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FaceDialCommon)((IFaceDialGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

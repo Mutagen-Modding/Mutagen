@@ -165,8 +165,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DialogueSceneAction
 - Explosion
 - ExternalDataSource
-- FaceMorphPhenotype
-- FaceMorphPhenotypeItem
+- FaceMorph
+- FaceMorphItem
 - Faction
 - Flora
 - FloraModification
@@ -479,9 +479,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### ExternalDataSource
 - INamed
-### FaceMorphPhenotype
+### FaceMorph
 - INamed
-### FaceMorphPhenotypeItem
+### FaceMorphItem
 - INamed
 ### Faction
 - INamed

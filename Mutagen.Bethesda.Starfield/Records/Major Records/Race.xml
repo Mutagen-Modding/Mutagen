@@ -16,32 +16,35 @@
       </List>
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
-      <!-- Generation issue that needs to be addressed -->
-<!--      <Data recordType="DAT2" >-->
-<!--        <Fields>-->
-<!--          <Int32 name="Height" />-->
-<!--          <Gendered name="DefaultWeight" >-->
-<!--            <Fields>-->
-<!--              <RefDirect refName="Weight" />-->
-<!--            </Fields>-->
-<!--          </Gendered>-->
-<!--          <Enum name="Flags" enumName="Race.Flag" byteLength="8" />-->
-<!--          <Float name="AccelerationRate" />-->
-<!--          <Float name="DecelerationRate" />-->
-<!--          <Enum name="Size" enumName="Size" byteLength="4" />-->
-<!--          <ByteArray name="DAT2Unknown1" byteLength="12" nullable="false" unknown="true" />-->
-<!--          <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />-->
-<!--          <Enum name="BeardBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />-->
-<!--          <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />-->
-<!--          <ByteArray name="DAT2Unknown2" byteLength="64" nullable="false" unknown="true" />-->
-<!--          <FormLink name="Explosion" refName="Explosion" />-->
-<!--          <FormLink name="Debris" refName="Debris" />-->
-<!--          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />-->
-<!--          <Float name="OrientationLimitsPitch" />-->
-<!--          <Float name="OrientationLimitsRoll" />-->
-<!--          <ByteArray name="DAT2Unknown3" byteLength="61" nullable="false" unknown="true" />-->
-<!--        </Fields>-->
-<!--      </Data>-->
+      <Data recordType="DAT2" >
+        <Fields>
+          <Gendered name="Height" >
+            <Fields>
+              <Float />
+            </Fields>
+          </Gendered>
+          <Gendered name="DefaultWeight" >
+            <Fields>
+              <RefDirect refName="Weight" />
+            </Fields>
+          </Gendered>
+          <Enum name="Flags" enumName="Race.Flag" byteLength="8" />
+          <Float name="AccelerationRate" />
+          <Float name="DecelerationRate" />
+          <Enum name="Size" enumName="Size" byteLength="4" />
+          <ByteArray name="DAT2Unknown1" byteLength="12" nullable="false" unknown="true" />
+          <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="BeardBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <ByteArray name="DAT2Unknown2" byteLength="64" nullable="false" unknown="true" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="Debris" refName="Debris" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <Float name="OrientationLimitsPitch" />
+          <Float name="OrientationLimitsRoll" />
+          <ByteArray name="DAT2Unknown3" byteLength="61" nullable="false" unknown="true" />
+        </Fields>
+      </Data>
       <CustomLogic name="MNAMLogic" recordType="MNAM" />
       <CustomLogic name="FNAMLogic" recordType="FNAM" />
       <Gendered name="SkeletalModel" binary="CustomWrite">
@@ -85,6 +88,14 @@
       <FormLink name="BaseMovementDefault" refName="MovementType" recordType="WKMV" />
       <FormLink name="BaseMovementSwimDefault" refName="MovementType" recordType="SWMV" />
       <FormLink name="BaseMovementFlyDefault" refName="MovementType" recordType="FLMV" />
+      <Gendered name="ChargenAndSkintones" maleMarker="MNAM" femaleMarker="FNAM">
+        <FemaleTypeOverrides>
+          <Mapping From="RPRM" To="RPRF" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="ChargenAndSkintones" />
+        </Fields>
+      </Gendered>
       <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
       <FormLink name="SubgraphTemplateRace" refName="Race" recordType="SRAC" />
       <RefList name="Subgraphs" refName="Subgraph" />
@@ -149,12 +160,6 @@
       <FormLink name="Conditions" refName="ActorValueInformation" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="FaceDial" objType="Subrecord">
-    <Fields>
-      <UInt32 name="Index" recordType="FDSI" nullable="False" />
-      <String name="Label" recordType="FDSL" translated="Normal" />
-    </Fields>
-  </Object>
   <Object name="Subgraph" objType="Subrecord" shortCircuitToLastRequired="true">
     <Fields>
       <List name="ActorKeywords">
@@ -187,7 +192,7 @@
   </Object>
   <Object name="MannequinSkinSwap" objType="Subrecord">
     <Fields>
-      <ByteArray name="MSSI" recordType="MSSI" unknown="true" />
+      <ByteArray name="MSSS" recordType="MSSS" unknown="true" />
       <RefList name="Items" refName="MannequinSkinSwapItem" />
     </Fields>
   </Object>
@@ -195,6 +200,26 @@
     <Fields>
       <ByteArray name="MSSI" recordType="MSSI" unknown="true" />
       <FormLink name="MaterialSwap" recordType="MSSA" refName="LayeredMaterialSwap" />
+    </Fields>
+  </Object>
+  <Object name="ChargenAndSkintones" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Chargen" refName="Chargen" />
+      <String name="BodySkinTones" recordType="BSTT" />
+      <String name="HandSkinTones" recordType="HSTT" />
+      <String name="FCTP" recordType="FCTP" />
+      <String name="FaceSkinTones" recordType="FSTT" />
+    </Fields>
+  </Object>
+  <Object name="Chargen" objType="Subrecord" markerType="NAM0">
+    <Fields>
+      <ByteArray name="NNAM" recordType="NNAM" />
+      <List name="RacePresets" >
+        <FormLink refName="Npc" recordType="RPRM" />
+      </List>
+      <RefList name="MorphGroups" refName="MorphGroup" />
+      <RefList name="FaceMorphs" refName="FaceMorph" />
+      <RefList name="FaceDials" refName="FaceDial" />
     </Fields>
   </Object>
   <Object name="MorphGroup" objType="Subrecord">
@@ -205,19 +230,26 @@
       </List>
     </Fields>
   </Object>
-  <Object name="FaceMorphPhenotype" objType="Subrecord">
+  <Object name="FaceMorph" objType="Subrecord">
     <Fields>
       <UInt32 name="Index" recordType="FMRI" />
-      <String name="FMRU" recordType="FMRU" />
+      <String name="FMRU" recordType="FMRU" unknown="true" />
       <String name="Name" recordType="FMRN" translated="Normal" />
-      <String name="FMRS" recordType="FMRS" />
+      <String name="FMRS" recordType="FMRS" unknown="true" />
+      <RefList name="Items" refName="FaceMorphItem" />
     </Fields>
   </Object>
-  <Object name="FaceMorphPhenotypeItem" objType="Subrecord" >
+  <Object name="FaceMorphItem" objType="Subrecord">
     <Fields>
-      <UInt32 name="Index" recordType="FMSR" nullable="False" />
-      <String name="FMRU" recordType="FMRU" />
+      <UInt32 name="Index" recordType="FMSR" />
+      <String name="FMRU" recordType="FMRU" unknown="true" />
       <String name="Name" recordType="FMRN" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="FaceDial" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Index" recordType="FDSI" />
+      <String name="Label" recordType="FDSL" translated="Normal" />
     </Fields>
   </Object>
 </Loqui>

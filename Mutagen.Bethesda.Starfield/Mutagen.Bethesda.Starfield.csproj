@@ -6581,5 +6581,17 @@
     <Compile Include="Records\Major Records\TimeOfDayRecord_Generated.cs">
       <DependentUpon>TimeOfDayRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ChargenAndSkintones_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceMorph_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceMorphItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Chargen_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
