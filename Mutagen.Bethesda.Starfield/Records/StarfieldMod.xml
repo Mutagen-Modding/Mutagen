@@ -132,12 +132,12 @@
       <Group name="LensFlares" refName="LensFlare" />
       <Group name="ObjectVisibilityManagers" refName="ObjectVisibilityManager" />
       <Group name="SnapTemplateNodes" refName="SnapTemplateNode" />
-      <Group name="BiomeSwaps" refName="BiomeSwap" />
       <Group name="SnapTemplates" refName="SnapTemplate" />
       <Group name="GroundCovers" refName="GroundCover" />
       <Group name="MorphableObjects" refName="MorphableObject" />
       <Group name="Traversals" refName="Traversal" />
       <Group name="ResourceGenerationData" refName="ResourceGenerationData" />
+      <Group name="BiomeSwaps" refName="BiomeSwap" />
       <Group name="Atmospheres" refName="Atmosphere" />
       <Group name="LeveledSpaceCells" refName="LeveledSpaceCell" />
       <Group name="SpeechChallenges" refName="SpeechChallenge" />
@@ -148,7 +148,7 @@
       <Group name="SurfacePatterns" refName="SurfacePattern" />
       <Group name="SurfaceTrees" refName="SurfaceTree" />
       <Group name="PlanetContentManagerTrees" refName="PlanetContentManagerTree" />
-      <Group name="BoneModifierS" refName="BoneModifier" />
+      <Group name="BoneModifiers" refName="BoneModifier" />
       <Group name="SnapTemplateBehaviors" refName="SnapTemplateBehavior" />
       <Group name="Planets" refName="Planet" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
@@ -157,8 +157,8 @@
       <Group name="Stars" refName="Star" />
       <Group name="WWiseEventDatas" refName="WWiseEventData" />
       <Group name="ResearchProjects" refName="ResearchProject" />
-      <Group name="AmbienceSets" refName="AmbienceSet" />
       <Group name="AimOpticalSightMarkers" refName="AimOpticalSightMarker" />
+      <Group name="AmbienceSets" refName="AmbienceSet" />
       <Group name="WeaponBarrelModels" refName="WeaponBarrelModel" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="LayeredMaterialSwaps" refName="LayeredMaterialSwap" />
