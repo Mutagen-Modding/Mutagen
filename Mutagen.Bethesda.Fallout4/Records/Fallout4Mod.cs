@@ -12,12 +12,21 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4Mod : AMod
 {
-    public const uint DefaultInitialNextFormID = 0x800;
-    private uint GetDefaultInitialNextFormID() => DefaultInitialNextFormID;
+    private uint GetDefaultInitialNextFormID() => GetDefaultInitialNextFormID(this.ModHeader.Version);
 
     partial void CustomCtor()
     {
         this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
+    }
+
+    public static uint GetDefaultInitialNextFormID(int headerVersion)
+    {
+        if (headerVersion >= 1f)
+        {
+            return 1;
+        }
+
+        return 800;
     }
 }
 
