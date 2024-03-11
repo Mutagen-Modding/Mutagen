@@ -578,6 +578,7 @@ public class StarfieldProcessor : Processor
     {
         ProcessRagdollData(majorFrame, fileOffset);
         ProcessPositionRotationData(majorFrame, fileOffset);
+        ZeroXOWNBool(stream, majorFrame, fileOffset);
     }
 
     private void ProcessHazards(
