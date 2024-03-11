@@ -59,6 +59,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
         AddDynamicProcessing(RecordTypes.SFPT, ProcessSurfacePatterns);
         AddDynamicProcessing(RecordTypes.SFTR, ProcessSurfaceTree);
+        AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -1336,6 +1337,23 @@ public class StarfieldProcessor : Processor
         foreach (var bnam in majorFrame.FindEnumerateSubrecords(RecordTypes.ENAM))
         {
             ProcessFormIDOverflows(bnam, fileOffset);
+        }
+    }
+
+    private void ProcessStatics(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var molms = majorFrame.FindEnumerateSubrecords(RecordTypes.MOLM).ToArray();
+        if (molms.Length > 1)
+        {
+            var range = new RangeInt64(molms[0].Location + fileOffset, molms[^2].Location + fileOffset + molms[^2].TotalLength - 1);
+            Instructions.SetRemove(range);
+
+            ProcessLengths(
+                majorFrame,
+                -range.Width,
+                fileOffset);
         }
     }
 }
