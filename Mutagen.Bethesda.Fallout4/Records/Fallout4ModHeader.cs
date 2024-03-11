@@ -39,7 +39,7 @@ public partial class Fallout4ModHeader
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    uint IModHeaderCommon.MinimumCustomFormID => Fallout4Mod.DefaultInitialNextFormID;
+    uint IModHeaderCommon.MinimumCustomFormID => Fallout4Mod.GetDefaultInitialNextFormID(this.Version);
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
 }

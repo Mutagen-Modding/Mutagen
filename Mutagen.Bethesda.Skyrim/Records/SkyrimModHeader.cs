@@ -39,7 +39,7 @@ public partial class SkyrimModHeader
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    uint IModHeaderCommon.MinimumCustomFormID => SkyrimMod.DefaultInitialNextFormID();
+    uint IModHeaderCommon.MinimumCustomFormID => SkyrimMod.GetDefaultInitialNextFormID(this.Version);
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
 }
