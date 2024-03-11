@@ -261,6 +261,7 @@ public partial class RecordTypes
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DCED = new(0x44454344);
     public static readonly RecordType DCSD = new(0x44534344);
+    public static readonly RecordType DCSH = new(0x48534344);
     public static readonly RecordType DEAD = new(0x44414544);
     public static readonly RecordType DEBR = new(0x52424544);
     public static readonly RecordType DEFL = new(0x4C464544);
@@ -274,6 +275,7 @@ public partial class RecordTypes
     public static readonly RecordType DIAL = new(0x4C414944);
     public static readonly RecordType DIFF = new(0x46464944);
     public static readonly RecordType DLBR = new(0x52424C44);
+    public static readonly RecordType DLSH = new(0x48534C44);
     public static readonly RecordType DMAX = new(0x58414D44);
     public static readonly RecordType DMDL = new(0x4C444D44);
     public static readonly RecordType DMDS = new(0x53444D44);
@@ -285,6 +287,7 @@ public partial class RecordTypes
     public static readonly RecordType DODT = new(0x54444F44);
     public static readonly RecordType DOFT = new(0x54464F44);
     public static readonly RecordType DOOR = new(0x524F4F44);
+    public static readonly RecordType DOSH = new(0x48534F44);
     public static readonly RecordType DPLT = new(0x544C5044);
     public static readonly RecordType DRES = new(0x53455244);
     public static readonly RecordType DSDL = new(0x4C445344);

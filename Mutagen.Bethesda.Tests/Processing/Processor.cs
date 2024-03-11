@@ -840,6 +840,7 @@ public abstract class Processor
             MajorRecordFrame majorRecordHeader,
             SubrecordPinFrame sub)
         {
+            if (sub.ContentLength != 4) return;
             var curIndex = sub.AsUInt32();
             if (!overlay.TryLookup(curIndex, out var str))
             {

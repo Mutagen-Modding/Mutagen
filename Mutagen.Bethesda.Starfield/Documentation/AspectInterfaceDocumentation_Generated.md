@@ -11,6 +11,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - DialogResponses
+- Door
 - Flora
 - Furniture
 - GenericBaseForm
@@ -56,6 +57,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - CameraShot
 - Container
+- Door
 - Flora
 - Furniture
 - IdleMarker
@@ -103,6 +105,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - ContainerModification
 - DestructionStage
+- Door
 - EffectShader
 - Explosion
 - Flora
@@ -163,6 +166,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DamageType
 - DialogTopic
 - DialogueSceneAction
+- Door
 - Explosion
 - ExternalDataSource
 - FaceMorph
@@ -264,6 +268,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BiomeMarker
 - Book
 - Container
+- Door
 - Explosion
 - Flora
 - Furniture
@@ -319,6 +324,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BiomeMarker
 - Book
 - Container
+- Door
 - Flora
 - Furniture
 - GenericBaseForm
@@ -471,6 +477,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### DialogueSceneAction
 - INamed
+### Door
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
 ### EffectShader
 - IModeled
 ### Explosion

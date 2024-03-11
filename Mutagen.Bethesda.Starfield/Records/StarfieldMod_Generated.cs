@@ -10369,6 +10369,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Armors.RemapLinks(mapping);
             obj.Books.RemapLinks(mapping);
             obj.Containers.RemapLinks(mapping);
+            obj.Doors.RemapLinks(mapping);
             obj.Lights.RemapLinks(mapping);
             obj.MiscItems.RemapLinks(mapping);
             obj.Statics.RemapLinks(mapping);
@@ -12627,6 +12628,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Doors is IAssetLinkContainer DoorslinkCont)
+            {
+                foreach (var item in DoorslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Lights is IAssetLinkContainer LightslinkCont)
             {
                 foreach (var item in LightslinkCont.EnumerateListedAssetLinks())
@@ -13070,6 +13078,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Armors.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Books.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Containers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Doors.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Lights.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.MiscItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Statics.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -16809,6 +16818,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Containers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Doors.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -23908,6 +23921,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.Containers is IAssetLinkContainerGetter ContainerslinkCont)
                 {
                     foreach (var item in ContainerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Doors is IAssetLinkContainerGetter DoorslinkCont)
+                {
+                    foreach (var item in DoorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }

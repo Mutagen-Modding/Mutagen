@@ -2149,6 +2149,9 @@
     <Compile Include="Records\Major Records\DialogTopic.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Door.cs">
+      <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\EquipType.cs">
       <DependentUpon>EquipType.xml</DependentUpon>
     </Compile>

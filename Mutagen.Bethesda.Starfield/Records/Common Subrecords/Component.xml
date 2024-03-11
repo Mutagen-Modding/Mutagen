@@ -248,7 +248,9 @@
   </Object>
   <Object name="ForcedLocRefTypeComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
     </Fields>
   </Object>
   <Object name="LinkedVoiceTypeComponent" objType="Subrecord" baseClass="AComponent">

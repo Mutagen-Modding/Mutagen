@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Door" recordType="DOOR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Door" recordType="DOOR" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="NativeTerminal" recordType="NTRM" refName="TerminalMenu" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <RefDirect name="OpenSound" recordType="DOSH" refName="SoundReference" />
+      <RefDirect name="CloseSound" recordType="DCSH" refName="SoundReference" />
+      <RefDirect name="LockSound" recordType="DLSH" refName="SoundReference" />
+      <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" nullable="False" />
+      <String name="AlternateTextOpen" recordType="ONAM" translated="Normal" />
+      <String name="AlternateTextClose" recordType="CNAM" translated="Normal" />
+      <ByteArray name="DEVT" recordType="DEVT" unknown="true" />
+      <ByteArray name="ANAM" recordType="ANAM" unknown="true" />
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>

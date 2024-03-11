@@ -259,6 +259,7 @@ public partial class RecordTypeInts
     public const int DATA = 0x41544144;
     public const int DCED = 0x44454344;
     public const int DCSD = 0x44534344;
+    public const int DCSH = 0x48534344;
     public const int DEAD = 0x44414544;
     public const int DEBR = 0x52424544;
     public const int DEFL = 0x4C464544;
@@ -272,6 +273,7 @@ public partial class RecordTypeInts
     public const int DIAL = 0x4C414944;
     public const int DIFF = 0x46464944;
     public const int DLBR = 0x52424C44;
+    public const int DLSH = 0x48534C44;
     public const int DMAX = 0x58414D44;
     public const int DMDL = 0x4C444D44;
     public const int DMDS = 0x53444D44;
@@ -283,6 +285,7 @@ public partial class RecordTypeInts
     public const int DODT = 0x54444F44;
     public const int DOFT = 0x54464F44;
     public const int DOOR = 0x524F4F44;
+    public const int DOSH = 0x48534F44;
     public const int DPLT = 0x544C5044;
     public const int DRES = 0x53455244;
     public const int DSDL = 0x4C445344;
