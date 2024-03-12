@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Version
-        public static readonly Single VersionDefault = 1.7f;
+        public static readonly Single VersionDefault = 1.71f;
         public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
         public UInt32 NumRecords { get; set; } = default(UInt32);
         #endregion
         #region NextFormID
-        public static readonly UInt32 NextFormIDDefault = 0x800;
+        public static readonly UInt32 NextFormIDDefault = 0x1;
         public UInt32 NextFormID { get; set; } = NextFormIDDefault;
         #endregion
 
