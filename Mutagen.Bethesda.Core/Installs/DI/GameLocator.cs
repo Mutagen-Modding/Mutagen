@@ -1,8 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
+using GameFinder.RegistryUtils;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
 using Microsoft.Win32;
 using Mutagen.Bethesda.Environments.DI;
+using NexusMods.Paths;
 using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
@@ -12,12 +14,16 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
     internal static readonly GameLocator Instance = new();
     
     private readonly Lazy<SteamHandler> _steamHandler;
-    private readonly Lazy<GOGHandler> _gogHandler;
+    private readonly Lazy<GOGHandler>? _gogHandler;
         
     public GameLocator()
     {
-        _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler());
-        _gogHandler = new(() => new GOGHandler());
+        var winReg = OperatingSystem.IsWindows() ? WindowsRegistry.Shared : null;
+        _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler(FileSystem.Shared, winReg));
+        if (winReg != null)
+        {
+            _gogHandler = new(() => new GOGHandler(winReg, FileSystem.Shared));
+        }
     }
     
     private IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
@@ -90,12 +96,11 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
     private bool TryGetSteamGameFolder(SteamGameSource steamGameSource, out DirectoryPath directoryPath)
     {
         foreach (var game in _steamHandler.Value.FindAllGames()
-                     .Where(x => x.Error.IsNullOrWhitespace())
-                     .Select(x => x.Game)
-                     .NotNull()
-                     .Where(x => x.AppId == steamGameSource.Id))
+                     .Where(x => x.IsT0)
+                     .Select(x => x.AsT0)
+                     .Where(x => x.AppId.Value == steamGameSource.Id))
         {
-            directoryPath = game.Path;
+            directoryPath = game.Path.ToString();
             return true;
         }
 
@@ -105,13 +110,17 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 
     private bool TryGetGogGameFolder(GogGameSource gogGameSource, out DirectoryPath directoryPath)
     {
-        foreach (var game in _gogHandler.Value.FindAllGames()
-                     .Where(x => x.Error.IsNullOrWhitespace())
-                     .Select(x => x.Game)
-                     .NotNull()
-                     .Where(x => x.Id == gogGameSource.Id))
+        if (_gogHandler == null)
         {
-            directoryPath = game.Path;
+            directoryPath = default;
+            return false;
+        }
+        foreach (var game in _gogHandler.Value.FindAllGames()
+                     .Where(x => x.IsT0)
+                     .Select(x => x.AsT0)
+                     .Where(x => x.Id.Value == gogGameSource.Id))
+        {
+            directoryPath = game.Path.ToString();
             return true;
         }
 
