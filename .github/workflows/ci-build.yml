@@ -39,6 +39,10 @@ jobs:
           
     steps:
     - uses: actions/checkout@v2
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.*
     - name: Install dependencies
       run: |
         dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
