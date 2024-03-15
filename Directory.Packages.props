@@ -22,10 +22,10 @@
       <Version>1.3.6</Version>
     </PackageVersion>
     <PackageVersion Include="Loqui">
-      <Version>[2.62.0.1-zdev]</Version>
+      <Version>[2.62.0.1-nightly-20240315-064920]</Version>
     </PackageVersion>
     <PackageVersion Include="Loqui.Generation">
-      <Version>[2.62.0.1-zdev]</Version>
+      <Version>[2.62.0.1-nightly-20240315-064920]</Version>
     </PackageVersion>
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common">
@@ -47,16 +47,16 @@
     </PackageVersion>
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Noggog.Autofac">
-      <Version>[2.62.0.1-zdev]</Version>
+      <Version>[2.62.0.1-zdev-nightly-20240315-063075]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.CSharpExt">
-      <Version>[2.62.0.1-zdev]</Version>
+      <Version>[2.62.0.1-zdev-nightly-20240315-063075]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.Testing">
-      <Version>[2.62.0.1-zdev]</Version>
+      <Version>[2.62.0.1-zdev-nightly-20240315-063075]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.WPF">
-      <Version>[2.62.0.1-zdev]</Version>
+      <Version>[2.62.0.1-zdev-nightly-20240315-063075]</Version>
     </PackageVersion>
     <PackageVersion Include="ReactiveUI" Version="19.5.41" />
     <PackageVersion Include="ReactiveUI.Fody" Version="19.5.41" />
